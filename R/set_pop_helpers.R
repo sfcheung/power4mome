@@ -164,3 +164,11 @@ fix_par_es <- function(par_es,
   out <- c(out, all_def[tmp])
   out
 }
+
+#' @noRd
+# Copied from another project of sfcheung
+lambda_from_reliability <- function(p = 3,
+                                    omega = .70) {
+  lambda <- sqrt(omega / (p - omega * (p - 1)))
+  lambda
+}
