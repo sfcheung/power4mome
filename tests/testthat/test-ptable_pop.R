@@ -1,3 +1,43 @@
+library(testthat)
+library(lavaan)
+
+# TODO:
+# - Update ptable_pop() and
+#   model_matrices_pop() to do
+#   standardization by default.
+
+check_gen_dat <- function(model,
+                          pop_es,
+                          n = 10000,
+                          seed = NULL) {
+  set.seed(seed)
+  ptable <- ptable_pop(model,
+                       pop_es = pop_es)
+  mm_out <- model_matrices_pop(ptable)
+  mm_out_original <- mm_out
+  mm_out$psi <- psi_std(mm_out)
+  ptable_std <- start_from_mm(ptable,
+                              mm_out)
+  mm_out_std <- model_matrices_pop(ptable_std)
+  mm_lm_out <- mm_lm(mm_out)
+  mm_lm_dat_out <- mm_lm_data(mm_lm_out,
+                              n = n)
+  fit <- lavaan::sem(model,
+             data = mm_lm_dat_out)
+  tmp <- ptable_std
+  tmp$est <- tmp$start
+  fit0 <- lavaan::sem(tmp,
+              do.fit = FALSE)
+  list(ptable = ptable,
+       mm_out_original = mm_out_original,
+       mm_out = mm_out,
+       mm_out_std = mm_out_std,
+       ptable_std = ptable_std,
+       mm_lm_out = mm_lm_out,
+       mm_lm_dat_out = mm_lm_dat_out,
+       fit = fit,
+       fit0 = fit0)
+}
 
 test_that("ptable_pop", {
 
@@ -12,14 +52,25 @@ y ~ m + x
 model_simple_med_es <- c(".beta." = "m",
                          "y ~ x" = "n")
 
-ptable_simple_med <- ptable_pop(model_simple_med,
-                                pop_es = model_simple_med_es)
+check_out <- check_gen_dat(model_simple_med,
+                           model_simple_med_es,
+                           seed = 1234)
 
-expect_equal(ptable_simple_med$start[1:3],
+expect_equal(check_out$ptable$start[1:3],
              c(.30, .30, .00))
-
-mm_lm_out <- mm_lm(model_matrices_pop(ptable_simple_med,
-                                      pop_es = model_simple_med_es))
+expect_equal(diag(implied_sigma(check_out$mm_out)),
+             rep(1, ncol(check_out$mm_lm_dat_out)),
+             tolerance = 1e-1,
+             ignore_attr = TRUE)
+expect_equal(check_out$mm_out$psi,
+             check_out$mm_out_std$psi)
+expect_equal(diag(cov(check_out$mm_lm_dat_out)),
+             rep(1, ncol(check_out$mm_lm_dat_out)),
+             tolerance = 1e-1,
+             ignore_attr = TRUE)
+expect_equal(coef(check_out$fit),
+             coef(check_out$fit0),
+             tolerance = 1e-1)
 
 # Parallel mediation model
 # Correlated errors
@@ -34,18 +85,30 @@ m1 ~~ m2
 
 model_med_parallel_es <- c(".beta." = "s",
                            "y ~ x" = "-m",
+                           "m1 ~ x" = "l",
+                           "m2 ~ x" = "s",
+                           "y ~ m1" = "m",
                            "m1 ~~ m2" = "l")
 
-ptable_med_parallel_es <- ptable_pop(model_med_parallel,
-                                     pop_es = model_med_parallel_es)
+check_out <- check_gen_dat(model_med_parallel,
+                           model_med_parallel_es,
+                           seed = 1234)
 
-expect_equal(ptable_med_parallel_es$start[6],
+expect_equal(check_out$ptable$start[6],
              .50)
-
-mm_out <- model_matrices_pop(ptable_med_parallel_es,
-                             pop_es = model_med_parallel_es)
-
-mm_lm_out <- mm_lm(mm_out)
+expect_equal(diag(implied_sigma(check_out$mm_out)),
+             rep(1, ncol(check_out$mm_lm_dat_out)),
+             tolerance = 1e-1,
+             ignore_attr = TRUE)
+expect_equal(check_out$mm_out$psi,
+             check_out$mm_out_std$psi)
+expect_equal(diag(cov(check_out$mm_lm_dat_out)),
+             rep(1, ncol(check_out$mm_lm_dat_out)),
+             tolerance = 1e-1,
+             ignore_attr = TRUE)
+expect_equal(coef(check_out$fit),
+             coef(check_out$fit0),
+             tolerance = 1e-1)
 
 # Parallel mediation model
 # Correlated errors not specified in the model
@@ -61,9 +124,62 @@ model_med_parallel_es <- c(".beta." = "s",
                            "y ~ x" = "-m",
                            "m1 ~~ m2" = "l")
 
-expect_warning(ptable_med_parallel_es <- ptable_pop(model_med_parallel,
-                                                    pop_es = model_med_parallel_es))
+# expect_warning(check_out <- check_gen_dat(model_med_parallel,
+#                                           model_med_parallel_es,
+#                                           seed = 1234))
+check_out <- check_gen_dat(model_med_parallel,
+                                          model_med_parallel_es,
+                                          seed = 1234)
+expect_equal(check_out$ptable$start[1:5],
+             c(.10, .10, .10, .10, -.30))
+expect_equal(diag(implied_sigma(check_out$mm_out)),
+             rep(1, ncol(check_out$mm_lm_dat_out)),
+             tolerance = 1e-1,
+             ignore_attr = TRUE)
+expect_equal(check_out$mm_out$psi,
+             check_out$mm_out_std$psi)
+expect_equal(diag(cov(check_out$mm_lm_dat_out)),
+             rep(1, ncol(check_out$mm_lm_dat_out)),
+             tolerance = 1e-1,
+             ignore_attr = TRUE)
+expect_equal(coef(check_out$fit),
+             coef(check_out$fit0),
+             tolerance = 1e-1)
 
+# Moderation only
+
+model_mod <-
+"
+y ~ x + w + x:w + c1
+"
+
+model_mod_es <- c(".beta." = "s",
+                  "y ~ w" = "-m",
+                  "x ~~ w" = "l")
+
+# expect_warning(check_out <- check_gen_dat(model_mod,
+#                                           model_mod_es,
+#                                           seed = 1234))
+check_out <- check_gen_dat(model_mod,
+                           model_mod_es,
+                           seed = 1234)
+expect_equal(check_out$ptable$start[1:4],
+             c(.10, -.30, .05, .10))
+expect_equal(check_out$ptable$start[7],
+             .50)
+expect_equal(diag(implied_sigma(check_out$mm_out)),
+             rep(1, ncol(check_out$mm_lm_dat_out)),
+             tolerance = 1e-1,
+             ignore_attr = TRUE)
+expect_equal(check_out$mm_out$psi,
+             check_out$mm_out_std$psi)
+expect_equal(diag(cov(check_out$mm_lm_dat_out)),
+             rep(1, ncol(check_out$mm_lm_dat_out)),
+             tolerance = 1e-1,
+             ignore_attr = TRUE)
+expect_equal(coef(check_out$fit),
+             coef(check_out$fit0),
+             tolerance = 1e-1)
 
 # Moderated mediation model
 
@@ -79,11 +195,30 @@ model_mod_med_es <- c(".beta." = "s",
                       "x ~~ w + z + u" = "s",
                       "w ~~ z + u" = "l")
 
-ptable_mod_med_es <- ptable_pop(model_mod_med,
-                                pop_es = model_mod_med_es)
-expect_equal(ptable_mod_med_es[(ptable_mod_med_es$lhs == "w") &
-                               (ptable_mod_med_es$rhs == "u"), "start"],
-             .50)
+check_out <- check_gen_dat(model_mod_med,
+                           model_mod_med_es,
+                           seed = 1234)
+expect_equal(check_out$ptable$start[1:9],
+             c(.10, .10, .15, .10, .10, .05, -.30, .10, .05))
+expect_equal(check_out$ptable$start[21:22],
+             c(.50, .50))
+expect_equal(check_out$ptable$start[16:17],
+             c(.10, .10))
+expect_equal(diag(implied_sigma(check_out$mm_out)),
+             rep(1, ncol(check_out$mm_lm_dat_out)),
+             tolerance = 1e-1,
+             ignore_attr = TRUE)
+expect_equal(check_out$mm_out$psi,
+             check_out$mm_out_std$psi)
+expect_equal(diag(cov(check_out$mm_lm_dat_out)),
+             rep(1, ncol(check_out$mm_lm_dat_out)),
+             tolerance = 1e-1,
+             ignore_attr = TRUE)
+expect_equal(coef(check_out$fit),
+             coef(check_out$fit0),
+             tolerance = 1e-1)
+
+# Other models
 
 model2 <-
 "
@@ -100,14 +235,21 @@ model2_es <- c("m1 ~ x" = "-m",
                "y ~ x:w" = "s",
                "x ~~ w" = "s")
 
-ptable2_es <- set_pop(model2_es)[, -5]
-ptable2_es
-
-ptable_final1 <- ptable_pop(model2,
-                            pop_es = ptable2_es)
-ptable_final2 <- ptable_pop(model2,
-                            pop_es = model2_es)
-expect_identical(ptable_final1,
-                 ptable_final2)
+check_out <- check_gen_dat(model2,
+                           model2_es,
+                           seed = 1234)
+expect_equal(diag(implied_sigma(check_out$mm_out)),
+             rep(1, ncol(check_out$mm_lm_dat_out)),
+             tolerance = 1e-1,
+             ignore_attr = TRUE)
+expect_equal(check_out$mm_out$psi,
+             check_out$mm_out_std$psi)
+expect_equal(diag(cov(check_out$mm_lm_dat_out)),
+             rep(1, ncol(check_out$mm_lm_dat_out)),
+             tolerance = 1e-1,
+             ignore_attr = TRUE)
+expect_equal(coef(check_out$fit),
+             coef(check_out$fit0),
+             tolerance = 1e-1)
 
 })

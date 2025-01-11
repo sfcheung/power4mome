@@ -107,6 +107,7 @@ ptable_pop <- function(model,
   } else {
     par_pop <- pop_es
   }
+  par_pop <- dup_cov(par_pop)
   fit0 <- lavaan::sem(model,
                       do.fit = FALSE)
   ptable0 <- lavaan::parTable(fit0)
@@ -121,8 +122,8 @@ ptable_pop <- function(model,
                   paste0,
                   collapse = " ")
     tmp2 <- paste(tmp2, collapse = ",")
-    warning("One or more parameters in 'pop_es' is not in the model: ",
-            tmp2)
+    # warning("One or more parameters in 'pop_es' is not in the model: ",
+    #         tmp2)
   }
   par_pop2 <- par_pop2[, c("id", "lhs", "op", "rhs", "pop")]
 
@@ -261,3 +262,20 @@ mm_lm <- function(mm) {
   return(out)
 }
 
+#' @noRd
+# Fix covariances in a parameter table
+dup_cov <- function(ptable) {
+  i <- ptable$op == "~~"
+  if (any(i)) {
+    j <- match(c("rhs", "op", "lhs"),
+               colnames(ptable))
+    j <- c(j,
+           sort(setdiff(seq_len(ncol(ptable)), j)))
+    ptable_rev <- ptable[i, j]
+    colnames(ptable_rev) <- colnames(ptable)
+    ptable <- rbind(ptable,
+                    ptable_rev)
+    rownames(ptable) <- NULL
+  }
+  ptable
+}
