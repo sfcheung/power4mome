@@ -28,8 +28,6 @@ start_from_mm <- function(ptable,
 #' @noRd
 # Input:
 # - mm_reg object
-# Notes:
-# - Empirically determine the error variance
 # Output:
 # - Generated data
 mm_lm_data <- function(object,
@@ -93,6 +91,8 @@ psi_std <- function(object,
     # Rescale the errors
     y_e <- dat_all[, y, drop = TRUE] * sqrt(y_e_var) / stats::sd(dat_all[, y])
     # Replace the errors by the generated values
+    # Update product terms
+    dat_all <- update_p_terms(dat_all)
     dat_all[, y] <- y_e + y_hat
   }
   return(psi)
@@ -112,6 +112,21 @@ gen_all_x <- function(psi,
   x_raw <- add_p_terms(x_raw,
                        all_x = all_x)
   x_raw
+}
+
+#' @noRd
+# Compute the product term
+update_p_terms <- function(x) {
+  out <- x
+  for (xx in colnames(out)) {
+    if (!grepl("[:]", xx)) next
+    a <- strsplit(xx, ":")[[1]]
+    b <- apply(out[, a],
+               MARGIN = 1,
+               prod)
+    out[, xx] <- b
+  }
+  out
 }
 
 #' @noRd
@@ -138,6 +153,8 @@ add_p_terms <- function(x,
 }
 
 #' @noRd
+# TODO:
+# - Allow for nonnormal variables.
 gen_pure_x <- function(psi,
                        n) {
   p <- ncol(psi)
@@ -158,4 +175,3 @@ implied_sigma <- function(mm) {
   sigma <- solve(diag(p) - beta) %*% psi %*% t(solve(diag(p) - beta))
   return(sigma)
 }
-

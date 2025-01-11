@@ -59,6 +59,20 @@
 #' Used only if `par_es` is a named
 #' vector.
 #'
+#' @param standardized Logical. If
+#' `TRUE`, the default, variances and
+#' error variances are scaled to ensure
+#' the population variances of the
+#' endogenous variables are close to
+#' one, and hence the effect sizes are
+#' standardized effect sizes if the
+#' variances of the continuos exogenous
+#' variables are also equal to one.
+#'
+#' @param n_std The sample size used to
+#' determine the error variances by
+#' simulation. Default is 100000.
+#'
 #' @author Shu Fai Cheung <https://orcid.org/0000-0002-9871-9448>
 #'
 #'
@@ -97,7 +111,9 @@ ptable_pop <- function(model,
                                "l" = .50),
                        es2 = c("s" = .05,
                                "m" = .10,
-                               "l" = .15)) {
+                               "l" = .15),
+                       standardized = TRUE,
+                       n_std = 100000) {
   if (is.character(pop_es)) {
     pop_es <- fix_par_es(pop_es,
                          model = model)
@@ -135,6 +151,14 @@ ptable_pop <- function(model,
   # TODO:
   # - Check equality constraints
   attr(ptable1, "model") <- model
+  if (standardized) {
+    mm <- model_matrices_pop(ptable1)
+    mm$psi <- psi_std(mm,
+                      n_std = n_std)
+    ptable1 <- start_from_mm(ptable1,
+                             mm)
+    attr(ptable1, "model") <- model
+  }
   ptable1
 }
 
@@ -161,6 +185,10 @@ ptable_pop <- function(model,
 #' `start` set to the population values,
 #' such as the output of [ptable_pop()].
 #'
+#' @param ... If `x` is a model syntax,
+#' these are arguments to be passed to
+#' [ptable_pop()].
+#'
 #' @examples
 #'
 #' model_matrices_pop(ptable_final1)
@@ -171,12 +199,12 @@ ptable_pop <- function(model,
 #' @export
 
 model_matrices_pop <- function(x,
-                               pop_es) {
-  if (missing(pop_es)) {
-    ptable <- x
-  } else {
+                               ...) {
+  if (is.character((x))) {
     ptable <- ptable_pop(model = x,
-                         pop_es = pop_es)
+                         ...)
+  } else {
+    ptable <- x
   }
   fit1 <- lavaan::sem(ptable,
                       do.fit = FALSE)
@@ -226,7 +254,6 @@ set_start <- function(mm,
 #   - covariance matrix of x-variables
 mm_lm <- function(mm) {
   # TODO:
-  # - Compute the error variance for each model
   # - Check whether the transpose of nox-beta is in echelon form.
   model <- attr(mm, "model")
   if (is.null(model)) {

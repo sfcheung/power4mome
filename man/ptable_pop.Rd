@@ -9,10 +9,12 @@ ptable_pop(
   model,
   pop_es,
   es1 = c(s = 0.1, m = 0.3, l = 0.5),
-  es2 = c(s = 0.05, m = 0.1, l = 0.15)
+  es2 = c(s = 0.05, m = 0.1, l = 0.15),
+  standardized = TRUE,
+  n_std = 1e+05
 )
 
-model_matrices_pop(x, pop_es)
+model_matrices_pop(x, ...)
 }
 \arguments{
 \item{model}{String. The model defined
@@ -57,11 +59,29 @@ Default is \code{c("s" = .05, "m" = .10, "l" = .15)}.
 Used only if \code{par_es} is a named
 vector.}
 
+\item{standardized}{Logical. If
+\code{TRUE}, the default, variances and
+error variances are scaled to ensure
+the population variances of the
+endogenous variables are close to
+one, and hence the effect sizes are
+standardized effect sizes if the
+variances of the continuos exogenous
+variables are also equal to one.}
+
+\item{n_std}{The sample size used to
+determine the error variances by
+simulation. Default is 100000.}
+
 \item{x}{It can be 'lavaan' model
 syntax, to be passed to \code{\link[=ptable_pop]{ptable_pop()}},
 or a parameter table with the column
 \code{start} set to the population values,
 such as the output of \code{\link[=ptable_pop]{ptable_pop()}}.}
+
+\item{...}{If \code{x} is a model syntax,
+these are arguments to be passed to
+\code{\link[=ptable_pop]{ptable_pop()}}.}
 }
 \value{
 The function \code{\link[=ptable_pop]{ptable_pop()}} returns
