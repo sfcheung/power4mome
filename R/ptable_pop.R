@@ -5,13 +5,15 @@
 #' syntax and user-specified effect
 #' sizes.
 #'
-#' @details It generates a `lavaan`
-#' parameter tables that can be used
+#' @details
+#' The function [ptable_pop()] generates a `lavaan`
+#' parameter table that can be used
 #' to generate data based on the population
 #' values of model parameters.
 #'
 #' @return
-#' A `lavaan` parameter table of the
+#' The function [ptable_pop()] returns
+#' a `lavaan` parameter table of the
 #' model, with `start` set to the
 #' population values.
 #'
@@ -109,9 +111,19 @@ ptable_pop <- function(model,
                       do.fit = FALSE)
   ptable0 <- lavaan::parTable(fit0)
   par_pop2 <- merge(par_pop,
-                       ptable0[, c("lhs", "op", "rhs", "id")],
-                       all.x = TRUE,
-                       all.y = FALSE)
+                    ptable0[, c("lhs", "op", "rhs", "id")],
+                    all.x = TRUE,
+                    all.y = FALSE)
+  if (any(is.na(par_pop2$id))) {
+    tmp1 <- is.na(par_pop2$id)
+    tmp2 <- apply(par_pop2[tmp1, c("lhs", "op", "rhs"), drop = FALSE],
+                  MARGIN = 1,
+                  paste0,
+                  collapse = " ")
+    tmp2 <- paste(tmp2, collapse = ",")
+    warning("One or more parameters in 'pop_es' is not in the model: ",
+            tmp2)
+  }
   par_pop2 <- par_pop2[, c("id", "lhs", "op", "rhs", "pop")]
 
   ptable1 <- merge(ptable0,
@@ -121,5 +133,131 @@ ptable_pop <- function(model,
   ptable1$pop <- NULL
   # TODO:
   # - Check equality constraints
+  attr(ptable1, "model") <- model
   ptable1
 }
+
+#' @describeIn ptable_pop
+#'
+#' @details
+#' The function [model_matrices_pop()]
+#' generates models matrices with
+#' population values.
+#'
+#' @return
+#' The function [model_matrices_pop()]
+#' returns a `lavaan` LISREL-style model
+#' matrices (like the output of
+#' [lavaan::lavInspect()] with `what`
+#' set to `free`), with matrix elements
+#' set to the population values. If
+#' `x` is the model syntax, it will be
+#' stored in the attributes `model`.
+#'
+#' @param x It can be 'lavaan' model
+#' syntax, to be passed to [ptable_pop()],
+#' or a parameter table with the column
+#' `start` set to the population values,
+#' such as the output of [ptable_pop()].
+#'
+#' @examples
+#'
+#' model_matrices_pop(ptable_final1)
+#'
+#' model_matrices_pop(model1,
+#'                    pop_es = model1_es)
+#'
+#' @export
+
+model_matrices_pop <- function(x,
+                               pop_es) {
+  if (missing(pop_es)) {
+    ptable <- x
+  } else {
+    ptable <- ptable_pop(model = x,
+                         pop_es = pop_es)
+  }
+  fit1 <- lavaan::sem(ptable,
+                      do.fit = FALSE)
+  mm <- lavaan::lavInspect(fit1,
+                           "partable")
+  mm2 <- set_start(mm = mm,
+                   ptable = ptable)
+  attr(mm2, "header") <- NULL
+  if (is.character((x))) {
+    attr(mm2, "model") <- x
+  } else (
+    attr(mm2, "model") <- attr(x, "model")
+  )
+  mm2
+}
+
+
+#' @noRd
+# Set the starting values in the model matrix
+# Input:
+# - The list of model matrices in lavaan
+# Output:
+# - The parameter table with starting values (in "start")
+
+set_start <- function(mm,
+                      ptable) {
+  for (k in seq_along(mm)) {
+    mmi <- mm[[k]]
+    i <- which(mmi > 0)
+    j <- mmi[i]
+    mmic <- col(mmi)
+    mmir <- row(mmi)
+    for (x in seq_along(j)) {
+      mmi[mmir[i[x]], mmic[i[x]]] <- ptable[j[x], "start"]
+    }
+    mm[[k]] <- mmi
+  }
+  mm
+}
+
+#' @noRd
+# Input:
+# - Lavaan model matrices
+# Output:
+# - A list of:
+#   - regression models
+#   - covariance matrix of x-variables
+mm_lm <- function(mm) {
+  # TODO:
+  # - Compute the error variance for each model
+  # - Check whether the transpose of nox-beta is in echelon form.
+  model <- attr(mm, "model")
+  if (is.null(model)) {
+    stop("Model syntax not found")
+  }
+  fit1 <- lavaan::sem(model,
+                      do.fit = FALSE)
+  mm1 <- lavaan::lavInspect(fit1,
+                            "partable")
+  beta1 <- mm1$beta
+  psi1 <- mm1$psi
+  ix <- apply(beta1,
+              MARGIN = 1,
+              function(x) all(x == 0))
+  x_names <- names(ix)[ix]
+  y_names <- setdiff(colnames(beta1), x_names)
+  beta <- mm$beta
+  psi <- mm$psi
+  gen_lm <- function(y) {
+    beta1_i <- beta1[y, , drop = FALSE]
+    beta_i <- beta[y, beta1_i > 0, drop = FALSE]
+    psi_i <- psi[beta1_i > 0, beta1_i > 0, drop = FALSE]
+    list(beta = beta_i,
+         psi = psi_i)
+  }
+  lm_y <- sapply(y_names,
+                 gen_lm,
+                 simplify = FALSE)
+  psi_pure_x <- psi[x_names, x_names, drop = FALSE]
+  out <- list(lm_y = lm_y,
+              psi_pure_x = psi_pure_x,
+              psi = psi)
+  return(out)
+}
+

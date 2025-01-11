@@ -2,6 +2,7 @@
 % Please edit documentation in R/ptable_pop.R
 \name{ptable_pop}
 \alias{ptable_pop}
+\alias{model_matrices_pop}
 \title{Generate the Population Model}
 \usage{
 ptable_pop(
@@ -10,6 +11,8 @@ ptable_pop(
   es1 = c(s = 0.1, m = 0.3, l = 0.5),
   es2 = c(s = 0.05, m = 0.1, l = 0.15)
 )
+
+model_matrices_pop(x, pop_es)
 }
 \arguments{
 \item{model}{String. The model defined
@@ -53,11 +56,27 @@ size of product term.
 Default is \code{c("s" = .05, "m" = .10, "l" = .15)}.
 Used only if \code{par_es} is a named
 vector.}
+
+\item{x}{It can be 'lavaan' model
+syntax, to be passed to \code{\link[=ptable_pop]{ptable_pop()}},
+or a parameter table with the column
+\code{start} set to the population values,
+such as the output of \code{\link[=ptable_pop]{ptable_pop()}}.}
 }
 \value{
-A \code{lavaan} parameter table of the
+The function \code{\link[=ptable_pop]{ptable_pop()}} returns
+a \code{lavaan} parameter table of the
 model, with \code{start} set to the
 population values.
+
+The function \code{\link[=model_matrices_pop]{model_matrices_pop()}}
+returns a \code{lavaan} LISREL-style model
+matrices (like the output of
+\code{\link[lavaan:lavInspect]{lavaan::lavInspect()}} with \code{what}
+set to \code{free}), with matrix elements
+set to the population values. If
+\code{x} is the model syntax, it will be
+stored in the attributes \code{model}.
 }
 \description{
 Generate the complete
@@ -66,11 +85,20 @@ syntax and user-specified effect
 sizes.
 }
 \details{
-It generates a \code{lavaan}
-parameter tables that can be used
+The function \code{\link[=ptable_pop]{ptable_pop()}} generates a \code{lavaan}
+parameter table that can be used
 to generate data based on the population
 values of model parameters.
+
+The function \code{\link[=model_matrices_pop]{model_matrices_pop()}}
+generates models matrices with
+population values.
 }
+\section{Functions}{
+\itemize{
+\item \code{model_matrices_pop()}: 
+
+}}
 \examples{
 
 model1 <-
@@ -91,6 +119,12 @@ model1_es <- c("m1 ~ x" = "-m",
 ptable_final1 <- ptable_pop(model1,
                             pop_es = model1_es)
 ptable_final1
+
+
+model_matrices_pop(ptable_final1)
+
+model_matrices_pop(model1,
+                   pop_es = model1_es)
 
 }
 \author{

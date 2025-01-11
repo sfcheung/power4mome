@@ -48,12 +48,12 @@
 #' values for each label of the effect
 #' size of correlations and regression
 #' paths.
-#' Default is `c("s" = .10, "m" = .30, "l" = .50)`.
+#' Default is `c("n" = .00, "s" = .10, "m" = .30, "l" = .50)`.
 #'
 #' @param es2 A named vector to set the
 #' values for each label of the effect
 #' size of product term.
-#' Default is `c("s" = .05, "m" = .10, "l" = .15)`.
+#' Default is `c("n" = .00, "s" = .05, "m" = .10, "l" = .15)`.
 #'
 #' @author Shu Fai Cheung <https://orcid.org/0000-0002-9871-9448>
 #'
@@ -63,10 +63,12 @@
 #'
 #' @noRd
 set_pop <- function(par_es,
-                    es1 = c("s" = .10,
+                    es1 = c("n" = .00,
+                            "s" = .10,
                             "m" = .30,
                             "l" = .50),
-                    es2 = c("s" = .05,
+                    es2 = c("n" = .00,
+                            "s" = .05,
                             "m" = .10,
                             "l" = .15)) {
   es10 <- es_long(es1)
