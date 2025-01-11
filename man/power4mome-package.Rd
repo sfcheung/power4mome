@@ -8,6 +8,13 @@
 \description{
 Power analysis and sample size determination for moderation, mediation, and moderated mediation in models fitted by structural equation modeling.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://sfcheung.github.io/power4mome/}
+}
+
+}
 \author{
 \strong{Maintainer}: Shu Fai Cheung \email{shufai.cheung@gmail.com} (\href{https://orcid.org/0000-0002-9871-9448}{ORCID})
 

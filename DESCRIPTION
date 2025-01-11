@@ -20,3 +20,6 @@ Config/testthat/edition: 3
 Depends:
     R (>= 4.0.0)
 URL: https://sfcheung.github.io/power4mome/
+Imports: 
+    lavaan,
+    stats
