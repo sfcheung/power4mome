@@ -58,7 +58,45 @@ mm_lm_data <- function(object,
   return(as.data.frame(dat_all))
 }
 
-
+#' @noRd
+# Input:
+# - A matrix of scores (e.g., from mm_lm_data()).
+# - ps: A named vector of the number of indicators.
+# - rels: A named vector of reliability coefficients.
+# - keep_f_scores: If TRUE, factor scores are ratained.
+# Output:
+# - A matrix with indicator scores added.
+add_indicator_scores <- function(x,
+                                 ps,
+                                 rels,
+                                 keep_f_scores = FALSE) {
+  if (!setequal(names(ps), names(rels))) {
+    stop("'ps' and 'rels' do not match in names.")
+  }
+  f_names <- names(ps)
+  if (length(setdiff(f_names, colnames(x))) != 0) {
+    stop("Some factors not found in the data.")
+  }
+  rels <- rels[f_names]
+  f_scores <- sapply(f_names,
+                     function(xx) x[, xx, drop = TRUE],
+                     simplify = FALSE)
+  prefixes <- f_names
+  out0 <- mapply(gen_indicator_scores,
+                 f_score = f_scores,
+                 p = ps,
+                 omega = rels,
+                 prefix = prefixes,
+                 SIMPLIFY = FALSE)
+  out1 <- do.call(cbind,
+                  out0)
+  out2 <- cbind(x, out1)
+  if (!keep_f_scores) {
+    i <- match(f_names, colnames(x))
+    out2 <- out2[, -i, drop = FALSE]
+  }
+  return(out2)
+}
 
 #' @noRd
 # Input:
