@@ -4,7 +4,10 @@ suppressMessages(library(lavaan))
 check_gen_dat <- function(model,
                           pop_es,
                           n = 10000,
-                          seed = NULL) {
+                          seed = NULL,
+                          number_of_indicators = NULL,
+                          reliability = NULL,
+                          keep_f_scores = FALSE) {
   set.seed(seed)
   ptable <- ptable_pop(model,
                        pop_es = pop_es,
@@ -23,7 +26,10 @@ check_gen_dat <- function(model,
   #                                   standardized = TRUE)
   mm_lm_out <- mm_lm(mm_out)
   mm_lm_dat_out <- mm_lm_data(mm_lm_out,
-                              n = n)
+                              n = n,
+                              number_of_indicators = number_of_indicators,
+                              reliability = reliability,
+                              keep_f_scores = keep_f_scores)
   fit <- lavaan::sem(model,
              data = mm_lm_dat_out)
   tmp <- ptable

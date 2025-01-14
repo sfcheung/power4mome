@@ -31,7 +31,10 @@ start_from_mm <- function(ptable,
 # Output:
 # - Generated data
 mm_lm_data <- function(object,
-                       n) {
+                       n,
+                       number_of_indicators = NULL,
+                       reliability = NULL,
+                       keep_f_scores = FALSE) {
   lm_y <- object$lm_y
   psi <- object$psi
   all_vars <- colnames(psi)
@@ -54,6 +57,12 @@ mm_lm_data <- function(object,
     # Replace the errors by the generated values
     dat_all[, y] <- as.vector(y_i)
     dat_all <- update_p_terms(dat_all)
+  }
+  if (!is.null(number_of_indicators)) {
+    dat_all <- add_indicator_scores(dat_all,
+                                    ps = number_of_indicators,
+                                    rels = reliability,
+                                    keep_f_scores = keep_f_scores)
   }
   return(as.data.frame(dat_all))
 }
@@ -92,6 +101,8 @@ add_indicator_scores <- function(x,
                   out0)
   out2 <- cbind(x, out1)
   if (!keep_f_scores) {
+    # TODO:
+    # - Should also remove product terms
     i <- match(f_names, colnames(x))
     out2 <- out2[, -i, drop = FALSE]
   }
