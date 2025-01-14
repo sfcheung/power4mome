@@ -59,6 +59,29 @@ mm_lm_data <- function(object,
 }
 
 #' @noRd
+gen_indicator_scores <- function(f_score,
+                                 p,
+                                 omega,
+                                 prefix = "x") {
+  f_score <- matrix(as.vector(f_score),
+                    ncol = 1)
+  n <- nrow(f_score)
+  lambda0 <- lambda_from_reliability(p = p,
+                                    omega = omega)
+  lambda1 <- matrix(lambda0,
+                    nrow = 1,
+                    ncol = p)
+  e_sd <- sqrt(1 - lambda0^2)
+  e <- stats::rnorm(n * p,
+                    mean = 0,
+                    sd = e_sd)
+  x <- f_score %*% lambda1 + e
+  colnames(x) <- paste0(prefix, seq(from = 1,
+                                    to = p))
+  return(x)
+}
+
+#' @noRd
 # Input:
 # - One lm model
 # Output:
