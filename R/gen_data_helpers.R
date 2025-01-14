@@ -27,7 +27,7 @@ start_from_mm <- function(ptable,
 
 #' @noRd
 # Input:
-# - mm_reg object
+# - mm_lm object
 # Output:
 # - Generated data
 mm_lm_data <- function(object,
