@@ -1,5 +1,5 @@
 library(testthat)
-library(lavaan)
+suppressMessages(library(lavaan))
 
 check_gen_dat <- function(model,
                           pop_es,
