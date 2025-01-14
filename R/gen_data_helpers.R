@@ -58,7 +58,16 @@ mm_lm_data <- function(object,
   return(as.data.frame(dat_all))
 }
 
+
+
 #' @noRd
+# Input:
+# - f_score: A vector or column vector of factor scores.
+# - p: The number of indicators.
+# - omega: The reliability.
+# - prefix: The prefix for naming the indicators.
+# Ouput:
+# - A matrix of indicator scores
 gen_indicator_scores <- function(f_score,
                                  p,
                                  omega,
