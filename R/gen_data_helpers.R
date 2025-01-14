@@ -53,6 +53,7 @@ mm_lm_data <- function(object,
     y_i <- dat_all[, colnames(beta_i), drop = FALSE] %*% t(beta_i) + e_i
     # Replace the errors by the generated values
     dat_all[, y] <- as.vector(y_i)
+    dat_all <- update_p_terms(dat_all)
   }
   return(as.data.frame(dat_all))
 }
