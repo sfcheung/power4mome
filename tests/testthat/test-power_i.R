@@ -50,6 +50,9 @@ power_i <- function(model,
     stop("'FUN_test' must be a function.")
   }
   if (!is.null(seed)) set.seed(seed)
+  # TODO:
+  # - ptable_pop() should be called only once
+  #   because it will find the error variances empirically.
   ptable <- ptable_pop(model,
                        pop_es = pop_es,
                        standardized = TRUE)
