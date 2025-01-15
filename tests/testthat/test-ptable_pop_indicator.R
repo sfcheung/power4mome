@@ -19,16 +19,9 @@ check_gen_dat <- function(model,
                               number_of_indicators = number_of_indicators,
                               reliability = reliability,
                               keep_f_scores = keep_f_scores)
-  if (!is.null(number_of_indicators)) {
-    for (i in seq_along(number_of_indicators)) {
-      i_name <- names(number_of_indicators)[i]
-      model = c(model,
-                paste0(i_name, " =~ ",
-                       paste0(i_name,
-                             seq_len(number_of_indicators[i]),
-                             collapse = " + ")))
-    }
-  }
+  model <- add_indicator_syntax(model,
+                                number_of_indicators = number_of_indicators,
+                                reliability = reliability)
   fit <- lavaan::sem(model,
              data = mm_lm_dat_out)
   tmp <- ptable

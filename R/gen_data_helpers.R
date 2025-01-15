@@ -69,6 +69,36 @@ mm_lm_data <- function(object,
 
 #' @noRd
 # Input:
+# - Original model syntax
+# - number_of_indicators
+# - reliability
+# Note:
+# - To be used internally. Assume that the argument values are valid.
+# - Assume the prefix of indicators are equal to the factor names.
+#   - E.g., x1, x2, ... for the factor x.
+# Output:
+# - Modified model syntax with the measurement part
+add_indicator_syntax <- function(model,
+                                 number_of_indicators = NULL,
+                                 reliability = NULL) {
+  f_names <- names(number_of_indicators)
+  reliability <- reliability[f_names]
+  if (!is.null(number_of_indicators)) {
+    for (i in seq_along(number_of_indicators)) {
+      i_name <- names(number_of_indicators)[i]
+      model <- c(model,
+                paste0(i_name, " =~ ",
+                       paste0(i_name,
+                              seq_len(number_of_indicators[i]),
+                              collapse = " + ")))
+    }
+  }
+  return(model)
+}
+
+
+#' @noRd
+# Input:
 # - A matrix of scores (e.g., from mm_lm_data()).
 # - ps: A named vector of the number of indicators.
 # - rels: A named vector of reliability coefficients.
