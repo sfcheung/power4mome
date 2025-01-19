@@ -5,106 +5,106 @@ library(pbapply)
 library(parallel)
 suppressMessages(library(lavaan))
 
-indirect_effect_mc <- function(x,
-                               m,
-                               y,
-                               fit,
-                               R = 100) {
-  ptable <- lavaan::parameterTable(fit)
-  id_a <- ptable$id[which((ptable$lhs == m) & (ptable$rhs == x))]
-  id_b <- ptable$id[which((ptable$lhs == y) & (ptable$rhs == m))]
-  fit_vcov <- lavaan::lavInspect(fit,
-                                 "vcov")
-  ab_vcov <- fit_vcov[c(id_a, id_b), c(id_a, id_b)]
-  ab_est <- ptable$est[c(id_a, id_b)]
-  ab_est_mc <- MASS::mvrnorm(n = R,
-                             mu = ab_est,
-                             Sigma = ab_vcov)
-  ab_mc <- apply(ab_est_mc,
-                 MARGIN = 1,
-                 prod)
-  ab_ci <- stats::quantile(ab_mc,
-                           c(.025, .975))
-  out1 <- ifelse((ab_ci[1] > 0) || (ab_ci[2] < 0),
-                  yes = 1,
-                  no = 0)
-  est <- lavaan::parameterEstimates(fit,
-                                    se = FALSE,
-                                    standardized = TRUE)
-  id_a <- which((est$lhs == m) & (est$rhs == x))
-  id_b <- which((est$lhs == y) & (est$rhs == m))
-  ab_std <- est[id_a, "std.all"] * est[id_b, "std.all"]
-  out2 <- c(est = ab_std,
-            cilo = unname(ab_ci[1]),
-            cihi = unname(ab_ci[2]),
-            sig = out1)
-}
+# indirect_effect_mc <- function(x,
+#                                m,
+#                                y,
+#                                fit,
+#                                R = 100) {
+#   ptable <- lavaan::parameterTable(fit)
+#   id_a <- ptable$id[which((ptable$lhs == m) & (ptable$rhs == x))]
+#   id_b <- ptable$id[which((ptable$lhs == y) & (ptable$rhs == m))]
+#   fit_vcov <- lavaan::lavInspect(fit,
+#                                  "vcov")
+#   ab_vcov <- fit_vcov[c(id_a, id_b), c(id_a, id_b)]
+#   ab_est <- ptable$est[c(id_a, id_b)]
+#   ab_est_mc <- MASS::mvrnorm(n = R,
+#                              mu = ab_est,
+#                              Sigma = ab_vcov)
+#   ab_mc <- apply(ab_est_mc,
+#                  MARGIN = 1,
+#                  prod)
+#   ab_ci <- stats::quantile(ab_mc,
+#                            c(.025, .975))
+#   out1 <- ifelse((ab_ci[1] > 0) || (ab_ci[2] < 0),
+#                   yes = 1,
+#                   no = 0)
+#   est <- lavaan::parameterEstimates(fit,
+#                                     se = FALSE,
+#                                     standardized = TRUE)
+#   id_a <- which((est$lhs == m) & (est$rhs == x))
+#   id_b <- which((est$lhs == y) & (est$rhs == m))
+#   ab_std <- est[id_a, "std.all"] * est[id_b, "std.all"]
+#   out2 <- c(est = ab_std,
+#             cilo = unname(ab_ci[1]),
+#             cihi = unname(ab_ci[2]),
+#             sig = out1)
+# }
 
-gen_all_i <- function(model,
-                      pop_es,
-                      n = 100,
-                      seed = NULL,
-                      number_of_indicators = NULL,
-                      reliability = NULL,
-                      gen_mc = TRUE,
-                      mc_R = 1000) {
-  if (!is.null(seed)) set.seed(seed)
-  ptable <- ptable_pop(model,
-                       pop_es = pop_es,
-                       standardized = TRUE)
-  mm_out <- model_matrices_pop(ptable)
-  mm_lm_out <- mm_lm(mm_out)
-  mm_lm_dat_out <- mm_lm_data(mm_lm_out,
-                              n = n,
-                              number_of_indicators = number_of_indicators,
-                              reliability = reliability,
-                              keep_f_scores = FALSE)
-  model <- add_indicator_syntax(model,
-                                number_of_indicators = number_of_indicators,
-                                reliability = reliability)
-  fit <- lavaan::sem(model,
-                     data = mm_lm_dat_out)
-  tmp <- ptable
-  tmp$est <- tmp$start
-  fit0 <- lavaan::sem(tmp,
-              do.fit = FALSE)
-  if (gen_mc) {
-    mc_out <- manymome::do_mc(fit,
-                              R = mc_R,
-                              parallel = FALSE,
-                              progress = FALSE)
-  } else {
-    mc_out <- NULL
-  }
-  out <- list(ptable = ptable,
-              mm_out = mm_out,
-              mm_lm_out = mm_lm_out,
-              mm_lm_dat_out = mm_lm_dat_out,
-              fit = fit,
-              fit0 = fit0,
-              mc_out = mc_out)
-  out
-}
+# gen_all_i <- function(model,
+#                       pop_es,
+#                       n = 100,
+#                       seed = NULL,
+#                       number_of_indicators = NULL,
+#                       reliability = NULL,
+#                       gen_mc = TRUE,
+#                       mc_R = 1000) {
+#   if (!is.null(seed)) set.seed(seed)
+#   ptable <- ptable_pop(model,
+#                        pop_es = pop_es,
+#                        standardized = TRUE)
+#   mm_out <- model_matrices_pop(ptable)
+#   mm_lm_out <- mm_lm(mm_out)
+#   mm_lm_dat_out <- mm_lm_data(mm_lm_out,
+#                               n = n,
+#                               number_of_indicators = number_of_indicators,
+#                               reliability = reliability,
+#                               keep_f_scores = FALSE)
+#   model <- add_indicator_syntax(model,
+#                                 number_of_indicators = number_of_indicators,
+#                                 reliability = reliability)
+#   fit <- lavaan::sem(model,
+#                      data = mm_lm_dat_out)
+#   tmp <- ptable
+#   tmp$est <- tmp$start
+#   fit0 <- lavaan::sem(tmp,
+#               do.fit = FALSE)
+#   if (gen_mc) {
+#     mc_out <- manymome::do_mc(fit,
+#                               R = mc_R,
+#                               parallel = FALSE,
+#                               progress = FALSE)
+#   } else {
+#     mc_out <- NULL
+#   }
+#   out <- list(ptable = ptable,
+#               mm_out = mm_out,
+#               mm_lm_out = mm_lm_out,
+#               mm_lm_dat_out = mm_lm_dat_out,
+#               fit = fit,
+#               fit0 = fit0,
+#               mc_out = mc_out)
+#   out
+# }
 
-power_i <- function(gen_all_out = NULL,
-                    FUN_test = NULL) {
-  test_sig <- do.call(FUN_test,
-                      list(fit0 = gen_all_out$fit,
-                           mc_out = gen_all_out$mc_out))
-  return(list(test_sig = test_sig))
-}
+# power_i <- function(gen_all_out = NULL,
+#                     FUN_test = NULL) {
+#   test_sig <- do.call(FUN_test,
+#                       list(fit0 = gen_all_out$fit,
+#                            mc_out = gen_all_out$mc_out))
+#   return(list(test_sig = test_sig))
+# }
 
-check_power <- function(check_out) {
-  sig_all <- sapply(check_out,
-                    function(xx) xx$test_sig["sig"])
-  mean(sig_all,
-       na.rm = TRUE)
-}
+# check_power <- function(check_out) {
+#   sig_all <- sapply(check_out,
+#                     function(xx) xx$test_sig["sig"])
+#   mean(sig_all,
+#        na.rm = TRUE)
+# }
 
-get_est <- function(check_out) {
-  sapply(check_out,
-         function(xx) xx$test_sig["est"])
-}
+# get_est <- function(check_out) {
+#   sapply(check_out,
+#          function(xx) xx$test_sig["est"])
+# }
 
 
 test_that("power_i", {
