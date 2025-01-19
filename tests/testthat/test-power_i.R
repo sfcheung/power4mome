@@ -2,6 +2,7 @@ skip("WIP")
 
 library(testthat)
 library(pbapply)
+library(parallel)
 suppressMessages(library(lavaan))
 
 indirect_effect_mc <- function(x,
@@ -39,20 +40,15 @@ indirect_effect_mc <- function(x,
             sig = out1)
 }
 
-power_i <- function(model,
-                    pop_es,
-                    n = 10000,
-                    seed = NULL,
-                    number_of_indicators = NULL,
-                    reliability = NULL,
-                    FUN_test = NULL) {
-  if (!is.function(FUN_test)) {
-    stop("'FUN_test' must be a function.")
-  }
+gen_all_i <- function(model,
+                      pop_es,
+                      n = 100,
+                      seed = NULL,
+                      number_of_indicators = NULL,
+                      reliability = NULL,
+                      gen_mc = TRUE,
+                      mc_R = 1000) {
   if (!is.null(seed)) set.seed(seed)
-  # TODO:
-  # - ptable_pop() should be called only once
-  #   because it will find the error variances empirically.
   ptable <- ptable_pop(model,
                        pop_es = pop_es,
                        standardized = TRUE)
@@ -68,20 +64,34 @@ power_i <- function(model,
                                 reliability = reliability)
   fit <- lavaan::sem(model,
                      data = mm_lm_dat_out)
-  test_sig <- do.call(FUN_test,
-                      list(fit))
   tmp <- ptable
   tmp$est <- tmp$start
   fit0 <- lavaan::sem(tmp,
               do.fit = FALSE)
+  if (gen_mc) {
+    mc_out <- manymome::do_mc(fit,
+                              R = mc_R,
+                              parallel = FALSE,
+                              progress = FALSE)
+  } else {
+    mc_out <- NULL
+  }
   out <- list(ptable = ptable,
               mm_out = mm_out,
               mm_lm_out = mm_lm_out,
               mm_lm_dat_out = mm_lm_dat_out,
               fit = fit,
               fit0 = fit0,
-              test_sig = test_sig)
+              mc_out = mc_out)
   out
+}
+
+power_i <- function(gen_all_out = NULL,
+                    FUN_test = NULL) {
+  test_sig <- do.call(FUN_test,
+                      list(fit0 = gen_all_out$fit,
+                           mc_out = gen_all_out$mc_out))
+  return(list(test_sig = test_sig))
 }
 
 check_power <- function(check_out) {
@@ -111,12 +121,14 @@ model_simple_med_es <- c("y ~ m" = "l",
                          "m ~ x" = "m",
                          "y ~ x" = "n")
 
-ind_p <- function(fit0) {
+ind_p <- function(fit0,
+                  mc_out = NULL) {
   out0 <- manymome::indirect_effect(x = "x",
                                     y = "y",
                                     m = "m",
                                     fit = fit0,
                                     mc_ci = TRUE,
+                                    mc_out = mc_out,
                                     R = 1000,
                                     standardized_x = TRUE,
                                     standardized_y = TRUE,
@@ -132,6 +144,27 @@ ind_p <- function(fit0) {
             sig = out1)
   return(out2)
 }
+
+
+set.seed(1234)
+check_data <- pblapply(rep(model_simple_med, 100),
+                       gen_all_i,
+                       pop_es = model_simple_med_es,
+                       n = 200,
+                       number_of_indicators = c(y = 3,
+                                                 x = 3,
+                                                 m = 3),
+                       reliability = c(x = .70,
+                                       m = .70,
+                                       y = .70),
+                       gen_mc = TRUE)
+
+check_out <- pblapply(check_data,
+                      power_i,
+                      FUN_test = ind_p,
+                      cl = NULL)
+
+check_power(check_out)
 
 set.seed(1234)
 check_out <- pbreplicate(
@@ -171,19 +204,23 @@ ind_p <- function(fit0) {
 }
 
 set.seed(1234)
-check_out <- pbreplicate(
-             n = 100,
-             power_i(model_simple_med,
-                     model_simple_med_es,
-                     n = 200,
-                     number_of_indicators = c(y = 3,
-                                              x = 3,
-                                              m = 3),
-                     reliability = c(x = .70,
-                                     m = .70,
-                                     y = .70),
-                     FUN_test = ind_p),
-             simplify = FALSE)
+check_data <- pbreplicate(n = 100,
+                          gen_all_i(model_simple_med,
+                                    model_simple_med_es,
+                                    n = 200,
+                                    number_of_indicators = c(y = 3,
+                                                             x = 3,
+                                                             m = 3),
+                                    reliability = c(x = .70,
+                                                    m = .70,
+                                                    y = .70),
+                                    gen_mc = FALSE),
+                          simplify = FALSE)
+
+check_out <- pblapply(check_data,
+                      power_i,
+                      FUN_test = ind_p,
+                      cl = NULL)
 
 check_power(check_out)
 est <- get_est(check_out)
