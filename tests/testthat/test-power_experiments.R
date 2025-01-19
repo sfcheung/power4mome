@@ -136,16 +136,13 @@ fit_all[[2]]
 
 mc_i <- gen_mc_i(fit_i = fit_i,
                  R = 1000)
-
-mc_all <- gen_mc(fit_all,
-                 R = 1000,
-                 parallel = FALSE,
-                 progress = TRUE)
+mc_i
 
 mc_all <- gen_mc(fit_all,
                  R = 1000,
                  parallel = TRUE,
                  progress = TRUE)
+mc_all[[1]]
 
 length(data_all)
 length(fit_all)
@@ -196,4 +193,5 @@ test_all <- do_test(out_all,
                     progress = TRUE)
 test_all <- as.data.frame(do.call(rbind, test_all))
 head(test_all)
+colMeans(test_all)
 mean(test_all$sig)

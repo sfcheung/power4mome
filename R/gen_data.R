@@ -89,7 +89,6 @@
 #' }
 #'
 #' @export
-#'
 sim_data <- function(nrep = 10,
                      model,
                      pop_es,
