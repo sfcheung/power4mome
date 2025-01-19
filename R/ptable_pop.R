@@ -255,6 +255,7 @@ set_start <- function(mm,
 mm_lm <- function(mm) {
   # TODO:
   # - Check whether the transpose of nox-beta is in echelon form.
+  # - Handle models with no y-variables (e.g., CFA).
   model <- attr(mm, "model")
   if (is.null(model)) {
     stop("Model syntax not found")

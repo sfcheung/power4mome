@@ -102,7 +102,7 @@ rel <- c(y = .70,
          m = .80,
          x = .70)
 
-data_i <- gen_data_i(model = model_simple_med,
+data_i <- sim_data_i(model = model_simple_med,
                      pop_es = model_simple_med_es,
                      n = 100,
                      number_of_indicators = k,
@@ -110,7 +110,7 @@ data_i <- gen_data_i(model = model_simple_med,
                      seed = 1234)
 names(data_i)
 
-data_all <- gen_data(nrep = 500,
+data_all <- sim_data(nrep = 500,
                      model = model_simple_med,
                      pop_es = model_simple_med_es,
                      n = 100,
