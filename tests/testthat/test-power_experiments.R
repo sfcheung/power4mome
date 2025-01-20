@@ -267,7 +267,7 @@ test_par <- function(object,
          (est$label == par)
     i <- which(i)
   } else {
-    par1 <- lavaan::lavParseModelString("ab",
+    par1 <- lavaan::lavParseModelString(par,
                                         as.data.frame. = TRUE)
     i <- (est$lhs == par1$lhs) &
         (est$op == par1$op) &
@@ -285,6 +285,52 @@ par_results <- function(object) {
   object
 }
 
+test_lrt <- function(object,
+                     par,
+                     alpha = .05) {
+  lrt_out <- semlrtp::lrtp(object,
+                           op = "~",
+                           progress = FALSE)
+  lrt_out <- as.data.frame(lrt_out)
+  if (par %in% lrt_out$label) {
+    i <- (lrt_out$lhs == par) &
+         (lrt_out$label == par)
+    i <- which(i)
+  } else {
+    par1 <- lavaan::lavParseModelString(par,
+                                        as.data.frame. = TRUE)
+    i <- (lrt_out$lhs == par1$lhs) &
+        (lrt_out$op == par1$op) &
+        (lrt_out$rhs == par1$rhs)
+    i <- which(i)
+  }
+  out <- c(est = lrt_out[i, "est"],
+           cilo = NA,
+           cihi = NA,
+           sig = as.numeric(lrt_out[i, "LRTp"] < alpha))
+  out
+}
+
+test_lrt_ind <- function(object,
+                         alpha = .05) {
+  lrt_out <- semlrtp::lrtp(object,
+                           op = "~",
+                           progress = FALSE)
+  lrt_out <- as.data.frame(lrt_out)
+  lrt_ind_p <- max(c(lrt_out[1, "LRTp"], lrt_out[2, "LRTp"]))
+  out <- c(est = lrt_out[25, "est"],
+           cilo = NA,
+           cihi = NA,
+           sig = lrt_ind_p < alpha)
+  out
+}
+
+test_lrt(power_all_sim_only$sim_all[[1]]$fit,
+         par = "y ~ m")
+
+test_lrt_ind(power_all_sim_only$sim_all[[1]]$fit)
+
+
 test_par(power_all_sim_only$sim_all[[1]]$fit,
          par = "y ~ m")
 
@@ -297,6 +343,7 @@ power_all_sim_only <- power4test(nrep = 500,
                                  n = 100,
                                  number_of_indicators = k,
                                  reliability = rel,
+                                 fit_model_args = list(estimator = "ML"),
                                  R = 1000,
                                  do_the_test = FALSE,
                                  iseed = 1234,
@@ -314,8 +361,36 @@ power_all_test_only <- power4test(sim_all = power_all_sim_only,
                                   results_fun = ind_results,
                                   parallel = TRUE,
                                   progress = TRUE)
-
 test_summary(power_all_test_only)
+
+power_all_test_only_par <- power4test(sim_all = power_all_sim_only,
+                                      test_fun = test_par,
+                                      test_args = list(par = "y ~ m"),
+                                      fit_name = "object",
+                                      mc_out_name = NULL,
+                                      results_fun = par_results,
+                                      parallel = TRUE,
+                                      progress = TRUE)
+test_summary(power_all_test_only_par)
+
+power_all_test_only_par <- power4test(sim_all = power_all_sim_only,
+                                      test_fun = test_lrt,
+                                      test_args = list(par = "y ~ m"),
+                                      fit_name = "object",
+                                      mc_out_name = NULL,
+                                      results_fun = par_results,
+                                      parallel = TRUE,
+                                      progress = TRUE)
+test_summary(power_all_test_only_par)
+
+power_all_test_only_par <- power4test(sim_all = power_all_sim_only,
+                                      test_fun = test_lrt_ind,
+                                      fit_name = "object",
+                                      mc_out_name = NULL,
+                                      results_fun = par_results,
+                                      parallel = TRUE,
+                                      progress = TRUE)
+test_summary(power_all_test_only_par)
 
 power_all_test_only_par <- power4test(sim_all = power_all_sim_only,
                                       test_fun = test_par,
