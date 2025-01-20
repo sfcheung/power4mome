@@ -17,17 +17,50 @@
 #' which is a list of the output of
 #' [lavaan::sem()].
 #'
+#' @param data_all The output
+#' of [sim_data()], or a `sim_data`
+#' class object.
+#'
+#' @param ... Optional arguments to be
+#' passed to [lavaan::sem()] when
+#' fitting the model.
+#'
+#' @param parallel If `TRUE`, parallel
+#' processing will be used to fit the
+#' models. Default is `FALSE`.
+#'
+#' @param progress If `TRUE`, the progress
+#' of model fitting will be displayed.
+#' Default is `FALSE.
+#'
+#' @param ncores The number of CPU
+#' cores to use if parallel processing
+#' is used.
+#'
 #' @examples
-#' \donttest{
-#' }
+#' mod <-
+#' "m ~ x
+#'  y ~ m + x"
+#' es <-
+#' c("y ~ m" = "m",
+#'   "m ~ x" = "m",
+#'   "y ~ x" = "n")
+#' data_all <- sim_data(nrep = 5,
+#'                  model = mod,
+#'                  pop_es = es,
+#'                  n = 100,
+#'                  iseed = 1234)
+#'
+#' fit_all <- fit_model(data_all)
+#' fit_all[[1]]
 #'
 #' @export
-fit_model <- function(sim_data_all,
+fit_model <- function(data_all,
                       ...,
                       parallel = FALSE,
                       progress = FALSE,
                       ncores = max(1, parallel::detectCores(logical = FALSE) - 1)) {
-  out <- do_FUN(X = sim_data_all,
+  out <- do_FUN(X = data_all,
                 FUN = fit_model_i,
                 ...,
                 parallel = parallel,

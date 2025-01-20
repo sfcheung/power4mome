@@ -6,34 +6,80 @@
 #' parameters.
 #'
 #' @details
-#' It simply call [manymome::do_mc()]
-#' on each of the fit output of
-#' [lavaan::sem()]. The simulated
+#' It simply calls [manymome::do_mc()]
+#' on each output of
+#' [lavaan::sem()] in `fit_all`. The
+#' simulated
 #' estimates can then be used to test
 #' effects such as indirect effects.
 #'
+#' @param fit_all The output of
+#' [fit_model()] or an object of the
+#' class `fit_model`.
+#'
+#' @param R The number of replications
+#' to generate the Monte Carlo estimates
+#' for each fit output.
+#'
+#' @param ... Optional arguments to be
+#' passed to [manymome::do_mc()] when
+#' generating the Monte Carlo estimates.
+#'
+#' @param iseed The seed for the random
+#' number generator. Default is `NULL`
+#' and the seed is not changed.
+#'
+#' @param parallel If `TRUE`, parallel
+#' processing will be used to generate
+#' Monte Carlo estimates for the
+#' fit outputs. Default is `FALSE`.
+#'
+#' @param progress If `TRUE`, the progress
+#' of Monte Carlo will be displayed.
+#' Default is `FALSE.
+#'
+#' @param ncores The number of CPU
+#' cores to use if parallel processing
+#' is used.
+#'
 #' @return
-#' An `mc_list` object, which is a list
+#' A `mc_list` object, which is a list
 #' of the output of [manymome::do_mc()].
 #'
 #' @examples
-#' \donttest{
-#' }
+#' mod <-
+#' "m ~ x
+#'  y ~ m + x"
+#' es <-
+#' c("y ~ m" = "m",
+#'   "m ~ x" = "m",
+#'   "y ~ x" = "n")
+#' data_all <- sim_data(nrep = 5,
+#'                      model = mod,
+#'                      pop_es = es,
+#'                      n = 100,
+#'                      iseed = 1234)
+#'
+#' fit_all <- fit_model(data_all)
+#' mc_all <- gen_mc(fit_all,
+#'                  R = 100,
+#'                  iseed = 4567)
+#'
 #'
 #' @export
 #'
 gen_mc <- function(fit_all,
                    R = 100,
-                   seed = NULL,
                    ...,
+                   iseed = NULL,
                    parallel = FALSE,
                    progress = FALSE,
                    ncores = max(1, parallel::detectCores(logical = FALSE) - 1)) {
   out <- do_FUN(X = fit_all,
                 FUN = gen_mc_i,
-                ...,
                 R = R,
-                seed = seed,
+                ...,
+                iseed = iseed,
                 parallel = parallel,
                 progress = progress,
                 ncores = ncores)

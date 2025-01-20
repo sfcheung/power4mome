@@ -2,10 +2,10 @@
 % Please edit documentation in R/do_test.R
 \name{do_test}
 \alias{do_test}
-\title{Title In Title Case}
+\title{Do a Test on Each Replication}
 \usage{
 do_test(
-  out_all,
+  sim_all,
   test_fun,
   test_args = list(),
   fit_name = "fit",
@@ -17,19 +17,152 @@ do_test(
   ncores = max(1, parallel::detectCores(logical = FALSE) - 1)
 )
 }
+\arguments{
+\item{sim_all}{The output of
+\code{\link[=sim_out]{sim_out()}}.}
+
+\item{test_fun}{A function to do the
+test. See 'Details' for the requirement
+of this function.}
+
+\item{test_args}{A list of arguments
+to be passed to the \code{test_fun}
+function. Default is \code{list()}.}
+
+\item{fit_name}{The name of the
+argument of the \code{test_fun} function
+that accepts the output of \code{\link[lavaan:sem]{lavaan::sem()}}.}
+
+\item{mc_out_name}{The name of the
+argument of the \code{test_fun} function
+that accepts the output of \code{\link[manymome:do_mc]{manymome::do_mc()}}.
+If the \code{test_fun} function does not
+use the Monte Carlo estimates, set
+this to \code{NULL}.}
+
+\item{results_fun}{The function to be
+used to extract the test results.
+See \code{Details} for the requirements
+of this function.}
+
+\item{results_args}{A list of
+arguments to be passed to the
+\code{results_fun} function. Default is
+\code{list()}.}
+
+\item{parallel}{If \code{TRUE}, parallel
+processing will be used to do the
+tests. Default is \code{FALSE}.}
+
+\item{progress}{If \code{TRUE}, the progress
+of tests will be displayed.
+Default is `FALSE.}
+
+\item{ncores}{The number of CPU
+cores to use if parallel processing
+is used.}
+}
 \value{
-Specify what are returned.
+An object of the class \code{test_out},
+which is a list of length equal to
+\code{sim_out}. Each element of the list
+has two elements:
+\itemize{
+\item \code{test}: The output of \code{test_fun}.
+\item \code{test_results}: The output of
+\code{results_fun}.
+}
 }
 \description{
-One paragraph description.
+Do a test on each
+replication in the output of
+\code{\link[=sim_out]{sim_out()}}.
 }
 \details{
-Details
-(Include subjects for verbs.)
-(Use 3rd person forms for verbs.)
+Do an arbitrary test in each
+replication using the function set to
+\code{test_fun}. This function should work
+on the output of \code{\link[lavaan:sem]{lavaan::sem()}}. if
+the function can use the output of
+\code{\link[manymome:do_mc]{manymome::do_mc()}}, set
+\code{mc_out_name} to the name of the
+argument (\code{mc_out} for
+\code{\link[manymome:cond_indirect]{manymome::indirect_effect()}}).
+
+The test results will be extracted
+from the output of \code{test_fun} by the
+function set to \code{results_fun}.
+
+The function set to \code{results_fun}
+must accept the output of \code{test_fun},
+as the first argument, and return a
+named vector of four elements:
+\itemize{
+\item \code{est}: The estimate of a parameter.
+\code{NA} if the test does not return an
+estimate.
+\item \code{cilo}: The lower limit of the
+confidence interval. \code{NA} if the
+test does not return a confidence
+interval.
+\item \code{cihi}: The upper limit of the
+confidence interval. \code{NA} if the
+test does not return a confidence
+interval.
+\item \code{sig}: If \code{1}, the test is
+significant. If \code{0}, the test is not
+significant. If the test cannot be
+done for any reason, it should be
+\code{NA}.
+}
+
+The results can then be used to
+estimate the power of the test.
 }
 \examples{
-\donttest{
+mod <-
+"m ~ x
+ y ~ m + x"
+es <-
+c("y ~ m" = "m",
+  "m ~ x" = "m",
+  "y ~ x" = "n")
+data_all <- sim_data(nrep = 5,
+                 model = mod,
+                 pop_es = es,
+                 n = 100,
+                 iseed = 1234)
+
+fit_all <- fit_model(data_all)
+mc_all <- gen_mc(fit_all,
+                 R = 100,
+                 iseed = 4567)
+sim_all <- sim_out(data_all = data_all,
+                   fit_all = fit_all,
+                   mc_all = mc_all)
+
+ind_results <- function(out) {
+  ci0 <- stats::confint(out)
+  out1 <- ifelse((ci0[1, 1] > 0) || (ci0[1, 2] < 0),
+                  yes = 1,
+                  no = 0)
+  out2 <- c(est = unname(coef(out)),
+            cilo = ci0[1, 1],
+            cihi = ci0[1, 2],
+            sig = out1)
+  return(out2)
 }
+
+test_all <- do_test(sim_all,
+                    test_fun = manymome::indirect_effect,
+                    test_args = list(x = "x",
+                                     m = "m",
+                                     y = "y",
+                                     mc_ci = TRUE),
+                    fit_name = "fit",
+                    mc_out_name = "mc_out",
+                    results_fun = ind_results,
+                    parallel = FALSE,
+                    progress = FALSE)
 
 }

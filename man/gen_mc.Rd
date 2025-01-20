@@ -7,15 +7,45 @@
 gen_mc(
   fit_all,
   R = 100,
-  seed = NULL,
   ...,
+  iseed = NULL,
   parallel = FALSE,
   progress = FALSE,
   ncores = max(1, parallel::detectCores(logical = FALSE) - 1)
 )
 }
+\arguments{
+\item{fit_all}{The output of
+\code{\link[=fit_model]{fit_model()}} or an object of the
+class \code{fit_model}.}
+
+\item{R}{The number of replications
+to generate the Monte Carlo estimates
+for each fit output.}
+
+\item{...}{Optional arguments to be
+passed to \code{\link[manymome:do_mc]{manymome::do_mc()}} when
+generating the Monte Carlo estimates.}
+
+\item{iseed}{The seed for the random
+number generator. Default is \code{NULL}
+and the seed is not changed.}
+
+\item{parallel}{If \code{TRUE}, parallel
+processing will be used to generate
+Monte Carlo estimates for the
+fit outputs. Default is \code{FALSE}.}
+
+\item{progress}{If \code{TRUE}, the progress
+of Monte Carlo will be displayed.
+Default is `FALSE.}
+
+\item{ncores}{The number of CPU
+cores to use if parallel processing
+is used.}
+}
 \value{
-An \code{mc_list} object, which is a list
+A \code{mc_list} object, which is a list
 of the output of \code{\link[manymome:do_mc]{manymome::do_mc()}}.
 }
 \description{
@@ -25,14 +55,31 @@ Monte Carlo estimates of model
 parameters.
 }
 \details{
-It simply call \code{\link[manymome:do_mc]{manymome::do_mc()}}
-on each of the fit output of
-\code{\link[lavaan:sem]{lavaan::sem()}}. The simulated
+It simply calls \code{\link[manymome:do_mc]{manymome::do_mc()}}
+on each output of
+\code{\link[lavaan:sem]{lavaan::sem()}} in \code{fit_all}. The
+simulated
 estimates can then be used to test
 effects such as indirect effects.
 }
 \examples{
-\donttest{
-}
+mod <-
+"m ~ x
+ y ~ m + x"
+es <-
+c("y ~ m" = "m",
+  "m ~ x" = "m",
+  "y ~ x" = "n")
+data_all <- sim_data(nrep = 5,
+                     model = mod,
+                     pop_es = es,
+                     n = 100,
+                     iseed = 1234)
+
+fit_all <- fit_model(data_all)
+mc_all <- gen_mc(fit_all,
+                 R = 100,
+                 iseed = 4567)
+
 
 }

@@ -41,6 +41,60 @@
 #' using the population model, to each
 #' of the dataset.
 #'
+#' ## Setting `pop_es`
+#'
+#' (To prepare)
+#'
+#' ## Setting `number_of_indicators` and `reliability`
+#'
+#' (To prepare)
+#'
+#' @param nrep The number of replications
+#' to generate the simulated datasets.
+#' Default is 10.
+#'
+#' @param model The `lavaan` model
+#' syntax of the population model.
+#' Required.
+#'
+#' @param pop_es The character to
+#' specify population effect sizes.
+#' See 'Details' on how to set the
+#' effect sizes for this argument.
+#' Required.
+#'
+#' @param n The sample size for each
+#' dataset. Default is 100.
+#'
+#' @param iseed The seed for the random
+#' number generator. Default is `NULL`
+#' and the seed is not changed.
+#'
+#' @param number_of_indicators A named
+#' vector to specify the number of
+#' indicators for each factors. See
+#' 'Details' on how to set this
+#' argument. Default is `NULL` and all
+#' variables in the model syntax are
+#' observed variables.
+#'
+#' @param reliability A named vector
+#' to set the reliability coefficient
+#' of each set of indicators. Default
+#' is `NULL`.
+#'
+#' @param parallel If `TRUE`, parallel
+#' processing will be used to simulate
+#' the datasets. Default is `FALSE`.
+#'
+#' @param progress If `TRUE`, the progress
+#' of data simulation will be displayed.
+#' Default is `FALSE.
+#'
+#' @param ncores The number of CPU
+#' cores to use if parallel processing
+#' is used.
+#'
 #' @return
 #' A list of the class `sim_data`,
 #' with length `nrep`. Each element
@@ -85,8 +139,18 @@
 #'  about the model.
 #'
 #' @examples
-#' \donttest{
-#' }
+#' mod <-
+#' "m ~ x
+#'  y ~ m + x"
+#' es <-
+#' c("y ~ m" = "m",
+#'   "m ~ x" = "m",
+#'   "y ~ x" = "n")
+#' data_all <- sim_data(nrep = 5,
+#'                      model = mod,
+#'                      pop_es = es,
+#'                      n = 100,
+#'                      iseed = 1234)
 #'
 #' @export
 sim_data <- function(nrep = 10,

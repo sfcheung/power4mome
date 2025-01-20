@@ -1,88 +1,9 @@
-skip("WIP")
+skip("Test in an interactive section due to parallel processing")
 
 library(testthat)
 library(pbapply)
 library(parallel)
 suppressMessages(library(lavaan))
-
-# indirect_effect_mc <- function(x,
-#                                m,
-#                                y,
-#                                fit,
-#                                R = 100) {
-#   ptable <- lavaan::parameterTable(fit)
-#   id_a <- ptable$id[which((ptable$lhs == m) & (ptable$rhs == x))]
-#   id_b <- ptable$id[which((ptable$lhs == y) & (ptable$rhs == m))]
-#   fit_vcov <- lavaan::lavInspect(fit,
-#                                  "vcov")
-#   ab_vcov <- fit_vcov[c(id_a, id_b), c(id_a, id_b)]
-#   ab_est <- ptable$est[c(id_a, id_b)]
-#   ab_est_mc <- MASS::mvrnorm(n = R,
-#                              mu = ab_est,
-#                              Sigma = ab_vcov)
-#   ab_mc <- apply(ab_est_mc,
-#                  MARGIN = 1,
-#                  prod)
-#   ab_ci <- stats::quantile(ab_mc,
-#                            c(.025, .975))
-#   out1 <- ifelse((ab_ci[1] > 0) || (ab_ci[2] < 0),
-#                   yes = 1,
-#                   no = 0)
-#   est <- lavaan::parameterEstimates(fit,
-#                                     se = FALSE,
-#                                     standardized = TRUE)
-#   id_a <- which((est$lhs == m) & (est$rhs == x))
-#   id_b <- which((est$lhs == y) & (est$rhs == m))
-#   ab_std <- est[id_a, "std.all"] * est[id_b, "std.all"]
-#   out2 <- c(est = ab_std,
-#             cilo = unname(ab_ci[1]),
-#             cihi = unname(ab_ci[2]),
-#             sig = out1)
-# }
-
-# power_i <- function(gen_all_out = NULL,
-#                     FUN_test = NULL) {
-#   test_sig <- do.call(FUN_test,
-#                       list(fit0 = gen_all_out$fit,
-#                            mc_out = gen_all_out$mc_out))
-#   return(list(test_sig = test_sig))
-# }
-
-# check_power <- function(check_out) {
-#   sig_all <- sapply(check_out,
-#                     function(xx) xx$test_sig["sig"])
-#   mean(sig_all,
-#        na.rm = TRUE)
-# }
-
-# get_est <- function(check_out) {
-#   sapply(check_out,
-#          function(xx) xx$test_sig["est"])
-# }
-
-# ind_p <- function(fit0,
-#                   mc_out = NULL) {
-#   out0 <- manymome::indirect_effect(x = "x",
-#                                     y = "y",
-#                                     m = "m",
-#                                     fit = fit0,
-#                                     mc_ci = TRUE,
-#                                     mc_out = mc_out,
-#                                     R = 1000,
-#                                     standardized_x = TRUE,
-#                                     standardized_y = TRUE,
-#                                     parallel = FALSE,
-#                                     progress = FALSE)
-#   ci0 <- stats::confint(out0)
-#   out1 <- ifelse((ci0[1, 1] > 0) || (ci0[1, 2] < 0),
-#                   yes = 1,
-#                   no = 0)
-#   out2 <- c(est = unname(coef(out0)),
-#             cilo = ci0[1, 1],
-#             cihi = ci0[1, 2],
-#             sig = out1)
-#   return(out2)
-# }
 
 # Simple Mediation Model
 
@@ -95,16 +16,16 @@ y ~ m + x
 model_simple_med_es <- c("y ~ m" = "l",
                          "m ~ x" = "m",
                          "y ~ x" = "n")
-k <- c(y = 4,
-       m = 5,
-       x = 3)
+k <- c(y = 8,
+       m = 8,
+       x = 8)
 rel <- c(y = .70,
          m = .80,
          x = .70)
 
 data_i <- sim_data_i(model = model_simple_med,
                      pop_es = model_simple_med_es,
-                     n = 100,
+                     n = 200,
                      number_of_indicators = k,
                      reliability = rel,
                      seed = 1234)
@@ -113,7 +34,7 @@ names(data_i)
 data_all <- sim_data(nrep = 500,
                      model = model_simple_med,
                      pop_es = model_simple_med_es,
-                     n = 100,
+                     n = 200,
                      number_of_indicators = k,
                      reliability = rel,
                      iseed = 1234,
@@ -148,13 +69,13 @@ length(data_all)
 length(fit_all)
 length(mc_all)
 
-out_all <- merge_all(data_all = data_all,
-                     fit_all = fit_all)
+out_all <- sim_out(data_all = data_all,
+                   fit_all = fit_all)
 out_all[[1]]$mc_out
 
-out_all <- merge_all(data_all = data_all,
-                     fit_all = fit_all,
-                     mc_all = mc_all)
+out_all <- sim_out(data_all = data_all,
+                   fit_all = fit_all,
+                   mc_all = mc_all)
 out_all[[1]]$mc_out
 
 ind_results <- function(out) {
@@ -191,7 +112,239 @@ test_all <- do_test(out_all,
                     results_fun = ind_results,
                     parallel = TRUE,
                     progress = TRUE)
-test_all <- as.data.frame(do.call(rbind, test_all))
-head(test_all)
-colMeans(test_all)
-mean(test_all$sig)
+names(test_all[[1]])
+test_results_all <- sapply(test_all, function(xx) xx$test_results)
+test_results_all <- as.data.frame(t(test_results_all))
+head(test_results_all)
+colMeans(test_results_all)
+mean(test_results_all$sig)
+
+# All-In-One
+
+power4test <- function(nrep = 10,
+                       model,
+                       pop_es,
+                       n,
+                       number_of_indicators = NULL,
+                       reliability = NULL,
+                       fit_model_args = list(),
+                       R = 100,
+                       gen_mc_args = list(),
+                       test_fun = NULL,
+                       test_args = list(),
+                       fit_name = "fit",
+                       mc_out_name = "mc_out",
+                       results_fun = NULL,
+                       results_args = list(),
+                       do_the_test = TRUE,
+                       sim_all = NULL,
+                       iseed = NULL,
+                       parallel = FALSE,
+                       progress = FALSE,
+                       ncores = max(1, parallel::detectCores(logical = FALSE) - 1)) {
+
+  if (is.null(sim_all)) {
+    if (progress) {
+      cat("Simulate the data:\n")
+    }
+    data_all <- sim_data(nrep = nrep,
+                        model = model,
+                        pop_es = pop_es,
+                        n = n,
+                        number_of_indicators = number_of_indicators,
+                        reliability = reliability,
+                        iseed = iseed,
+                        parallel = parallel,
+                        progress = progress,
+                        ncores = ncores)
+
+    fit_args0 <- utils::modifyList(fit_model_args,
+                                  list(data_all = data_all,
+                                        parallel = parallel,
+                                        progress = progress,
+                                        ncores = ncores))
+    if (progress) {
+      cat("Fit the model:\n")
+    }
+    fit_all <- do.call(fit_model,
+                      fit_args0)
+
+    if (!is.null(R)) {
+      # iseed should be used only once
+      mc_args0 <- utils::modifyList(gen_mc_args,
+                                    list(fit_all = fit_all,
+                                        R = R,
+                                        parallel = parallel,
+                                        progress = progress,
+                                        ncores = ncores))
+      if (progress) {
+        cat("Generate Monte Carlo estimates:\n")
+      }
+      mc_all <- do.call(gen_mc,
+                        mc_args0)
+    } else {
+      mc_all <- NULL
+    }
+
+    sim_all <- sim_out(data_all = data_all,
+                       fit_all = fit_all,
+                       mc_all = mc_all)
+
+  } else {
+    if (inherits(sim_all, "power4test")) {
+      sim_all <- sim_all$sim_all
+    }
+  }
+
+  if (!do_the_test) {
+    test_all <- NULL
+  } else {
+    if (progress) {
+      cat("Do the test:\n")
+    }
+    test_all <- do_test(sim_all,
+                        test_fun = test_fun,
+                        test_args = test_args,
+                        fit_name = fit_name,
+                        mc_out_name = mc_out_name,
+                        results_fun = results_fun,
+                        results_args = results_args,
+                        parallel = parallel,
+                        progress = progress,
+                        ncores = ncores)
+  }
+  out <- list(sim_all = sim_all,
+              test_all = test_all)
+  class(out) <- c("power4test", class(out))
+  out
+}
+
+test_summary <- function(object) {
+  if (inherits(object, "power4test")) {
+    object <- object$test_all
+  }
+  test_results_all <- sapply(object,
+                             function(xx) xx$test_results)
+  test_results_all <- as.data.frame(t(test_results_all))
+  colMeans(test_results_all, na.rm = TRUE)
+}
+
+model_simple_med <-
+"
+m ~ a*x
+y ~ b*m + x
+ab := a * b
+"
+
+model_simple_med_es <- c("y ~ m" = "l",
+                         "m ~ x" = "m",
+                         "y ~ x" = "n")
+k <- c(y = 3,
+       m = 3,
+       x = 3)
+rel <- c(y = .70,
+         m = .70,
+         x = .70)
+
+ind_results <- function(out) {
+  ci0 <- stats::confint(out)
+  out1 <- ifelse((ci0[1, 1] > 0) || (ci0[1, 2] < 0),
+                  yes = 1,
+                  no = 0)
+  out2 <- c(est = unname(coef(out)),
+            cilo = ci0[1, 1],
+            cihi = ci0[1, 2],
+            sig = out1)
+  return(out2)
+}
+
+test_par <- function(object,
+                     par,
+                     alpha = .05) {
+  est <- lavaan::parameterEstimates(object)
+  if (par %in% est$label) {
+    i <- (est$lhs == par) &
+         (est$label == par)
+    i <- which(i)
+  } else {
+    par1 <- lavaan::lavParseModelString("ab",
+                                        as.data.frame. = TRUE)
+    i <- (est$lhs == par1$lhs) &
+        (est$op == par1$op) &
+        (est$rhs == par1$rhs)
+    i <- which(i)
+  }
+  out <- c(est = est[i, "est"],
+           cilo = est[i, "ci.lower"],
+           cihi = est[i, "ci.upper"],
+           sig = as.numeric(est[i, "pvalue"] < alpha))
+  out
+}
+
+par_results <- function(object) {
+  object
+}
+
+test_par(power_all_sim_only$sim_all[[1]]$fit,
+         par = "y ~ m")
+
+test_par(power_all_sim_only$sim_all[[1]]$fit,
+         par = "ab")
+
+power_all_sim_only <- power4test(nrep = 500,
+                                 model = model_simple_med,
+                                 pop_es = model_simple_med_es,
+                                 n = 100,
+                                 number_of_indicators = k,
+                                 reliability = rel,
+                                 R = 1000,
+                                 do_the_test = FALSE,
+                                 iseed = 1234,
+                                 parallel = TRUE,
+                                 progress = TRUE)
+
+power_all_test_only <- power4test(sim_all = power_all_sim_only,
+                                  test_fun = manymome::indirect_effect,
+                                  test_args = list(x = "x",
+                                                   m = "m",
+                                                   y = "y",
+                                                   mc_ci = TRUE),
+                                  fit_name = "fit",
+                                  mc_out_name = "mc_out",
+                                  results_fun = ind_results,
+                                  parallel = TRUE,
+                                  progress = TRUE)
+
+test_summary(power_all_test_only)
+
+power_all_test_only_par <- power4test(sim_all = power_all_sim_only,
+                                      test_fun = test_par,
+                                      test_args = list(par = "ab"),
+                                      fit_name = "object",
+                                      mc_out_name = NULL,
+                                      results_fun = par_results,
+                                      parallel = TRUE,
+                                      progress = TRUE)
+test_summary(power_all_test_only_par)
+
+
+power_all <- power4test(nrep = 500,
+                        model = model_simple_med,
+                        pop_es = model_simple_med_es,
+                        n = 200,
+                        number_of_indicators = k,
+                        reliability = rel,
+                        R = 1000,
+                        test_fun = manymome::indirect_effect,
+                        test_args = list(x = "x",
+                                        m = "m",
+                                        y = "y",
+                                        mc_ci = TRUE),
+                        fit_name = "fit",
+                        mc_out_name = "mc_out",
+                        results_fun = ind_results,
+                        iseed = 1234,
+                        parallel = TRUE,
+                        progress = TRUE)
+
+test_summary(power_all)

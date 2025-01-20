@@ -5,12 +5,33 @@
 \title{Fit a Model to a List of Datasets}
 \usage{
 fit_model(
-  sim_data_all,
+  data_all,
   ...,
   parallel = FALSE,
   progress = FALSE,
   ncores = max(1, parallel::detectCores(logical = FALSE) - 1)
 )
+}
+\arguments{
+\item{data_all}{The output
+of \code{\link[=sim_data]{sim_data()}}, or a \code{sim_data}
+class object.}
+
+\item{...}{Optional arguments to be
+passed to \code{\link[lavaan:sem]{lavaan::sem()}} when
+fitting the model.}
+
+\item{parallel}{If \code{TRUE}, parallel
+processing will be used to fit the
+models. Default is \code{FALSE}.}
+
+\item{progress}{If \code{TRUE}, the progress
+of model fitting will be displayed.
+Default is `FALSE.}
+
+\item{ncores}{The number of CPU
+cores to use if parallel processing
+is used.}
 }
 \value{
 An object of the class \code{fit_model},
@@ -30,7 +51,20 @@ simulated using \code{\link[lavaan:sem]{lavaan::sem()}}, and
 returns the results.
 }
 \examples{
-\donttest{
-}
+mod <-
+"m ~ x
+ y ~ m + x"
+es <-
+c("y ~ m" = "m",
+  "m ~ x" = "m",
+  "y ~ x" = "n")
+data_all <- sim_data(nrep = 5,
+                 model = mod,
+                 pop_es = es,
+                 n = 100,
+                 iseed = 1234)
+
+fit_all <- fit_model(data_all)
+fit_all[[1]]
 
 }

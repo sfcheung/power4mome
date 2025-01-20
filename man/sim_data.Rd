@@ -17,6 +17,53 @@ sim_data(
   ncores = max(1, parallel::detectCores(logical = FALSE) - 1)
 )
 }
+\arguments{
+\item{nrep}{The number of replications
+to generate the simulated datasets.
+Default is 10.}
+
+\item{model}{The \code{lavaan} model
+syntax of the population model.
+Required.}
+
+\item{pop_es}{The character to
+specify population effect sizes.
+See 'Details' on how to set the
+effect sizes for this argument.
+Required.}
+
+\item{n}{The sample size for each
+dataset. Default is 100.}
+
+\item{iseed}{The seed for the random
+number generator. Default is \code{NULL}
+and the seed is not changed.}
+
+\item{number_of_indicators}{A named
+vector to specify the number of
+indicators for each factors. See
+'Details' on how to set this
+argument. Default is \code{NULL} and all
+variables in the model syntax are
+observed variables.}
+
+\item{reliability}{A named vector
+to set the reliability coefficient
+of each set of indicators. Default
+is \code{NULL}.}
+
+\item{parallel}{If \code{TRUE}, parallel
+processing will be used to simulate
+the datasets. Default is \code{FALSE}.}
+
+\item{progress}{If \code{TRUE}, the progress
+of data simulation will be displayed.
+Default is `FALSE.}
+
+\item{ncores}{The number of CPU
+cores to use if parallel processing
+is used.}
+}
 \value{
 A list of the class \code{sim_data},
 with length \code{nrep}. Each element
@@ -94,9 +141,28 @@ The output is usually used by
 \code{\link[=fit_model]{fit_model()}} to fit a target model,
 using the population model, to each
 of the dataset.
+\subsection{Setting \code{pop_es}}{
+
+(To prepare)
+}
+
+\subsection{Setting \code{number_of_indicators} and \code{reliability}}{
+
+(To prepare)
+}
 }
 \examples{
-\donttest{
-}
+mod <-
+"m ~ x
+ y ~ m + x"
+es <-
+c("y ~ m" = "m",
+  "m ~ x" = "m",
+  "y ~ x" = "n")
+data_all <- sim_data(nrep = 5,
+                     model = mod,
+                     pop_es = es,
+                     n = 100,
+                     iseed = 1234)
 
 }
