@@ -121,104 +121,6 @@ mean(test_results_all$sig)
 
 # All-In-One
 
-power4test <- function(nrep = 10,
-                       model,
-                       pop_es,
-                       n,
-                       number_of_indicators = NULL,
-                       reliability = NULL,
-                       fit_model_args = list(),
-                       R = 100,
-                       gen_mc_args = list(),
-                       test_fun = NULL,
-                       test_args = list(),
-                       fit_name = "fit",
-                       mc_out_name = "mc_out",
-                       results_fun = NULL,
-                       results_args = list(),
-                       do_the_test = TRUE,
-                       sim_all = NULL,
-                       iseed = NULL,
-                       parallel = FALSE,
-                       progress = FALSE,
-                       ncores = max(1, parallel::detectCores(logical = FALSE) - 1)) {
-
-  if (is.null(sim_all)) {
-    if (progress) {
-      cat("Simulate the data:\n")
-    }
-    data_all <- sim_data(nrep = nrep,
-                        model = model,
-                        pop_es = pop_es,
-                        n = n,
-                        number_of_indicators = number_of_indicators,
-                        reliability = reliability,
-                        iseed = iseed,
-                        parallel = parallel,
-                        progress = progress,
-                        ncores = ncores)
-
-    fit_args0 <- utils::modifyList(fit_model_args,
-                                  list(data_all = data_all,
-                                        parallel = parallel,
-                                        progress = progress,
-                                        ncores = ncores))
-    if (progress) {
-      cat("Fit the model:\n")
-    }
-    fit_all <- do.call(fit_model,
-                      fit_args0)
-
-    if (!is.null(R)) {
-      # iseed should be used only once
-      mc_args0 <- utils::modifyList(gen_mc_args,
-                                    list(fit_all = fit_all,
-                                        R = R,
-                                        parallel = parallel,
-                                        progress = progress,
-                                        ncores = ncores))
-      if (progress) {
-        cat("Generate Monte Carlo estimates:\n")
-      }
-      mc_all <- do.call(gen_mc,
-                        mc_args0)
-    } else {
-      mc_all <- NULL
-    }
-
-    sim_all <- sim_out(data_all = data_all,
-                       fit_all = fit_all,
-                       mc_all = mc_all)
-
-  } else {
-    if (inherits(sim_all, "power4test")) {
-      sim_all <- sim_all$sim_all
-    }
-  }
-
-  if (!do_the_test) {
-    test_all <- NULL
-  } else {
-    if (progress) {
-      cat("Do the test:\n")
-    }
-    test_all <- do_test(sim_all,
-                        test_fun = test_fun,
-                        test_args = test_args,
-                        fit_name = fit_name,
-                        mc_out_name = mc_out_name,
-                        results_fun = results_fun,
-                        results_args = results_args,
-                        parallel = parallel,
-                        progress = progress,
-                        ncores = ncores)
-  }
-  out <- list(sim_all = sim_all,
-              test_all = test_all)
-  class(out) <- c("power4test", class(out))
-  out
-}
-
 test_summary <- function(object) {
   if (inherits(object, "power4test")) {
     object <- object$test_all
@@ -285,50 +187,50 @@ par_results <- function(object) {
   object
 }
 
-test_lrt <- function(object,
-                     par,
-                     alpha = .05) {
-  lrt_out <- semlrtp::lrtp(object,
-                           op = "~",
-                           progress = FALSE)
-  lrt_out <- as.data.frame(lrt_out)
-  if (par %in% lrt_out$label) {
-    i <- (lrt_out$lhs == par) &
-         (lrt_out$label == par)
-    i <- which(i)
-  } else {
-    par1 <- lavaan::lavParseModelString(par,
-                                        as.data.frame. = TRUE)
-    i <- (lrt_out$lhs == par1$lhs) &
-        (lrt_out$op == par1$op) &
-        (lrt_out$rhs == par1$rhs)
-    i <- which(i)
-  }
-  out <- c(est = lrt_out[i, "est"],
-           cilo = NA,
-           cihi = NA,
-           sig = as.numeric(lrt_out[i, "LRTp"] < alpha))
-  out
-}
+# test_lrt <- function(object,
+#                      par,
+#                      alpha = .05) {
+#   lrt_out <- semlrtp::lrtp(object,
+#                            op = "~",
+#                            progress = FALSE)
+#   lrt_out <- as.data.frame(lrt_out)
+#   if (par %in% lrt_out$label) {
+#     i <- (lrt_out$lhs == par) &
+#          (lrt_out$label == par)
+#     i <- which(i)
+#   } else {
+#     par1 <- lavaan::lavParseModelString(par,
+#                                         as.data.frame. = TRUE)
+#     i <- (lrt_out$lhs == par1$lhs) &
+#         (lrt_out$op == par1$op) &
+#         (lrt_out$rhs == par1$rhs)
+#     i <- which(i)
+#   }
+#   out <- c(est = lrt_out[i, "est"],
+#            cilo = NA,
+#            cihi = NA,
+#            sig = as.numeric(lrt_out[i, "LRTp"] < alpha))
+#   out
+# }
 
-test_lrt_ind <- function(object,
-                         alpha = .05) {
-  lrt_out <- semlrtp::lrtp(object,
-                           op = "~",
-                           progress = FALSE)
-  lrt_out <- as.data.frame(lrt_out)
-  lrt_ind_p <- max(c(lrt_out[1, "LRTp"], lrt_out[2, "LRTp"]))
-  out <- c(est = lrt_out[25, "est"],
-           cilo = NA,
-           cihi = NA,
-           sig = lrt_ind_p < alpha)
-  out
-}
+# test_lrt_ind <- function(object,
+#                          alpha = .05) {
+#   lrt_out <- semlrtp::lrtp(object,
+#                            op = "~",
+#                            progress = FALSE)
+#   lrt_out <- as.data.frame(lrt_out)
+#   lrt_ind_p <- max(c(lrt_out[1, "LRTp"], lrt_out[2, "LRTp"]))
+#   out <- c(est = lrt_out[25, "est"],
+#            cilo = NA,
+#            cihi = NA,
+#            sig = lrt_ind_p < alpha)
+#   out
+# }
 
-test_lrt(power_all_sim_only$sim_all[[1]]$fit,
-         par = "y ~ m")
+# test_lrt(power_all_sim_only$sim_all[[1]]$fit,
+#          par = "y ~ m")
 
-test_lrt_ind(power_all_sim_only$sim_all[[1]]$fit)
+# test_lrt_ind(power_all_sim_only$sim_all[[1]]$fit)
 
 
 test_par(power_all_sim_only$sim_all[[1]]$fit,
