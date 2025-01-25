@@ -170,12 +170,90 @@ gen_indicator_scores <- function(f_score,
 }
 
 #' @noRd
-# Input:
-# - One lm model
-# Output:
-# - Generated data
+#' Check product terms
+#' Input:
+#' - Output of model_matrices_pop()
+#' Output:
+#' - Logical. TRUE if the model has one or more product terms
+has_p_terms <- function(object) {
+  vnames <- colnames(object$beta)
+  return(any(grepl(":", vnames)))
+}
+
+#' @noRd
+#' Input:
+#' - Output of model_matrices_pop()
+#' Output:
+#' - Psi matrix if all variables standardized
+#'
 psi_std <- function(object,
                     n_std = 100000) {
+  if (has_p_terms(object)) {
+    out <- psi_std_monte_carlo(object = object,
+                               n_std = n_std)
+  } else {
+    out <- tryCatch(psi_std_analytic(object = object),
+                    error = function(e) e)
+    if (inherits(out, "error")) {
+      out <- psi_std_monte_carlo(object = object,
+                                 n_std = n_std)
+    }
+  }
+  return(out)
+}
+
+#' @noRd
+#' Input:
+#' - Output of model_matrices_pop()
+#' Output:
+#' - Psi matrix if all variables standardized
+#' Note:
+#' - Determine by Monte Carlo
+#' - Can have product terms
+psi_std_analytic <- function(object) {
+  vnames <- colnames(object$beta)
+  p <- length(vnames)
+  object_lm <- mm_lm(object)
+  lm_y <- object_lm$lm_y
+  mm_tmp <- object
+  for (yy in names(lm_y)) {
+    sigma <- implied_sigma(mm_tmp)
+    mm_tmp$psi[yy, yy] <- 2 - sigma[yy, yy]
+  }
+  # Check
+  if (all.equal(rep(1, p),
+                diag(implied_sigma(mm_tmp)),
+                tolerance = 1e-4,
+                check.attributes = FALSE,
+                check.class = FALSE)) {
+    return(mm_tmp$psi)
+  } else {
+    stop("Analytical standardization failed. ",
+         "Please set std_force_monte_carlo to TRUE ",
+         "to standardize by simulation.")
+  }
+}
+
+#' @noRd
+endo_beta <- function(object) {
+  beta <- object$beta
+  vnames <- colnames(beta)
+  exo <- apply(beta,
+               MARGIN = 1,
+               function(xx) all(xx == 0))
+  vnames[!exo]
+}
+
+#' @noRd
+#' Input:
+#' - Output of model_matrices_pop()
+#' Output:
+#' - Psi matrix if all variables standardized
+#' Note:
+#' - Determine by Monte Carlo
+#' - Can have product terms
+psi_std_monte_carlo <- function(object,
+                                n_std = 100000) {
   object <- mm_lm(object)
   lm_y <- object$lm_y
   psi <- object$psi

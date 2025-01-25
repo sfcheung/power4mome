@@ -11,7 +11,8 @@ ptable_pop(
   es1 = c(s = 0.1, m = 0.3, l = 0.5),
   es2 = c(s = 0.05, m = 0.1, l = 0.15),
   standardized = TRUE,
-  n_std = 1e+05
+  n_std = 1e+05,
+  std_force_monte_carlo = FALSE
 )
 
 model_matrices_pop(x, ...)
@@ -72,6 +73,17 @@ variables are also equal to one.}
 \item{n_std}{The sample size used to
 determine the error variances by
 simulation. Default is 100000.}
+
+\item{std_force_monte_carlo}{Logical.
+If \code{FALSE}, the default,
+standardization is done analytically
+if the model has no product terms,
+and by simulation if the model has
+product terms. If \code{TRUE}, simulation
+will be used whether the model has
+product terms or not. Always fall
+back to standardization if
+analytical standardization failed.}
 
 \item{x}{It can be 'lavaan' model
 syntax, to be passed to \code{\link[=ptable_pop]{ptable_pop()}},

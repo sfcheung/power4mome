@@ -73,6 +73,17 @@
 #' determine the error variances by
 #' simulation. Default is 100000.
 #'
+#' @param std_force_monte_carlo Logical.
+#' If `FALSE`, the default,
+#' standardization is done analytically
+#' if the model has no product terms,
+#' and by simulation if the model has
+#' product terms. If `TRUE`, simulation
+#' will be used whether the model has
+#' product terms or not. Always fall
+#' back to standardization if
+#' analytical standardization failed.
+#'
 #' @author Shu Fai Cheung <https://orcid.org/0000-0002-9871-9448>
 #'
 #'
@@ -113,7 +124,8 @@ ptable_pop <- function(model,
                                "m" = .10,
                                "l" = .15),
                        standardized = TRUE,
-                       n_std = 100000) {
+                       n_std = 100000,
+                       std_force_monte_carlo = FALSE) {
   if (is.character(pop_es)) {
     pop_es <- fix_par_es(pop_es,
                          model = model)
