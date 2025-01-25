@@ -6,10 +6,6 @@ on:
   # pull_request:
   #   branches: [main, master]
 # Disable before making public
-  push:
-    branches: [master]
-  pull_request:
-    branches: [master]
 
 name: R-CMD-check.yaml
 
