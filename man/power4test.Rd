@@ -16,7 +16,7 @@ power4test(
   gen_mc_args = list(),
   test_fun = NULL,
   test_args = list(),
-  fit_name = "fit",
+  fit_name = NULL,
   mc_out_name = "mc_out",
   results_fun = NULL,
   results_args = list(),
@@ -92,7 +92,10 @@ function. Default is \code{list()}.}
 
 \item{fit_name}{The name of the
 argument of the \code{test_fun} function
-that accepts the output of \code{\link[lavaan:sem]{lavaan::sem()}}.}
+that accepts the output of \code{\link[lavaan:sem]{lavaan::sem()}}.
+If it is the first argument of
+\code{test_fun}, set \code{fit_name} to \code{NULL},
+the default.}
 
 \item{mc_out_name}{The name of the
 argument of the \code{test_fun} function
@@ -103,9 +106,10 @@ this to \code{NULL}.}
 
 \item{results_fun}{The function to be
 used to extract the test results.
-See the help page of
-\code{\link[=do_test]{do_test()}} for the requirements
-of this function.}
+See \code{Details} for the requirements
+of this function. Default is \code{NULL},
+assuming that the output of
+\code{test_fun} can be used directly.}
 
 \item{results_args}{A list of
 arguments to be passed to the

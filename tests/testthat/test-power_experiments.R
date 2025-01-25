@@ -268,9 +268,7 @@ test_summary(power_all_test_only)
 power_all_test_only_par <- power4test(sim_all = power_all_sim_only,
                                       test_fun = test_par,
                                       test_args = list(par = "y ~ m"),
-                                      fit_name = "object",
                                       mc_out_name = NULL,
-                                      results_fun = par_results,
                                       parallel = TRUE,
                                       progress = TRUE)
 test_summary(power_all_test_only_par)

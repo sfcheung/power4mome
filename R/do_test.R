@@ -17,28 +17,33 @@
 #'
 #' The test results will be extracted
 #' from the output of `test_fun` by the
-#' function set to `results_fun`.
+#' function set to `results_fun`. If
+#' the `test_fun` already returns an
+#' output of the expected format
+#' (see below), then set `results_fun`
+#' to `NULL`, the default. The output
+#' of `test_fun` will be used for
+#' estimating power.
 #'
 #' The function set to `results_fun`
 #' must accept the output of `test_fun`,
 #' as the first argument, and return a
-#' named vector of four elements:
+#' named vector with some of the following
+#' elements:
 #'
-#' - `est`: The estimate of a parameter.
-#'  `NA` if the test does not return an
-#'  estimate.
+#' - `est`: Optional. The estimate of a
+#'  parameter.
 #'
-#' - `cilo`: The lower limit of the
-#'  confidence interval. `NA` if the
-#'  test does not return a confidence
-#'  interval.
+#' - `se`: Optional. The standard error
+#'  of the estimate.
 #'
-#' - `cihi`: The upper limit of the
-#'  confidence interval. `NA` if the
-#'  test does not return a confidence
-#'  interval.
+#' - `cilo`: Optional. The lower limit of the
+#'  confidence interval.
 #'
-#' - `sig`: If `1`, the test is
+#' - `cihi`: Optional. The upper limit of the
+#'  confidence interval.
+#'
+#' - `sig`: Required. If `1`, the test is
 #'  significant. If `0`, the test is not
 #'  significant. If the test cannot be
 #'  done for any reason, it should be
@@ -72,6 +77,9 @@
 #' @param fit_name The name of the
 #' argument of the `test_fun` function
 #' that accepts the output of [lavaan::sem()].
+#' If it is the first argument of
+#' `test_fun`, set `fit_name` to `NULL`,
+#' the default.
 #'
 #' @param mc_out_name The name of the
 #' argument of the `test_fun` function
@@ -83,7 +91,9 @@
 #' @param results_fun The function to be
 #' used to extract the test results.
 #' See `Details` for the requirements
-#' of this function.
+#' of this function. Default is `NULL`,
+#' assuming that the output of
+#' `test_fun` can be used directly.
 #'
 #' @param results_args A list of
 #' arguments to be passed to the
@@ -153,7 +163,7 @@
 do_test <- function(sim_all,
                     test_fun,
                     test_args = list(),
-                    fit_name = "fit",
+                    fit_name = NULL,
                     mc_out_name = "mc_out",
                     results_fun = NULL,
                     results_args = list(),
@@ -195,7 +205,7 @@ do_test <- function(sim_all,
 do_test_i <- function(out_i,
                       test_fun,
                       test_args = list(0),
-                      fit_name = "fit",
+                      fit_name = NULL,
                       mc_out_name = "mc_out",
                       results_fun = NULL,
                       results_args = list()) {
@@ -210,20 +220,38 @@ do_test_i <- function(out_i,
 #   - cilo: Scalar
 #   - cihi: Scalar
 #   - sig: Logical
-  if (is.null(mc_out_name)) {
-    args <- list(x = out_i$fit)
-    names(args) <- c(fit_name)
+  # if (is.null(mc_out_name)) {
+  #   args <- list(x = out_i$fit)
+  #   names(args) <- c(fit_name)
+  # } else {
+  #   args <- list(x = out_i$fit,
+  #                y = out_i$mc_out)
+  #   names(args) <- c(fit_name, mc_out_name)
+  # }
+  # args1 <- utils::modifyList(test_args,
+  #                            args)
+  if (!is.null(mc_out_name)) {
+    arg_mc <- list(out_i$mc_out)
+    names(arg_mc) <- mc_out_name
   } else {
-    args <- list(x = out_i$fit,
-                 y = out_i$mc_out)
-    names(args) <- c(fit_name, mc_out_name)
+    arg_mc <- list()
   }
-  args1 <- utils::modifyList(test_args,
-                             args)
+  arg_fit <- list(out_i$fit)
+  if (!is.null(fit_name)) {
+    names(arg_fit) <- fit_name
+  }
+  args1 <- c(arg_fit,
+             arg_mc,
+             test_args)
   out0 <- do.call(test_fun,
                   args1)
-  out1 <- do.call(results_fun,
-                  c(list(out0), results_args))
+  if (is.function(results_fun)) {
+    out1 <- do.call(results_fun,
+                    c(list(out0), results_args))
+  } else {
+    out1 <- out0
+  }
+
   return(list(test = out0,
               test_results = out1))
 }

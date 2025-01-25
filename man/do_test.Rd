@@ -8,7 +8,7 @@ do_test(
   sim_all,
   test_fun,
   test_args = list(),
-  fit_name = "fit",
+  fit_name = NULL,
   mc_out_name = "mc_out",
   results_fun = NULL,
   results_args = list(),
@@ -31,7 +31,10 @@ function. Default is \code{list()}.}
 
 \item{fit_name}{The name of the
 argument of the \code{test_fun} function
-that accepts the output of \code{\link[lavaan:sem]{lavaan::sem()}}.}
+that accepts the output of \code{\link[lavaan:sem]{lavaan::sem()}}.
+If it is the first argument of
+\code{test_fun}, set \code{fit_name} to \code{NULL},
+the default.}
 
 \item{mc_out_name}{The name of the
 argument of the \code{test_fun} function
@@ -43,7 +46,9 @@ this to \code{NULL}.}
 \item{results_fun}{The function to be
 used to extract the test results.
 See \code{Details} for the requirements
-of this function.}
+of this function. Default is \code{NULL},
+assuming that the output of
+\code{test_fun} can be used directly.}
 
 \item{results_args}{A list of
 arguments to be passed to the
@@ -91,25 +96,29 @@ argument (\code{mc_out} for
 
 The test results will be extracted
 from the output of \code{test_fun} by the
-function set to \code{results_fun}.
+function set to \code{results_fun}. If
+the \code{test_fun} already returns an
+output of the expected format
+(see below), then set \code{results_fun}
+to \code{NULL}, the default. The output
+of \code{test_fun} will be used for
+estimating power.
 
 The function set to \code{results_fun}
 must accept the output of \code{test_fun},
 as the first argument, and return a
-named vector of four elements:
+named vector with some of the following
+elements:
 \itemize{
-\item \code{est}: The estimate of a parameter.
-\code{NA} if the test does not return an
-estimate.
-\item \code{cilo}: The lower limit of the
-confidence interval. \code{NA} if the
-test does not return a confidence
-interval.
-\item \code{cihi}: The upper limit of the
-confidence interval. \code{NA} if the
-test does not return a confidence
-interval.
-\item \code{sig}: If \code{1}, the test is
+\item \code{est}: Optional. The estimate of a
+parameter.
+\item \code{se}: Optional. The standard error
+of the estimate.
+\item \code{cilo}: Optional. The lower limit of the
+confidence interval.
+\item \code{cihi}: Optional. The upper limit of the
+confidence interval.
+\item \code{sig}: Required. If \code{1}, the test is
 significant. If \code{0}, the test is not
 significant. If the test cannot be
 done for any reason, it should be

@@ -141,6 +141,9 @@
 #' @param fit_name The name of the
 #' argument of the `test_fun` function
 #' that accepts the output of [lavaan::sem()].
+#' If it is the first argument of
+#' `test_fun`, set `fit_name` to `NULL`,
+#' the default.
 #'
 #' @param mc_out_name The name of the
 #' argument of the `test_fun` function
@@ -151,9 +154,10 @@
 #'
 #' @param results_fun The function to be
 #' used to extract the test results.
-#' See the help page of
-#' [do_test()] for the requirements
-#' of this function.
+#' See `Details` for the requirements
+#' of this function. Default is `NULL`,
+#' assuming that the output of
+#' `test_fun` can be used directly.
 #'
 #' @param results_args A list of
 #' arguments to be passed to the
@@ -251,7 +255,7 @@ power4test <- function(nrep = 10,
                        gen_mc_args = list(),
                        test_fun = NULL,
                        test_args = list(),
-                       fit_name = "fit",
+                       fit_name = NULL,
                        mc_out_name = "mc_out",
                        results_fun = NULL,
                        results_args = list(),
