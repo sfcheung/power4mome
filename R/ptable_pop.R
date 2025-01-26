@@ -11,6 +11,49 @@
 #' to generate data based on the population
 #' values of model parameters.
 #'
+#' ## Setting `pop_es` to a named vector
+#'
+#' If `pop_es` is specified by a named
+#' vector, it must follow the convention
+#' below.
+#'
+#' - The names of the vectors are
+#'   `lavaan` names for the selected
+#'   parameters. For example, `m ~ x`
+#'   denotes the path from `x` to `m`.
+#'
+#' - Alternatively, the names can be
+#'   either `".beta."` or `".cov."`.
+#'   Use `".beta."` to set the default
+#'   values for all regression coefficients.
+#'   Use `".cov."` to set the default
+#'   values for all correlations of
+#'   exogenous variables (e.g., predictors).
+#'
+#' - If using `lavaan` names, can
+#'   specify more than one parameters
+#'   using `+`. For example, `y ~ m + x`
+#'   denotes the two paths from `m` and
+#'   `x` to `y`.
+#'
+#' - The value of each element can be
+#'   the label for the effect size: `n`
+#'   for nil, `s` for small, `m` for
+#'   medium, and `l` for large. The
+#'   value for each label is determined
+#'   by `es1` and `es2`.
+#'
+#' - The value of `pop_es` can also be
+#'   set to a value, but it must be
+#'   quoted as a string, such as `"y ~
+#'   x" = ".31"`.
+#'
+#' The vector `es1` is for correlations
+#' and regression coefficients, and the
+#' vector `es2` is for for standardized
+#' moderation effect, the coefficients
+#' of a product term.
+#'
 #' @return
 #' The function [ptable_pop()] returns
 #' a `lavaan` parameter table of the
@@ -28,38 +71,22 @@
 #' `pop` stores the population values.
 #' The column `es` stores the original
 #' labels, for reference. It can also be
-#' A named character vector. The names
-#' are `lavaan` for the selected
-#' parameters. For example, `m ~ x`
-#' denotes the path from `x` to `m`. Can
-#' specify more than one parameters. For
-#' example, `y ~ m + x` denotes the two
-#' paths from `m` and `x` to `y`. The
-#' value is the label for the effect
-#' size: `s` for small, `m` for medium,
-#' and `l` for large. There are two
-#' possible values, one set, `es1`, for
-#' correlations and regression
-#' coefficients, the other set, `es2`,
-#' for standardized moderation effect,
-#' the coefficients of a product term.
-#' Users can also set the effect to a
-#' value but it must be quoted as a
-#' string, such as `".31"`.
+#' A named character vector. See 'Details'
+#' on how to specify this vector.
 #'
 #' @param es1 A named vector to set the
 #' values for each label of the effect
 #' size of correlations and regression
 #' paths.
-#' Default is `c("s" = .10, "m" = .30, "l" = .50)`.
-#' Used only if `par_es` is a named
+#' Default is `c("n" = .00, "s" = .10, "m" = .30, "l" = .50)`.
+#' Used only if `pop_es` is a named
 #' vector.
 #'
 #' @param es2 A named vector to set the
 #' values for each label of the effect
 #' size of product term.
-#' Default is `c("s" = .05, "m" = .10, "l" = .15)`.
-#' Used only if `par_es` is a named
+#' Default is `c("n" = .00, "s" = .05, "m" = .10, "l" = .15)`.
+#' Used only if `pop_es` is a named
 #' vector.
 #'
 #' @param standardized Logical. If
@@ -120,10 +147,12 @@
 # - The parameter table with population values
 ptable_pop <- function(model,
                        pop_es,
-                       es1 = c("s" = .10,
+                       es1 = c("n" = .00,
+                               "s" = .10,
                                "m" = .30,
                                "l" = .50),
-                       es2 = c("s" = .05,
+                       es2 = c("n" = .00,
+                               "s" = .05,
                                "m" = .10,
                                "l" = .15),
                        standardized = TRUE,

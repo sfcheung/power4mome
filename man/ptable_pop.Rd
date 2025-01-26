@@ -8,8 +8,8 @@
 ptable_pop(
   model,
   pop_es,
-  es1 = c(s = 0.1, m = 0.3, l = 0.5),
-  es2 = c(s = 0.05, m = 0.1, l = 0.15),
+  es1 = c(n = 0, s = 0.1, m = 0.3, l = 0.5),
+  es2 = c(n = 0, s = 0.05, m = 0.1, l = 0.15),
   standardized = TRUE,
   n_std = 1e+05,
   std_force_monte_carlo = FALSE
@@ -29,38 +29,22 @@ columns correspond to those in a
 \code{pop} stores the population values.
 The column \code{es} stores the original
 labels, for reference. It can also be
-A named character vector. The names
-are \code{lavaan} for the selected
-parameters. For example, \code{m ~ x}
-denotes the path from \code{x} to \code{m}. Can
-specify more than one parameters. For
-example, \code{y ~ m + x} denotes the two
-paths from \code{m} and \code{x} to \code{y}. The
-value is the label for the effect
-size: \code{s} for small, \code{m} for medium,
-and \code{l} for large. There are two
-possible values, one set, \code{es1}, for
-correlations and regression
-coefficients, the other set, \code{es2},
-for standardized moderation effect,
-the coefficients of a product term.
-Users can also set the effect to a
-value but it must be quoted as a
-string, such as \code{".31"}.}
+A named character vector. See 'Details'
+on how to specify this vector.}
 
 \item{es1}{A named vector to set the
 values for each label of the effect
 size of correlations and regression
 paths.
-Default is \code{c("s" = .10, "m" = .30, "l" = .50)}.
-Used only if \code{par_es} is a named
+Default is \code{c("n" = .00, "s" = .10, "m" = .30, "l" = .50)}.
+Used only if \code{pop_es} is a named
 vector.}
 
 \item{es2}{A named vector to set the
 values for each label of the effect
 size of product term.
-Default is \code{c("s" = .05, "m" = .10, "l" = .15)}.
-Used only if \code{par_es} is a named
+Default is \code{c("n" = .00, "s" = .05, "m" = .10, "l" = .15)}.
+Used only if \code{pop_es} is a named
 vector.}
 
 \item{standardized}{Logical. If
@@ -124,6 +108,45 @@ The function \code{\link[=ptable_pop]{ptable_pop()}} generates a \code{lavaan}
 parameter table that can be used
 to generate data based on the population
 values of model parameters.
+\subsection{Setting \code{pop_es} to a named vector}{
+
+If \code{pop_es} is specified by a named
+vector, it must follow the convention
+below.
+\itemize{
+\item The names of the vectors are
+\code{lavaan} names for the selected
+parameters. For example, \code{m ~ x}
+denotes the path from \code{x} to \code{m}.
+\item Alternatively, the names can be
+either \code{".beta."} or \code{".cov."}.
+Use \code{".beta."} to set the default
+values for all regression coefficients.
+Use \code{".cov."} to set the default
+values for all correlations of
+exogenous variables (e.g., predictors).
+\item If using \code{lavaan} names, can
+specify more than one parameters
+using \code{+}. For example, \code{y ~ m + x}
+denotes the two paths from \code{m} and
+\code{x} to \code{y}.
+\item The value of each element can be
+the label for the effect size: \code{n}
+for nil, \code{s} for small, \code{m} for
+medium, and \code{l} for large. The
+value for each label is determined
+by \code{es1} and \code{es2}.
+\item The value of \code{pop_es} can also be
+set to a value, but it must be
+quoted as a string, such as \code{"y ~ x" = ".31"}.
+}
+
+The vector \code{es1} is for correlations
+and regression coefficients, and the
+vector \code{es2} is for for standardized
+moderation effect, the coefficients
+of a product term.
+}
 
 The function \code{\link[=model_matrices_pop]{model_matrices_pop()}}
 generates models matrices with
