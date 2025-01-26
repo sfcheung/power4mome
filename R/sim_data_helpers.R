@@ -49,14 +49,17 @@ mm_lm_data <- function(object,
                     ncol = length(all_vars))
   colnames(dat_all) <- all_vars
   dat_all[, colnames(x_raw)] <- x_raw
-  for (y in names(lm_y)) {
-    lm_y_i <- lm_y[[y]]
-    beta_i <- lm_y_i$beta
-    e_i <- dat_all[, y]
-    y_i <- dat_all[, colnames(beta_i), drop = FALSE] %*% t(beta_i) + e_i
-    # Replace the errors by the generated values
-    dat_all[, y] <- as.vector(y_i)
-    dat_all <- update_p_terms(dat_all)
+  if (!is.null(lm_y)) {
+    # Update product terms
+    for (y in names(lm_y)) {
+      lm_y_i <- lm_y[[y]]
+      beta_i <- lm_y_i$beta
+      e_i <- dat_all[, y]
+      y_i <- dat_all[, colnames(beta_i), drop = FALSE] %*% t(beta_i) + e_i
+      # Replace the errors by the generated values
+      dat_all[, y] <- as.vector(y_i)
+      dat_all <- update_p_terms(dat_all)
+    }
   }
   if (!is.null(number_of_indicators)) {
     dat_all <- add_indicator_scores(dat_all,

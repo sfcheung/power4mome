@@ -197,8 +197,15 @@ ptable_pop <- function(model,
   attr(ptable1, "model") <- model
   if (standardized) {
     mm <- model_matrices_pop(ptable1)
-    mm$psi <- psi_std(mm,
-                      n_std = n_std)
+    if (ncol(mm$psi) != 0) {
+      mm$psi <- psi_std(mm,
+                        n_std = n_std)
+    } else {
+      # CFA model or correlation only
+      # Make sure theta is a covariance matrix,
+      # in case variances accidentally set.
+      mm$theta <- stats::cov2cor(mm$theta)
+    }
     ptable1 <- start_from_mm(ptable1,
                              mm)
     attr(ptable1, "model") <- model
@@ -310,6 +317,16 @@ mm_lm <- function(mm) {
                             "partable")
   beta1 <- mm1$beta
   psi1 <- mm1$psi
+  if (is.null(beta1)) {
+    # No regression paths. A CFA model.
+    # Set psi to theta, the covariance
+    # matrix of factor scores to be
+    # generated.
+    out <- list(lm_y = NULL,
+                psi_pure_x = NULL,
+                psi = mm$theta)
+    return(out)
+  }
   ix <- apply(beta1,
               MARGIN = 1,
               function(x) all(x == 0))
