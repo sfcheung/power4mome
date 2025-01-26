@@ -13,7 +13,7 @@
 #' returns the results.
 #'
 #' @return
-#' An object of the class `fit_model`,
+#' An object of the class `fit_out`,
 #' which is a list of the output of
 #' [lavaan::sem()].
 #'
@@ -66,7 +66,7 @@ fit_model <- function(data_all,
                 parallel = parallel,
                 progress = progress,
                 ncores = ncores)
-  class(out) <- c("fit_model", class(out))
+  class(out) <- c("fit_out", class(out))
   return(out)
 }
 

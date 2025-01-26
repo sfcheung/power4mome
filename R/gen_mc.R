@@ -15,7 +15,7 @@
 #'
 #' @param fit_all The output of
 #' [fit_model()] or an object of the
-#' class `fit_model`.
+#' class `fit_out`.
 #'
 #' @param R The number of replications
 #' to generate the Monte Carlo estimates

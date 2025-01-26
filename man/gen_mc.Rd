@@ -17,7 +17,7 @@ gen_mc(
 \arguments{
 \item{fit_all}{The output of
 \code{\link[=fit_model]{fit_model()}} or an object of the
-class \code{fit_model}.}
+class \code{fit_out}.}
 
 \item{R}{The number of replications
 to generate the Monte Carlo estimates

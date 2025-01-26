@@ -34,7 +34,7 @@ cores to use if parallel processing
 is used.}
 }
 \value{
-An object of the class \code{fit_model},
+An object of the class \code{fit_out},
 which is a list of the output of
 \code{\link[lavaan:sem]{lavaan::sem()}}.
 }
