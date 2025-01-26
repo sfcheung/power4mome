@@ -31,16 +31,18 @@ workflows of major functions in
 
 # From Population to Power
 
+The workflow of `power4test()`.
+
 ```{r fig-pop_to_power, fig.cap = "From Population to Power", echo = FALSE}
-# https://mermaid.live/edit#pako:eNqNVGFv2jAQ_SuWp0ogUUoCDOJJkwgp3ypV6z5BKuQmF4iWxMh2xlrEf9_ZBkKBSYsU6e787t3L3cU7mogUKKNZIbbJmktNfkZxRcjdHUkKrlQEGUkh43WhSZYXBfvyiM9s9u0SBFIKWSHZATabRfhcwZTGGlClB1QUGdwVqkw-Md3EvAmhz1CG6Yasgv--EHULVP6H8PrttibzzuetRUxfzLfF9LXtQjb2qHRecg3kWWxBng4ni4eYPotNXXCdi4qUSF10CGQZJJqo_AMUerob04dXkzBZIFcEGmSZV0D0GsjmIptw7OoKKpCmXMo1V6AVQ7JyabxWG6tbstCQzXJN-CFTCwI8WR-TGH6kXtqjJmliJU9IkStNRHYqQFq2RU2d9lFzeJGBpESCwk1qkk6FTllTI-4J5AqMLG6zHbmodSNn-i853O7WdaUDQ1MnNOP5AbqWle2nZcqEJKnIqxXRW0HQKYVEIaC0Os4usqMQNsccEByA7Z6rikUZUizNUSM3upBrEy8lmuAnjW6PGGOnv-b-_jsuj1sh61j7YFo7tHbo4u4gPLOnbjKNPXXmxDXVOvYCiJw5cepd4fn8DDUNaYeWuJA8T_EC2VnBFLtSQkwZmimXv2IaV3vE8VqLl_cqoUzLGjpUinq1pizjhUKv3uD4IMr5SvLyFN3wai5E40OaayGf3H1lry2LoWxH_1DmD4Pu2O97_YHvf_WG_nDYoe8YHnQH3igYeUEv6I2C8XjfoR-W1e_2PH_cC4ZDr-_1_KDf3_8FHKWUAQ
+# https://mermaid.live/edit#pako:eNp1U11v4jAQ_CsrnyqBRCkJ5CA56aSElLdK1fWeIBWyyAaiS2JkO-JaxH_v2gbSo7o87cfM7MRrH9lG5MgiVlTisNlxqeF3mjUAd3ewqbhSKRaQY8HbSkNRVlX07ZG-xeLHLQilFLIhsTNssUjp-wJTmmZgk59RaWpwFnVGLpe9VcZeDCxjr31TXbrao9JlzTXCszigvDbj1UPGnsW-rbguRQM1eagGgEWBGw2qfEdFmR5m7OHVEOIVaaWoUdZlg6B3CPsbNnAyuMUGpRmXc80VahWRWL02Wa9P061YYsQWpQZ-ZmoByDe7Cymi_9Rr2-pIsbUcQ1UqDaK4DoCePaZuTv_iOblhkChIVLSUjnQddGXNjbknlFs0trhlO3HR6s7O_H92uF3T10lnhW5OYtbzC3UrG3ueVqkQEnJRNlvQBwGU1EKSEVRaXXaX2lUIyzENoAXY03NTaWhEEmvT6uymN3Yt8daiKf7j0V0VuL__CbHdgQttnNg4cXXXSD7Fc7eBLp67MHaHZxP7ZlIXxs6lTejqfkLNEzZgNV08Xub05o7WGKO_rzFjEYU5l38yljUnwvFWi5e3ZsMiLVscMCna7Y5FBa8UZe2e1oRpybeS19fqnjdLIboc81IL-eSeuH3pFsOiI_vLIj8IhzN_7I0nvv_dC_wgGLA3Kk-GE28aTr1wFI6m4Wx2GrB3q-oPR54_G4VB4I29kR-Ox6cP5tlTaw
 mermaid('
 flowchart TD
   classDef default fill:#EEEEFF;
   classDef errornode fill:#FFDDDD;
   classDef startend fill:#DDFFDD;
 
-  ZZ(["Start"])
-  ZZZ(["Estimate Power"])
+  %% ZZ(["Start"])
+  ZZZ(["Return the results for estimating power"])
   ZA[/"Population model, effect sizes, et."/]
   A[["Determine the population model and generate datasets: sim_data()"]]
   B[["Fit a model to each dataset: fit_model()"]]
@@ -51,18 +53,59 @@ flowchart TD
   CB(["Return the list for doing two or more tests"])
   D[["Do the test on each fit reult: do_test()"]]
   DA[/"A list of test results (class: test_out)"/]
+  C0{{"do_the_test?"}}
 
-  ZZ:::startend --> ZA
-  ZA --> A
+  ZA:::startend --> A
   A --> AA
   B --> BA
   AA --> B
   AA --> C
   BA --> C
   C --> CA
-  CA --> D
+  CA --> C0
+  C0 -- TRUE --> D
   D --> DA
-  DA --> ZZZ
-  CA --> CB
+  DA --> ZZZ:::startend
+  C0 -- FALSE--> CB:::startend
+', height = 1100, width = 500)
+```
+
+# Generate Simulated Data (`sim_data()`)
+
+The internal function `sim_data_i()` is called `m`
+times by `sim_data()` to generate `m` datasets.
+
+```{r fig-sim_data, fig.cap = "The Workflow of sim_data_i()", echo = FALSE}
+# https://mermaid.live/edit#pako:eNqFVE1v4jAQ_SuWV5WoRCkJsCVeaaWWwJ566p5CKuQmE7DkxJHt0G1R__uObQole9hIETPmzZs3H86BFqoEymgl1Wux49qS32neEFJIbkwKFSmh4p20pBJSsm9LfFarHxcI0FrpBmmOmNUqxecSYyxSQ1MeIWnqQB7i3qsrkmWDdU6fHCynz9fu9H59m9NH5JWEYyRUFRSWGPEOJqe3zw7ysMagX9CA5haI3QFpueY1WNDE8heQjLT4K2HTqnZwjcwhLHPU95dgCeRV2B1BZCe5Faohey67c7KFS7ZQzR6wS__kwnCriOR7zhtSe9U1t1oUYFjwN5_-pZjFUYwUxhJV9WL_oyn1mjS48vmJQsNWgzEO7tkMqZT2knEEaguN6gwSaeFkO3n1RtZnRWlPUZ-OmBYKUYnCK_qUsryYRcktJ5VWtU_rw4ZEtS6AS_kWyhJN6UhQW1_MxsWfFS17io7s2P1TJ7Ksh8E0PrfqbNtZQ_iL2gMZ-JVkuEYhx0ZcBwa_cYyx06be3PwkD35bgpmFzfHOwg8umFkYonf81UmDmYVWemfpiwhmFgryDor-kvJLAvzjC-3RS08eHdIadM1FiVf34K8RxVpryClD83hnc5o3HwjlnVVPb01BmdUdDKlW3XZHWcWlQa9rsQ-QCr7Ffp5OW95kSp19KAXO6TF8LPw3w2MoO9A_lMWzZDSPJ9FkGsffo1k8mw3pGx5PR9PoLrmLknEyvkvm848hffes8WgcxfNxMptFk2gcJ5PJx1_iPnd2
+mermaid('
+flowchart TD
+  classDef default fill:#EEEEFF;
+  classDef errornode fill:#FFDDDD;
+  classDef startend fill:#DDFFDD;
+
+  %% ZZ(["Start"])
+  A[/"Model and effect sizes"/]
+  B[["Generate the parameter tabel: ptable_pop()"]]
+  BZ[/"A parameter table with population values"/]
+  C[["Convert the parameter table to lavaan model matrices: model_matrices_pop()"]]
+  CZ[/"A list of model matrices with population values"/]
+  D[["Create a list of regression models for the endogenous variables: mm_lm()"]]
+  DZ[/"A list of regression model specification"/]
+  E[["Generate data from the model, optionally with indicator variables: mm_lm_data()"]]
+  EZ[/"A list of data frames"/]
+  ZZZ[/"A list of all the outputs above (class: sim_data_i)"/]
+
+  A:::startend --> B
+  B --> BZ
+  BZ --> C
+  C --> CZ
+  CZ --> D
+  D --> DZ
+  DZ --> E
+  E --> EZ
+  EZ --> ZZZ:::startend
+  BZ --> ZZZ
+  CZ --> ZZZ
+  DZ --> ZZZ
 ', height = 1100, width = 500)
 ```
