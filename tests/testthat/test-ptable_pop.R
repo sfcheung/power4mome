@@ -245,4 +245,26 @@ test_check_out(check_out)
 
 # psych::describe(check_out$mm_lm_dat_out)
 
+# Simple mediation model
+# Effect sizes set numerically
+
+model_simple_med <-
+"
+m ~ x
+y ~ m + x
+"
+
+model_simple_med_es <- c(".beta." = ".21",
+                         "m ~ x" = ".31",
+                         "y ~ x" = "n")
+
+check_out <- check_gen_dat(model_simple_med,
+                           model_simple_med_es,
+                           seed = 1234)
+
+expect_equal(check_out$ptable[1, "start"],
+             .31)
+expect_equal(check_out$ptable[2, "start"],
+             .21)
+
 })

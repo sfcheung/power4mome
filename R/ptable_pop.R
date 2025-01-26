@@ -43,6 +43,9 @@
 #' coefficients, the other set, `es2`,
 #' for standardized moderation effect,
 #' the coefficients of a product term.
+#' Users can also set the effect to a
+#' value but it must be quoted as a
+#' string, such as `".31"`.
 #'
 #' @param es1 A named vector to set the
 #' values for each label of the effect

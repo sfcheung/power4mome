@@ -78,7 +78,17 @@ set_pop <- function(par_es,
   to_set$pop <- NA
   for (x in seq_along(par_es)) {
     y <- match(par_es[x], names(es10))
-    if (is.na(y)) next
+    if (is.na(y)) {
+      es_num <- suppressWarnings(as.numeric(par_es[x]))
+      if (!is.na(es_num)) {
+        # Effect size specified numerically
+        to_set[x, "pop"] <- es_num
+        next
+      } else {
+        next
+      }
+    }
+    # Effect size label found
     is_inter <- isTRUE(grepl(":", to_set$rhs[x], fixed = TRUE))
     to_set[x, "pop"] <- ifelse(is_inter,
                                es20[y],
