@@ -170,22 +170,22 @@ gen_indicator_scores <- function(f_score,
 }
 
 #' @noRd
-#' Check product terms
-#' Input:
-#' - Output of model_matrices_pop()
-#' Output:
-#' - Logical. TRUE if the model has one or more product terms
+# Check product terms
+# Input:
+# - Output of model_matrices_pop()
+# Output:
+# - Logical. TRUE if the model has one or more product terms
 has_p_terms <- function(object) {
   vnames <- colnames(object$beta)
   return(any(grepl(":", vnames)))
 }
 
 #' @noRd
-#' Input:
-#' - Output of model_matrices_pop()
-#' Output:
-#' - Psi matrix if all variables standardized
-#'
+# Input:
+# - Output of model_matrices_pop()
+# Output:
+# - Psi matrix if all variables standardized
+#
 psi_std <- function(object,
                     n_std = 100000) {
   if (has_p_terms(object)) {
@@ -203,13 +203,13 @@ psi_std <- function(object,
 }
 
 #' @noRd
-#' Input:
-#' - Output of model_matrices_pop()
-#' Output:
-#' - Psi matrix if all variables standardized
-#' Note:
-#' - Determine by Monte Carlo
-#' - Can have product terms
+# Input:
+# - Output of model_matrices_pop()
+# Output:
+# - Psi matrix if all variables standardized
+# Note:
+# - Determine by Monte Carlo
+# - Can have product terms
 psi_std_analytic <- function(object) {
   vnames <- colnames(object$beta)
   p <- length(vnames)
@@ -245,13 +245,13 @@ endo_beta <- function(object) {
 }
 
 #' @noRd
-#' Input:
-#' - Output of model_matrices_pop()
-#' Output:
-#' - Psi matrix if all variables standardized
-#' Note:
-#' - Determine by Monte Carlo
-#' - Can have product terms
+# Input:
+# - Output of model_matrices_pop()
+# Output:
+# - Psi matrix if all variables standardized
+# Note:
+# - Determine by Monte Carlo
+# - Can have product terms
 psi_std_monte_carlo <- function(object,
                                 n_std = 100000) {
   object <- mm_lm(object)
