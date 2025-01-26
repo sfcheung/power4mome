@@ -35,6 +35,8 @@ mm_lm_data <- function(object,
                        number_of_indicators = NULL,
                        reliability = NULL,
                        keep_f_scores = FALSE) {
+  # TODO:
+  # - MG: Revise for MG
   lm_y <- object$lm_y
   psi <- object$psi
   all_vars <- colnames(psi)
@@ -84,6 +86,10 @@ mm_lm_data <- function(object,
 add_indicator_syntax <- function(model,
                                  number_of_indicators = NULL,
                                  reliability = NULL) {
+  # TODO:
+  # - MG: Revise for MG. Note that
+  #       reliability can be different
+  #       between groups.
   f_names <- names(number_of_indicators)
   reliability <- reliability[f_names]
   if (!is.null(number_of_indicators)) {

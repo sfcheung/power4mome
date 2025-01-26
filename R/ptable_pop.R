@@ -158,6 +158,10 @@ ptable_pop <- function(model,
                        standardized = TRUE,
                        n_std = 100000,
                        std_force_monte_carlo = FALSE) {
+  # TODO:
+  # - MG: Call fix_par_es() and set_pop() for each group
+  # - MG: But we can also use lavaan convention, e.g.,
+  #       "y ~ c('n', 'm')*x"
   if (is.character(pop_es)) {
     pop_es <- fix_par_es(pop_es,
                          model = model)
@@ -168,9 +172,16 @@ ptable_pop <- function(model,
     par_pop <- pop_es
   }
   par_pop <- dup_cov(par_pop)
+  # TODO:
+  # - MG: Merge the list of par_pop to one table
+  # TODO:
+  # - MG: Need fake data to force a MG parameter table
   fit0 <- lavaan::sem(model,
                       do.fit = FALSE)
   ptable0 <- lavaan::parTable(fit0)
+  # TODO:
+  # - MG: Include group id
+  # - MG: id may not match
   par_pop2 <- merge(par_pop,
                     ptable0[, c("lhs", "op", "rhs", "id")],
                     all.x = TRUE,
@@ -185,6 +196,8 @@ ptable_pop <- function(model,
     # warning("One or more parameters in 'pop_es' is not in the model: ",
     #         tmp2)
   }
+  # TODO:
+  # - MG: Include group id
   par_pop2 <- par_pop2[, c("id", "lhs", "op", "rhs", "pop")]
 
   ptable1 <- merge(ptable0,
@@ -196,7 +209,11 @@ ptable_pop <- function(model,
   # - Check equality constraints
   attr(ptable1, "model") <- model
   if (standardized) {
+    # TODO:
+    # - MG: Revise model_matrices_pop for MG
     mm <- model_matrices_pop(ptable1)
+    # TODO:
+    # - MG: Revise the following for MG
     if (ncol(mm$psi) != 0) {
       mm$psi <- psi_std(mm,
                         n_std = n_std)
@@ -206,6 +223,8 @@ ptable_pop <- function(model,
       # in case variances accidentally set.
       mm$theta <- stats::cov2cor(mm$theta)
     }
+    # TODO:
+    # - MG: Revise start_from_mm for MG
     ptable1 <- start_from_mm(ptable1,
                              mm)
     attr(ptable1, "model") <- model
@@ -257,10 +276,17 @@ model_matrices_pop <- function(x,
   } else {
     ptable <- x
   }
+  # TODO:
+  # - MG: Revise for MG
+  # - MG: Store the MG parameter table
+  # - MG: If x is an output of ptable_pop,
+  #       it should be ready for lavInspect().
   fit1 <- lavaan::sem(ptable,
                       do.fit = FALSE)
   mm <- lavaan::lavInspect(fit1,
                            "partable")
+  # TODO:
+  # - MG: Revise set_start for MG
   mm2 <- set_start(mm = mm,
                    ptable = ptable)
   attr(mm2, "header") <- NULL
@@ -307,6 +333,7 @@ mm_lm <- function(mm) {
   # TODO:
   # - Check whether the transpose of nox-beta is in echelon form.
   # - Handle models with no y-variables (e.g., CFA).
+  # - MG: Revise for MG
   model <- attr(mm, "model")
   if (is.null(model)) {
     stop("Model syntax not found")

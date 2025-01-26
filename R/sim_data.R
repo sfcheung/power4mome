@@ -215,11 +215,15 @@ sim_data_i <- function(model,
                               reliability = reliability,
                               keep_f_scores = FALSE)
   model_original <- model
+  # TODO:
+  # - MG: Check whether the syntax works for MG
   model <- add_indicator_syntax(model,
                                 number_of_indicators = number_of_indicators,
                                 reliability = reliability)
   tmp <- ptable
   tmp$est <- tmp$start
+  # TODO:
+  # - MG: Check whether tmp already works for MG.
   fit0 <- lavaan::sem(tmp,
               do.fit = FALSE)
   out <- list(ptable = ptable,
