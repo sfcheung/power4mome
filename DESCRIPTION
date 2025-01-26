@@ -26,3 +26,4 @@ Imports:
     manymome,
     pbapply,
     parallel
+Config/Needs/website: rmarkdown

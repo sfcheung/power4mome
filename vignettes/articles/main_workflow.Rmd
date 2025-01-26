@@ -1,0 +1,68 @@
+---
+title: "Main Workflows"
+author: "Shu Fai Cheung & Sing-Hang Cheung"
+output:
+  html_document:
+    fig.align: "center"
+    toc: true
+    number_sections: false
+bibliography: references.bib
+csl: apa.csl
+---
+
+(**DRAFT: WORK-IN-PROGRESS**)
+
+```{r echo = FALSE}
+library(DiagrammeR)
+```
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Goal
+
+This technical appendix describes the
+workflows of major functions in
+[power4mome](https://sfcheung.github.io/power4mome/).
+
+# From Population to Power
+
+```{r fig-pop_to_power, fig.cap = "From Population to Power", echo = FALSE}
+# https://mermaid.live/edit#pako:eNqNVGFv2jAQ_SuWp0ogUUoCDOJJkwgp3ypV6z5BKuQmF4iWxMh2xlrEf9_ZBkKBSYsU6e787t3L3cU7mogUKKNZIbbJmktNfkZxRcjdHUkKrlQEGUkh43WhSZYXBfvyiM9s9u0SBFIKWSHZATabRfhcwZTGGlClB1QUGdwVqkw-Md3EvAmhz1CG6Yasgv--EHULVP6H8PrttibzzuetRUxfzLfF9LXtQjb2qHRecg3kWWxBng4ni4eYPotNXXCdi4qUSF10CGQZJJqo_AMUerob04dXkzBZIFcEGmSZV0D0GsjmIptw7OoKKpCmXMo1V6AVQ7JyabxWG6tbstCQzXJN-CFTCwI8WR-TGH6kXtqjJmliJU9IkStNRHYqQFq2RU2d9lFzeJGBpESCwk1qkk6FTllTI-4J5AqMLG6zHbmodSNn-i853O7WdaUDQ1MnNOP5AbqWle2nZcqEJKnIqxXRW0HQKYVEIaC0Os4usqMQNsccEByA7Z6rikUZUizNUSM3upBrEy8lmuAnjW6PGGOnv-b-_jsuj1sh61j7YFo7tHbo4u4gPLOnbjKNPXXmxDXVOvYCiJw5cepd4fn8DDUNaYeWuJA8T_EC2VnBFLtSQkwZmimXv2IaV3vE8VqLl_cqoUzLGjpUinq1pizjhUKv3uD4IMr5SvLyFN3wai5E40OaayGf3H1lry2LoWxH_1DmD4Pu2O97_YHvf_WG_nDYoe8YHnQH3igYeUEv6I2C8XjfoR-W1e_2PH_cC4ZDr-_1_KDf3_8FHKWUAQ
+mermaid('
+flowchart TD
+  classDef default fill:#EEEEFF;
+  classDef errornode fill:#FFDDDD;
+  classDef startend fill:#DDFFDD;
+
+  ZZ(["Start"])
+  ZZZ(["Estimate Power"])
+  ZA[/"Population model, effect sizes, et."/]
+  A[["Determine the population model and generate datasets: sim_data()"]]
+  B[["Fit a model to each dataset: fit_model()"]]
+  AA[/"A list of datasets (class: sim_data)"/]
+  BA[/"A list of fit results (class: fit_model)"/]
+  C[["Merge to a list: sim_out()"]]
+  CA[/"A list of datasets and fit results (class: sim_out)"/]
+  CB(["Return the list for doing two or more tests"])
+  D[["Do the test on each fit reult: do_test()"]]
+  DA[/"A list of test results (class: test_out)"/]
+
+  ZZ:::startend --> ZA
+  ZA --> A
+  A --> AA
+  B --> BA
+  AA --> B
+  AA --> C
+  BA --> C
+  C --> CA
+  CA --> D
+  D --> DA
+  DA --> ZZZ
+  CA --> CB
+', height = 1100, width = 500)
+```
