@@ -18,4 +18,5 @@ model1_es <- list("m1 ~ x" = "-m",
 
 out <- ptable_pop(model = model1,
                   pop_es = model1_es)
-
+mm_out <- model_matrices_pop(out)
+mm_lm_out <- mm_lm(mm_out)

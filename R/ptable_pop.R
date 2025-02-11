@@ -366,7 +366,25 @@ set_start <- function(mm,
 # - A list of:
 #   - regression models
 #   - covariance matrix of x-variables
-mm_lm <- function(mm) {
+mm_lm <- function(mm,
+                  drop_list_single_group = TRUE) {
+  # TODO:
+  # - Find a more robust way to check
+  #   the number of groups.
+  if (is.null(attr(mm[[1]], "model"))) {
+    out <- mm_lm_i(mm)
+  } else {
+    out <- lapply(mm,
+                  mm_lm_i)
+  }
+  if (!drop_list_single_group) {
+    out <- list(out)
+  }
+  return(out)
+}
+
+#' @noRd
+mm_lm_i <- function(mm) {
   # TODO:
   # - Check whether the transpose of nox-beta is in echelon form.
   # - Handle models with no y-variables (e.g., CFA).
