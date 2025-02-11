@@ -158,30 +158,59 @@ ptable_pop <- function(model,
                        standardized = TRUE,
                        n_std = 100000,
                        std_force_monte_carlo = FALSE) {
-  # TODO:
-  # - MG: Call fix_par_es() and set_pop() for each group
-  # - MG: But we can also use lavaan convention, e.g.,
-  #       "y ~ c('n', 'm')*x"
   if (is.character(pop_es)) {
     pop_es <- fix_par_es(pop_es,
                          model = model)
     par_pop <- set_pop(pop_es,
                        es1 = es1,
                        es2 = es2)
+    par_pop <- list(par_pop)
+  } else if (is.list(pop_es)) {
+    pop_es <- split_par_es(pop_es)
+    pop_es <- lapply(pop_es,
+                     FUN = fix_par_es,
+                     model = model)
+    par_pop <- lapply(pop_es,
+                      set_pop,
+                      es1 = es1,
+                      es2 = es2)
   } else {
     par_pop <- pop_es
   }
-  par_pop <- dup_cov(par_pop)
-  # TODO:
-  # - MG: Merge the list of par_pop to one table
+  # par_pop <- dup_cov(par_pop)
+  par_pop <- lapply(par_pop,
+                    dup_cov)
+  ngroups <- length(par_pop)
+  for (i in seq_along(par_pop)) {
+    par_pop[[i]]$group <- i
+  }
+  par_pop <- do.call(rbind,
+                     par_pop)
   # TODO:
   # - MG: Need fake data to force a MG parameter table
+
+  # Single group ptable
   fit0 <- lavaan::sem(model,
                       do.fit = FALSE)
   ptable0 <- lavaan::parTable(fit0)
-  # TODO:
-  # - MG: Include group id
-  # - MG: id may not match
+
+  # Use fake data to create the target parameter table
+  if (ngroups > 1) {
+    gpnames <- paste0("gp", seq_len(ngroups))
+    vnames <- lavaan::lavNames(ptable0,
+                               type = "ov")
+    p <- length(vnames)
+    d1 <- diag(p)
+    colnames(d1) <- rownames(d1) <- vnames
+    dat_cov <- lapply(seq_len(ngroups),
+                      function(x) d1)
+    fit0 <- lavaan::sem(model,
+                        sample.cov = dat_cov,
+                        sample.nobs = rep(10000, ngroups),
+                        do.fit = FALSE,
+                        group.label = gpnames)
+    ptable0 <- lavaan::parTable(fit0)
+  }
   par_pop2 <- merge(par_pop,
                     ptable0[, c("lhs", "op", "rhs", "id")],
                     all.x = TRUE,
@@ -198,7 +227,7 @@ ptable_pop <- function(model,
   }
   # TODO:
   # - MG: Include group id
-  par_pop2 <- par_pop2[, c("id", "lhs", "op", "rhs", "pop")]
+  par_pop2 <- par_pop2[, c("id", "lhs", "op", "rhs", "group", "pop")]
 
   ptable1 <- merge(ptable0,
                    par_pop2,
