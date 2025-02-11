@@ -10,16 +10,19 @@ start_from_mm <- function(ptable,
   fit <- lavaan::sem(ptable,
                      do.fit = FALSE)
   mm0 <- lavaan::lavInspect(fit,
-                            "partable")
-  for (k in seq_along(mm0)) {
-    mmi <- mm0[[k]]
-    mmi1 <- mm[[k]]
-    i <- which(mmi > 0)
-    j <- mmi[i]
-    mmic <- col(mmi)
-    mmir <- row(mmi)
-    for (x in seq_along(j)) {
-      ptable_out[j[x], "start"] <- mmi1[mmir[i[x]], mmic[i[x]]]
+                            "partable",
+                            drop.list.single.group = FALSE)
+  for (k0 in seq_along(mm0)) {
+    for (k in seq_along(mm0[[k0]])) {
+      mmi <- mm0[[k0]][[k]]
+      mmi1 <- mm[[k0]][[k]]
+      i <- which(mmi > 0)
+      j <- mmi[i]
+      mmic <- col(mmi)
+      mmir <- row(mmi)
+      for (x in seq_along(j)) {
+        ptable_out[j[x], "start"] <- mmi1[mmir[i[x]], mmic[i[x]]]
+      }
     }
   }
   ptable_out

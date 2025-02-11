@@ -186,9 +186,6 @@ ptable_pop <- function(model,
   }
   par_pop <- do.call(rbind,
                      par_pop)
-  # TODO:
-  # - MG: Need fake data to force a MG parameter table
-
   # Single group ptable
   fit0 <- lavaan::sem(model,
                       do.fit = FALSE)
@@ -225,8 +222,6 @@ ptable_pop <- function(model,
     # warning("One or more parameters in 'pop_es' is not in the model: ",
     #         tmp2)
   }
-  # TODO:
-  # - MG: Include group id
   par_pop2 <- par_pop2[, c("id", "lhs", "op", "rhs", "group", "pop")]
 
   ptable1 <- merge(ptable0,
@@ -238,22 +233,21 @@ ptable_pop <- function(model,
   # - Check equality constraints
   attr(ptable1, "model") <- model
   if (standardized) {
-    # TODO:
-    # - MG: Revise model_matrices_pop for MG
-    mm <- model_matrices_pop(ptable1)
-    # TODO:
-    # - MG: Revise the following for MG
-    if (ncol(mm$psi) != 0) {
-      mm$psi <- psi_std(mm,
-                        n_std = n_std)
+    mm <- model_matrices_pop(ptable1,
+                             drop_list_single_group = FALSE)
+    if (ncol(mm[[1]]$psi) != 0) {
+      for (i in seq_along(mm)) {
+        mm[[i]]$psi <- psi_std(mm[[i]],
+                               n_std = n_std)
+      }
     } else {
       # CFA model or correlation only
       # Make sure theta is a covariance matrix,
       # in case variances accidentally set.
-      mm$theta <- stats::cov2cor(mm$theta)
+      for (i in seq_along(mm)) {
+        mm[[i]]$theta <- stats::cov2cor(mm[[i]]$theta)
+      }
     }
-    # TODO:
-    # - MG: Revise start_from_mm for MG
     ptable1 <- start_from_mm(ptable1,
                              mm)
     attr(ptable1, "model") <- model
@@ -288,6 +282,12 @@ ptable_pop <- function(model,
 #' these are arguments to be passed to
 #' [ptable_pop()].
 #'
+#' @param drop_list_single_group If
+#' `TRUE` and the number groups is
+#' equal to one, the output will be
+#' a list of matrices of one group
+#' only. Default if `TRUE`.
+#'
 #' @examples
 #'
 #' model_matrices_pop(ptable_final1)
@@ -298,32 +298,40 @@ ptable_pop <- function(model,
 #' @export
 
 model_matrices_pop <- function(x,
-                               ...) {
+                               ...,
+                               drop_list_single_group = TRUE) {
   if (is.character((x))) {
     ptable <- ptable_pop(model = x,
                          ...)
   } else {
     ptable <- x
   }
-  # TODO:
-  # - MG: Revise for MG
-  # - MG: Store the MG parameter table
-  # - MG: If x is an output of ptable_pop,
-  #       it should be ready for lavInspect().
   fit1 <- lavaan::sem(ptable,
                       do.fit = FALSE)
+  ngroups <- lavaan::lavInspect(fit1,
+                                "ngroups")
   mm <- lavaan::lavInspect(fit1,
-                           "partable")
-  # TODO:
-  # - MG: Revise set_start for MG
-  mm2 <- set_start(mm = mm,
-                   ptable = ptable)
+                           "partable",
+                           drop.list.single.group = FALSE)
+  mm2 <- sapply(mm,
+                set_start,
+                ptable = ptable,
+                simplify = FALSE)
   attr(mm2, "header") <- NULL
   if (is.character((x))) {
     attr(mm2, "model") <- x
-  } else (
+    for (i in seq_along(mm2)) {
+      attr(mm2[[i]], "model") <- x
+    }
+  } else {
     attr(mm2, "model") <- attr(x, "model")
-  )
+    for (i in seq_along(mm2)) {
+      attr(mm2[[i]], "model") <- attr(x, "model")
+    }
+  }
+  if (drop_list_single_group && (ngroups == 1)) {
+    mm2 <- mm2[[1]]
+  }
   mm2
 }
 

@@ -15,7 +15,7 @@ ptable_pop(
   std_force_monte_carlo = FALSE
 )
 
-model_matrices_pop(x, ...)
+model_matrices_pop(x, ..., drop_list_single_group = TRUE)
 }
 \arguments{
 \item{model}{String. The model defined
@@ -81,6 +81,12 @@ such as the output of \code{\link[=ptable_pop]{ptable_pop()}}.}
 \item{...}{If \code{x} is a model syntax,
 these are arguments to be passed to
 \code{\link[=ptable_pop]{ptable_pop()}}.}
+
+\item{drop_list_single_group}{If
+\code{TRUE} and the number groups is
+equal to one, the output will be
+a list of matrices of one group
+only. Default if \code{TRUE}.}
 }
 \value{
 The function \code{\link[=ptable_pop]{ptable_pop()}} returns
