@@ -1,4 +1,5 @@
 library(testthat)
+library(lavaan)
 
 skip("WIP")
 
@@ -21,6 +22,12 @@ out <- ptable_pop(model = model1,
 mm_out <- model_matrices_pop(out)
 mm_lm_out <- mm_lm(mm_out)
 
+data_i <- sim_data_i(model = model1,
+                     pop_es = model1_es,
+                     n = 200,
+                     seed = 1234)
+fit_i <- fit_model_i(data_i)
+summary(fit_i)
 
 model2 <-
 "
@@ -39,3 +46,5 @@ data_i <- sim_data_i(model = model2,
                      number_of_indicators = c(x = 3, y = 4, m = 5),
                      reliability = c(x = .60, y = .70, m = .80),
                      seed = 1234)
+
+fit_i <- fit_model_i(data_i)
