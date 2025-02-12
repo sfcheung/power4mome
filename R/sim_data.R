@@ -236,8 +236,6 @@ sim_data_i <- function(model,
                           SIMPLIFY = FALSE)
 
   model_original <- model
-  # TODO:
-  # - MG: Check whether the syntax works for MG
   model <- add_indicator_syntax(model,
                                 number_of_indicators = number_of_indicators[[1]],
                                 reliability = reliability[[1]])
@@ -250,6 +248,8 @@ sim_data_i <- function(model,
     mm_lm_out <- mm_lm_out[[1]]
     mm_lm_dat_out <- mm_lm_dat_out[[1]]
   }
+  # TODO:
+  # - MG: The data can be merged or can be a list.
   out <- list(ptable = ptable,
               mm_out = mm_out,
               mm_lm_out = mm_lm_out,
