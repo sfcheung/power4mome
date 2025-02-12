@@ -246,8 +246,10 @@ sim_data_i <- function(model,
               do.fit = FALSE)
   if (ngroups > 1) {
     group_labels <- names(mm_out)
+    group_name <- "group"
   } else {
     group_labels <- NULL
+    group_name <- NULL
   }
   if (drop_list_single_group && (ngroups == 1)) {
     mm_out <- mm_out[[1]]
@@ -273,6 +275,7 @@ sim_data_i <- function(model,
               model_original = model_original,
               model_final = model,
               fit0 = fit0,
+              group_name = group_name,
               group_labels = group_labels)
   class(out) <- c("sim_data_i", class(out))
   out
