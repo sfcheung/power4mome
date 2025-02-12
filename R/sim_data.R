@@ -199,33 +199,57 @@ sim_data_i <- function(model,
                        n = 100,
                        number_of_indicators = NULL,
                        reliability = NULL,
-                       seed = NULL) {
+                       seed = NULL,
+                       drop_list_single_group = TRUE) {
   if (!is.null(seed)) set.seed(seed)
   # TODO:
   # - Set the default values for parameter
   #   not specified (do this in ptable_pop).
+  # - Can accept ptable, mm_out, and mm_lm_out, to save the
+  #   time in repeating these steps unnecessarily.
   ptable <- ptable_pop(model = model,
                        pop_es = pop_es,
                        standardized = TRUE)
-  mm_out <- model_matrices_pop(ptable)
-  mm_lm_out <- mm_lm(mm_out)
-  mm_lm_dat_out <- mm_lm_data(mm_lm_out,
-                              n = n,
-                              number_of_indicators = number_of_indicators,
-                              reliability = reliability,
-                              keep_f_scores = FALSE)
+  mm_out <- model_matrices_pop(ptable,
+                               drop_list_single_group = FALSE)
+  mm_lm_out <- mm_lm(mm_out,
+                     drop_list_single_group = FALSE)
+
+  ngroups <- max(ptable$group)
+  if (length(n) == 1) {
+    n <- rep(n, ngroups)
+  }
+  if (!is.list(number_of_indicators)) {
+    number_of_indicators <- rep(list(number_of_indicators),
+                                ngroups)
+  }
+  if (!is.list(reliability)) {
+    reliability <- rep(list(reliability),
+                            ngroups)
+  }
+  mm_lm_dat_out <- mapply(mm_lm_data,
+                          object = mm_lm_out,
+                          n = n,
+                          number_of_indicators = number_of_indicators,
+                          reliability = reliability,
+                          MoreArgs = list(keep_f_scores = FALSE),
+                          SIMPLIFY = FALSE)
+
   model_original <- model
   # TODO:
   # - MG: Check whether the syntax works for MG
   model <- add_indicator_syntax(model,
-                                number_of_indicators = number_of_indicators,
-                                reliability = reliability)
+                                number_of_indicators = number_of_indicators[[1]],
+                                reliability = reliability[[1]])
   tmp <- ptable
   tmp$est <- tmp$start
-  # TODO:
-  # - MG: Check whether tmp already works for MG.
   fit0 <- lavaan::sem(tmp,
               do.fit = FALSE)
+  if (drop_list_single_group && (ngroups == 1)) {
+    mm_out <- mm_out[[1]]
+    mm_lm_out <- mm_lm_out[[1]]
+    mm_lm_dat_out <- mm_lm_dat_out[[1]]
+  }
   out <- list(ptable = ptable,
               mm_out = mm_out,
               mm_lm_out = mm_lm_out,
