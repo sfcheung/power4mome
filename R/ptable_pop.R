@@ -373,12 +373,12 @@ mm_lm <- function(mm,
   #   the number of groups.
   if (is.null(attr(mm[[1]], "model"))) {
     out <- mm_lm_i(mm)
+    if (!drop_list_single_group) {
+      out <- list(out)
+    }
   } else {
     out <- lapply(mm,
                   mm_lm_i)
-  }
-  if (!drop_list_single_group) {
-    out <- list(out)
   }
   return(out)
 }
