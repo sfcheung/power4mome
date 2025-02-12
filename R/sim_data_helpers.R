@@ -94,6 +94,8 @@ add_indicator_syntax <- function(model,
   #       reliability can be different
   #       between groups.
   f_names <- names(number_of_indicators)
+  # TODO:
+  # - Check: reliability may not be needed.
   reliability <- reliability[f_names]
   if (!is.null(number_of_indicators)) {
     for (i in seq_along(number_of_indicators)) {
