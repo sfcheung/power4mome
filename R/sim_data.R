@@ -266,8 +266,6 @@ sim_data_i <- function(model,
                              mm_lm_dat_out)
     rownames(mm_lm_dat_out) <- NULL
   }
-  # TODO:
-  # - MG: The data can be merged or can be a list.
   out <- list(ptable = ptable,
               mm_out = mm_out,
               mm_lm_out = mm_lm_out,
