@@ -89,10 +89,9 @@ fit_model <- function(data_all,
 #' @noRd
 fit_model_i <- function(data_i,
                         ...) {
-  # TODO:
-  # - MG: Revise for MG (e.g., add 'group').
   fit <- lavaan::sem(model = data_i$model_final,
                      data = data_i$mm_lm_dat_out,
+                     group = data_i$group_name,
                      ...)
   return(fit)
 }
