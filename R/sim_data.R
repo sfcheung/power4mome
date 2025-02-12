@@ -163,9 +163,20 @@ sim_data <- function(nrep = 10,
                      parallel = FALSE,
                      progress = FALSE,
                      ncores = max(1, parallel::detectCores(logical = FALSE) - 1)) {
+
+  ptable <- ptable_pop(model = model,
+                       pop_es = pop_es,
+                       standardized = TRUE)
+  mm_out <- model_matrices_pop(ptable,
+                               drop_list_single_group = FALSE)
+  mm_lm_out <- mm_lm(mm_out,
+                     drop_list_single_group = FALSE)
+
   out <- do_FUN(X = rep(model, nrep),
                 FUN = sim_data_i,
-                pop_es = pop_es,
+                ptable = ptable,
+                mm_out = mm_out,
+                mm_lm_out = mm_lm_out,
                 n = n,
                 number_of_indicators = number_of_indicators,
                 reliability = reliability,
@@ -194,8 +205,11 @@ sim_data <- function(nrep = 10,
 #' }
 #'
 #' @noRd
-sim_data_i <- function(model,
-                       pop_es,
+sim_data_i <- function(model = NULL,
+                       pop_es = NULL,
+                       ptable = NULL,
+                       mm_out = NULL,
+                       mm_lm_out = NULL,
                        n = 100,
                        number_of_indicators = NULL,
                        reliability = NULL,
@@ -208,13 +222,19 @@ sim_data_i <- function(model,
   #   not specified (do this in ptable_pop).
   # - Can accept ptable, mm_out, and mm_lm_out, to save the
   #   time in repeating these steps unnecessarily.
-  ptable <- ptable_pop(model = model,
-                       pop_es = pop_es,
-                       standardized = TRUE)
-  mm_out <- model_matrices_pop(ptable,
-                               drop_list_single_group = FALSE)
+  if (is.null(ptable)) {
+    ptable <- ptable_pop(model = model,
+                        pop_es = pop_es,
+                        standardized = TRUE)
+  }
+  if (is.null(mm_out)) {
+    mm_out <- model_matrices_pop(ptable,
+                                drop_list_single_group = FALSE)
+  }
+  if (is.null(mm_lm_out)) {
   mm_lm_out <- mm_lm(mm_out,
                      drop_list_single_group = FALSE)
+  }
 
   ngroups <- max(ptable$group)
   if (length(n) == 1) {
