@@ -200,7 +200,8 @@ sim_data_i <- function(model,
                        number_of_indicators = NULL,
                        reliability = NULL,
                        seed = NULL,
-                       drop_list_single_group = TRUE) {
+                       drop_list_single_group = TRUE,
+                       merge_groups = TRUE) {
   if (!is.null(seed)) set.seed(seed)
   # TODO:
   # - Set the default values for parameter
@@ -243,10 +244,25 @@ sim_data_i <- function(model,
   tmp$est <- tmp$start
   fit0 <- lavaan::sem(tmp,
               do.fit = FALSE)
+  if (ngroups > 1) {
+    group_labels <- names(mm_out)
+  } else {
+    group_labels <- NULL
+  }
   if (drop_list_single_group && (ngroups == 1)) {
     mm_out <- mm_out[[1]]
     mm_lm_out <- mm_lm_out[[1]]
     mm_lm_dat_out <- mm_lm_dat_out[[1]]
+  }
+  if (ngroups > 1) {
+    for (i in group_labels) {
+      mm_lm_dat_out[[i]]$group <- i
+    }
+  }
+  if (merge_groups && (ngroups > 1)) {
+    mm_lm_dat_out <- do.call(rbind,
+                             mm_lm_dat_out)
+    rownames(mm_lm_dat_out) <- NULL
   }
   # TODO:
   # - MG: The data can be merged or can be a list.
@@ -256,7 +272,8 @@ sim_data_i <- function(model,
               mm_lm_dat_out = mm_lm_dat_out,
               model_original = model_original,
               model_final = model,
-              fit0 = fit0)
+              fit0 = fit0,
+              group_labels = group_labels)
   class(out) <- c("sim_data_i", class(out))
   out
 }
