@@ -247,6 +247,8 @@ sim_data_i <- function(model = NULL,
   if (!is.list(reliability)) {
     reliability <- rep(list(reliability),
                             ngroups)
+  } else {
+    reliability <- split_par_es(reliability)
   }
   mm_lm_dat_out <- mapply(mm_lm_data,
                           object = mm_lm_out,
