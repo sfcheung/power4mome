@@ -193,6 +193,7 @@ ptable_pop <- function(model,
 
   # Use fake data to create the target parameter table
   if (ngroups > 1) {
+    ptable0_ng <- ptable0
     gpnames <- paste0("gp", seq_len(ngroups))
     vnames <- lavaan::lavNames(ptable0,
                                type = "ov")
@@ -207,6 +208,29 @@ ptable_pop <- function(model,
                         do.fit = FALSE,
                         group.label = gpnames)
     ptable0 <- lavaan::parTable(fit0)
+
+    # Fix starting values from MG
+    ptable0$tmp1 <- paste0(ptable0$lhs,
+                           ptable0$op,
+                           ptable0$rhs)
+    ptable0_ng$tmp1 <- paste0(ptable0_ng$lhs,
+                              ptable0_ng$op,
+                              ptable0_ng$rhs)
+    ptable0_ng$start_ng <- ptable0_ng$start
+    ptable0_ng$est_ng <- ptable0_ng$est
+    pt_tmp <- merge(ptable0,
+                    ptable0_ng[, c("tmp1", "start_ng", "est_ng")],
+                    all.x = TRUE,
+                    all.y = FALSE,
+                    sort = FALSE)
+    i <- !is.na(pt_tmp$start_ng)
+    pt_tmp$start[i] <- pt_tmp$start_ng[i]
+    i <- !is.na(pt_tmp$est_ng)
+    pt_tmp$est[i] <- pt_tmp$est_ng[i]
+    ptable0 <- pt_tmp[, colnames(ptable0)]
+    ptable0 <- ptable0[order(ptable0$id), ]
+    ptable0$tmp1 <- NULL
+    rownames(ptable0) <- NULL
   }
   par_pop2 <- merge(par_pop,
                     ptable0[, c("lhs", "op", "rhs", "id")],
