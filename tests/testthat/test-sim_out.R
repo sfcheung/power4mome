@@ -24,16 +24,24 @@ sim_all <- sim_out(data_all = data_all,
 
 est_test <- function(fit,
                      par_name = NULL,
-                     alpha = .05) {
+                     alpha = .05,
+                     out_type = c("vector", "list")) {
+  out_type <- match.arg(out_type)
   est <- lavaan::parameterEstimates(fit,
                                     ci = TRUE)
   est$lavlabel <- lavaan::lav_partable_labels(est)
   i <- which(est$lavlabel == par_name)
-  out <- c(est = est[i, "est"],
-           se = est[i, "se"],
-           cilo = est[i, "ci.lower"],
-           cihi = est[i, "ci.upper"],
-           sig = ifelse(est[i, "pvalue"] < alpha, 1, 0))
+  out <- switch(out_type,
+          vector = c(est = est[i, "est"],
+                     se = est[i, "se"],
+                     cilo = est[i, "ci.lower"],
+                     cihi = est[i, "ci.upper"],
+                     sig = ifelse(est[i, "pvalue"] < alpha, 1, 0)),
+          list = list(est = est[i, "est"],
+                      se = est[i, "se"],
+                      cilo = est[i, "ci.lower"],
+                      cihi = est[i, "ci.upper"],
+                      sig = ifelse(est[i, "pvalue"] < alpha, 1, 0)))
   out
 }
 
@@ -48,16 +56,36 @@ expect_equal(test_all[[3]]$test_results["se"],
              parameterEstimates(fit_all[[3]])[3, "se"],
              ignore_attr = TRUE)
 
+test_all <- do_test(sim_all,
+                    test_fun = est_test,
+                    test_args = list(par_name = "y~x",
+                                     out_type = "list"),
+                    mc_out_name = NULL,
+                    parallel = FALSE,
+                    progress = FALSE)
+
+expect_equal(test_all[[3]]$test_results$se,
+             parameterEstimates(fit_all[[3]])[3, "se"],
+             ignore_attr = TRUE)
+
 est_results <- function(est,
                         par_name = NULL,
-                        alpha = .05) {
+                        alpha = .05,
+                        out_type = c("vector", "list")) {
+  out_type <- match.arg(out_type)
   est$lavlabel <- lavaan::lav_partable_labels(est)
   i <- which(est$lavlabel == par_name)
-  out <- c(est = est[i, "est"],
-           se = est[i, "se"],
-           cilo = est[i, "ci.lower"],
-           cihi = est[i, "ci.upper"],
-           sig = ifelse(est[i, "pvalue"] < alpha, 1, 0))
+  out <- switch(out_type,
+          vector = c(est = est[i, "est"],
+                     se = est[i, "se"],
+                     cilo = est[i, "ci.lower"],
+                     cihi = est[i, "ci.upper"],
+                     sig = ifelse(est[i, "pvalue"] < alpha, 1, 0)),
+          list = list(est = est[i, "est"],
+                      se = est[i, "se"],
+                      cilo = est[i, "ci.lower"],
+                      cihi = est[i, "ci.upper"],
+                      sig = ifelse(est[i, "pvalue"] < alpha, 1, 0)))
   out
 }
 
@@ -71,5 +99,18 @@ test_all <- do_test(sim_all,
 expect_equal(test_all[[3]]$test_results["se"],
              parameterEstimates(fit_all[[3]])[3, "se"],
              ignore_attr = TRUE)
+
+test_all <- do_test(sim_all,
+                    test_fun = lavaan::parameterEstimates,
+                    mc_out_name = NULL,
+                    results_fun = est_results,
+                    results_args = list(par_name = "y~x",
+                                        out_type = "list"),
+                    parallel = FALSE,
+                    progress = FALSE)
+expect_equal(test_all[[3]]$test_results$se,
+             parameterEstimates(fit_all[[3]])[3, "se"],
+             ignore_attr = TRUE)
+
 
 })

@@ -28,7 +28,8 @@
 #' The function set to `results_fun`
 #' must accept the output of `test_fun`,
 #' as the first argument, and return a
-#' named vector with some of the following
+#' named list or named vector with some
+#' of the following
 #' elements:
 #'
 #' - `est`: Optional. The estimate of a

@@ -38,3 +38,7 @@
 
 - Added tests for `sim_out()` and
   `do_test()`. (0.0.0.9010)
+
+- Updated the help of `do_test()` on
+  the requirement for the results
+  and test functions. (0.0.0.9011)

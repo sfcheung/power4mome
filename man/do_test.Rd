@@ -107,7 +107,8 @@ estimating power.
 The function set to \code{results_fun}
 must accept the output of \code{test_fun},
 as the first argument, and return a
-named vector with some of the following
+named list or named vector with some
+of the following
 elements:
 \itemize{
 \item \code{est}: Optional. The estimate of a
