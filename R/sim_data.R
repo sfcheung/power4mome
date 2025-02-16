@@ -38,16 +38,86 @@
 #'
 #' The output is usually used by
 #' [fit_model()] to fit a target model,
-#' using the population model, to each
+#' by default the population model, to each
 #' of the dataset.
 #'
-#' ## Setting `pop_es`
+#' ## Setting `model` and `pop_es`
 #'
-#' (To prepare)
+#' Please refer to help page of
+#' [ptable_pop()] on how to specify
+#' `model` and `pop_es`.
 #'
 #' ## Setting `number_of_indicators` and `reliability`
 #'
-#' (To prepare)
+#' If a variable in the model is to be
+#' replaced by indicators, set
+#' `number_of_indicators` to a named
+#' numeric vector. The names are the
+#' variables of variables with
+#' indicators, as appeared in the
+#' `model` syntax. The value of each
+#' name is the number of indicators. The
+#' argument `reliability` should then be
+#' set a named numeric vector (or list,
+#' see the section on multigroup models)
+#' to specify the population reliability
+#' coefficients ("omega") of each set of
+#' indicators. The population factor
+#' loadings are then computed to ensure
+#' that the population reliability
+#' coefficient is of the target value.
+#'
+#' These are examples for a single group
+#' model:
+#'
+#' `number of indicator = c(m = 3, x = 4, y = 5)`
+#'
+#' The numbers of indicators for `m`,
+#' `x`, and `y` are 3, 4, and 5,
+#' respectively.
+#'
+#' `reliability = c(m = .90, x = .80, y = .70)`
+#'
+#' The population reliability
+#' coefficients of `m`, `x`, and `y` are
+#' .90, .80, and .70, respectively.
+#'
+#' ### Multigroup Models
+#'
+#' Multigroup models are supported.
+#' The number of groups is inferred
+#' from `pop_es` (see the help page
+#' of [ptable_pop()]).
+#'
+#' For a multigroup model, the number
+#' of indicators for each variable
+#' must be the same across groups.
+#'
+#' However, the population reliability
+#' coefficients can be different
+#' across groups. For a multigroup model
+#' of *k* groups,
+#' with one or more population reliability
+#' coefficients differ across groups,
+#' the argument `reliability` should be
+#' set to a named list. The names are
+#' the variables to which the population
+#' reliability coefficients are to be
+#' set. The element for each name is
+#' either a single value for the common
+#' reliability coefficient, or a
+#' numeric vector of the reliability
+#' coefficient of each group.
+#'
+#' This is an example of `reliability`
+#' for a model with 2 groups:
+#'
+#' `reliability = list(x = .80, m = c(.70, .80))`
+#'
+#' The reliability coefficients of `x` are
+#' .80 in all groups, while the
+#' reliability coefficients of `m` are
+#' .70 in one group and .80 in another.
 #'
 #' @param nrep The number of replications
 #' to generate the simulated datasets.
@@ -62,6 +132,9 @@
 #' See 'Details' on how to set the
 #' effect sizes for this argument.
 #' Required.
+#'
+#' @param ... Parameters to be passed
+#' to [ptable_pop].
 #'
 #' @param n The sample size for each
 #' dataset. Default is 100.
@@ -104,13 +177,13 @@
 #' - ptable: A `lavaan` parameter
 #'  table of the model, with population
 #'  values set in the column `start`.
-#'  (It is the output of the internal
+#'  (It is the output of the
 #'  function `ptable_pop()`.)
 #'
 #' - mm_out: The population model
 #'  represented by model matrices
 #'  as in `lavaan`. (It is the output
-#'  of the internal function
+#'  of the function
 #' `model_matrices_pop()`.)
 #'
 #' - mm_lm_out: A list of regression
@@ -135,7 +208,7 @@
 #' - fit0: The output of [lavaan::sem()]
 #'  with `ptable` as the model and
 #'  `do.fit` set to `FALSE`. Use for
-#'  easy retrieve of information
+#'  easy retrieval of information
 #'  about the model.
 #'
 #' @examples
@@ -156,6 +229,7 @@
 sim_data <- function(nrep = 10,
                      model,
                      pop_es,
+                     ...,
                      n = 100,
                      iseed = NULL,
                      number_of_indicators = NULL,
@@ -166,7 +240,7 @@ sim_data <- function(nrep = 10,
 
   ptable <- ptable_pop(model = model,
                        pop_es = pop_es,
-                       standardized = TRUE)
+                       ...)
   mm_out <- model_matrices_pop(ptable,
                                drop_list_single_group = FALSE)
   mm_lm_out <- mm_lm(mm_out,

@@ -89,8 +89,7 @@
 #'
 #' This is an example:
 #'
-#' `list("m ~ x" = "m",
-#'       "y ~ m" = c("s", "m", "l"))`
+#' `list("m ~ x" = "m", "y ~ m" = c("s", "m", "l"))`
 #'
 #' In this model, the population value
 #' of the path `m ~ x` is medium for

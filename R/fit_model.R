@@ -10,7 +10,10 @@
 #' stored in the output of [sim_data()],
 #' fits the model to each dataset
 #' simulated using [lavaan::sem()], and
-#' returns the results.
+#' returns the results. If the datasets
+#' were generated from a multigroup
+#' model when calling [sim_data()],
+#' a multigroup model is fitted.
 #'
 #' @return
 #' An object of the class `fit_out`,
