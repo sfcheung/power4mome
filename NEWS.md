@@ -1,4 +1,4 @@
-# power4mome 0.0.0.9014
+# power4mome 0.0.0.9015
 
 - Initialized the package. (0.0.0.9000)
 
@@ -54,3 +54,6 @@
 - Updated `do_test()` and `sim_out()`
   to support tests that compare two
   models. (0.0.0.9014)
+
+- Added tests of `power4test()`.
+  (0.0.0.9015)

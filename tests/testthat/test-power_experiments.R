@@ -5,120 +5,6 @@ library(pbapply)
 library(parallel)
 suppressMessages(library(lavaan))
 
-# Simple Mediation Model
-
-model_simple_med <-
-"
-m ~ x
-y ~ m + x
-"
-
-model_simple_med_es <- c("y ~ m" = "l",
-                         "m ~ x" = "m",
-                         "y ~ x" = "n")
-k <- c(y = 8,
-       m = 8,
-       x = 8)
-rel <- c(y = .70,
-         m = .80,
-         x = .70)
-
-data_i <- sim_data_i(model = model_simple_med,
-                     pop_es = model_simple_med_es,
-                     n = 200,
-                     number_of_indicators = k,
-                     reliability = rel,
-                     seed = 1234)
-names(data_i)
-
-data_all <- sim_data(nrep = 500,
-                     model = model_simple_med,
-                     pop_es = model_simple_med_es,
-                     n = 200,
-                     number_of_indicators = k,
-                     reliability = rel,
-                     iseed = 1234,
-                     parallel = TRUE,
-                     progress = TRUE)
-head(data_all[[1]]$mm_lm_dat_out)[, 1:5]
-head(data_all[[2]]$mm_lm_dat_out)[, 1:5]
-
-fit_i <- fit_model_i(data_i)
-
-fit_model_i(data_all[[1]])
-fit_model_i(data_all[[2]])
-
-fit_all <- fit_model(data_all,
-                     parallel = TRUE,
-                     progress = TRUE)
-
-fit_all[[1]]
-fit_all[[2]]
-
-mc_i <- gen_mc_i(fit_i = fit_i,
-                 R = 1000)
-mc_i
-
-mc_all <- gen_mc(fit_all,
-                 R = 1000,
-                 parallel = TRUE,
-                 progress = TRUE)
-mc_all[[1]]
-
-length(data_all)
-length(fit_all)
-length(mc_all)
-
-out_all <- sim_out(data_all = data_all,
-                   fit_all = fit_all)
-out_all[[1]]$mc_out
-
-out_all <- sim_out(data_all = data_all,
-                   fit_all = fit_all,
-                   mc_all = mc_all)
-out_all[[1]]$mc_out
-
-ind_results <- function(out) {
-  ci0 <- stats::confint(out)
-  out1 <- ifelse((ci0[1, 1] > 0) || (ci0[1, 2] < 0),
-                  yes = 1,
-                  no = 0)
-  out2 <- c(est = unname(coef(out)),
-            cilo = ci0[1, 1],
-            cihi = ci0[1, 2],
-            sig = out1)
-  return(out2)
-}
-
-test_i <- do_test_i(out_all[[1]],
-                    test_fun = manymome::indirect_effect,
-                    test_args = list(x = "x",
-                                     m = "m",
-                                     y = "y",
-                                     mc_ci = TRUE),
-                    fit_name = "fit",
-                    mc_out_name = "mc_out",
-                    results_fun = ind_results)
-test_i
-
-test_all <- do_test(out_all,
-                    test_fun = manymome::indirect_effect,
-                    test_args = list(x = "x",
-                                     m = "m",
-                                     y = "y",
-                                     mc_ci = TRUE),
-                    fit_name = "fit",
-                    mc_out_name = "mc_out",
-                    results_fun = ind_results,
-                    parallel = TRUE,
-                    progress = TRUE)
-names(test_all[[1]])
-test_results_all <- sapply(test_all, function(xx) xx$test_results)
-test_results_all <- as.data.frame(t(test_results_all))
-head(test_results_all)
-colMeans(test_results_all)
-mean(test_results_all$sig)
-
 # All-In-One
 
 test_summary <- function(object) {
@@ -232,12 +118,11 @@ par_results <- function(object) {
 
 # test_lrt_ind(power_all_sim_only$sim_all[[1]]$fit)
 
+# test_par(power_all_sim_only$sim_all[[1]]$fit,
+#          par = "y ~ m")
 
-test_par(power_all_sim_only$sim_all[[1]]$fit,
-         par = "y ~ m")
-
-test_par(power_all_sim_only$sim_all[[1]]$fit,
-         par = "ab")
+# test_par(power_all_sim_only$sim_all[[1]]$fit,
+#          par = "ab")
 
 power_all_sim_only <- power4test(nrep = 500,
                                  model = model_simple_med,
