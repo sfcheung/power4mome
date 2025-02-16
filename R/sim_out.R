@@ -40,11 +40,15 @@
 #' @param data_all The output of
 #' [sim_data()].
 #'
-#' @param fit_all The output pf
-#' [fit_model()].
-#'
-#' @param mc_all Optional. The out of
-#' [gen_mc()].
+#' @param ... Named arguments of
+#' objects to be added to each
+#' replication under the element
+#' `extra`. For example, if set to
+#' `fit = fit_all`, where `fit_all`
+#' is the output of [fit_model()],
+#' then `data_all[[1]]$extra$fit`
+#' will be set to the first output
+#' in `fit_all`.
 #'
 #' @examples
 #' mod <-
@@ -62,33 +66,67 @@
 #'
 #' fits <- fit_model(dats)
 #' sim_out_all <- sim_out(data_all = dats,
-#'                        fit_all = fits)
+#'                        fit = fits)
 #'
 #' @export
 #'
 sim_out <- function(data_all,
-                    fit_all,
-                    mc_all = NULL) {
+                    ...) {
   nrep <- length(data_all)
-  if (nrep != length(fit_all)) {
-    stop("The numbers of replications do not match.")
+  # if (nrep != length(fit_all)) {
+  #   stop("The numbers of replications do not match.")
+  # }
+  # if ((nrep != length(mc_all)) && !is.null(mc_all)) {
+  #   stop("The numbers of replications do not match.")
+  # }
+  # if (is.null(mc_all)) {
+  #   mc_all <- rep(NA, nrep)
+  # }
+  args <- list(...)
+  if (length(args) == 0) {
+    args_by_rep <- rep(NA, nrep)
+  } else {
+    args_by_rep <- split_by_rep(args)
   }
-  if ((nrep != length(mc_all)) && !is.null(mc_all)) {
-    stop("The numbers of replications do not match.")
-  }
-  if (is.null(mc_all)) {
-    mc_all <- rep(NA, nrep)
-  }
-  tmpfct <- function(x, y, z) {
-    x$fit <- y
-    x$mc_out <- z
+  tmpfct <- function(x, y, z,
+                     extra = NULL) {
+    # x$fit <- y
+    # x$mc_out <- z
+    x$extra <- extra
     x
   }
   out0 <- mapply(tmpfct,
                  x = data_all,
-                 y = fit_all,
-                 z = mc_all,
+                #  y = fit_all,
+                #  z = mc_all,
+                 extra = args_by_rep,
                  SIMPLIFY = FALSE)
   class(out0) <- c("sim_out", class(out0))
   return(out0)
+}
+
+#' @noRd
+# Process optional arguments
+split_by_rep <- function(args) {
+  arg_names <- names(args)
+  if (is.null(arg_names)) {
+    stop("The additional arguments must be named.")
+  }
+  nrep <- sapply(args,
+                 length)
+  if (!all(nrep == max(nrep))) {
+    tmp <- paste(arg_names, collapse = ", ")
+    stop("The numbers of replications in <",
+         tmp,
+         "> must be the same.")
+  }
+  tmpfct <- function(...,
+                     arg_names) {
+    list(...)
+  }
+  out <- do.call(mapply,
+                 c(list(FUN = tmpfct),
+                   args,
+                   list(SIMPLIFY = FALSE)))
+  out
 }

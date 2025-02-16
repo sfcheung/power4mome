@@ -138,19 +138,18 @@
 #' to be passed to the `test_fun`
 #' function. Default is `list()`.
 #'
-#' @param fit_name The name of the
-#' argument of the `test_fun` function
-#' that accepts the output of [lavaan::sem()].
-#' If it is the first argument of
-#' `test_fun`, set `fit_name` to `NULL`,
-#' the default.
-#'
-#' @param mc_out_name The name of the
-#' argument of the `test_fun` function
-#' that accepts the output of [manymome::do_mc()].
-#' If the `test_fun` function does not
-#' use the Monte Carlo estimates, set
-#' this to `NULL`.
+#' @param map_names A named character
+#' vector specifying how the content of
+#' the element `extra` in
+#' each replication of `sim_all` map
+#' to the argument of `test_fun`.
+#' Default is `c(fit = "fit")`,
+#' indicating that the element `fit`
+#' in the element `extra` is set to
+#' the argument `fit` of `test_fun`.
+#' That is, for the first replication,
+#' `fit = sim_out[[1]]$extra$fit` when
+#' calling `test_fun`.
 #'
 #' @param results_fun The function to be
 #' used to extract the test results.
@@ -231,8 +230,7 @@
 #'                                       fit_model_args = list(estimator = "ML"),
 #'                                       R = NULL,
 #'                                       test_fun = test_ab,
-#'                                       fit_name = "object",
-#'                                       mc_out_name = NULL,
+#'                                       map_names = c(object = "fit"),
 #'                                       results_fun = ab_results,
 #'                                       parallel = FALSE,
 #'                                       progress = TRUE)
@@ -255,8 +253,7 @@ power4test <- function(nrep = 10,
                        gen_mc_args = list(),
                        test_fun = NULL,
                        test_args = list(),
-                       fit_name = NULL,
-                       mc_out_name = "mc_out",
+                       map_names = c(fit = "fit"),
                        results_fun = NULL,
                        results_args = list(),
                        do_the_test = TRUE,
@@ -306,12 +303,12 @@ power4test <- function(nrep = 10,
       mc_all <- do.call(gen_mc,
                         mc_args0)
     } else {
-      mc_all <- NULL
+      mc_all <- rep(NA, length(fit_all))
     }
 
     sim_all <- sim_out(data_all = data_all,
-                       fit_all = fit_all,
-                       mc_all = mc_all)
+                       fit = fit_all,
+                       mc_out = mc_all)
 
   } else {
     if (inherits(sim_all, "power4test")) {
@@ -328,8 +325,7 @@ power4test <- function(nrep = 10,
     test_all <- do_test(sim_all,
                         test_fun = test_fun,
                         test_args = test_args,
-                        fit_name = fit_name,
-                        mc_out_name = mc_out_name,
+                        map_names = map_names,
                         results_fun = results_fun,
                         results_args = results_args,
                         parallel = parallel,

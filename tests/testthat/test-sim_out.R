@@ -20,7 +20,7 @@ fit_all <- fit_model(data_all)
 #                  R = 100,
 #                  iseed = 4567)
 sim_all <- sim_out(data_all = data_all,
-                   fit_all = fit_all)
+                   fit = fit_all)
 
 est_test <- function(fit,
                      par_name = NULL,
@@ -45,10 +45,16 @@ est_test <- function(fit,
   out
 }
 
+test_i <- do_test_i(sim_all[[1]],
+                    test_fun = est_test,
+                    test_args = list(par_name = "y~x"))
+expect_equal(test_i$test_results["se"],
+             parameterEstimates(fit_all[[1]])[3, "se"],
+             ignore_attr = TRUE)
+
 test_all <- do_test(sim_all,
                     test_fun = est_test,
                     test_args = list(par_name = "y~x"),
-                    mc_out_name = NULL,
                     parallel = FALSE,
                     progress = FALSE)
 
@@ -60,7 +66,6 @@ test_all <- do_test(sim_all,
                     test_fun = est_test,
                     test_args = list(par_name = "y~x",
                                      out_type = "list"),
-                    mc_out_name = NULL,
                     parallel = FALSE,
                     progress = FALSE)
 
@@ -91,7 +96,7 @@ est_results <- function(est,
 
 test_all <- do_test(sim_all,
                     test_fun = lavaan::parameterEstimates,
-                    mc_out_name = NULL,
+                    map_names = c(object = "fit"),
                     results_fun = est_results,
                     results_args = list(par_name = "y~x"),
                     parallel = FALSE,
@@ -102,7 +107,7 @@ expect_equal(test_all[[3]]$test_results["se"],
 
 test_all <- do_test(sim_all,
                     test_fun = lavaan::parameterEstimates,
-                    mc_out_name = NULL,
+                    map_names = c(object = "fit"),
                     results_fun = est_results,
                     results_args = list(par_name = "y~x",
                                         out_type = "list"),

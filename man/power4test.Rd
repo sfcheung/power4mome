@@ -16,8 +16,7 @@ power4test(
   gen_mc_args = list(),
   test_fun = NULL,
   test_args = list(),
-  fit_name = NULL,
-  mc_out_name = "mc_out",
+  map_names = c(fit = "fit"),
   results_fun = NULL,
   results_args = list(),
   do_the_test = TRUE,
@@ -90,19 +89,18 @@ this function.}
 to be passed to the \code{test_fun}
 function. Default is \code{list()}.}
 
-\item{fit_name}{The name of the
-argument of the \code{test_fun} function
-that accepts the output of \code{\link[lavaan:sem]{lavaan::sem()}}.
-If it is the first argument of
-\code{test_fun}, set \code{fit_name} to \code{NULL},
-the default.}
-
-\item{mc_out_name}{The name of the
-argument of the \code{test_fun} function
-that accepts the output of \code{\link[manymome:do_mc]{manymome::do_mc()}}.
-If the \code{test_fun} function does not
-use the Monte Carlo estimates, set
-this to \code{NULL}.}
+\item{map_names}{A named character
+vector specifying how the content of
+the element \code{extra} in
+each replication of \code{sim_all} map
+to the argument of \code{test_fun}.
+Default is \code{c(fit = "fit")},
+indicating that the element \code{fit}
+in the element \code{extra} is set to
+the argument \code{fit} of \code{test_fun}.
+That is, for the first replication,
+\code{fit = sim_out[[1]]$extra$fit} when
+calling \code{test_fun}.}
 
 \item{results_fun}{The function to be
 used to extract the test results.
@@ -254,8 +252,7 @@ power_all_test_only_par <- power4test(nrep = 50,
                                       fit_model_args = list(estimator = "ML"),
                                       R = NULL,
                                       test_fun = test_ab,
-                                      fit_name = "object",
-                                      mc_out_name = NULL,
+                                      map_names = c(object = "fit"),
                                       results_fun = ab_results,
                                       parallel = FALSE,
                                       progress = TRUE)

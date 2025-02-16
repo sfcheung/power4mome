@@ -8,8 +8,7 @@ do_test(
   sim_all,
   test_fun,
   test_args = list(),
-  fit_name = NULL,
-  mc_out_name = "mc_out",
+  map_names = c(fit = "fit"),
   results_fun = NULL,
   results_args = list(),
   parallel = FALSE,
@@ -29,19 +28,18 @@ of this function.}
 to be passed to the \code{test_fun}
 function. Default is \code{list()}.}
 
-\item{fit_name}{The name of the
-argument of the \code{test_fun} function
-that accepts the output of \code{\link[lavaan:sem]{lavaan::sem()}}.
-If it is the first argument of
-\code{test_fun}, set \code{fit_name} to \code{NULL},
-the default.}
-
-\item{mc_out_name}{The name of the
-argument of the \code{test_fun} function
-that accepts the output of \code{\link[manymome:do_mc]{manymome::do_mc()}}.
-If the \code{test_fun} function does not
-use the Monte Carlo estimates, set
-this to \code{NULL}.}
+\item{map_names}{A named character
+vector specifying how the content of
+the element \code{extra} in
+each replication of \code{sim_all} map
+to the argument of \code{test_fun}.
+Default is \code{c(fit = "fit")},
+indicating that the element \code{fit}
+in the element \code{extra} is set to
+the argument \code{fit} of \code{test_fun}.
+That is, for the first replication,
+\code{fit = sim_out[[1]]$extra$fit} when
+calling \code{test_fun}.}
 
 \item{results_fun}{The function to be
 used to extract the test results.
@@ -87,12 +85,7 @@ replication in the output of
 Do an arbitrary test in each
 replication using the function set to
 \code{test_fun}. This function should work
-on the output of \code{\link[lavaan:sem]{lavaan::sem()}}. if
-the function can use the output of
-\code{\link[manymome:do_mc]{manymome::do_mc()}}, set
-\code{mc_out_name} to the name of the
-argument (\code{mc_out} for
-\code{\link[manymome:cond_indirect]{manymome::indirect_effect()}}).
+on the output of \code{\link[lavaan:sem]{lavaan::sem()}}.
 
 The test results will be extracted
 from the output of \code{test_fun} by the
@@ -148,8 +141,8 @@ mc_all <- gen_mc(fit_all,
                  R = 100,
                  iseed = 4567)
 sim_all <- sim_out(data_all = data_all,
-                   fit_all = fit_all,
-                   mc_all = mc_all)
+                   fit = fit_all,
+                   mc_out = mc_all)
 
 ind_results <- function(out) {
   ci0 <- stats::confint(out)
@@ -169,8 +162,8 @@ test_all <- do_test(sim_all,
                                      m = "m",
                                      y = "y",
                                      mc_ci = TRUE),
-                    fit_name = "fit",
-                    mc_out_name = "mc_out",
+                    map_name = c(fit = "fit",
+                                 mc_out = "mc_out"),
                     results_fun = ind_results,
                     parallel = FALSE,
                     progress = FALSE)

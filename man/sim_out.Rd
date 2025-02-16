@@ -4,17 +4,21 @@
 \alias{sim_out}
 \title{Create a 'sim_out' Object}
 \usage{
-sim_out(data_all, fit_all, mc_all = NULL)
+sim_out(data_all, ...)
 }
 \arguments{
 \item{data_all}{The output of
 \code{\link[=sim_data]{sim_data()}}.}
 
-\item{fit_all}{The output pf
-\code{\link[=fit_model]{fit_model()}}.}
-
-\item{mc_all}{Optional. The out of
-\code{\link[=gen_mc]{gen_mc()}}.}
+\item{...}{Named arguments of
+objects to be added to each
+replication under the element
+\code{extra}. For example, if set to
+\code{fit = fit_all}, where \code{fit_all}
+is the output of \code{\link[=fit_model]{fit_model()}},
+then \code{data_all[[1]]$extra$fit}
+will be set to the first output
+in \code{fit_all}.}
 }
 \value{
 It returns an \code{sim_out} object, which
@@ -70,6 +74,6 @@ dats <- sim_data(nrep = 5,
 
 fits <- fit_model(dats)
 sim_out_all <- sim_out(data_all = dats,
-                       fit_all = fits)
+                       fit = fits)
 
 }

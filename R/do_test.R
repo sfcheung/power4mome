@@ -8,12 +8,7 @@
 #' Do an arbitrary test in each
 #' replication using the function set to
 #' `test_fun`. This function should work
-#' on the output of [lavaan::sem()]. if
-#' the function can use the output of
-#' [manymome::do_mc()], set
-#' `mc_out_name` to the name of the
-#' argument (`mc_out` for
-#' [manymome::indirect_effect()]).
+#' on the output of [lavaan::sem()].
 #'
 #' The test results will be extracted
 #' from the output of `test_fun` by the
@@ -75,19 +70,18 @@
 #' to be passed to the `test_fun`
 #' function. Default is `list()`.
 #'
-#' @param fit_name The name of the
-#' argument of the `test_fun` function
-#' that accepts the output of [lavaan::sem()].
-#' If it is the first argument of
-#' `test_fun`, set `fit_name` to `NULL`,
-#' the default.
-#'
-#' @param mc_out_name The name of the
-#' argument of the `test_fun` function
-#' that accepts the output of [manymome::do_mc()].
-#' If the `test_fun` function does not
-#' use the Monte Carlo estimates, set
-#' this to `NULL`.
+#' @param map_names A named character
+#' vector specifying how the content of
+#' the element `extra` in
+#' each replication of `sim_all` map
+#' to the argument of `test_fun`.
+#' Default is `c(fit = "fit")`,
+#' indicating that the element `fit`
+#' in the element `extra` is set to
+#' the argument `fit` of `test_fun`.
+#' That is, for the first replication,
+#' `fit = sim_out[[1]]$extra$fit` when
+#' calling `test_fun`.
 #'
 #' @param results_fun The function to be
 #' used to extract the test results.
@@ -132,8 +126,8 @@
 #'                  R = 100,
 #'                  iseed = 4567)
 #' sim_all <- sim_out(data_all = data_all,
-#'                    fit_all = fit_all,
-#'                    mc_all = mc_all)
+#'                    fit = fit_all,
+#'                    mc_out = mc_all)
 #'
 #' ind_results <- function(out) {
 #'   ci0 <- stats::confint(out)
@@ -153,8 +147,8 @@
 #'                                      m = "m",
 #'                                      y = "y",
 #'                                      mc_ci = TRUE),
-#'                     fit_name = "fit",
-#'                     mc_out_name = "mc_out",
+#'                     map_name = c(fit = "fit",
+#'                                  mc_out = "mc_out"),
 #'                     results_fun = ind_results,
 #'                     parallel = FALSE,
 #'                     progress = FALSE)
@@ -164,8 +158,7 @@
 do_test <- function(sim_all,
                     test_fun,
                     test_args = list(),
-                    fit_name = NULL,
-                    mc_out_name = "mc_out",
+                    map_names = c(fit = "fit"),
                     results_fun = NULL,
                     results_args = list(),
                     parallel = FALSE,
@@ -175,8 +168,7 @@ do_test <- function(sim_all,
                 FUN = do_test_i,
                 test_fun = test_fun,
                 test_args = test_args,
-                fit_name = fit_name,
-                mc_out_name = mc_out_name,
+                map_names = map_names,
                 results_fun = results_fun,
                 results_args = results_args,
                 parallel = parallel,
@@ -206,8 +198,7 @@ do_test <- function(sim_all,
 do_test_i <- function(out_i,
                       test_fun,
                       test_args = list(0),
-                      fit_name = NULL,
-                      mc_out_name = "mc_out",
+                      map_names = c(fit = "fit"),
                       results_fun = NULL,
                       results_args = list()) {
 # FUN must be a function that:
@@ -231,18 +222,25 @@ do_test_i <- function(out_i,
   # }
   # args1 <- utils::modifyList(test_args,
   #                            args)
-  if (!is.null(mc_out_name)) {
-    arg_mc <- list(out_i$mc_out)
-    names(arg_mc) <- mc_out_name
-  } else {
-    arg_mc <- list()
-  }
-  arg_fit <- list(out_i$fit)
-  if (!is.null(fit_name)) {
-    names(arg_fit) <- fit_name
-  }
-  args1 <- c(arg_fit,
-             arg_mc,
+  # if (!is.null(mc_out_name)) {
+  #   arg_mc <- list(out_i$extra$mc_out)
+  #   names(arg_mc) <- mc_out_name
+  # } else {
+  #   arg_mc <- list()
+  # }
+  # arg_fit <- list(out_i$extra$fit)
+  # if (!is.null(fit_name)) {
+  #   names(arg_fit) <- fit_name
+  # }
+  args_map <- sapply(map_names,
+                     function(x,
+                              out_i) {
+                       out_i$extra[[x]]
+                     },
+                     out_i = out_i,
+                     simplify = FALSE,
+                     USE.NAMES = FALSE)
+  args1 <- c(args_map,
              test_args)
   out0 <- do.call(test_fun,
                   args1)
