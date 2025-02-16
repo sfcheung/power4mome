@@ -119,6 +119,18 @@
 #' reliability coefficients of `m` are
 #' .70 in one group and .80 in another.
 #'
+#' ### Equal Numbers of Indicators and/or Reliability Coefficients
+#'
+#' If all variables in the model has
+#' the same number of indicators,
+#' `number_of_indicators` can be set
+#' to one single value.
+#'
+#' Similarly, if all sets of indicators
+#' have the same population reliability
+#' in all groups, `reliability` can also
+#' be set to one single value.
+#'
 #' @param nrep The number of replications
 #' to generate the simulated datasets.
 #' Default is 10.
@@ -314,9 +326,27 @@ sim_data_i <- function(model = NULL,
   if (length(n) == 1) {
     n <- rep(n, ngroups)
   }
+
+  vnames <- lavaan::lavNames(ptable,
+                             type = "ov")
+  p <- length(vnames)
+
+  if ((length(number_of_indicators) == 1) &&
+      is.numeric(number_of_indicators)) {
+    number_of_indicators <- rep(number_of_indicators,
+                                p)
+    names(number_of_indicators) <- vnames
+  }
   if (!is.list(number_of_indicators)) {
     number_of_indicators <- rep(list(number_of_indicators),
                                 ngroups)
+  }
+
+  if ((length(reliability) == 1) &&
+      is.numeric(reliability)) {
+    reliability <- rep(reliability,
+                                p)
+    names(reliability) <- vnames
   }
   if (!is.list(reliability)) {
     reliability <- rep(list(reliability),

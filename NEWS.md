@@ -1,4 +1,4 @@
-# power4mome 0.0.0.9004
+# power4mome 0.0.0.9005
 
 - Initialized the package. (0.0.0.9000)
 
@@ -16,3 +16,7 @@
 
 - Added support for multigroup models.
   (0.0.0.9004)
+
+- For `sim_data()`, `number_of_indicators`
+  and `reliability` can be set to one
+  single values. (0.0.0.9005)

@@ -224,6 +224,19 @@ reliability coefficients of \code{m} are
 .70 in one group and .80 in another.
 }
 
+\subsection{Equal Numbers of Indicators and/or Reliability Coefficients}{
+
+If all variables in the model has
+the same number of indicators,
+\code{number_of_indicators} can be set
+to one single value.
+
+Similarly, if all sets of indicators
+have the same population reliability
+in all groups, \code{reliability} can also
+be set to one single value.
+}
+
 }
 }
 \examples{
