@@ -1,4 +1,4 @@
-# power4mome 0.0.0.9003
+# power4mome 0.0.0.9004
 
 - Initialized the package. (0.0.0.9000)
 
@@ -9,7 +9,10 @@
 - Documented how to set `pop_es`.
   (0.0.0.9002)
 
-- Add preliminary support for
+- Added preliminary support for
   covariance-only models (no regression
   path) and confirmatory factor analytic
   models (CFA). (0.0.0.9003)
+
+- Added support for multigroup models.
+  (0.0.0.9004)
