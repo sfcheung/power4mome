@@ -1,4 +1,4 @@
-# power4mome 0.0.0.9013
+# power4mome 0.0.0.9014
 
 - Initialized the package. (0.0.0.9000)
 
@@ -50,3 +50,7 @@
   for arbitrary number of models
   and arbitrary elements to be used
   in `test_fun()`. (0.0.0.9013)
+
+- Updated `do_test()` and `sim_out()`
+  to support tests that compare two
+  models. (0.0.0.9014)
