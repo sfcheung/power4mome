@@ -1,4 +1,4 @@
-# power4mome 0.0.0.9008
+# power4mome 0.0.0.9009
 
 - Initialized the package. (0.0.0.9000)
 
@@ -32,3 +32,6 @@
 - Added error and warning checking
   code to `fit_model()`.
   (0.0.0.9008)
+
+- Added error checking code to `gen_mc()`.
+  (0.0.0.9009)

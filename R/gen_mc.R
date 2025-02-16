@@ -107,10 +107,17 @@ gen_mc_i <- function(fit_i,
                      R = 100,
                      seed = NULL,
                      ...) {
-  mc_out <- manymome::do_mc(fit = fit_i,
-                            R = R,
-                            ...,
-                            parallel = FALSE,
-                            progress = FALSE)
+  if (inherits(fit_i, "lavaan")) {
+    mc_out <- tryCatch(manymome::do_mc(fit = fit_i,
+                                       R = R,
+                                       ...,
+                                       parallel = FALSE,
+                                       progress = FALSE),
+                       error = function(e) e)
+  } else {
+    mc_out <- tryCatch(stop("The fit is not a lavaan object, ",
+                            "probably an error in model fitting."),
+                       error = function(e) e)
+  }
   mc_out
 }
