@@ -276,6 +276,23 @@ ptable_pop <- function(model,
     ptable0$tmp1 <- NULL
     rownames(ptable0) <- NULL
   }
+
+  # Check par_pop
+  vnames <- lavaan::lavNames(ptable0,
+                             type = "ov")
+  vnamee_par_pop <- lavaan::lavNames(par_pop,
+                                     type = "ov")
+  chk_names <- setdiff(vnamee_par_pop,
+                       vnames)
+  if (length(chk_names) > 0) {
+    tmp <- paste0(chk_names,
+                  collapse = ", ")
+    msg <- paste(tmp,
+                 "is/are in pop_es but not in the model,",
+                 "and parameter(s) involved is/are ignored.")
+    warning(msg)
+  }
+
   par_pop2 <- merge(par_pop,
                     ptable0[, c("lhs", "op", "rhs", "id")],
                     all.x = TRUE,

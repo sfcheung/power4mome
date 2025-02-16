@@ -1,4 +1,4 @@
-# power4mome 0.0.0.9006
+# power4mome 0.0.0.9007
 
 - Initialized the package. (0.0.0.9000)
 
@@ -24,3 +24,7 @@
 - Added a check for negative variances
   or variances greater than one in the
   model. (0.0.0.9006)
+
+- A warning will be raised by `ptable_pop()`
+  if `pop_es` has one or more variables
+  not in the model. (0.0.0.9007)
