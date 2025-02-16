@@ -28,6 +28,12 @@
 #' of [sim_data()], or a `sim_data`
 #' class object.
 #'
+#' @param model The model to be fitted.
+#' If `NULL`, the default, the model
+#' stored in `data_all`, which should
+#' be the data generation model,
+#' will be used.
+#'
 #' @param ... Optional arguments to be
 #' passed to [lavaan::sem()] when
 #' fitting the model.
@@ -63,12 +69,14 @@
 #'
 #' @export
 fit_model <- function(data_all,
+                      model = NULL,
                       ...,
                       parallel = FALSE,
                       progress = FALSE,
                       ncores = max(1, parallel::detectCores(logical = FALSE) - 1)) {
   out <- do_FUN(X = data_all,
                 FUN = fit_model_i,
+                model = model,
                 ...,
                 parallel = parallel,
                 progress = progress,
@@ -95,11 +103,19 @@ fit_model <- function(data_all,
 #'
 #' @noRd
 fit_model_i <- function(data_i,
+                        model = NULL,
                         ...) {
   # Anomalies should be checked in
   # subsequent steps, not during fitting
   # the model to many datasets.
-  fit <- tryCatch(suppressWarnings(lavaan::sem(model = data_i$model_final,
+  if (is.null(model)) {
+    model_to_fit <- data_i$model_final
+  } else {
+    model_to_fit <- model
+  }
+  # For single-group models,
+  # data_i$group_name would be NULL.
+  fit <- tryCatch(suppressWarnings(lavaan::sem(model = model_to_fit,
                                       data = data_i$mm_lm_dat_out,
                                       group = data_i$group_name,
                                       ...)),

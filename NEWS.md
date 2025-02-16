@@ -1,4 +1,4 @@
-# power4mome 0.0.0.9010
+# power4mome 0.0.0.9012
 
 - Initialized the package. (0.0.0.9000)
 
@@ -42,3 +42,6 @@
 - Updated the help of `do_test()` on
   the requirement for the results
   and test functions. (0.0.0.9011)
+
+- Updated `fit_model()` to support
+  user-supplied models. (0.0.0.9012)

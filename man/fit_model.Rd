@@ -6,6 +6,7 @@
 \usage{
 fit_model(
   data_all,
+  model = NULL,
   ...,
   parallel = FALSE,
   progress = FALSE,
@@ -16,6 +17,12 @@ fit_model(
 \item{data_all}{The output
 of \code{\link[=sim_data]{sim_data()}}, or a \code{sim_data}
 class object.}
+
+\item{model}{The model to be fitted.
+If \code{NULL}, the default, the model
+stored in \code{data_all}, which should
+be the data generation model,
+will be used.}
 
 \item{...}{Optional arguments to be
 passed to \code{\link[lavaan:sem]{lavaan::sem()}} when
