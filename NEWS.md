@@ -1,4 +1,4 @@
-# power4mome 0.0.0.9005
+# power4mome 0.0.0.9006
 
 - Initialized the package. (0.0.0.9000)
 
@@ -20,3 +20,7 @@
 - For `sim_data()`, `number_of_indicators`
   and `reliability` can be set to one
   single values. (0.0.0.9005)
+
+- Added a check for negative variances
+  or variances greater than one in the
+  model. (0.0.0.9006)

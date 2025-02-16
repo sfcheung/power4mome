@@ -205,6 +205,22 @@ psi_std <- function(object,
                                  n_std = n_std)
     }
   }
+  if (any(diag(out) < 0)) {
+    tmp <- colnames(out)[(diag(out) < 0)]
+    msg <- paste0("Negative model or implied variance(s) for ",
+                  paste0(tmp, collapse = ", "),
+                  ". ",
+                  "Please check the model.")
+    stop(msg)
+  }
+  if (any(diag(out) > 1)) {
+    tmp <- colnames(out)[(diag(out) > 1)]
+    msg <- paste0("Model or implied variance(s) for ",
+                  paste0(tmp, collapse = ", "),
+                  " greater than 1 when standardized. ",
+                  "Please check the model.")
+    stop(msg)
+  }
   return(out)
 }
 
