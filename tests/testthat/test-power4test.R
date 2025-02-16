@@ -68,9 +68,7 @@ power_all_sim_only <- power4test(nrep = 10,
                                  fit_model_args = list(estimator = "ML"),
                                  R = 50,
                                  do_the_test = FALSE,
-                                 iseed = 1234,
-                                 parallel = FALSE,
-                                 progress = FALSE)
+                                 iseed = 1234)
 
 # Indirect effect
 
@@ -94,9 +92,7 @@ power_all_test_only <- power4test(sim_all = power_all_sim_only,
                                                    mc_ci = TRUE),
                                   map_names = c(fit = "fit",
                                                 mc_out = "mc_out"),
-                                  results_fun = ind_results,
-                                  parallel = FALSE,
-                                  progress = FALSE)
+                                  results_fun = ind_results)
 
 summary_all <- test_summary(power_all_test_only)
 
@@ -130,9 +126,7 @@ power_all_test_only2 <- power4test(sim_all = power_all_test_only,
                                                     mc_ci = TRUE),
                                    map_names = c(fit = "fit",
                                                  mc_out = "mc_out"),
-                                   results_fun = ind_results,
-                                   parallel = FALSE,
-                                   progress = FALSE)
+                                   results_fun = ind_results)
 
 summary_all <- test_summary(power_all_test_only2)
 
