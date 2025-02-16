@@ -1,4 +1,4 @@
-# power4mome 0.0.0.9007
+# power4mome 0.0.0.9008
 
 - Initialized the package. (0.0.0.9000)
 
@@ -28,3 +28,7 @@
 - A warning will be raised by `ptable_pop()`
   if `pop_es` has one or more variables
   not in the model. (0.0.0.9007)
+
+- Added error and warning checking
+  code to `fit_model()`.
+  (0.0.0.9008)

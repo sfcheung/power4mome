@@ -18,7 +18,11 @@
 #' @return
 #' An object of the class `fit_out`,
 #' which is a list of the output of
-#' [lavaan::sem()].
+#' [lavaan::sem()]. If error occurred
+#' when fitting the model to a dataset,
+#' then element will be the error
+#' message from [lavaan::sem()] instead
+#' of the output of [lavaan::sem()].
 #'
 #' @param data_all The output
 #' of [sim_data()], or a `sim_data`
@@ -92,9 +96,13 @@ fit_model <- function(data_all,
 #' @noRd
 fit_model_i <- function(data_i,
                         ...) {
-  fit <- lavaan::sem(model = data_i$model_final,
-                     data = data_i$mm_lm_dat_out,
-                     group = data_i$group_name,
-                     ...)
+  # Anomalies should be checked in
+  # subsequent steps, not during fitting
+  # the model to many datasets.
+  fit <- tryCatch(suppressWarnings(lavaan::sem(model = data_i$model_final,
+                                      data = data_i$mm_lm_dat_out,
+                                      group = data_i$group_name,
+                                      ...)),
+                  error = function(e) e)
   return(fit)
 }

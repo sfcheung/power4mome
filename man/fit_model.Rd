@@ -36,7 +36,11 @@ is used.}
 \value{
 An object of the class \code{fit_out},
 which is a list of the output of
-\code{\link[lavaan:sem]{lavaan::sem()}}.
+\code{\link[lavaan:sem]{lavaan::sem()}}. If error occurred
+when fitting the model to a dataset,
+then element will be the error
+message from \code{\link[lavaan:sem]{lavaan::sem()}} instead
+of the output of \code{\link[lavaan:sem]{lavaan::sem()}}.
 }
 \description{
 Get the output of
