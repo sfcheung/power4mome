@@ -54,6 +54,51 @@
 #' moderation effect, the coefficients
 #' of a product term.
 #'
+#' ## Multigroup Models
+#'
+#' The function also support multigroup
+#' models.
+#'
+#' Because the model is the population
+#' model, equality constraints are
+#' irrelevant and the model syntax
+#' specifies only the *form* of the
+#' model. Therefore, `model` is
+#' specified as in the case of single
+#' group models.
+#'
+#' For `pop_es`, instead of using a
+#' named vectors, use as named *list*.
+#'
+#' - The names are the parameters, or
+#'   keywords such as `.beta.` and
+#'   `.cov.`, like specifying the
+#'   population values for a single
+#'   group model.
+#'
+#' - The elements are character vectors.
+#'   If it has only one element (e.g.,
+#'   a single string), then it is the
+#'   the population value for all groups.
+#'   If it has more than one element
+#'   (e.g., a vector of three strings),
+#'   then they are the population values
+#'   of the groups. For a model of *k*
+#'   groups, each vector must have
+#'   either *k* elements or one element.
+#'
+#' This is an example:
+#'
+#' `list("m ~ x" = "m",
+#'       "y ~ m" = c("s", "m", "l"))`
+#'
+#' In this model, the population value
+#' of the path `m ~ x` is medium for
+#' all groups, while the population
+#' values for the path `y ~ m` are
+#' small, medium, and large,
+#' respectively.
+#'
 #' @return
 #' The function [ptable_pop()] returns
 #' a `lavaan` parameter table of the
@@ -295,6 +340,11 @@ ptable_pop <- function(model,
 #' set to the population values. If
 #' `x` is the model syntax, it will be
 #' stored in the attributes `model`.
+#' If the model is a multigroup model
+#' with *k* groups (*k* greater than 1),
+#' then it returns a list of *k* lists
+#' of `lavaan` LISREL-style model
+#' matrices.
 #'
 #' @param x It can be 'lavaan' model
 #' syntax, to be passed to [ptable_pop()],
