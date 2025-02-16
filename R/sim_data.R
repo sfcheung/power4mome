@@ -38,16 +38,86 @@
 #'
 #' The output is usually used by
 #' [fit_model()] to fit a target model,
-#' using the population model, to each
+#' by default the population model, to each
 #' of the dataset.
 #'
-#' ## Setting `pop_es`
+#' ## Setting `model` and `pop_es`
 #'
-#' (To prepare)
+#' Please refer to help page of
+#' [ptable_pop()] on how to specify
+#' `model` and `pop_es`.
 #'
 #' ## Setting `number_of_indicators` and `reliability`
 #'
-#' (To prepare)
+#' If a variable in the model is to be
+#' replaced by indicators, set
+#' `number_of_indicators` to a named
+#' numeric vector. The names are the
+#' variables of variables with
+#' indicators, as appeared in the
+#' `model` syntax. The value of each
+#' name is the number of indicators. The
+#' argument `reliability` should then be
+#' set a named numeric vector (or list,
+#' see the section on multigroup models)
+#' to specify the population reliability
+#' coefficients ("omega") of each set of
+#' indicators. The population factor
+#' loadings are then computed to ensure
+#' that the population reliability
+#' coefficient is of the target value.
+#'
+#' These are examples for a single group
+#' model:
+#'
+#' `number of indicator = c(m = 3, x = 4, y = 5)`
+#'
+#' The numbers of indicators for `m`,
+#' `x`, and `y` are 3, 4, and 5,
+#' respectively.
+#'
+#' `reliability = c(m = .90, x = .80, y = .70)`
+#'
+#' The population reliability
+#' coefficients of `m`, `x`, and `y` are
+#' .90, .80, and .70, respectively.
+#'
+#' ### Multigroup Models
+#'
+#' Multigroup models are supported.
+#' The number of groups is inferred
+#' from `pop_es` (see the help page
+#' of [ptable_pop()]).
+#'
+#' For a multigroup model, the number
+#' of indicators for each variable
+#' must be the same across groups.
+#'
+#' However, the population reliability
+#' coefficients can be different
+#' across groups. For a multigroup model
+#' of *k* groups,
+#' with one or more population reliability
+#' coefficients differ across groups,
+#' the argument `reliability` should be
+#' set to a named list. The names are
+#' the variables to which the population
+#' reliability coefficients are to be
+#' set. The element for each name is
+#' either a single value for the common
+#' reliability coefficient, or a
+#' numeric vector of the reliability
+#' coefficient of each group.
+#'
+#' This is an example of `reliability`
+#' for a model with 2 groups:
+#'
+#' `reliability = list(x = .80, m = c(.70, .80))`
+#'
+#' The reliability coefficients of `x` are
+#' .80 in all groups, while the
+#' reliability coefficients of `m` are
+#' .70 in one group and .80 in another.
 #'
 #' @param nrep The number of replications
 #' to generate the simulated datasets.
@@ -62,6 +132,9 @@
 #' See 'Details' on how to set the
 #' effect sizes for this argument.
 #' Required.
+#'
+#' @param ... Parameters to be passed
+#' to [ptable_pop].
 #'
 #' @param n The sample size for each
 #' dataset. Default is 100.
@@ -104,13 +177,13 @@
 #' - ptable: A `lavaan` parameter
 #'  table of the model, with population
 #'  values set in the column `start`.
-#'  (It is the output of the internal
+#'  (It is the output of the
 #'  function `ptable_pop()`.)
 #'
 #' - mm_out: The population model
 #'  represented by model matrices
 #'  as in `lavaan`. (It is the output
-#'  of the internal function
+#'  of the function
 #' `model_matrices_pop()`.)
 #'
 #' - mm_lm_out: A list of regression
@@ -135,7 +208,7 @@
 #' - fit0: The output of [lavaan::sem()]
 #'  with `ptable` as the model and
 #'  `do.fit` set to `FALSE`. Use for
-#'  easy retrieve of information
+#'  easy retrieval of information
 #'  about the model.
 #'
 #' @examples
@@ -156,6 +229,7 @@
 sim_data <- function(nrep = 10,
                      model,
                      pop_es,
+                     ...,
                      n = 100,
                      iseed = NULL,
                      number_of_indicators = NULL,
@@ -163,9 +237,20 @@ sim_data <- function(nrep = 10,
                      parallel = FALSE,
                      progress = FALSE,
                      ncores = max(1, parallel::detectCores(logical = FALSE) - 1)) {
+
+  ptable <- ptable_pop(model = model,
+                       pop_es = pop_es,
+                       ...)
+  mm_out <- model_matrices_pop(ptable,
+                               drop_list_single_group = FALSE)
+  mm_lm_out <- mm_lm(mm_out,
+                     drop_list_single_group = FALSE)
+
   out <- do_FUN(X = rep(model, nrep),
                 FUN = sim_data_i,
-                pop_es = pop_es,
+                ptable = ptable,
+                mm_out = mm_out,
+                mm_lm_out = mm_lm_out,
                 n = n,
                 number_of_indicators = number_of_indicators,
                 reliability = reliability,
@@ -194,41 +279,98 @@ sim_data <- function(nrep = 10,
 #' }
 #'
 #' @noRd
-sim_data_i <- function(model,
-                       pop_es,
+sim_data_i <- function(model = NULL,
+                       pop_es = NULL,
+                       ptable = NULL,
+                       mm_out = NULL,
+                       mm_lm_out = NULL,
                        n = 100,
                        number_of_indicators = NULL,
                        reliability = NULL,
-                       seed = NULL) {
+                       seed = NULL,
+                       drop_list_single_group = TRUE,
+                       merge_groups = TRUE) {
   if (!is.null(seed)) set.seed(seed)
   # TODO:
   # - Set the default values for parameter
   #   not specified (do this in ptable_pop).
-  ptable <- ptable_pop(model = model,
-                       pop_es = pop_es,
-                       standardized = TRUE)
-  mm_out <- model_matrices_pop(ptable)
-  mm_lm_out <- mm_lm(mm_out)
-  mm_lm_dat_out <- mm_lm_data(mm_lm_out,
-                              n = n,
-                              number_of_indicators = number_of_indicators,
-                              reliability = reliability,
-                              keep_f_scores = FALSE)
+  # - Can accept ptable, mm_out, and mm_lm_out, to save the
+  #   time in repeating these steps unnecessarily.
+  if (is.null(ptable)) {
+    ptable <- ptable_pop(model = model,
+                        pop_es = pop_es,
+                        standardized = TRUE)
+  }
+  if (is.null(mm_out)) {
+    mm_out <- model_matrices_pop(ptable,
+                                drop_list_single_group = FALSE)
+  }
+  if (is.null(mm_lm_out)) {
+  mm_lm_out <- mm_lm(mm_out,
+                     drop_list_single_group = FALSE)
+  }
+
+  ngroups <- max(ptable$group)
+  if (length(n) == 1) {
+    n <- rep(n, ngroups)
+  }
+  if (!is.list(number_of_indicators)) {
+    number_of_indicators <- rep(list(number_of_indicators),
+                                ngroups)
+  }
+  if (!is.list(reliability)) {
+    reliability <- rep(list(reliability),
+                            ngroups)
+  } else {
+    reliability <- split_par_es(reliability)
+  }
+  mm_lm_dat_out <- mapply(mm_lm_data,
+                          object = mm_lm_out,
+                          n = n,
+                          number_of_indicators = number_of_indicators,
+                          reliability = reliability,
+                          MoreArgs = list(keep_f_scores = FALSE),
+                          SIMPLIFY = FALSE)
+
   model_original <- model
   model <- add_indicator_syntax(model,
-                                number_of_indicators = number_of_indicators,
-                                reliability = reliability)
+                                number_of_indicators = number_of_indicators[[1]],
+                                reliability = reliability[[1]])
   tmp <- ptable
   tmp$est <- tmp$start
   fit0 <- lavaan::sem(tmp,
               do.fit = FALSE)
+  if (ngroups > 1) {
+    group_labels <- names(mm_out)
+    group_name <- "group"
+  } else {
+    group_labels <- NULL
+    group_name <- NULL
+  }
+  if (drop_list_single_group && (ngroups == 1)) {
+    mm_out <- mm_out[[1]]
+    mm_lm_out <- mm_lm_out[[1]]
+    mm_lm_dat_out <- mm_lm_dat_out[[1]]
+  }
+  if (ngroups > 1) {
+    for (i in group_labels) {
+      mm_lm_dat_out[[i]]$group <- i
+    }
+  }
+  if (merge_groups && (ngroups > 1)) {
+    mm_lm_dat_out <- do.call(rbind,
+                             mm_lm_dat_out)
+    rownames(mm_lm_dat_out) <- NULL
+  }
   out <- list(ptable = ptable,
               mm_out = mm_out,
               mm_lm_out = mm_lm_out,
               mm_lm_dat_out = mm_lm_dat_out,
               model_original = model_original,
               model_final = model,
-              fit0 = fit0)
+              fit0 = fit0,
+              group_name = group_name,
+              group_labels = group_labels)
   class(out) <- c("sim_data_i", class(out))
   out
 }

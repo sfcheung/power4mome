@@ -54,6 +54,50 @@
 #' moderation effect, the coefficients
 #' of a product term.
 #'
+#' ## Multigroup Models
+#'
+#' The function also support multigroup
+#' models.
+#'
+#' Because the model is the population
+#' model, equality constraints are
+#' irrelevant and the model syntax
+#' specifies only the *form* of the
+#' model. Therefore, `model` is
+#' specified as in the case of single
+#' group models.
+#'
+#' For `pop_es`, instead of using a
+#' named vectors, use as named *list*.
+#'
+#' - The names are the parameters, or
+#'   keywords such as `.beta.` and
+#'   `.cov.`, like specifying the
+#'   population values for a single
+#'   group model.
+#'
+#' - The elements are character vectors.
+#'   If it has only one element (e.g.,
+#'   a single string), then it is the
+#'   the population value for all groups.
+#'   If it has more than one element
+#'   (e.g., a vector of three strings),
+#'   then they are the population values
+#'   of the groups. For a model of *k*
+#'   groups, each vector must have
+#'   either *k* elements or one element.
+#'
+#' This is an example:
+#'
+#' `list("m ~ x" = "m", "y ~ m" = c("s", "m", "l"))`
+#'
+#' In this model, the population value
+#' of the path `m ~ x` is medium for
+#' all groups, while the population
+#' values for the path `y ~ m` are
+#' small, medium, and large,
+#' respectively.
+#'
 #' @return
 #' The function [ptable_pop()] returns
 #' a `lavaan` parameter table of the
@@ -164,13 +208,74 @@ ptable_pop <- function(model,
     par_pop <- set_pop(pop_es,
                        es1 = es1,
                        es2 = es2)
+    par_pop <- list(par_pop)
+  } else if (is.list(pop_es)) {
+    pop_es <- split_par_es(pop_es)
+    pop_es <- lapply(pop_es,
+                     FUN = fix_par_es,
+                     model = model)
+    par_pop <- lapply(pop_es,
+                      set_pop,
+                      es1 = es1,
+                      es2 = es2)
   } else {
     par_pop <- pop_es
   }
-  par_pop <- dup_cov(par_pop)
+  # par_pop <- dup_cov(par_pop)
+  par_pop <- lapply(par_pop,
+                    dup_cov)
+  ngroups <- length(par_pop)
+  for (i in seq_along(par_pop)) {
+    par_pop[[i]]$group <- i
+  }
+  par_pop <- do.call(rbind,
+                     par_pop)
+  # Single group ptable
   fit0 <- lavaan::sem(model,
                       do.fit = FALSE)
   ptable0 <- lavaan::parTable(fit0)
+
+  # Use fake data to create the target parameter table
+  if (ngroups > 1) {
+    ptable0_ng <- ptable0
+    gpnames <- paste0("gp", seq_len(ngroups))
+    vnames <- lavaan::lavNames(ptable0,
+                               type = "ov")
+    p <- length(vnames)
+    d1 <- diag(p)
+    colnames(d1) <- rownames(d1) <- vnames
+    dat_cov <- lapply(seq_len(ngroups),
+                      function(x) d1)
+    fit0 <- lavaan::sem(model,
+                        sample.cov = dat_cov,
+                        sample.nobs = rep(10000, ngroups),
+                        do.fit = FALSE,
+                        group.label = gpnames)
+    ptable0 <- lavaan::parTable(fit0)
+
+    # Fix starting values from MG
+    ptable0$tmp1 <- paste0(ptable0$lhs,
+                           ptable0$op,
+                           ptable0$rhs)
+    ptable0_ng$tmp1 <- paste0(ptable0_ng$lhs,
+                              ptable0_ng$op,
+                              ptable0_ng$rhs)
+    ptable0_ng$start_ng <- ptable0_ng$start
+    ptable0_ng$est_ng <- ptable0_ng$est
+    pt_tmp <- merge(ptable0,
+                    ptable0_ng[, c("tmp1", "start_ng", "est_ng")],
+                    all.x = TRUE,
+                    all.y = FALSE,
+                    sort = FALSE)
+    i <- !is.na(pt_tmp$start_ng)
+    pt_tmp$start[i] <- pt_tmp$start_ng[i]
+    i <- !is.na(pt_tmp$est_ng)
+    pt_tmp$est[i] <- pt_tmp$est_ng[i]
+    ptable0 <- pt_tmp[, colnames(ptable0)]
+    ptable0 <- ptable0[order(ptable0$id), ]
+    ptable0$tmp1 <- NULL
+    rownames(ptable0) <- NULL
+  }
   par_pop2 <- merge(par_pop,
                     ptable0[, c("lhs", "op", "rhs", "id")],
                     all.x = TRUE,
@@ -185,7 +290,7 @@ ptable_pop <- function(model,
     # warning("One or more parameters in 'pop_es' is not in the model: ",
     #         tmp2)
   }
-  par_pop2 <- par_pop2[, c("id", "lhs", "op", "rhs", "pop")]
+  par_pop2 <- par_pop2[, c("id", "lhs", "op", "rhs", "group", "pop")]
 
   ptable1 <- merge(ptable0,
                    par_pop2,
@@ -196,15 +301,20 @@ ptable_pop <- function(model,
   # - Check equality constraints
   attr(ptable1, "model") <- model
   if (standardized) {
-    mm <- model_matrices_pop(ptable1)
-    if (ncol(mm$psi) != 0) {
-      mm$psi <- psi_std(mm,
-                        n_std = n_std)
+    mm <- model_matrices_pop(ptable1,
+                             drop_list_single_group = FALSE)
+    if (ncol(mm[[1]]$psi) != 0) {
+      for (i in seq_along(mm)) {
+        mm[[i]]$psi <- psi_std(mm[[i]],
+                               n_std = n_std)
+      }
     } else {
       # CFA model or correlation only
       # Make sure theta is a covariance matrix,
       # in case variances accidentally set.
-      mm$theta <- stats::cov2cor(mm$theta)
+      for (i in seq_along(mm)) {
+        mm[[i]]$theta <- stats::cov2cor(mm[[i]]$theta)
+      }
     }
     ptable1 <- start_from_mm(ptable1,
                              mm)
@@ -229,6 +339,11 @@ ptable_pop <- function(model,
 #' set to the population values. If
 #' `x` is the model syntax, it will be
 #' stored in the attributes `model`.
+#' If the model is a multigroup model
+#' with *k* groups (*k* greater than 1),
+#' then it returns a list of *k* lists
+#' of `lavaan` LISREL-style model
+#' matrices.
 #'
 #' @param x It can be 'lavaan' model
 #' syntax, to be passed to [ptable_pop()],
@@ -240,6 +355,12 @@ ptable_pop <- function(model,
 #' these are arguments to be passed to
 #' [ptable_pop()].
 #'
+#' @param drop_list_single_group If
+#' `TRUE` and the number groups is
+#' equal to one, the output will be
+#' a list of matrices of one group
+#' only. Default if `TRUE`.
+#'
 #' @examples
 #'
 #' model_matrices_pop(ptable_final1)
@@ -250,7 +371,8 @@ ptable_pop <- function(model,
 #' @export
 
 model_matrices_pop <- function(x,
-                               ...) {
+                               ...,
+                               drop_list_single_group = TRUE) {
   if (is.character((x))) {
     ptable <- ptable_pop(model = x,
                          ...)
@@ -259,16 +381,30 @@ model_matrices_pop <- function(x,
   }
   fit1 <- lavaan::sem(ptable,
                       do.fit = FALSE)
+  ngroups <- lavaan::lavInspect(fit1,
+                                "ngroups")
   mm <- lavaan::lavInspect(fit1,
-                           "partable")
-  mm2 <- set_start(mm = mm,
-                   ptable = ptable)
+                           "partable",
+                           drop.list.single.group = FALSE)
+  mm2 <- sapply(mm,
+                set_start,
+                ptable = ptable,
+                simplify = FALSE)
   attr(mm2, "header") <- NULL
   if (is.character((x))) {
     attr(mm2, "model") <- x
-  } else (
+    for (i in seq_along(mm2)) {
+      attr(mm2[[i]], "model") <- x
+    }
+  } else {
     attr(mm2, "model") <- attr(x, "model")
-  )
+    for (i in seq_along(mm2)) {
+      attr(mm2[[i]], "model") <- attr(x, "model")
+    }
+  }
+  if (drop_list_single_group && (ngroups == 1)) {
+    mm2 <- mm2[[1]]
+  }
   mm2
 }
 
@@ -303,7 +439,25 @@ set_start <- function(mm,
 # - A list of:
 #   - regression models
 #   - covariance matrix of x-variables
-mm_lm <- function(mm) {
+mm_lm <- function(mm,
+                  drop_list_single_group = TRUE) {
+  # TODO:
+  # - Find a more robust way to check
+  #   the number of groups.
+  if (is.null(attr(mm[[1]], "model"))) {
+    out <- mm_lm_i(mm)
+    if (!drop_list_single_group) {
+      out <- list(out)
+    }
+  } else {
+    out <- lapply(mm,
+                  mm_lm_i)
+  }
+  return(out)
+}
+
+#' @noRd
+mm_lm_i <- function(mm) {
   # TODO:
   # - Check whether the transpose of nox-beta is in echelon form.
   # - Handle models with no y-variables (e.g., CFA).

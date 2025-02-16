@@ -48,7 +48,10 @@ By default, it extracts the model
 stored in the output of \code{\link[=sim_data]{sim_data()}},
 fits the model to each dataset
 simulated using \code{\link[lavaan:sem]{lavaan::sem()}}, and
-returns the results.
+returns the results. If the datasets
+were generated from a multigroup
+model when calling \code{\link[=sim_data]{sim_data()}},
+a multigroup model is fitted.
 }
 \examples{
 mod <-

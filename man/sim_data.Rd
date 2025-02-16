@@ -8,6 +8,7 @@ sim_data(
   nrep = 10,
   model,
   pop_es,
+  ...,
   n = 100,
   iseed = NULL,
   number_of_indicators = NULL,
@@ -31,6 +32,9 @@ specify population effect sizes.
 See 'Details' on how to set the
 effect sizes for this argument.
 Required.}
+
+\item{...}{Parameters to be passed
+to \link{ptable_pop}.}
 
 \item{n}{The sample size for each
 dataset. Default is 100.}
@@ -73,12 +77,12 @@ the following major elements:
 \item ptable: A \code{lavaan} parameter
 table of the model, with population
 values set in the column \code{start}.
-(It is the output of the internal
+(It is the output of the
 function \code{ptable_pop()}.)
 \item mm_out: The population model
 represented by model matrices
 as in \code{lavaan}. (It is the output
-of the internal function
+of the function
 \code{model_matrices_pop()}.)
 \item mm_lm_out: A list of regression
 model formula, one for each
@@ -98,7 +102,7 @@ to the syntax.
 \item fit0: The output of \code{\link[lavaan:sem]{lavaan::sem()}}
 with \code{ptable} as the model and
 \code{do.fit} set to \code{FALSE}. Use for
-easy retrieve of information
+easy retrieval of information
 about the model.
 }
 }
@@ -139,16 +143,87 @@ parameters, and estimate power.
 
 The output is usually used by
 \code{\link[=fit_model]{fit_model()}} to fit a target model,
-using the population model, to each
+by default the population model, to each
 of the dataset.
-\subsection{Setting \code{pop_es}}{
+\subsection{Setting \code{model} and \code{pop_es}}{
 
-(To prepare)
+Please refer to help page of
+\code{\link[=ptable_pop]{ptable_pop()}} on how to specify
+\code{model} and \code{pop_es}.
 }
 
 \subsection{Setting \code{number_of_indicators} and \code{reliability}}{
 
-(To prepare)
+If a variable in the model is to be
+replaced by indicators, set
+\code{number_of_indicators} to a named
+numeric vector. The names are the
+variables of variables with
+indicators, as appeared in the
+\code{model} syntax. The value of each
+name is the number of indicators. The
+argument \code{reliability} should then be
+set a named numeric vector (or list,
+see the section on multigroup models)
+to specify the population reliability
+coefficients ("omega") of each set of
+indicators. The population factor
+loadings are then computed to ensure
+that the population reliability
+coefficient is of the target value.
+
+These are examples for a single group
+model:
+
+\verb{number of indicator = c(m = 3, x = 4, y = 5)}
+
+The numbers of indicators for \code{m},
+\code{x}, and \code{y} are 3, 4, and 5,
+respectively.
+
+\code{reliability = c(m = .90, x = .80, y = .70)}
+
+The population reliability
+coefficients of \code{m}, \code{x}, and \code{y} are
+.90, .80, and .70, respectively.
+\subsection{Multigroup Models}{
+
+Multigroup models are supported.
+The number of groups is inferred
+from \code{pop_es} (see the help page
+of \code{\link[=ptable_pop]{ptable_pop()}}).
+
+For a multigroup model, the number
+of indicators for each variable
+must be the same across groups.
+
+However, the population reliability
+coefficients can be different
+across groups. For a multigroup model
+of \emph{k} groups,
+with one or more population reliability
+coefficients differ across groups,
+the argument \code{reliability} should be
+set to a named list. The names are
+the variables to which the population
+reliability coefficients are to be
+set. The element for each name is
+either a single value for the common
+reliability coefficient, or a
+numeric vector of the reliability
+coefficient of each group.
+
+This is an example of \code{reliability}
+for a model with 2 groups:
+
+\code{reliability = list(x = .80, m = c(.70, .80))}
+
+The reliability coefficients of \code{x} are
+.80 in all groups, while the
+reliability coefficients of \code{m} are
+.70 in one group and .80 in another.
+}
+
 }
 }
 \examples{

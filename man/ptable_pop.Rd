@@ -15,7 +15,7 @@ ptable_pop(
   std_force_monte_carlo = FALSE
 )
 
-model_matrices_pop(x, ...)
+model_matrices_pop(x, ..., drop_list_single_group = TRUE)
 }
 \arguments{
 \item{model}{String. The model defined
@@ -81,6 +81,12 @@ such as the output of \code{\link[=ptable_pop]{ptable_pop()}}.}
 \item{...}{If \code{x} is a model syntax,
 these are arguments to be passed to
 \code{\link[=ptable_pop]{ptable_pop()}}.}
+
+\item{drop_list_single_group}{If
+\code{TRUE} and the number groups is
+equal to one, the output will be
+a list of matrices of one group
+only. Default if \code{TRUE}.}
 }
 \value{
 The function \code{\link[=ptable_pop]{ptable_pop()}} returns
@@ -96,6 +102,11 @@ set to \code{free}), with matrix elements
 set to the population values. If
 \code{x} is the model syntax, it will be
 stored in the attributes \code{model}.
+If the model is a multigroup model
+with \emph{k} groups (\emph{k} greater than 1),
+then it returns a list of \emph{k} lists
+of \code{lavaan} LISREL-style model
+matrices.
 }
 \description{
 Generate the complete
@@ -146,6 +157,51 @@ and regression coefficients, and the
 vector \code{es2} is for for standardized
 moderation effect, the coefficients
 of a product term.
+}
+
+\subsection{Multigroup Models}{
+
+The function also support multigroup
+models.
+
+Because the model is the population
+model, equality constraints are
+irrelevant and the model syntax
+specifies only the \emph{form} of the
+model. Therefore, \code{model} is
+specified as in the case of single
+group models.
+
+For \code{pop_es}, instead of using a
+named vectors, use as named \emph{list}.
+\itemize{
+\item The names are the parameters, or
+keywords such as \code{.beta.} and
+\code{.cov.}, like specifying the
+population values for a single
+group model.
+\item The elements are character vectors.
+If it has only one element (e.g.,
+a single string), then it is the
+the population value for all groups.
+If it has more than one element
+(e.g., a vector of three strings),
+then they are the population values
+of the groups. For a model of \emph{k}
+groups, each vector must have
+either \emph{k} elements or one element.
+}
+
+This is an example:
+
+\code{list("m ~ x" = "m", "y ~ m" = c("s", "m", "l"))}
+
+In this model, the population value
+of the path \code{m ~ x} is medium for
+all groups, while the population
+values for the path \code{y ~ m} are
+small, medium, and large,
+respectively.
 }
 
 The function \code{\link[=model_matrices_pop]{model_matrices_pop()}}

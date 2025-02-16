@@ -182,3 +182,26 @@ lambda_from_reliability <- function(p = 3,
   lambda <- sqrt(omega / (p - omega * (p - 1)))
   lambda
 }
+
+#' @noRd
+# Create a list of par_es for groups
+split_par_es <- function(object) {
+  ngroups <- max(sapply(object,
+                        length,
+                        USE.NAMES = FALSE))
+  for (xx in names(object)) {
+    i <- length(object[[xx]])
+    if (i == 1) {
+      object[[xx]] <- rep(object[[xx]], ngroups)
+    } else if (i != ngroups) {
+      stop("Each element of pop_es must either one element of equal number of elements.")
+    }
+  }
+  i <- seq_len(ngroups)
+  out <- lapply(i, function(x) {
+              sapply(object,
+                     function(y) y[x],
+                     simplify = TRUE)
+            })
+  return(out)
+}
