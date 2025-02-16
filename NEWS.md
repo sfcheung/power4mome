@@ -1,4 +1,4 @@
-# power4mome 0.0.0.9009
+# power4mome 0.0.0.9010
 
 - Initialized the package. (0.0.0.9000)
 
@@ -35,3 +35,6 @@
 
 - Added error checking code to `gen_mc()`.
   (0.0.0.9009)
+
+- Added tests for `sim_out()` and
+  `do_test()`. (0.0.0.9010)

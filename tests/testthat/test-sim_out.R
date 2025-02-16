@@ -1,0 +1,75 @@
+library(testthat)
+suppressMessages(library(lavaan))
+
+test_that("sim_out and do_test", {
+
+mod <-
+"m ~ x
+ y ~ m + x"
+es <-
+c("y ~ m" = "m",
+  "m ~ x" = "m",
+  "y ~ x" = "n")
+data_all <- sim_data(nrep = 3,
+                     model = mod,
+                     pop_es = es,
+                     n = 100,
+                     iseed = 1234)
+fit_all <- fit_model(data_all)
+# mc_all <- gen_mc(fit_all,
+#                  R = 100,
+#                  iseed = 4567)
+sim_all <- sim_out(data_all = data_all,
+                   fit_all = fit_all)
+
+est_test <- function(fit,
+                     par_name = NULL,
+                     alpha = .05) {
+  est <- lavaan::parameterEstimates(fit,
+                                    ci = TRUE)
+  est$lavlabel <- lavaan::lav_partable_labels(est)
+  i <- which(est$lavlabel == par_name)
+  out <- c(est = est[i, "est"],
+           se = est[i, "se"],
+           cilo = est[i, "ci.lower"],
+           cihi = est[i, "ci.upper"],
+           sig = ifelse(est[i, "pvalue"] < alpha, 1, 0))
+  out
+}
+
+test_all <- do_test(sim_all,
+                    test_fun = est_test,
+                    test_args = list(par_name = "y~x"),
+                    mc_out_name = NULL,
+                    parallel = FALSE,
+                    progress = FALSE)
+
+expect_equal(test_all[[3]]$test_results["se"],
+             parameterEstimates(fit_all[[3]])[3, "se"],
+             ignore_attr = TRUE)
+
+est_results <- function(est,
+                        par_name = NULL,
+                        alpha = .05) {
+  est$lavlabel <- lavaan::lav_partable_labels(est)
+  i <- which(est$lavlabel == par_name)
+  out <- c(est = est[i, "est"],
+           se = est[i, "se"],
+           cilo = est[i, "ci.lower"],
+           cihi = est[i, "ci.upper"],
+           sig = ifelse(est[i, "pvalue"] < alpha, 1, 0))
+  out
+}
+
+test_all <- do_test(sim_all,
+                    test_fun = lavaan::parameterEstimates,
+                    mc_out_name = NULL,
+                    results_fun = est_results,
+                    results_args = list(par_name = "y~x"),
+                    parallel = FALSE,
+                    progress = FALSE)
+expect_equal(test_all[[3]]$test_results["se"],
+             parameterEstimates(fit_all[[3]])[3, "se"],
+             ignore_attr = TRUE)
+
+})
