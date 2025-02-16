@@ -14,7 +14,7 @@ model2_es <- list(".beta." = "-s",
                   "m1 + m2 ~ x" = "-m",
                   "y ~ m1" = "l",
                   "y ~ m2" = c("m", "l"))
-
+set.seed(1234)
 out <- ptable_pop(model = model2,
                   pop_es = model2_es,
                   n_std = 5e4)

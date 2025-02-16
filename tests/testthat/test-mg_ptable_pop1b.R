@@ -15,7 +15,7 @@ y ~  m2 + m1 + x + w + m2:w
 model1_es <- list("m1 ~ x" = "m",
                   "m2 ~ m1" = "s",
                   "y ~ m2:w" = c("-m", "n"))
-
+set.seed(1234)
 out <- ptable_pop(model = model1,
                   pop_es = model1_es,
                   n_std = 5e4)
