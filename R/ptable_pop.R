@@ -330,6 +330,7 @@ ptable_pop <- function(model,
   attr(ptable1, "es2") <- es2
   attr(ptable1, "par_pop") <- par_pop
 
+  class(ptable1) <- c("ptable1", class(ptable1))
   ptable1
 }
 
@@ -417,6 +418,13 @@ model_matrices_pop <- function(x,
   }
   mm2
 }
+
+#' @noRd
+# Update par_pop
+# Input:
+# - par_pop
+# - pop_es
+
 
 #' @noRd
 pop_es2par_pop <- function(pop_es,
