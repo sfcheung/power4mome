@@ -9,6 +9,13 @@ test_summary <- function(object) {
   if (inherits(object, "power4test")) {
     object <- object$test_all
   }
+  out <- sapply(object,
+                test_summary_i,
+                simplify = FALSE)
+  out
+}
+
+test_summary_i <- function(object) {
   test_results_all <- sapply(object,
                              function(xx) xx$test_results)
   test_results_all <- as.data.frame(t(test_results_all))
@@ -95,6 +102,7 @@ power_all_test_only <- power4test(sim_all = power_all_sim_only,
                                   results_fun = ind_results)
 
 summary_all <- test_summary(power_all_test_only)
+summary_all
 
 fits <- lapply(power_all_sim_only$sim_all,
                function(x) x$extra$fit)
@@ -112,10 +120,10 @@ ind_cis <- t(sapply(ind_outs,
                     confint))
 ind_sigs <- (ind_cis[, 1] > 0) | (ind_cis[, 2] < 0)
 
-expect_equal(summary_all["sig"],
+expect_equal(summary_all$`manymome::indirect_effect`["sig"],
              mean(ind_sigs),
              ignore_attr = TRUE)
-expect_equal(summary_all[c("cilo", "cihi")],
+expect_equal(summary_all$`manymome::indirect_effect`[c("cilo", "cihi")],
              colMeans(ind_cis),
              ignore_attr = TRUE)
 
@@ -126,9 +134,12 @@ power_all_test_only2 <- power4test(sim_all = power_all_test_only,
                                                     mc_ci = TRUE),
                                    map_names = c(fit = "fit",
                                                  mc_out = "mc_out"),
+                                   test_name = "Direct Effect",
+                                   test_note = "y ~ x",
                                    results_fun = ind_results)
 
 summary_all <- test_summary(power_all_test_only2)
+summary_all
 
 ind_outs <- mapply(manymome::indirect_effect,
                    fit = fits,
@@ -141,10 +152,52 @@ ind_cis <- t(sapply(ind_outs,
                     confint))
 ind_sigs <- (ind_cis[, 1] > 0) | (ind_cis[, 2] < 0)
 
-expect_equal(summary_all["sig"],
+expect_equal(summary_all$`Direct Effect`["sig"],
              mean(ind_sigs),
              ignore_attr = TRUE)
-expect_equal(summary_all[c("cilo", "cihi")],
+expect_equal(summary_all$`Direct Effect`[c("cilo", "cihi")],
+             colMeans(ind_cis),
+             ignore_attr = TRUE)
+
+# Update a test
+
+power_all_test_only3 <- power4test(sim_all = power_all_test_only2,
+                                   test_fun = manymome::indirect_effect,
+                                   test_args = list(x = "x",
+                                                    m = "m",
+                                                    y = "y",
+                                                    mc_ci = TRUE),
+                                   test_note = "Updated indirect effect",
+                                   map_names = c(fit = "fit",
+                                                 mc_out = "mc_out"),
+                                   results_fun = ind_results)
+
+expect_equal(length(power_all_test_only3$test_all),
+             2)
+
+summary_all <- test_summary(power_all_test_only3)
+summary_all
+
+fits <- lapply(power_all_sim_only$sim_all,
+               function(x) x$extra$fit)
+mc_outs <- lapply(power_all_sim_only$sim_all,
+                  function(x) x$extra$mc_out)
+ind_outs <- mapply(manymome::indirect_effect,
+                   fit = fits,
+                   mc_out = mc_outs,
+                   MoreArgs = list(x = "x",
+                                   m = "m",
+                                   y = "y",
+                                   mc_ci = TRUE),
+                  SIMPLIFY = FALSE)
+ind_cis <- t(sapply(ind_outs,
+                    confint))
+ind_sigs <- (ind_cis[, 1] > 0) | (ind_cis[, 2] < 0)
+
+expect_equal(summary_all$`manymome::indirect_effect`["sig"],
+             mean(ind_sigs),
+             ignore_attr = TRUE)
+expect_equal(summary_all$`manymome::indirect_effect`[c("cilo", "cihi")],
              colMeans(ind_cis),
              ignore_attr = TRUE)
 

@@ -1,4 +1,4 @@
-# power4mome 0.0.0.9016
+# power4mome 0.0.0.9017
 
 - Initialized the package. (0.0.0.9000)
 
@@ -61,3 +61,6 @@
 - Removed redundant arguments in
   tests of `power4test()`.
   (0.0.0.9016)
+
+- Updated `power4test()` to store more
+  than one test. (0.0.0.9017)

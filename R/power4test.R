@@ -71,7 +71,13 @@
 #'
 #' - `sim_all`: The output of [sim_out()].
 #'
-#' - `test_all`: The output of [do_test()].
+#' - `test_all`: A named list of the
+#'    output of [do_test()]. The names
+#'    are the values of `test_name`.
+#'    This list can have more than one
+#'    test because a call to
+#'    [power4test()] can add new tests
+#'    to a `power4mome` object.
 #'
 #' @param nrep The number of replications
 #' to generate the simulated datasets.
@@ -163,6 +169,19 @@
 #' `results_fun` function. Default is
 #' `list()`.
 #'
+#' @param test_name String. The name
+#' of the test. Default is `NULL`,
+#' and the name will be created from
+#' `test_fun`. Note that if `sim_out`
+#' is a `power4test` object and already
+#' has a test of this name stored, it
+#' will be replaced by the new results
+#'
+#' @param test_note String. An optional
+#' note for the test, stored in the
+#' attribute `test_note` of the output
+#' of [do_test()]. Default is `NULL`.
+#'
 #' @param do_the_test If `TRUE`,
 #' [do_test()] will be called to do the
 #' specified test in the fit output of
@@ -234,8 +253,8 @@
 #'                                       results_fun = ab_results,
 #'                                       parallel = FALSE,
 #'                                       progress = TRUE)
-#'
-#' test_results_all <- sapply(power_all_test_only_par$test_all,
+#' names(power_all_test_only_par$test_all)
+#' test_results_all <- sapply(power_all_test_only_par$test_all$test_ab,
 #'                            function(xx) xx$test_results)
 #' test_results_all <- as.data.frame(t(test_results_all))
 #' colMeans(test_results_all, na.rm = TRUE)
@@ -256,13 +275,15 @@ power4test <- function(nrep = 10,
                        map_names = c(fit = "fit"),
                        results_fun = NULL,
                        results_args = list(),
+                       test_name = NULL,
+                       test_note = NULL,
                        do_the_test = TRUE,
                        sim_all = NULL,
                        iseed = NULL,
                        parallel = FALSE,
                        progress = FALSE,
                        ncores = max(1, parallel::detectCores(logical = FALSE) - 1)) {
-
+  update_test <- FALSE
   if (is.null(sim_all)) {
     if (progress) {
       cat("Simulate the data:\n")
@@ -312,28 +333,49 @@ power4test <- function(nrep = 10,
 
   } else {
     if (inherits(sim_all, "power4test")) {
+      update_test <- TRUE
+      out <- sim_all
       sim_all <- sim_all$sim_all
     }
   }
 
   if (!do_the_test) {
-    test_all <- NULL
-  } else {
-    if (progress) {
-      cat("Do the test:\n")
+    if (update_test) {
+      return(out)
+    } else {
+      test_all <- NULL
+      out <- list(sim_all = sim_all,
+                  test_all = test_all)
+      class(out) <- c("power4test", class(out))
+      return(out)
     }
-    test_all <- do_test(sim_all,
-                        test_fun = test_fun,
-                        test_args = test_args,
-                        map_names = map_names,
-                        results_fun = results_fun,
-                        results_args = results_args,
-                        parallel = parallel,
-                        progress = progress,
-                        ncores = ncores)
   }
-  out <- list(sim_all = sim_all,
-              test_all = test_all)
-  class(out) <- c("power4test", class(out))
-  out
+
+  if (progress) {
+    cat("Do the test:\n")
+  }
+  test_all <- do_test(sim_all,
+                      test_fun = test_fun,
+                      test_args = test_args,
+                      map_names = map_names,
+                      results_fun = results_fun,
+                      results_args = results_args,
+                      parallel = parallel,
+                      progress = progress,
+                      ncores = ncores)
+  if (is.null(test_name)) {
+    test_name <- deparse(substitute(test_fun))
+  }
+  attr(test_all, "test_note") <- test_note
+  if (update_test) {
+    out$test_all[[test_name]] <- test_all
+    return(out)
+  } else {
+    test_all <- list(test_all)
+    names(test_all) <- test_name
+    out <- list(sim_all = sim_all,
+                test_all = test_all)
+    class(out) <- c("power4test", class(out))
+    return(out)
+  }
 }

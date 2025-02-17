@@ -19,6 +19,8 @@ power4test(
   map_names = c(fit = "fit"),
   results_fun = NULL,
   results_args = list(),
+  test_name = NULL,
+  test_note = NULL,
   do_the_test = TRUE,
   sim_all = NULL,
   iseed = NULL,
@@ -114,6 +116,19 @@ arguments to be passed to the
 \code{results_fun} function. Default is
 \code{list()}.}
 
+\item{test_name}{String. The name
+of the test. Default is \code{NULL},
+and the name will be created from
+\code{test_fun}. Note that if \code{sim_out}
+is a \code{power4test} object and already
+has a test of this name stored, it
+will be replaced by the new results}
+
+\item{test_note}{String. An optional
+note for the test, stored in the
+attribute \code{test_note} of the output
+of \code{\link[=do_test]{do_test()}}. Default is \code{NULL}.}
+
 \item{do_the_test}{If \code{TRUE},
 \code{\link[=do_test]{do_test()}} will be called to do the
 specified test in the fit output of
@@ -150,7 +165,13 @@ An object of the class \code{power4test},
 which is a list of with two elements:
 \itemize{
 \item \code{sim_all}: The output of \code{\link[=sim_out]{sim_out()}}.
-\item \code{test_all}: The output of \code{\link[=do_test]{do_test()}}.
+\item \code{test_all}: A named list of the
+output of \code{\link[=do_test]{do_test()}}. The names
+are the values of \code{test_name}.
+This list can have more than one
+test because a call to
+\code{\link[=power4test]{power4test()}} can add new tests
+to a \code{power4mome} object.
 }
 }
 \description{
@@ -256,8 +277,8 @@ power_all_test_only_par <- power4test(nrep = 50,
                                       results_fun = ab_results,
                                       parallel = FALSE,
                                       progress = TRUE)
-
-test_results_all <- sapply(power_all_test_only_par$test_all,
+names(power_all_test_only_par$test_all)
+test_results_all <- sapply(power_all_test_only_par$test_all$test_ab,
                            function(xx) xx$test_results)
 test_results_all <- as.data.frame(t(test_results_all))
 colMeans(test_results_all, na.rm = TRUE)
