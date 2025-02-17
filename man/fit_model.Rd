@@ -7,6 +7,10 @@
 fit_model(
   data_all,
   model = NULL,
+  fit_function = lavaan::sem,
+  arg_data_name = "data",
+  arg_model_name = "model",
+  arg_group_name = "group",
   ...,
   parallel = FALSE,
   progress = FALSE,
@@ -24,8 +28,28 @@ stored in \code{data_all}, which should
 be the data generation model,
 will be used.}
 
+\item{fit_function}{The function to
+be used to fit the model. Default
+is \code{\link[lavaan:sem]{lavaan::sem()}} but can be set to
+another function.}
+
+\item{arg_data_name}{The name of the
+argument of \code{fit_function} expecting
+the dataset. Default is \code{"data"}.}
+
+\item{arg_model_name}{The name of
+the argument of \code{fit_function}
+expecting the model definition.
+Default is \code{"model"}.}
+
+\item{arg_group_name}{The name of
+the argument of \code{fit_function}
+expecting the name of the group
+variable. Used only for multigroup
+models. Default is \code{"group"}.}
+
 \item{...}{Optional arguments to be
-passed to \code{\link[lavaan:sem]{lavaan::sem()}} when
+passed to \code{fit_function} when
 fitting the model.}
 
 \item{parallel}{If \code{TRUE}, parallel
@@ -58,7 +82,8 @@ of the stored dataset.
 By default, it extracts the model
 stored in the output of \code{\link[=sim_data]{sim_data()}},
 fits the model to each dataset
-simulated using \code{\link[lavaan:sem]{lavaan::sem()}}, and
+simulated using \code{fit_function},
+default to \code{\link[lavaan:sem]{lavaan::sem()}}, and
 returns the results. If the datasets
 were generated from a multigroup
 model when calling \code{\link[=sim_data]{sim_data()}},

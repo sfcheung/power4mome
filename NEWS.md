@@ -1,4 +1,4 @@
-# power4mome 0.0.0.9017
+# power4mome 0.0.0.9018
 
 - Initialized the package. (0.0.0.9000)
 
@@ -64,3 +64,7 @@
 
 - Updated `power4test()` to store more
   than one test. (0.0.0.9017)
+
+- Updated `fit_model()` to support
+  fitting a model by another function
+  (0.0.0.9018)

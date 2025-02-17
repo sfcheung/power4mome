@@ -9,7 +9,8 @@
 #' By default, it extracts the model
 #' stored in the output of [sim_data()],
 #' fits the model to each dataset
-#' simulated using [lavaan::sem()], and
+#' simulated using `fit_function`,
+#' default to [lavaan::sem()], and
 #' returns the results. If the datasets
 #' were generated from a multigroup
 #' model when calling [sim_data()],
@@ -34,8 +35,28 @@
 #' be the data generation model,
 #' will be used.
 #'
+#' @param fit_function The function to
+#' be used to fit the model. Default
+#' is [lavaan::sem()] but can be set to
+#' another function.
+#'
+#' @param arg_data_name The name of the
+#' argument of `fit_function` expecting
+#' the dataset. Default is `"data"`.
+#'
+#' @param arg_model_name The name of
+#' the argument of `fit_function`
+#' expecting the model definition.
+#' Default is `"model"`.
+#'
+#' @param arg_group_name The name of
+#' the argument of `fit_function`
+#' expecting the name of the group
+#' variable. Used only for multigroup
+#' models. Default is `"group"`.
+#'
 #' @param ... Optional arguments to be
-#' passed to [lavaan::sem()] when
+#' passed to `fit_function` when
 #' fitting the model.
 #'
 #' @param parallel If `TRUE`, parallel
@@ -70,6 +91,10 @@
 #' @export
 fit_model <- function(data_all,
                       model = NULL,
+                      fit_function = lavaan::sem,
+                      arg_data_name = "data",
+                      arg_model_name = "model",
+                      arg_group_name = "group",
                       ...,
                       parallel = FALSE,
                       progress = FALSE,
@@ -77,6 +102,10 @@ fit_model <- function(data_all,
   out <- do_FUN(X = data_all,
                 FUN = fit_model_i,
                 model = model,
+                fit_function = fit_function,
+                arg_data_name = arg_data_name,
+                arg_model_name = arg_model_name,
+                arg_group_name = arg_group_name,
                 ...,
                 parallel = parallel,
                 progress = progress,
@@ -104,7 +133,12 @@ fit_model <- function(data_all,
 #' @noRd
 fit_model_i <- function(data_i,
                         model = NULL,
+                        fit_function = lavaan::sem,
+                        arg_data_name = "data",
+                        arg_model_name = "model",
+                        arg_group_name = "group",
                         ...) {
+  fit_function <- match.fun(fit_function)
   # Anomalies should be checked in
   # subsequent steps, not during fitting
   # the model to many datasets.
@@ -115,10 +149,19 @@ fit_model_i <- function(data_i,
   }
   # For single-group models,
   # data_i$group_name would be NULL.
-  fit <- tryCatch(suppressWarnings(lavaan::sem(model = model_to_fit,
-                                      data = data_i$mm_lm_dat_out,
-                                      group = data_i$group_name,
-                                      ...)),
+  fit_args0 <- list()
+  fit_args0[[arg_model_name]] <- model_to_fit
+  fit_args0[[arg_data_name]] <- data_i$mm_lm_dat_out
+  fit_args0[[arg_group_name]] = data_i$group_name
+  fit_args <- utils::modifyList(list(...),
+                                fit_args0)
+  fit <- tryCatch(suppressWarnings(do.call(fit_function,
+                                           fit_args)),
                   error = function(e) e)
+  # fit <- tryCatch(suppressWarnings(lavaan::sem(model = model_to_fit,
+  #                                     data = data_i$mm_lm_dat_out,
+  #                                     group = data_i$group_name,
+  #                                     ...)),
+  #                 error = function(e) e)
   return(fit)
 }
