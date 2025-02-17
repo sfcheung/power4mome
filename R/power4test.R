@@ -113,6 +113,15 @@
 #' of each set of indicators. Default
 #' is `NULL`.
 #'
+#' @param x_fun The function(s) used to
+#' generate the exogenous variables. If
+#' not supplied, or set to `list()`, the
+#' default, the variables are generated
+#' from a multivariate normal
+#' distribution. See 'Details' of
+#' [sim_data()] on how to use this
+#' argument.
+#'
 #' @param fit_model_args A list of the
 #' arguments to be passed to
 #' [lavaan::sem()] when fitting the
@@ -267,6 +276,7 @@ power4test <- function(nrep = 10,
                        n,
                        number_of_indicators = NULL,
                        reliability = NULL,
+                       x_fun = list(),
                        fit_model_args = list(),
                        R = 100,
                        gen_mc_args = list(),
@@ -294,6 +304,7 @@ power4test <- function(nrep = 10,
                         n = n,
                         number_of_indicators = number_of_indicators,
                         reliability = reliability,
+                        x_fun = x_fun,
                         iseed = iseed,
                         parallel = parallel,
                         progress = progress,

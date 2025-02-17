@@ -11,6 +11,7 @@ power4test(
   n,
   number_of_indicators = NULL,
   reliability = NULL,
+  x_fun = list(),
   fit_model_args = list(),
   R = 100,
   gen_mc_args = list(),
@@ -59,6 +60,15 @@ observed variables.}
 to set the reliability coefficient
 of each set of indicators. Default
 is \code{NULL}.}
+
+\item{x_fun}{The function(s) used to
+generate the exogenous variables. If
+not supplied, or set to \code{list()}, the
+default, the variables are generated
+from a multivariate normal
+distribution. See 'Details' of
+\code{\link[=sim_data]{sim_data()}} on how to use this
+argument.}
 
 \item{fit_model_args}{A list of the
 arguments to be passed to

@@ -2,7 +2,7 @@ library(testthat)
 suppressMessages(library(lavaan))
 library(manymome)
 
-skip_if_not_installed(lmhelprs)
+skip_if_not_installed("lmhelprs")
 
 test_that("fit_model: User fit function", {
 

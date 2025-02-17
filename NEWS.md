@@ -1,4 +1,4 @@
-# power4mome 0.0.0.9018
+# power4mome 0.0.0.9019
 
 - Initialized the package. (0.0.0.9000)
 
@@ -68,3 +68,8 @@
 - Updated `fit_model()` to support
   fitting a model by another function
   (0.0.0.9018)
+
+- Added the argument `x_fun()` to
+  `sim_data()` for generating nonnormal
+  exogenous variables.
+  (0.0.0.9019)

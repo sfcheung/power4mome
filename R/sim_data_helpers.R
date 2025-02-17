@@ -37,7 +37,8 @@ mm_lm_data <- function(object,
                        n,
                        number_of_indicators = NULL,
                        reliability = NULL,
-                       keep_f_scores = FALSE) {
+                       keep_f_scores = FALSE,
+                       x_fun = list()) {
   lm_y <- object$lm_y
   psi <- object$psi
   all_vars <- colnames(psi)
@@ -46,7 +47,8 @@ mm_lm_data <- function(object,
   q <- ncol(psi)
   x_raw <- gen_all_x(psi = psi,
                      n = n,
-                     all_x = all_vars)
+                     all_x = all_vars,
+                     x_fun = x_fun)
   dat_all <- matrix(NA,
                     nrow = n,
                     ncol = length(all_vars))
@@ -275,7 +277,8 @@ endo_beta <- function(object) {
 # - Determine by Monte Carlo
 # - Can have product terms
 psi_std_monte_carlo <- function(object,
-                                n_std = 100000) {
+                                n_std = 100000,
+                                x_fun = list()) {
   object <- mm_lm(object)
   lm_y <- object$lm_y
   psi <- object$psi
@@ -285,7 +288,8 @@ psi_std_monte_carlo <- function(object,
   q <- ncol(psi)
   x_raw <- gen_all_x(psi = psi,
                      n = n_std,
-                     all_x = all_vars)
+                     all_x = all_vars,
+                     x_fun = list())
   dat_all <- matrix(NA,
                     nrow = n_std,
                     ncol = length(all_vars))
@@ -313,14 +317,13 @@ psi_std_monte_carlo <- function(object,
 
 #' @noRd
 # Generate all x's
-# TODO:
-# - Allow for categorical variables
-# - Allow for nonnormal variables
 gen_all_x <- function(psi,
                       n,
-                      all_x) {
+                      all_x,
+                      x_fun = list()) {
   x_raw <- gen_pure_x(psi = psi,
-                      n = n)
+                      n = n,
+                      x_fun = x_fun)
   x_raw <- add_p_terms(x_raw,
                        all_x = all_x)
   x_raw
@@ -365,10 +368,9 @@ add_p_terms <- function(x,
 }
 
 #' @noRd
-# TODO:
-# - Allow for nonnormal variables.
 gen_pure_x <- function(psi,
-                       n) {
+                       n,
+                       x_fun = list()) {
   p <- ncol(psi)
   psi_q <- chol(psi)
   x0 <- matrix(stats::rnorm(n * p),
@@ -376,6 +378,51 @@ gen_pure_x <- function(psi,
                ncol = p)
   x <- x0 %*% psi_q
   colnames(x) <- colnames(psi)
+
+  # Generate data using x_fun functions
+  if (length(x_fun) > 1) {
+    xnames <- colnames(x)
+    x_fun_names <- names(x_fun)
+    if (!all(x_fun_names %in% xnames)) {
+      tmp <- setdiff(x_fun_names,
+                     xnames)
+      msg <- paste0(paste0(tmp, collapse = ", "),
+                    " in x_fun but not in the model.")
+      stop(msg)
+    }
+    for (xx in x_fun_names) {
+      psi_xx <- psi[xx, ]
+      psi_xx <- psi_xx[-which(xnames == xx)]
+      if (!isTRUE(all.equal(psi_xx,
+                            rep(0, length(psi_xx)),
+                            tolerance = 1e-6,
+                            check.attributes = FALSE))) {
+        tmp <- paste0(xx, " must have zero covariance with other variables",
+                      " to be eligible for using x_fun.")
+        stop(tmp)
+      }
+    }
+    tmpfct <- function(xx,
+                       n) {
+      xx_fun <- xx[[1]]
+      xx_fun <- match.fun(xx_fun)
+      xx <- xx[-1]
+      xx <- utils::modifyList(xx,
+                              list(n = n))
+      out <- do.call(xx_fun,
+                     xx)
+      out
+    }
+    x_fun_out <- sapply(x_fun,
+                        tmpfct,
+                        n = n,
+                        simplify = FALSE,
+                        USE.NAMES = TRUE)
+    for (xx in x_fun_names) {
+      x[, xx] <- x_fun_out[[xx]]
+    }
+  }
+
   x
 }
 
