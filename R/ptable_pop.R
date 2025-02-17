@@ -202,25 +202,10 @@ ptable_pop <- function(model,
                        standardized = TRUE,
                        n_std = 100000,
                        std_force_monte_carlo = FALSE) {
-  if (is.character(pop_es)) {
-    pop_es <- fix_par_es(pop_es,
-                         model = model)
-    par_pop <- set_pop(pop_es,
-                       es1 = es1,
-                       es2 = es2)
-    par_pop <- list(par_pop)
-  } else if (is.list(pop_es)) {
-    pop_es <- split_par_es(pop_es)
-    pop_es <- lapply(pop_es,
-                     FUN = fix_par_es,
-                     model = model)
-    par_pop <- lapply(pop_es,
-                      set_pop,
-                      es1 = es1,
-                      es2 = es2)
-  } else {
-    par_pop <- pop_es
-  }
+  par_pop <- pop_es2par_pop(pop_es = pop_es,
+                            es1 = es1,
+                            es2 = es2,
+                            model = model)
   # par_pop <- dup_cov(par_pop)
   par_pop <- lapply(par_pop,
                     dup_cov)
@@ -337,6 +322,14 @@ ptable_pop <- function(model,
                              mm)
     attr(ptable1, "model") <- model
   }
+
+  # It is intentional not saving the call
+  # saving the argument values.
+  attr(ptable1, "pop_es") <- pop_es
+  attr(ptable1, "es1") <- es1
+  attr(ptable1, "es2") <- es2
+  attr(ptable1, "par_pop") <- par_pop
+
   ptable1
 }
 
@@ -425,6 +418,32 @@ model_matrices_pop <- function(x,
   mm2
 }
 
+#' @noRd
+pop_es2par_pop <- function(pop_es,
+                           es1,
+                           es2,
+                           model) {
+  if (is.character(pop_es)) {
+    pop_es <- fix_par_es(pop_es,
+                         model = model)
+    par_pop <- set_pop(pop_es,
+                       es1 = es1,
+                       es2 = es2)
+    par_pop <- list(par_pop)
+  } else if (is.list(pop_es)) {
+    pop_es <- split_par_es(pop_es)
+    pop_es <- lapply(pop_es,
+                     FUN = fix_par_es,
+                     model = model)
+    par_pop <- lapply(pop_es,
+                      set_pop,
+                      es1 = es1,
+                      es2 = es2)
+  } else {
+    par_pop <- pop_es
+  }
+  par_pop
+}
 
 #' @noRd
 # Set the starting values in the model matrix
