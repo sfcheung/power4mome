@@ -33,17 +33,17 @@
 #'
 #' @examples
 #' set.seed(90870962)
-#' x <- rbinary(n = 5000,
-#'              p1 = .5,
-#'              pmean = 3,
-#'              psd = 1)
+#' x <- rbinary_rs(n = 5000,
+#'                 p1 = .5,
+#'                 pmean = 3,
+#'                 psd = 1)
 #' mean(x)
 #' sd(x)
 #' hist(x)
 #'
 #' @export
 
-rbinary <- function(n = 10,
+rbinary_rs <- function(n = 10,
                     p1 = .50,
                     pmean = 0,
                     psd = 1) {
