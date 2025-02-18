@@ -30,12 +30,14 @@
 #' is a list of length equal to the
 #' length of `data_all`. Each element
 #' of the list is a `sim_data` object
-#' with two elements added to it:
-#' `fit`, the output of [fit_model()]
-#' for this replication, and `mc_out`,
-#' the output of [gen_mc()] for this
-#' replication, or `NA` if `mc_all`
-#' is `NULL.`
+#' with the element `extra` added to
+#' it. Other named elements will be
+#' added under this name. For example.
+#' the output of [fit_model()]
+#' for this replication can be added
+#' to `fit`, under `extra`. See
+#' the description of the argument
+#' `...` for details.
 #'
 #' @param data_all The output of
 #' [sim_data()].
@@ -73,15 +75,6 @@
 sim_out <- function(data_all,
                     ...) {
   nrep <- length(data_all)
-  # if (nrep != length(fit_all)) {
-  #   stop("The numbers of replications do not match.")
-  # }
-  # if ((nrep != length(mc_all)) && !is.null(mc_all)) {
-  #   stop("The numbers of replications do not match.")
-  # }
-  # if (is.null(mc_all)) {
-  #   mc_all <- rep(NA, nrep)
-  # }
   args <- list(...)
   if (length(args) == 0) {
     args_by_rep <- rep(NA, nrep)
@@ -90,15 +83,11 @@ sim_out <- function(data_all,
   }
   tmpfct <- function(x, y, z,
                      extra = NULL) {
-    # x$fit <- y
-    # x$mc_out <- z
     x$extra <- extra
     x
   }
   out0 <- mapply(tmpfct,
                  x = data_all,
-                #  y = fit_all,
-                #  z = mc_all,
                  extra = args_by_rep,
                  SIMPLIFY = FALSE)
   class(out0) <- c("sim_out", class(out0))

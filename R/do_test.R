@@ -219,26 +219,6 @@ do_test_i <- function(out_i,
 #   - cilo: Scalar
 #   - cihi: Scalar
 #   - sig: Logical
-  # if (is.null(mc_out_name)) {
-  #   args <- list(x = out_i$fit)
-  #   names(args) <- c(fit_name)
-  # } else {
-  #   args <- list(x = out_i$fit,
-  #                y = out_i$mc_out)
-  #   names(args) <- c(fit_name, mc_out_name)
-  # }
-  # args1 <- utils::modifyList(test_args,
-  #                            args)
-  # if (!is.null(mc_out_name)) {
-  #   arg_mc <- list(out_i$extra$mc_out)
-  #   names(arg_mc) <- mc_out_name
-  # } else {
-  #   arg_mc <- list()
-  # }
-  # arg_fit <- list(out_i$extra$fit)
-  # if (!is.null(fit_name)) {
-  #   names(arg_fit) <- fit_name
-  # }
   args_map <- sapply(map_names,
                      function(x,
                               out_i) {
