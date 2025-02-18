@@ -13,7 +13,11 @@
 #' to do the test. It can be used on
 #' models fitted by [lavaan::sem()]
 #' or fitted by a sequence of calls
-#' to [stats::lm()].
+#' to [stats::lm()], although only
+#' nonparametric bootstrap confidence
+#' interval is supported for models
+#' fitted by regression using
+#' [stats::lm()].
 #'
 #' @return
 #' In its normal usage, it returns
