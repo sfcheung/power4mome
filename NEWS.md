@@ -1,4 +1,4 @@
-# power4mome 0.0.0.9022
+# power4mome 0.0.0.9023
 
 - Initialized the package. (0.0.0.9000)
 
@@ -90,3 +90,9 @@
   testing an indirect effect when
   calling `power4test()`.
   (0.0.0.9022)
+
+- Added `test_index_mome()` for testing
+  a moderated mediation effect (by
+  testing the index of moderated
+  mediaton) when calling `power4test()`.
+  (0.0.0.9023)
