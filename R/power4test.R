@@ -146,10 +146,19 @@
 #' arguments.
 #'
 #' @param R The number of replications
-#' to generate the Monte Carlo estimates
+#' to generate the Monte Carlo or
+#' bootstrapping estimates
 #' for each fit output. No Monte Carlo
+#' nor bootstrapping
 #' estimates will be generated if `R`
 #' is set to `NULL`.
+#'
+#' @param ci_type The type of
+#' simulation-based confidence
+#' intervals to use. Can be either
+#' `"mc"` for Monte Carlo method
+#' (the default) or `"boot"` for
+#' nonparametric bootstrapping method.
 #'
 #' @param gen_mc_args A list of
 #' arguments to be passed to
@@ -157,7 +166,17 @@
 #' the Monte Carlo estimates.
 #' Should be a named argument
 #' with names being the names of the
-#' arguments.
+#' arguments. Used only if
+#' `ci_type` is `"mc".`
+#'
+#' @param gen_boot_args A list of
+#' arguments to be passed to
+#' [manymome::do_boot()] when generating
+#' the bootstrap estimates.
+#' Should be a named argument
+#' with names being the names of the
+#' arguments. Used only if
+#' `ci_type` is `"boot".
 #'
 #' @param test_fun A function to do the
 #' test. See the help page of
@@ -294,7 +313,9 @@ power4test <- function(object = NULL,
                        x_fun = list(),
                        fit_model_args = list(),
                        R = NULL,
+                       ci_type = c("mc", "boot"),
                        gen_mc_args = list(),
+                       gen_boot_args = list(),
                        test_fun = NULL,
                        test_args = list(),
                        map_names = c(fit = "fit"),
@@ -316,6 +337,8 @@ power4test <- function(object = NULL,
   if (progress) {
     cat("Displaying progress enabled. Set 'progress = FALSE' to hide the progress.\n")
   }
+
+  ci_type <- match.arg(ci_type)
 
   update_test <- FALSE
 
@@ -416,10 +439,10 @@ power4test <- function(object = NULL,
     fit_all <- do.call(fit_model,
                        fit_args0)
 
-    if (!is.null(R)) {
+    if (!is.null(R) && (ci_type == "mc")) {
       # TODO:
       # - iseed should be used only once
-      mc_args0 <- utils::modifyList(gen_mc_args,
+      mc_args0 <- utils::modifyList(args$gen_mc_args,
                                     list(fit_all = fit_all,
                                         R = R,
                                         parallel = parallel,
@@ -434,9 +457,28 @@ power4test <- function(object = NULL,
       mc_all <- rep(NA, length(fit_all))
     }
 
+    if (!is.null(R) && (ci_type == "boot")) {
+      # TODO:
+      # - iseed should be used only once
+      boot_args0 <- utils::modifyList(args$gen_boot_args,
+                                      list(fit_all = fit_all,
+                                           R = R,
+                                           parallel = parallel,
+                                           progress = progress,
+                                           ncores = ncores))
+      if (progress) {
+        cat("Generate bootstrap estimates:\n")
+      }
+      boot_all <- do.call(gen_boot,
+                          boot_args0)
+    } else {
+      boot_all <- rep(NA, length(fit_all))
+    }
+
     sim_all <- sim_out(data_all = data_all,
                        fit = fit_all,
-                       mc_out = mc_all)
+                       mc_out = mc_all,
+                       boot_out = boot_all)
   } else {
     sim_all <- object$sim_all
   }

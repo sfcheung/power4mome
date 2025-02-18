@@ -1,4 +1,4 @@
-# power4mome 0.0.0.9019
+# power4mome 0.0.0.9021
 
 - Initialized the package. (0.0.0.9000)
 
@@ -79,3 +79,9 @@
   a `power4test` object with different
   population effect sizes or sample size(s).
   (0.0.0.9020)
+
+- Added the option to generate
+  nonparametric bootstrap estimates.
+  Slow for `lavaan` but can be used
+  with models fittedc by `lm()`.
+  (0.0.0.9021)
