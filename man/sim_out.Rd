@@ -25,12 +25,14 @@ It returns an \code{sim_out} object, which
 is a list of length equal to the
 length of \code{data_all}. Each element
 of the list is a \code{sim_data} object
-with two elements added to it:
-\code{fit}, the output of \code{\link[=fit_model]{fit_model()}}
-for this replication, and \code{mc_out},
-the output of \code{\link[=gen_mc]{gen_mc()}} for this
-replication, or \code{NA} if \code{mc_all}
-is \code{NULL.}
+with the element \code{extra} added to
+it. Other named elements will be
+added under this name. For example.
+the output of \code{\link[=fit_model]{fit_model()}}
+for this replication can be added
+to \code{fit}, under \code{extra}. See
+the description of the argument
+\code{...} for details.
 }
 \description{
 Combine the outputs
