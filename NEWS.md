@@ -1,4 +1,4 @@
-# power4mome 0.0.0.9021
+# power4mome 0.0.0.9022
 
 - Initialized the package. (0.0.0.9000)
 
@@ -85,3 +85,8 @@
   Slow for `lavaan` but can be used
   with models fittedc by `lm()`.
   (0.0.0.9021)
+
+- Added `test_indirect_effect()` for
+  testing an indirect effect when
+  calling `power4test()`.
+  (0.0.0.9022)
