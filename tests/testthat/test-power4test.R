@@ -66,6 +66,8 @@ par_results <- function(object) {
   object
 }
 
+# Generate the data
+
 power_all_sim_only <- power4test(nrep = 10,
                                  model = model_simple_med,
                                  pop_es = model_simple_med_es,
@@ -90,6 +92,9 @@ ind_results <- function(out) {
             sig = out1)
   return(out2)
 }
+
+# Do the test
+# - Need only the arguments for the test.
 
 power_all_test_only <- power4test(sim_all = power_all_sim_only,
                                   test_fun = manymome::indirect_effect,
@@ -127,6 +132,9 @@ expect_equal(summary_all$`manymome::indirect_effect`[c("cilo", "cihi")],
              colMeans(ind_cis),
              ignore_attr = TRUE)
 
+# Do the test and add it to the power4test object
+# - Need only the arguments for the test.
+
 power_all_test_only2 <- power4test(sim_all = power_all_test_only,
                                    test_fun = manymome::indirect_effect,
                                    test_args = list(x = "x",
@@ -159,7 +167,8 @@ expect_equal(summary_all$`Direct Effect`[c("cilo", "cihi")],
              colMeans(ind_cis),
              ignore_attr = TRUE)
 
-# Update a test
+# Do the test and replace the previous tests in the power4test object
+# - Need only the arguments for the test.
 
 power_all_test_only3 <- power4test(sim_all = power_all_test_only2,
                                    test_fun = manymome::indirect_effect,

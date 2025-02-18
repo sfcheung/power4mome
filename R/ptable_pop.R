@@ -205,16 +205,9 @@ ptable_pop <- function(model,
   par_pop <- pop_es2par_pop(pop_es = pop_es,
                             es1 = es1,
                             es2 = es2,
-                            model = model)
-  # par_pop <- dup_cov(par_pop)
-  par_pop <- lapply(par_pop,
-                    dup_cov)
-  ngroups <- length(par_pop)
-  for (i in seq_along(par_pop)) {
-    par_pop[[i]]$group <- i
-  }
-  par_pop <- do.call(rbind,
-                     par_pop)
+                            model = model,
+                            to_one_table = TRUE)
+  ngroups <- max(par_pop$group)
   # Single group ptable
   fit0 <- lavaan::sem(model,
                       do.fit = FALSE)
@@ -328,8 +321,10 @@ ptable_pop <- function(model,
   attr(ptable1, "pop_es") <- pop_es
   attr(ptable1, "es1") <- es1
   attr(ptable1, "es2") <- es2
+  # par_pop is one single table with a group column
   attr(ptable1, "par_pop") <- par_pop
   attr(ptable1, "n_std") <- n_std
+  attr(ptable1, "standardized") <- standardized
   attr(ptable1, "std_force_monte_carlo") <- std_force_monte_carlo
 
   class(ptable1) <- c("ptable1", class(ptable1))
@@ -340,7 +335,44 @@ ptable_pop <- function(model,
 # Should only update pop_es
 update_ptable_pop <- function(object,
                               new_pop_es) {
-  new_par_pop <- update_par_pop()
+  es1 <- attr(object, "es1")
+  es2 <- attr(object, "es2")
+  model <- attr(object, "model")
+  old_par_pop <- attr(object, "par_pop")
+  if (is.data.frame(old_par_pop)) {
+    old_par_pop <- split_par_pop(old_par_pop)
+  }
+  new_par_pop <- pop_es2par_pop(new_pop_es,
+                                es1 = es1,
+                                es2 = es2,
+                                model = model)
+  updated_par_pop <- update_par_pop(add = new_par_pop,
+                                    par_pop = old_par_pop)
+  updated_par_pop <- par_pop_to_one_table(updated_par_pop)
+  out <- ptable_pop(model = model,
+                    pop_es = updated_par_pop,
+                    es1 = es1,
+                    es2 = es2,
+                    standardized = attr(object, "standardized"),
+                    n_std = attr(object, "n_std"),
+                    std_force_monte_carlo = attr(object, "std_force_monte_carlo"))
+  out
+}
+
+#' @noRd
+split_par_pop <- function(par_pop) {
+  # Already a list of table(s)?
+  if (is.list(par_pop)) {
+    if (is.data.frame(par_pop[[1]])) {
+      return(par_pop)
+    }
+  }
+  out <- par_pop
+  out$group <- NULL
+  out1 <- split(out,
+                f = par_pop$group)
+  names(out1) <- NULL
+  out1
 }
 
 #' @describeIn ptable_pop
@@ -441,6 +473,7 @@ model_matrices_pop <- function(x,
 
 update_par_pop <- function(add,
                            par_pop) {
+  # par_pop should be a list of tables
   out <- par_pop
   ngroups <- length(out)
   for (i in seq_len(ngroups)) {
@@ -460,6 +493,7 @@ update_par_pop <- function(add,
     tmp$es.add <- NULL
     out[[i]] <- tmp
   }
+  # The output is always a list
   out
 }
 
@@ -467,7 +501,9 @@ update_par_pop <- function(add,
 pop_es2par_pop <- function(pop_es,
                            es1,
                            es2,
-                           model) {
+                           model,
+                           to_one_table = FALSE) {
+  # Always process par_pop as a list until existing
   if (is.character(pop_es)) {
     pop_es <- fix_par_es(pop_es,
                          model = model)
@@ -476,20 +512,46 @@ pop_es2par_pop <- function(pop_es,
                        es2 = es2)
     par_pop <- list(par_pop)
   } else if (is.list(pop_es)) {
-    if (is.data.frame(pop_es[[1]])) {
-      # Already a par_pop object
+    if (is.data.frame(pop_es)) {
+      # A one-table par_pop
+      # Convert to a list
+      par_pop <- split_par_pop(pop_es)
+    } else if (is.data.frame(pop_es[[1]])) {
+      # Already a list of table(s)
       par_pop <- pop_es
-      return(par_pop)
+    } else {
+      # A list of character vectors
+      pop_es <- split_par_es(pop_es)
+      pop_es <- lapply(pop_es,
+                      FUN = fix_par_es,
+                      model = model)
+      par_pop <- lapply(pop_es,
+                        set_pop,
+                        es1 = es1,
+                        es2 = es2)
     }
-    pop_es <- split_par_es(pop_es)
-    pop_es <- lapply(pop_es,
-                     FUN = fix_par_es,
-                     model = model)
-    par_pop <- lapply(pop_es,
-                      set_pop,
-                      es1 = es1,
-                      es2 = es2)
   }
+  par_pop <- lapply(par_pop,
+                    dup_cov)
+  if (to_one_table) {
+    par_pop <- par_pop_to_one_table(par_pop)
+  }
+  par_pop
+}
+
+#' @noRd
+par_pop_to_one_table <- function(par_pop) {
+  # Already one table?
+  if (is.data.frame(par_pop)) {
+    return(par_pop)
+  }
+  ngroups <- length(par_pop)
+  for (i in seq_along(par_pop)) {
+    par_pop[[i]]$group <- i
+  }
+  par_pop <- do.call(rbind,
+                     par_pop)
+  rownames(par_pop) <- NULL
   par_pop
 }
 

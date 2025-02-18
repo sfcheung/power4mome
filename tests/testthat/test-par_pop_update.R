@@ -35,6 +35,12 @@ par_pop2 <- update_par_pop(add = par_pop_add,
 expect_equal(par_pop2[[1]][1, "es"],
              "s")
 
+ptable <- ptable_pop(model = model_simple_med,
+                     pop_es = model_simple_med_es)
+
+ptable2 <- update_ptable_pop(ptable,
+                             new_pop_es = c("m ~ x" = "s"))
+
 # Multigroup
 
 model_simple_med <-
