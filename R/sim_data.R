@@ -214,15 +214,25 @@
 #' to generate the simulated datasets.
 #' Default is 10.
 #'
+#' @param ptable The output of
+#' [ptable_pop()], which is a
+#' `ptable_pop` object, representing the
+#' population model. If `NULL`, the
+#' default, [ptable_pop()] will be
+#' called to generate the `ptable_pop`
+#' object.
+#'
 #' @param model The `lavaan` model
 #' syntax of the population model.
-#' Required.
+#' Required. Ignored if `ptable` is
+#' specified.
 #'
 #' @param pop_es The character to
-#' specify population effect sizes.
-#' See 'Details' on how to set the
-#' effect sizes for this argument.
-#' Required.
+#' specify population effect sizes. See
+#' 'Details' of [ptable_pop()] on how to
+#' set the effect sizes for this
+#' argument. Ignored if `ptable` is
+#' specified.
 #'
 #' @param ... Parameters to be passed
 #' to [ptable_pop].
@@ -326,8 +336,9 @@
 #'
 #' @export
 sim_data <- function(nrep = 10,
-                     model,
-                     pop_es,
+                     ptable = NULL,
+                     model = NULL,
+                     pop_es = NULL,
                      ...,
                      n = 100,
                      iseed = NULL,
@@ -338,17 +349,23 @@ sim_data <- function(nrep = 10,
                      progress = FALSE,
                      ncores = max(1, parallel::detectCores(logical = FALSE) - 1)) {
 
-  ptable <- ptable_pop(model = model,
-                       pop_es = pop_es,
-                       ...)
+  if (is.null(ptable)) {
+    if (is.null(model) || is.null(pop_es)) {
+      stop("Both model and pop_es must be set if ptable is not set.")
+    }
+    ptable <- ptable_pop(model = model,
+                         pop_es = pop_es,
+                         ...)
+  }
   mm_out <- model_matrices_pop(ptable,
                                drop_list_single_group = FALSE)
   mm_lm_out <- mm_lm(mm_out,
                      drop_list_single_group = FALSE)
 
-  out <- do_FUN(X = rep(model, nrep),
+  out <- do_FUN(X = seq_len(nrep),
                 FUN = sim_data_i,
                 ptable = ptable,
+                model = model,
                 mm_out = mm_out,
                 mm_lm_out = mm_lm_out,
                 n = n,
@@ -380,12 +397,13 @@ sim_data <- function(nrep = 10,
 #' }
 #'
 #' @noRd
-sim_data_i <- function(model = NULL,
+sim_data_i <- function(repid = 1,
+                       n = 100,
+                       model = NULL,
                        pop_es = NULL,
                        ptable = NULL,
                        mm_out = NULL,
                        mm_lm_out = NULL,
-                       n = 100,
                        number_of_indicators = NULL,
                        reliability = NULL,
                        x_fun = list(),
@@ -402,6 +420,8 @@ sim_data_i <- function(model = NULL,
     ptable <- ptable_pop(model = model,
                         pop_es = pop_es,
                         standardized = TRUE)
+  } else {
+    model <- attr(ptable, "model")
   }
   if (is.null(mm_out)) {
     mm_out <- model_matrices_pop(ptable,

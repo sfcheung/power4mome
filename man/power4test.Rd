@@ -5,15 +5,17 @@
 \title{Estimate the Power of a Test}
 \usage{
 power4test(
+  object = NULL,
   nrep = 10,
-  model,
-  pop_es,
-  n,
+  ptable = NULL,
+  model = NULL,
+  pop_es = NULL,
+  n = NULL,
   number_of_indicators = NULL,
   reliability = NULL,
   x_fun = list(),
   fit_model_args = list(),
-  R = 100,
+  R = NULL,
   gen_mc_args = list(),
   test_fun = NULL,
   test_args = list(),
@@ -26,24 +28,39 @@ power4test(
   sim_all = NULL,
   iseed = NULL,
   parallel = FALSE,
-  progress = FALSE,
+  progress = TRUE,
   ncores = max(1, parallel::detectCores(logical = FALSE) - 1)
 )
 }
 \arguments{
+\item{object}{Optional. If set to a
+\code{power4test} object, it will be
+updated using the value(s) in \code{n}
+and/or \code{pop_es}. Default is \code{NULL}.}
+
 \item{nrep}{The number of replications
 to generate the simulated datasets.
 Default is 10.}
 
+\item{ptable}{The output of
+\code{\link[=ptable_pop]{ptable_pop()}}, which is a
+\code{ptable_pop} object, representing the
+population model. If \code{NULL}, the
+default, \code{\link[=ptable_pop]{ptable_pop()}} will be
+called to generate the \code{ptable_pop}
+object.}
+
 \item{model}{The \code{lavaan} model
 syntax of the population model.
-Required.}
+Required. Ignored if \code{ptable} is
+specified.}
 
 \item{pop_es}{The character to
-specify population effect sizes.
-See 'Details' on how to set the
-effect sizes for this argument.
-Required.}
+specify population effect sizes. See
+'Details' of \code{\link[=ptable_pop]{ptable_pop()}} on how to
+set the effect sizes for this
+argument. Ignored if \code{ptable} is
+specified.}
 
 \item{n}{The sample size for each
 dataset. Default is 100.}
@@ -181,7 +198,7 @@ are the values of \code{test_name}.
 This list can have more than one
 test because a call to
 \code{\link[=power4test]{power4test()}} can add new tests
-to a \code{power4mome} object.
+to a \code{power4test} object.
 }
 }
 \description{
@@ -249,7 +266,6 @@ effect sizes and sample sizes.
 }
 \examples{
 
-
 model_simple_med <-
 "
 m ~ a*x
@@ -281,7 +297,6 @@ power_all_test_only_par <- power4test(nrep = 50,
                                       pop_es = model_simple_med_es,
                                       n = 100,
                                       fit_model_args = list(estimator = "ML"),
-                                      R = NULL,
                                       test_fun = test_ab,
                                       map_names = c(object = "fit"),
                                       results_fun = ab_results,

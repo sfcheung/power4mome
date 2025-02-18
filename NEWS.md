@@ -73,3 +73,9 @@
   `sim_data()` for generating nonnormal
   exogenous variables.
   (0.0.0.9019)
+
+- Updated `power4test()` and related
+  functions to support updating
+  a `power4test` object with different
+  population effect sizes or sample size(s).
+  (0.0.0.9020)

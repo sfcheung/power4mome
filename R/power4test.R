@@ -77,21 +77,36 @@
 #'    This list can have more than one
 #'    test because a call to
 #'    [power4test()] can add new tests
-#'    to a `power4mome` object.
+#'    to a `power4test` object.
+#'
+#' @param object Optional. If set to a
+#' `power4test` object, it will be
+#' updated using the value(s) in `n`
+#' and/or `pop_es`. Default is `NULL`.
 #'
 #' @param nrep The number of replications
 #' to generate the simulated datasets.
 #' Default is 10.
 #'
+#' @param ptable The output of
+#' [ptable_pop()], which is a
+#' `ptable_pop` object, representing the
+#' population model. If `NULL`, the
+#' default, [ptable_pop()] will be
+#' called to generate the `ptable_pop`
+#' object.
+#'
 #' @param model The `lavaan` model
 #' syntax of the population model.
-#' Required.
+#' Required. Ignored if `ptable` is
+#' specified.
 #'
 #' @param pop_es The character to
-#' specify population effect sizes.
-#' See 'Details' on how to set the
-#' effect sizes for this argument.
-#' Required.
+#' specify population effect sizes. See
+#' 'Details' of [ptable_pop()] on how to
+#' set the effect sizes for this
+#' argument. Ignored if `ptable` is
+#' specified.
 #'
 #' @param n The sample size for each
 #' dataset. Default is 100.
@@ -224,7 +239,6 @@
 #'
 #' @examples
 #'
-#'
 #' model_simple_med <-
 #' "
 #' m ~ a*x
@@ -256,7 +270,6 @@
 #'                                       pop_es = model_simple_med_es,
 #'                                       n = 100,
 #'                                       fit_model_args = list(estimator = "ML"),
-#'                                       R = NULL,
 #'                                       test_fun = test_ab,
 #'                                       map_names = c(object = "fit"),
 #'                                       results_fun = ab_results,
@@ -270,15 +283,17 @@
 #'
 #' @export
 
-power4test <- function(nrep = 10,
-                       model,
-                       pop_es,
-                       n,
+power4test <- function(object = NULL,
+                       nrep = 10,
+                       ptable = NULL,
+                       model = NULL,
+                       pop_es = NULL,
+                       n = NULL,
                        number_of_indicators = NULL,
                        reliability = NULL,
                        x_fun = list(),
                        fit_model_args = list(),
-                       R = 100,
+                       R = NULL,
                        gen_mc_args = list(),
                        test_fun = NULL,
                        test_args = list(),
@@ -291,24 +306,104 @@ power4test <- function(nrep = 10,
                        sim_all = NULL,
                        iseed = NULL,
                        parallel = FALSE,
-                       progress = FALSE,
+                       progress = TRUE,
                        ncores = max(1, parallel::detectCores(logical = FALSE) - 1)) {
+
+  # TOOD:
+  # - Should allow only limited changes
+  #   when updating a power4test object.
+
+  if (progress) {
+    cat("Displaying progress enabled. Set 'progress = FALSE' to hide the progress.\n")
+  }
+
   update_test <- FALSE
-  if (is.null(sim_all)) {
-    if (progress) {
-      cat("Simulate the data:\n")
+
+  update_power4test <- FALSE
+  update_data <- TRUE
+  if (!is.null(object)) {
+    if (!inherits(object, "power4test")) {
+      stop("object is not a power4test object.")
     }
-    data_all <- sim_data(nrep = nrep,
-                        model = model,
-                        pop_es = pop_es,
-                        n = n,
-                        number_of_indicators = number_of_indicators,
-                        reliability = reliability,
-                        x_fun = x_fun,
-                        iseed = iseed,
-                        parallel = parallel,
-                        progress = progress,
-                        ncores = ncores)
+    update_power4test <- TRUE
+  }
+
+  if (!update_power4test) {
+    # Store the evaluated arguments
+    args <- formals(power4test)
+    args <- lapply(args,
+                   eval,
+                   envir = parent.frame())
+  } else {
+    args <- attr(object, "args")
+  }
+
+  my_call <- match.call()
+  call_args <- as.list(my_call)[-1]
+  call_args <- lapply(call_args,
+                      eval,
+                      envir = parent.frame())
+  args <- utils::modifyList(args,
+                            as.list(call_args))
+  args$object <- NULL
+
+  if (update_power4test && !is.null(pop_es)) {
+    update_data <- TRUE
+    # Update ptable
+    old_ptable <- object$sim_all[[1]]$ptable
+    new_ptable <- update_ptable_pop(old_ptable,
+                                    new_pop_es = pop_es)
+    ptable <- new_ptable
+    args$ptable <- ptable
+    args$model <- NULL
+    args$pop_es <- NULL
+  } else {
+    if (is.null(n) &&
+        is.null(number_of_indicators) &&
+        is.null(reliability) &&
+        identical(x_fun, list())) {
+      update_data <- FALSE
+    }
+  }
+
+  if (update_data) {
+    if (update_power4test) {
+      # Mandatory use of stored arguments
+      if (progress) {
+        cat("Re-simulate the data:\n")
+      }
+      sim_data_args <- list(nrep = args$nrep,
+                            ptable = ptable,
+                            model = args$model,
+                            pop_es = args$pop_es,
+                            n = args$n,
+                            number_of_indicators = args$number_of_indicators,
+                            reliability = args$reliability,
+                            x_fun = args$x_fun,
+                            iseed = args$iseed,
+                            parallel = args$parallel,
+                            progress = args$progress,
+                            ncores = args$ncores)
+      fit_model_args <- args$fit_model_args
+    } else {
+      if (progress) {
+        cat("Simulate the data:\n")
+      }
+      sim_data_args <- list(nrep = nrep,
+                            ptable = ptable,
+                            model = model,
+                            pop_es = pop_es,
+                            n = n,
+                            number_of_indicators = number_of_indicators,
+                            reliability = reliability,
+                            x_fun = x_fun,
+                            iseed = iseed,
+                            parallel = parallel,
+                            progress = progress,
+                            ncores = ncores)
+    }
+    data_all <- do.call(sim_data,
+                        sim_data_args)
 
     fit_args0 <- utils::modifyList(fit_model_args,
                                   list(data_all = data_all,
@@ -319,10 +414,11 @@ power4test <- function(nrep = 10,
       cat("Fit the model:\n")
     }
     fit_all <- do.call(fit_model,
-                      fit_args0)
+                       fit_args0)
 
     if (!is.null(R)) {
-      # iseed should be used only once
+      # TODO:
+      # - iseed should be used only once
       mc_args0 <- utils::modifyList(gen_mc_args,
                                     list(fit_all = fit_all,
                                         R = R,
@@ -341,31 +437,115 @@ power4test <- function(nrep = 10,
     sim_all <- sim_out(data_all = data_all,
                        fit = fit_all,
                        mc_out = mc_all)
-
   } else {
-    if (inherits(sim_all, "power4test")) {
-      update_test <- TRUE
-      out <- sim_all
-      sim_all <- sim_all$sim_all
-    }
+    sim_all <- object$sim_all
   }
 
-  if (!do_the_test) {
-    if (update_test) {
-      return(out)
-    } else {
-      test_all <- NULL
-      out <- list(sim_all = sim_all,
-                  test_all = test_all)
-      class(out) <- c("power4test", class(out))
-      return(out)
-    }
+  if (is.null(object$test_all) &&
+      is.null(test_fun)) {
+    do_the_test <- FALSE
   }
 
+  if (update_data && !is.null(object$test_all)) {
+    # Data updated and test exits.
+    # Mandatory update of test to make the object
+    # internally consistent.
+    update_test <- TRUE
+  }
+
+  test_all <- NULL
+
+  if (do_the_test && !update_test) {
+    if (is.null(test_name)) {
+      test_name <- deparse(substitute(test_fun))
+    }
+    if (progress) {
+      cat("Do the test:",
+          test_name,
+          "\n")
+    }
+    test_all <- do_test(sim_all,
+                        test_fun = test_fun,
+                        test_args = test_args,
+                        map_names = map_names,
+                        results_fun = results_fun,
+                        results_args = results_args,
+                        parallel = parallel,
+                        progress = progress,
+                        ncores = ncores)
+    attr(test_all, "test_note") <- test_note
+    attr(test_all, "test_name") <- test_name
+    test_all <- list(test_all)
+    names(test_all) <- test_name
+  }
+
+  if (update_test) {
+    if (progress) {
+      cat("Update the test(s):\n")
+    }
+    # Only update tests. Ignore test arguments
+    # Clear all argument values about test
+    tmp <- formals(power4test)
+    args$test_fun <- tmp$test_fun
+    args$test_args <- tmp$test_args
+    args$map_names <- tmp$map_names
+    args$results_fun <- args$results_fun
+    args$results_args <- args$results_args
+    args$test_name <- args$test_name
+    args$test_note <- args$test_note
+    test_all <- sapply(object$test_all,
+                       update_test_i,
+                       sim_all = sim_all,
+                       parallel = args$parallel,
+                       progress = args$progress,
+                       ncores = args$ncores,
+                       simplify = FALSE,
+                       USE.NAMES = TRUE)
+
+  }
+
+  if (!update_power4test) {
+    out <- list(sim_all = sim_all,
+                test_all = test_all)
+    attr(out, "args") <- args
+    class(out) <- c("power4test", class(out))
+  } else {
+    attr(object, "args") <- args
+    if (update_data) {
+      object$sim_all <- sim_all
+    }
+    if (!is.null(test_all)) {
+      if (update_test) {
+        object$test_all <- test_all
+      } else {
+        object$test_all[[test_name]] <- test_all[[1]]
+      }
+    }
+    out <- object
+  }
+
+  out
+}
+
+#' @noRd
+update_test_i <- function(test_i,
+                          sim_all,
+                          parallel = FALSE,
+                          progress = FALSE,
+                          ncores = max(1, parallel::detectCores(logical = FALSE) - 1)) {
+  test_fun <- attr(test_i, "test_fun")
+  test_args <- attr(test_i, "test_args")
+  map_names <- attr(test_i, "map_names")
+  results_fun <- attr(test_i, "results_fun")
+  results_args <- attr(test_i, "results_args")
+  test_name <- attr(test_i, "test_name")
   if (progress) {
-    cat("Do the test:\n")
+      cat("Update",
+          test_name,
+          ":\n")
   }
-  test_all <- do_test(sim_all,
+  test_note <- attr(test_i, "test_note")
+  test_new <- do_test(sim_all,
                       test_fun = test_fun,
                       test_args = test_args,
                       map_names = map_names,
@@ -374,19 +554,8 @@ power4test <- function(nrep = 10,
                       parallel = parallel,
                       progress = progress,
                       ncores = ncores)
-  if (is.null(test_name)) {
-    test_name <- deparse(substitute(test_fun))
-  }
-  attr(test_all, "test_note") <- test_note
-  if (update_test) {
-    out$test_all[[test_name]] <- test_all
-    return(out)
-  } else {
-    test_all <- list(test_all)
-    names(test_all) <- test_name
-    out <- list(sim_all = sim_all,
-                test_all = test_all)
-    class(out) <- c("power4test", class(out))
-    return(out)
-  }
+  attr(test_new, "test_note") <- test_note
+  attr(test_new, "test_name") <- test_name
+
+  test_new
 }

@@ -189,8 +189,8 @@
 #           A named vector of the effect size labels for selected parameters
 # Output:
 # - The parameter table with population values
-ptable_pop <- function(model,
-                       pop_es,
+ptable_pop <- function(model = NULL,
+                       pop_es = NULL,
                        es1 = c("n" = .00,
                                "s" = .10,
                                "m" = .30,
@@ -202,6 +202,9 @@ ptable_pop <- function(model,
                        standardized = TRUE,
                        n_std = 100000,
                        std_force_monte_carlo = FALSE) {
+  if (is.null(model) || is.null(pop_es)) {
+    stop("Both model and pop_es must be set.")
+  }
   par_pop <- pop_es2par_pop(pop_es = pop_es,
                             es1 = es1,
                             es2 = es2,
@@ -327,14 +330,22 @@ ptable_pop <- function(model,
   attr(ptable1, "standardized") <- standardized
   attr(ptable1, "std_force_monte_carlo") <- std_force_monte_carlo
 
-  class(ptable1) <- c("ptable1", class(ptable1))
+  class(ptable1) <- c("ptable_pop", class(ptable1))
   ptable1
 }
 
 #' @noRd
 # Should only update pop_es
+# Input:
+# - A ptable object
+# - new_pop_es: pop_es for parameters to be updated
+# Output:
+# - A ptable based on updated pop_es
 update_ptable_pop <- function(object,
                               new_pop_es) {
+  if (!inherits(object, "ptable_pop")) {
+    stop("Can only update a ptable_pop object.")
+  }
   es1 <- attr(object, "es1")
   es2 <- attr(object, "es2")
   model <- attr(object, "model")
@@ -360,6 +371,12 @@ update_ptable_pop <- function(object,
 }
 
 #' @noRd
+# Input:
+# - par_pop
+# Output:
+# - A list of par_pops, one for each
+#   group, even if the number of groups
+#   is 1.
 split_par_pop <- function(par_pop) {
   # Already a list of table(s)?
   if (is.list(par_pop)) {
@@ -470,7 +487,6 @@ model_matrices_pop <- function(x,
 # - model
 # Output:
 # - par_pop
-
 update_par_pop <- function(add,
                            par_pop) {
   # par_pop should be a list of tables
@@ -498,6 +514,11 @@ update_par_pop <- function(add,
 }
 
 #' @noRd
+# Input:
+# - pop_es
+# - Other arguments needed.
+# Output:
+# - par_pop. Can be a list or a table.
 pop_es2par_pop <- function(pop_es,
                            es1,
                            es2,
@@ -540,6 +561,10 @@ pop_es2par_pop <- function(pop_es,
 }
 
 #' @noRd
+# Input:
+# - par_pop
+# Output:
+# - One single table
 par_pop_to_one_table <- function(par_pop) {
   # Already one table?
   if (is.data.frame(par_pop)) {

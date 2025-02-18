@@ -174,6 +174,13 @@ do_test <- function(sim_all,
                 parallel = parallel,
                 progress = progress,
                 ncores = ncores)
+
+  attr(out, "test_fun") <- test_fun
+  attr(out, "test_args") <- test_args
+  attr(out, "map_names") <- map_names
+  attr(out, "results_fun") <- results_fun
+  attr(out, "results_args") <- results_args
+
   class(out) <- c("test_out", class(out))
   return(out)
 }

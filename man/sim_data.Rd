@@ -6,8 +6,9 @@
 \usage{
 sim_data(
   nrep = 10,
-  model,
-  pop_es,
+  ptable = NULL,
+  model = NULL,
+  pop_es = NULL,
   ...,
   n = 100,
   iseed = NULL,
@@ -24,15 +25,25 @@ sim_data(
 to generate the simulated datasets.
 Default is 10.}
 
+\item{ptable}{The output of
+\code{\link[=ptable_pop]{ptable_pop()}}, which is a
+\code{ptable_pop} object, representing the
+population model. If \code{NULL}, the
+default, \code{\link[=ptable_pop]{ptable_pop()}} will be
+called to generate the \code{ptable_pop}
+object.}
+
 \item{model}{The \code{lavaan} model
 syntax of the population model.
-Required.}
+Required. Ignored if \code{ptable} is
+specified.}
 
 \item{pop_es}{The character to
-specify population effect sizes.
-See 'Details' on how to set the
-effect sizes for this argument.
-Required.}
+specify population effect sizes. See
+'Details' of \code{\link[=ptable_pop]{ptable_pop()}} on how to
+set the effect sizes for this
+argument. Ignored if \code{ptable} is
+specified.}
 
 \item{...}{Parameters to be passed
 to \link{ptable_pop}.}

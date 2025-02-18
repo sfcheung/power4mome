@@ -96,7 +96,7 @@ ind_results <- function(out) {
 # Do the test
 # - Need only the arguments for the test.
 
-power_all_test_only <- power4test(sim_all = power_all_sim_only,
+power_all_test_only <- power4test(object = power_all_sim_only,
                                   test_fun = manymome::indirect_effect,
                                   test_args = list(x = "x",
                                                    m = "m",
@@ -135,7 +135,7 @@ expect_equal(summary_all$`manymome::indirect_effect`[c("cilo", "cihi")],
 # Do the test and add it to the power4test object
 # - Need only the arguments for the test.
 
-power_all_test_only2 <- power4test(sim_all = power_all_test_only,
+power_all_test_only2 <- power4test(object = power_all_test_only,
                                    test_fun = manymome::indirect_effect,
                                    test_args = list(x = "x",
                                                     y = "y",
@@ -170,7 +170,7 @@ expect_equal(summary_all$`Direct Effect`[c("cilo", "cihi")],
 # Do the test and replace the previous tests in the power4test object
 # - Need only the arguments for the test.
 
-power_all_test_only3 <- power4test(sim_all = power_all_test_only2,
+power_all_test_only3 <- power4test(object = power_all_test_only2,
                                    test_fun = manymome::indirect_effect,
                                    test_args = list(x = "x",
                                                     m = "m",

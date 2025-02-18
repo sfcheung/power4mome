@@ -6,8 +6,8 @@
 \title{Generate the Population Model}
 \usage{
 ptable_pop(
-  model,
-  pop_es,
+  model = NULL,
+  pop_es = NULL,
   es1 = c(n = 0, s = 0.1, m = 0.3, l = 0.5),
   es2 = c(n = 0, s = 0.05, m = 0.1, l = 0.15),
   standardized = TRUE,

@@ -1,5 +1,3 @@
-skip("WIP")
-
 library(testthat)
 suppressMessages(library(lavaan))
 
@@ -41,6 +39,12 @@ ptable <- ptable_pop(model = model_simple_med,
 ptable2 <- update_ptable_pop(ptable,
                              new_pop_es = c("m ~ x" = "s"))
 
+expect_equal(ptable2[1, "start"],
+             .10)
+
+expect_equal(ptable[1, "start"],
+             .50)
+
 # Multigroup
 
 model_simple_med <-
@@ -73,5 +77,20 @@ expect_equal(par_pop2[[1]][1, "es"],
 expect_equal(par_pop2[[2]][1, "es"],
              "m")
 
+ptable <- ptable_pop(model = model_simple_med,
+                     pop_es = model_simple_med_es)
+
+ptable2 <- update_ptable_pop(ptable,
+                             new_pop_es = list("m ~ x" = c("s", "l")))
+
+expect_equal(ptable2[1, "start"],
+             .10)
+expect_equal(ptable2[7, "start"],
+             .50)
+
+expect_equal(ptable[1, "start"],
+             .00)
+expect_equal(ptable[7, "start"],
+             .10)
 
 })
