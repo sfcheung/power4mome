@@ -336,6 +336,13 @@ ptable_pop <- function(model,
   ptable1
 }
 
+#' @noRd
+# Should only update pop_es
+update_ptable_pop <- function(object,
+                              new_pop_es) {
+  new_par_pop <- update_par_pop()
+}
+
 #' @describeIn ptable_pop
 #'
 #' @details
@@ -469,6 +476,11 @@ pop_es2par_pop <- function(pop_es,
                        es2 = es2)
     par_pop <- list(par_pop)
   } else if (is.list(pop_es)) {
+    if (is.data.frame(pop_es[[1]])) {
+      # Already a par_pop object
+      par_pop <- pop_es
+      return(par_pop)
+    }
     pop_es <- split_par_es(pop_es)
     pop_es <- lapply(pop_es,
                      FUN = fix_par_es,
@@ -477,8 +489,6 @@ pop_es2par_pop <- function(pop_es,
                       set_pop,
                       es1 = es1,
                       es2 = es2)
-  } else {
-    par_pop <- pop_es
   }
   par_pop
 }
