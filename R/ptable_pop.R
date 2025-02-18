@@ -446,7 +446,7 @@ update_par_pop <- function(add,
     i2 <- !is.na(tmp$pop.add)
     i3 <- !is.na(tmp$es.add)
     tmp$pop[i2] <- tmp$pop.add[i2]
-    tmp$es[i2] <- tmp$es.add[i2]
+    tmp$es[i3] <- tmp$es.add[i3]
     tmp$pop.add <- NULL
     tmp$es.add <- NULL
     out[[i]] <- tmp
