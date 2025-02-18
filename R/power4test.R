@@ -458,11 +458,29 @@ power4test <- function(object = NULL,
   if (do_the_test && !update_test) {
     if (is.null(test_name)) {
       test_name <- deparse(substitute(test_fun))
+      test_args_tmp <- utils::modifyList(test_args,
+                                         list(get_test_name = TRUE))
+      test_name0 <- tryCatch(do.call(test_fun,
+                                     test_args_tmp),
+                             error = function(e) e)
+      if (!inherits(test_name0, "error")) {
+        if (is.character(test_name0) &&
+            length(test_name0) == 1) {
+          test_name <- test_name0
+        }
+      }
     }
     if (progress) {
       cat("Do the test:",
           test_name,
           "\n")
+    }
+    map_names0 <- tryCatch(test_fun(get_map_names = TRUE),
+                           error = function(e) e)
+    if (!inherits(map_names, "error")) {
+      if (is.character(map_names0) && !is.null(names(map_names0))) {
+        map_names <- map_names0
+      }
     }
     test_all <- do_test(sim_all,
                         test_fun = test_fun,
