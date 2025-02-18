@@ -329,6 +329,8 @@ ptable_pop <- function(model,
   attr(ptable1, "es1") <- es1
   attr(ptable1, "es2") <- es2
   attr(ptable1, "par_pop") <- par_pop
+  attr(ptable1, "n_std") <- n_std
+  attr(ptable1, "std_force_monte_carlo") <- std_force_monte_carlo
 
   class(ptable1) <- c("ptable1", class(ptable1))
   ptable1
