@@ -1,7 +1,5 @@
 library(testthat)
 
-skip("WIP")
-
 skip_if_not_installed("lmhelprs")
 
 test_that("indirect effect by lm", {
@@ -37,6 +35,8 @@ sim_only <- power4test(nrep = 5,
                        model = model_simple_med,
                        pop_es = model_simple_med_es,
                        n = 100,
+                       R = 50,
+                       ci_type = "boot",
                        fit_model_args = list(fit_function = lmhelprs::many_lm),
                        do_the_test = FALSE,
                        iseed = 1234)
@@ -55,7 +55,8 @@ test_indirect <- function(fit = fit,
                           get_map_names = FALSE,
                           get_test_name = FALSE) {
   map_names <- c(fit = "fit",
-                mc_out = "mc_out")
+                mc_out = "mc_out",
+                boot_out = "boot_out")
   if (get_map_names) {
     return(map_names)
   }
@@ -103,6 +104,29 @@ test_ind <- power4test(object = sim_only,
                                         mc_ci = FALSE))
 
 (chk <- test_summary(test_ind))
-expect_true(length(chk) == 1)
+
+fits <- lapply(sim_only$sim_all,
+               function(x) x$extra$fit)
+boot_out <- lapply(sim_only$sim_all,
+                   function(x) x$extra$boot_out)
+chk_outs <- mapply(manymome::indirect_effect,
+                   fit = fits,
+                   boot_out = boot_out,
+                   MoreArgs = list(x = "x",
+                                   m = "m",
+                                   y = "y",
+                                   boot_ci = TRUE),
+                  SIMPLIFY = FALSE)
+chk_cis <- lapply(chk_outs,
+                  confint)
+chk_cis <- do.call(rbind, chk_cis)
+chk_sigs <- (chk_cis[, 1] > 0) | (chk_cis[, 2] < 0)
+
+expect_equal(chk[[1]]["sig"],
+             mean(chk_sigs),
+             ignore_attr = TRUE)
+expect_equal(chk[[1]][c("cilo", "cihi")],
+             colMeans(chk_cis),
+             ignore_attr = TRUE)
 
 })

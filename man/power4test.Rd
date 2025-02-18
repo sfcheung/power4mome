@@ -16,7 +16,9 @@ power4test(
   x_fun = list(),
   fit_model_args = list(),
   R = NULL,
+  ci_type = c("mc", "boot"),
   gen_mc_args = list(),
+  gen_boot_args = list(),
   test_fun = NULL,
   test_args = list(),
   map_names = c(fit = "fit"),
@@ -96,10 +98,19 @@ with names being the names of the
 arguments.}
 
 \item{R}{The number of replications
-to generate the Monte Carlo estimates
+to generate the Monte Carlo or
+bootstrapping estimates
 for each fit output. No Monte Carlo
+nor bootstrapping
 estimates will be generated if \code{R}
 is set to \code{NULL}.}
+
+\item{ci_type}{The type of
+simulation-based confidence
+intervals to use. Can be either
+\code{"mc"} for Monte Carlo method
+(the default) or \code{"boot"} for
+nonparametric bootstrapping method.}
 
 \item{gen_mc_args}{A list of
 arguments to be passed to
@@ -107,7 +118,17 @@ arguments to be passed to
 the Monte Carlo estimates.
 Should be a named argument
 with names being the names of the
-arguments.}
+arguments. Used only if
+\code{ci_type} is \verb{"mc".}}
+
+\item{gen_boot_args}{A list of
+arguments to be passed to
+\code{\link[manymome:do_boot]{manymome::do_boot()}} when generating
+the bootstrap estimates.
+Should be a named argument
+with names being the names of the
+arguments. Used only if
+\code{ci_type} is `"boot".}
 
 \item{test_fun}{A function to do the
 test. See the help page of
