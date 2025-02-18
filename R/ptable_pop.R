@@ -424,7 +424,35 @@ model_matrices_pop <- function(x,
 # Input:
 # - par_pop
 # - pop_es
+# - es1
+# - es2
+# - model
+# Output:
+# - par_pop
 
+update_par_pop <- function(add,
+                           par_pop) {
+  out <- par_pop
+  ngroups <- length(out)
+  for (i in seq_len(ngroups)) {
+    # Can ignore group because
+    # each group has its own table
+    tmp <- merge(out[[i]],
+                 add[[i]],
+                 by = c("lhs", "op", "rhs"),
+                 all.x = TRUE,
+                 all.y = FALSE,
+                 suffix = c("", ".add"))
+    i2 <- !is.na(tmp$pop.add)
+    i3 <- !is.na(tmp$es.add)
+    tmp$pop[i2] <- tmp$pop.add[i2]
+    tmp$es[i2] <- tmp$es.add[i2]
+    tmp$pop.add <- NULL
+    tmp$es.add <- NULL
+    out[[i]] <- tmp
+  }
+  out
+}
 
 #' @noRd
 pop_es2par_pop <- function(pop_es,
