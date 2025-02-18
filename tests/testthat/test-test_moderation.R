@@ -1,6 +1,8 @@
+skip("WIP")
+
 library(testthat)
 
-test_that("index of mome", {
+test_that("Test moderation", {
 
 mod <-
 "

@@ -7,6 +7,9 @@ suppressMessages(library(lavaan))
 
 # All-In-One
 
+# This test function is different from
+# the internal one.
+
 test_summary <- function(object) {
   if (inherits(object, "power4test")) {
     object <- object$test_all
