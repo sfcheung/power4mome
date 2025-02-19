@@ -212,9 +212,19 @@ ptable_pop <- function(model = NULL,
                             to_one_table = TRUE)
   ngroups <- max(par_pop$group)
   # Single group ptable
-  fit0 <- lavaan::sem(model,
-                      do.fit = FALSE)
-  ptable0 <- lavaan::parTable(fit0)
+  if (ngroups > 1) {
+    # Handle labels in the syntax
+    tmp <- lavaan::lavParseModelString(model,
+                                       as.data.frame. = TRUE)
+    tmp2 <- paste(tmp$lhs, tmp$op, tmp$rhs)
+    fit0 <- lavaan::sem(tmp2,
+                        do.fit = FALSE)
+    ptable0 <- lavaan::parTable(fit0)
+  } else {
+    fit0 <- lavaan::sem(model,
+                        do.fit = FALSE)
+    ptable0 <- lavaan::parTable(fit0)
+  }
 
   # Use fake data to create the target parameter table
   if (ngroups > 1) {
