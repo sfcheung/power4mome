@@ -147,6 +147,7 @@ test_parameters <- function(fit = fit,
                             get_map_names = FALSE,
                             get_test_name = FALSE) {
   map_names <- c(fit = "fit")
+  args <- list(...)
   if (get_map_names) {
     return(map_names)
   }
@@ -205,9 +206,15 @@ test_parameters <- function(fit = fit,
   } else {
     if (fit_type == "lm_list") {
       # TODO:
-      # - Add arguments for CI, such as level.
+      # - Find a better way to handle level
+      if (!is.null(args$level)) {
+        ci_args <- list(level = args$level)
+      } else {
+        ci_args <- eval(formals(lmhelprs::lm_list_to_partable)$ci_args)
+      }
       est <- lmhelprs::lm_list_to_partable(object = fit,
-                                           ci = TRUE)
+                                           ci = TRUE,
+                                           ci_args = ci_args)
       est <- est[, c("lhs", "op", "rhs", "est", "se", "pvalue",
                      "ci.lower", "ci.upper")]
     } else {
