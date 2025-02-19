@@ -16,7 +16,7 @@ sim_only <- power4test(nrep = 5,
                        model = model_simple_med,
                        pop_es = model_simple_med_es,
                        n = 100,
-                       fit_model_args = list(fit_function = lmhelprs::many_lm),
+                       fit_model_args = list(fit_function = "lm"),
                        do_the_test = FALSE,
                        iseed = 1234)
 

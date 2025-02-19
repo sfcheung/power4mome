@@ -25,7 +25,7 @@ data_i <- sim_data_i(model = model_simple_med,
 
 fit_i <- fit_model_i(data_i,
                      model = c("m ~ x", "y ~ m"),
-                     fit_function = lmhelprs::many_lm)
+                     fit_function = "lm")
 
 expect_s3_class(fit_i,
                 "lm_list_lmhelprs")

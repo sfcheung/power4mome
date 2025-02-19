@@ -10,7 +10,8 @@
 #' stored in the output of [sim_data()],
 #' fits the model to each dataset
 #' simulated using `fit_function`,
-#' default to [lavaan::sem()], and
+#' default to `"lavaan"` and
+#' [lavaan::sem()] will be called, and
 #' returns the results. If the datasets
 #' were generated from a multigroup
 #' model when calling [sim_data()],
@@ -19,7 +20,8 @@
 #' @return
 #' An object of the class `fit_out`,
 #' which is a list of the output of
-#' [lavaan::sem()]. If error occurred
+#' `fit_function` ([lavaan::sem()]
+#' by default). If error occurred
 #' when fitting the model to a dataset,
 #' then element will be the error
 #' message from [lavaan::sem()] instead
@@ -36,9 +38,12 @@
 #' will be used.
 #'
 #' @param fit_function The function to
-#' be used to fit the model. Default
-#' is [lavaan::sem()] but can be set to
-#' another function.
+#' be used to fit the model. Can also
+#' be a string: `lavaan` (the default) for
+#' [lavaan::sem()], and `lm` or `many_lm`
+#' for [lmhelprs::many_lm()].
+#' Other values will be tried to match
+#' to a function.
 #'
 #' @param arg_data_name The name of the
 #' argument of `fit_function` expecting
@@ -91,7 +96,7 @@
 #' @export
 fit_model <- function(data_all,
                       model = NULL,
-                      fit_function = lavaan::sem,
+                      fit_function = "lavaan",
                       arg_data_name = "data",
                       arg_model_name = "model",
                       arg_group_name = "group",
@@ -133,12 +138,19 @@ fit_model <- function(data_all,
 #' @noRd
 fit_model_i <- function(data_i,
                         model = NULL,
-                        fit_function = lavaan::sem,
+                        fit_function = "lavaan",
                         arg_data_name = "data",
                         arg_model_name = "model",
                         arg_group_name = "group",
                         ...) {
-  fit_function <- match.fun(fit_function)
+  if (is.character(fit_function)) {
+    fit_function <- switch(fit_function,
+                           lavaan = lavaan::sem,
+                           lm = lmhelprs::many_lm,
+                           many_lm = lmhelprs::many_lm,
+                           fit_function)
+
+  }
   # Anomalies should be checked in
   # subsequent steps, not during fitting
   # the model to many datasets.

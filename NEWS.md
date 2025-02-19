@@ -110,3 +110,8 @@
 - Some test functions can suppport
   models fitted by `lmhelprs::many_lm()`.
   (0.0.0.9024)
+
+- Simplified the argument `fit_function`
+ of `fit_model()`. They can now be
+ strings, such as `lavaan` and `lm`.
+ (0.0.0.9025)
