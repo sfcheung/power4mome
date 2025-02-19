@@ -89,6 +89,6 @@ expect_true(all(chk[[3]]$op %in% "~"))
 expect_identical(chk[[4]]$op,
                  ":=")
 
-test_out_summary <- summarize_test(test_out)
+test_out_summary <- summarize_tests(test_out)
 
 })

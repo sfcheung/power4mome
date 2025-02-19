@@ -45,6 +45,6 @@ chk_outs <- sapply(fits,
 expect_identical(chk[[1]]$cilo[1],
                  mean(chk_outs))
 
-test_out_summary <- summarize_test(test_out)
+test_out_summary <- summarize_tests(test_out)
 
 })

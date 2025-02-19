@@ -70,6 +70,6 @@ test_ind4 <- suppressWarnings(power4test(object = test_ind3,
 (chk <- test_summary(test_ind4))
 expect_true(length(chk) == 4)
 
-test_ind4_summary <- summarize_test(test_ind4$test_all)
+test_ind4_summary <- summarize_tests(test_ind4$test_all)
 
 })
