@@ -26,7 +26,7 @@
 #' power of this test.
 #'
 #' @return
-#' It returns an `sim_out` object, which
+#' The function [sim_out()] returns an `sim_out` object, which
 #' is a list of length equal to the
 #' length of `data_all`. Each element
 #' of the list is a `sim_data` object
@@ -69,6 +69,7 @@
 #' fits <- fit_model(dats)
 #' sim_out_all <- sim_out(data_all = dats,
 #'                        fit = fits)
+#' sim_out_all
 #'
 #' @export
 #'
@@ -90,8 +91,35 @@ sim_out <- function(data_all,
                  x = data_all,
                  extra = args_by_rep,
                  SIMPLIFY = FALSE)
-  class(out0) <- c("sim_out", class(out0))
+  class(out0) <- c("sim_out", "sim_data", class(out0))
   return(out0)
+}
+
+#' @param digits The numbers of digits
+#' displayed after the decimal.
+#'
+#' @param digits_descriptive The
+#' number of digits displayed after
+#' the decimal for the descriptive
+#' statistics table.
+#'
+#' @param x The `sim_out` object
+#' to be printed.
+#'
+#' @return
+#' The `print` method of `sim_out`
+#' return `x` invisibly. Called for
+#' its side effect.
+#'
+#' @rdname sim_out
+#' @export
+print.sim_out <- function(x,
+                          digits = 3,
+                          digits_descriptive = 2,
+                          ...) {
+  # TODO:
+  # - Add print method for components in `extra`.
+  NextMethod()
 }
 
 #' @noRd

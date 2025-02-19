@@ -2,9 +2,12 @@
 % Please edit documentation in R/sim_out.R
 \name{sim_out}
 \alias{sim_out}
+\alias{print.sim_out}
 \title{Create a 'sim_out' Object}
 \usage{
 sim_out(data_all, ...)
+
+\method{print}{sim_out}(x, digits = 3, digits_descriptive = 2, ...)
 }
 \arguments{
 \item{data_all}{The output of
@@ -19,9 +22,20 @@ is the output of \code{\link[=fit_model]{fit_model()}},
 then \code{data_all[[1]]$extra$fit}
 will be set to the first output
 in \code{fit_all}.}
+
+\item{x}{The \code{sim_out} object
+to be printed.}
+
+\item{digits}{The numbers of digits
+displayed after the decimal.}
+
+\item{digits_descriptive}{The
+number of digits displayed after
+the decimal for the descriptive
+statistics table.}
 }
 \value{
-It returns an \code{sim_out} object, which
+The function \code{\link[=sim_out]{sim_out()}} returns an \code{sim_out} object, which
 is a list of length equal to the
 length of \code{data_all}. Each element
 of the list is a \code{sim_data} object
@@ -33,6 +47,10 @@ for this replication can be added
 to \code{fit}, under \code{extra}. See
 the description of the argument
 \code{...} for details.
+
+The \code{print} method of \code{sim_out}
+return \code{x} invisibly. Called for
+its side effect.
 }
 \description{
 Combine the outputs
@@ -77,5 +95,6 @@ dats <- sim_data(nrep = 5,
 fits <- fit_model(dats)
 sim_out_all <- sim_out(data_all = dats,
                        fit = fits)
+sim_out_all
 
 }

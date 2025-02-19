@@ -2,6 +2,7 @@
 % Please edit documentation in R/sim_data.R
 \name{sim_data}
 \alias{sim_data}
+\alias{print.sim_data}
 \title{Simulate Datasets Based on a Model}
 \usage{
 sim_data(
@@ -19,6 +20,8 @@ sim_data(
   progress = FALSE,
   ncores = max(1, parallel::detectCores(logical = FALSE) - 1)
 )
+
+\method{print}{sim_data}(x, digits = 3, digits_descriptive = 2, ...)
 }
 \arguments{
 \item{nrep}{The number of replications
@@ -45,8 +48,10 @@ set the effect sizes for this
 argument. Ignored if \code{ptable} is
 specified.}
 
-\item{...}{Parameters to be passed
-to \link{ptable_pop}.}
+\item{...}{For \link{sim_data}, parameters
+to be passed to \link{ptable_pop}. For
+\code{\link[=print.sim_data]{print.sim_data()}}, these arguments
+are ignored.}
 
 \item{n}{The sample size for each
 dataset. Default is 100.}
@@ -87,9 +92,21 @@ Default is `FALSE.}
 \item{ncores}{The number of CPU
 cores to use if parallel processing
 is used.}
+
+\item{x}{The \code{sim_data} object
+to be printed.}
+
+\item{digits}{The numbers of digits
+displayed after the decimal.}
+
+\item{digits_descriptive}{The
+number of digits displayed after
+the decimal for the descriptive
+statistics table.}
 }
 \value{
-A list of the class \code{sim_data},
+The function \code{\link[=sim_out]{sim_out()}} returns
+a list of the class \code{sim_data},
 with length \code{nrep}. Each element
 is a \code{sim_data_i} object, with
 the following major elements:
@@ -125,6 +142,10 @@ with \code{ptable} as the model and
 easy retrieval of information
 about the model.
 }
+
+The \code{print} method of \code{sim_data}
+return \code{x} invisibly. Called for
+its side effect.
 }
 \description{
 Get a model matrix and
@@ -347,5 +368,7 @@ data_all <- sim_data(nrep = 5,
                      pop_es = es,
                      n = 100,
                      iseed = 1234)
+
+data_all
 
 }

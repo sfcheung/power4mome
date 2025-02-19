@@ -234,8 +234,10 @@
 #' argument. Ignored if `ptable` is
 #' specified.
 #'
-#' @param ... Parameters to be passed
-#' to [ptable_pop].
+#' @param ... For [sim_data], parameters
+#' to be passed to [ptable_pop]. For
+#' [print.sim_data()], these arguments
+#' are ignored.
 #'
 #' @param n The sample size for each
 #' dataset. Default is 100.
@@ -278,7 +280,8 @@
 #' is used.
 #'
 #' @return
-#' A list of the class `sim_data`,
+#' The function [sim_out()] returns
+#' a list of the class `sim_data`,
 #' with length `nrep`. Each element
 #' is a `sim_data_i` object, with
 #' the following major elements:
@@ -334,6 +337,8 @@
 #'                      n = 100,
 #'                      iseed = 1234)
 #'
+#' data_all
+#'
 #' @export
 sim_data <- function(nrep = 10,
                      ptable = NULL,
@@ -378,6 +383,210 @@ sim_data <- function(nrep = 10,
                 ncores = ncores)
   class(out) <- c("sim_data", class(out))
   return(out)
+}
+
+#' @param digits The numbers of digits
+#' displayed after the decimal.
+#'
+#' @param digits_descriptive The
+#' number of digits displayed after
+#' the decimal for the descriptive
+#' statistics table.
+#'
+#' @param x The `sim_data` object
+#' to be printed.
+#'
+#' @return
+#' The `print` method of `sim_data`
+#' return `x` invisibly. Called for
+#' its side effect.
+#'
+#' @rdname sim_data
+#' @export
+print.sim_data <- function(x,
+                           digits = 3,
+                           digits_descriptive = 2,
+                           ...) {
+  x_i <- x[[1]]
+  ptable <- x_i$ptable
+  fit0 <- x_i$fit0
+
+  group_labels <- x_i$group_labels
+  ngroups <- length(group_labels)
+  if (is.null(ngroups)) ngroups <- 1
+
+  ptable0 <- lavaan::parameterTable(fit0)
+  ptable <- set_user_pop(ptable,
+                         fit = fit0)
+  ptable1 <- ptable[, c("lhs",
+                        "op",
+                        "rhs",
+                        "group",
+                        "block",
+                        "exo",
+                        "label",
+                        "start")]
+  colnames(ptable1)[which(colnames(ptable1) == "start")] <- "Population"
+  if (max(ptable1$group) == 1) {
+    ptable1$group <- NULL
+  }
+
+  class(ptable1) <- c("lavaan.parameterEstimates", class(ptable1))
+  if (ngroups > 1) {
+    attr(ptable1, "group.label") <- group_labels
+  }
+
+  model_original <- x_i$model_original
+
+  cat(header_str("Model Information",
+                 prefix = "\n",
+                 suffix = "\n\n"))
+
+  cat(header_str("Model on Factors/Variables",
+                 hw = .4,
+                 prefix = "\n\n",
+                 suffix = "\n\n"))
+  cat(model_original)
+
+  model_final <- x_i$model_final
+  cat(header_str("Model on Variables/Indicators",
+                 hw = .4,
+                 prefix = "\n",
+                 suffix = "\n"))
+  cat(model_final, sep = "\n")
+
+  cat(header_str("Population Values",
+                 hw = .4,
+                 prefix = "\n",
+                 suffix = "\n"))
+  print(ptable1,
+        digits = digits)
+
+  k0 <- x_i$number_of_indicators
+
+  rel0 <- x_i$reliability
+
+  if (!is.null(rel0[[1]])) {
+    rel <- do.call(rbind,
+                  rel0)
+    rel <- as.data.frame(rel)
+    rel_n <- nrow(rel)
+    rownames(rel) <- paste0("Group ", seq_len(rel_n))
+    cat(header_str("Population Reliability",
+                  hw = .4,
+                  prefix = "\n",
+                  suffix = "\n\n"))
+    print(rel,
+          row.names = isTRUE(rel_n > 1),
+          digits = digits)
+  }
+
+  if (!is.null(k0[[1]])) {
+    lambda0 <- mapply(function(xx, yy) {
+                        out <- mapply(lambda_from_reliability,
+                                      p = xx,
+                                      omega = yy)
+                        out
+                      },
+                      xx = k0,
+                      yy = rel0,
+                      SIMPLIFY = FALSE)
+    lambda <- do.call(rbind,
+                      lambda0)
+    lambda <- as.data.frame(lambda)
+    lambda_n <- nrow(lambda)
+    rownames(lambda) <- paste0("Group ", seq_len(lambda_n))
+    cat(header_str("Population Standardized Loadings",
+                  hw = .4,
+                  prefix = "\n",
+                  suffix = "\n\n"))
+    print(lambda,
+          row.names = isTRUE(lambda_n > 1),
+          digits = digits)
+  }
+
+  # Summarize data
+
+  all_data <- pool_sim_data(x)
+
+  fit_all <- lavaan::sem(model = model_final,
+                         data = all_data,
+                         se = "none",
+                         test = "none",
+                         group = x_i$group_name)
+  est_all <- lavaan::standardizedSolution(fit_all,
+                                          se = FALSE,
+                                          pvalue = FALSE,
+                                          ci = FALSE,
+                                          output = "text")
+  i <- est_all$lhs == est_all$rhs
+  est_all <- est_all[!i, ]
+
+  nrep <- length(x)
+  n <- nrow(x_i$mm_lm_dat_out)
+
+  cat(header_str("Data Information",
+                 prefix = "\n",
+                 suffix = "\n\n"))
+
+  cat("Number of Replications: ", nrep, "\n")
+  cat("Sample Sizes: ", paste0(n, collapse = ", "), "\n")
+
+  cat(header_str("Descriptive Statistics",
+                 hw = .4,
+                 prefix = "\n",
+                 suffix = "\n\n"))
+
+  print(psych::describe(all_data,
+                        range = FALSE),
+        digits = digits_descriptive)
+
+  tmp <- paste("Parameter Estimates Based on All",
+               nrep,
+               "Samples Combined")
+  cat(header_str(tmp,
+                 prefix = "\n",
+                 suffix = "\n\n"))
+
+  cat("Total Sample Size:", n * nrep, "\n")
+
+  cat(header_str("Standardized Estimates",
+                 hw = .4,
+                 prefix = "\n",
+                 suffix = "\n\n"))
+
+  cat("Variances and error variances omitted.\n")
+
+  print(est_all,
+        nd = digits)
+
+  invisible(x)
+}
+
+#' @noRd
+pool_sim_data <- function(sim_out) {
+  all_data <- lapply(sim_out,
+                     function(x) x$mm_lm_dat_out)
+  all_data <- do.call(rbind,
+                      all_data)
+  all_data
+}
+
+#' @noRd
+set_user_pop <- function(ptable,
+                         fit) {
+  if (!(":=" %in% ptable$op)) {
+    return(ptable)
+  }
+  user_fun <- fit@Model@def.function
+  i <- ptable$free
+  i <- i[i > 0]
+  j <- match(i, ptable$free)
+  pop <- ptable$start[j]
+  user_pop <- user_fun(pop)
+  k <- match(names(user_pop), ptable$lhs)
+  ptable[k, "start"] <- user_pop
+  ptable
 }
 
 
