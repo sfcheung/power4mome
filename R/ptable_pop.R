@@ -646,7 +646,11 @@ mm_lm_i <- function(mm) {
   if (is.null(model)) {
     stop("Model syntax not found")
   }
-  fit1 <- lavaan::sem(model,
+  # Handle labels
+  tmp <- lavaan::lavParseModelString(model,
+                                     as.data.frame. = TRUE)
+  tmp2 <- paste(tmp$lhs, tmp$op, tmp$rhs)
+  fit1 <- lavaan::sem(tmp2,
                       do.fit = FALSE)
   mm1 <- lavaan::lavInspect(fit1,
                             "partable")
