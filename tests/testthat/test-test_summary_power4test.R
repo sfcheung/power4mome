@@ -24,13 +24,16 @@ sim_only <- power4test(nrep = 10,
                        model = model_simple_med,
                        pop_es = model_simple_med_es,
                        n = 200,
+                       R = 10,
                        number_of_indicators = k,
                        reliability = rel,
                        fit_model_args = list(estimator = "ML"),
                        do_the_test = FALSE,
                        iseed = 1234)
 
-expect_no_error(print(sim_only$sim_all))
+sim_all <- sim_only$sim_all
+
+expect_no_error(print(sim_all))
 
 # Multigroup
 
@@ -50,10 +53,12 @@ rel2 <- list(y = .70,
              m = c(.80, .70),
              x = .90)
 
-sim_gp02 <- power4test(nrep = 10,
+sim_gp02 <- power4test(nrep = 2,
                        model = model_simple_med2,
                        pop_es = model_simple_med_es2,
-                       n = 200,
+                       n = c(100, 200),
+                       R = 5,
+                       ci_type = "boot",
                        number_of_indicators = k,
                        reliability = rel2,
                        fit_model_args = list(estimator = "ML"),

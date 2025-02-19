@@ -120,6 +120,45 @@ print.sim_out <- function(x,
   # TODO:
   # - Add print method for components in `extra`.
   NextMethod()
+  print_extra(x)
+  return(x)
+}
+
+#' @noRd
+
+print_extra <- function(x) {
+  extra <- x[[1]]$extra
+  if (is.null(extra)) {
+    return(NULL)
+  }
+  tmp <- sapply(extra,
+                function(x) identical(x, NA))
+  if (!any(tmp)) {
+    return(NULL)
+  }
+  extra <- extra[!tmp]
+  extra_names <- names(extra)
+  cat(header_str("Extra Element(s) Found",
+                 prefix = "\n",
+                 suffix = "\n\n"))
+  cat(paste0("- ",
+             extra_names),
+      sep = "\n")
+
+  cat(header_str("Element(s) of the First Dataset",
+                 hw = .5,
+                 prefix = "\n",
+                 suffix = "\n\n"))
+
+  for (xx in extra_names) {
+    tmp <- paste0("<", xx, ">")
+    cat(header_str(tmp,
+                   hw = .4,
+                   prefix = "\n",
+                   suffix = "\n\n"))
+    print(extra[[xx]])
+  }
+  return(NULL)
 }
 
 #' @noRd
