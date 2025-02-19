@@ -56,4 +56,6 @@ expect_equal(chk[[1]][c("cilo", "cihi")],
              colMeans(chk_cis),
              ignore_attr = TRUE)
 
+expect_no_error(print(test_out1))
+
 })

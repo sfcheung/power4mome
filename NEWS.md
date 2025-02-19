@@ -1,4 +1,4 @@
-# power4mome 0.0.0.9026
+# power4mome 0.0.0.9027
 
 - Initialized the package. (0.0.0.9000)
 
@@ -120,3 +120,6 @@
   with `print` method, to summarize
   te test results in a `power4test`
   object. (0.0.0.9026)
+
+- Added a print method for `power4test`
+  objects. (0.0.0.9027)

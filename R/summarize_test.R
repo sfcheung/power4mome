@@ -76,9 +76,7 @@ summarize_tests <- function(object) {
 
 #' @rdname summarize_tests
 #'
-#' @param x A `test_summary_list`
-#' object or a `test_summary` object,
-#' depending on the print method used.
+#' @param x The object to be printed.
 #'
 #' @param digits The numbers of digits
 #' after the decimal when print
@@ -88,9 +86,7 @@ summarize_tests <- function(object) {
 #' Not used.
 #'
 #' @return
-#' The `print` methods of
-#' `test_summary_list` and
-#' `test_summary` return `x` invisibly.
+#' The `print` methods return `x` invisibly.
 #' They are called for their side
 #' effects.
 #'
@@ -103,7 +99,7 @@ print.test_summary_list <- function(x,
           digits = digits,
           ...)
   }
-  return(x)
+  invisible(x)
 }
 
 #' @rdname summarize_tests
@@ -170,7 +166,45 @@ print.test_summary <- function(x,
                   exdent = 2), sep = "\n")
     }
   }
-  return(x)
+  invisible(x)
+}
+
+#' @rdname summarize_tests
+#'
+#' @details
+#' The method `print.test_out_list()` is
+#' used to print the contest of a list
+#' of test stored in a `power4test`
+#' object, with the option to print
+#' just the names of tests.
+#'
+#' @param test_long If `TRUE`, a detailed
+#' report will be printed.
+#'
+#' @export
+print.test_out_list <- function(x,
+                                digits = 3,
+                                test_long = FALSE,
+                                ...) {
+  # TODO:
+  # - Retrieve and print test notes.
+  if (!test_long) {
+    test_names <- names(x)
+    cat(header_str("Test(s) Conducted",
+                  hw = .8,
+                  prefix = "\n",
+                  suffix = "\n\n"))
+    cat(paste0("- ", test_names),
+        sep = "\n")
+    cat("\n")
+    cat("Call print() and set 'test_long = TRUE' for a detailed report.\n")
+  } else {
+    out <- summarize_tests(x)
+    print(out,
+          digits = digits,
+          ...)
+  }
+  invisible(x)
 }
 
 #' @noRd

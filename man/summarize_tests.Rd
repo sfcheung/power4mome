@@ -4,6 +4,7 @@
 \alias{summarize_tests}
 \alias{print.test_summary_list}
 \alias{print.test_summary}
+\alias{print.test_out_list}
 \title{Summarize Test Results}
 \usage{
 summarize_tests(object)
@@ -11,15 +12,15 @@ summarize_tests(object)
 \method{print}{test_summary_list}(x, digits = 3, ...)
 
 \method{print}{test_summary}(x, digits = 2, ...)
+
+\method{print}{test_out_list}(x, digits = 3, test_long = FALSE, ...)
 }
 \arguments{
 \item{object}{A \code{power4test} object
 or the element \code{test_all} in
 a \code{power4test} object.}
 
-\item{x}{A \code{test_summary_list}
-object or a \code{test_summary} object,
-depending on the print method used.}
+\item{x}{The object to be printed.}
 
 \item{digits}{The numbers of digits
 after the decimal when print
@@ -27,6 +28,9 @@ numeric results.}
 
 \item{...}{Optional arguments.
 Not used.}
+
+\item{test_long}{If \code{TRUE}, a detailed
+report will be printed.}
 }
 \value{
 The function \code{\link[=summarize_tests]{summarize_tests()}} returns
@@ -49,9 +53,7 @@ replications used to compute each
 mean.
 }
 
-The \code{print} methods of
-\code{test_summary_list} and
-\code{test_summary} return \code{x} invisibly.
+The \code{print} methods return \code{x} invisibly.
 They are called for their side
 effects.
 }
@@ -63,6 +65,12 @@ test results.
 This function is used to extract
 information from each test stored
 in a \code{power4test} object.
+
+The method \code{print.test_out_list()} is
+used to print the contest of a list
+of test stored in a \code{power4test}
+object, with the option to print
+just the names of tests.
 }
 \examples{
 

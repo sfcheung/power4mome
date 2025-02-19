@@ -396,6 +396,9 @@ sim_data <- function(nrep = 10,
 #' @param x The `sim_data` object
 #' to be printed.
 #'
+#' @param data_long If `TRUE`, detailed
+#' information will be printed.
+#'
 #' @return
 #' The `print` method of `sim_data`
 #' return `x` invisibly. Called for
@@ -406,6 +409,7 @@ sim_data <- function(nrep = 10,
 print.sim_data <- function(x,
                            digits = 3,
                            digits_descriptive = 2,
+                           data_long = TRUE,
                            ...) {
   x_i <- x[[1]]
   ptable <- x_i$ptable
@@ -507,58 +511,62 @@ print.sim_data <- function(x,
 
   # Summarize data
 
-  all_data <- pool_sim_data(x)
+  if (data_long) {
+    all_data <- pool_sim_data(x)
 
-  fit_all <- lavaan::sem(model = model_final,
-                         data = all_data,
-                         se = "none",
-                         test = "none",
-                         group = x_i$group_name)
-  est_all <- lavaan::standardizedSolution(fit_all,
-                                          se = FALSE,
-                                          pvalue = FALSE,
-                                          ci = FALSE,
-                                          output = "text")
-  i <- est_all$lhs == est_all$rhs
-  est_all <- est_all[!i, ]
+    fit_all <- lavaan::sem(model = model_final,
+                          data = all_data,
+                          se = "none",
+                          test = "none",
+                          group = x_i$group_name)
+    est_all <- lavaan::standardizedSolution(fit_all,
+                                            se = FALSE,
+                                            pvalue = FALSE,
+                                            ci = FALSE,
+                                            output = "text")
+    i <- est_all$lhs == est_all$rhs
+    est_all <- est_all[!i, ]
 
-  nrep <- length(x)
-  n <- nrow(x_i$mm_lm_dat_out)
+    nrep <- length(x)
+    n <- nrow(x_i$mm_lm_dat_out)
 
-  cat(header_str("Data Information",
-                 prefix = "\n",
-                 suffix = "\n\n"))
+    cat(header_str("Data Information",
+                  prefix = "\n",
+                  suffix = "\n\n"))
 
-  cat("Number of Replications: ", nrep, "\n")
-  cat("Sample Sizes: ", paste0(n, collapse = ", "), "\n")
+    cat("Number of Replications: ", nrep, "\n")
+    cat("Sample Sizes: ", paste0(n, collapse = ", "), "\n")
 
-  cat(header_str("Descriptive Statistics",
-                 hw = .4,
-                 prefix = "\n",
-                 suffix = "\n\n"))
+    cat(header_str("Descriptive Statistics",
+                  hw = .4,
+                  prefix = "\n",
+                  suffix = "\n\n"))
 
-  print(psych::describe(all_data,
-                        range = FALSE),
-        digits = digits_descriptive)
+    print(psych::describe(all_data,
+                          range = FALSE),
+          digits = digits_descriptive)
 
-  tmp <- paste("Parameter Estimates Based on All",
-               nrep,
-               "Samples Combined")
-  cat(header_str(tmp,
-                 prefix = "\n",
-                 suffix = "\n\n"))
+    tmp <- paste("Parameter Estimates Based on All",
+                nrep,
+                "Samples Combined")
+    cat(header_str(tmp,
+                  prefix = "\n",
+                  suffix = "\n\n"))
 
-  cat("Total Sample Size:", n * nrep, "\n")
+    cat("Total Sample Size:", n * nrep, "\n")
 
-  cat(header_str("Standardized Estimates",
-                 hw = .4,
-                 prefix = "\n",
-                 suffix = "\n\n"))
+    cat(header_str("Standardized Estimates",
+                  hw = .4,
+                  prefix = "\n",
+                  suffix = "\n\n"))
 
-  cat("Variances and error variances omitted.\n")
+    cat("Variances and error variances omitted.\n")
 
-  print(est_all,
-        nd = digits)
+    print(est_all,
+          nd = digits)
+  } else {
+    cat("Call print with 'data_long = TRUE' for further information.")
+  }
 
   invisible(x)
 }

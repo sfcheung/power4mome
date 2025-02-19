@@ -21,7 +21,7 @@ sim_data(
   ncores = max(1, parallel::detectCores(logical = FALSE) - 1)
 )
 
-\method{print}{sim_data}(x, digits = 3, digits_descriptive = 2, ...)
+\method{print}{sim_data}(x, digits = 3, digits_descriptive = 2, data_long = TRUE, ...)
 }
 \arguments{
 \item{nrep}{The number of replications
@@ -103,6 +103,9 @@ displayed after the decimal.}
 number of digits displayed after
 the decimal for the descriptive
 statistics table.}
+
+\item{data_long}{If \code{TRUE}, detailed
+information will be printed.}
 }
 \value{
 The function \code{\link[=sim_out]{sim_out()}} returns

@@ -2,6 +2,7 @@
 % Please edit documentation in R/power4test.R
 \name{power4test}
 \alias{power4test}
+\alias{print.power4test}
 \title{Estimate the Power of a Test}
 \usage{
 power4test(
@@ -32,6 +33,16 @@ power4test(
   parallel = FALSE,
   progress = TRUE,
   ncores = max(1, parallel::detectCores(logical = FALSE) - 1)
+)
+
+\method{print}{power4test}(
+  x,
+  what = c("data", "test"),
+  digits = 3,
+  digits_descriptive = 2,
+  data_long = FALSE,
+  test_long = FALSE,
+  ...
 )
 }
 \arguments{
@@ -207,6 +218,34 @@ Default is `FALSE.}
 \item{ncores}{The number of CPU
 cores to use if parallel processing
 is used.}
+
+\item{x}{The \code{power4test} object
+to be printed.}
+
+\item{what}{A string vector of
+what to print, \code{"data"} for
+simulated data and \code{"test"} for
+stored test(s). Default is
+\code{c("data", "test")}.}
+
+\item{digits}{The numbers of digits
+displayed after the decimal.}
+
+\item{digits_descriptive}{The
+number of digits displayed after
+the decimal for the descriptive
+statistics table.}
+
+\item{data_long}{If \code{TRUE}, detailed
+results will be printed when printing
+the simulated data.}
+
+\item{test_long}{If \code{TRUE}, detailed
+results will be printed when printing
+test(s).}
+
+\item{...}{Optional arguments to
+be passed to other print methods.}
 }
 \value{
 An object of the class \code{power4test},
@@ -221,6 +260,10 @@ test because a call to
 \code{\link[=power4test]{power4test()}} can add new tests
 to a \code{power4test} object.
 }
+
+The \code{print} method of \code{power4test}
+return \code{x} invisibly. Called for
+its side effect.
 }
 \description{
 An all-in-one function

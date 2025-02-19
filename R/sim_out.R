@@ -121,7 +121,7 @@ print.sim_out <- function(x,
   # - Add print method for components in `extra`.
   NextMethod()
   print_extra(x)
-  return(x)
+  invisible(x)
 }
 
 #' @noRd

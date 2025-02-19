@@ -583,8 +583,72 @@ power4test <- function(object = NULL,
     }
     out <- object
   }
-
+  if (!is.null(out$test_all)) {
+    if (!inherits(out$test_all, "test_out_list")) {
+      class(out$test_all) <- c("test_out_list", class(out$test_all))
+    }
+  }
   out
+}
+
+#' @param digits The numbers of digits
+#' displayed after the decimal.
+#'
+#' @param digits_descriptive The
+#' number of digits displayed after
+#' the decimal for the descriptive
+#' statistics table.
+#'
+#' @param x The `power4test` object
+#' to be printed.
+#'
+#' @param what A string vector of
+#' what to print, `"data"` for
+#' simulated data and `"test"` for
+#' stored test(s). Default is
+#' `c("data", "test")`.
+#'
+#' @param data_long If `TRUE`, detailed
+#' results will be printed when printing
+#' the simulated data.
+#'
+#' @param test_long If `TRUE`, detailed
+#' results will be printed when printing
+#' test(s).
+#'
+#' @param ... Optional arguments to
+#' be passed to other print methods.
+#'
+#' @return
+#' The `print` method of `power4test`
+#' return `x` invisibly. Called for
+#' its side effect.
+#'
+#' @rdname power4test
+#' @export
+print.power4test <- function(x,
+                             what = c("data", "test"),
+                             digits = 3,
+                             digits_descriptive = 2,
+                             data_long = FALSE,
+                             test_long = FALSE,
+                             ...) {
+  what <- match.arg(what, several.ok = TRUE)
+  if ("data" %in% what) {
+    print(x$sim_all,
+          data_long = data_long,
+          digits = digits,
+          digits_descriptive = digits_descriptive,
+          ...)
+  }
+  if ("test" %in% what) {
+    print(x$test_all,
+          test_long = test_long,
+          digits = digits,
+          digits_descriptive = digits_descriptive,
+          ...)
+  }
+  invisible(x)
 }
 
 #' @noRd
