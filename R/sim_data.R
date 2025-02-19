@@ -511,7 +511,9 @@ sim_data_i <- function(repid = 1,
               model_final = model,
               fit0 = fit0,
               group_name = group_name,
-              group_labels = group_labels)
+              group_labels = group_labels,
+              number_of_indicators = number_of_indicators,
+              reliability = reliability)
   class(out) <- c("sim_data_i", class(out))
   out
 }
