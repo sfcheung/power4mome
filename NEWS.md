@@ -1,4 +1,4 @@
-# power4mome 0.0.0.9024
+# power4mome 0.0.0.9026
 
 - Initialized the package. (0.0.0.9000)
 
@@ -115,3 +115,8 @@
  of `fit_model()`. They can now be
  strings, such as `lavaan` and `lm`.
  (0.0.0.9025)
+
+- Added `summarize_tests()`, along
+  with `print` method, to summarize
+  te test results in a `power4test`
+  object. (0.0.0.9026)

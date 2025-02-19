@@ -8,9 +8,9 @@
 \usage{
 summarize_tests(object)
 
-\method{print}{test_summary_list}(x, ...)
+\method{print}{test_summary_list}(x, digits = 3, ...)
 
-\method{print}{test_summary}(x, ...)
+\method{print}{test_summary}(x, digits = 2, ...)
 }
 \arguments{
 \item{object}{A \code{power4test} object
@@ -20,6 +20,10 @@ a \code{power4test} object.}
 \item{x}{A \code{test_summary_list}
 object or a \code{test_summary} object,
 depending on the print method used.}
+
+\item{digits}{The numbers of digits
+after the decimal when print
+numeric results.}
 
 \item{...}{Optional arguments.
 Not used.}
@@ -62,10 +66,28 @@ in a \code{power4test} object.
 }
 \examples{
 
-# TO PREPARE
-x <- 1
-\donttest{
-}
+mod <-
+"
+m ~ a*x
+y ~ b*m + x
+ab := a * b
+"
+
+mod_es <- c("y ~ m" = "l",
+            "m ~ x" = "m",
+            "y ~ x" = "n")
+
+sim_only <- power4test(nrep = 2,
+                       model = mod,
+                       pop_es = mod_es,
+                       n = 100,
+                       do_the_test = FALSE,
+                       iseed = 1234)
+
+test_out <- power4test(object = sim_only,
+                       test_fun = test_parameters)
+
+test_out
 
 }
 \seealso{
