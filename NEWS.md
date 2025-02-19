@@ -1,4 +1,4 @@
-# power4mome 0.0.0.9023
+# power4mome 0.0.0.9024
 
 - Initialized the package. (0.0.0.9000)
 
@@ -94,5 +94,19 @@
 - Added `test_index_mome()` for testing
   a moderated mediation effect (by
   testing the index of moderated
-  mediaton) when calling `power4test()`.
+  mediation) when calling `power4test()`.
   (0.0.0.9023)
+
+- Added `test_parameters()`
+  for testing all free parameters
+  when calling `power4test()`.
+  (0.0.0.9024)
+
+- Added `test_moderation()` for testing
+  all product terms when calling
+  `power4test()`.
+  (0.0.0.9024)
+
+- Some test functions can suppport
+  models fitted by `lmhelprs::many_lm()`.
+  (0.0.0.9024)

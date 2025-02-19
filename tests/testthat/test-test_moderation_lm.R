@@ -1,6 +1,6 @@
 library(testthat)
 
-test_that("Test moderation", {
+test_that("Test moderation: lm", {
 
 mod <-
 "
@@ -18,6 +18,7 @@ sim_only <- power4test(nrep = 5,
                        model = mod,
                        pop_es = mod_es,
                        n = 100,
+                       fit_model_args = list(fit_function = lmhelprs::many_lm),
                        do_the_test = FALSE,
                        iseed = 1234)
 
@@ -37,20 +38,8 @@ expect_equal(chk[[1]]$sig,
 
 # Standardized
 
-test_out <- power4test(object = sim_only,
+expect_error(test_out <- power4test(object = sim_only,
                        test_fun = test_moderation,
-                       test_args = list(standardized = TRUE))
-
-(chk <- test_summary(test_out))
-
-test_out <- power4test(object = test_out,
-                       test_fun = test_parameters,
-                       test_args = list(pars = c("m~x:w1",
-                                                 "y~m:w2"),
-                                        standardized = TRUE))
-(chk <- test_summary(test_out))
-
-expect_equal(chk[[1]]$sig,
-             chk[[2]]$sig)
+                       test_args = list(standardized = TRUE)))
 
 })
