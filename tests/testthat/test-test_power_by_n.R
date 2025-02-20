@@ -1,0 +1,54 @@
+library(testthat)
+
+skip_if_not_installed("lmhelprs")
+
+test_that("Power by n", {
+
+model_simple_med <-
+"
+m ~ x
+y ~ m + x
+"
+
+model_simple_med_es <- c("y ~ m" = "l",
+                         "m ~ x" = "m",
+                         "y ~ x" = "n")
+
+sim_only <- power4test(nrep = 5,
+                       model = model_simple_med,
+                       pop_es = model_simple_med_es,
+                       n = 100,
+                       R = 50,
+                       ci_type = "boot",
+                       fit_model_args = list(fit_function = "lm"),
+                       do_the_test = FALSE,
+                       iseed = 1234)
+
+test_out <- power4test(object = sim_only,
+                       test_fun = test_indirect_effect,
+                       test_args = list(x = "x",
+                                        m = "m",
+                                        y = "y",
+                                        boot_ci = TRUE,
+                                        mc_ci = FALSE))
+
+out <- power4test_by_n(test_out,
+                       n = c(100, 110, 120))
+out_reject <- get_rejection_rates_by_n(out)
+out_reject
+
+out2 <- power4test_by_n(object = sim_only,
+                        n = c(100, 110, 120),
+                        test_fun = test_indirect_effect,
+                        test_args = list(x = "x",
+                                         m = "m",
+                                         y = "y",
+                                         boot_ci = TRUE,
+                                         mc_ci = FALSE))
+out_reject2 <- get_rejection_rates_by_n(out2)
+out_reject2
+
+expect_equal(out[[3]]$sim_all[[1]]$mm_lm_dat_out[1, ],
+             out2[[3]]$sim_all[[1]]$mm_lm_dat_out[1, ])
+
+})

@@ -1,4 +1,4 @@
-# power4mome 0.0.0.9030
+# power4mome 0.0.0.9031
 
 - Initialized the package. (0.0.0.9000)
 
@@ -135,3 +135,9 @@
 - Added `get_rejection_rates()` to
   extract rejection rates from all
   stored tests. (0.0.0.9030)
+
+- Added `power4test_by_n()` and
+  `power4test_by_pop_es()` for
+  finding the power for a range of
+  sample sizes or effect sizes.
+  (0.0.0.9031)
