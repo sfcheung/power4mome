@@ -29,8 +29,7 @@ test_out <- power4test(object = sim_only,
                        test_args = list(x = "x",
                                         m = "m",
                                         y = "y",
-                                        boot_ci = TRUE,
-                                        mc_ci = FALSE))
+                                        boot_ci = TRUE))
 
 power_all_test_only_new_es <- power4test(object = test_out,
                                          pop_es = c("y ~ m" = ".10"))

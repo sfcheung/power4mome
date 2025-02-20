@@ -157,6 +157,7 @@ test_indirect_effect <- function(fit = fit,
     }
     return(paste0("test_indirect: ", tmp, collapse = ""))
   }
+  if (boot_ci) mc_ci <- FALSE
   out <- manymome::indirect_effect(x = x,
                                    y = y,
                                    m = m,

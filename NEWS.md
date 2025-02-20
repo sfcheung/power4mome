@@ -1,4 +1,4 @@
-# power4mome 0.0.0.9032
+# power4mome 0.0.0.9033
 
 - Initialized the package. (0.0.0.9000)
 
@@ -144,3 +144,8 @@
 
 - Update the help pages and the examples.
   (0.0.0.9032)
+
+- Minor fixes on the `boot_ci` and
+  `mc_ci` arguments of `test_indirect_effect()`
+  and `test_index_of_mome()`.
+  (0.0.0.9033)

@@ -112,6 +112,7 @@ test_index_of_mome <- function(fit = fit,
                   w)
     return(paste0("test_index_of_mome: ", tmp, collapse = ""))
   }
+  if (boot_ci) mc_ci <- FALSE
   out <- manymome::index_of_mome(x = x,
                                  y = y,
                                  m = m,
