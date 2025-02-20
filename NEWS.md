@@ -127,3 +127,7 @@
 - `sim_out` can now be used to update
   a `sim_out` object by adding elements
   to `extra`. (0.0.0.9028)
+
+- `power4test()` can updata a
+  `power4test` object using only a
+  new `nrep`. (0.0.0.9029)

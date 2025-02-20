@@ -199,5 +199,39 @@ expect_equal(chk1[[2]]["est"],
              chk2,
              ignore_attr = TRUE)
 
+# Update the nrep
+
+power_all_test_only_new_nrep <- power4test(object = power_all_test_only,
+                                           nrep = 5)
+expect_equal(length(power_all_test_only_new_nrep$sim_all),
+             5)
+expect_equal(length(power_all_test_only_new_nrep$test_all[[1]]),
+             5)
+expect_equal(length(power_all_test_only$sim_all),
+             3)
+expect_equal(length(power_all_test_only$test_all[[1]]),
+             3)
+
+power_all_sim_only_5 <- power4test(nrep = 5,
+                                 model = model_simple_med,
+                                 pop_es = model_simple_med_es,
+                                 n = 50,
+                                 number_of_indicators = k,
+                                 reliability = rel,
+                                 fit_model_args = list(estimator = "ML"),
+                                 do_the_test = FALSE,
+                                 iseed = 1234)
+
+power_all_test_only_5 <- power4test(object = power_all_sim_only_5,
+                                  test_fun = test_par,
+                                  test_args = list(par = "y~m"),
+                                  map_names = c(object = "fit"))
+
+expect_identical(power_all_sim_only_5$sim_all[[1]]$mm_lm_dat_out[1:10, ],
+                 power_all_test_only_new_nrep$sim_all[[1]]$mm_lm_dat_out[1:10, ])
+
+expect_identical(power_all_test_only_5$test_all[[1]][[5]]$test_results,
+                 power_all_test_only_new_nrep$test_all[[1]][[5]]$test_results)
+
 })
 

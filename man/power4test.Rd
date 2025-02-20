@@ -7,7 +7,7 @@
 \usage{
 power4test(
   object = NULL,
-  nrep = 10,
+  nrep = NULL,
   ptable = NULL,
   model = NULL,
   pop_es = NULL,

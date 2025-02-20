@@ -303,7 +303,7 @@
 #' @export
 
 power4test <- function(object = NULL,
-                       nrep = 10,
+                       nrep = NULL,
                        ptable = NULL,
                        model = NULL,
                        pop_es = NULL,
@@ -349,6 +349,11 @@ power4test <- function(object = NULL,
       stop("object is not a power4test object.")
     }
     update_power4test <- TRUE
+
+  }
+
+  if (!update_power4test && is.null(nrep)) {
+    stop("'nrep' must be set unless updating a power4test object.")
   }
 
   if (!update_power4test) {
@@ -371,27 +376,36 @@ power4test <- function(object = NULL,
   args$object <- NULL
 
   if (update_power4test && !is.null(pop_es)) {
+    # Population model
+    # Data must be updated
     update_data <- TRUE
     # Update ptable
     old_ptable <- object$sim_all[[1]]$ptable
     new_ptable <- update_ptable_pop(old_ptable,
                                     new_pop_es = pop_es)
     ptable <- new_ptable
+    # Use the updated population model
     args$ptable <- ptable
     args$model <- NULL
     args$pop_es <- NULL
   } else {
+    # Population model not updated
+    # Still update data if any of the following has changed
     if (is.null(n) &&
         is.null(number_of_indicators) &&
         is.null(reliability) &&
-        identical(x_fun, list())) {
+        identical(x_fun, list()) &&
+        is.null(nrep)) {
       update_data <- FALSE
     }
   }
 
   if (update_data) {
+    # Determine the arguments to use
     if (update_power4test) {
-      # Mandatory use of stored arguments
+      # Regenerate the data
+      # Mandatory use of stored arguments,
+      # though some have been updated
       if (progress) {
         cat("Re-simulate the data:\n")
       }
@@ -409,6 +423,7 @@ power4test <- function(object = NULL,
                             ncores = args$ncores)
       fit_model_args <- args$fit_model_args
     } else {
+      # A fresh run to generate the data
       if (progress) {
         cat("Simulate the data:\n")
       }
