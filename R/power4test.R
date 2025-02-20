@@ -313,7 +313,7 @@ power4test <- function(object = NULL,
                        x_fun = list(),
                        fit_model_args = list(),
                        R = NULL,
-                       ci_type = c("mc", "boot"),
+                       ci_type = "mc",
                        gen_mc_args = list(),
                        gen_boot_args = list(),
                        test_fun = NULL,
@@ -338,7 +338,8 @@ power4test <- function(object = NULL,
     cat("Displaying progress enabled. Set 'progress = FALSE' to hide the progress.\n")
   }
 
-  ci_type <- match.arg(ci_type)
+  ci_type <- match.arg(ci_type,
+                       c("mc", "boot"))
 
   update_test <- FALSE
 
@@ -349,7 +350,6 @@ power4test <- function(object = NULL,
       stop("object is not a power4test object.")
     }
     update_power4test <- TRUE
-
   }
 
   if (!update_power4test && is.null(nrep)) {
@@ -365,7 +365,6 @@ power4test <- function(object = NULL,
   } else {
     args <- attr(object, "args")
   }
-
   my_call <- match.call()
   call_args <- as.list(my_call)[-1]
   call_args <- lapply(call_args,
@@ -374,9 +373,12 @@ power4test <- function(object = NULL,
   args <- utils::modifyList(args,
                             as.list(call_args))
   args$object <- NULL
+  # args available in all cases.
+  # It should be used whenever possible,
+  # unless we explicitly need the value in this call.
 
   if (update_power4test && !is.null(pop_es)) {
-    # Population model
+    # Population effect size changed
     # Data must be updated
     update_data <- TRUE
     # Update ptable
@@ -404,8 +406,8 @@ power4test <- function(object = NULL,
     # Determine the arguments to use
     if (update_power4test) {
       # Regenerate the data
-      # Mandatory use of stored arguments,
-      # though some have been updated
+      # Mandatory use of stored arguments.
+      # Changes in this call already incorporated into args.
       if (progress) {
         cat("Re-simulate the data:\n")
       }
@@ -421,6 +423,7 @@ power4test <- function(object = NULL,
                             parallel = args$parallel,
                             progress = args$progress,
                             ncores = args$ncores)
+
       fit_model_args <- args$fit_model_args
     } else {
       # A fresh run to generate the data
@@ -453,13 +456,12 @@ power4test <- function(object = NULL,
     }
     fit_all <- do.call(fit_model,
                        fit_args0)
-
-    if (!is.null(R) && (ci_type == "mc")) {
+    if (!is.null(args$R) && (args$ci_type == "mc")) {
       # TODO:
       # - iseed should be used only once
       mc_args0 <- utils::modifyList(args$gen_mc_args,
                                     list(fit_all = fit_all,
-                                        R = R,
+                                        R = args$R,
                                         parallel = parallel,
                                         progress = progress,
                                         ncores = ncores))
@@ -472,12 +474,12 @@ power4test <- function(object = NULL,
       mc_all <- rep(NA, length(fit_all))
     }
 
-    if (!is.null(R) && (ci_type == "boot")) {
+    if (!is.null(args$R) && (args$ci_type == "boot")) {
       # TODO:
       # - iseed should be used only once
       boot_args0 <- utils::modifyList(args$gen_boot_args,
                                       list(fit_all = fit_all,
-                                           R = R,
+                                           R = args$R,
                                            parallel = parallel,
                                            progress = progress,
                                            ncores = ncores))

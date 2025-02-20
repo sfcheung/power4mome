@@ -17,7 +17,7 @@ power4test(
   x_fun = list(),
   fit_model_args = list(),
   R = NULL,
-  ci_type = c("mc", "boot"),
+  ci_type = "mc",
   gen_mc_args = list(),
   gen_boot_args = list(),
   test_fun = NULL,
