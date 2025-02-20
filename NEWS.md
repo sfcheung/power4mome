@@ -1,4 +1,4 @@
-# power4mome 0.0.0.9029
+# power4mome 0.0.0.9030
 
 - Initialized the package. (0.0.0.9000)
 
@@ -131,3 +131,7 @@
 - `power4test()` can updata a
   `power4test` object using only a
   new `nrep`. (0.0.0.9029)
+
+- Added `get_rejection_rates()` to
+  extract rejection rates from all
+  stored tests. (0.0.0.9030)
