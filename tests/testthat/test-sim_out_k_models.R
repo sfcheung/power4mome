@@ -59,4 +59,22 @@ expect_equal(unname(test_all[[2]]$test_results["pvalue"]),
              chk[2, "Pr(>Chisq)"],
              ignore_attr = FALSE)
 
+# Check update models
+
+sim_all1 <- sim_out(data_all = data_all,
+                    fit = fit_all)
+sim_all1 <- sim_out(data_all = sim_all1,
+                    fit2 = fit_all2)
+sim_all1 <- sim_out(data_all = sim_all1,
+                    fit3 = fit_all3)
+
+expect_true(identical(sim_all,
+                      sim_all1))
+
+# Check NULL
+
+sim_all2 <- sim_out(data_all = data_all)
+
+expect_true(is.null(sim_all2[[1]]$extra))
+
 })

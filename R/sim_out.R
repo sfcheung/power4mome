@@ -77,21 +77,41 @@ sim_out <- function(data_all,
                     ...) {
   nrep <- length(data_all)
   args <- list(...)
-  if (length(args) == 0) {
-    args_by_rep <- rep(NA, nrep)
-  } else {
+  add_new_extra <- FALSE
+  if (length(args) > 0) {
+    add_new_extra <- TRUE
     args_by_rep <- split_by_rep(args)
+  } else {
+    # TODO:
+    # - Need to decide whether NA is a
+    #   good option. It will not be
+    #   added anyway.
+    args_by_rep <- rep(NA,
+                       nrep)
   }
-  tmpfct <- function(x, y, z,
-                     extra = NULL) {
-    x$extra <- extra
+  tmpfct <- function(x,
+                     new_extra = NULL,
+                     add_new_extra = FALSE) {
+    # Always work, args or not
+    if (!add_new_extra) {
+      return(x)
+    }
+    if (!is.null(x$extra)) {
+      x$extra <- append(x$extra,
+                        new_extra)
+      x
+    } else {
+      x$extra <- new_extra
+    }
     x
   }
   out0 <- mapply(tmpfct,
-                 x = data_all,
-                 extra = args_by_rep,
-                 SIMPLIFY = FALSE)
-  class(out0) <- c("sim_out", "sim_data", class(out0))
+                  x = data_all,
+                  new_extra = args_by_rep,
+                  MoreArgs = list(add_new_extra = add_new_extra),
+                  SIMPLIFY = FALSE)
+  class(out0) <- c("sim_out", "sim_data",
+                    setdiff(class(out0), c("sim_out", "sim_data")))
   return(out0)
 }
 
