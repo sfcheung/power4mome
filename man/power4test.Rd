@@ -48,12 +48,14 @@ power4test(
 \arguments{
 \item{object}{Optional. If set to a
 \code{power4test} object, it will be
-updated using the value(s) in \code{n}
-and/or \code{pop_es}. Default is \code{NULL}.}
+updated using the value(s) in \code{n},
+\code{pop_es}, and/or \code{nrep}. Default is \code{NULL}.}
 
 \item{nrep}{The number of replications
 to generate the simulated datasets.
-Default is 10.}
+Default is \code{NULL}. Must be set when
+called to create a \code{power4test}
+object.}
 
 \item{ptable}{The output of
 \code{\link[=ptable_pop]{ptable_pop()}}, which is a
@@ -61,14 +63,18 @@ Default is 10.}
 population model. If \code{NULL}, the
 default, \code{\link[=ptable_pop]{ptable_pop()}} will be
 called to generate the \code{ptable_pop}
-object.}
+object using \code{model} and \code{pop_es}.}
 
 \item{model}{The \code{lavaan} model
 syntax of the population model.
 Required. Ignored if \code{ptable} is
+specified. See 'Details' of
+\code{\link[=ptable_pop]{ptable_pop()}} on how to use it for
+models with latent factors
+and indicators. Ignored if \code{ptable} is
 specified.}
 
-\item{pop_es}{The character to
+\item{pop_es}{The character vector to
 specify population effect sizes. See
 'Details' of \code{\link[=ptable_pop]{ptable_pop()}} on how to
 set the effect sizes for this
@@ -81,7 +87,7 @@ dataset. Default is 100.}
 \item{number_of_indicators}{A named
 vector to specify the number of
 indicators for each factors. See
-'Details' on how to set this
+'Details' of \code{\link[=ptable_pop]{ptable_pop()}} on how to set this
 argument. Default is \code{NULL} and all
 variables in the model syntax are
 observed variables.}
@@ -89,7 +95,9 @@ observed variables.}
 \item{reliability}{A named vector
 to set the reliability coefficient
 of each set of indicators. Default
-is \code{NULL}.}
+is \code{NULL}. See 'Details' of
+\code{\link[=ptable_pop]{ptable_pop()}} on how to set this
+argument.}
 
 \item{x_fun}{The function(s) used to
 generate the exogenous variables. If
@@ -101,8 +109,8 @@ distribution. See 'Details' of
 argument.}
 
 \item{fit_model_args}{A list of the
-arguments to be passed to
-\code{\link[lavaan:sem]{lavaan::sem()}} when fitting the
+arguments to be passed to \code{\link[=fit_model]{fit_model()}}
+when fitting the
 model.
 Should be a named argument
 with names being the names of the
@@ -121,7 +129,8 @@ simulation-based confidence
 intervals to use. Can be either
 \code{"mc"} for Monte Carlo method
 (the default) or \code{"boot"} for
-nonparametric bootstrapping method.}
+nonparametric bootstrapping method.
+See \code{\link[=sim_data]{sim_data()}} on the details.}
 
 \item{gen_mc_args}{A list of
 arguments to be passed to
@@ -165,7 +174,7 @@ calling \code{test_fun}.}
 
 \item{results_fun}{The function to be
 used to extract the test results.
-See \code{Details} for the requirements
+See \code{Details} of \code{\link[=do_test]{do_test()}} for the requirements
 of this function. Default is \code{NULL},
 assuming that the output of
 \code{test_fun} can be used directly.}
@@ -181,7 +190,7 @@ and the name will be created from
 \code{test_fun}. Note that if \code{sim_out}
 is a \code{power4test} object and already
 has a test of this name stored, it
-will be replaced by the new results}
+will be replaced by the new results.}
 
 \item{test_note}{String. An optional
 note for the test, stored in the
@@ -219,7 +228,7 @@ Default is `FALSE.}
 cores to use if parallel processing
 is used.}
 
-\item{x}{The \code{power4test} object
+\item{x}{The object
 to be printed.}
 
 \item{what}{A string vector of
@@ -262,13 +271,13 @@ to a \code{power4test} object.
 }
 
 The \code{print} method of \code{power4test}
-return \code{x} invisibly. Called for
+returns \code{x} invisibly. Called for
 its side effect.
 }
 \description{
 An all-in-one function
 that receives a model specification,
-generate datasets, fits a model, does
+generates datasets, fits a model, does
 the target test, and returns the test
 results.
 }
@@ -294,19 +303,26 @@ the population model and
 generate the datasets.
 \item Call \code{\link[=fit_model]{fit_model()}} to fit the
 model to each of the datasets.
-\item If \code{R} is not \code{NULL}, call
+\item If \code{R} is not \code{NULL} and
+\code{ci_type = "mc"}, call
 \code{\link[=gen_mc]{gen_mc()}} to generate Monte
 Carlo estimates using
 \code{\link[manymome:do_mc]{manymome::do_mc()}}.
+\item If \code{R} is not \code{NULL} and
+\code{ci_type = "boot"}, call
+\code{\link[=gen_boot]{gen_boot()}} to generate
+bootstrap estimates using
+\code{\link[manymome:do_boot]{manymome::do_boot()}}.
 \item Merge the results into a
 \code{sim_out} object by calling
 \code{\link[=sim_out]{sim_out()}}.
 \item If \code{do_the_test} is \code{FALSE},
-skip the reaming steps and
+skip the remaining steps and
 return a \code{power4test} object,
-which contains only the
+which contains only the data
 generated and optionally the
-Monte Carlo estimates.
+Monte Carlo or bootstrap
+estimates.
 }
 \item If \code{do_the_test} is \code{TRUE}, do
 the test.
@@ -323,17 +339,31 @@ the output of \code{\link[=do_test]{do_test()}}.
 
 This function is to be used when
 users are interested only in the
-power of a specific test on a
+power of one or several tests on a
 particular aspect of the model, such
 as a parameter, given a specific
 effect sizes and sample sizes.
 }
+\section{Updating a Condition}{
+This function can also be used to
+update a condition when only some
+selected aspects changed. For example,
+without calling this function with
+all the arguments set just to change
+the sample size, it can be called
+by supplying an existing
+\code{power4test} object and set only
+\code{n} to a new sample size. The data
+and the tests will be updated
+automatically.
+}
+
 \examples{
 
 model_simple_med <-
 "
-m ~ a*x
-y ~ b*m + x
+m ~ a * x
+y ~ b * m + x
 ab := a * b
 "
 
@@ -341,35 +371,25 @@ model_simple_med_es <- c("y ~ m" = "l",
                          "m ~ x" = "m",
                          "y ~ x" = "n")
 
-test_ab <- function(object,
-                    alpha = .05) {
-  est <- lavaan::parameterEstimates(object)
-  i <- match("ab", est$lhs)
-  out <- c(est = est[i, "est"],
-           cilo = est[i, "ci.lower"],
-           cihi = est[i, "ci.upper"],
-           sig = as.numeric(est[i, "pvalue"] < alpha))
-  out
-}
+out <- power4test(nrep = 50,
+                  model = model_simple_med,
+                  pop_es = model_simple_med_es,
+                  n = 100,
+                  test_fun = test_parameters,
+                  test_args = list(pars = "a"),
+                  iseed = 1234,
+                  parallel = FALSE,
+                  progress = TRUE)
 
-ab_results <- function(object) {
-  object
-}
+print(out,
+      test_long = TRUE)
 
-power_all_test_only_par <- power4test(nrep = 50,
-                                      model = model_simple_med,
-                                      pop_es = model_simple_med_es,
-                                      n = 100,
-                                      fit_model_args = list(estimator = "ML"),
-                                      test_fun = test_ab,
-                                      map_names = c(object = "fit"),
-                                      results_fun = ab_results,
-                                      parallel = FALSE,
-                                      progress = TRUE)
-names(power_all_test_only_par$test_all)
-test_results_all <- sapply(power_all_test_only_par$test_all$test_ab,
-                           function(xx) xx$test_results)
-test_results_all <- as.data.frame(t(test_results_all))
-colMeans(test_results_all, na.rm = TRUE)
+# Add one more test
+
+out <- power4test(out,
+                  test_fun = test_parameters,
+                  test_args = list(op = ":="))
+print(out,
+      test_long = TRUE)
 
 }

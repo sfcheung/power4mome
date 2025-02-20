@@ -120,22 +120,22 @@
 #' test_out <- power4test(object = sim_only,
 #'                        test_fun = test_parameters)
 #'
-#' lapply(test_out$test_all[[1]],
-#'        function(x) x$test_results)
+#' print(test_out,
+#'       test_long = TRUE)
 #'
 #' test_out <- power4test(object = sim_only,
 #'                        test_fun = test_parameters,
 #'                        test_args = list(standardized = TRUE))
 #'
-#' lapply(test_out$test_all[[1]],
-#'        function(x) x$test_results)
+#' print(test_out,
+#'       test_long = TRUE)
 #'
 #' test_out <- power4test(object = sim_only,
 #'                        test_fun = test_parameters,
 #'                        test_args = list(op = "~"))
 #'
-#' lapply(test_out$test_all[[1]],
-#'        function(x) x$test_results)
+#' print(test_out,
+#'       test_long = TRUE)
 #'
 #' @export
 test_parameters <- function(fit = fit,

@@ -37,7 +37,7 @@ bootstrap estimates for the
 fit outputs. Default is \code{FALSE}.}
 
 \item{progress}{If \code{TRUE}, the progress
-of bootstrap will be displayed.
+will be displayed.
 Default is `FALSE.}
 
 \item{ncores}{The number of CPU
@@ -50,17 +50,27 @@ of the output of \code{\link[manymome:do_boot]{manymome::do_boot()}}.
 }
 \description{
 Get a list of the output
-of \code{\link[lavaan:sem]{lavaan::sem()}} and generate
+of \code{\link[lavaan:sem]{lavaan::sem()}} or \code{\link[lmhelprs:many_lm]{lmhelprs::many_lm()}}
+and generate
 bootstrap estimates of model
 parameters.
 }
 \details{
 It simply calls \code{\link[manymome:do_boot]{manymome::do_boot()}}
 on each output of
-\code{\link[lavaan:sem]{lavaan::sem()}} in \code{fit_all}. The
+\code{\link[lavaan:sem]{lavaan::sem()}} or \code{\link[lmhelprs:many_lm]{lmhelprs::many_lm()}}
+in \code{fit_all}. The
 simulated
 estimates can then be used to test
-effects such as indirect effects.
+effects such as indirect effects,
+usually by functions from the
+\code{manymome} package, such as
+\code{\link[manymome:cond_indirect]{manymome::indirect_effect()}}.
+
+This function is used by the
+all-in-one function \code{\link[=power4test]{power4test()}}.
+Users usually do not call this
+function directly.
 }
 \examples{
 mod <-
@@ -80,6 +90,10 @@ fit_all <- fit_model(data_all)
 boot_all <- gen_boot(fit_all,
                      R = 10,
                      iseed = 4567)
+boot_all
 
 
+}
+\seealso{
+\code{\link[=power4test]{power4test()}}
 }

@@ -59,7 +59,8 @@ variables are also equal to one.}
 
 \item{n_std}{The sample size used to
 determine the error variances by
-simulation. Default is 100000.}
+simulation when \code{std_force_monte_carlo}
+is \code{TRUE}. Default is 100000.}
 
 \item{std_force_monte_carlo}{Logical.
 If \code{FALSE}, the default,
@@ -72,7 +73,7 @@ product terms or not. Always fall
 back to standardization if
 analytical standardization failed.}
 
-\item{x}{It can be 'lavaan' model
+\item{x}{It can be a 'lavaan' model
 syntax, to be passed to \code{\link[=ptable_pop]{ptable_pop()}},
 or a parameter table with the column
 \code{start} set to the population values,
@@ -83,7 +84,7 @@ these are arguments to be passed to
 \code{\link[=ptable_pop]{ptable_pop()}}.}
 
 \item{drop_list_single_group}{If
-\code{TRUE} and the number groups is
+\code{TRUE} and the number of groups is
 equal to one, the output will be
 a list of matrices of one group
 only. Default if \code{TRUE}.}
@@ -91,14 +92,14 @@ only. Default if \code{TRUE}.}
 \value{
 The function \code{\link[=ptable_pop]{ptable_pop()}} returns
 a \code{lavaan} parameter table of the
-model, with \code{start} set to the
+model, with the column \code{start} set to the
 population values.
 
 The function \code{\link[=model_matrices_pop]{model_matrices_pop()}}
 returns a \code{lavaan} LISREL-style model
 matrices (like the output of
 \code{\link[lavaan:lavInspect]{lavaan::lavInspect()}} with \code{what}
-set to \code{free}), with matrix elements
+set to \code{"free"}), with matrix elements
 set to the population values. If
 \code{x} is the model syntax, it will be
 stored in the attributes \code{model}.
@@ -106,7 +107,8 @@ If the model is a multigroup model
 with \emph{k} groups (\emph{k} greater than 1),
 then it returns a list of \emph{k} lists
 of \code{lavaan} LISREL-style model
-matrices.
+matrices unless \code{drop_list_single_group}
+is \code{TRUE}.
 }
 \description{
 Generate the complete
@@ -137,7 +139,7 @@ Use \code{".cov."} to set the default
 values for all correlations of
 exogenous variables (e.g., predictors).
 \item If using \code{lavaan} names, can
-specify more than one parameters
+specify more than one parameter
 using \code{+}. For example, \code{y ~ m + x}
 denotes the two paths from \code{m} and
 \code{x} to \code{y}.
@@ -161,7 +163,7 @@ of a product term.
 
 \subsection{Multigroup Models}{
 
-The function also support multigroup
+The function also supports multigroup
 models.
 
 Because the model is the population
@@ -202,11 +204,17 @@ all groups, while the population
 values for the path \code{y ~ m} are
 small, medium, and large,
 respectively.
+
+This function is used by the
+all-in-one function \code{\link[=power4test]{power4test()}}.
+Users usually do not call this
+function directly.
 }
 
 The function \code{\link[=model_matrices_pop]{model_matrices_pop()}}
 generates models matrices with
-population values.
+population values. For advanced
+users.
 }
 \section{Functions}{
 \itemize{
@@ -241,6 +249,6 @@ model_matrices_pop(model1,
                    pop_es = model1_es)
 
 }
-\author{
-Shu Fai Cheung \url{https://orcid.org/0000-0002-9871-9448}
+\seealso{
+\code{\link[=power4test]{power4test()}}
 }

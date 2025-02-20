@@ -209,6 +209,12 @@
 #' is rarely needed when estimating
 #' power *before* having the data.
 #'
+#' This function is used by the
+#' all-in-one function [power4test()].
+#' Users usually do not call this
+#' function directly.
+#'
+#' @seealso [power4test()]
 #'
 #' @param nrep The number of replications
 #' to generate the simulated datasets.
@@ -286,38 +292,38 @@
 #' is a `sim_data_i` object, with
 #' the following major elements:
 #'
-#' - ptable: A `lavaan` parameter
+#' - `ptable`: A `lavaan` parameter
 #'  table of the model, with population
 #'  values set in the column `start`.
 #'  (It is the output of the
 #'  function `ptable_pop()`.)
 #'
-#' - mm_out: The population model
+#' - `mm_out`: The population model
 #'  represented by model matrices
 #'  as in `lavaan`. (It is the output
 #'  of the function
 #' `model_matrices_pop()`.)
 #'
-#' - mm_lm_out: A list of regression
+#' - `mm_lm_out`: A list of regression
 #'  model formula, one for each
 #'  endogenous variable. (It is the
 #'  output of the internal function
 #' `mm_lm()`.)
 #'
-#' - mm_lm_dat_out: A simulated dataset
+#' - `mm_lm_dat_out`: A simulated dataset
 #'  generated from the population model.
 #'  (It is the output of the internal
 #'  function `mm_lm_data()`).
 #'
-#' - model_original: The original model
+#' - `model_original`: The original model
 #'  syntax (i.e., the argument `model`).
 #'
-#' - model_final: A modified model
+#' - `model_final`: A modified model
 #'  syntax if the model is a latent
 #'  variable model. Indicators are added
 #'  to the syntax.
 #'
-#' - fit0: The output of [lavaan::sem()]
+#' - `fit0`: The output of [lavaan::sem()]
 #'  with `ptable` as the model and
 #'  `do.fit` set to `FALSE`. Use for
 #'  easy retrieval of information
@@ -401,7 +407,7 @@ sim_data <- function(nrep = 10,
 #'
 #' @return
 #' The `print` method of `sim_data`
-#' return `x` invisibly. Called for
+#' returns `x` invisibly. Called for
 #' its side effect.
 #'
 #' @rdname sim_data
@@ -598,21 +604,6 @@ set_user_pop <- function(ptable,
 }
 
 
-#' @title Title In Title Case
-#'
-#' @description One paragraph description.
-#'
-#' @details Details
-#'   (Include subjects for verbs.)
-#'   (Use 3rd person forms for verbs.)
-#'
-#' @return
-#' Specify what are returned.
-#'
-#' @examples
-#' \donttest{
-#' }
-#'
 #' @noRd
 sim_data_i <- function(repid = 1,
                        n = 100,

@@ -79,7 +79,7 @@ model_simple_med_es <- c("y ~ m" = "l",
                          "m ~ x" = "m",
                          "y ~ x" = "n")
 
-sim_only <- power4test(nrep = 5,
+sim_only <- power4test(nrep = 3,
                        model = model_simple_med,
                        pop_es = model_simple_med_es,
                        n = 100,

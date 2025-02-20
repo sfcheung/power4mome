@@ -136,8 +136,8 @@ test_ind <- power4test(object = sim_only,
                                         m = "m",
                                         y = "y",
                                         mc_ci = TRUE))
-lapply(test_ind$test_all[[1]],
-       function(x) x$test_results)
+print(test_ind,
+      test_long = TRUE)
 
 }
 \seealso{

@@ -35,7 +35,7 @@ the decimal for the descriptive
 statistics table.}
 }
 \value{
-The function \code{\link[=sim_out]{sim_out()}} returns an \code{sim_out} object, which
+The function \code{\link[=sim_out]{sim_out()}} returns a \code{sim_out} object, which
 is a list of length equal to the
 length of \code{data_all}. Each element
 of the list is a \code{sim_data} object
@@ -55,7 +55,8 @@ its side effect.
 \description{
 Combine the outputs
 of \code{\link[=sim_data]{sim_data()}}, \code{\link[=fit_model]{fit_model()}},
-and optionally \code{\link[=gen_mc]{gen_mc()}} to one
+and optionally \code{\link[=gen_mc]{gen_mc()}} and/or
+\code{\link[=gen_boot]{gen_boot()}} to one
 single object.
 }
 \details{
@@ -65,10 +66,10 @@ of \code{\link[=sim_data]{sim_data()}}, which is a list of
 \code{\link[=fit_model]{fit_model()}}, which is a list of the
 \code{\link[lavaan:sem]{lavaan::sem()}} output for the \code{M}
 datasets, and optionally the output
-of \code{\link[=gen_mc]{gen_mc()}}, which is a list of the
-\code{M} sets of Monte Carlo estimates
+of \code{\link[=gen_mc]{gen_mc()}} or \code{\link[=gen_boot]{gen_boot()}}, which is a list of the
+\code{M} sets of Monte Carlo or bootstrap estimates
 based on the results of
-\code{\link[lavaan:sem]{lavaan::sem()}}. The list has \code{M}
+\code{\link[=fit_model]{fit_model()}}. The list has \code{M}
 elements, with the data, model fit
 results, and optionally the Monte
 Carlo estimates matched.
@@ -77,6 +78,11 @@ This object can then be used for testing
 effects of interests, which are
 further processed to estimate the
 power of this test.
+
+This function is used by the
+all-in-one function \code{\link[=power4test]{power4test()}}.
+Users usually do not call this
+function directly.
 }
 \examples{
 mod <-
@@ -97,4 +103,7 @@ sim_out_all <- sim_out(data_all = dats,
                        fit = fits)
 sim_out_all
 
+}
+\seealso{
+\code{\link[=power4test]{power4test()}}
 }

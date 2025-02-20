@@ -81,8 +81,8 @@
 #'                                         w = "w",
 #'                                         mc_ci = TRUE))
 #'
-#' lapply(test_out$test_all[[1]],
-#'        function(x) x$test_results)
+#' print(test_out,
+#'       test_long = TRUE)
 #'
 #'
 #' @export

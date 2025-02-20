@@ -23,7 +23,8 @@
 #' The function set to `results_fun`
 #' must accept the output of `test_fun`,
 #' as the first argument, and return a
-#' named list or named vector with some
+#' named list (which can be a data frame)
+#' or a named vector with some
 #' of the following
 #' elements:
 #'
@@ -47,6 +48,24 @@
 #'
 #' The results can then be used to
 #' estimate the power of the test.
+#'
+#' The package came with some ready-to-use
+#' test functions as examples:
+#'
+#' - [test_indirect_effect()]
+#'
+#' - [test_moderation()]
+#'
+#' - [test_index_of_mome()]
+#'
+#' - [test_parameters()]
+#'
+#' This function is used by the
+#' all-in-one function [power4test()].
+#' Users usually do not call this
+#' function directly.
+#'
+#' @seealso [power4test()]
 #'
 #' @return
 #' An object of the class `test_out`,
@@ -109,49 +128,38 @@
 #'
 #' @examples
 #' mod <-
-#' "m ~ x
-#'  y ~ m + x"
+#' "
+#' m ~ x
+#' y ~ m + x
+#' "
 #' es <-
 #' c("y ~ m" = "m",
 #'   "m ~ x" = "m",
 #'   "y ~ x" = "n")
 #' data_all <- sim_data(nrep = 5,
-#'                  model = mod,
-#'                  pop_es = es,
-#'                  n = 100,
-#'                  iseed = 1234)
-#'
+#'                      model = mod,
+#'                      pop_es = es,
+#'                      n = 100,
+#'                      iseed = 1234)
 #' fit_all <- fit_model(data_all)
 #' mc_all <- gen_mc(fit_all,
-#'                  R = 100,
+#'                  R = 50,
 #'                  iseed = 4567)
 #' sim_all <- sim_out(data_all = data_all,
 #'                    fit = fit_all,
 #'                    mc_out = mc_all)
 #'
-#' ind_results <- function(out) {
-#'   ci0 <- stats::confint(out)
-#'   out1 <- ifelse((ci0[1, 1] > 0) || (ci0[1, 2] < 0),
-#'                   yes = 1,
-#'                   no = 0)
-#'   out2 <- c(est = unname(coef(out)),
-#'             cilo = ci0[1, 1],
-#'             cihi = ci0[1, 2],
-#'             sig = out1)
-#'   return(out2)
-#' }
-#'
 #' test_all <- do_test(sim_all,
-#'                     test_fun = manymome::indirect_effect,
+#'                     test_fun = test_indirect_effect,
 #'                     test_args = list(x = "x",
 #'                                      m = "m",
 #'                                      y = "y",
 #'                                      mc_ci = TRUE),
-#'                     map_name = c(fit = "fit",
-#'                                  mc_out = "mc_out"),
-#'                     results_fun = ind_results,
 #'                     parallel = FALSE,
 #'                     progress = FALSE)
+#'
+#' lapply(test_all, function(x) x$test_results)
+#'
 #'
 #' @export
 #'
@@ -185,40 +193,13 @@ do_test <- function(sim_all,
   return(out)
 }
 
-#' @title Title In Title Case
-#'
-#' @description One paragraph description.
-#'
-#' @details Details
-#'   (Include subjects for verbs.)
-#'   (Use 3rd person forms for verbs.)
-#'
-#' @return
-#' Specify what are returned.
-#'
-#' @examples
-#' \donttest{
-#' }
-#'
 #' @noRd
-#'
 do_test_i <- function(out_i,
                       test_fun,
                       test_args = list(0),
                       map_names = c(fit = "fit"),
                       results_fun = NULL,
                       results_args = list()) {
-# FUN must be a function that:
-# - Extracts the outcome of sim_out(), e.g.,
-#   - fit
-#   - mc_all (optional)
-# FUN_get_results: Extract the following from
-# the output of FUN
-# - A list with these elements:
-#   - est: Scalar
-#   - cilo: Scalar
-#   - cihi: Scalar
-#   - sig: Logical
   args_map <- sapply(map_names,
                      function(x,
                               out_i) {

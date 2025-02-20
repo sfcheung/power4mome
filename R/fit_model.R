@@ -3,7 +3,7 @@
 #'
 #' @description Get the output of
 #' [sim_data()] and fit a model to each
-#' of the stored dataset.
+#' of the stored datasets.
 #'
 #' @details
 #' By default, it extracts the model
@@ -17,15 +17,21 @@
 #' model when calling [sim_data()],
 #' a multigroup model is fitted.
 #'
+#' This function is used by the
+#' all-in-one function [power4test()].
+#' Users usually do not call this
+#' function directly.
+#'
+#' @seealso [power4test()]
+#'
 #' @return
 #' An object of the class `fit_out`,
 #' which is a list of the output of
 #' `fit_function` ([lavaan::sem()]
-#' by default). If error occurred
+#' by default). If an error occurred
 #' when fitting the model to a dataset,
 #' then element will be the error
-#' message from [lavaan::sem()] instead
-#' of the output of [lavaan::sem()].
+#' message from the fit function.
 #'
 #' @param data_all The output
 #' of [sim_data()], or a `sim_data`
@@ -39,11 +45,11 @@
 #'
 #' @param fit_function The function to
 #' be used to fit the model. Can also
-#' be a string: `lavaan` (the default) for
-#' [lavaan::sem()], and `lm` or `many_lm`
+#' be a string: `"lavaan"` (the default) for
+#' [lavaan::sem()], and `"lm"` or `many_lm`
 #' for [lmhelprs::many_lm()].
-#' Other values will be tried to match
-#' to a function.
+#' Other functions can also be used
+#' if necessary.
 #'
 #' @param arg_data_name The name of the
 #' argument of `fit_function` expecting
@@ -120,21 +126,6 @@ fit_model <- function(data_all,
 }
 
 
-#' @title Title In Title Case
-#'
-#' @description One paragraph description.
-#'
-#' @details Details
-#'   (Include subjects for verbs.)
-#'   (Use 3rd person forms for verbs.)
-#'
-#' @return
-#' Specify what are returned.
-#'
-#' @examples
-#' \donttest{
-#' }
-#'
 #' @noRd
 fit_model_i <- function(data_i,
                         model = NULL,
@@ -170,10 +161,5 @@ fit_model_i <- function(data_i,
   fit <- tryCatch(suppressWarnings(do.call(fit_function,
                                            fit_args)),
                   error = function(e) e)
-  # fit <- tryCatch(suppressWarnings(lavaan::sem(model = model_to_fit,
-  #                                     data = data_i$mm_lm_dat_out,
-  #                                     group = data_i$group_name,
-  #                                     ...)),
-  #                 error = function(e) e)
   return(fit)
 }

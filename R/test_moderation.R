@@ -55,7 +55,6 @@
 #' @examples
 #'
 #'
-
 #' mod <-
 #' "
 #' m ~ x + w1 + x:w1
@@ -78,8 +77,8 @@
 #' test_out <- power4test(object = sim_only,
 #'                        test_fun = test_moderation)
 #'
-#' lapply(test_out$test_all[[1]],
-#'        function(x) x$test_results)
+#' print(test_out,
+#'       test_long = TRUE)
 #'
 #' @export
 test_moderation <- function(fit = fit,

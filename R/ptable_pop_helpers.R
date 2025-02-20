@@ -55,8 +55,6 @@
 #' size of product term.
 #' Default is `c("n" = .00, "s" = .05, "m" = .10, "l" = .15)`.
 #'
-#' @author Shu Fai Cheung <https://orcid.org/0000-0002-9871-9448>
-#'
 #' @examples
 #' \donttest{
 #' }
@@ -176,7 +174,7 @@ fix_par_es <- function(par_es,
 }
 
 #' @noRd
-# Copied from another project of sfcheung
+# Copied from another project by the author
 lambda_from_reliability <- function(p = 3,
                                     omega = .70) {
   lambda <- sqrt(omega / (p - omega * (p - 1)))

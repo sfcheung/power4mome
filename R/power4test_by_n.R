@@ -51,11 +51,11 @@
 #'                          "m ~ x" = "m",
 #'                          "y ~ x" = "n")
 #'
-#' sim_only <- power4test(nrep = 5,
+#' sim_only <- power4test(nrep = 2,
 #'                        model = model_simple_med,
 #'                        pop_es = model_simple_med_es,
 #'                        n = 100,
-#'                        R = 50,
+#'                        R = 40,
 #'                        ci_type = "boot",
 #'                        fit_model_args = list(fit_function = "lm"),
 #'                        do_the_test = FALSE,

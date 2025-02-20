@@ -114,32 +114,32 @@ with length \code{nrep}. Each element
 is a \code{sim_data_i} object, with
 the following major elements:
 \itemize{
-\item ptable: A \code{lavaan} parameter
+\item \code{ptable}: A \code{lavaan} parameter
 table of the model, with population
 values set in the column \code{start}.
 (It is the output of the
 function \code{ptable_pop()}.)
-\item mm_out: The population model
+\item \code{mm_out}: The population model
 represented by model matrices
 as in \code{lavaan}. (It is the output
 of the function
 \code{model_matrices_pop()}.)
-\item mm_lm_out: A list of regression
+\item \code{mm_lm_out}: A list of regression
 model formula, one for each
 endogenous variable. (It is the
 output of the internal function
 \code{mm_lm()}.)
-\item mm_lm_dat_out: A simulated dataset
+\item \code{mm_lm_dat_out}: A simulated dataset
 generated from the population model.
 (It is the output of the internal
 function \code{mm_lm_data()}).
-\item model_original: The original model
+\item \code{model_original}: The original model
 syntax (i.e., the argument \code{model}).
-\item model_final: A modified model
+\item \code{model_final}: A modified model
 syntax if the model is a latent
 variable model. Indicators are added
 to the syntax.
-\item fit0: The output of \code{\link[lavaan:sem]{lavaan::sem()}}
+\item \code{fit0}: The output of \code{\link[lavaan:sem]{lavaan::sem()}}
 with \code{ptable} as the model and
 \code{do.fit} set to \code{FALSE}. Use for
 easy retrieval of information
@@ -147,7 +147,7 @@ about the model.
 }
 
 The \code{print} method of \code{sim_data}
-return \code{x} invisibly. Called for
+returns \code{x} invisibly. Called for
 its side effect.
 }
 \description{
@@ -356,6 +356,11 @@ possible to generate nonnormal
 multivariate data but we believe this
 is rarely needed when estimating
 power \emph{before} having the data.
+
+This function is used by the
+all-in-one function \code{\link[=power4test]{power4test()}}.
+Users usually do not call this
+function directly.
 }
 }
 \examples{
@@ -374,4 +379,7 @@ data_all <- sim_data(nrep = 5,
 
 data_all
 
+}
+\seealso{
+\code{\link[=power4test]{power4test()}}
 }

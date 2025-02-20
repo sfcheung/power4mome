@@ -31,7 +31,7 @@
 #'   exogenous variables (e.g., predictors).
 #'
 #' - If using `lavaan` names, can
-#'   specify more than one parameters
+#'   specify more than one parameter
 #'   using `+`. For example, `y ~ m + x`
 #'   denotes the two paths from `m` and
 #'   `x` to `y`.
@@ -56,7 +56,7 @@
 #'
 #' ## Multigroup Models
 #'
-#' The function also support multigroup
+#' The function also supports multigroup
 #' models.
 #'
 #' Because the model is the population
@@ -98,10 +98,17 @@
 #' small, medium, and large,
 #' respectively.
 #'
+#' This function is used by the
+#' all-in-one function [power4test()].
+#' Users usually do not call this
+#' function directly.
+#'
+#' @seealso [power4test()]
+#'
 #' @return
 #' The function [ptable_pop()] returns
 #' a `lavaan` parameter table of the
-#' model, with `start` set to the
+#' model, with the column `start` set to the
 #' population values.
 #'
 #' @param model String. The model defined
@@ -145,7 +152,8 @@
 #'
 #' @param n_std The sample size used to
 #' determine the error variances by
-#' simulation. Default is 100000.
+#' simulation when `std_force_monte_carlo`
+#' is `TRUE`. Default is 100000.
 #'
 #' @param std_force_monte_carlo Logical.
 #' If `FALSE`, the default,
@@ -157,8 +165,6 @@
 #' product terms or not. Always fall
 #' back to standardization if
 #' analytical standardization failed.
-#'
-#' @author Shu Fai Cheung <https://orcid.org/0000-0002-9871-9448>
 #'
 #'
 #' @examples
@@ -329,8 +335,9 @@ ptable_pop <- function(model = NULL,
     attr(ptable1, "model") <- model
   }
 
-  # It is intentional not saving the call
+  # It is intentional not saving the call and
   # saving the argument values.
+  # For the ease of updating.
   attr(ptable1, "pop_es") <- pop_es
   attr(ptable1, "es1") <- es1
   attr(ptable1, "es2") <- es2
@@ -407,14 +414,15 @@ split_par_pop <- function(par_pop) {
 #' @details
 #' The function [model_matrices_pop()]
 #' generates models matrices with
-#' population values.
+#' population values. For advanced
+#' users.
 #'
 #' @return
 #' The function [model_matrices_pop()]
 #' returns a `lavaan` LISREL-style model
 #' matrices (like the output of
 #' [lavaan::lavInspect()] with `what`
-#' set to `free`), with matrix elements
+#' set to `"free"`), with matrix elements
 #' set to the population values. If
 #' `x` is the model syntax, it will be
 #' stored in the attributes `model`.
@@ -422,9 +430,10 @@ split_par_pop <- function(par_pop) {
 #' with *k* groups (*k* greater than 1),
 #' then it returns a list of *k* lists
 #' of `lavaan` LISREL-style model
-#' matrices.
+#' matrices unless `drop_list_single_group`
+#' is `TRUE`.
 #'
-#' @param x It can be 'lavaan' model
+#' @param x It can be a 'lavaan' model
 #' syntax, to be passed to [ptable_pop()],
 #' or a parameter table with the column
 #' `start` set to the population values,
@@ -435,7 +444,7 @@ split_par_pop <- function(par_pop) {
 #' [ptable_pop()].
 #'
 #' @param drop_list_single_group If
-#' `TRUE` and the number groups is
+#' `TRUE` and the number of groups is
 #' equal to one, the output will be
 #' a list of matrices of one group
 #' only. Default if `TRUE`.

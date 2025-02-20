@@ -1,4 +1,4 @@
-# power4mome 0.0.0.9031
+# power4mome 0.0.0.9032
 
 - Initialized the package. (0.0.0.9000)
 
@@ -141,3 +141,6 @@
   finding the power for a range of
   sample sizes or effect sizes.
   (0.0.0.9031)
+
+- Update the help pages and the examples.
+  (0.0.0.9032)

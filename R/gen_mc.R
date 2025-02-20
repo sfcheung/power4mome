@@ -11,7 +11,17 @@
 #' [lavaan::sem()] in `fit_all`. The
 #' simulated
 #' estimates can then be used to test
-#' effects such as indirect effects.
+#' effects such as indirect effects,
+#' usually by functions from the
+#' `manymome` package, such as
+#' [manymome::indirect_effect()].
+#'
+#' This function is used by the
+#' all-in-one function [power4test()].
+#' Users usually do not call this
+#' function directly.
+#'
+#' @seealso [power4test()]
 #'
 #' @param fit_all The output of
 #' [fit_model()] or an object of the
@@ -35,7 +45,7 @@
 #' fit outputs. Default is `FALSE`.
 #'
 #' @param progress If `TRUE`, the progress
-#' of Monte Carlo will be displayed.
+#' will be displayed.
 #' Default is `FALSE.
 #'
 #' @param ncores The number of CPU

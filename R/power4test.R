@@ -2,7 +2,7 @@
 #'
 #' @description An all-in-one function
 #' that receives a model specification,
-#' generate datasets, fits a model, does
+#' generates datasets, fits a model, does
 #' the target test, and returns the test
 #' results.
 #'
@@ -30,21 +30,29 @@
 #'    - Call [fit_model()] to fit the
 #'      model to each of the datasets.
 #'
-#'    - If `R` is not `NULL`, call
+#'    - If `R` is not `NULL` and
+#'      `ci_type = "mc"`, call
 #'      [gen_mc()] to generate Monte
 #'      Carlo estimates using
 #'      [manymome::do_mc()].
+#
+#'    - If `R` is not `NULL` and
+#'      `ci_type = "boot"`, call
+#'      [gen_boot()] to generate
+#'      bootstrap estimates using
+#'      [manymome::do_boot()].
 #'
 #'    - Merge the results into a
 #'      `sim_out` object by calling
 #'      [sim_out()].
 #'
 #'    - If `do_the_test` is `FALSE`,
-#'      skip the reaming steps and
+#'      skip the remaining steps and
 #'      return a `power4test` object,
-#'      which contains only the
+#'      which contains only the data
 #'      generated and optionally the
-#'      Monte Carlo estimates.
+#'      Monte Carlo or bootstrap
+#'      estimates.
 #'
 #' - If `do_the_test` is `TRUE`, do
 #'   the test.
@@ -60,10 +68,24 @@
 #'
 #' This function is to be used when
 #' users are interested only in the
-#' power of a specific test on a
+#' power of one or several tests on a
 #' particular aspect of the model, such
 #' as a parameter, given a specific
 #' effect sizes and sample sizes.
+#'
+#' # Updating a Condition
+#'
+#' This function can also be used to
+#' update a condition when only some
+#' selected aspects changed. For example,
+#' without calling this function with
+#' all the arguments set just to change
+#' the sample size, it can be called
+#' by supplying an existing
+#' `power4test` object and set only
+#' `n` to a new sample size. The data
+#' and the tests will be updated
+#' automatically.
 #'
 #' @return
 #' An object of the class `power4test`,
@@ -81,12 +103,14 @@
 #'
 #' @param object Optional. If set to a
 #' `power4test` object, it will be
-#' updated using the value(s) in `n`
-#' and/or `pop_es`. Default is `NULL`.
+#' updated using the value(s) in `n`,
+#' `pop_es`, and/or `nrep`. Default is `NULL`.
 #'
 #' @param nrep The number of replications
 #' to generate the simulated datasets.
-#' Default is 10.
+#' Default is `NULL`. Must be set when
+#' called to create a `power4test`
+#' object.
 #'
 #' @param ptable The output of
 #' [ptable_pop()], which is a
@@ -94,14 +118,18 @@
 #' population model. If `NULL`, the
 #' default, [ptable_pop()] will be
 #' called to generate the `ptable_pop`
-#' object.
+#' object using `model` and `pop_es`.
 #'
 #' @param model The `lavaan` model
 #' syntax of the population model.
 #' Required. Ignored if `ptable` is
+#' specified. See 'Details' of
+#' [ptable_pop()] on how to use it for
+#' models with latent factors
+#' and indicators. Ignored if `ptable` is
 #' specified.
 #'
-#' @param pop_es The character to
+#' @param pop_es The character vector to
 #' specify population effect sizes. See
 #' 'Details' of [ptable_pop()] on how to
 #' set the effect sizes for this
@@ -118,7 +146,7 @@
 #' @param number_of_indicators A named
 #' vector to specify the number of
 #' indicators for each factors. See
-#' 'Details' on how to set this
+#' 'Details' of [ptable_pop()] on how to set this
 #' argument. Default is `NULL` and all
 #' variables in the model syntax are
 #' observed variables.
@@ -126,7 +154,9 @@
 #' @param reliability A named vector
 #' to set the reliability coefficient
 #' of each set of indicators. Default
-#' is `NULL`.
+#' is `NULL`. See 'Details' of
+#' [ptable_pop()] on how to set this
+#' argument.
 #'
 #' @param x_fun The function(s) used to
 #' generate the exogenous variables. If
@@ -138,8 +168,8 @@
 #' argument.
 #'
 #' @param fit_model_args A list of the
-#' arguments to be passed to
-#' [lavaan::sem()] when fitting the
+#' arguments to be passed to [fit_model()]
+#' when fitting the
 #' model.
 #' Should be a named argument
 #' with names being the names of the
@@ -159,6 +189,7 @@
 #' `"mc"` for Monte Carlo method
 #' (the default) or `"boot"` for
 #' nonparametric bootstrapping method.
+#' See [sim_data()] on the details.
 #'
 #' @param gen_mc_args A list of
 #' arguments to be passed to
@@ -202,7 +233,7 @@
 #'
 #' @param results_fun The function to be
 #' used to extract the test results.
-#' See `Details` for the requirements
+#' See `Details` of [do_test()] for the requirements
 #' of this function. Default is `NULL`,
 #' assuming that the output of
 #' `test_fun` can be used directly.
@@ -218,7 +249,7 @@
 #' `test_fun`. Note that if `sim_out`
 #' is a `power4test` object and already
 #' has a test of this name stored, it
-#' will be replaced by the new results
+#' will be replaced by the new results.
 #'
 #' @param test_note String. An optional
 #' note for the test, stored in the
@@ -260,8 +291,8 @@
 #'
 #' model_simple_med <-
 #' "
-#' m ~ a*x
-#' y ~ b*m + x
+#' m ~ a * x
+#' y ~ b * m + x
 #' ab := a * b
 #' "
 #'
@@ -269,36 +300,26 @@
 #'                          "m ~ x" = "m",
 #'                          "y ~ x" = "n")
 #'
-#' test_ab <- function(object,
-#'                     alpha = .05) {
-#'   est <- lavaan::parameterEstimates(object)
-#'   i <- match("ab", est$lhs)
-#'   out <- c(est = est[i, "est"],
-#'            cilo = est[i, "ci.lower"],
-#'            cihi = est[i, "ci.upper"],
-#'            sig = as.numeric(est[i, "pvalue"] < alpha))
-#'   out
-#' }
+#' out <- power4test(nrep = 50,
+#'                   model = model_simple_med,
+#'                   pop_es = model_simple_med_es,
+#'                   n = 100,
+#'                   test_fun = test_parameters,
+#'                   test_args = list(pars = "a"),
+#'                   iseed = 1234,
+#'                   parallel = FALSE,
+#'                   progress = TRUE)
 #'
-#' ab_results <- function(object) {
-#'   object
-#' }
+#' print(out,
+#'       test_long = TRUE)
 #'
-#' power_all_test_only_par <- power4test(nrep = 50,
-#'                                       model = model_simple_med,
-#'                                       pop_es = model_simple_med_es,
-#'                                       n = 100,
-#'                                       fit_model_args = list(estimator = "ML"),
-#'                                       test_fun = test_ab,
-#'                                       map_names = c(object = "fit"),
-#'                                       results_fun = ab_results,
-#'                                       parallel = FALSE,
-#'                                       progress = TRUE)
-#' names(power_all_test_only_par$test_all)
-#' test_results_all <- sapply(power_all_test_only_par$test_all$test_ab,
-#'                            function(xx) xx$test_results)
-#' test_results_all <- as.data.frame(t(test_results_all))
-#' colMeans(test_results_all, na.rm = TRUE)
+#' # Add one more test
+#'
+#' out <- power4test(out,
+#'                   test_fun = test_parameters,
+#'                   test_args = list(op = ":="))
+#' print(out,
+#'       test_long = TRUE)
 #'
 #' @export
 
@@ -616,7 +637,7 @@ power4test <- function(object = NULL,
 #' the decimal for the descriptive
 #' statistics table.
 #'
-#' @param x The `power4test` object
+#' @param x The object
 #' to be printed.
 #'
 #' @param what A string vector of
@@ -638,7 +659,7 @@ power4test <- function(object = NULL,
 #'
 #' @return
 #' The `print` method of `power4test`
-#' return `x` invisibly. Called for
+#' returns `x` invisibly. Called for
 #' its side effect.
 #'
 #' @rdname power4test

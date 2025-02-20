@@ -2,7 +2,8 @@
 #'
 #' @description Combine the outputs
 #' of [sim_data()], [fit_model()],
-#' and optionally [gen_mc()] to one
+#' and optionally [gen_mc()] and/or
+#' [gen_boot()] to one
 #' single object.
 #'
 #' @details
@@ -12,10 +13,10 @@
 #' [fit_model()], which is a list of the
 #' [lavaan::sem()] output for the `M`
 #' datasets, and optionally the output
-#' of [gen_mc()], which is a list of the
-#' `M` sets of Monte Carlo estimates
+#' of [gen_mc()] or [gen_boot()], which is a list of the
+#' `M` sets of Monte Carlo or bootstrap estimates
 #' based on the results of
-#' [lavaan::sem()]. The list has `M`
+#' [fit_model()]. The list has `M`
 #' elements, with the data, model fit
 #' results, and optionally the Monte
 #' Carlo estimates matched.
@@ -25,8 +26,15 @@
 #' further processed to estimate the
 #' power of this test.
 #'
+#' This function is used by the
+#' all-in-one function [power4test()].
+#' Users usually do not call this
+#' function directly.
+#'
+#' @seealso [power4test()]
+#'
 #' @return
-#' The function [sim_out()] returns an `sim_out` object, which
+#' The function [sim_out()] returns a `sim_out` object, which
 #' is a list of length equal to the
 #' length of `data_all`. Each element
 #' of the list is a `sim_data` object

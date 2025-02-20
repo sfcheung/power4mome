@@ -92,11 +92,11 @@ model_simple_med_es <- c("y ~ m" = "l",
                          "m ~ x" = "m",
                          "y ~ x" = "n")
 
-sim_only <- power4test(nrep = 5,
+sim_only <- power4test(nrep = 2,
                        model = model_simple_med,
                        pop_es = model_simple_med_es,
                        n = 100,
-                       R = 50,
+                       R = 40,
                        ci_type = "boot",
                        fit_model_args = list(fit_function = "lm"),
                        do_the_test = FALSE,
@@ -115,7 +115,7 @@ power_all_test_only_new_es <- power4test(object = test_out,
 
 out <- power4test_by_pop_es(test_out,
                             pop_es_name = "y ~ m",
-                            pop_es_values = c(.10, .20, .30))
+                            pop_es_values = c(.10, .20))
 out_reject <- get_rejection_rates_by_pop_es(out)
 out_reject
 

@@ -92,6 +92,7 @@ get_rejection_rates_i <- function(object_i) {
     out <- get_rejection_rates_i_data_frame(object_i)
     return(out)
   }
+  stop("Something is wrong. The tests results are not of the supported format.")
 }
 
 #' @noRd

@@ -37,7 +37,7 @@ Monte Carlo estimates for the
 fit outputs. Default is \code{FALSE}.}
 
 \item{progress}{If \code{TRUE}, the progress
-of Monte Carlo will be displayed.
+will be displayed.
 Default is `FALSE.}
 
 \item{ncores}{The number of CPU
@@ -60,7 +60,15 @@ on each output of
 \code{\link[lavaan:sem]{lavaan::sem()}} in \code{fit_all}. The
 simulated
 estimates can then be used to test
-effects such as indirect effects.
+effects such as indirect effects,
+usually by functions from the
+\code{manymome} package, such as
+\code{\link[manymome:cond_indirect]{manymome::indirect_effect()}}.
+
+This function is used by the
+all-in-one function \code{\link[=power4test]{power4test()}}.
+Users usually do not call this
+function directly.
 }
 \examples{
 mod <-
@@ -82,4 +90,7 @@ mc_all <- gen_mc(fit_all,
                  iseed = 4567)
 
 
+}
+\seealso{
+\code{\link[=power4test]{power4test()}}
 }

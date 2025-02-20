@@ -30,11 +30,11 @@ will be used.}
 
 \item{fit_function}{The function to
 be used to fit the model. Can also
-be a string: \code{lavaan} (the default) for
-\code{\link[lavaan:sem]{lavaan::sem()}}, and \code{lm} or \code{many_lm}
+be a string: \code{"lavaan"} (the default) for
+\code{\link[lavaan:sem]{lavaan::sem()}}, and \code{"lm"} or \code{many_lm}
 for \code{\link[lmhelprs:many_lm]{lmhelprs::many_lm()}}.
-Other values will be tried to match
-to a function.}
+Other functions can also be used
+if necessary.}
 
 \item{arg_data_name}{The name of the
 argument of \code{fit_function} expecting
@@ -71,16 +71,15 @@ is used.}
 An object of the class \code{fit_out},
 which is a list of the output of
 \code{fit_function} (\code{\link[lavaan:sem]{lavaan::sem()}}
-by default). If error occurred
+by default). If an error occurred
 when fitting the model to a dataset,
 then element will be the error
-message from \code{\link[lavaan:sem]{lavaan::sem()}} instead
-of the output of \code{\link[lavaan:sem]{lavaan::sem()}}.
+message from the fit function.
 }
 \description{
 Get the output of
 \code{\link[=sim_data]{sim_data()}} and fit a model to each
-of the stored dataset.
+of the stored datasets.
 }
 \details{
 By default, it extracts the model
@@ -93,6 +92,11 @@ returns the results. If the datasets
 were generated from a multigroup
 model when calling \code{\link[=sim_data]{sim_data()}},
 a multigroup model is fitted.
+
+This function is used by the
+all-in-one function \code{\link[=power4test]{power4test()}}.
+Users usually do not call this
+function directly.
 }
 \examples{
 mod <-
@@ -111,4 +115,7 @@ data_all <- sim_data(nrep = 5,
 fit_all <- fit_model(data_all)
 fit_all[[1]]
 
+}
+\seealso{
+\code{\link[=power4test]{power4test()}}
 }

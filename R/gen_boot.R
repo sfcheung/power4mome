@@ -1,17 +1,29 @@
 #' @title Generate Bootstrap Estimates
 #'
 #' @description Get a list of the output
-#' of [lavaan::sem()] and generate
+#' of [lavaan::sem()] or [lmhelprs::many_lm()]
+#' and generate
 #' bootstrap estimates of model
 #' parameters.
 #'
 #' @details
 #' It simply calls [manymome::do_boot()]
 #' on each output of
-#' [lavaan::sem()] in `fit_all`. The
+#' [lavaan::sem()] or [lmhelprs::many_lm()]
+#' in `fit_all`. The
 #' simulated
 #' estimates can then be used to test
-#' effects such as indirect effects.
+#' effects such as indirect effects,
+#' usually by functions from the
+#' `manymome` package, such as
+#' [manymome::indirect_effect()].
+#'
+#' This function is used by the
+#' all-in-one function [power4test()].
+#' Users usually do not call this
+#' function directly.
+#'
+#' @seealso [power4test()]
 #'
 #' @param fit_all The output of
 #' [fit_model()] or an object of the
@@ -35,7 +47,7 @@
 #' fit outputs. Default is `FALSE`.
 #'
 #' @param progress If `TRUE`, the progress
-#' of bootstrap will be displayed.
+#' will be displayed.
 #' Default is `FALSE.
 #'
 #' @param ncores The number of CPU
@@ -64,6 +76,7 @@
 #' boot_all <- gen_boot(fit_all,
 #'                      R = 10,
 #'                      iseed = 4567)
+#' boot_all
 #'
 #'
 #' @export
@@ -87,21 +100,6 @@ gen_boot <- function(fit_all,
   return(out)
 }
 
-#' @title Title In Title Case
-#'
-#' @description One paragraph description.
-#'
-#' @details Details
-#'   (Include subjects for verbs.)
-#'   (Use 3rd person forms for verbs.)
-#'
-#' @return
-#' Specify what are returned.
-#'
-#' @examples
-#' \donttest{
-#' }
-#'
 #' @noRd
 gen_boot_i <- function(fit_i,
                        R = 100,
