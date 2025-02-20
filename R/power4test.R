@@ -656,7 +656,8 @@ print.power4test <- function(x,
           digits_descriptive = digits_descriptive,
           ...)
   }
-  if ("test" %in% what) {
+  if (("test" %in% what) &&
+      !is.null(x$test_all)) {
     print(x$test_all,
           test_long = test_long,
           digits = digits,

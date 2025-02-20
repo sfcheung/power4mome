@@ -461,7 +461,7 @@ print.sim_data <- function(x,
 
   cat(header_str("Population Values",
                  hw = .4,
-                 prefix = "\n",
+                 prefix = "",
                  suffix = "\n"))
   print(ptable1,
         digits = digits)
@@ -515,7 +515,7 @@ print.sim_data <- function(x,
     n <- nrow(x_i$mm_lm_dat_out)
 
     cat(header_str("Data Information",
-                  prefix = "\n",
+                  prefix = "",
                   suffix = "\n\n"))
 
     cat("Number of Replications: ", nrep, "\n")
@@ -565,7 +565,7 @@ print.sim_data <- function(x,
     print(est_all,
           nd = digits)
   } else {
-    cat("\nCall print with 'data_long = TRUE' for further information.")
+    cat("\nCall print with 'data_long = TRUE' for further information.\n")
   }
 
   invisible(x)
