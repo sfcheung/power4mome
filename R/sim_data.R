@@ -444,12 +444,12 @@ print.sim_data <- function(x,
 
   cat(header_str("Model Information",
                  prefix = "\n",
-                 suffix = "\n\n"))
+                 suffix = "\n"))
 
   cat(header_str("Model on Factors/Variables",
                  hw = .4,
-                 prefix = "\n\n",
-                 suffix = "\n\n"))
+                 prefix = "\n",
+                 suffix = "\n"))
   cat(model_original)
 
   model_final <- x_i$model_final
@@ -478,7 +478,7 @@ print.sim_data <- function(x,
     rownames(rel) <- paste0("Group ", seq_len(rel_n))
     cat(header_str("Population Reliability",
                   hw = .4,
-                  prefix = "\n",
+                  prefix = "",
                   suffix = "\n\n"))
     print(rel,
           row.names = isTRUE(rel_n > 1),
@@ -511,6 +511,16 @@ print.sim_data <- function(x,
 
   # Summarize data
 
+    nrep <- length(x)
+    n <- nrow(x_i$mm_lm_dat_out)
+
+    cat(header_str("Data Information",
+                  prefix = "\n",
+                  suffix = "\n\n"))
+
+    cat("Number of Replications: ", nrep, "\n")
+    cat("Sample Sizes: ", paste0(n, collapse = ", "), "\n")
+
   if (data_long) {
     all_data <- pool_sim_data(x)
 
@@ -526,16 +536,6 @@ print.sim_data <- function(x,
                                             output = "text")
     i <- est_all$lhs == est_all$rhs
     est_all <- est_all[!i, ]
-
-    nrep <- length(x)
-    n <- nrow(x_i$mm_lm_dat_out)
-
-    cat(header_str("Data Information",
-                  prefix = "\n",
-                  suffix = "\n\n"))
-
-    cat("Number of Replications: ", nrep, "\n")
-    cat("Sample Sizes: ", paste0(n, collapse = ", "), "\n")
 
     cat(header_str("Descriptive Statistics",
                   hw = .4,
@@ -565,7 +565,7 @@ print.sim_data <- function(x,
     print(est_all,
           nd = digits)
   } else {
-    cat("Call print with 'data_long = TRUE' for further information.")
+    cat("\nCall print with 'data_long = TRUE' for further information.")
   }
 
   invisible(x)
