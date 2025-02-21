@@ -5,13 +5,14 @@
 \title{Fit a Model to a List of Datasets}
 \usage{
 fit_model(
-  data_all,
+  data_all = NULL,
   model = NULL,
   fit_function = "lavaan",
   arg_data_name = "data",
   arg_model_name = "model",
   arg_group_name = "group",
   ...,
+  fit_out = NULL,
   parallel = FALSE,
   progress = FALSE,
   ncores = max(1, parallel::detectCores(logical = FALSE) - 1)
@@ -54,6 +55,16 @@ models. Default is \code{"group"}.}
 \item{...}{Optional arguments to be
 passed to \code{fit_function} when
 fitting the model.}
+
+\item{fit_out}{If set to a \code{fit_out}
+object (the output of \code{\link[=fit_model]{fit_model()}}),
+then all missing arguments will be
+retrieved from \code{fit_out}. That is,
+users can use \code{fit_model(data_all = new_data, fit_out = old_out)}
+to re-fit a model originally fitted
+in \code{old_out} on a new list of dataset
+(\code{new_data}). No need to include
+all other arguments.}
 
 \item{parallel}{If \code{TRUE}, parallel
 processing will be used to fit the

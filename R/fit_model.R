@@ -70,6 +70,16 @@
 #' passed to `fit_function` when
 #' fitting the model.
 #'
+#' @param fit_out If set to a `fit_out`
+#' object (the output of [fit_model()]),
+#' then all missing arguments will be
+#' retrieved from `fit_out`. That is,
+#' users can use `fit_model(data_all = new_data, fit_out = old_out)`
+#' to re-fit a model originally fitted
+#' in `old_out` on a new list of dataset
+#' (`new_data`). No need to include
+#' all other arguments.
+#'
 #' @param parallel If `TRUE`, parallel
 #' processing will be used to fit the
 #' models. Default is `FALSE`.
@@ -100,28 +110,72 @@
 #' fit_all[[1]]
 #'
 #' @export
-fit_model <- function(data_all,
+fit_model <- function(data_all = NULL,
                       model = NULL,
                       fit_function = "lavaan",
                       arg_data_name = "data",
                       arg_model_name = "model",
                       arg_group_name = "group",
                       ...,
+                      fit_out = NULL,
                       parallel = FALSE,
                       progress = FALSE,
                       ncores = max(1, parallel::detectCores(logical = FALSE) - 1)) {
-  out <- do_FUN(X = data_all,
-                FUN = fit_model_i,
-                model = model,
-                fit_function = fit_function,
-                arg_data_name = arg_data_name,
-                arg_model_name = arg_model_name,
-                arg_group_name = arg_group_name,
-                ...,
-                parallel = parallel,
-                progress = progress,
-                ncores = ncores)
+  # Store the arguments such the
+  # it can be updated with new data.
+  # It is intentional not to store the call.
+  update_fit <- FALSE
+  if (!is.null(fit_out)) {
+    if (inherits(fit_out, "fit_out")) {
+      update_fit <- TRUE
+    } else {
+      stop("'fit_out' is not a supported object.")
+    }
+  }
+  if (!update_fit) {
+    # Store the evaluated arguments
+    args <- formals(fit_model)
+    args$`...` <- NULL
+    args <- lapply(args,
+                   eval,
+                   envir = parent.frame())
+  } else {
+    args <- attr(fit_out, "args")
+  }
+  my_call <- match.call()
+  call_args <- as.list(my_call)[-1]
+  i <- which(names(call_args) == "data_all")
+  if (length(i) != 0) {
+    call_args <- call_args[-i]
+  }
+  call_args <- lapply(call_args,
+                      eval,
+                      envir = parent.frame())
+  args <- utils::modifyList(args,
+                            as.list(call_args))
+  args$fit_out <- NULL
+  args$data_all <- NULL
+  # args available in all cases.
+  # It should be used whenever possible,
+  # unless we explicitly need the value in this call.
+  out <- do.call(do_FUN,
+                 c(list(X = data_all,
+                        FUN = fit_model_i),
+                   args))
+  # Update
+  # out <- do_FUN(X = data_all,
+  #               FUN = fit_model_i,
+  #               model = model,
+  #               fit_function = fit_function,
+  #               arg_data_name = arg_data_name,
+  #               arg_model_name = arg_model_name,
+  #               arg_group_name = arg_group_name,
+  #               ...,
+  #               parallel = parallel,
+  #               progress = progress,
+  #               ncores = ncores)
   class(out) <- c("fit_out", class(out))
+  attr(out, "args") <- args
   return(out)
 }
 

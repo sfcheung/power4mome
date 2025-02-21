@@ -1,4 +1,4 @@
-# power4mome 0.0.0.9033
+# power4mome 0.0.0.9034
 
 - Initialized the package. (0.0.0.9000)
 
@@ -149,3 +149,7 @@
   `mc_ci` arguments of `test_indirect_effect()`
   and `test_index_of_mome()`.
   (0.0.0.9033)
+
+- Revised `fit_model()` such that it
+  can be used to refit a model on a new
+  set of data. (0.0.0.9034)
