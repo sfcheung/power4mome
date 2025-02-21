@@ -1,4 +1,4 @@
-# power4mome 0.0.0.9034
+# power4mome 0.0.0.9035
 
 - Initialized the package. (0.0.0.9000)
 
@@ -153,3 +153,11 @@
 - Revised `fit_model()` such that it
   can be used to refit a model on a new
   set of data. (0.0.0.9034)
+
+- Revised `power4test()` to support
+  fitting more than one model in each
+  datasets. The `test_` functions have
+  also been updated to allow users
+  specifying which model will be uesd
+  in doing the tests.
+  (0.0.0.9035)

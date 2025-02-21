@@ -11,6 +11,7 @@ test_parameters(
   op = NULL,
   remove.nonfree = TRUE,
   ...,
+  fit_name = "fit",
   get_map_names = FALSE,
   get_test_name = FALSE
 )
@@ -49,6 +50,14 @@ if the model is not fitted by
 be passed to \code{\link[lavaan:parameterEstimates]{lavaan::parameterEstimates()}},
 \code{\link[lavaan:standardizedSolution]{lavaan::standardizedSolution()}},
 or \code{\link[lmhelprs:lm_list_to_partable]{lmhelprs::lm_list_to_partable()}}.}
+
+\item{fit_name}{The name of the
+model fit object to be extracted.
+Default is \code{"fit"}. Used only when
+more than one model is fitted in
+each replication. This should be
+the name of the model on which the
+test is to be conducted.}
 
 \item{get_map_names}{Logical. Used
 by \code{\link[=power4test]{power4test()}} to determine how

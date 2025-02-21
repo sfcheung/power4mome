@@ -96,11 +96,19 @@ test_index_of_mome <- function(fit = fit,
                       boot_ci = FALSE,
                       boot_out = NULL,
                       ...,
+                      fit_name = "fit",
                       get_map_names = FALSE,
                       get_test_name = FALSE) {
-  map_names <- c(fit = "fit",
-                 mc_out = "mc_out",
-                 boot_out = "boot_out")
+  if (fit_name != "fit") {
+    mc_name <- paste0(fit_name, "_mc_out")
+    boot_name <- paste0(fit_name, "_boot_out")
+  } else {
+    mc_name <- "mc_out"
+    boot_name <- "boot_out"
+  }
+  map_names <- c(fit = fit_name,
+                 mc_out = mc_name,
+                 boot_out = boot_name)
   if (get_map_names) {
     return(map_names)
   }

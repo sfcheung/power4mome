@@ -358,6 +358,38 @@ and the tests will be updated
 automatically.
 }
 
+\section{Multiple Models}{
+More than one model can be fitted to
+each replication. This is done
+by setting \code{fit_model_args} to
+a named list. The names are the names
+used to identify the models, and
+each element is a list of named
+list of arguments for a model.
+
+For example:
+
+\verb{fit_model_args = list(fit = list(),}
+
+\verb{                      fit2 = list(model = mod2),}
+
+\verb{                      fit3 = list(model = mod3))}
+
+Three models will be fitted. The
+first model is the model ued to
+generate the data, named \code{"fit"}.
+The second and first models are
+named \code{"fit2"} and \code{"fit3"},
+respectively, with \code{"fit2"} fitted
+with \code{model = mod2} and \code{"fit3"}
+fitted with \code{model = mod3}.
+
+If Monte Carlos or bootstrap estimates
+are to be generated, they will be
+generated for each model, using the
+values for their arguments.
+}
+
 \examples{
 
 model_simple_med <-

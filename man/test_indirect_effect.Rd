@@ -14,6 +14,7 @@ test_indirect_effect(
   boot_ci = FALSE,
   boot_out = NULL,
   ...,
+  fit_name = "fit",
   get_map_names = FALSE,
   get_test_name = FALSE
 )
@@ -62,6 +63,14 @@ not set this argument and should let
 
 \item{...}{Additional arguments to
 be passed to \code{\link[manymome:cond_indirect]{manymome::indirect_effect()}}.}
+
+\item{fit_name}{The name of the
+model fit object to be extracted.
+Default is \code{"fit"}. Used only when
+more than one model is fitted in
+each replication. This should be
+the name of the model on which the
+test is to be conducted.}
 
 \item{get_map_names}{Logical. Used
 by \code{\link[=power4test]{power4test()}} to determine how

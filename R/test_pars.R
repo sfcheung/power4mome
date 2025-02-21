@@ -144,9 +144,10 @@ test_parameters <- function(fit = fit,
                             op = NULL,
                             remove.nonfree = TRUE,
                             ...,
+                            fit_name = "fit",
                             get_map_names = FALSE,
                             get_test_name = FALSE) {
-  map_names <- c(fit = "fit")
+  map_names <- c(fit = fit_name)
   args <- list(...)
   if (get_map_names) {
     return(map_names)

@@ -87,6 +87,38 @@
 #' and the tests will be updated
 #' automatically.
 #'
+#' # Multiple Models
+#'
+#' More than one model can be fitted to
+#' each replication. This is done
+#' by setting `fit_model_args` to
+#' a named list. The names are the names
+#' used to identify the models, and
+#' each element is a list of named
+#' list of arguments for a model.
+#'
+#' For example:
+#'
+#' `fit_model_args = list(fit = list(),`
+#'
+#' `                      fit2 = list(model = mod2),`
+#'
+#' `                      fit3 = list(model = mod3))`
+#'
+#' Three models will be fitted. The
+#' first model is the model ued to
+#' generate the data, named `"fit"`.
+#' The second and first models are
+#' named `"fit2"` and `"fit3"`,
+#' respectively, with `"fit2"` fitted
+#' with `model = mod2` and `"fit3"`
+#' fitted with `model = mod3`.
+#'
+#' If Monte Carlos or bootstrap estimates
+#' are to be generated, they will be
+#' generated for each model, using the
+#' values for their arguments.
+#'
 #' @return
 #' An object of the class `power4test`,
 #' which is a list of with two elements:
@@ -467,56 +499,132 @@ power4test <- function(object = NULL,
     data_all <- do.call(sim_data,
                         sim_data_args)
 
-    fit_args0 <- utils::modifyList(fit_model_args,
-                                  list(data_all = data_all,
-                                        parallel = parallel,
-                                        progress = progress,
-                                        ncores = ncores))
-    if (progress) {
-      cat("Fit the model:\n")
+    # fit_model_args must always be a named list of models
+    fit_k <- FALSE
+    if (length(fit_model_args) > 1) {
+      fit_k <- all(sapply(fit_model_args,
+                          is.list))
+      if (fit_k) {
+        if (is.null(names(fit_model_args))) {
+          # Auto names
+          names(fit_model_args) <- paste0("fit", seq_along(fit_model_args))
+          names(fit_model_args)[1] <- "fit"
+        } else {
+          if (any(names(fit_model_args) %in% "")) {
+            stop("All models in 'fit_model_args' must be named")
+          }
+          if (names(fit_model_args)[1] != "fit") {
+            stop("The first model must be named 'fit'.")
+          }
+        }
+      }
+    } else {
+      # One model or not specified
+      fit_model_args <- list(fit = fit_model_args)
     }
-    fit_all <- do.call(fit_model,
-                       fit_args0)
+    fit_args0 <- sapply(fit_model_args,
+                        utils::modifyList,
+                        val = list(parallel = parallel,
+                                   progress = progress,
+                                   ncores = ncores),
+                        simplify = FALSE)
+
+    # fit_args0 <- utils::modifyList`(fit_model_args,
+    #                               list(data_all = data_all,
+    #                                     parallel = parallel,
+    #                                     progress = progress,
+    #                                     ncores = ncores))
+    if (progress) {
+      cat("Fit the model(s):\n")
+    }
+    # fit_all is always a named list
+    fit_all <- sapply(fit_args0,
+                      function(x,
+                               data_all) {
+                        do.call(fit_model,
+                                c(list(data_all = data_all),
+                                  x))
+                      },
+                      data_all = data_all,
+                      simplify = FALSE)
+    # fit_all <- do.call(fit_model,
+    #                    fit_args0)
     if (!is.null(args$R) && (args$ci_type == "mc")) {
       # TODO:
       # - iseed should be used only once
       mc_args0 <- utils::modifyList(args$gen_mc_args,
-                                    list(fit_all = fit_all,
-                                        R = args$R,
+                                    list(R = args$R,
                                         parallel = parallel,
                                         progress = progress,
                                         ncores = ncores))
       if (progress) {
         cat("Generate Monte Carlo estimates:\n")
       }
-      mc_all <- do.call(gen_mc,
-                        mc_args0)
+      # mc_all is always a named list
+      mc_all <- sapply(fit_all,
+                        function(x) {
+                          do.call(gen_mc,
+                                  c(list(fit_all = x),
+                                    mc_args0))
+                        },
+                        simplify = FALSE)
+      # mc_all <- do.call(gen_mc,
+      #                   mc_args0)
     } else {
-      mc_all <- rep(NA, length(fit_all))
+      mc_all <- rep(NA, length(fit_all[[1]]))
+      mc_all <- sapply(names(fit_all),
+                       function(x) mc_all,
+                       simplify = FALSE)
     }
+    # The first mc_all is always named "mc_out"
+    tmp <- paste0(names(fit_all),
+                  "_mc_out")
+    tmp[1] <- "mc_out"
+    names(mc_all) <- tmp
 
     if (!is.null(args$R) && (args$ci_type == "boot")) {
       # TODO:
       # - iseed should be used only once
       boot_args0 <- utils::modifyList(args$gen_boot_args,
-                                      list(fit_all = fit_all,
-                                           R = args$R,
+                                      list(R = args$R,
                                            parallel = parallel,
                                            progress = progress,
                                            ncores = ncores))
       if (progress) {
         cat("Generate bootstrap estimates:\n")
       }
-      boot_all <- do.call(gen_boot,
-                          boot_args0)
+      # boot_all is always a named list
+      boot_all <- sapply(fit_all,
+                        function(x) {
+                          do.call(gen_boot,
+                                  c(list(fit_all = x),
+                                    boot_args0))
+                        },
+                        simplify = FALSE)
+      # boot_all <- do.call(gen_boot,
+      #                     boot_args0)
     } else {
-      boot_all <- rep(NA, length(fit_all))
+      boot_all <- rep(NA, length(fit_all[[1]]))
+      boot_all <- sapply(names(fit_all),
+                         function(x) boot_all,
+                         simplify = FALSE)
     }
+    # The first boot_all is always named "boot_out"
+    tmp <- paste0(names(fit_all),
+                  "_boot_out")
+    tmp[1] <- "boot_out"
+    names(boot_all) <- tmp
 
-    sim_all <- sim_out(data_all = data_all,
-                       fit = fit_all,
-                       mc_out = mc_all,
-                       boot_out = boot_all)
+    sim_all <- do.call(sim_out,
+                       c(list(data_all = data_all),
+                         fit_all,
+                         mc_all,
+                         boot_all))
+
+    # sim_all <- sim_out(data_all = data_all,
+    #                    fit = fit_all,
+    #                    mc_out = mc_all,
+    #                    boot_out = boot_all)
   } else {
     sim_all <- object$sim_all
   }
@@ -555,7 +663,9 @@ power4test <- function(object = NULL,
           test_name,
           "\n")
     }
-    map_names0 <- tryCatch(test_fun(get_map_names = TRUE),
+    tmp_args <- test_args
+    tmp_args$get_map_names <- TRUE
+    map_names0 <- tryCatch(do.call(test_fun, tmp_args),
                            error = function(e) e)
     if (!inherits(map_names, "error")) {
       if (is.character(map_names0) && !is.null(names(map_names0))) {
