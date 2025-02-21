@@ -176,14 +176,14 @@ print_extra <- function(x) {
   cat(header_str("Element(s) of the First Dataset",
                  hw = .5,
                  prefix = "\n",
-                 suffix = "\n\n"))
+                 suffix = "\n"))
 
   for (xx in extra_names) {
     tmp <- paste0("<", xx, ">")
     cat(header_str(tmp,
                    hw = .4,
-                   prefix = "",
-                   suffix = "\n"))
+                   prefix = "\n",
+                   suffix = "\n\n"))
     print(extra[[xx]])
   }
   return(NULL)
