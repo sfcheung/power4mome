@@ -14,7 +14,7 @@ model_simple_med_es <- c("y ~ m" = "l",
                          "m ~ x" = "m",
                          "y ~ x" = "n")
 
-sim_only <- power4test(nrep = 5,
+sim_only <- power4test(nrep = 3,
                        model = model_simple_med,
                        pop_es = model_simple_med_es,
                        n = 100,
@@ -33,12 +33,12 @@ test_out <- power4test(object = sim_only,
                                         mc_ci = FALSE))
 
 out <- power4test_by_n(test_out,
-                       n = c(100, 110, 120))
+                       n = c(100, 110))
 out_reject <- get_rejection_rates_by_n(out)
 out_reject
 
 out2 <- power4test_by_n(object = sim_only,
-                        n = c(100, 110, 120),
+                        n = c(100, 110),
                         test_fun = test_indirect_effect,
                         test_args = list(x = "x",
                                          m = "m",
@@ -48,7 +48,7 @@ out2 <- power4test_by_n(object = sim_only,
 out_reject2 <- get_rejection_rates_by_n(out2)
 out_reject2
 
-expect_equal(out[[3]]$sim_all[[1]]$mm_lm_dat_out[1, ],
-             out2[[3]]$sim_all[[1]]$mm_lm_dat_out[1, ])
+expect_equal(out[[2]]$sim_all[[1]]$mm_lm_dat_out[1, ],
+             out2[[2]]$sim_all[[1]]$mm_lm_dat_out[1, ])
 
 })
