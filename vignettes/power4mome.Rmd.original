@@ -44,6 +44,15 @@ complicated scenarios and other features
 of `power4mome` will be described in
 other vignettes.
 
+# Package
+
+This introduction only needs the following
+package(s):
+
+```{r}
+library(power4mome)
+```
+
 # Workflow
 
 Two functions are sufficient for estimating
@@ -266,6 +275,7 @@ out <- power4test(nrep = 100,
                   pop_es = mod_es,
                   n = 50,
                   R = 2000,
+                  ci_type = "mc",
                   test_fun = test_indirect_effect,
                   test_args = list(x = "x",
                                    m = "m",
