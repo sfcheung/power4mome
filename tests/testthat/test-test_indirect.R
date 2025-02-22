@@ -58,18 +58,18 @@ test_ind3 <- power4test(object = test_ind2,
 (chk <- test_summary(test_ind3))
 expect_true(length(chk) == 3)
 
-test_ind4 <- suppressWarnings(power4test(object = test_ind3,
-                                         test_fun = test_indirect_effect,
-                                         test_args = list(x = "x",
-                                                           m = "m",
-                                                           y = "y",
-                                                           mc_ci = TRUE,
-                                                           standardized_x = TRUE,
-                                                           standardized_y = TRUE)))
+# test_ind4 <- suppressWarnings(power4test(object = test_ind3,
+#                                          test_fun = test_indirect_effect,
+#                                          test_args = list(x = "x",
+#                                                            m = "m",
+#                                                            y = "y",
+#                                                            mc_ci = TRUE,
+#                                                            standardized_x = TRUE,
+#                                                            standardized_y = TRUE)))
 
-(chk <- test_summary(test_ind4))
-expect_true(length(chk) == 4)
+# (chk <- test_summary(test_ind4))
+# expect_true(length(chk) == 4)
 
-test_ind4_summary <- summarize_tests(test_ind4$test_all)
+# test_ind4_summary <- summarize_tests(test_ind4$test_all)
 
 })

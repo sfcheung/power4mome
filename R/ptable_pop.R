@@ -311,11 +311,13 @@ ptable_pop <- function(model = NULL,
                                        as.data.frame. = TRUE)
     tmp2 <- paste(tmp$lhs, tmp$op, tmp$rhs)
     fit0 <- lavaan::sem(tmp2,
-                        do.fit = FALSE)
+                        do.fit = FALSE,
+                        fixed.x = FALSE)
     ptable0 <- lavaan::parTable(fit0)
   } else {
     fit0 <- lavaan::sem(model,
-                        do.fit = FALSE)
+                        do.fit = FALSE,
+                        fixed.x = FALSE)
     ptable0 <- lavaan::parTable(fit0)
   }
 
@@ -334,7 +336,8 @@ ptable_pop <- function(model = NULL,
                         sample.cov = dat_cov,
                         sample.nobs = rep(10000, ngroups),
                         do.fit = FALSE,
-                        group.label = gpnames)
+                        group.label = gpnames,
+                        fixed.x = FALSE)
     ptable0 <- lavaan::parTable(fit0)
 
     # Fix starting values from MG

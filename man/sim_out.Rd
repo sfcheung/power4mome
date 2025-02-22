@@ -7,7 +7,7 @@
 \usage{
 sim_out(data_all, ...)
 
-\method{print}{sim_out}(x, digits = 3, digits_descriptive = 2, ...)
+\method{print}{sim_out}(x, digits = 3, digits_descriptive = 2, fit_to_all_args = list(), ...)
 }
 \arguments{
 \item{data_all}{The output of
@@ -33,6 +33,11 @@ displayed after the decimal.}
 number of digits displayed after
 the decimal for the descriptive
 statistics table.}
+
+\item{fit_to_all_args}{A named list
+of arguments to be passed to
+\code{\link[lavaan:sem]{lavaan::sem()}} when the model is
+fitted to a sample combined from}
 }
 \value{
 The function \code{\link[=sim_out]{sim_out()}} returns a \code{sim_out} object, which

@@ -404,6 +404,12 @@ sim_data <- function(nrep = 10,
 #' @param data_long If `TRUE`, detailed
 #' information will be printed.
 #'
+#' @param fit_to_all_args A named list
+#' of arguments to be passed to
+#' [lavaan::sem()] when the model is
+#' fitted to a sample combined from
+#  all samples stored.
+#'
 #' @return
 #' The `print` method of `sim_data`
 #' returns `x` invisibly. Called for
@@ -415,6 +421,7 @@ print.sim_data <- function(x,
                            digits = 3,
                            digits_descriptive = 2,
                            data_long = TRUE,
+                           fit_to_all_args = list(),
                            ...) {
   x_i <- x[[1]]
   ptable <- x_i$ptable
@@ -529,11 +536,16 @@ print.sim_data <- function(x,
   if (data_long) {
     all_data <- pool_sim_data(x)
 
-    fit_all <- lavaan::sem(model = model_final,
-                          data = all_data,
-                          se = "none",
-                          test = "none",
-                          group = x_i$group_name)
+    fit_to_all_args0 <- list(model = model_final,
+                             data = all_data,
+                             se = "none",
+                             test = "none",
+                             group = x_i$group_name,
+                             fixed.x = FALSE)
+    fit_to_all_args1 <- utils::modifyList(fit_to_all_args0,
+                                          fit_to_all_args)
+    fit_all <- do.call(lavaan::sem,
+                       fit_to_all_args1)
     est_all <- lavaan::standardizedSolution(fit_all,
                                             se = FALSE,
                                             pvalue = FALSE,
@@ -686,8 +698,10 @@ sim_data_i <- function(repid = 1,
                                 reliability = reliability[[1]])
   tmp <- ptable
   tmp$est <- tmp$start
+  # fixed.x set to FALSE such that covariances are also displayed
   fit0 <- lavaan::sem(tmp,
-              do.fit = FALSE)
+              do.fit = FALSE,
+              fixed.x = FALSE)
   if (ngroups > 1) {
     group_labels <- names(mm_out)
     group_name <- "group"

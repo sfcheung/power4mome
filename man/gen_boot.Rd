@@ -11,7 +11,8 @@ gen_boot(
   iseed = NULL,
   parallel = FALSE,
   progress = FALSE,
-  ncores = max(1, parallel::detectCores(logical = FALSE) - 1)
+  ncores = max(1, parallel::detectCores(logical = FALSE) - 1),
+  compute_implied_stats = FALSE
 )
 }
 \arguments{
@@ -43,6 +44,13 @@ Default is `FALSE.}
 \item{ncores}{The number of CPU
 cores to use if parallel processing
 is used.}
+
+\item{compute_implied_stats}{Whether
+implied statistics are computed
+in each bootstrap samples. Usually
+not needed and so default to \code{FALSE}
+Required \code{manymome} 0.2.7.1
+or above.}
 }
 \value{
 A \code{boot_list} object, which is a list

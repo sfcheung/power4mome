@@ -178,7 +178,7 @@
 #' @param number_of_indicators A named
 #' vector to specify the number of
 #' indicators for each factors. See
-#' 'Details' of [ptable_pop()] on how to set this
+#' 'Details' of [sim_data()] on how to set this
 #' argument. Default is `NULL` and all
 #' variables in the model syntax are
 #' observed variables.
@@ -187,7 +187,7 @@
 #' to set the reliability coefficient
 #' of each set of indicators. Default
 #' is `NULL`. See 'Details' of
-#' [ptable_pop()] on how to set this
+#' [sim_data()] on how to set this
 #' argument.
 #'
 #' @param x_fun The function(s) used to
@@ -387,10 +387,6 @@ power4test <- function(object = NULL,
   # - Should allow only limited changes
   #   when updating a power4test object.
 
-  if (progress) {
-    cat("Displaying progress enabled. Set 'progress = FALSE' to hide the progress.\n")
-  }
-
   ci_type <- match.arg(ci_type,
                        c("mc", "boot"))
 
@@ -430,6 +426,10 @@ power4test <- function(object = NULL,
   # It should be used whenever possible,
   # unless we explicitly need the value in this call.
 
+  if (args$progress) {
+    cat("Displaying progress enabled. Set 'progress = FALSE' to hide the progress.\n")
+  }
+
   if (update_power4test && !is.null(pop_es)) {
     # Population effect size changed
     # Data must be updated
@@ -461,7 +461,7 @@ power4test <- function(object = NULL,
       # Regenerate the data
       # Mandatory use of stored arguments.
       # Changes in this call already incorporated into args.
-      if (progress) {
+      if (args$progress) {
         cat("Re-simulate the data:\n")
       }
       sim_data_args <- list(nrep = args$nrep,
@@ -480,21 +480,21 @@ power4test <- function(object = NULL,
       fit_model_args <- args$fit_model_args
     } else {
       # A fresh run to generate the data
-      if (progress) {
+      if (args$progress) {
         cat("Simulate the data:\n")
       }
-      sim_data_args <- list(nrep = nrep,
-                            ptable = ptable,
-                            model = model,
-                            pop_es = pop_es,
-                            n = n,
-                            number_of_indicators = number_of_indicators,
-                            reliability = reliability,
-                            x_fun = x_fun,
-                            iseed = iseed,
-                            parallel = parallel,
-                            progress = progress,
-                            ncores = ncores)
+      sim_data_args <- list(nrep = args$nrep,
+                            ptable = args$ptable,
+                            model = args$model,
+                            pop_es = args$pop_es,
+                            n = args$n,
+                            number_of_indicators = args$number_of_indicators,
+                            reliability = args$reliability,
+                            x_fun = args$x_fun,
+                            iseed = args$iseed,
+                            parallel = args$parallel,
+                            progress = args$progress,
+                            ncores = args$ncores)
     }
     data_all <- do.call(sim_data,
                         sim_data_args)
@@ -524,9 +524,9 @@ power4test <- function(object = NULL,
     }
     fit_args0 <- sapply(fit_model_args,
                         utils::modifyList,
-                        val = list(parallel = parallel,
-                                   progress = progress,
-                                   ncores = ncores),
+                        val = list(parallel = args$parallel,
+                                   progress = args$progress,
+                                   ncores = args$ncores),
                         simplify = FALSE)
 
     # fit_args0 <- utils::modifyList`(fit_model_args,
@@ -534,7 +534,7 @@ power4test <- function(object = NULL,
     #                                     parallel = parallel,
     #                                     progress = progress,
     #                                     ncores = ncores))
-    if (progress) {
+    if (args$progress) {
       cat("Fit the model(s):\n")
     }
     # fit_all is always a named list
@@ -554,10 +554,10 @@ power4test <- function(object = NULL,
       # - iseed should be used only once
       mc_args0 <- utils::modifyList(args$gen_mc_args,
                                     list(R = args$R,
-                                        parallel = parallel,
-                                        progress = progress,
-                                        ncores = ncores))
-      if (progress) {
+                                        parallel = args$parallel,
+                                        progress = args$progress,
+                                        ncores = args$ncores))
+      if (args$progress) {
         cat("Generate Monte Carlo estimates:\n")
       }
       # mc_all is always a named list
@@ -587,10 +587,10 @@ power4test <- function(object = NULL,
       # - iseed should be used only once
       boot_args0 <- utils::modifyList(args$gen_boot_args,
                                       list(R = args$R,
-                                           parallel = parallel,
-                                           progress = progress,
-                                           ncores = ncores))
-      if (progress) {
+                                           parallel = args$parallel,
+                                           progress = args$progress,
+                                           ncores = args$ncores))
+      if (args$progress) {
         cat("Generate bootstrap estimates:\n")
       }
       # boot_all is always a named list
@@ -658,7 +658,7 @@ power4test <- function(object = NULL,
         }
       }
     }
-    if (progress) {
+    if (args$progress) {
       cat("Do the test:",
           test_name,
           "\n")
@@ -764,6 +764,12 @@ power4test <- function(object = NULL,
 #' results will be printed when printing
 #' test(s).
 #'
+#' @param fit_to_all_args A named list
+#' of arguments to be passed to
+#' [lavaan::sem()] when the model is
+#' fitted to a sample combined from
+#  all samples stored.
+#'
 #' @param ... Optional arguments to
 #' be passed to other print methods.
 #'
@@ -780,6 +786,7 @@ print.power4test <- function(x,
                              digits_descriptive = 2,
                              data_long = FALSE,
                              test_long = FALSE,
+                             fit_to_all_args = list(),
                              ...) {
   what <- match.arg(what, several.ok = TRUE)
   if ("data" %in% what) {

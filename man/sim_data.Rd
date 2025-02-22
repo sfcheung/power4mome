@@ -21,7 +21,14 @@ sim_data(
   ncores = max(1, parallel::detectCores(logical = FALSE) - 1)
 )
 
-\method{print}{sim_data}(x, digits = 3, digits_descriptive = 2, data_long = TRUE, ...)
+\method{print}{sim_data}(
+  x,
+  digits = 3,
+  digits_descriptive = 2,
+  data_long = TRUE,
+  fit_to_all_args = list(),
+  ...
+)
 }
 \arguments{
 \item{nrep}{The number of replications
@@ -106,6 +113,11 @@ statistics table.}
 
 \item{data_long}{If \code{TRUE}, detailed
 information will be printed.}
+
+\item{fit_to_all_args}{A named list
+of arguments to be passed to
+\code{\link[lavaan:sem]{lavaan::sem()}} when the model is
+fitted to a sample combined from}
 }
 \value{
 The function \code{\link[=sim_out]{sim_out()}} returns

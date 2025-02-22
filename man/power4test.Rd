@@ -42,6 +42,7 @@ power4test(
   digits_descriptive = 2,
   data_long = FALSE,
   test_long = FALSE,
+  fit_to_all_args = list(),
   ...
 )
 }
@@ -252,6 +253,11 @@ the simulated data.}
 \item{test_long}{If \code{TRUE}, detailed
 results will be printed when printing
 test(s).}
+
+\item{fit_to_all_args}{A named list
+of arguments to be passed to
+\code{\link[lavaan:sem]{lavaan::sem()}} when the model is
+fitted to a sample combined from}
 
 \item{...}{Optional arguments to
 be passed to other print methods.}
