@@ -343,8 +343,8 @@ power of one or several tests on a
 particular aspect of the model, such
 as a parameter, given a specific
 effect sizes and sample sizes.
-}
-\section{Updating a Condition}{
+\subsection{Updating a Condition}{
+
 This function can also be used to
 update a condition when only some
 selected aspects changed. For example,
@@ -358,7 +358,8 @@ and the tests will be updated
 automatically.
 }
 
-\section{Multiple Models}{
+\subsection{Multiple Models}{
+
 More than one model can be fitted to
 each replication. This is done
 by setting \code{fit_model_args} to
@@ -389,7 +390,7 @@ are to be generated, they will be
 generated for each model, using the
 values for their arguments.
 }
-
+}
 \examples{
 
 model_simple_med <-

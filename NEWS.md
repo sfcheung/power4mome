@@ -1,4 +1,4 @@
-# power4mome 0.0.0.9035
+# power4mome 0.0.0.9036
 
 - Initialized the package. (0.0.0.9000)
 
@@ -161,3 +161,6 @@
   specifying which model will be uesd
   in doing the tests.
   (0.0.0.9035)
+
+- Drafted the pkgdown site.
+  (0.0.0.9036)

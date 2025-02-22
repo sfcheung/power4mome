@@ -73,7 +73,7 @@
 #' as a parameter, given a specific
 #' effect sizes and sample sizes.
 #'
-#' # Updating a Condition
+#' ## Updating a Condition
 #'
 #' This function can also be used to
 #' update a condition when only some
@@ -87,7 +87,7 @@
 #' and the tests will be updated
 #' automatically.
 #'
-#' # Multiple Models
+#' ## Multiple Models
 #'
 #' More than one model can be fitted to
 #' each replication. This is done

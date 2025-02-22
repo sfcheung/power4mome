@@ -4,17 +4,17 @@ destination: docs
 
 template:
   bootstrap: 5
-  bootswatch: simplex
+  bootswatch: journal
   theme: a11y-light
   bslib:
-    # pkgdown-nav-height: 100px
+    pkgdown-nav-height: 80px
     bg: "#EFEFEF"
     fg: "#000000"
-    # primary: "#0051A8"
+    primary: "#996FB9"
     link-color: "#0000A0"
-    base_font: {google: "Cabin"}
-    heading_font: {google: "Cabin"}
-    code_font: {google: "Cousine"}
+    base_font: {google: "Hind"}
+    heading_font: {google: "Hind"}
+    code_font: {google: "Oxygen Mono"}
   includes:
     in_header: <meta name="google-site-verification" content="0VLBmFnW_UJFI-7gXnORPBsWxqZwmzuGpK-TeVRLBjQ" />
 figures:
@@ -43,19 +43,61 @@ navbar:
 #      - text: Title
 #        href: articles/doc4.html
 
-# reference:
-# - title: Section Title
-#   desc:  >
-#     Section description.
-# - contents:
-#   - Rd1
-#   - Rd2
-# - title: Section Title
-#   desc:  >
-#     Section description.
-# - contents:
-#   - Rd3
-#   - Rd4
+reference:
+- title: Main Functions
+  desc:  >
+    All-in-one functions for
+    common tasks.
+- contents:
+  - power4test
+  - power4test_by_n
+  - power4test_by_pop_es
+  - get_rejection_rates
+- title: Test Functions
+  desc:  >
+    Built-in functions for
+    do common tests such as
+    testing indirect effects and
+    model parameters.
+- contents:
+  - test_indirect_effect
+  - test_moderation
+  - test_index_of_mome
+  - test_parameters
+- title: Advanced Functions
+  desc:  >
+    For advanced users to
+    do the power analysis
+    step-by-step or build
+    a customized workflow.
+- contents:
+  - ptable_pop
+  - sim_data
+  - fit_model
+  - gen_mc
+  - gen_boot
+  - sim_out
+  - do_test
+- title: Helper Functions
+  desc:  >
+    Miscellaneous helper
+    functions
+- contents:
+  - summarize_tests
+- title: Generate Random Numbers
+  desc:  >
+    Functions for generating
+    one variable from a specific
+    distribution.
+- contents:
+  - rbeta_rs
+  - rbeta_rs2
+  - rbinary_rs
+  - rexp_rs
+  - rlnorm_rs
+  - rpgnorm_rs
+  - rt_rs
+  - runif_rs
 # - title: Datasets
 #   desc: Datasets used in examples.
 # - contents:
