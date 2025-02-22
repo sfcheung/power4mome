@@ -1,4 +1,4 @@
-# power4mome 0.0.0.9037
+# power4mome 0.0.0.9038
 
 - Initialized the package. (0.0.0.9000)
 
@@ -169,3 +169,10 @@
   `ptable_pop()` to support this
   method to specify population values.
   (0.0.0.9037)
+
+- Added the option to disable the
+  computation of implied statistics.
+  Default to `FALSE` becasue it is not
+  required for testing the unstandardized
+  effects. Require `manymome` 0.2.7.1
+  or above. (0.0.0.9038)

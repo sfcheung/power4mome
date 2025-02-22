@@ -52,6 +52,13 @@
 #' cores to use if parallel processing
 #' is used.
 #'
+#' @param compute_implied_stats Whether
+#' implied statistics are computed
+#' in each Monte Carlo replication. Usually
+#' not needed and so default to `FALSE`
+#' Required `manymome` 0.2.7.1
+#' or above.
+#'
 #' @return
 #' A `mc_list` object, which is a list
 #' of the output of [manymome::do_mc()].
@@ -84,11 +91,13 @@ gen_mc <- function(fit_all,
                    iseed = NULL,
                    parallel = FALSE,
                    progress = FALSE,
-                   ncores = max(1, parallel::detectCores(logical = FALSE) - 1)) {
+                   ncores = max(1, parallel::detectCores(logical = FALSE) - 1),
+                   compute_implied_stats = FALSE) {
   out <- do_FUN(X = fit_all,
                 FUN = gen_mc_i,
                 R = R,
                 ...,
+                compute_implied_stats = compute_implied_stats,
                 iseed = iseed,
                 parallel = parallel,
                 progress = progress,
@@ -116,11 +125,13 @@ gen_mc <- function(fit_all,
 gen_mc_i <- function(fit_i,
                      R = 100,
                      seed = NULL,
+                     compute_implied_stats = FALSE,
                      ...) {
   if (inherits(fit_i, "lavaan")) {
     mc_out <- tryCatch(manymome::do_mc(fit = fit_i,
                                        R = R,
                                        ...,
+                                       compute_implied_stats = compute_implied_stats,
                                        parallel = FALSE,
                                        progress = FALSE),
                        error = function(e) e)
