@@ -33,6 +33,12 @@ jobs:
         with:
           use-public-rspm: true
 
+      - name: Temp install of GitHub versions
+        run: |
+          install.packages("remotes")
+          remotes::install_github("sfcheung/manymome")
+          remotes::install_github("sfcheung/lmhelprs")
+
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::pkgdown, local::.
