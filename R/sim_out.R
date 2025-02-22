@@ -131,6 +131,12 @@ sim_out <- function(data_all,
 #' the decimal for the descriptive
 #' statistics table.
 #'
+#' @param fit_to_all_args A named list
+#' of arguments to be passed to
+#' [lavaan::sem()] when the model is
+#' fitted to a sample combined from
+#  all samples stored.
+#'
 #' @param x The `sim_out` object
 #' to be printed.
 #'
@@ -144,6 +150,7 @@ sim_out <- function(data_all,
 print.sim_out <- function(x,
                           digits = 3,
                           digits_descriptive = 2,
+                          fit_to_all_args = list(),
                           ...) {
   # TODO:
   # - Add print method for components in `extra`.

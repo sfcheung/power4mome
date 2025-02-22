@@ -764,6 +764,12 @@ power4test <- function(object = NULL,
 #' results will be printed when printing
 #' test(s).
 #'
+#' @param fit_to_all_args A named list
+#' of arguments to be passed to
+#' [lavaan::sem()] when the model is
+#' fitted to a sample combined from
+#  all samples stored.
+#'
 #' @param ... Optional arguments to
 #' be passed to other print methods.
 #'
@@ -780,6 +786,7 @@ print.power4test <- function(x,
                              digits_descriptive = 2,
                              data_long = FALSE,
                              test_long = FALSE,
+                             fit_to_all_args = list(),
                              ...) {
   what <- match.arg(what, several.ok = TRUE)
   if ("data" %in% what) {

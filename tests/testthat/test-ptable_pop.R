@@ -31,11 +31,13 @@ check_gen_dat <- function(model,
                               reliability = reliability,
                               keep_f_scores = keep_f_scores)
   fit <- lavaan::sem(model,
-             data = mm_lm_dat_out)
+             data = mm_lm_dat_out,
+             fixed.x = FALSE)
   tmp <- ptable
   tmp$est <- tmp$start
   fit0 <- lavaan::sem(tmp,
-              do.fit = FALSE)
+              do.fit = FALSE,
+              fixed.x = FALSE)
   out <- list(ptable = ptable,
               # mm_out_original = mm_out_original,
               mm_out = mm_out,

@@ -23,11 +23,13 @@ check_gen_dat <- function(model,
                                 number_of_indicators = number_of_indicators,
                                 reliability = reliability)
   fit <- lavaan::sem(model,
-             data = mm_lm_dat_out)
+             data = mm_lm_dat_out,
+             fixed.x = FALSE)
   tmp <- ptable
   tmp$est <- tmp$start
   fit0 <- lavaan::sem(tmp,
-              do.fit = FALSE)
+              do.fit = FALSE,
+              fixed.x = FALSE)
   out <- list(ptable = ptable,
               mm_out = mm_out,
               mm_lm_out = mm_lm_out,
