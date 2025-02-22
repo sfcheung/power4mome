@@ -99,11 +99,11 @@
 #'
 #' For example:
 #'
-#' `fit_model_args = list(fit = list(),`
-#'
-#' `                      fit2 = list(model = mod2),`
-#'
-#' `                      fit3 = list(model = mod3))`
+#' \preformatted{
+#' fit_model_args = list(fit = list(),
+#'                       fit2 = list(model = mod2),
+#'                       fit3 = list(model = mod3))
+#' }
 #'
 #' Three models will be fitted. The
 #' first model is the model ued to

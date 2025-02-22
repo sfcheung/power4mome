@@ -1,4 +1,4 @@
-# power4mome 0.0.0.9036
+# power4mome 0.0.0.9037
 
 - Initialized the package. (0.0.0.9000)
 
@@ -162,5 +162,10 @@
   in doing the tests.
   (0.0.0.9035)
 
-- Drafted the pkgdown site.
+- Drafted the `pkgdown` site.
   (0.0.0.9036)
+
+- Added `pop_es_yaml()` and revised
+  `ptable_pop()` to support this
+  method to specify population values.
+  (0.0.0.9037)

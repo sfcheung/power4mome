@@ -84,6 +84,7 @@ reference:
     functions
 - contents:
   - summarize_tests
+  - pop_es_yaml
 - title: Generate Random Numbers
   desc:  >
     Functions for generating

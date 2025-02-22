@@ -1,6 +1,6 @@
 Package: power4mome
 Title: Power Analysis for Moderation and Mediation
-Version: 0.0.0.9036
+Version: 0.0.0.9037
 Authors@R:
     c(person(given = "Shu Fai",
            family = "Cheung",
@@ -34,5 +34,6 @@ Imports:
     parallel,
     pgnorm,
     lmhelprs (>= 0.4.2),
-    psych
+    psych,
+    yaml
 Config/Needs/website: rmarkdown

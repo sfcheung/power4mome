@@ -8,8 +8,8 @@
 ptable_pop(
   model = NULL,
   pop_es = NULL,
-  es1 = c(n = 0, s = 0.1, m = 0.3, l = 0.5),
-  es2 = c(n = 0, s = 0.05, m = 0.1, l = 0.15),
+  es1 = c(n = 0, nil = 0, s = 0.1, m = 0.3, l = 0.5),
+  es2 = c(n = 0, nil = 0, s = 0.05, m = 0.1, l = 0.15),
   standardized = TRUE,
   n_std = 1e+05,
   std_force_monte_carlo = FALSE
@@ -36,14 +36,14 @@ on how to specify this vector.}
 values for each label of the effect
 size of correlations and regression
 paths.
-Default is \code{c("n" = .00, "s" = .10, "m" = .30, "l" = .50)}.
+Default is \code{c("n" = .00, "nil" = .00, "s" = .10, "m" = .30, "l" = .50)}.
 Used only if \code{pop_es} is a named
 vector.}
 
 \item{es2}{A named vector to set the
 values for each label of the effect
 size of product term.
-Default is \code{c("n" = .00, "s" = .05, "m" = .10, "l" = .15)}.
+Default is \code{c("n" = .00, "nil" = .00, "s" = .05, "m" = .10, "l" = .15)}.
 Used only if \code{pop_es} is a named
 vector.}
 
@@ -121,6 +121,11 @@ The function \code{\link[=ptable_pop]{ptable_pop()}} generates a \code{lavaan}
 parameter table that can be used
 to generate data based on the population
 values of model parameters.
+
+This function is used by the
+all-in-one function \code{\link[=power4test]{power4test()}}.
+Users usually do not call this
+function directly.
 \subsection{Setting \code{pop_es} to a named vector}{
 
 If \code{pop_es} is specified by a named
@@ -159,6 +164,51 @@ and regression coefficients, and the
 vector \code{es2} is for for standardized
 moderation effect, the coefficients
 of a product term.
+
+This is an example:
+
+\preformatted{
+c(".beta." = "s",
+  "m1 ~ x" = "-m",
+  "m2 ~ m1" = "l",
+  "y ~ x:w" = "s")
+}
+
+In this example,
+\itemize{
+\item All regression coefficients are
+set to small (\code{s}) by default, unless
+specified otherwise.
+\item The path from \code{x} to \code{m1} is
+set to medium and negative (\code{-m}).
+\item The path from \code{m1} to \code{m2} is set
+to large (\code{l}).
+\item The coefficient of the product
+term \code{x:w} when predicting \code{y} is
+set to small (\code{s}).
+}
+\subsection{Using One Single String To Set \code{pop_es}}{
+
+An alternative way to set \code{pop_es}
+is using one single string, like
+a \code{lavaan} model syntax.
+
+This is an example, equivalent to
+the example above:
+
+\preformatted{
+"
+.beta.: s
+m1 ~ x: -m
+m2 ~ m1: l
+y ~ x:w: s
+"
+}
+
+See the help page of \code{\link[=pop_es_yaml]{pop_es_yaml()}}
+on how to use this approach.
+}
+
 }
 
 \subsection{Multigroup Models}{
@@ -196,7 +246,10 @@ either \emph{k} elements or one element.
 
 This is an example:
 
-\code{list("m ~ x" = "m", "y ~ m" = c("s", "m", "l"))}
+\preformatted{
+list("m ~ x" = "m",
+     "y ~ m" = c("s", "m", "l"))
+}
 
 In this model, the population value
 of the path \code{m ~ x} is medium for
@@ -204,11 +257,38 @@ all groups, while the population
 values for the path \code{y ~ m} are
 small, medium, and large,
 respectively.
+\subsection{Using One Single String To Set \code{pop_es}}{
 
-This function is used by the
-all-in-one function \code{\link[=power4test]{power4test()}}.
-Users usually do not call this
-function directly.
+The population values for a
+multigroup model can also be set
+using one single string.
+
+This is an example, equivalent to
+the example above:
+
+\preformatted{
+"
+m ~ x: m
+y ~ m: [s, m, l]
+"
+}
+
+This is another equivalent form:
+
+\preformatted{
+"
+m ~ x: m
+y ~ m:
+ - s
+ - m
+ - l
+"
+}
+
+See the help page of \code{\link[=pop_es_yaml]{pop_es_yaml()}}
+on how to use this approach.
+}
+
 }
 
 The function \code{\link[=model_matrices_pop]{model_matrices_pop()}}
@@ -250,5 +330,7 @@ model_matrices_pop(model1,
 
 }
 \seealso{
-\code{\link[=power4test]{power4test()}}
+\code{\link[=power4test]{power4test()}}, and
+\code{\link[=pop_es_yaml]{pop_es_yaml()}} on an alternative
+way to specify population values.
 }

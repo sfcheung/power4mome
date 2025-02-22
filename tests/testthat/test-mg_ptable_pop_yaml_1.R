@@ -1,0 +1,40 @@
+library(testthat)
+library(lavaan)
+
+test_that("Multigroup models", {
+
+mod <-
+"
+m1 ~ x + c1
+m2 ~ m1 + x2 + c1
+y ~  m2 + m1 + x + w + x:w + c1
+"
+mod_es1 <- list("m1 ~ x" = "-m",
+                "m2 ~ m1" = "s",
+                "y ~ m2" = "l",
+                "y ~ x" = c("m", "l", "n"),
+                "y ~ w" = "s",
+                "y ~ x:w" = "s",
+                "x ~~ w" = c("s", "m", "l"))
+
+mod_es2 <-
+"
+m1 ~ x: -m
+m2 ~ m1: s
+y ~ m2: l
+y ~ x: [m, l, nil]
+y ~ w: s
+y ~ x:w: s
+x ~~ w: [s, m, l]
+"
+
+pop_es_yaml(mod_es2)
+
+chk1 <- ptable_pop(mod, mod_es1)
+chk2 <- ptable_pop(mod, mod_es2)
+
+expect_equal(chk1$start,
+             chk2$start,
+             tolerance = 1e-1)
+
+})

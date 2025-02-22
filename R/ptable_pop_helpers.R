@@ -48,12 +48,12 @@
 #' values for each label of the effect
 #' size of correlations and regression
 #' paths.
-#' Default is `c("n" = .00, "s" = .10, "m" = .30, "l" = .50)`.
+#' Default is `c("n" = .00, "nil" = .00, "s" = .10, "m" = .30, "l" = .50)`.
 #'
 #' @param es2 A named vector to set the
 #' values for each label of the effect
 #' size of product term.
-#' Default is `c("n" = .00, "s" = .05, "m" = .10, "l" = .15)`.
+#' Default is `c("n" = .00, "nil" = .00, "s" = .05, "m" = .10, "l" = .15)`.
 #'
 #' @examples
 #' \donttest{
@@ -62,10 +62,12 @@
 #' @noRd
 set_pop <- function(par_es,
                     es1 = c("n" = .00,
+                            "nil" = .00,
                             "s" = .10,
                             "m" = .30,
                             "l" = .50),
                     es2 = c("n" = .00,
+                            "nil" = .00,
                             "s" = .05,
                             "m" = .10,
                             "l" = .15)) {

@@ -11,6 +11,11 @@
 #' to generate data based on the population
 #' values of model parameters.
 #'
+#' This function is used by the
+#' all-in-one function [power4test()].
+#' Users usually do not call this
+#' function directly.
+#'
 #' ## Setting `pop_es` to a named vector
 #'
 #' If `pop_es` is specified by a named
@@ -54,6 +59,52 @@
 #' moderation effect, the coefficients
 #' of a product term.
 #'
+#' This is an example:
+#'
+#' \preformatted{
+#' c(".beta." = "s",
+#'   "m1 ~ x" = "-m",
+#'   "m2 ~ m1" = "l",
+#'   "y ~ x:w" = "s")
+#' }
+#'
+#' In this example,
+#'
+#' - All regression coefficients are
+#'  set to small (`s`) by default, unless
+#'  specified otherwise.
+#'
+#' - The path from `x` to `m1` is
+#'  set to medium and negative (`-m`).
+#'
+#' - The path from `m1` to `m2` is set
+#'  to large (`l`).
+#'
+#' - The coefficient of the product
+#'  term `x:w` when predicting `y` is
+#'  set to small (`s`).
+#'
+#' ### Using One Single String To Set `pop_es`
+#'
+#' An alternative way to set `pop_es`
+#' is using one single string, like
+#' a `lavaan` model syntax.
+#'
+#' This is an example, equivalent to
+#' the example above:
+#'
+#' \preformatted{
+#' "
+#' .beta.: s
+#' m1 ~ x: -m
+#' m2 ~ m1: l
+#' y ~ x:w: s
+#' "
+#' }
+#'
+#' See the help page of [pop_es_yaml()]
+#' on how to use this approach.
+#'
 #' ## Multigroup Models
 #'
 #' The function also supports multigroup
@@ -89,7 +140,10 @@
 #'
 #' This is an example:
 #'
-#' `list("m ~ x" = "m", "y ~ m" = c("s", "m", "l"))`
+#' \preformatted{
+#' list("m ~ x" = "m",
+#'      "y ~ m" = c("s", "m", "l"))
+#' }
 #'
 #' In this model, the population value
 #' of the path `m ~ x` is medium for
@@ -98,12 +152,40 @@
 #' small, medium, and large,
 #' respectively.
 #'
-#' This function is used by the
-#' all-in-one function [power4test()].
-#' Users usually do not call this
-#' function directly.
+#' ### Using One Single String To Set `pop_es`
 #'
-#' @seealso [power4test()]
+#' The population values for a
+#' multigroup model can also be set
+#' using one single string.
+#'
+#' This is an example, equivalent to
+#' the example above:
+#'
+#' \preformatted{
+#' "
+#' m ~ x: m
+#' y ~ m: [s, m, l]
+#' "
+#' }
+#'
+#' This is another equivalent form:
+#'
+#' \preformatted{
+#' "
+#' m ~ x: m
+#' y ~ m:
+#'  - s
+#'  - m
+#'  - l
+#' "
+#' }
+#'
+#' See the help page of [pop_es_yaml()]
+#' on how to use this approach.
+#'
+#' @seealso [power4test()], and
+#' [pop_es_yaml()] on an alternative
+#' way to specify population values.
 #'
 #' @return
 #' The function [ptable_pop()] returns
@@ -129,14 +211,14 @@
 #' values for each label of the effect
 #' size of correlations and regression
 #' paths.
-#' Default is `c("n" = .00, "s" = .10, "m" = .30, "l" = .50)`.
+#' Default is `c("n" = .00, "nil" = .00, "s" = .10, "m" = .30, "l" = .50)`.
 #' Used only if `pop_es` is a named
 #' vector.
 #'
 #' @param es2 A named vector to set the
 #' values for each label of the effect
 #' size of product term.
-#' Default is `c("n" = .00, "s" = .05, "m" = .10, "l" = .15)`.
+#' Default is `c("n" = .00, "nil" = .00, "s" = .05, "m" = .10, "l" = .15)`.
 #' Used only if `pop_es` is a named
 #' vector.
 #'
@@ -198,10 +280,12 @@
 ptable_pop <- function(model = NULL,
                        pop_es = NULL,
                        es1 = c("n" = .00,
+                               "nil" = .00,
                                "s" = .10,
                                "m" = .30,
                                "l" = .50),
                        es2 = c("n" = .00,
+                               "nil" = .00,
                                "s" = .05,
                                "m" = .10,
                                "l" = .15),
@@ -211,6 +295,9 @@ ptable_pop <- function(model = NULL,
   if (is.null(model) || is.null(pop_es)) {
     stop("Both model and pop_es must be set.")
   }
+  # pop_es a YAML string? If yes, convert it
+  pop_es <- pop_es_yaml_check(pop_es)
+
   par_pop <- pop_es2par_pop(pop_es = pop_es,
                             es1 = es1,
                             es2 = es2,
