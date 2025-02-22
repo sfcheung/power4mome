@@ -380,7 +380,7 @@ gen_pure_x <- function(psi,
   colnames(x) <- colnames(psi)
 
   # Generate data using x_fun functions
-  if (length(x_fun) > 1) {
+  if (length(x_fun) > 0) {
     xnames <- colnames(x)
     x_fun_names <- names(x_fun)
     if (!all(x_fun_names %in% xnames)) {
