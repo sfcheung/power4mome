@@ -178,7 +178,7 @@
 #' @param number_of_indicators A named
 #' vector to specify the number of
 #' indicators for each factors. See
-#' 'Details' of [ptable_pop()] on how to set this
+#' 'Details' of [sim_data()] on how to set this
 #' argument. Default is `NULL` and all
 #' variables in the model syntax are
 #' observed variables.
@@ -187,7 +187,7 @@
 #' to set the reliability coefficient
 #' of each set of indicators. Default
 #' is `NULL`. See 'Details' of
-#' [ptable_pop()] on how to set this
+#' [sim_data()] on how to set this
 #' argument.
 #'
 #' @param x_fun The function(s) used to
