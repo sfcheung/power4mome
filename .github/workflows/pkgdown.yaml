@@ -1,12 +1,13 @@
 # Workflow derived from https://github.com/r-lib/actions/tree/v2/examples
 # Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
 on:
+# Set to 'branches: [main, master]' when making public
   push:
-    branches: [master]
+    branches: [main, master]
   pull_request:
-    branches: [master]
-  release:
-    types: [published]
+    branches: [main, master]
+  # release:
+  #   types: [published]
   # workflow_dispatch:
 
 name: pkgdown.yaml
@@ -32,10 +33,35 @@ jobs:
         with:
           use-public-rspm: true
 
+      - name: Temp install of GitHub versions
+        run: |
+          install.packages("remotes")
+          remotes::install_github("sfcheung/manymome")
+          remotes::install_github("sfcheung/lmhelprs")
+        shell: Rscript {0}
+
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::pkgdown, local::.
+          extra-packages: any::pkgdown, any::DiagrammeR, local::.
           needs: website
+
+      - name: Update mermaid
+        run: |
+          # Adapted from https://github.com/rich-iannone/DiagrammeR/issues/457#issuecomment-1109995343
+          mm_loc <- list.files(
+            find.package("DiagrammeR"),
+            recursive = TRUE,
+            pattern = "mermaid.*js",
+            full.names = TRUE
+          )
+          mm_dir <- dirname(mm_loc)
+          mm_loc_old <- file.path(mm_dir, "mm.old")
+          mm_loc_new <- file.path(mm_dir, "mm.new")
+          file.copy(mm_loc, mm_loc_old, overwrite = TRUE)
+          mm_url <- "https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.0.1/mermaid.min.js"
+          utils::download.file(mm_url, mm_loc_new)
+          file.copy(mm_loc_new, mm_loc, overwrite = TRUE)
+        shell: Rscript {0}
 
       - name: Build site
         run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)

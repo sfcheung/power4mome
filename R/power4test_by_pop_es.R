@@ -1,0 +1,167 @@
+#' @title Power By Effect Sizes
+#'
+#' @description Estimate power for a
+#' range of effect sizes.
+#'
+#' @details This function regenerates
+#' datasets for a set of effect sizes
+#' and does the stored tests in each of
+#' them.
+#'
+#' Optionally, it can also be run
+#' on a object with no stored tests.
+#' In this case, additional arguments
+#' must be set to instruct [power4test()]
+#' on the tests to be conducted.
+#'
+#' It is usually used to examine the
+#' power over a range of effect sizes.
+#'
+#' @return The function
+#' [power4test_by_pop_es()] returns a
+#' `power4test_by_pop_es` object, which is a
+#' list of `power4test` objects, one for
+#' each effect size.
+#'
+#' @param object A `power4test` object.
+#'
+#' @param pop_es_name The name of the
+#' parameter. See the help page
+#' of [ptable_pop()] on the names for
+#' the argument `pop_es`.
+#'
+#' @param pop_es_values A numeric
+#' vector of the population values
+#' of the parameter specified in
+#' `pop_es_names`.
+#'
+#' @param progress Logical. Whether
+#' progress of the simulation will be
+#' displayed.
+#'
+#' @param ... Arguments to be passed
+#' to [power4test()].
+#'
+#' @seealso [power4test()]
+#'
+#' @examples
+#'
+#'
+#' model_simple_med <-
+#' "
+#' m ~ x
+#' y ~ m + x
+#' "
+#'
+#' model_simple_med_es <- c("y ~ m" = "l",
+#'                          "m ~ x" = "m",
+#'                          "y ~ x" = "n")
+#'
+#' sim_only <- power4test(nrep = 2,
+#'                        model = model_simple_med,
+#'                        pop_es = model_simple_med_es,
+#'                        n = 100,
+#'                        R = 40,
+#'                        ci_type = "boot",
+#'                        fit_model_args = list(fit_function = "lm"),
+#'                        do_the_test = FALSE,
+#'                        iseed = 1234)
+#'
+#' test_out <- power4test(object = sim_only,
+#'                        test_fun = test_indirect_effect,
+#'                        test_args = list(x = "x",
+#'                                         m = "m",
+#'                                         y = "y",
+#'                                         boot_ci = TRUE,
+#'                                         mc_ci = FALSE))
+#'
+#' power_all_test_only_new_es <- power4test(object = test_out,
+#'                                          pop_es = c("y ~ m" = ".10"))
+#'
+#' out <- power4test_by_pop_es(test_out,
+#'                             pop_es_name = "y ~ m",
+#'                             pop_es_values = c(.10, .20))
+#' out_reject <- get_rejection_rates_by_pop_es(out)
+#' out_reject
+#'
+#' @export
+power4test_by_pop_es <- function(object,
+                                 pop_es_name = NULL,
+                                 pop_es_values = NULL,
+                                 progress = TRUE,
+                                 ...) {
+  if (!inherits(object, "power4test")) {
+    stop("Only support 'power4test' objects.")
+  }
+  if (!is.null(object$sim_all[[1]]$group_name)) {
+    stop("Does not support multigroup models for now.")
+  }
+  if (is.null(pop_es_name) || is.null(pop_es_values)) {
+    stop("Both 'pop_es_name' and 'pop_es_values' must be set.")
+  }
+  out <- list()
+  # TODO
+  # - Think about to handle MG models,
+  #   for which pop_values can be vectors.
+  for (x in pop_es_values) {
+    p_name <- paste0(pop_es_name,
+                     " = ",
+                     as.character(x))
+    if (progress) {
+      cat("Updating the simulation for new value:",
+          p_name,
+          "\n")
+    }
+    tmp <- as.character(x)
+    names(tmp) <- pop_es_name
+    out[[p_name]] <- power4test(object = object,
+                                pop_es = tmp,
+                                progress = progress,
+                                ...)
+  }
+  class(out) <- c("power4test_by_pop_es", class(out))
+  attr(out, "pop_es_name") <- pop_es_name
+  attr(out, "pop_es_values") <- pop_es_values
+  out
+}
+
+#' @rdname power4test_by_pop_es
+#' @param object_by_es A `power4test_by_pop_es`
+#' object, which is an output of
+#' [power4test_by_pop_es()].
+#'
+#' @return
+#' The function [get_rejection_rates_by_pop_es()]
+#' returns a data frame which is
+#' similar to the output of
+#' [get_rejection_rates()], with a
+#' column added for the effect size (`pop_es_name` and
+#' `pop_es_values`)
+#' for each test.
+#'
+#' @description
+#' The function [get_rejection_rates_by_pop_es()]
+#' is used to extract the rejection
+#' rates form a `get_rejection_rates_by_pop_es`
+#' object, with effect sizes added to
+#' the output.
+#'
+#' @export
+get_rejection_rates_by_pop_es <- function(object_by_es) {
+  tmpfct <- function(x, pn, pv) {
+    out_i <- get_rejection_rates(x)
+    out_i <- data.frame(par = pn,
+                        es = pv,
+                        out_i)
+    out_i
+  }
+  out <- mapply(tmpfct,
+                x = object_by_es,
+                pv = attr(object_by_es, "pop_es_values"),
+                MoreArgs = list(pn = attr(object_by_es, "pop_es_name")),
+                SIMPLIFY = FALSE)
+  out <- do.call(rbind,
+                 out)
+  rownames(out) <- NULL
+  out
+}
