@@ -83,7 +83,7 @@
 - Added the option to generate
   nonparametric bootstrap estimates.
   Slow for `lavaan` but can be used
-  with models fittedc by `lm()`.
+  with models fitted by `lm()`.
   (0.0.0.9021)
 
 - Added `test_indirect_effect()` for
@@ -107,7 +107,7 @@
   `power4test()`.
   (0.0.0.9024)
 
-- Some test functions can suppport
+- Some test functions can support
   models fitted by `lmhelprs::many_lm()`.
   (0.0.0.9024)
 
