@@ -33,7 +33,7 @@ Imports:
     pbapply,
     parallel,
     pgnorm,
-    lmhelprs (>= 0.4.2),
+    lmhelprs,
     psych,
     yaml
 Config/Needs/website: rmarkdown
