@@ -1,0 +1,515 @@
+---
+title: "Power Analysis for Moderation, Mediation, and Moderated-Mediation"
+author: "Shu Fai Cheung & Sing-Hang Cheung"
+date: "2025-02-22"
+output:
+  rmarkdown::html_vignette:
+    number_sections: true
+vignette: >
+  %\VignetteIndexEntry{Power Analysis for Moderation, Mediation, and Moderated-Mediation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+bibliography: references.bib
+csl: apa.csl
+---
+
+
+
+# Introduction
+
+This article is a brief illustration of how
+to use `power4test()`
+from the package
+[power4mome](https://sfcheung.github.io/power4mome/)
+to do power analysis of Mediation,
+moderation, and moderated-mediation
+in a model to be fitted by structural
+equation model modeling using `lavaan`.
+
+# Prerequisite
+
+Basic knowledge about fitting models
+by `lavaan` is required.
+
+# Scope
+
+This is a brief illustration. More
+complicated scenarios and other features
+of `power4mome` will be described in
+other vignettes.
+
+# Workflow
+
+Two functions are sufficient for estimating
+power give a particular model, population
+values, sample size, and the test to be
+used. This is the basic workflow:
+
+1.  Specify the model syntax for the
+    population model, in `lavaan`
+    style, and set the population values of
+    the model parameters.
+
+3.  Call `power4test()` to examine the setup
+    and the datasets generated. Repeat
+    previous steps until the model is
+    specified correctly.
+
+4.  Call `power4test()` again, with the
+    test to do specified.
+
+5.  Call `get_rejection_rates()` to
+    compute the power.
+
+# Packages
+
+Only the package `power4mome` is needed
+in this vignette.
+
+
+``` r
+library(power4mome)
+```
+
+# Mediation
+
+Let's consider a simple mediation
+model. We would like to estimate the
+power of testing a mediation effect
+by Monte Carlo confidence interval.
+
+## Specify Population Model
+
+This is the model syntax
+
+
+``` r
+mod <-
+"
+m ~ x
+y ~ m + x
+"
+```
+
+Note that, even if we are going to
+test mediation, moderation, or
+moderated-mediation effects, we do not
+need to add any labels to this model.
+This will be taken care of by the
+test functions, through the use of
+the package
+[`manymome`](https://sfcheung.github.io/manymome/index.html02224-z)
+[@cheung_manymome_2024].
+
+
+## Specify Population Values
+
+There are two approaches to do this:
+using named vectors or lists, or using
+a long string similar to `lavaan`
+model syntax. The second approach is
+demonstrated below.
+
+Suppose we want to estimate the power
+when:
+
+- The path from `x` to `m` are "large"
+  in strength.
+
+- The path from `m` to `y` are "medium"
+  in strength.
+
+- The path from `x` to `m` are "small"
+  in strength.
+
+By default, `power4mome` use this convention
+for regression path and correlation:^[
+Users can explicitly specify the values
+if this convention is not suitable.]
+
+- Small: .10 (or -.10)
+
+- Medium: .30 (or -.30)
+
+- Large: .50 (or -.50)
+
+For product term, this is the convention:
+
+- Small: .05 (or -.05)
+
+- Medium: .10 (or -.10)
+
+- Large: .15 (or -.15)
+
+All these values are for the standardized
+solution (the so-called "betas").
+
+The following string denote the desired
+values:
+
+
+``` r
+mod_es <-
+"
+m ~ x: l
+y ~ m: m
+y ~ x: s
+"
+```
+
+Each line starts with a *tag*, which
+is the parameter presented in `lavaan`
+syntax. The tag ends with a colon, `:`.
+
+After the colon is population value, which
+can be:
+
+- A word denoting the value. By default:
+
+    - `s`: Small. (`-s` for small and negative.)
+
+    - `m`: Medium. (`-m` for medium and negative.)
+
+    - `l`: Large. (`-l` for large and negative.)
+
+    - `nil`: Zero.
+
+## Call `power4test()` to Check the Model
+
+
+``` r
+out <- power4test(nrep = 2,
+                  model = mod,
+                  pop_es = mod_es,
+                  n = 50000)
+```
+
+These are the arguments used:
+
+- `nrep`: The number of replications.
+  In this stage, a small number can
+  be used. It is more important to
+  have a large sample size.
+
+- `model`: The model syntax.
+
+- `pop_es`: The string setting the
+  population values.
+
+- `n`: The sample size in each replications.
+  In this stage, just for checking the
+  model and the data generation, this
+  number can be set to a large one unless
+  the model is slow to fit when the
+  sample size is large.
+
+The population values can be shown by
+print this object:
+
+
+``` r
+out
+#> 
+#> ====================== Model Information ======================
+#> 
+#> == Model on Factors/Variables ==
+#> 
+#> m ~ x
+#> y ~ m + x
+#> 
+#> == Model on Variables/Indicators ==
+#> 
+#> m ~ x
+#> y ~ m + x
+#> 
+#> ====== Population Values ======
+#> 
+#> Regressions:
+#>                    Population
+#>   m ~                        
+#>     x                 0.500  
+#>   y ~                        
+#>     m                 0.300  
+#>     x                 0.100  
+#> 
+#> Variances:
+#>                    Population
+#>    .m                 0.750  
+#>    .y                 0.870  
+#> 
+#> ======================= Data Information =======================
+#> 
+#> Number of Replications:  2 
+#> Sample Sizes:  50000 
+#> 
+#> Call print with 'data_long = TRUE' for further information.
+#> 
+#> ==================== Extra Element(s) Found ====================
+#> 
+#> - fit
+#> 
+#> === Element(s) of the First Dataset ===
+#> 
+#> ============ <fit> ============
+#> 
+#> lavaan 0.6-19 ended normally after 1 iteration
+#> 
+#>   Estimator                                         ML
+#>   Optimization method                           NLMINB
+#>   Number of model parameters                         5
+#> 
+#>   Number of observations                         50000
+#> 
+#> Model Test User Model:
+#>                                                       
+#>   Test statistic                                 0.000
+#>   Degrees of freedom                                 0
+```
+
+By the default, the population model
+will be fitted to each dataset, hence
+the section `<fit>`.
+
+The population values for the regression
+paths are what we specified.
+
+If necessary, we can check the data
+generation by adding `data_long = TRUE`
+when printing the output:
+
+
+``` r
+print(out,
+      data_long = TRUE)
+#> 
+#> ====================== Model Information ======================
+#> 
+#> == Model on Factors/Variables ==
+#> 
+#> m ~ x
+#> y ~ m + x
+#> 
+#> == Model on Variables/Indicators ==
+#> 
+#> m ~ x
+#> y ~ m + x
+#> 
+#> ====== Population Values ======
+#> 
+#> Regressions:
+#>                    Population
+#>   m ~                        
+#>     x                 0.500  
+#>   y ~                        
+#>     m                 0.300  
+#>     x                 0.100  
+#> 
+#> Variances:
+#>                    Population
+#>    .m                 0.750  
+#>    .y                 0.870  
+#> 
+#> ======================= Data Information =======================
+#> 
+#> Number of Replications:  2 
+#> Sample Sizes:  50000 
+#> 
+#> ==== Descriptive Statistics ====
+#> 
+#>   vars     n mean sd  skew kurtosis se
+#> m    1 1e+05    0  1  0.00     0.03  0
+#> y    2 1e+05    0  1 -0.01    -0.03  0
+#> x    3 1e+05    0  1  0.01     0.00  0
+#> 
+#> ===== Parameter Estimates Based on All 2 Samples Combined =====
+#> 
+#> Total Sample Size: 100000 
+#> 
+#> ==== Standardized Estimates ====
+#> 
+#> Variances and error variances omitted.
+#> 
+#> Regressions:
+#>                     est.std
+#>   m ~                      
+#>     x                 0.501
+#>   y ~                      
+#>     m                 0.300
+#>     x                 0.098
+#> 
+#> 
+#> ==================== Extra Element(s) Found ====================
+#> 
+#> - fit
+#> 
+#> === Element(s) of the First Dataset ===
+#> 
+#> ============ <fit> ============
+#> 
+#> lavaan 0.6-19 ended normally after 1 iteration
+#> 
+#>   Estimator                                         ML
+#>   Optimization method                           NLMINB
+#>   Number of model parameters                         5
+#> 
+#>   Number of observations                         50000
+#> 
+#> Model Test User Model:
+#>                                                       
+#>   Test statistic                                 0.000
+#>   Degrees of freedom                                 0
+```
+
+The section `Descriptive Statistics`, generated
+by `psych::describe()`, shows basic
+descriptive statistics for the observed
+variables. As expected, they have means
+close to zero and standard deviations
+close to one, because the datasets were
+generated using the standardized model.
+
+The section `Parameter Estimates Based on`
+shows the parameter estimates when the
+population model is fitted to all the
+datasets combined. When the total
+sample size is large, these estimates
+should be close to the population values.
+
+The results show that population model
+is the desired one.
+
+## Call `power4test()` to Do the Target Test
+
+We can now do the simulation to estimate
+power. A large number of datasets (e.g., 500)
+of the target sample size are to be generated,
+and then the target test will be conducted
+in each of these datasets.
+
+Suppose we would like to estimate the
+power of using Monte Carlo confidence interval
+to test the indirect effect from `x` to
+`y` through `m`, when sample size is 50.
+This is the call:
+
+
+``` r
+out <- power4test(nrep = 100,
+                  model = mod,
+                  pop_es = mod_es,
+                  n = 50,
+                  R = 2000,
+                  test_fun = test_indirect_effect,
+                  test_args = list(x = "x",
+                                   m = "m",
+                                   y = "y",
+                                   mc_ci = TRUE),
+                  iseed = 1234,
+                  parallel = TRUE)
+```
+
+**TODO: Describe the arguments.**
+
+This is the default printout:
+
+
+``` r
+out
+#> 
+#> ====================== Model Information ======================
+#> 
+#> == Model on Factors/Variables ==
+#> 
+#> m ~ x
+#> y ~ m + x
+#> 
+#> == Model on Variables/Indicators ==
+#> 
+#> m ~ x
+#> y ~ m + x
+#> 
+#> ====== Population Values ======
+#> 
+#> Regressions:
+#>                    Population
+#>   m ~                        
+#>     x                 0.500  
+#>   y ~                        
+#>     m                 0.300  
+#>     x                 0.100  
+#> 
+#> Variances:
+#>                    Population
+#>    .m                 0.750  
+#>    .y                 0.870  
+#> 
+#> ======================= Data Information =======================
+#> 
+#> Number of Replications:  100 
+#> Sample Sizes:  50 
+#> 
+#> Call print with 'data_long = TRUE' for further information.
+#> 
+#> ==================== Extra Element(s) Found ====================
+#> 
+#> - fit
+#> - mc_out
+#> 
+#> === Element(s) of the First Dataset ===
+#> 
+#> ============ <fit> ============
+#> 
+#> lavaan 0.6-19 ended normally after 1 iteration
+#> 
+#>   Estimator                                         ML
+#>   Optimization method                           NLMINB
+#>   Number of model parameters                         5
+#> 
+#>   Number of observations                            50
+#> 
+#> Model Test User Model:
+#>                                                       
+#>   Test statistic                                 0.000
+#>   Degrees of freedom                                 0
+#> 
+#> =========== <mc_out> ===========
+#> 
+#> 
+#> == A 'mc_out' class object ==
+#> 
+#> Number of Monte Carlo replications: 2000 
+#> Column names in data:
+#> [1] m y x
+#> (Note: May contain derived terms such as product terms.)
+#> 
+#> 
+#> ====================== Test(s) Conducted ======================
+#> 
+#> - test_indirect: x->m->y
+#> 
+#> Call print() and set 'test_long = TRUE' for a detailed report.
+```
+
+## Compute the Power
+
+The power estimate is simply the proportion
+of significant results because the
+null hypothesis is false.
+
+
+``` r
+out_power <- get_rejection_rates(out)
+```
+
+
+``` r
+out_power
+#>                     test label pvalid reject
+#> 1 test_indirect: x->m->y  Test      1   0.45
+```
+
+# Other Features
+
+# Final Remark
+
+# Reference
