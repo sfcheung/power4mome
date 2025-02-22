@@ -1,4 +1,4 @@
-# power4mome 0.0.0.9038
+# power4mome 0.0.1
 
 - Initialized the package. (0.0.0.9000)
 
@@ -176,3 +176,6 @@
   required for testing the unstandardized
   effects. Require `manymome` 0.2.7.1
   or above. (0.0.0.9038)
+
+- Finalize for internal testing.
+  (0.0.1)
