@@ -1,4 +1,4 @@
-# power4mome 0.0.1.3
+# power4mome 0.0.1.4
 
 - Initialized the package. (0.0.0.9000)
 
@@ -189,3 +189,8 @@
 - Fixed the issue with printing
   `boot_out` and `mc_out` objects
   by `print.sim_data()`. (0.0.1.3)
+
+- Revised `get_rejection_rates_*`
+  functions to add the option to return all columns
+  stored by a test.
+  (0.0.1.4)

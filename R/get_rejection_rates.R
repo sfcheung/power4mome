@@ -35,6 +35,12 @@
 #'
 #' @param object A `power4test` object.
 #'
+#' @param all_columns If `TRUE`, all
+#' columns stored by a test will be
+#' printed. Default is `FALSE` and
+#' only essential columns related to
+#' power will be printed.
+#'
 #' @seealso [power4test()]
 #'
 #' @examples
@@ -71,10 +77,12 @@
 #' get_rejection_rates(test_out)
 #'
 #' @export
-get_rejection_rates <- function(object) {
+get_rejection_rates <- function(object,
+                                all_columns = FALSE) {
   out0 <- summarize_tests(object)
   out1 <- lapply(out0,
-                 get_rejection_rates_i)
+                 get_rejection_rates_i,
+                 all_columns = all_columns)
   out2 <- do.call(rbind,
                   out1)
   rownames(out2) <- NULL
@@ -82,42 +90,63 @@ get_rejection_rates <- function(object) {
 }
 
 #' @noRd
-get_rejection_rates_i <- function(object_i) {
+get_rejection_rates_i <- function(object_i,
+                                  all_columns = FALSE) {
   if (is.vector(object_i$mean)) {
-    out <- get_rejection_rates_i_vector(object_i)
+    out <- get_rejection_rates_i_vector(object_i,
+                                        all_columns = all_columns)
     return(out)
   }
   if (length(dim(object_i$mean)) == 2) {
     # Likely a data frame
-    out <- get_rejection_rates_i_data_frame(object_i)
+    out <- get_rejection_rates_i_data_frame(object_i,
+                                            all_columns = all_columns)
     return(out)
   }
   stop("Something is wrong. The tests results are not of the supported format.")
 }
 
 #' @noRd
-get_rejection_rates_i_vector <- function(object_i) {
+get_rejection_rates_i_vector <- function(object_i,
+                                         all_columns = FALSE) {
   test_args <- object_i$test_attributes
   test_name <- test_args$test_name
-  out_i <- data.frame(test = test_name,
-                      label = "Test",
-                      pvalid = object_i$nvalid["sig"] / object_i$nrep,
-                      reject = object_i$mean["sig"],
-                      row.names = NULL)
+  if (all_columns) {
+    out_i <- data.frame(test = test_name,
+                        test_label = "Test",
+                        pvalid = object_i$nvalid["sig"] / object_i$nrep,
+                        rbind(object_i$mean),
+                        row.names = NULL)
+  } else {
+    out_i <- data.frame(test = test_name,
+                        test_label = "Test",
+                        pvalid = object_i$nvalid["sig"] / object_i$nrep,
+                        reject = object_i$mean["sig"],
+                        row.names = NULL)
+  }
   out_i
 }
 
 #' @noRd
-get_rejection_rates_i_data_frame <- function(object_i) {
+get_rejection_rates_i_data_frame <- function(object_i,
+                                             all_columns = FALSE) {
   test_args <- object_i$test_attributes
   test_name <- test_args$test_name
   out_i0 <- object_i$mean
   p <- nrow(out_i0)
   pvalid <- object_i$nvalid[, "sig", drop = TRUE] / object_i$nrep
-  out_i <- data.frame(test = test_name,
-                      label = out_i0$test_label,
-                      pvalid = pvalid,
-                      reject = object_i$mean[, "sig", drop = TRUE],
-                      row.names = NULL)
+  if (all_columns) {
+    out_i <- data.frame(test = test_name,
+                        pvalid = pvalid,
+                        object_i$mean,
+                        row.names = NULL)
+    class(out_i) <- class(object_i$mean)
+  } else {
+    out_i <- data.frame(test = test_name,
+                        test_label = out_i0$test_label,
+                        pvalid = pvalid,
+                        reject = object_i$mean[, "sig", drop = TRUE],
+                        row.names = NULL)
+  }
   out_i
 }

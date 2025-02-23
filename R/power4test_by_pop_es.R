@@ -130,6 +130,12 @@ power4test_by_pop_es <- function(object,
 #' object, which is an output of
 #' [power4test_by_pop_es()].
 #'
+#' @param all_columns If `TRUE`, all
+#' columns stored by a test will be
+#' printed. Default is `FALSE` and
+#' only essential columns related to
+#' power will be printed.
+#'
 #' @return
 #' The function [get_rejection_rates_by_pop_es()]
 #' returns a data frame which is
@@ -147,9 +153,11 @@ power4test_by_pop_es <- function(object,
 #' the output.
 #'
 #' @export
-get_rejection_rates_by_pop_es <- function(object_by_es) {
+get_rejection_rates_by_pop_es <- function(object_by_es,
+                                          all_columns = FALSE) {
   tmpfct <- function(x, pn, pv) {
-    out_i <- get_rejection_rates(x)
+    out_i <- get_rejection_rates(x,
+                                 all_columns = all_columns)
     out_i <- data.frame(par = pn,
                         es = pv,
                         out_i)
