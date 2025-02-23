@@ -1,4 +1,4 @@
-# power4mome 0.0.1
+# power4mome 0.0.1.3
 
 - Initialized the package. (0.0.0.9000)
 
@@ -177,5 +177,15 @@
   effects. Require `manymome` 0.2.7.1
   or above. (0.0.0.9038)
 
-- Finalize for internal testing.
+- Finalized for internal testing.
   (0.0.1)
+
+- Fixed a bug in using `x_fun`.
+  (0.0.1.1)
+
+- Added a temporary check for package
+  versions. (0.0.1.2)
+
+- Fixed the issue with printing
+  `boot_out` and `mc_out` objects
+  by `print.sim_data()`. (0.0.1.3)

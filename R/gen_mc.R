@@ -93,6 +93,14 @@ gen_mc <- function(fit_all,
                    progress = FALSE,
                    ncores = max(1, parallel::detectCores(logical = FALSE) - 1),
                    compute_implied_stats = FALSE) {
+  # This check can be removed after manymome is updated on CRAN.
+  # The version requirement should be added to DESCRIPTION later.
+  manymome_implied <- (utils::packageVersion("manymome") >= "0.2.7.1")
+  if (isFALSE(manymome_implied)) {
+    stop("manymome 0.2.7.1 or later is required. ",
+         "If not available from CRAN, can be installed from ",
+         "GitHub: remotes::install_github('sfcheung/manymome')")
+  }
   out <- do_FUN(X = fit_all,
                 FUN = gen_mc_i,
                 R = R,

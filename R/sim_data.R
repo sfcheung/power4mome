@@ -423,6 +423,9 @@ print.sim_data <- function(x,
                            data_long = TRUE,
                            fit_to_all_args = list(),
                            ...) {
+  # This line needed for printing boot_out and mc_out
+  requireNamespace("manymome", quietly = TRUE)
+
   x_i <- x[[1]]
   ptable <- x_i$ptable
   fit0 <- x_i$fit0
