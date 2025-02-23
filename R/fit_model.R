@@ -124,6 +124,19 @@ fit_model <- function(data_all = NULL,
   # Store the arguments such the
   # it can be updated with new data.
   # It is intentional not to store the call.
+
+  # This check can be removed after lmhelprs is updated on CRAN.
+  # The version requirement should be added to DESCRIPTION later.
+  tmp <- deparse(substitute(fit_function))
+  if (isTRUE(grepl("lmhelprs", tmp)) || identical("lm", tmp)) {
+    lmhelprs_supported <- (utils::packageVersion("lmhelprs") >= "0.4.2")
+    if (isFALSE(lmhelprs_supported)) {
+      stop("lmhelprs 0.4.2 or later is required. ",
+          "If not available from CRAN, can be installed from ",
+          "GitHub: remotes::install_github('sfcheung/lmhelprs')")
+    }
+  }
+
   update_fit <- FALSE
   if (!is.null(fit_out)) {
     if (inherits(fit_out, "fit_out")) {

@@ -1,4 +1,4 @@
-# power4mome 0.0.1.1
+# power4mome 0.0.1.2
 
 - Initialized the package. (0.0.0.9000)
 
@@ -177,8 +177,11 @@
   effects. Require `manymome` 0.2.7.1
   or above. (0.0.0.9038)
 
-- Finalize for internal testing.
+- Finalized for internal testing.
   (0.0.1)
 
-- Fix a bug in using `x_fun`.
+- Fixed a bug in using `x_fun`.
   (0.0.1.1)
+
+- Added a temporary check for package
+  versions. (0.0.1.2)
