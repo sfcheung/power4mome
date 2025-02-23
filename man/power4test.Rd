@@ -88,7 +88,7 @@ dataset. Default is 100.}
 \item{number_of_indicators}{A named
 vector to specify the number of
 indicators for each factors. See
-'Details' of \code{\link[=ptable_pop]{ptable_pop()}} on how to set this
+'Details' of \code{\link[=sim_data]{sim_data()}} on how to set this
 argument. Default is \code{NULL} and all
 variables in the model syntax are
 observed variables.}
@@ -97,7 +97,7 @@ observed variables.}
 to set the reliability coefficient
 of each set of indicators. Default
 is \code{NULL}. See 'Details' of
-\code{\link[=ptable_pop]{ptable_pop()}} on how to set this
+\code{\link[=sim_data]{sim_data()}} on how to set this
 argument.}
 
 \item{x_fun}{The function(s) used to
