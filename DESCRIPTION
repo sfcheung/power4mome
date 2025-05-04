@@ -29,11 +29,11 @@ URL: https://sfcheung.github.io/power4mome/
 Imports:
     lavaan,
     stats,
-    manymome,
+    manymome (>= 0.2.8),
     pbapply,
     parallel,
     pgnorm,
-    lmhelprs,
+    lmhelprs (>= 0.4.2),
     psych,
     yaml
 Config/Needs/website: rmarkdown
