@@ -1,4 +1,4 @@
-# power4mome 0.0.1.4
+# power4mome 0.0.1.5
 
 - Initialized the package. (0.0.0.9000)
 
@@ -194,3 +194,6 @@
   functions to add the option to return all columns
   stored by a test.
   (0.0.1.4)
+
+- Add version requirements for
+  `lmhelprs` and `manymome`. (0.0.1.5)
