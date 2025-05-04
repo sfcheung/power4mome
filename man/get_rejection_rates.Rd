@@ -4,10 +4,16 @@
 \alias{get_rejection_rates}
 \title{Rejection Rates of All Tests}
 \usage{
-get_rejection_rates(object)
+get_rejection_rates(object, all_columns = FALSE)
 }
 \arguments{
 \item{object}{A \code{power4test} object.}
+
+\item{all_columns}{If \code{TRUE}, all
+columns stored by a test will be
+printed. Default is \code{FALSE} and
+only essential columns related to
+power will be printed.}
 }
 \value{
 A data frame with the number of

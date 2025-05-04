@@ -13,7 +13,7 @@ power4test_by_pop_es(
   ...
 )
 
-get_rejection_rates_by_pop_es(object_by_es)
+get_rejection_rates_by_pop_es(object_by_es, all_columns = FALSE)
 }
 \arguments{
 \item{object}{A \code{power4test} object.}
@@ -38,6 +38,12 @@ to \code{\link[=power4test]{power4test()}}.}
 \item{object_by_es}{A \code{power4test_by_pop_es}
 object, which is an output of
 \code{\link[=power4test_by_pop_es]{power4test_by_pop_es()}}.}
+
+\item{all_columns}{If \code{TRUE}, all
+columns stored by a test will be
+printed. Default is \code{FALSE} and
+only essential columns related to
+power will be printed.}
 }
 \value{
 The function

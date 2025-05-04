@@ -109,6 +109,12 @@ power4test_by_n <- function(object,
 #' object, which is an output of
 #' [power4test_by_n()].
 #'
+#' @param all_columns If `TRUE`, all
+#' columns stored by a test will be
+#' printed. Default is `FALSE` and
+#' only essential columns related to
+#' power will be printed.
+#'
 #' @return
 #' The function [get_rejection_rates_by_n()]
 #' returns a data frame which is
@@ -125,9 +131,11 @@ power4test_by_n <- function(object,
 #' the output.
 #'
 #' @export
-get_rejection_rates_by_n <- function(object_by_n) {
+get_rejection_rates_by_n <- function(object_by_n,
+                                     all_columns = FALSE) {
   tmpfct <- function(x, n) {
-    out_i <- get_rejection_rates(x)
+    out_i <- get_rejection_rates(x,
+                                 all_columns = all_columns)
     out_i <- data.frame(n = n,
                         out_i)
     out_i

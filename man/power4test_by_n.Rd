@@ -7,7 +7,7 @@
 \usage{
 power4test_by_n(object, n = NULL, progress = TRUE, ...)
 
-get_rejection_rates_by_n(object_by_n)
+get_rejection_rates_by_n(object_by_n, all_columns = FALSE)
 }
 \arguments{
 \item{object}{A \code{power4test} object.}
@@ -26,6 +26,12 @@ to \code{\link[=power4test]{power4test()}}.}
 \item{object_by_n}{A \code{power4test_by_n}
 object, which is an output of
 \code{\link[=power4test_by_n]{power4test_by_n()}}.}
+
+\item{all_columns}{If \code{TRUE}, all
+columns stored by a test will be
+printed. Default is \code{FALSE} and
+only essential columns related to
+power will be printed.}
 }
 \value{
 The function

@@ -1,7 +1,7 @@
 ---
 title: "Power Analysis for Moderation, Mediation, and Moderated-Mediation"
 author: "Shu Fai Cheung & Sing-Hang Cheung"
-date: "2025-02-23"
+date: "2025-05-04"
 output:
   rmarkdown::html_vignette:
     options:
@@ -588,8 +588,8 @@ The output is simply a data frame:
 
 ``` r
 out_power
-#>                     test label pvalid reject
-#> 1 test_indirect: x->m->y  Test      1   0.47
+#>                     test test_label pvalid reject
+#> 1 test_indirect: x->m->y       Test      1   0.43
 ```
 
 
@@ -598,7 +598,7 @@ In the example above, the estimated
 power of the test of the indirect
 effect, conducted by Monte Carlo
 confidence interval, is
-0.470.^[`pvalid` is
+0.430.^[`pvalid` is
 the proportion of valid results
 across replications. `1` means that
 the test conducted normally in all
@@ -859,8 +859,8 @@ again to estimate the power:
 ``` r
 out_power <- get_rejection_rates(out)
 out_power
-#>                    test label pvalid reject
-#> 1 test_moderation: CIs  y~x:w      1   0.11
+#>                    test test_label pvalid reject
+#> 1 test_moderation: CIs       y~x:w      1  0.118
 ```
 
 
@@ -868,7 +868,7 @@ out_power
 The estimated
 power of the test of the product term,
 `x:w`, is
-0.110.
+0.118.
 
 The function `power4test()` also supports
 redoing an analysis using a new value
@@ -893,13 +893,13 @@ the sample size is 200.
 ``` r
 out_new_n_reject <- get_rejection_rates(out_new_n)
 out_new_n_reject
-#>                    test label pvalid reject
-#> 1 test_moderation: CIs  y~x:w      1  0.294
+#>                    test test_label pvalid reject
+#> 1 test_moderation: CIs       y~x:w      1  0.296
 ```
 
 
 
-The estimated power is 0.294
+The estimated power is 0.296
 when the sample size is
 200. This process can be
 repeated to find the required sample
@@ -1083,7 +1083,7 @@ are what we expect.
 To estimate the power of a
 moderated-mediation effect, we can
 test the *index of moderated-mediation*
-[hayes_index_2015]. In this example,
+[@hayes_index_2015]. In this example,
 it is the product of the coefficient
 `m ~ x:w` and the coefficient `y ~ m`.
 This can be done by the test function
@@ -1134,8 +1134,8 @@ again to estimate the power:
 ``` r
 out_power <- get_rejection_rates(out)
 out_power
-#>                                          test label pvalid reject
-#> 1 test_index_of_mome: x->m->y, moderated by w  Test      1  0.066
+#>                                          test test_label pvalid reject
+#> 1 test_index_of_mome: x->m->y, moderated by w       Test      1  0.056
 ```
 
 
@@ -1144,7 +1144,7 @@ The estimated
 power of the test of moderated mediation
 effect, conducted by a test of the
 index of moderated mediation, is
-0.066.
+0.056.
 
 As shown above, we can rerun the analysis
 using a larger sample size:
@@ -1164,13 +1164,13 @@ the sample size is 500.
 ``` r
 out_new_n_reject <- get_rejection_rates(out_new_n)
 out_new_n_reject
-#>                                          test label pvalid reject
-#> 1 test_index_of_mome: x->m->y, moderated by w  Test      1  0.222
+#>                                          test test_label pvalid reject
+#> 1 test_index_of_mome: x->m->y, moderated by w       Test      1   0.21
 ```
 
 
 
-The estimated power is 0.222
+The estimated power is 0.210
 when the sample size is
 500. This process can be
 repeated to find the required sample
