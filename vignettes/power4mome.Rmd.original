@@ -672,7 +672,7 @@ are what we expect.
 To estimate the power of a
 moderated-mediation effect, we can
 test the *index of moderated-mediation*
-[hayes_index_2015]. In this example,
+[@hayes_index_2015]. In this example,
 it is the product of the coefficient
 `m ~ x:w` and the coefficient `y ~ m`.
 This can be done by the test function
