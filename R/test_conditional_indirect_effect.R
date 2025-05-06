@@ -122,10 +122,10 @@
 #'                          "m ~ x" = "m",
 #'                          "m ~ w" = "n",
 #'                          "m ~ x:w" = "l")
-#' sim_only <- power4test(nrep = 100,
+#' sim_only <- power4test(nrep = 5,
 #'                        model = model_simple_mod,
 #'                        pop_es = model_simple_mod_es,
-#'                        n = 1000,
+#'                        n = 100,
 #'                        R = 100,
 #'                        do_the_test = FALSE,
 #'                        iseed = 1234)
@@ -135,7 +135,7 @@
 #'                        test_args = list(x = "x",
 #'                                         m = "m",
 #'                                         y = "y",
-#'                                         wvalues = c(w = 10),
+#'                                         wvalues = c(w = 1),
 #'                                         mc_ci = TRUE))
 #' print(test_ind,
 #'       test_long = TRUE)
