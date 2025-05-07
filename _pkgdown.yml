@@ -61,6 +61,8 @@ reference:
     model parameters.
 - contents:
   - test_indirect_effect
+  - test_cond_indirect
+  - test_cond_indirect_effects
   - test_moderation
   - test_index_of_mome
   - test_parameters

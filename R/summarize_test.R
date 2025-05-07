@@ -128,7 +128,8 @@ print.test_summary <- function(x,
     out0 <- formatC(x0$mean,
                     digits = digits,
                     format = "f")
-    print(as.data.frame(rbind(out0)),
+    print(as.data.frame(rbind(out0),
+                        check.names = FALSE),
           row.names = FALSE)
     cat("\n")
     cat("- The value 'sig' is the rejection rate.\n")
@@ -210,7 +211,8 @@ print.test_out_list <- function(x,
 #' @noRd
 format_num_cols <- function(object,
                             digits = digits) {
-  tmp <- as.data.frame(object)
+  tmp <- as.data.frame(object,
+                       check.names = FALSE)
   tmp2 <- lapply(tmp,
                   function(x,
                             digits) {
@@ -224,7 +226,8 @@ format_num_cols <- function(object,
                     }
                   },
                   digits = digits)
-  tmp2 <- as.data.frame(tmp2)
+  tmp2 <- as.data.frame(tmp2,
+                        check.names = FALSE)
   class(tmp2) <- class(object)
   tmp2
 }
@@ -252,7 +255,8 @@ summarize_one_test_vector <- function(x) {
   nrep <- length(test_results_all)
   test_results_all <- do.call(rbind,
                               test_results_all)
-  test_results_all <- as.data.frame(test_results_all)
+  test_results_all <- as.data.frame(test_results_all,
+                                    check.names = FALSE)
   test_means <- colMeans(test_results_all, na.rm = TRUE)
   test_not_na <- apply(test_results_all,
                        2,

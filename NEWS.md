@@ -1,4 +1,4 @@
-# power4mome 0.0.1.7
+# power4mome 0.0.1.8
 
 - Initialized the package. (0.0.0.9000)
 
@@ -201,3 +201,6 @@
 - Added `test_cond_indirect()` and
   `test_cond_indirect_effects()`.
   (0.0.1.7)
+
+- Fixed some issues with the column
+  names. (0.0.1.8)

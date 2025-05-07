@@ -31,7 +31,8 @@ test_summary_i <- function(object) {
 test_summary_i_vector_one_test <- function(object) {
   test_results_all <- sapply(object,
                              function(xx) xx$test_results)
-  test_results_all <- as.data.frame(t(test_results_all))
+  test_results_all <- as.data.frame(t(test_results_all),
+                                    check.names = FALSE)
   colMeans(test_results_all, na.rm = TRUE)
 }
 

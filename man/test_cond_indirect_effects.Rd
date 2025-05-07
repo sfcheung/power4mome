@@ -154,6 +154,11 @@ nonparametric bootstrap confidence
 interval is supported for models
 fitted by regression using
 \code{\link[stats:lm]{stats::lm()}}.
+
+It can also be used to test
+conditional effects on a direct path
+with no mediator. Just omit \code{m} when
+calling the function.
 }
 \examples{
 
@@ -175,14 +180,14 @@ sim_only <- power4test(nrep = 5,
                        do_the_test = FALSE,
                        iseed = 1234)
 
-test_ind <- power4test(object = sim_only,
-                       test_fun = test_cond_indirect,
+test_out <- power4test(object = sim_only,
+                       test_fun = test_cond_indirect_effects,
                        test_args = list(x = "x",
                                         m = "m",
                                         y = "y",
-                                        wvalues = c(w = 1),
+                                        wlevels = c("w"),
                                         mc_ci = TRUE))
-print(test_ind,
+print(test_out,
       test_long = TRUE)
 
 }
