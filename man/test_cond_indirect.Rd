@@ -128,6 +128,11 @@ nonparametric bootstrap confidence
 interval is supported for models
 fitted by regression using
 \code{\link[stats:lm]{stats::lm()}}.
+
+It can also be used to test
+a conditional effect on a direct path
+with no mediator. Just omit \code{m} when
+calling the function.
 }
 \examples{
 

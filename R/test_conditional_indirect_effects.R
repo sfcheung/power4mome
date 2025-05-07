@@ -162,14 +162,14 @@
 #'                        do_the_test = FALSE,
 #'                        iseed = 1234)
 #'
-#' test_ind <- power4test(object = sim_only,
-#'                        test_fun = test_cond_indirect,
+#' test_out <- power4test(object = sim_only,
+#'                        test_fun = test_cond_indirect_effects,
 #'                        test_args = list(x = "x",
 #'                                         m = "m",
 #'                                         y = "y",
-#'                                         wvalues = c(w = 1),
+#'                                         wlevels = c("w"),
 #'                                         mc_ci = TRUE))
-#' print(test_ind,
+#' print(test_out,
 #'       test_long = TRUE)
 #'
 #' @export
@@ -228,7 +228,14 @@ test_cond_indirect_effects <- function(fit = fit,
                                          boot_out = boot_out,
                                          progress = FALSE,
                                          ...)
-  out2 <- as.data.frame(out)
+  tmp <- rownames(attr(out, "wlevels"))
+  tmp2 <- paste0(c(x, m, y),
+                 collapse = "->")
+  test_label <- paste(tmp2, "|", tmp)
+  out2 <- as.data.frame(out,
+                        check.names = FALSE)
+  out2 <- cbind(test_label = test_label,
+                out2)
   tmp <- colnames(out2)
   if ("std" %in% tmp) {
     tmp <- gsub("ind", "est_raw", tmp, fixed = TRUE)
@@ -244,12 +251,7 @@ test_cond_indirect_effects <- function(fit = fit,
                  yes = 1,
                  no = 0)
   out2$sig <- out1
-  tmp <- rownames(attr(out, "wlevels"))
-  tmp2 <- paste0(c(x, m, y),
-                 collapse = "->")
-  tmp3 <- paste(tmp2, "|", tmp)
   rownames(out2) <- NULL
-  out2$test_label <- tmp3
   attr(out2, "test_label") <- "test_label"
   return(out2)
 }
