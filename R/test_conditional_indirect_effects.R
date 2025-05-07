@@ -1,17 +1,17 @@
-#' @title Test a Conditional Indirect Effect
+#' @title Test Several Conditional Indirect Effects
 #'
-#' @description Test a conditional
-#' indirect effect
+#' @description Test several conditional
+#' indirect effects
 #' for a `power4test` object.
 #'
 #' @details
 #' This function is to be used in
-#' [power4test()] for testing a
+#' [power4test()] for testing several
 #' conditional
-#' indirect effect, by setting it
+#' indirect effects, by setting it
 #' to the `test_fun` argument.
 #'
-#' It uses [manymome::cond_indirect()]
+#' It uses [manymome::cond_indirect_effects()]
 #' to do the test. It can be used on
 #' models fitted by [lavaan::sem()]
 #' or fitted by a sequence of calls
@@ -22,19 +22,20 @@
 #' [stats::lm()].
 #'
 #' It can also be used to test
-#' a conditional effect on a direct path
+#' conditional effects on a direct path
 #' with no mediator. Just omit `m` when
 #' calling the function.
 #'
 #' @return
 #' In its normal usage, it returns
-#' a named numeric vector with the
-#' following elements:
+#' the output returned by
+#' [manymome::cond_indirect_effects()],
+#' with the following modifications:
 #'
-#' - `est`: The mean of the estimated
-#'  indirect effect across datasets.
+#' - `est`: The estimated
+#'  conditional indirect effects.
 #'
-#' - `cilo` and `cihi`: The means of the
+#' - `cilo` and `cihi`: The
 #'  lower and upper limits of the
 #'  confidence interval (95% by
 #'  default), respectively.
@@ -42,6 +43,10 @@
 #' - `sig`: Whether a test by confidence
 #'  interval is significant (`1`) or
 #'  not significant (`0`).
+#'
+#' - `test_label`: A column of labels
+#'  generated to label the conditional
+#'  effects.
 #'
 #' @param fit The fit object, to be
 #' passed to [manymome::cond_indirect()].
@@ -59,12 +64,34 @@
 #' @param y The name of the `y`-variable,
 #' the outcome variable.
 #'
-#' @param wvalues A numeric vector of
-#' named elements. The names are the
-#' variable names of the moderators,
-#' and the values are the values to
-#' which the moderators will be set to.
-#' Default is `NULL`.
+#' @param wlevels The output of
+#' [manymome::merge_mod_levels()], or
+#' the moderator(s) to be passed to
+#' [manymome::mod_levels_list()].
+#' If all the moderators can be
+#' represented by one variable, that is,
+#' each moderator is (a) a numeric
+#' variable, (b) a dichotomous
+#' categorical variable, or (c) a
+#' factor or string variable used in
+#' [stats::lm()] in fit, then it is a
+#' vector of the names of the moderators
+#' as appeared in the data frame. If at
+#' least one of the moderators is a
+#' categorical variable represented by
+#' more than one variable, such as
+#' user-created dummy variables used in
+#' [lavaan::sem()], then it must be a
+#' list of the names of the moderators,
+#' with such moderators represented by
+#' a vector of names. For example:
+#' `list("w1", c("gpgp2", "gpgp3")`,
+#' the first moderator `w1` and the
+#' second moderator a three-category
+#' variable represented by `gpgp2` and
+#' `gpgp3`. See the help page of
+#' [manymome::cond_indirect_effects()]
+#' for further details.
 #'
 #' @param mc_ci Logical. If `TRUE`, the
 #' default, Monte Carlo confidence
@@ -92,7 +119,7 @@
 #' [power4test()] to set it automatically.
 #'
 #' @param ... Additional arguments to
-#' be passed to [manymome::cond_indirect()].
+#' be passed to [manymome::cond_indirect_effects()].
 #'
 #' @param fit_name The name of the
 #' model fit object to be extracted.
@@ -147,19 +174,19 @@
 #'
 #' @export
 
-test_cond_indirect <- function(fit = fit,
-                               x = NULL,
-                               m = NULL,
-                               y = NULL,
-                               wvalues = NULL,
-                               mc_ci = TRUE,
-                               mc_out = NULL,
-                               boot_ci = FALSE,
-                               boot_out = NULL,
-                               ...,
-                               fit_name = "fit",
-                               get_map_names = FALSE,
-                               get_test_name = FALSE) {
+test_cond_indirect_effects <- function(fit = fit,
+                                       x = NULL,
+                                       m = NULL,
+                                       y = NULL,
+                                       wlevels = NULL,
+                                       mc_ci = TRUE,
+                                       mc_out = NULL,
+                                       boot_ci = FALSE,
+                                       boot_out = NULL,
+                                       ...,
+                                       fit_name = "fit",
+                                       get_map_names = FALSE,
+                                       get_test_name = FALSE) {
   if (fit_name != "fit") {
     mc_name <- paste0(fit_name, "_mc_out")
     boot_name <- paste0(fit_name, "_boot_out")
@@ -174,13 +201,8 @@ test_cond_indirect <- function(fit = fit,
     return(map_names)
   }
   if (get_test_name) {
-    tmp_w <- cond_name(wvalues)
     tmp <- paste0(c(x, m, y),
                   collapse = "->")
-    tmp <- paste0(tmp,
-                  " (",
-                  tmp_w,
-                  ")")
     args <- as.list(match.call())
     tmp2 <- character(0)
     if (isTRUE(args$standardized_x) && !isTRUE(args$standardized_y)) {
@@ -192,28 +214,43 @@ test_cond_indirect <- function(fit = fit,
     if (isTRUE(args$standardized_x) && isTRUE(args$standardized_y)) {
       tmp <- paste0(tmp, " ('x' and 'y' standardized)")
     }
-    return(paste0("test_cond_indirect: ", tmp, collapse = ""))
+    return(paste0("test_cond_indirect_effects: ", tmp, collapse = ""))
   }
   if (boot_ci) mc_ci <- FALSE
-  out <- manymome::cond_indirect(x = x,
-                                 y = y,
-                                 m = m,
-                                 wvalues = wvalues,
-                                 fit = fit,
-                                 mc_ci = mc_ci,
-                                 mc_out = mc_out,
-                                 boot_ci = boot_ci,
-                                 boot_out = boot_out,
-                                 progress = FALSE,
-                                 ...)
-  ci0 <- stats::confint(out)
-  out1 <- ifelse((ci0[1, 1] > 0) || (ci0[1, 2] < 0),
-                  yes = 1,
-                  no = 0)
-  out2 <- c(est = unname(stats::coef(out)),
-            cilo = ci0[1, 1],
-            cihi = ci0[1, 2],
-            sig = out1)
+  out <- manymome::cond_indirect_effects(x = x,
+                                         y = y,
+                                         m = m,
+                                         wlevels = wlevels,
+                                         fit = fit,
+                                         mc_ci = mc_ci,
+                                         mc_out = mc_out,
+                                         boot_ci = boot_ci,
+                                         boot_out = boot_out,
+                                         progress = FALSE,
+                                         ...)
+  out2 <- as.data.frame(out)
+  tmp <- colnames(out2)
+  if ("std" %in% tmp) {
+    tmp <- gsub("ind", "est_raw", tmp, fixed = TRUE)
+    tmp <- gsub("std", "est", tmp, fixed = TRUE)
+  } else {
+    tmp <- gsub("ind", "est", tmp, fixed = TRUE)
+  }
+  tmp <- gsub("CI.lo", "cilo", tmp, fixed = TRUE)
+  tmp <- gsub("CI.hi", "cihi", tmp, fixed = TRUE)
+  tmp <- gsub("Sig", "sig", tmp, fixed = TRUE)
+  colnames(out2) <- tmp
+  out1 <- ifelse((out2$cilo > 0) | (out2$cihi < 0),
+                 yes = 1,
+                 no = 0)
+  out2$sig <- out1
+  tmp <- rownames(attr(out, "wlevels"))
+  tmp2 <- paste0(c(x, m, y),
+                 collapse = "->")
+  tmp3 <- paste(tmp2, "|", tmp)
+  rownames(out2) <- NULL
+  out2$test_label <- tmp3
+  attr(out2, "test_label") <- "test_label"
   return(out2)
 }
 
