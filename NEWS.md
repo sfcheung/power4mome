@@ -1,4 +1,4 @@
-# power4mome 0.0.1.6
+# power4mome 0.0.1.7
 
 - Initialized the package. (0.0.0.9000)
 
@@ -195,5 +195,9 @@
   stored by a test.
   (0.0.1.4)
 
-- Add version requirements for
+- Added version requirements for
   `lmhelprs` and `manymome`. (0.0.1.5)
+
+- Added `test_cond_indirect()` and
+  `test_cond_indirect_effects()`.
+  (0.0.1.7)
