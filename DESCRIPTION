@@ -1,6 +1,6 @@
 Package: power4mome
 Title: Power Analysis for Moderation and Mediation
-Version: 0.0.1.5
+Version: 0.0.1.7
 Authors@R:
     c(person(given = "Shu Fai",
            family = "Cheung",
@@ -10,7 +10,11 @@ Authors@R:
       person(given = "Sing-Hang",
            family = "Cheung",
            role = c("aut"),
-           comment = c(ORCID = "0000-0001-5182-0752")))
+           comment = c(ORCID = "0000-0001-5182-0752")),
+      person(given = "Wendie",
+             family ="Yang",
+             role = c("aut"),
+             comment = c(ORCID = "0009-0000-8388-6481")))
 Description: Power analysis and sample size determination
   for moderation, mediation, and moderated mediation in models
   fitted by structural equation modeling.
