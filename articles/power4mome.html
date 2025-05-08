@@ -23,7 +23,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.9</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -63,7 +63,7 @@
                         <h4 data-toc-skip class="author">Shu Fai Cheung
 &amp; Sing-Hang Cheung</h4>
             
-            <h4 data-toc-skip class="date">2025-05-04</h4>
+            <h4 data-toc-skip class="date">2025-05-08</h4>
       
 
       <div class="d-none name"><code>power4mome.Rmd</code></div>
@@ -969,9 +969,9 @@ power:</p>
 <code class="sourceCode R"><span><span class="va">out_power</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_rejection_rates.html">get_rejection_rates</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span></span>
 <span><span class="va">out_power</span></span>
 <span><span class="co">#&gt;                                          test test_label pvalid reject</span></span>
-<span><span class="co">#&gt; 1 test_index_of_mome: x-&gt;m-&gt;y, moderated by w       Test      1  0.056</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 test_index_of_mome: x-&gt;m-&gt;y, moderated by w       Test      1  0.052</span></span></code></pre></div>
 <p>The estimated power of the test of moderated mediation effect,
-conducted by a test of the index of moderated mediation, is 0.056.</p>
+conducted by a test of the index of moderated mediation, is 0.052.</p>
 <p>As shown above, we can rerun the analysis using a larger sample
 size:</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
@@ -982,8 +982,8 @@ size:</p>
 <code class="sourceCode R"><span><span class="va">out_new_n_reject</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_rejection_rates.html">get_rejection_rates</a></span><span class="op">(</span><span class="va">out_new_n</span><span class="op">)</span></span>
 <span><span class="va">out_new_n_reject</span></span>
 <span><span class="co">#&gt;                                          test test_label pvalid reject</span></span>
-<span><span class="co">#&gt; 1 test_index_of_mome: x-&gt;m-&gt;y, moderated by w       Test      1   0.21</span></span></code></pre></div>
-<p>The estimated power is 0.210 when the sample size is 500. This
+<span><span class="co">#&gt; 1 test_index_of_mome: x-&gt;m-&gt;y, moderated by w       Test      1   0.22</span></span></code></pre></div>
+<p>The estimated power is 0.220 when the sample size is 500. This
 process can be repeated to find the required sample size for a target
 power.</p>
 <p>Unlike the previous example on moderation tested by regression,

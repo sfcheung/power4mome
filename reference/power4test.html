@@ -15,7 +15,7 @@ results."><meta name="google-site-verification" content="0VLBmFnW_UJFI-7gXnORPBs
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.9</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -82,7 +82,9 @@ results.</p>
 <span>  iseed <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  parallel <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  progress <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  ncores <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fu">parallel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">detectCores</a></span><span class="op">(</span>logical <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span></span>
+<span>  ncores <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fu">parallel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">detectCores</a></span><span class="op">(</span>logical <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span>,</span>
+<span>  es1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">0</span>, nil <span class="op">=</span> <span class="fl">0</span>, s <span class="op">=</span> <span class="fl">0.1</span>, m <span class="op">=</span> <span class="fl">0.3</span>, l <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span>,</span>
+<span>  es2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">0</span>, nil <span class="op">=</span> <span class="fl">0</span>, s <span class="op">=</span> <span class="fl">0.05</span>, m <span class="op">=</span> <span class="fl">0.1</span>, l <span class="op">=</span> <span class="fl">0.15</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'power4test'</span></span>
@@ -336,6 +338,27 @@ Default is `FALSE.</p></dd>
 <dd><p>The number of CPU
 cores to use if parallel processing
 is used.</p></dd>
+
+
+<dt id="arg-es-">es1<a class="anchor" aria-label="anchor" href="#arg-es-"></a></dt>
+<dd><p>A named vector to set the
+values for each label of the effect
+size of correlations and regression
+paths.
+Default is <code>c("n" = .00, "nil" = .00, "s" = .10, "m" = .30, "l" = .50)</code>.
+Used only if <code>pop_es</code> is a named
+vector. See <code><a href="ptable_pop.html">ptable_pop()</a></code> for
+further information.</p></dd>
+
+
+<dt id="arg-es-">es2<a class="anchor" aria-label="anchor" href="#arg-es-"></a></dt>
+<dd><p>A named vector to set the
+values for each label of the effect
+size of product term.
+Default is <code>c("n" = .00, "nil" = .00, "s" = .05, "m" = .10, "l" = .15)</code>.
+Used only if <code>pop_es</code> is a named
+vector. See <code><a href="ptable_pop.html">ptable_pop()</a></code> for
+further information.</p></dd>
 
 
 <dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
