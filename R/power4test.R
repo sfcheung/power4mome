@@ -319,6 +319,23 @@
 #' cores to use if parallel processing
 #' is used.
 #'
+#' @param es1 A named vector to set the
+#' values for each label of the effect
+#' size of correlations and regression
+#' paths.
+#' Default is `c("n" = .00, "nil" = .00, "s" = .10, "m" = .30, "l" = .50)`.
+#' Used only if `pop_es` is a named
+#' vector. See [ptable_pop()] for
+#' further information.
+#'
+#' @param es2 A named vector to set the
+#' values for each label of the effect
+#' size of product term.
+#' Default is `c("n" = .00, "nil" = .00, "s" = .05, "m" = .10, "l" = .15)`.
+#' Used only if `pop_es` is a named
+#' vector. See [ptable_pop()] for
+#' further information.
+#'
 #' @examples
 #'
 #' model_simple_med <-
@@ -381,7 +398,17 @@ power4test <- function(object = NULL,
                        iseed = NULL,
                        parallel = FALSE,
                        progress = TRUE,
-                       ncores = max(1, parallel::detectCores(logical = FALSE) - 1)) {
+                       ncores = max(1, parallel::detectCores(logical = FALSE) - 1),
+                       es1 = c("n" = .00,
+                               "nil" = .00,
+                               "s" = .10,
+                               "m" = .30,
+                               "l" = .50),
+                       es2 = c("n" = .00,
+                               "nil" = .00,
+                               "s" = .05,
+                               "m" = .10,
+                               "l" = .15)) {
 
   # TOOD:
   # - Should allow only limited changes
@@ -468,6 +495,8 @@ power4test <- function(object = NULL,
                             ptable = ptable,
                             model = args$model,
                             pop_es = args$pop_es,
+                            es1 = es1,
+                            es2 = es2,
                             n = args$n,
                             number_of_indicators = args$number_of_indicators,
                             reliability = args$reliability,
@@ -487,6 +516,8 @@ power4test <- function(object = NULL,
                             ptable = args$ptable,
                             model = args$model,
                             pop_es = args$pop_es,
+                            es1 = args$es1,
+                            es2 = args$es2,
                             n = args$n,
                             number_of_indicators = args$number_of_indicators,
                             reliability = args$reliability,

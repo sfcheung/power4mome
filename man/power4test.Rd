@@ -32,7 +32,9 @@ power4test(
   iseed = NULL,
   parallel = FALSE,
   progress = TRUE,
-  ncores = max(1, parallel::detectCores(logical = FALSE) - 1)
+  ncores = max(1, parallel::detectCores(logical = FALSE) - 1),
+  es1 = c(n = 0, nil = 0, s = 0.1, m = 0.3, l = 0.5),
+  es2 = c(n = 0, nil = 0, s = 0.05, m = 0.1, l = 0.15)
 )
 
 \method{print}{power4test}(
@@ -228,6 +230,23 @@ Default is `FALSE.}
 \item{ncores}{The number of CPU
 cores to use if parallel processing
 is used.}
+
+\item{es1}{A named vector to set the
+values for each label of the effect
+size of correlations and regression
+paths.
+Default is \code{c("n" = .00, "nil" = .00, "s" = .10, "m" = .30, "l" = .50)}.
+Used only if \code{pop_es} is a named
+vector. See \code{\link[=ptable_pop]{ptable_pop()}} for
+further information.}
+
+\item{es2}{A named vector to set the
+values for each label of the effect
+size of product term.
+Default is \code{c("n" = .00, "nil" = .00, "s" = .05, "m" = .10, "l" = .15)}.
+Used only if \code{pop_es} is a named
+vector. See \code{\link[=ptable_pop]{ptable_pop()}} for
+further information.}
 
 \item{x}{The object
 to be printed.}
