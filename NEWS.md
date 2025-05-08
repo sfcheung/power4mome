@@ -1,4 +1,4 @@
-# power4mome 0.0.1.8
+# power4mome 0.0.1.9
 
 - Initialized the package. (0.0.0.9000)
 
@@ -204,3 +204,7 @@
 
 - Fixed some issues with the column
   names. (0.0.1.8)
+
+- Added `es1` and `es2` to `power4test()`,
+  to allow users to change the effect
+  sizes for the labels. (0.0.1.9)
