@@ -1,7 +1,7 @@
 ---
 title: "Power Analysis for Moderation, Mediation, and Moderated-Mediation"
 author: "Shu Fai Cheung & Sing-Hang Cheung"
-date: "2025-05-04"
+date: "2025-05-08"
 output:
   rmarkdown::html_vignette:
     options:
@@ -1135,7 +1135,7 @@ again to estimate the power:
 out_power <- get_rejection_rates(out)
 out_power
 #>                                          test test_label pvalid reject
-#> 1 test_index_of_mome: x->m->y, moderated by w       Test      1  0.056
+#> 1 test_index_of_mome: x->m->y, moderated by w       Test      1  0.052
 ```
 
 
@@ -1144,7 +1144,7 @@ The estimated
 power of the test of moderated mediation
 effect, conducted by a test of the
 index of moderated mediation, is
-0.056.
+0.052.
 
 As shown above, we can rerun the analysis
 using a larger sample size:
@@ -1165,12 +1165,12 @@ the sample size is 500.
 out_new_n_reject <- get_rejection_rates(out_new_n)
 out_new_n_reject
 #>                                          test test_label pvalid reject
-#> 1 test_index_of_mome: x->m->y, moderated by w       Test      1   0.21
+#> 1 test_index_of_mome: x->m->y, moderated by w       Test      1   0.22
 ```
 
 
 
-The estimated power is 0.210
+The estimated power is 0.220
 when the sample size is
 500. This process can be
 repeated to find the required sample
