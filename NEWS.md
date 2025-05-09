@@ -1,4 +1,4 @@
-# power4mome 0.0.1.9
+# power4mome 0.0.1.10
 
 - Initialized the package. (0.0.0.9000)
 
@@ -208,3 +208,7 @@
 - Added `es1` and `es2` to `power4test()`,
   to allow users to change the effect
   sizes for the labels. (0.0.1.9)
+
+- Added a `c()` method to the output
+  of `power4test_by_n()`.
+  (0.0.1.10)
