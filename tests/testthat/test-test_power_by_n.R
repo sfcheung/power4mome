@@ -17,7 +17,7 @@ model_simple_med_es <- c("y ~ m" = "l",
 sim_only <- power4test(nrep = 3,
                        model = model_simple_med,
                        pop_es = model_simple_med_es,
-                       n = 100,
+                       n = 50,
                        R = 50,
                        ci_type = "boot",
                        fit_model_args = list(fit_function = "lm"),
@@ -38,7 +38,7 @@ out_reject <- get_rejection_rates_by_n(out)
 out_reject
 
 out2 <- power4test_by_n(object = sim_only,
-                        n = c(100, 110),
+                        n = c(50, 100, 110),
                         test_fun = test_indirect_effect,
                         test_args = list(x = "x",
                                          m = "m",

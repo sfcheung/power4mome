@@ -17,7 +17,7 @@ model_simple_med_es <- c("y ~ m" = "l",
 sim_only <- power4test(nrep = 3,
                        model = model_simple_med,
                        pop_es = model_simple_med_es,
-                       n = 100,
+                       n = 50,
                        R = 50,
                        ci_type = "boot",
                        fit_model_args = list(fit_function = "lm"),
@@ -40,7 +40,7 @@ out <- c(out1, out2)
 out_reject <- get_rejection_rates_by_n(out)
 
 out_chk <- power4test_by_n(test_out,
-                           n = c(100, 110, 120, 130))
+                           n = c(50, 100, 110, 120, 130))
 out_reject_chk <- get_rejection_rates_by_n(out_chk)
 
 expect_identical(out_reject,
@@ -52,7 +52,7 @@ out <- c(out1, out2, sort = FALSE)
 out_reject <- get_rejection_rates_by_n(out)
 
 out_chk <- power4test_by_n(test_out,
-                           n = c(100, 110, 130, 120))
+                           n = c(100, 110, 50, 130, 120))
 out_reject_chk <- get_rejection_rates_by_n(out_chk)
 
 expect_identical(out_reject,

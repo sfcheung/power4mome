@@ -89,20 +89,27 @@ power4test_by_n <- function(object,
     stop("Does not support multigroup models for now.")
   }
   out <- list()
+
+  # Store the original object
+  n_org <- attr(object, "args")$n
+  out[[1]] <- object
+
   # TODO
   # - Think about to handle MG models,
   #   for which n is a vector.
-  for (x in n) {
+  for (i in seq_along(n)) {
+    x <- n[i]
     if (progress) {
       cat("Updating the simulation for sample size:",
           paste(x, collapse = ", "),
           "\n")
     }
-    out[[as.character(x)]] <- power4test(object = object,
+    out[[i + 1]] <- power4test(object = object,
                                          n = x,
                                          progress = progress,
                                          ...)
   }
+  names(out) <- c(n_org, n)
   class(out) <- c("power4test_by_n", class(out))
   out
 }
