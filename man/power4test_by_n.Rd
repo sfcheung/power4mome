@@ -2,10 +2,13 @@
 % Please edit documentation in R/power4test_by_n.R
 \name{power4test_by_n}
 \alias{power4test_by_n}
+\alias{c.power4test_by_n}
 \alias{get_rejection_rates_by_n}
 \title{Power By Sample Sizes}
 \usage{
 power4test_by_n(object, n = NULL, progress = TRUE, ...)
+
+\method{c}{power4test_by_n}(..., sort = TRUE)
 
 get_rejection_rates_by_n(object_by_n, all_columns = FALSE)
 }
@@ -20,8 +23,15 @@ be conducted.}
 progress of the simulation will be
 displayed.}
 
-\item{...}{Arguments to be passed
-to \code{\link[=power4test]{power4test()}}.}
+\item{...}{For \code{\link[=power4test_by_n]{power4test_by_n()}},
+they are arguments to be passed
+to \code{\link[=power4test]{power4test()}}. For \code{\link[=c.power4test_by_n]{c.power4test_by_n()}},
+they are \code{\link[=power4test_by_n]{power4test_by_n()}} outputs
+to be combined together.}
+
+\item{sort}{WHen combining \code{power4test_by_n}
+objects, whether they will be sorted
+by sample sizes. Default is \code{TRUE}.}
 
 \item{object_by_n}{A \code{power4test_by_n}
 object, which is an output of
@@ -40,6 +50,11 @@ The function
 list of \code{power4test} objects, one for
 each sample size.
 
+The method \code{\link[=c.power4test_by_n]{c.power4test_by_n()}} returns
+a \code{power4test_by_n} object with
+all the elements (tests for different
+sample sizes) combined.
+
 The function \code{\link[=get_rejection_rates_by_n]{get_rejection_rates_by_n()}}
 returns a data frame which is
 similar to the output of
@@ -50,6 +65,10 @@ for each test.
 \description{
 Estimate power for a
 range of sample sizes.
+
+The method \code{\link[=c.power4test_by_n]{c.power4test_by_n()}}
+is used to combine tests from different
+runs of \code{\link[=power4test_by_n]{power4test_by_n()}}.
 
 The function \code{\link[=get_rejection_rates_by_n]{get_rejection_rates_by_n()}}
 is used to extract the rejection

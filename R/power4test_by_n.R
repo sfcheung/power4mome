@@ -33,8 +33,11 @@
 #' progress of the simulation will be
 #' displayed.
 #'
-#' @param ... Arguments to be passed
-#' to [power4test()].
+#' @param ... For [power4test_by_n()],
+#' they are arguments to be passed
+#' to [power4test()]. For [c.power4test_by_n()],
+#' they are [power4test_by_n()] outputs
+#' to be combined together.
 #'
 #' @seealso [power4test()]
 #'
@@ -102,6 +105,52 @@ power4test_by_n <- function(object,
   }
   class(out) <- c("power4test_by_n", class(out))
   out
+}
+
+#' @rdname power4test_by_n
+#'
+#' @param sort WHen combining `power4test_by_n`
+#' objects, whether they will be sorted
+#' by sample sizes. Default is `TRUE`.
+#'
+#' @return
+#' The method [c.power4test_by_n()] returns
+#' a `power4test_by_n` object with
+#' all the elements (tests for different
+#' sample sizes) combined.
+#'
+#' @description
+#' The method [c.power4test_by_n()]
+#' is used to combine tests from different
+#' runs of [power4test_by_n()].
+#' @export
+c.power4test_by_n <- function(...,
+                              sort = TRUE) {
+
+  # Check whether they have the same ptable
+  tmp <- list(...)
+  if (length(tmp) > 1) {
+    ptables <- lapply(tmp,
+                      \(x) {x[[1]]$sim_all[[1]]$ptable})
+    for (i in seq_along(ptables)[-1]) {
+      chk <- identical(ptables[[i]],
+                       ptables[[i - 1]])
+      if (!chk) {
+        stop("Not all objects are based on the same model.")
+      }
+    }
+  }
+  out <- NextMethod()
+  out["sort"] <- NULL
+  class(out) <- c("power4test_by_n", class(out))
+  if (!sort) {
+    return(out)
+  }
+  ns <- as.numeric(names(out))
+  i <- order(ns)
+  out <- out[i]
+  class(out) <- c("power4test_by_n", class(out))
+  return(out)
 }
 
 #' @rdname power4test_by_n

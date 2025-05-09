@@ -2,6 +2,7 @@
 % Please edit documentation in R/power4test_by_pop_es.R
 \name{power4test_by_pop_es}
 \alias{power4test_by_pop_es}
+\alias{c.power4test_by_pop_es}
 \alias{get_rejection_rates_by_pop_es}
 \title{Power By Effect Sizes}
 \usage{
@@ -12,6 +13,8 @@ power4test_by_pop_es(
   progress = TRUE,
   ...
 )
+
+\method{c}{power4test_by_pop_es}(..., sort = TRUE)
 
 get_rejection_rates_by_pop_es(object_by_es, all_columns = FALSE)
 }
@@ -32,8 +35,15 @@ of the parameter specified in
 progress of the simulation will be
 displayed.}
 
-\item{...}{Arguments to be passed
-to \code{\link[=power4test]{power4test()}}.}
+\item{...}{For \code{\link[=power4test_by_pop_es]{power4test_by_pop_es()}},
+they are arguments to be passed
+to \code{\link[=power4test]{power4test()}}. For \code{\link[=power4test_by_pop_es]{power4test_by_pop_es()}},
+they are \code{\link[=power4test_by_pop_es]{power4test_by_pop_es()}} outputs
+to be combined together.}
+
+\item{sort}{WHen combining \code{power4test_by_pop_es}
+objects, whether they will be sorted
+by effect size. Default is \code{TRUE}.}
 
 \item{object_by_es}{A \code{power4test_by_pop_es}
 object, which is an output of
@@ -52,6 +62,11 @@ The function
 list of \code{power4test} objects, one for
 each effect size.
 
+The method \code{\link[=c.power4test_by_pop_es]{c.power4test_by_pop_es()}} returns
+a \code{power4test_by_pop_es} object with
+all the elements (tests for different
+sample sizes) combined.
+
 The function \code{\link[=get_rejection_rates_by_pop_es]{get_rejection_rates_by_pop_es()}}
 returns a data frame which is
 similar to the output of
@@ -63,6 +78,10 @@ for each test.
 \description{
 Estimate power for a
 range of effect sizes.
+
+The method \code{\link[=c.power4test_by_pop_es]{c.power4test_by_pop_es()}}
+is used to combine tests from different
+runs of \code{\link[=power4test_by_pop_es]{power4test_by_pop_es()}}.
 
 The function \code{\link[=get_rejection_rates_by_pop_es]{get_rejection_rates_by_pop_es()}}
 is used to extract the rejection
