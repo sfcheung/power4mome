@@ -1,4 +1,4 @@
-# power4mome 0.0.1.10
+# power4mome 0.0.1.11
 
 - Initialized the package. (0.0.0.9000)
 
@@ -212,3 +212,7 @@
 - Added a `c()` method to the output
   of `power4test_by_n()`.
   (0.0.1.10)
+
+- Added a `c()` method to the output
+  of `power4test_by_pop_es()`.
+  (0.0.1.11)

@@ -51,7 +51,7 @@ list of \code{power4test} objects, one for
 each sample size.
 
 The method \code{\link[=c.power4test_by_n]{c.power4test_by_n()}} returns
-a \code{c.power4test_by_n} object with
+a \code{power4test_by_n} object with
 all the elements (tests for different
 sample sizes) combined.
 

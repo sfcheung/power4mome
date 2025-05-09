@@ -42,6 +42,12 @@
 #' @param ... Arguments to be passed
 #' to [power4test()].
 #'
+#' @param ... For [power4test_by_pop_es()],
+#' they are arguments to be passed
+#' to [power4test()]. For [power4test_by_pop_es()],
+#' they are [power4test_by_pop_es()] outputs
+#' to be combined together.
+#'
 #' @seealso [power4test()]
 #'
 #' @examples
@@ -123,6 +129,67 @@ power4test_by_pop_es <- function(object,
   attr(out, "pop_es_name") <- pop_es_name
   attr(out, "pop_es_values") <- pop_es_values
   out
+}
+
+
+#' @rdname power4test_by_pop_es
+#'
+#' @param sort WHen combining `power4test_by_pop_es`
+#' objects, whether they will be sorted
+#' by effect size. Default is `TRUE`.
+#'
+#' @return
+#' The method [c.power4test_by_pop_es()] returns
+#' a `power4test_by_pop_es` object with
+#' all the elements (tests for different
+#' sample sizes) combined.
+#'
+#' @description
+#' The method [c.power4test_by_pop_es()]
+#' is used to combine tests from different
+#' runs of [power4test_by_pop_es()].
+#' @export
+c.power4test_by_pop_es <- function(...,
+                                   sort = TRUE) {
+  # Check whether they have the same ptable
+  tmp <- list(...)
+  if (length(tmp) > 1) {
+    ptables <- lapply(tmp,
+                      \(x) {x[[1]]$sim_all[[1]]$ptable})
+    for (i in seq_along(ptables)[-1]) {
+      chk <- identical(ptables[[i]][, c("lhs", "op", "rhs", "group", "user", "block")],
+                       ptables[[i - 1]][, c("lhs", "op", "rhs", "group", "user", "block")])
+      if (!chk) {
+        stop("Not all objects are based on the same model.")
+      }
+    }
+  }
+  all_pop_es_name <- sapply(tmp,
+                            \(x) {attr(x, "pop_es_name")})
+  all_pop_es_name <- unique(all_pop_es_name)
+  if (length(all_pop_es_name) != 1) {
+    stop("Not all objects have the same parameters changes: ",
+         paste0(all_pop_es_name, collapse = ","))
+  }
+
+  all_pop_es_values <- lapply(tmp,
+                              \(x) {attr(x, "pop_es_values")})
+  all_pop_es_values <- unlist(all_pop_es_values)
+
+  out <- NextMethod()
+  out["sort"] <- NULL
+  class(out) <- c("power4test_by_pop_es", class(out))
+  attr(out, "pop_es_name") <- all_pop_es_name
+  attr(out, "pop_es_values") <- all_pop_es_values
+  if (!sort) {
+    return(out)
+  }
+  i <- order(all_pop_es_values)
+  out <- out[i]
+  class(out) <- c("power4test_by_pop_es", class(out))
+  attr(out, "pop_es_name") <- all_pop_es_name
+  attr(out, "pop_es_values") <- all_pop_es_values[i]
+  return(out)
 }
 
 #' @rdname power4test_by_pop_es
