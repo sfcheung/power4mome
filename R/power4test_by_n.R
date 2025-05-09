@@ -115,7 +115,7 @@ power4test_by_n <- function(object,
 #'
 #' @return
 #' The method [c.power4test_by_n()] returns
-#' a `c.power4test_by_n` object with
+#' a `power4test_by_n` object with
 #' all the elements (tests for different
 #' sample sizes) combined.
 #'
