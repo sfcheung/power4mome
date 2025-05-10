@@ -13,7 +13,11 @@ power4test_by_n(object, n = NULL, progress = TRUE, ..., by_seed = NULL)
 get_rejection_rates_by_n(object_by_n, all_columns = FALSE)
 }
 \arguments{
-\item{object}{A \code{power4test} object.}
+\item{object}{A \code{power4test} object,
+or a \code{power4test_by_n} object.
+If it is a \code{power4test_by_n} object,
+the first element will be used
+for running the simulation.}
 
 \item{n}{A numeric vector of sample
 sizes for which the simulation will

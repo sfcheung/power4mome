@@ -23,7 +23,11 @@
 #' list of `power4test` objects, one for
 #' each effect size.
 #'
-#' @param object A `power4test` object.
+#' @param object A `power4test` object,
+#' or a `power4test_by_pop_es` object.
+#' If it is a `power4test_by_pop_es` object,
+#' the first element will be used
+#' for running the simulation.
 #'
 #' @param pop_es_name The name of the
 #' parameter. See the help page
@@ -101,8 +105,13 @@ power4test_by_pop_es <- function(object,
                                  progress = TRUE,
                                  ...,
                                  by_seed = NULL) {
-  if (!inherits(object, "power4test")) {
-    stop("Only support 'power4test' objects.")
+  if (!inherits(object, "power4test") &&
+      !inherits(object, "power4test_by_pop_es")) {
+    stop("Only support 'power4test' or 'power4test_by_pop_es' objects.")
+  }
+  # Use the first object if the object is a power4test_by_pop_es object:
+  if (inherits(object, "power4test_by_pop_es")) {
+    object <- object[[1]]
   }
   if (!is.null(object$sim_all[[1]]$group_name)) {
     stop("Does not support multigroup models for now.")
