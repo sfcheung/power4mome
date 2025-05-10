@@ -33,14 +33,19 @@ test_out <- power4test(object = sim_only,
                                         mc_ci = FALSE))
 
 out1 <- power4test_by_n(test_out,
-                        n = c(100, 110))
+                        n = c(100, 110),
+                        by_seed = 1234)
 out2 <- power4test_by_n(test_out,
-                        n = c(130, 120))
+                        n = c(130, 120),
+                        by_seed = 1234)
 out <- c(out1, out2)
 out_reject <- get_rejection_rates_by_n(out)
 
+tmp <- sapply(out,
+              \(x) {attr(x, "args")$iseed})
 out_chk <- power4test_by_n(test_out,
-                           n = c(100, 110, 120, 130))
+                           n = c(100, 110, 120, 130),
+                           by_seed = tmp)
 out_reject_chk <- get_rejection_rates_by_n(out_chk)
 
 expect_identical(out_reject,
@@ -50,9 +55,11 @@ expect_identical(out_reject,
 
 out <- c(out1, out2, sort = FALSE)
 out_reject <- get_rejection_rates_by_n(out)
-
+tmp <- sapply(out,
+              \(x) {attr(x, "args")$iseed})
 out_chk <- power4test_by_n(test_out,
-                           n = c(100, 110, 130, 120))
+                           n = c(100, 110, 130, 120),
+                           by_seed = tmp)
 out_reject_chk <- get_rejection_rates_by_n(out_chk)
 
 expect_identical(out_reject,

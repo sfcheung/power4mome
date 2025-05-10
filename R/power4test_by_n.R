@@ -39,6 +39,13 @@
 #' they are [power4test_by_n()] outputs
 #' to be combined together.
 #'
+#' @param by_seed If set to a number,
+#' it will be used to generate the
+#' seeds for each call to [power4test()].
+#' If `NULL`, the default, then seeds
+#' will still be randomly generated but
+#' the results cannot be easily reproduced.
+#'
 #' @seealso [power4test()]
 #'
 #' @examples
@@ -81,7 +88,8 @@
 power4test_by_n <- function(object,
                             n = NULL,
                             progress = TRUE,
-                            ...) {
+                            ...,
+                            by_seed = NULL) {
   if (!inherits(object, "power4test")) {
     stop("Only support 'power4test' objects.")
   }
@@ -95,6 +103,15 @@ power4test_by_n <- function(object,
   # n_org <- attr(object, "args")$n
   # out[[1]] <- object
 
+  if (length(by_seed) == length(n)) {
+    seeds <- by_seed
+  } else {
+    if (!is.null(by_seed)) {
+      set.seed(by_seed)
+    }
+    seeds <- sample.int(99999999,
+                        size = length(n))
+  }
   # TODO
   # - Think about to handle MG models,
   #   for which n is a vector.
@@ -108,6 +125,7 @@ power4test_by_n <- function(object,
     out[[i]] <- power4test(object = object,
                                          n = x,
                                          progress = progress,
+                                         iseed = seeds[i],
                                          ...)
   }
   # names(out) <- c(n_org, n)
