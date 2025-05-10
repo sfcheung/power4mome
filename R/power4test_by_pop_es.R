@@ -39,14 +39,18 @@
 #' progress of the simulation will be
 #' displayed.
 #'
-#' @param ... Arguments to be passed
-#' to [power4test()].
-#'
 #' @param ... For [power4test_by_pop_es()],
 #' they are arguments to be passed
 #' to [power4test()]. For [power4test_by_pop_es()],
 #' they are [power4test_by_pop_es()] outputs
 #' to be combined together.
+#'
+#' @param by_seed If set to a number,
+#' it will be used to generate the
+#' seeds for each call to [power4test()].
+#' If `NULL`, the default, then seeds
+#' will still be randomly generated but
+#' the results cannot be easily reproduced.
 #'
 #' @seealso [power4test()]
 #'
@@ -95,7 +99,8 @@ power4test_by_pop_es <- function(object,
                                  pop_es_name = NULL,
                                  pop_es_values = NULL,
                                  progress = TRUE,
-                                 ...) {
+                                 ...,
+                                 by_seed = NULL) {
   if (!inherits(object, "power4test")) {
     stop("Only support 'power4test' objects.")
   }
@@ -106,10 +111,21 @@ power4test_by_pop_es <- function(object,
     stop("Both 'pop_es_name' and 'pop_es_values' must be set.")
   }
   out <- list()
+
+  if (length(by_seed) == length(pop_es_values)) {
+    seeds <- by_seed
+  } else {
+    if (!is.null(by_seed)) {
+      set.seed(by_seed)
+    }
+    seeds <- sample.int(99999999,
+                        size = length(pop_es_values))
+  }
   # TODO
   # - Think about to handle MG models,
   #   for which pop_values can be vectors.
-  for (x in pop_es_values) {
+  for (i in seq_along(pop_es_values)) {
+    x <- pop_es_values[i]
     p_name <- paste0(pop_es_name,
                      " = ",
                      as.character(x))
@@ -123,11 +139,14 @@ power4test_by_pop_es <- function(object,
     out[[p_name]] <- power4test(object = object,
                                 pop_es = tmp,
                                 progress = progress,
+                                iseed = seeds[i],
                                 ...)
+    attr(out[[p_name]], "pop_es_name") <- pop_es_name
+    attr(out[[p_name]], "pop_es_value") <- x
   }
   class(out) <- c("power4test_by_pop_es", class(out))
-  attr(out, "pop_es_name") <- pop_es_name
-  attr(out, "pop_es_values") <- pop_es_values
+  # attr(out, "pop_es_name") <- pop_es_name
+  # attr(out, "pop_es_values") <- pop_es_values
   out
 }
 
@@ -164,7 +183,10 @@ c.power4test_by_pop_es <- function(...,
       }
     }
   }
-  all_pop_es_name <- sapply(tmp,
+  out <- NextMethod()
+  out["sort"] <- NULL
+
+  all_pop_es_name <- sapply(out,
                             \(x) {attr(x, "pop_es_name")})
   all_pop_es_name <- unique(all_pop_es_name)
   if (length(all_pop_es_name) != 1) {
@@ -172,23 +194,19 @@ c.power4test_by_pop_es <- function(...,
          paste0(all_pop_es_name, collapse = ","))
   }
 
-  all_pop_es_values <- lapply(tmp,
-                              \(x) {attr(x, "pop_es_values")})
-  all_pop_es_values <- unlist(all_pop_es_values)
-
-  out <- NextMethod()
-  out["sort"] <- NULL
+  all_pop_es_values <- sapply(out,
+                              \(x) {attr(x, "pop_es_value")})
   class(out) <- c("power4test_by_pop_es", class(out))
-  attr(out, "pop_es_name") <- all_pop_es_name
-  attr(out, "pop_es_values") <- all_pop_es_values
+  # attr(out, "pop_es_name") <- all_pop_es_name
+  # attr(out, "pop_es_values") <- all_pop_es_values
   if (!sort) {
     return(out)
   }
   i <- order(all_pop_es_values)
   out <- out[i]
   class(out) <- c("power4test_by_pop_es", class(out))
-  attr(out, "pop_es_name") <- all_pop_es_name
-  attr(out, "pop_es_values") <- all_pop_es_values[i]
+  # attr(out, "pop_es_name") <- all_pop_es_name
+  # attr(out, "pop_es_values") <- all_pop_es_values[i]
   return(out)
 }
 
@@ -222,9 +240,11 @@ c.power4test_by_pop_es <- function(...,
 #' @export
 get_rejection_rates_by_pop_es <- function(object_by_es,
                                           all_columns = FALSE) {
-  tmpfct <- function(x, pn, pv) {
+  tmpfct <- function(x) {
     out_i <- get_rejection_rates(x,
                                  all_columns = all_columns)
+    pn <- attr(x, "pop_es_name")
+    pv <- attr(x, "pop_es_value")
     out_i <- data.frame(par = pn,
                         es = pv,
                         out_i)
@@ -232,8 +252,8 @@ get_rejection_rates_by_pop_es <- function(object_by_es,
   }
   out <- mapply(tmpfct,
                 x = object_by_es,
-                pv = attr(object_by_es, "pop_es_values"),
-                MoreArgs = list(pn = attr(object_by_es, "pop_es_name")),
+                # pv = attr(object_by_es, "pop_es_values"),
+                # MoreArgs = list(pn = attr(object_by_es, "pop_es_name")),
                 SIMPLIFY = FALSE)
   out <- do.call(rbind,
                  out)

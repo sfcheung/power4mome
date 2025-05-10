@@ -36,30 +36,43 @@ power_all_test_only_new_es <- power4test(object = test_out,
 
 out1 <- power4test_by_pop_es(test_out,
                              pop_es_name = "y ~ m",
-                             pop_es_values = c(.10, .20))
+                             pop_es_values = c(.10, .20),
+                             by_seed = 1234)
 out2 <- power4test_by_pop_es(test_out,
                              pop_es_name = "y ~ m",
-                             pop_es_values = c(.40, .30))
+                             pop_es_values = c(.40, .30),
+                             by_seed = 5678)
 out <- c(out1, out2)
 
 out_reject <- get_rejection_rates_by_pop_es(out)
-
+tmp <- sapply(out,
+              \(x) {attr(x, "args")$iseed})
 out_chk <- power4test_by_pop_es(test_out,
                                 pop_es_name = "y ~ m",
-                                pop_es_values = c(.10, .20, .30, .40))
+                                pop_es_values = c(.10, .20, .30, .40),
+                                by_seed = tmp)
 out_reject_chk <- get_rejection_rates_by_pop_es(out_chk)
 
 expect_identical(out_reject,
                  out_reject_chk)
 
+# Test different parameters
+
+out4 <- power4test_by_pop_es(test_out,
+                             pop_es_name = "y ~ x",
+                             pop_es_values = c(.40, .30))
+expect_error(c(out1, out4))
+
 # Test sort = FALSE
 
 out <- c(out1, out2, sort = FALSE)
 out_reject <- get_rejection_rates_by_pop_es(out)
-
+tmp <- sapply(out,
+              \(x) {attr(x, "args")$iseed})
 out_chk <- power4test_by_pop_es(test_out,
                                 pop_es_name = "y ~ m",
-                                pop_es_values = c(.10, .20, .40, .30))
+                                pop_es_values = c(.10, .20, .40, .30),
+                                by_seed = tmp)
 out_reject_chk <- get_rejection_rates_by_pop_es(out_chk)
 
 expect_identical(out_reject,
