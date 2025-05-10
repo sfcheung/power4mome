@@ -25,7 +25,7 @@ the output."><meta name="google-site-verification" content="0VLBmFnW_UJFI-7gXnOR
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.11</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.12</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -75,7 +75,8 @@ the output.</p>
 <span>  pop_es_name <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  pop_es_values <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  progress <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  <span class="va">...</span></span>
+<span>  <span class="va">...</span>,</span>
+<span>  by_seed <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'power4test_by_pop_es'</span></span>
@@ -118,6 +119,15 @@ they are arguments to be passed
 to <code><a href="power4test.html">power4test()</a></code>. For <code>power4test_by_pop_es()</code>,
 they are <code>power4test_by_pop_es()</code> outputs
 to be combined together.</p></dd>
+
+
+<dt id="arg-by-seed">by_seed<a class="anchor" aria-label="anchor" href="#arg-by-seed"></a></dt>
+<dd><p>If set to a number,
+it will be used to generate the
+seeds for each call to <code><a href="power4test.html">power4test()</a></code>.
+If <code>NULL</code>, the default, then seeds
+will still be randomly generated but
+the results cannot be easily reproduced.</p></dd>
 
 
 <dt id="arg-sort">sort<a class="anchor" aria-label="anchor" href="#arg-sort"></a></dt>
@@ -245,8 +255,8 @@ power over a range of effect sizes.</p>
 <span class="r-in"><span><span class="va">out_reject</span> <span class="op">&lt;-</span> <span class="fu">get_rejection_rates_by_pop_es</span><span class="op">(</span><span class="va">out</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">out_reject</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     par  es                   test test_label pvalid reject</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 y ~ m 0.1 test_indirect: x-&gt;m-&gt;y       Test      1      0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 y ~ m 0.2 test_indirect: x-&gt;m-&gt;y       Test      1      0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 y ~ m 0.1 test_indirect: x-&gt;m-&gt;y       Test      1    0.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 y ~ m 0.2 test_indirect: x-&gt;m-&gt;y       Test      1    0.5</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
