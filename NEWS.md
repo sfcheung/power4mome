@@ -1,4 +1,4 @@
-# power4mome 0.0.1.14
+# power4mome 0.0.1.15
 
 - Initialized the package. (0.0.0.9000)
 
@@ -228,3 +228,6 @@
   `power4test_by_n()` to accept the
   output of these two functions.
   (0.0.1.14)
+
+- Added `by_nrep` to `power4test_by_n()`.
+  (0.0.1.15)
