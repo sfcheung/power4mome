@@ -581,13 +581,13 @@ power4test <- function(object = NULL,
     # fit_all <- do.call(fit_model,
     #                    fit_args0)
     if (!is.null(args$R) && (args$ci_type == "mc")) {
-      # TODO:
-      # - iseed should be used only once
+      # - It's OK to reuse iseed because the processes are different.
       mc_args0 <- utils::modifyList(args$gen_mc_args,
                                     list(R = args$R,
                                         parallel = args$parallel,
                                         progress = args$progress,
-                                        ncores = args$ncores))
+                                        ncores = args$ncores,
+                                        iseed = args$iseed))
       if (args$progress) {
         cat("Generate Monte Carlo estimates:\n")
       }
@@ -614,13 +614,13 @@ power4test <- function(object = NULL,
     names(mc_all) <- tmp
 
     if (!is.null(args$R) && (args$ci_type == "boot")) {
-      # TODO:
-      # - iseed should be used only once
+      # - It's OK to reuse the seed because the processes are different.
       boot_args0 <- utils::modifyList(args$gen_boot_args,
                                       list(R = args$R,
                                            parallel = args$parallel,
                                            progress = args$progress,
-                                           ncores = args$ncores))
+                                           ncores = args$ncores,
+                                           iseed = args$iseed))
       if (args$progress) {
         cat("Generate bootstrap estimates:\n")
       }

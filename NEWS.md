@@ -1,4 +1,4 @@
-# power4mome 0.0.1.12
+# power4mome 0.0.1.13
 
 - Initialized the package. (0.0.0.9000)
 
@@ -220,3 +220,6 @@
 - Added `by_seed` to `power4test_by_n()`
   and `power4test_by_pop_es()` for
   reproducible results. (0.0.1.12)
+
+- Results are now reproducible is
+  `parallel` is `TRUE`. (0.0.1.13)
