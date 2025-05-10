@@ -1,4 +1,4 @@
-# power4mome 0.0.1.13
+# power4mome 0.0.1.14
 
 - Initialized the package. (0.0.0.9000)
 
@@ -223,3 +223,8 @@
 
 - Results are now reproducible is
   `parallel` is `TRUE`. (0.0.1.13)
+
+- Updated `power4test_by_pop_es()` and
+  `power4test_by_n()` to accept the
+  output of these two functions.
+  (0.0.1.14)

@@ -20,7 +20,11 @@ power4test_by_pop_es(
 get_rejection_rates_by_pop_es(object_by_es, all_columns = FALSE)
 }
 \arguments{
-\item{object}{A \code{power4test} object.}
+\item{object}{A \code{power4test} object,
+or a \code{power4test_by_pop_es} object.
+If it is a \code{power4test_by_pop_es} object,
+the first element will be used
+for running the simulation.}
 
 \item{pop_es_name}{The name of the
 parameter. See the help page
