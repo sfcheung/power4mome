@@ -38,7 +38,7 @@ out_reject <- get_rejection_rates_by_n(out)
 out_reject
 
 out2 <- power4test_by_n(object = sim_only,
-                        n = c(50, 100, 110),
+                        n = c(100, 110),
                         test_fun = test_indirect_effect,
                         test_args = list(x = "x",
                                          m = "m",

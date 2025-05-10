@@ -90,9 +90,10 @@ power4test_by_n <- function(object,
   }
   out <- list()
 
-  # Store the original object
-  n_org <- attr(object, "args")$n
-  out[[1]] <- object
+  # # Disable this for now
+  # # Store the original object
+  # n_org <- attr(object, "args")$n
+  # out[[1]] <- object
 
   # TODO
   # - Think about to handle MG models,
@@ -104,12 +105,13 @@ power4test_by_n <- function(object,
           paste(x, collapse = ", "),
           "\n")
     }
-    out[[i + 1]] <- power4test(object = object,
+    out[[i]] <- power4test(object = object,
                                          n = x,
                                          progress = progress,
                                          ...)
   }
-  names(out) <- c(n_org, n)
+  # names(out) <- c(n_org, n)
+  names(out) <- c(n)
   class(out) <- c("power4test_by_n", class(out))
   out
 }
