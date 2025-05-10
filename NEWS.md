@@ -1,4 +1,4 @@
-# power4mome 0.0.1.15
+# power4mome 0.0.1.16
 
 - Initialized the package. (0.0.0.9000)
 
@@ -231,3 +231,7 @@
 
 - Added `by_nrep` to `power4test_by_n()`.
   (0.0.1.15)
+
+- Added more columns to the results
+  of functions returning rejection
+  rates. (0.0.1.16)
