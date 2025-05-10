@@ -52,6 +52,13 @@ out_reject_chk <- get_rejection_rates_by_pop_es(out_chk)
 expect_identical(out_reject,
                  out_reject_chk)
 
+# Test different parameters
+
+out4 <- power4test_by_pop_es(test_out,
+                             pop_es_name = "y ~ x",
+                             pop_es_values = c(.40, .30))
+expect_error(c(out1, out4))
+
 # Test sort = FALSE
 
 out <- c(out1, out2, sort = FALSE)

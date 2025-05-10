@@ -124,10 +124,13 @@ power4test_by_pop_es <- function(object,
                                 pop_es = tmp,
                                 progress = progress,
                                 ...)
+    attr(out[[p_name]], "pop_es_name") <- pop_es_name
+    attr(out[[p_name]], "pop_es_value") <- x
   }
+  attr(out[[1]], "args")
   class(out) <- c("power4test_by_pop_es", class(out))
-  attr(out, "pop_es_name") <- pop_es_name
-  attr(out, "pop_es_values") <- pop_es_values
+  # attr(out, "pop_es_name") <- pop_es_name
+  # attr(out, "pop_es_values") <- pop_es_values
   out
 }
 
@@ -164,7 +167,10 @@ c.power4test_by_pop_es <- function(...,
       }
     }
   }
-  all_pop_es_name <- sapply(tmp,
+  out <- NextMethod()
+  out["sort"] <- NULL
+
+  all_pop_es_name <- sapply(out,
                             \(x) {attr(x, "pop_es_name")})
   all_pop_es_name <- unique(all_pop_es_name)
   if (length(all_pop_es_name) != 1) {
@@ -172,23 +178,19 @@ c.power4test_by_pop_es <- function(...,
          paste0(all_pop_es_name, collapse = ","))
   }
 
-  all_pop_es_values <- lapply(tmp,
-                              \(x) {attr(x, "pop_es_values")})
-  all_pop_es_values <- unlist(all_pop_es_values)
-
-  out <- NextMethod()
-  out["sort"] <- NULL
+  all_pop_es_values <- sapply(out,
+                              \(x) {attr(x, "pop_es_value")})
   class(out) <- c("power4test_by_pop_es", class(out))
-  attr(out, "pop_es_name") <- all_pop_es_name
-  attr(out, "pop_es_values") <- all_pop_es_values
+  # attr(out, "pop_es_name") <- all_pop_es_name
+  # attr(out, "pop_es_values") <- all_pop_es_values
   if (!sort) {
     return(out)
   }
   i <- order(all_pop_es_values)
   out <- out[i]
   class(out) <- c("power4test_by_pop_es", class(out))
-  attr(out, "pop_es_name") <- all_pop_es_name
-  attr(out, "pop_es_values") <- all_pop_es_values[i]
+  # attr(out, "pop_es_name") <- all_pop_es_name
+  # attr(out, "pop_es_values") <- all_pop_es_values[i]
   return(out)
 }
 
@@ -222,9 +224,11 @@ c.power4test_by_pop_es <- function(...,
 #' @export
 get_rejection_rates_by_pop_es <- function(object_by_es,
                                           all_columns = FALSE) {
-  tmpfct <- function(x, pn, pv) {
+  tmpfct <- function(x) {
     out_i <- get_rejection_rates(x,
                                  all_columns = all_columns)
+    pn <- attr(x, "pop_es_name")
+    pv <- attr(x, "pop_es_value")
     out_i <- data.frame(par = pn,
                         es = pv,
                         out_i)
@@ -232,8 +236,8 @@ get_rejection_rates_by_pop_es <- function(object_by_es,
   }
   out <- mapply(tmpfct,
                 x = object_by_es,
-                pv = attr(object_by_es, "pop_es_values"),
-                MoreArgs = list(pn = attr(object_by_es, "pop_es_name")),
+                # pv = attr(object_by_es, "pop_es_values"),
+                # MoreArgs = list(pn = attr(object_by_es, "pop_es_name")),
                 SIMPLIFY = FALSE)
   out <- do.call(rbind,
                  out)
