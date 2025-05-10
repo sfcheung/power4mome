@@ -11,7 +11,8 @@ power4test_by_pop_es(
   pop_es_name = NULL,
   pop_es_values = NULL,
   progress = TRUE,
-  ...
+  ...,
+  by_seed = NULL
 )
 
 \method{c}{power4test_by_pop_es}(..., sort = TRUE)
@@ -40,6 +41,13 @@ they are arguments to be passed
 to \code{\link[=power4test]{power4test()}}. For \code{\link[=power4test_by_pop_es]{power4test_by_pop_es()}},
 they are \code{\link[=power4test_by_pop_es]{power4test_by_pop_es()}} outputs
 to be combined together.}
+
+\item{by_seed}{If set to a number,
+it will be used to generate the
+seeds for each call to \code{\link[=power4test]{power4test()}}.
+If \code{NULL}, the default, then seeds
+will still be randomly generated but
+the results cannot be easily reproduced.}
 
 \item{sort}{WHen combining \code{power4test_by_pop_es}
 objects, whether they will be sorted
