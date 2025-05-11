@@ -48,6 +48,8 @@ power_curve_n <- function(object,
   nls_contorl0 <- list(maxiter = 5000)
   nls_contorl1 <- utils::modifyList(nls_contorl0,
                                     control)
+
+  # Do nls
   fit <- tryCatch(suppressWarnings(stats::nls(formula = formula,
                     data = reject0,
                     start = start,
@@ -55,31 +57,42 @@ power_curve_n <- function(object,
                     lower = lower_bound,
                     control = nls_contorl1)),
                   error = function(e) e)
-  if (inherits(fit, "error")) {
-    reject1 <- reject0[, c("n", "power", "nrep")]
-    # TODO:
-    # - Use true nrep
-    reject1$sig <- round(reject1$power * reject1$nrep)
-    reject1$ns <- reject1$nrep - reject1$sig
-    tmp <- mapply(function(x, y) {
-                    c(rep(1, x), rep(0, y - x))
-                  },
-                  x = reject1$sig,
-                  y = reject1$nrep,
-                  SIMPLIFY = FALSE)
-    tmp <- unlist(tmp)
-    reject1 <- data.frame(n = rep(reject1$n, times = reject1$nrep),
-                          sig = tmp)
-    # aggregate(. ~ n, reject1, mean)
-    fit <- tryCatch(stats::glm(sig ~ n,
-                                data = reject1,
-                                family = "binomial"),
-                    error = function(e) e)
-    if (inherits(fit, "error")) {
-      return(NA)
-    }
+  if (inherits(fit, "nls")) {
+    return(fit)
   }
-  return(fit)
+
+  # Do logistic
+  reject1 <- reject0[, c("n", "power", "nrep")]
+  reject1$sig <- round(reject1$power * reject1$nrep)
+  reject1$ns <- reject1$nrep - reject1$sig
+  tmp <- mapply(function(x, y) {
+                  c(rep(1, x), rep(0, y - x))
+                },
+                x = reject1$sig,
+                y = reject1$nrep,
+                SIMPLIFY = FALSE)
+  tmp <- unlist(tmp)
+  reject1 <- data.frame(n = rep(reject1$n, times = reject1$nrep),
+                        sig = tmp)
+  fit <- tryCatch(stats::glm(sig ~ n,
+                              data = reject1,
+                              family = "binomial"),
+                  error = function(e) e,
+                  warning = function(w) w)
+  # Also catch warning such as
+  # - "fitted probabilities numerically 0 or 1 occurred>"
+  if (inherits(fit, "glm")) {
+    return(fit)
+  }
+
+  # Last resort: OLS regression
+  fit <- tryCatch(stats::lm(sig ~ n,
+                            data = reject1),
+                  error = function(e) e)
+  if (inherits(fit, "lm")) {
+    return(fit)
+  }
+  return(NA)
 }
 
 plot_power_curve <- function(object,
