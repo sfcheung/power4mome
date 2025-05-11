@@ -244,9 +244,9 @@ n_from_power <- function(object,
 
   time_start <- Sys.time()
 
-  # Initial Attempts
+  # Initial Trial
   if (progress) {
-    cat("\n--- Pre-iteration Attempts ---\n\n")
+    cat("\n--- Pre-iteration Search ---\n\n")
     tmp <- format(Sys.time(), "%Y-%m-%d %X")
     cat("- Start at", tmp, "\n")
   }
@@ -291,7 +291,7 @@ n_from_power <- function(object,
     cat("- Power Curve:\n")
     plot_power_curve(by_n_i,
                      power_n_fit = fit_i)
-    title(paste0("Pre-iteration Attempt"))
+    title(paste0("Pre-iteration Search"))
     print(fit_i)
     cat("\n")
   }
@@ -317,7 +317,7 @@ n_from_power <- function(object,
   ci_hit <- FALSE
   for (j in seq_len(max_trials)) {
     if (progress) {
-      cat("\n\n--- Attempt", j, "---\n\n")
+      cat("\n\n--- Trial", j, "---\n\n")
       tmp <- format(Sys.time(), "%Y-%m-%d %X")
       cat("- Start at", tmp, "\n")
     }
@@ -433,7 +433,7 @@ n_from_power <- function(object,
       cat("- Power Curve:\n")
       plot_power_curve(by_n_1,
                        power_n_fit = fit_1)
-      title(paste0("Attempt ", j))
+      title(paste0("Trial ", j))
       abline(h = target_power,
              lty = "dotted",
              lwd = 2)
@@ -552,7 +552,7 @@ n_from_power <- function(object,
   args$object <- NULL
   reject_1 <- get_rejection_rates_by_n(by_n_1)
   time_end <- Sys.time()
-  out <- list(power4test_attempts = by_n_1,
+  out <- list(power4test_trials = by_n_1,
               rejection_rates = reject_1,
               n_tried = reject_1$n,
               power_tried = reject_1$reject,
@@ -585,7 +585,7 @@ plot.n_from_power <- function(x,
                               ...) {
   # TODO:
   # - A draft only
-  plot_power_curve(x$power4test_attempts,
+  plot_power_curve(x$power4test_trials,
                    x$power_curve)
   abline(h = x$target_power,
          lty = "dotted")
