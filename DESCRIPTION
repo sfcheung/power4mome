@@ -39,5 +39,6 @@ Imports:
     pgnorm,
     lmhelprs (>= 0.4.2),
     psych,
-    yaml
+    yaml,
+    graphics
 Config/Needs/website: rmarkdown
