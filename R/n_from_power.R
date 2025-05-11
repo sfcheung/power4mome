@@ -10,7 +10,8 @@
 #'   (Use 3rd person forms for verbs.)
 #'
 #' @return
-#' It returns a `n_from_power` object,
+#' The function [n_from_power()]
+#' returns a `n_from_power` object,
 #' which is a list with the following
 #' elements:
 #'
@@ -586,6 +587,20 @@ n_from_power <- function(object,
     ci_final <- NA
     nrep_final <- NA
   }
+
+  n_x <- NA
+  if (ci_hit) {
+    n_x <- estimate_n_range(power_n_fit = fit_1,
+                            target_power = target_power,
+                            k = 1,
+                            tolerance = 0,
+                            power_min = power_min,
+                            power_max = power_max,
+                            interval = n_interval,
+                            extendInt = "yes",
+                            n_to_exclude = as.numeric(names(by_n_1)))
+  }
+
   if (progress) {
     if (ci_hit) {
       cat("\n")
@@ -601,15 +616,6 @@ n_from_power <- function(object,
       cat("\n")
       cat("- None of the sample sizes examined",
           "in the interval meet the target power.\n")
-      n_x <- estimate_n_range(power_n_fit = fit_1,
-                              target_power = target_power,
-                              k = 1,
-                              tolerance = 0,
-                              power_min = power_min,
-                              power_max = power_max,
-                              interval = n_interval,
-                              extendInt = "yes",
-                              n_to_exclude = as.numeric(names(by_n_1)))
       if (!is.na(n_x)) {
         cat("- The estimated required sample size is ",
             n_x,
@@ -626,6 +632,11 @@ n_from_power <- function(object,
   args$object <- NULL
   reject_1 <- get_rejection_rates_by_n(by_n_1)
   time_end <- Sys.time()
+  if (!ci_hit) {
+    n_out <- NA
+    power_final <- NA
+    ci_final <- NA
+  }
   out <- list(power4test_trials = by_n_1,
               rejection_rates = reject_1,
               n_tried = reject_1$n,
@@ -633,10 +644,12 @@ n_from_power <- function(object,
               n_final = n_out,
               power_final = power_final,
               ci_final = ci_final,
+              ci_level = ci_level,
               nrep_final = nrep_final,
               power_curve = fit_1,
               target_power = target_power,
               power_tolerance = power_tolerance_in_final,
+              n_estimated = n_x,
               start = time_start,
               end = time_end,
               time_spent = difftime(time_end, time_start),
@@ -648,11 +661,97 @@ n_from_power <- function(object,
 
 #' @rdname n_from_power
 #'
+#' @param x The output of
+#' [n_from_power()], the
+#' `print` method of
+#' an `n_from_power` object,
+#' which is the output of
+#' [n_from_power()].
+#'
+#' @param digits The number of digits
+#' after the decimal when printing
+#' the results.
+#'
+#' @description
+#' The `print` method only print
+#' basic information. Call
+#' [summary.n_from_power()] and its
+#' `print` method for detailed output.
+#'
+#' @return
+#' The `print`-method of `n_from_power`
+#' objects returns the object `x`
+#' invisibly.
+#' It is called for its side effect.
+#'
+#' @export
+print.n_from_power <- function(x,
+                               digits = 3,
+                               ...) {
+
+  my_call <- x$call
+  cat("Call:\n")
+  print(my_call)
+  solution_found <- !is.na(x$n_final)
+
+  cat("- Target Power:",
+      formatC(x$target_power, digits = digits, format = "f"),
+      "\n")
+  if (solution_found) {
+    cat("- Final Sample Size:", x$n_final, "\n")
+    cat("- Final Estimated Power:",
+        formatC(x$power_final, digits = digits, format = "f"),
+        "\n")
+  } else {
+    cat("- Solution not found.\n")
+  }
+  cat("Call `summary()` for detailed results.\n")
+  invisible(x)
+}
+
+
+#'
+#' @noRd
+# Helper for printing
+catwrap <- function(x,
+                    width = 0.9 * getOption("width"),
+                    indent = 0,
+                    exdent = 0,
+                    prefix = "",
+                    simplify = TRUE,
+                    initial = prefix,
+                    sep = "\n",
+                    fill = FALSE,
+                    labels = NULL,
+                    append = FALSE) {
+  out <- strwrap(x,
+                 width = width,
+                 indent = indent,
+                 exdent = exdent,
+                 prefix = prefix,
+                 simplify = simplify,
+                 initial = initial)
+  cat(out,
+      sep = sep,
+      fill = fill,
+      labels = labels,
+      append = append)
+}
+
+#' @rdname n_from_power
+#'
 #' @param x A `n_from_power` object,
 #' the output of [n_from_power()].
 #'
 #' @param ... Optional arguments.
 #' Not used for now.
+#'
+#' @return
+#' The `plot`-method of `n_from_power`
+#' objects plot the power rates
+#' against sample sizes examined,
+#' or other diagnostic plots.
+#' It is called for its side effect.
 #'
 #' @export
 plot.n_from_power <- function(x,
@@ -677,4 +776,5 @@ plot.n_from_power <- function(x,
        labels = x$power_final,
        pos = 3,
        cex = 2)
+  invisible(x)
 }

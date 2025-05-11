@@ -39,6 +39,7 @@ tmp <- n_from_power(out,
                     progress = TRUE,
                     final_nrep = 100,
                     seed = 1234)
+tmp
 plot(tmp)
 
 # Case 2

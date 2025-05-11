@@ -42,5 +42,5 @@ tmp <- n_from_power(out,
                     progress = FALSE,
                     simulation_progress = FALSE)
 expect_true(is.na(tmp$power_final))
-
+expect_true(is.na(tmp$n_final))
 })

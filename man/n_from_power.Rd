@@ -2,6 +2,7 @@
 % Please edit documentation in R/n_from_power.R
 \name{n_from_power}
 \alias{n_from_power}
+\alias{print.n_from_power}
 \alias{plot.n_from_power}
 \title{Sample Size Determination}
 \usage{
@@ -28,6 +29,8 @@ n_from_power(
   nls_control = list(),
   nls_args = list()
 )
+
+\method{print}{n_from_power}(x, digits = 3, ...)
 
 \method{plot}{n_from_power}(x, ...)
 }
@@ -175,19 +178,40 @@ Used with cautions.}
 \item{x}{A \code{n_from_power} object,
 the output of \code{\link[=n_from_power]{n_from_power()}}.}
 
+\item{digits}{The number of digits
+after the decimal when printing
+the results.}
+
 \item{...}{Optional arguments.
 Not used for now.}
 }
 \value{
-It returns a \code{n_from_power} object,
+The function \code{\link[=n_from_power]{n_from_power()}}
+returns a \code{n_from_power} object,
 which is a list with the following
 elements:
+
+The \code{print}-method of \code{n_from_power}
+objects returns the object \code{x}
+invisibly.
+It is called for its side effect.
+
+The \code{plot}-method of \code{n_from_power}
+objects plot the power rates
+against sample sizes examined,
+or other diagnostic plots.
+It is called for its side effect.
 }
 \description{
 It searches by simulation
 the sample size with power to
 detect an effect close to a target
 value.
+
+The \code{print} method only print
+basic information. Call
+\code{\link[=summary.n_from_power]{summary.n_from_power()}} and its
+\code{print} method for detailed output.
 }
 \details{
 Details
