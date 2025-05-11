@@ -308,9 +308,13 @@ n_from_power <- function(object,
                                 to = final_nrep,
                                 length.out = nrep_steps + 1))
   R0 <- attr(object, "args")$R
-  R_seq <- ceiling(seq(from = R0,
-                       to = final_R,
-                       length.out = nrep_steps + 1))
+  if (!is.null(R0)) {
+    R_seq <- ceiling(seq(from = R0,
+                        to = final_R,
+                        length.out = nrep_steps + 1))
+  } else {
+    R_seq <- NULL
+  }
   ns_per_trial_seq <- ceiling(seq(from = ns_per_trial,
                                    to = 2,
                                    length.out = nrep_steps + 1))
@@ -450,7 +454,7 @@ n_from_power <- function(object,
       # Update based on CI and SE
       ci_hit <- TRUE
       i1 <- rank(by_n_ci$reject_se)
-      i2 <- which(i1 == min(i1[i0]))
+      i2 <- which(i1 == min(i1[i0]))[1]
       by_n_out <- by_n_1[[i2]]
       power_out <- by_n_ci$reject[i2]
       nrep_out <- by_n_ci$nrep[i2]
