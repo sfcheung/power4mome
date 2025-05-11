@@ -86,8 +86,8 @@ power_curve_n <- function(object,
   }
 
   # Last resort: OLS regression
-  fit <- tryCatch(stats::lm(sig ~ n,
-                            data = reject1),
+  fit <- tryCatch(stats::lm(power ~ n,
+                            data = reject0),
                   error = function(e) e)
   if (inherits(fit, "lm")) {
     return(fit)
