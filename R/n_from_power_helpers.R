@@ -39,7 +39,8 @@ power_curve_n <- function(object,
                           start = c(b = 2, c0 = 100, e = 1),
                           lower_bound = c(b = 0, c0 = 0, e = 1),
                           nls_args = list(),
-                          nls_control = list()) {
+                          nls_control = list(),
+                          verbose = TRUE) {
   reject0 <- get_rejection_rates_by_n(object,
                                       all_columns = TRUE)
   reject0$power <- reject0$sig
@@ -58,21 +59,29 @@ power_curve_n <- function(object,
                                       lower = lower_bound,
                                       control = nls_contorl1))
   # Do nls
+  # Try weights
+  nls_args1b <- utils::modifyList(nls_args1,
+                                  list(weights = reject0$nrep))
+  fit <- tryCatch(suppressWarnings(do.call(stats::nls,
+                                           nls_args1b)),
+                   error = function(e) e)
+  if (inherits(fit, "nls")) {
+    return(fit)
+  }
+  # Do not use weights
   fit <- tryCatch(suppressWarnings(do.call(stats::nls,
                                            nls_args1)),
                    error = function(e) e)
-  # fit <- tryCatch(suppressWarnings(stats::nls(formula = formula,
-  #                   data = reject0,
-  #                   start = start,
-  #                   algorithm = "port",
-  #                   lower = lower_bound,
-  #                   control = nls_contorl1)),
-  #                 error = function(e) e)
   if (inherits(fit, "nls")) {
     return(fit)
   }
 
+  if (verbose) {
+    message("- 'nls()' estimation failed. Switch to logistic regression.")
+  }
+
   # Do logistic
+  # nrep is used and so no need for weight
   reject1 <- reject0[, c("n", "power", "nrep")]
   reject1$sig <- round(reject1$power * reject1$nrep)
   reject1$ns <- reject1$nrep - reject1$sig
@@ -96,13 +105,25 @@ power_curve_n <- function(object,
     return(fit)
   }
 
+  if (verbose) {
+    message("- Logistic regression failed. Switch to linear regression.")
+  }
   # Last resort: OLS regression
+  # Try weights
   fit <- tryCatch(stats::lm(power ~ n,
-                            data = reject0),
+                            data = reject0,
+                            weights = reject0$nrep),
                   error = function(e) e)
   if (inherits(fit, "lm")) {
     return(fit)
   }
+  # Do not use weights
+  fit <- tryCatch(stats::lm(power ~ n,
+                            data = reject0),
+                  error = function(e) e)
+
+  # TODO:
+  # - Consider using `splinefun()` as a last resort.
   return(NA)
 }
 

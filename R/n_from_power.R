@@ -307,7 +307,8 @@ n_from_power <- function(object,
                          start = start,
                          lower_bound = lower_bound,
                          nls_control = nls_control,
-                         nls_args = nls_args)
+                         nls_args = nls_args,
+                         verbose = progress)
   if (progress) {
     cat("- Power Curve:\n")
     plot_power_curve(by_n_i,
@@ -394,7 +395,8 @@ n_from_power <- function(object,
                            start = stats::coef(fit_1),
                            lower_bound = lower_bound,
                            nls_control = nls_control,
-                           nls_args = nls_args)
+                           nls_args = nls_args,
+                           verbose = progress)
     tmp1 <- get_rejection_rates_by_n(by_n_1,
                                      all_columns = TRUE)
     tmp1$reject <- tmp1$sig
@@ -463,7 +465,8 @@ n_from_power <- function(object,
                             start = stats::coef(fit_1),
                             lower_bound = lower_bound,
                             nls_control = nls_control,
-                            nls_args = nls_args)
+                            nls_args = nls_args,
+                            verbose = progress)
       # Update by_n_out
       by_n_out <- by_n_out[[1]]
     }
