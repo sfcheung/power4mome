@@ -13,6 +13,7 @@ n_from_power(
   power_min = 0.01,
   power_max = 0.9,
   n_interval = c(50, 2000),
+  extendInt = c("upX", "no", "yes", "downX"),
   progress = TRUE,
   simulation_progress = TRUE,
   max_trials = 10,
@@ -21,7 +22,7 @@ n_from_power(
   nrep_steps = 1,
   seed = NULL,
   n_include_interval = FALSE,
-  power_curve = power ~ (n - c0)^e/(b + (n - c0)^e),
+  power_curve = power ~ I((n - c0)^e)/(b + I((n - c0)^e)),
   start = c(b = 2, c0 = 100, e = 1),
   lower_bound = c(b = 0, c0 = 0, e = 1),
   nls_control = list()
@@ -60,6 +61,17 @@ try in each trail. Default is .01.}
 two values, the minimum sample size
 and the maximum sample size, in
 the search for sample sizes.}
+
+\item{extendInt}{Whether \code{n_interval}
+can be expanded when estimating the
+sample sizes to try. The value will
+be passed to the argument of the
+same name in \code{\link[stats:uniroot]{stats::uniroot()}},
+but the default value is \code{"upX"}.
+That is, sample size higher than
+the maximum in \code{n_interval} is
+allowed, if predicted by the tentative
+model.}
 
 \item{progress}{Logical. Whether
 the searching progress is reported.}
