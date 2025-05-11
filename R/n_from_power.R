@@ -174,7 +174,7 @@ n_from_power <- function(object,
                          nrep_steps = 1,
                          seed = NULL,
                          n_include_interval = FALSE,
-                         power_curve = power ~ (n - c0)^e / (b + (n - c0)^e),
+                         power_curve = power ~ I((n - c0)^e) / (b + I((n - c0)^e)),
                          start = c(b = 2, c0 = 100, e = 1),
                          lower_bound = c(b = 0, c0 = 0, e = 1),
                          nls_control = list()
