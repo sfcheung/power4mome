@@ -39,7 +39,7 @@ tmp <- n_from_power(out,
                     extendInt = "no",
                     max_trials = 2,
                     seed = 1234,
-                    progress = TRUE,
+                    progress = FALSE,
                     simulation_progress = FALSE)
 expect_true(is.na(tmp$power_final))
 
