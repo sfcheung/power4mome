@@ -45,6 +45,17 @@
 #' and the maximum sample size, in
 #' the search for sample sizes.
 #'
+#' @param extendInt Whether `n_interval`
+#' can be expanded when estimating the
+#' sample sizes to try. The value will
+#' be passed to the argument of the
+#' same name in [stats::uniroot()],
+#' but the default value is `"upX"`.
+#' That is, sample size higher than
+#' the maximum in `n_interval` is
+#' allowed, if predicted by the tentative
+#' model.
+#'
 #' @param progress Logical. Whether
 #' the searching progress is reported.
 #'
@@ -154,6 +165,7 @@ n_from_power <- function(object,
                          power_min = .01,
                          power_max = .90,
                          n_interval = c(50, 2000),
+                         extendInt = c("upX", "no", "yes", "downX"),
                          progress = TRUE,
                          simulation_progress = TRUE,
                          max_trials = 10,
@@ -182,6 +194,8 @@ n_from_power <- function(object,
   # - Initial power4test object.
   # - Final power4test object.
   # - Final model by nls.
+
+  extendInt <- match.arg(extendInt)
 
   a <- abs(stats::qnorm((1 - ci_level) / 2))
   power_tolerance_in_interval <- a * sqrt(target_power * (1 - target_power) / final_nrep)
@@ -336,7 +350,9 @@ n_from_power <- function(object,
                             tolerance = power_tolerance_in_interval,
                             power_min = power_min,
                             power_max = power_max,
-                            interval = n_interval)
+                            interval = n_interval,
+                            extendInt = extendInt,
+                            n_to_exclude = as.numeric(names(by_n_1)))
     power_j <- predict_fit(fit_1,
                            newdata = list(n = n_j))
     nrep_j <- nrep_from_power(power_j = power_j,
@@ -397,9 +413,15 @@ n_from_power <- function(object,
       }
       by_n_out <- by_n_1[[n_out_i]]
     } else {
-      n_out <- estimate_n(power_n_fit = fit_i,
-                          target_power = target_power,
-                          interval = n_interval)
+      n_out <- estimate_n_range(power_n_fit = fit_1,
+                                target_power = target_power,
+                                k = 1,
+                                tolerance = 0,
+                                power_min = power_min,
+                                power_max = power_max,
+                                interval = n_interval,
+                                extendInt = extendInt,
+                                n_to_exclude = as.numeric(names(by_n_1)))
       if (progress) {
         cat("- Extrapolated sample size:", n_out, "\n")
       }
@@ -431,6 +453,8 @@ n_from_power <- function(object,
                             start = stats::coef(fit_1),
                             lower_bound = lower_bound,
                             control = nls_control)
+      # Update by_n_out
+      by_n_out <- by_n_out[[1]]
     }
 
     if (progress) {
@@ -522,32 +546,60 @@ n_from_power <- function(object,
     abline(h = target_power,
            lty = "dotted",
            lwd = 2)
-    abline(v = n_out,
-           lty = "dotted",
-           lwd = 2)
+    if (ci_hit) {
+      abline(v = n_out,
+            lty = "dotted",
+            lwd = 2)
+    }
     title("Final Power Curve")
     print(fit_1)
     cat("\n")
   }
 
-  # TODO:
-  # - Need to handle failure in convergence.
-
-  by_n_final <- by_n_out
-  tmp <- get_rejection_rates(by_n_final)
-  power_final <- tmp$reject
-  ci_final <- ci_out
-  nrep_final <- nrep_out
+  if (ci_hit) {
+    by_n_final <- by_n_out
+    tmp <- get_rejection_rates(by_n_final)
+    power_final <- tmp$reject
+    ci_final <- ci_out
+    nrep_final <- nrep_out
+  } else {
+    by_n_final <- NA
+    power_final <- NA
+    ci_final <- NA
+    nrep_final <- NA
+  }
   if (progress) {
-    cat("\n")
-    cat("- Final Sample Size:", n_out, "\n")
-    cat("- Final Estimated Power:",
-        formatC(power_final, digits = 4, format = "f"), "\n")
-    cat("- Confidence Interval: [",
-        paste0(formatC(ci_final, digits = 4, format = "f"), collapse = "; "),
-        "]\n", sep = "")
-    cat("- CI Level: ",
-        formatC(ci_level*100, digits = 2, format = "f"), "%", "\n", sep = "")
+    if (ci_hit) {
+      cat("\n")
+      cat("- Final Sample Size:", n_out, "\n")
+      cat("- Final Estimated Power:",
+          formatC(power_final, digits = 4, format = "f"), "\n")
+      cat("- Confidence Interval: [",
+          paste0(formatC(ci_final, digits = 4, format = "f"), collapse = "; "),
+          "]\n", sep = "")
+      cat("- CI Level: ",
+          formatC(ci_level*100, digits = 2, format = "f"), "%", "\n", sep = "")
+    } else {
+      cat("\n")
+      cat("- None of the sample sizes examined",
+          "in the interval meet the target power.\n")
+      n_x <- estimate_n_range(power_n_fit = fit_1,
+                              target_power = target_power,
+                              k = 1,
+                              tolerance = 0,
+                              power_min = power_min,
+                              power_max = power_max,
+                              interval = n_interval,
+                              extendInt = "yes",
+                              n_to_exclude = as.numeric(names(by_n_1)))
+      if (!is.na(n_x)) {
+        cat("- The estimated required sample size is ",
+            n_x,
+            ".\n", sep = "")
+      }
+      cat("- Try expanding the range of sample sizes",
+          "by setting 'n_interval'.\n")
+    }
   }
   my_call <- as.list(match.call())[-1]
   args <- formals()

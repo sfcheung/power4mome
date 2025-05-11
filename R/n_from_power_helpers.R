@@ -134,7 +134,8 @@ plot_power_curve <- function(object,
 
 estimate_n <- function(power_n_fit,
                        target_power = .80,
-                       interval = c(50, 2000)) {
+                       interval = c(50, 2000),
+                       extendInt = "no") {
   # TODO:
   # - Need to handle negative sample size.
   f <- function(n) {
@@ -143,9 +144,15 @@ estimate_n <- function(power_n_fit,
     predict_fit(power_n_fit,
                 newdata = list(n = n)) - target_power
   }
-  n_target <- stats::uniroot(f,
+  n_target <- tryCatch(stats::uniroot(f,
                              interval = interval,
-                             extendInt = "yes")
+                             extendInt = extendInt),
+                       error = function(e) e)
+  if (inherits(n_target, "error")) {
+    # Return NA if error occurred. E.g.,
+    # - Root not in the interval.
+    return(NA)
+  }
   n_target <- round(n_target$root)
   return(n_target)
 }
@@ -156,7 +163,9 @@ estimate_n_range <- function(power_n_fit,
                              tolerance = .20,
                              power_min = .01,
                              power_max = .99,
-                             interval = c(50, 2000)) {
+                             interval = c(50, 2000),
+                             extendInt = "upX",
+                             n_to_exclude = NULL) {
   # TODO:
   # - Need to handle negative sample size
   power_j <- seq(from = max(target_power - tolerance, power_min),
@@ -169,9 +178,28 @@ estimate_n_range <- function(power_n_fit,
                 function(x) {
                   estimate_n(power_n_fit = power_n_fit,
                              target_power = x,
-                             interval = interval)
+                             interval = interval,
+                             extendInt = extendInt)
                 })
-  out
+  out <- ceiling(out)
+  # Check invalid Ns
+  i <- rep(FALSE, length(out))
+  if (isFALSE(extendInt %in% c("yes", "upX"))) {
+    i <- out > interval[2]
+  }
+  if (isFALSE(extendInt %in% c("yes", "downX"))) {
+    i <- out < interval[1]
+  }
+  i[is.na(i)] <- TRUE
+  if (isFALSE(any(i))) {
+    return(out)
+  }
+  # Replace invalid Ns by random Ns
+  n_pool <- setdiff(seq(interval[1], interval[2]),
+                    c(n_to_exclude, out[!i]))
+  n_new <- sample(n_pool, size = sum(i))
+  out[i] <- n_new
+  return(out)
 }
 
 predict_fit <- function(object,
