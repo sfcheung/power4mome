@@ -40,9 +40,6 @@ power_curve_n <- function(object,
                           lower_bound = c(b = 0, c0 = 0, e = 1),
                           nls_args = list(),
                           nls_control = list()) {
-  # TODO:
-  # - Make the function more flexible and allow users
-  #   to customize the search.
   reject0 <- get_rejection_rates_by_n(object,
                                       all_columns = TRUE)
   reject0$power <- reject0$sig
