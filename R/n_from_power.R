@@ -139,12 +139,20 @@
 #' Users rarely need to change the
 #' default values.
 #'
+#' @param nls_args A named list of
+#' arguments to be used when calling
+#' [stats::nls()]. Used to override
+#' internal default, such as the
+#' algorithm (default is `"port"`).
+#' Used with cautions.
+#'
 #' @param nls_control A named list of
 #' arguments to be passed the `control`
 #' argument of [stats::nls()] when
 #' estimating the relation between
 #' power and sample size. The values will
-#' override internal default values.
+#' override internal default values,
+#' and also override `nls_args`.
 #'
 #' @seealso [power4test()]
 #'
@@ -177,7 +185,8 @@ n_from_power <- function(object,
                          power_curve = power ~ I((n - c0)^e) / (b + I((n - c0)^e)),
                          start = c(b = 2, c0 = 100, e = 1),
                          lower_bound = c(b = 0, c0 = 0, e = 1),
-                         nls_control = list()
+                         nls_control = list(),
+                         nls_args = list()
                          ) {
 
   # Inputs
@@ -297,13 +306,16 @@ n_from_power <- function(object,
                          formula = power_curve,
                          start = start,
                          lower_bound = lower_bound,
-                         control = nls_control)
+                         nls_control = nls_control,
+                         nls_args = nls_args)
   if (progress) {
     cat("- Power Curve:\n")
     plot_power_curve(by_n_i,
                      power_n_fit = fit_i)
     title(paste0("Pre-iteration Search"))
-    print(fit_i)
+    fit_tmp <- fit_i
+    fit_tmp$data <- "(Omitted)"
+    print(fit_tmp)
     cat("\n")
   }
 
@@ -381,7 +393,8 @@ n_from_power <- function(object,
                            formula = power_curve,
                            start = stats::coef(fit_1),
                            lower_bound = lower_bound,
-                           control = nls_control)
+                           nls_control = nls_control,
+                           nls_args = nls_args)
     tmp1 <- get_rejection_rates_by_n(by_n_1,
                                      all_columns = TRUE)
     tmp1$reject <- tmp1$sig
@@ -449,7 +462,8 @@ n_from_power <- function(object,
                             formula = power_curve,
                             start = stats::coef(fit_1),
                             lower_bound = lower_bound,
-                            control = nls_control)
+                            nls_control = nls_control,
+                            nls_args = nls_args)
       # Update by_n_out
       by_n_out <- by_n_out[[1]]
     }
@@ -462,7 +476,9 @@ n_from_power <- function(object,
       abline(h = target_power,
              lty = "dotted",
              lwd = 2)
-      print(fit_1)
+      fit_tmp <- fit_1
+      fit_tmp$data <- "(Omitted)"
+      print(fit_tmp)
       cat("\n")
     }
 
@@ -549,7 +565,9 @@ n_from_power <- function(object,
             lwd = 2)
     }
     title("Final Power Curve")
-    print(fit_1)
+    fit_tmp <- fit_1
+    fit_tmp$data <- "(Omitted)"
+    print(fit_tmp)
     cat("\n")
   }
 

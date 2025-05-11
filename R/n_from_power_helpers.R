@@ -38,7 +38,8 @@ power_curve_n <- function(object,
                           formula = power ~ (n - c0)^e / (b + (n - c0)^e),
                           start = c(b = 2, c0 = 100, e = 1),
                           lower_bound = c(b = 0, c0 = 0, e = 1),
-                          control = list()) {
+                          nls_args = list(),
+                          nls_control = list()) {
   # TODO:
   # - Make the function more flexible and allow users
   #   to customize the search.
@@ -47,16 +48,29 @@ power_curve_n <- function(object,
   reject0$power <- reject0$sig
   nls_contorl0 <- list(maxiter = 5000)
   nls_contorl1 <- utils::modifyList(nls_contorl0,
-                                    control)
+                                    nls_control)
 
+  nls_args0 <- list(algorithm = "port")
+  nls_args1 <- utils::modifyList(nls_args0,
+                                 nls_args)
+  # Override these arguments
+  nls_args1 <- utils::modifyList(nls_args1,
+                                 list(formula = formula,
+                                      data = reject0,
+                                      start = start,
+                                      lower = lower_bound,
+                                      control = nls_contorl1))
   # Do nls
-  fit <- tryCatch(suppressWarnings(stats::nls(formula = formula,
-                    data = reject0,
-                    start = start,
-                    algorithm = "port",
-                    lower = lower_bound,
-                    control = nls_contorl1)),
-                  error = function(e) e)
+  fit <- tryCatch(suppressWarnings(do.call(stats::nls,
+                                           nls_args1)),
+                   error = function(e) e)
+  # fit <- tryCatch(suppressWarnings(stats::nls(formula = formula,
+  #                   data = reject0,
+  #                   start = start,
+  #                   algorithm = "port",
+  #                   lower = lower_bound,
+  #                   control = nls_contorl1)),
+  #                 error = function(e) e)
   if (inherits(fit, "nls")) {
     return(fit)
   }

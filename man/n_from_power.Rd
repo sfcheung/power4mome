@@ -25,7 +25,8 @@ n_from_power(
   power_curve = power ~ I((n - c0)^e)/(b + I((n - c0)^e)),
   start = c(b = 2, c0 = 100, e = 1),
   lower_bound = c(b = 0, c0 = 0, e = 1),
-  nls_control = list()
+  nls_control = list(),
+  nls_args = list()
 )
 
 \method{plot}{n_from_power}(x, ...)
@@ -161,7 +162,15 @@ arguments to be passed the \code{control}
 argument of \code{\link[stats:nls]{stats::nls()}} when
 estimating the relation between
 power and sample size. The values will
-override internal default values.}
+override internal default values,
+and also override \code{nls_args}.}
+
+\item{nls_args}{A named list of
+arguments to be used when calling
+\code{\link[stats:nls]{stats::nls()}}. Used to override
+internal default, such as the
+algorithm (default is \code{"port"}).
+Used with cautions.}
 
 \item{x}{A \code{n_from_power} object,
 the output of \code{\link[=n_from_power]{n_from_power()}}.}

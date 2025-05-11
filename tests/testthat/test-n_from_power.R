@@ -37,6 +37,7 @@ out_power
 
 tmp <- n_from_power(out,
                     progress = TRUE,
+                    final_nrep = 100,
                     seed = 1234)
 plot(tmp)
 
@@ -58,6 +59,7 @@ out2 <- power4test(nrep = 50,
 
 tmp2 <- n_from_power(out2,
                      progress = TRUE,
+                     final_nrep = 100,
                      seed = 1234)
 plot(tmp2)
 
@@ -98,6 +100,7 @@ get_rejection_rates(out3)
 
 tmp3 <- n_from_power(out3,
                      progress = TRUE,
+                     final_nrep = 100,
                      seed = 1234)
 
 plot(tmp3)
