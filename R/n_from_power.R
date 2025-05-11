@@ -249,9 +249,6 @@ n_from_power <- function(object,
     stop("'nrep_steps' must be at least 1 (after rounding, if necessary).")
   }
 
-  # TODO:
-  # - Use CI and CI width for convergence?
-
   if (!is.null(seed)) {
     set.seed(seed)
   }
@@ -639,8 +636,6 @@ n_from_power <- function(object,
 #' @export
 plot.n_from_power <- function(x,
                               ...) {
-  # TODO:
-  # - A draft only
   plot_power_curve(x$power4test_trials,
                    x$power_curve)
   abline(h = x$target_power,

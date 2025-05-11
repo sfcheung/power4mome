@@ -136,8 +136,6 @@ estimate_n <- function(power_n_fit,
                        target_power = .80,
                        interval = c(50, 2000),
                        extendInt = "no") {
-  # TODO:
-  # - Need to handle negative sample size.
   f <- function(n) {
     # stats::predict(power_n_fit,
     #                newdata = list(n = n)) - target_power
@@ -154,6 +152,8 @@ estimate_n <- function(power_n_fit,
     return(NA)
   }
   n_target <- round(n_target$root)
+  # Negative sample size should be handled by the
+  # calling function, e.g,, estimate_n_range().
   return(n_target)
 }
 
@@ -166,8 +166,6 @@ estimate_n_range <- function(power_n_fit,
                              interval = c(50, 2000),
                              extendInt = "upX",
                              n_to_exclude = NULL) {
-  # TODO:
-  # - Need to handle negative sample size
   power_j <- seq(from = max(target_power - tolerance, power_min),
                  to = min(target_power + tolerance, power_max),
                  length.out = k)
