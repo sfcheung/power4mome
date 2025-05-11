@@ -1,5 +1,3 @@
-skip("WIP")
-
 skip_on_cran()
 
 library(testthat)
