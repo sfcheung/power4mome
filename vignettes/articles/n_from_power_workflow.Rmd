@@ -1,0 +1,168 @@
+---
+title: "Workflow of 'n_from_power()'"
+author: "Shu Fai Cheung & Sing-Hang Cheung"
+output:
+  html_document:
+    fig.align: "center"
+    toc: true
+    number_sections: false
+bibliography: references.bib
+csl: apa.csl
+---
+
+(**DRAFT: WORK-IN-PROGRESS**)
+
+```{r echo = FALSE}
+library(DiagrammeR)
+```
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Goal
+
+This technical appendix describes the
+workflow of `n_from_power()` in
+[power4mome](https://sfcheung.github.io/power4mome/).
+
+# `n_from_power()`
+
+The workflow of `n_from_power()`.
+
+```{r fig-n_from_power, fig.cap = "From Power to Sample Size", echo = FALSE}
+# https://mermaid.live/edit#pako:eNqtVntvGjkQ_yrWVpVAIhGPNgGqXuVdIEBCdEraP8pRIWfXwPYWL_V6k9Ao3_1mPfY-CLmedEWK4vH85u2Z2SfHjwPu9J1VFD_4GyYV-TxYCELeviV-xJJkwFck4CuWRoqswijqvxnCbzT6cAjiUsZSgDIDG40G8HsBSxTY4CIwqMEgwwEqw81p7a-FMwqBqzac3LLtLoJ_4U9OaqK-cL7VMxSltRIoFKEKWUREQtbhPReVS8kT8DtZOCjogqDHoojs4gcu3ymeqOXdfinIKpZaTuRQD6AzLtdc3x_oGWgHFGGoiPipvOfk5A-ISS3DHJX5-WUXMMU1o5Uz3IKRmS84Q2DccqVtJvxHyoXPSbwiQvJd0iA38Mcgboh1B2aVhBiNKKSYjl6RvklKoItXQG-0nUPFmZRLn0AkKxsEbFjPhuUCy5sQPxZKsRDEAbYG7TovJVgpFVgfxeU9FAhsYgojfs8jEI_BKSb9TWHds9UWmq3knpxAqsXyu4nKzcpBg-9ponSiyB1LeEBiUVWN4WlRABXSw18_Ci2lK5VLjY69jwJnK-peHH8q5q20ijDHkMlJNX-QpiQMjAUm1rpO4F64hTwGleg-FbkeV9pDkIdQbazxKE5AXqcReNVa1Y10qVRiGaeqgQA86tTpkx_i_-w96pCBKkWTPfGhcRWcuNtri6Uc5Ab12_iXAoQJEQXY_Z_eaSXefyzeWD-t0rv9RQ0nUEMq9sSDQobCj1JTvHKiS5WaUNOL4O0m1GX5fPNlaK1P3Goha6yOxYSGe027Drh2VyfJFjLKE3JbqPN-R2En8xc-j-iVsaIRU0gCMkuhTrMZYm2Qjx8hc4JFy-ymgspgs1hmgTEBLcyxoyO-qmrTr_SaP2LHw2S0g3EJ82t5ML-mmc8z9hhu0y3OOQ1IoPLM3_DgUwG9POb8pa2TWGq3G5gXc8YkGgJkzUkHa87msmTGtVM4Jte0__sUX1Xabvl4pPFITb_aeiE0A6E_QSuT-KCgRLu85novz7O9fMNVKkUF8a1uF7duB0pxPyPh4s5FwsOtisQA16AhqNmWhnTNjkRyaPfWEOlRvuyQvkAHDNuluLCQcHH3AEG-8sTcGZ5X8K7j8hW66A5wsyAxxEWBxAjnPxIXOOSRGOPQqNgbUzNWLUkLkDU8ds20sSS1k9FeWECO8OwksxeDfPAanyd2nOck9m_Fuwk1g8iQrhk8hvTM4EByWlZhfZ_MzVioYqZlDC1f5ran1PRy5faydGnlp9RC6YGGgmEimM5Nxx_Yz-9eGKLHPL2sQmlxaZGXbj4c8OLKNHZOYT8iObOdpsn53Gk4Wy63LAzgy_spYy0c6KstbMU-HAMm_144C_EMOJaq-HYvfKevZMobjozT9cbpr2B-AZXqeT4I2VqybX67Y2Iex1srwoNQxXKG3_n6c19DnP6T8-j0e73TVrfdaXbPOu97zWbnXcPZO_2TVvu0d37eet89aza73c55q_3ccH5qrWen3WavfdZsdTtnzXar02k4a5mFYjyEr3suvTgVyum32gB8_gcmBcHR
+mermaid('
+flowchart TD
+  %% classDef default fill:#EEEEFF;
+  %% classDef errornode fill:#FFDDDD;
+  %% classDef startend fill:#DDFFDD;
+
+  ZA(["Find the Sample Size (n)"])
+  AA("Find the initial ns given the initial results")
+  AB("Call power4test_by_n for the ns")
+  AC("Merge the results")
+  AD("Fit a power curve -> fit_i")
+  ADA("Update fit_1")
+  ADB("Update by_n_1")
+  AE("Set the sequence of nreps, Rs, and ns per trial")
+  %% AF("Set the sequence of Rs")
+  %% AG("Set the sequence of # of ns per trial")
+
+  BA{"Start a trial"}
+
+  BB{"CI conttains target power"}
+
+  BBA("Update the interval of power levels to search")
+
+  BC("Find ns to try --> n_j")
+  BD("Adjust nrep based on power levels of ns --> nrep_j")
+  BE("Call power4test_by_n for the ns --> by_n_j")
+  BF("Merge the results --> by_n_1")
+  BG("Fit a power curve --> fit_1")
+
+  BH{"Is target power inside the range of estimated power levels?"}
+
+  BHA("Find the n with power closest to the target power")
+  BHAA("Update n_out, power_out, nrep_out, ci_out, and by_n_out")
+
+  BHB("Estimate n by the power curve")
+  BHBA("Call power4test_by_n for this n")
+  BHBB("Update n_out, power_out, nrep_out, ci_out, and by_n_out")
+  BHBC("Merge the results --> by_n_1")
+  BHBD("Update the power curve --> fit_1")
+
+  BI{"Any CIs include the target power?"}
+
+  BIA("Set ci_hit to TRUE")
+  BIB("Find the n (a) with CI include the target power and (b) smalles SE")
+  BIC("Update n_out, power_out, nrep_out, ci_out, and by_n_out")
+
+  BIZ("Set ci_hit to FALSE")
+
+  BJ{"ci_hit?"}
+
+  BJA{"nrep_out == final_nrep?"}
+
+  BJAA{"More than one nrep left?"}
+
+  BJAAA("Next nrep, R, and ns_per_trial")
+
+  BJZ("Maximum # of trials reached?")
+
+  BK{"ci_hit?"}
+
+  BKA("Set n_final, by_n_final, power_final, ci_final, nrep_final, i_final")
+
+  BKB("Set to NA: n_final, by_n_final, power_final, ci_final, nrep_final, i_final")
+
+  BL("Estimate n_x by the power curve (fit_1)")
+
+  BM("Prepare the output")
+
+
+  ZZ(["Return the output"])
+
+  ZA --> AA
+  AA --> AB
+  AB --> AC
+  AC --> AD
+  AD --> ADA
+  ADA --> ADB
+  ADB --> AE
+  %% AE --> AF
+  %% AF --> AG
+
+  AE --> BA
+  BA --> BB
+  BB -- Yes --> BBA --> BC
+  BB -- No --> BC
+  BC --> BD
+  BD --> BE
+  BE --> BF
+  BF --> BG
+  BG --> BH
+  BH -- Yes --> BHA
+  BHA --> BHAA
+  BH -- No --> BHB
+  BHB --> BHBA
+  BHBA --> BHBB
+  BHBB --> BHBC
+  BHBC --> BHBD
+
+  BHBD --> BI
+  BHAA --> BI
+
+  BI -- Yes --> BIA
+  BIA --> BIB
+  BIB --> BIC
+  BIC --> BJ
+
+  BI -- No --> BIZ
+  BIZ --> BJ
+
+  BJ -- No --> BA
+
+  BJ -- Yes --> BJA
+  BJA -- Yes --> BK
+  BJA -- No --> BJAA
+  BJAA -- Yes --> BJAAA
+  BJAAA --> BJZ
+  BJZ -- No --> BA
+  BJZ -- Yes --> BK
+  BJAA -- No --> BA
+
+  BK -- Yes --> BKA
+  BK -- No --> BKB
+
+  BKA --> BL
+  BKB --> BL
+
+  BL --> BM
+
+  BM --> ZZ
+', height = 4500, width = 700)
+```
