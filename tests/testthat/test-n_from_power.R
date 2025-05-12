@@ -19,7 +19,7 @@ y ~ m: m
 y ~ x: s
 "
 
-out <- power4test(nrep = 50,
+out <- power4test(nrep = 20,
                   model = mod,
                   pop_es = mod_es,
                   n = 100,

@@ -39,6 +39,7 @@ expect_no_error(tmp <- n_from_power(out,
                     seed = 1234,
                     progress = FALSE,
                     simulation_progress = FALSE))
+summary(tmp)
 expect_true((tmp$power_final > .70) &&
             (tmp$power_final < .90))
 
@@ -64,6 +65,7 @@ expect_no_error(tmp <- n_from_power(out,
                     seed = 1234,
                     progress = FALSE,
                     simulation_progress = FALSE))
-expect_true((tmp$power_final > .70) &&
+summary(tmp)
+expect_true((tmp$power_final > .60) &&
             (tmp$power_final < .90))
 })

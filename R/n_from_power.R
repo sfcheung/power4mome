@@ -312,9 +312,6 @@ n_from_power <- function(object,
                          verbose = progress)
   if (progress) {
     cat("- Power Curve:\n")
-    plot_power_curve(by_n_i,
-                     power_n_fit = fit_i)
-    title(paste0("Pre-iteration Search"))
     fit_tmp <- fit_i
     fit_tmp$data <- "(Omitted)"
     print(fit_tmp)
@@ -407,6 +404,7 @@ n_from_power <- function(object,
     if (target_in_range) {
       tmp3 <- abs(tmp1$reject - target_power)
       n_out_i <- which.min(tmp3)
+      # If ties, the smallest sample size will be used
       n_out <- tmp1$n[n_out_i]
       power_out <- tmp1$reject[n_out_i]
       nrep_out <- tmp1$nrep[n_out_i]
@@ -474,19 +472,12 @@ n_from_power <- function(object,
 
     if (progress) {
       cat("- Power Curve:\n")
-      plot_power_curve(by_n_1,
-                       power_n_fit = fit_1)
-      title(paste0("Trial ", j))
-      abline(h = target_power,
-             lty = "dotted",
-             lwd = 2)
       fit_tmp <- fit_1
       fit_tmp$data <- "(Omitted)"
       print(fit_tmp)
       cat("\n")
     }
 
-    power_diff <- abs(power_out - target_power)
     by_n_ci <- rejection_rates_add_ci(by_n_1,
                                       level = ci_level)
     i0 <- (by_n_ci$reject_ci_lo < target_power) &
@@ -495,8 +486,10 @@ n_from_power <- function(object,
       # Update based on CI and SE
       ci_hit <- TRUE
       i1 <- rank(by_n_ci$reject_se)
+      # If ties, the smallest sample size will be used
       i2 <- which(i1 == min(i1[i0]))[1]
       by_n_out <- by_n_1[[i2]]
+      n_out <- by_n_ci$n[i2]
       power_out <- by_n_ci$reject[i2]
       nrep_out <- by_n_ci$nrep[i2]
       ci_out <- unlist(by_n_ci[i2, c("reject_ci_lo", "reject_ci_hi")])
@@ -504,9 +497,7 @@ n_from_power <- function(object,
       ci_hit <- FALSE
     }
 
-    # if (power_diff <= power_tolerance_in_final) {
     if (ci_hit) {
-      # if (length(nrep_seq) == 1) {
       if (nrep_out == final_nrep) {
         # Used maximum
         if (progress) {
@@ -532,11 +523,6 @@ n_from_power <- function(object,
       }
     } else {
       if (progress) {
-        # cat("- Estimated power is not close enough to target power (",
-        #     target_power, "). ",
-        #     "(Tolerance: ", power_tolerance_in_final, ")",
-        #     "\n",
-        #     sep = "")
         cat("- Estimated power is not close enough to target power (",
             formatC(target_power, digits = 4, format = "f"), "). ",
             "(CI: [", paste0(formatC(ci_out, digits = 4, format = "f"), collapse = ","), "])",
@@ -558,17 +544,6 @@ n_from_power <- function(object,
     print(tmp)
     cat("\n")
     cat("- Estimated Power Curve:\n")
-    plot_power_curve(by_n_1,
-                     power_n_fit = fit_1)
-    abline(h = target_power,
-           lty = "dotted",
-           lwd = 2)
-    if (ci_hit) {
-      abline(v = n_out,
-            lty = "dotted",
-            lwd = 2)
-    }
-    title("Final Power Curve")
     fit_tmp <- fit_1
     fit_tmp$data <- "(Omitted)"
     print(fit_tmp)
@@ -576,16 +551,20 @@ n_from_power <- function(object,
   }
 
   if (ci_hit) {
+    # Created when ci_hit set to TRUE
+    n_final <- n_out
     by_n_final <- by_n_out
-    tmp <- get_rejection_rates(by_n_final)
-    power_final <- tmp$reject
+    power_final <- power_out
     ci_final <- ci_out
     nrep_final <- nrep_out
+    i_final <- i2
   } else {
+    n_final <- NA
     by_n_final <- NA
     power_final <- NA
     ci_final <- NA
     nrep_final <- NA
+    i_final <- NA
   }
 
   n_x <- NA
@@ -632,17 +611,14 @@ n_from_power <- function(object,
   args$object <- NULL
   reject_1 <- get_rejection_rates_by_n(by_n_1)
   time_end <- Sys.time()
-  if (!ci_hit) {
-    n_out <- NA
-    power_final <- NA
-    ci_final <- NA
-  }
+
   out <- list(power4test_trials = by_n_1,
               rejection_rates = reject_1,
               n_tried = reject_1$n,
               power_tried = reject_1$reject,
-              n_final = n_out,
+              n_final = n_final,
               power_final = power_final,
+              i_final = i_final,
               ci_final = ci_final,
               ci_level = ci_level,
               nrep_final = nrep_final,
@@ -671,6 +647,9 @@ n_from_power <- function(object,
 #' @param digits The number of digits
 #' after the decimal when printing
 #' the results.
+#'
+#' @param ... Optional arguments.
+#' Not used for now.
 #'
 #' @description
 #' The `print` method only print
@@ -736,45 +715,4 @@ catwrap <- function(x,
       fill = fill,
       labels = labels,
       append = append)
-}
-
-#' @rdname n_from_power
-#'
-#' @param x A `n_from_power` object,
-#' the output of [n_from_power()].
-#'
-#' @param ... Optional arguments.
-#' Not used for now.
-#'
-#' @return
-#' The `plot`-method of `n_from_power`
-#' objects plot the power rates
-#' against sample sizes examined,
-#' or other diagnostic plots.
-#' It is called for its side effect.
-#'
-#' @export
-plot.n_from_power <- function(x,
-                              ...) {
-  plot_power_curve(x$power4test_trials,
-                   x$power_curve)
-  abline(h = x$target_power,
-         lty = "dotted")
-  abline(v = x$n_final,
-         col = "blue")
-  abline(h = x$power_final,
-         lty = "dotted",
-         col = "blue")
-  text(x = x$n_final,
-       y = 0,
-       labels = x$n_final,
-       adj = .5,
-       cex = 2)
-  tmp <- par("usr")
-  text(x = tmp[1] + (tmp[2] - tmp[1]) * .05,
-       y = x$power_final,
-       labels = x$power_final,
-       pos = 3,
-       cex = 2)
-  invisible(x)
 }

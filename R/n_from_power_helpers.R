@@ -127,43 +127,6 @@ power_curve_n <- function(object,
   return(NA)
 }
 
-plot_power_curve <- function(object,
-                             power_n_fit,
-                             ...) {
-  # reject0 <- get_rejection_rates_by_n(object)
-  reject0 <- rejection_rates_add_ci(object)
-  reject0$power <- reject0$reject
-  plot(power ~ n,
-       data = reject0,
-       type = "l",
-       lwd = 2,
-       ylim = c(0, 1))
-  # Some CIs may be of zero width
-  i <- !(reject0$reject_ci_lo == reject0$reject_ci_hi)
-  if (any(i)) {
-    arrows(x0 = reject0$n[i],
-          y0 = reject0$reject_ci_lo[i],
-          x1 = reject0$n[i],
-          y1 = reject0$reject_ci_hi[i],
-          length = .05,
-          angle = 90,
-          code = 3,
-          col = "grey50")
-  }
-  x_new <- seq(min(reject0$n),
-               max(reject0$n),
-               length.out = 20)
-  if (inherits(power_n_fit, "nls") || inherits(power_n_fit, "lm")) {
-    y_new <- predict_fit(power_n_fit,
-                         newdata = list(n = x_new))
-    points(x = x_new,
-          y = y_new,
-          type = "l",
-          lwd = 2,
-          col = "red")
-  }
-}
-
 estimate_n <- function(power_n_fit,
                        target_power = .80,
                        interval = c(50, 2000),
@@ -213,19 +176,32 @@ estimate_n_range <- function(power_n_fit,
                 })
   out <- ceiling(out)
   # Check invalid Ns
+
   i <- rep(FALSE, length(out))
   if (isFALSE(extendInt %in% c("yes", "upX"))) {
-    i <- out > interval[2]
+    i[out > interval[2]] <- TRUE
   }
   if (isFALSE(extendInt %in% c("yes", "downX"))) {
-    i <- out < interval[1]
+    i[out < interval[1]] <- TRUE
   }
-  i[is.na(i)] <- TRUE
+
+  # Ns used are considered invalid
+  i[out %in% n_to_exclude] <- TRUE
+
+  # Duplicated are considered invalid
+  i[duplicated(out)] <- TRUE
+
+  i[is.na(out)] <- TRUE
+
   if (isFALSE(any(i))) {
     return(out)
   }
   # Replace invalid Ns by random Ns
-  n_pool <- setdiff(seq(interval[1], interval[2]),
+  # Do not use the full interval
+  new_interval1 <- min(n_to_exclude, interval)
+  new_interval2 <- min(ceiling(max(n_to_exclude) * 1.25),
+                       interval[2])
+  n_pool <- setdiff(seq(new_interval1, new_interval2),
                     c(n_to_exclude, out[!i]))
   n_new <- sample(n_pool, size = sum(i))
   out[i] <- n_new
