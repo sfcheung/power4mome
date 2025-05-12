@@ -34,7 +34,7 @@ workflow of `n_from_power()` in
 The workflow of `n_from_power()`.
 
 ```{r fig-n_from_power, fig.cap = "From Power to Sample Size", echo = FALSE}
-# https://mermaid.live/edit#pako:eNqtVntvGjkQ_yrWVpVAIhGPNgGqXuVdIEBCdEraP8pRIWfXwPYWL_V6k9Ao3_1mPfY-CLmedEWK4vH85u2Z2SfHjwPu9J1VFD_4GyYV-TxYCELeviV-xJJkwFck4CuWRoqswijqvxnCbzT6cAjiUsZSgDIDG40G8HsBSxTY4CIwqMEgwwEqw81p7a-FMwqBqzac3LLtLoJ_4U9OaqK-cL7VMxSltRIoFKEKWUREQtbhPReVS8kT8DtZOCjogqDHoojs4gcu3ymeqOXdfinIKpZaTuRQD6AzLtdc3x_oGWgHFGGoiPipvOfk5A-ISS3DHJX5-WUXMMU1o5Uz3IKRmS84Q2DccqVtJvxHyoXPSbwiQvJd0iA38Mcgboh1B2aVhBiNKKSYjl6RvklKoItXQG-0nUPFmZRLn0AkKxsEbFjPhuUCy5sQPxZKsRDEAbYG7TovJVgpFVgfxeU9FAhsYgojfs8jEI_BKSb9TWHds9UWmq3knpxAqsXyu4nKzcpBg-9ponSiyB1LeEBiUVWN4WlRABXSw18_Ci2lK5VLjY69jwJnK-peHH8q5q20ijDHkMlJNX-QpiQMjAUm1rpO4F64hTwGleg-FbkeV9pDkIdQbazxKE5AXqcReNVa1Y10qVRiGaeqgQA86tTpkx_i_-w96pCBKkWTPfGhcRWcuNtri6Uc5Ab12_iXAoQJEQXY_Z_eaSXefyzeWD-t0rv9RQ0nUEMq9sSDQobCj1JTvHKiS5WaUNOL4O0m1GX5fPNlaK1P3Goha6yOxYSGe027Drh2VyfJFjLKE3JbqPN-R2En8xc-j-iVsaIRU0gCMkuhTrMZYm2Qjx8hc4JFy-ymgspgs1hmgTEBLcyxoyO-qmrTr_SaP2LHw2S0g3EJ82t5ML-mmc8z9hhu0y3OOQ1IoPLM3_DgUwG9POb8pa2TWGq3G5gXc8YkGgJkzUkHa87msmTGtVM4Jte0__sUX1Xabvl4pPFITb_aeiE0A6E_QSuT-KCgRLu85novz7O9fMNVKkUF8a1uF7duB0pxPyPh4s5FwsOtisQA16AhqNmWhnTNjkRyaPfWEOlRvuyQvkAHDNuluLCQcHH3AEG-8sTcGZ5X8K7j8hW66A5wsyAxxEWBxAjnPxIXOOSRGOPQqNgbUzNWLUkLkDU8ds20sSS1k9FeWECO8OwksxeDfPAanyd2nOck9m_Fuwk1g8iQrhk8hvTM4EByWlZhfZ_MzVioYqZlDC1f5ran1PRy5faydGnlp9RC6YGGgmEimM5Nxx_Yz-9eGKLHPL2sQmlxaZGXbj4c8OLKNHZOYT8iObOdpsn53Gk4Wy63LAzgy_spYy0c6KstbMU-HAMm_144C_EMOJaq-HYvfKevZMobjozT9cbpr2B-AZXqeT4I2VqybX67Y2Iex1srwoNQxXKG3_n6c19DnP6T8-j0e73TVrfdaXbPOu97zWbnXcPZO_2TVvu0d37eet89aza73c55q_3ccH5qrWen3WavfdZsdTtnzXar02k4a5mFYjyEr3suvTgVyum32gB8_gcmBcHR
+# https://mermaid.live/edit#pako:eNqtV3tvGjkQ_yrWVpVAIhGPUhKqXrXLQgIJUZWkfxxHtXJ2DWxv8XJebxIa5bvf2GPvgybXSlekKJ7xb94Pw5MTphFzhs4qSR_CDRWS3PpLTsjbtyRMaJb5bEUitqJ5IskqTpLhmzF8JpMPhyAmRCo4KDOwycSHzw-wTIINxiOD8n2FA5TCLdzGX0tnEsOt3DByQ7e7BP7F3xlp8ObS-dpUKNdtVEAxj2VME8Izso7vGa8xBcvA72zpoKAHgiOaJGSXPjDxTrJMBnf7gJNVKrQcL6AjgM6ZWDPNN3rI0dEfRAkEHYvztS-SUNRJwlzcMwKwVSyD2KAgftdXXn_ZRVQyfdep3nnlXV39GC5umNROZOyfnPGQkXRFuGC7rEWu4Y9CIiD4HRiXAoKu6J28In2dVUBnr4DeaDuHipWUp0K5UXWEsA-uvKcnyPGUhCmXksYgD7g1qNfpWTrPzxZYyQeWTDJxDzUDq5jKhN2zBORTcIuKcFMaGdkG4Ppair2uDA--mbg8VRY3-pZnUqeK3NGMRSTlddUYoBYFUCk9_nmflK1QSE1-rWW8s5dbxvRMpwzzXOVyWs8g5CmLI2OC8rUuFfgXbyGRUS28T5Vsn9dmhpOHWG6s-STNQIFOJNzVy9U00pVi8SDNZQsBeNTJ06cwxv-qJ3XQQFXiUW0-Nr6CE3d7bbGShcKg7o7_KEGcEV6Cvf_pnVbyixMPSL_euT-p4lRV0eV7MoJSxjxMclO-aqartZq6ZiLB302sC3N7_WVs7U-9eikbtInlhKl7Tb0OuXHXJNkWcsoyclOqG_2O0k4XP_g8cS-NFY2YqTTgbTXYmav41gz5-BHSx2kSKE4dp4HzVKjoKIdZZjjaCVsdaNTdesUecfZhS9olGcAuCw4W1kx5PqeP8Tbf4s7TgAw6gIYbFn0qoRfKgwbG0MSUvux4s-rPhS0nDzSihekzZ8y1IUC1OWm95myYFT88u7JTcuUOf5_iy9p8Bo8vTChp6PZulkJzEPoMWqnAvoNs7IrW0K_6Qr3q10zmgtcQX5v22ddz47r4uiPh4YuNxAjfZCR8fHiRGKMKd6xJz0Uyy-_Wgu425FbVklym6c4-XYjz8A0CgvzJMsMzd6Py7iqtstC-5-MLg8QYHwwkJvgOIHGGyx6Jc1wdNXvnrlmulnRLkDV87pmdY0nX7kfLsIACMbL7zDL8Yv0an6d2qRckznDNu6lrlpEhPbN8DDkyywPJWVWF9X26MKuhjplVMbNFlVsYn7lmlGtY13LdA3D9oqrb7IM6Y1FFvSiq2wi-pBY7ombwouJclWnHs853S6ZVf-EVuwEZl2auCwrHEcm5HTRNLhZOy9kysaVxBF_bn9TV0oGx2sLrOYRjRMXfS2fJnwFHc5ne7HnoDKXIWcsRab7eOMMV7Degcr31_ZjCrGwL7o7yRZpurQiLYpmKOf5I0L8VNMQZPjmPzvCkc9zuvu-fdk56ndP2oN9y9s7wqNvut4977X53MOh2Bifves8t57vW2T_u9vrt03a33x_0BgBpOWuhAjH-Qc6ZGKU5l86w877Xbj__C8fD2-Y
 mermaid('
 flowchart TD
   %% classDef default fill:#EEEEFF;
@@ -44,17 +44,17 @@ flowchart TD
   ZA(["Find the Sample Size (n)"])
   AA("Find the initial ns given the initial results")
   AB("Call power4test_by_n for the ns")
-  AC("Merge the results")
+  AC("Merge the results --> by_n_1")
   AD("Fit a power curve -> fit_i")
-  ADA("Update fit_1")
-  ADB("Update by_n_1")
+  %% ADA("Update fit_1")
+  %% ADB("Update by_n_1")
   AE("Set the sequence of nreps, Rs, and ns per trial")
   %% AF("Set the sequence of Rs")
   %% AG("Set the sequence of # of ns per trial")
 
-  BA{"Start a trial"}
+  BA("Start a trial")
 
-  BB{"CI conttains target power"}
+  BB{{"CI conttains target power"}}
 
   BBA("Update the interval of power levels to search")
 
@@ -64,7 +64,7 @@ flowchart TD
   BF("Merge the results --> by_n_1")
   BG("Fit a power curve --> fit_1")
 
-  BH{"Is target power inside the range of estimated power levels?"}
+  BH{{"Is target power inside the range of estimated power levels?"}}
 
   BHA("Find the n with power closest to the target power")
   BHAA("Update n_out, power_out, nrep_out, ci_out, and by_n_out")
@@ -75,7 +75,7 @@ flowchart TD
   BHBC("Merge the results --> by_n_1")
   BHBD("Update the power curve --> fit_1")
 
-  BI{"Any CIs include the target power?"}
+  BI{{"Any CIs include the target power?"}}
 
   BIA("Set ci_hit to TRUE")
   BIB("Find the n (a) with CI include the target power and (b) smalles SE")
@@ -83,17 +83,17 @@ flowchart TD
 
   BIZ("Set ci_hit to FALSE")
 
-  BJ{"ci_hit?"}
+  BJ{{"ci_hit?"}}
 
-  BJA{"nrep_out == final_nrep?"}
+  BJA{{"nrep_out == final_nrep?"}}
 
-  BJAA{"More than one nrep left?"}
+  BJAA{{"More than one nrep left?"}}
 
   BJAAA("Next nrep, R, and ns_per_trial")
 
   BJZ("Maximum # of trials reached?")
 
-  BK{"ci_hit?"}
+  BK{{"(ci_hit) and (nrep_out == final_nrep)?"}}
 
   BKA("Set n_final, by_n_final, power_final, ci_final, nrep_final, i_final")
 
@@ -110,13 +110,12 @@ flowchart TD
   AA --> AB
   AB --> AC
   AC --> AD
-  AD --> ADA
-  ADA --> ADB
-  ADB --> AE
-  %% AE --> AF
-  %% AF --> AG
+  AD --> AE
 
   AE --> BA
+
+  subgraph Trial Loop
+
   BA --> BB
   BB -- Yes --> BBA --> BC
   BB -- No --> BC
@@ -144,16 +143,21 @@ flowchart TD
   BI -- No --> BIZ
   BIZ --> BJ
 
-  BJ -- No --> BA
+  BJ -- No --> BJZ
 
   BJ -- Yes --> BJA
-  BJA -- Yes --> BK
   BJA -- No --> BJAA
   BJAA -- Yes --> BJAAA
+  BJAA -- No --> BJZ
   BJAAA --> BJZ
   BJZ -- No --> BA
-  BJZ -- Yes --> BK
   BJAA -- No --> BA
+
+end
+
+  BJZ -- Yes --> BK
+  BJA -- Yes --> BK
+
 
   BK -- Yes --> BKA
   BK -- No --> BKB
