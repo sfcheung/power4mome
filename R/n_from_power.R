@@ -550,7 +550,7 @@ n_from_power <- function(object,
     cat("\n")
   }
 
-  if (ci_hit) {
+  if (ci_hit && nrep_out == final_nrep) {
     # Created when ci_hit set to TRUE
     n_final <- n_out
     by_n_final <- by_n_out
