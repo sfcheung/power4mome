@@ -3,7 +3,6 @@
 \name{n_from_power}
 \alias{n_from_power}
 \alias{print.n_from_power}
-\alias{plot.n_from_power}
 \title{Sample Size Determination}
 \usage{
 n_from_power(
@@ -31,8 +30,6 @@ n_from_power(
 )
 
 \method{print}{n_from_power}(x, digits = 3, ...)
-
-\method{plot}{n_from_power}(x, ...)
 }
 \arguments{
 \item{object}{A \code{power4test} object,
@@ -175,8 +172,12 @@ internal default, such as the
 algorithm (default is \code{"port"}).
 Used with cautions.}
 
-\item{x}{A \code{n_from_power} object,
-the output of \code{\link[=n_from_power]{n_from_power()}}.}
+\item{x}{The output of
+\code{\link[=n_from_power]{n_from_power()}}, the
+\code{print} method of
+an \code{n_from_power} object,
+which is the output of
+\code{\link[=n_from_power]{n_from_power()}}.}
 
 \item{digits}{The number of digits
 after the decimal when printing
@@ -194,12 +195,6 @@ elements:
 The \code{print}-method of \code{n_from_power}
 objects returns the object \code{x}
 invisibly.
-It is called for its side effect.
-
-The \code{plot}-method of \code{n_from_power}
-objects plot the power rates
-against sample sizes examined,
-or other diagnostic plots.
 It is called for its side effect.
 }
 \description{
