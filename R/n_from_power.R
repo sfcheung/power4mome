@@ -211,7 +211,8 @@ n_from_power <- function(object,
   power_tolerance_in_interval <- a * sqrt(target_power * (1 - target_power) / final_nrep)
   power_tolerance_in_final <- a * sqrt(target_power * (1 - target_power) / final_nrep)
 
-  # Sanity Checks
+  # === Sanity Checks ===
+
   if (target_power <= 0 || target_power >= 1) {
     stop("'target power' (",
          target_power,
@@ -265,33 +266,43 @@ n_from_power <- function(object,
 
   time_start <- Sys.time()
 
-  # Initial Trial
+  # === Initial Trial ===
+
   if (progress) {
     cat("\n--- Pre-iteration Search ---\n\n")
     tmp <- format(Sys.time(), "%Y-%m-%d %X")
     cat("- Start at", tmp, "\n")
   }
 
+  # Set the initial sample sizes to try
+
   n_i <- set_n_range(object,
                      target_power = target_power,
                      k = ns_per_trial,
                      n_max = n_max)
+  # Exclude the sample size in the input object
   n0 <- attr(object, "args")$n
   n_i <- setdiff(n_i, n0)
   if (n_include_interval) {
+    # Include the lowest and highest sample sizes in interval
     n_i <- c(n_interval, n_i)
   }
   n_i <- sort(unique(n_i))
+
   if (progress) {
     cat("- Sample sizes to try: ",
         paste0(n_i, collapse = ", "),
         "\n")
   }
+
+  # ** by_n_i **
+  # The current (i-th) set of sample size examined,
+  # along with their results.
   by_n_i <- power4test_by_n(object,
                             n = n_i,
                             progress = simulation_progress)
 
-  # Add object to the list
+  # Add the input object to the list
   tmp <- list(object)
   class(tmp) <- c("power4test_by_n", class(tmp))
   names(tmp) <- as.character(n0)
@@ -303,6 +314,9 @@ n_from_power <- function(object,
     print(tmp)
     cat("\n")
   }
+
+  # ** fit_i **
+  # The current power curve, based on by_n_i
   fit_i <- power_curve_n(by_n_i,
                          formula = power_curve,
                          start = start,
@@ -310,6 +324,7 @@ n_from_power <- function(object,
                          nls_control = nls_control,
                          nls_args = nls_args,
                          verbose = progress)
+
   if (progress) {
     cat("- Power Curve:\n")
     fit_tmp <- fit_i
@@ -318,8 +333,26 @@ n_from_power <- function(object,
     cat("\n")
   }
 
-  fit_1 <- fit_i
+  # ** by_n_1 **
+  # The collection of all sample sizes tried and their results
+  # to be updated when new sample size is tried.
+  # Used after the end of the loop.
   by_n_1 <- by_n_i
+
+  # ** fit_1 **
+  # The latest power curve
+  # To be updated whenever by_n_1 is updated.
+  # Used after the end of the loop.
+  fit_1 <- fit_i
+
+  # === Initialize the Sequences ===
+  # The sequence will be updated when nrep_step is initiated,
+  # to successively increase precision and speed by
+  # - increasing the number of replication,
+  # - increasing the number of resampling, and
+  # - decreasing the number of sample sizes to try.
+
+  # The sequence of the numbers of replication
   new_nrep <- get_rejection_rates_by_n(by_n_1,
                                         all_columns = TRUE)$nrep
   new_nrep <- ceiling(mean(new_nrep))
@@ -329,6 +362,8 @@ n_from_power <- function(object,
   final_nrep_seq <- ceiling(seq(from = final_nrep * .50,
                                 to = final_nrep,
                                 length.out = nrep_steps + 1))
+
+  # The sequence of the Rs (for boot and MC CI)
   R0 <- attr(object, "args")$R
   if (!is.null(R0)) {
     R_seq <- ceiling(seq(from = R0,
@@ -337,21 +372,36 @@ n_from_power <- function(object,
   } else {
     R_seq <- NULL
   }
+
+  # The sequence of the numbers of sample sizes per trial
   ns_per_trial_seq <- ceiling(seq(from = ns_per_trial,
                                    to = 2,
                                    length.out = nrep_steps + 1))
   ci_hit <- FALSE
+
+  # === Loop Over The Trials ===
+
   for (j in seq_len(max_trials)) {
+
     if (progress) {
       cat("\n\n--- Trial", j, "---\n\n")
       tmp <- format(Sys.time(), "%Y-%m-%d %X")
       cat("- Start at", tmp, "\n")
     }
-    # Target power is inserted, hence k can be greater than
-    # ns_per_trial by one.
+
     if (ci_hit) {
+      # After the first trial,
+      # Check whether at least one CI hit the target power.
+      # If yes, reduce the range of power levels when
+      # selecting the sample sizes to try.
+      # Necessary because the number of replication may have
+      # increased, requiring narrower CI.
       power_tolerance_in_interval <- max(abs(ci_out - power_out))
     }
+
+    # ** n_j **
+    # The vector of sample sizes to be tried in this trial
+    # Determined using by latest power curve (fit_1)
     n_j <- estimate_n_range(power_n_fit = fit_1,
                             target_power = target_power,
                             k = ns_per_trial_seq[1],
@@ -361,6 +411,10 @@ n_from_power <- function(object,
                             interval = n_interval,
                             extendInt = extendInt,
                             n_to_exclude = as.numeric(names(by_n_1)))
+
+    # Adjust the numbers of replication for each sample size.
+    # A sample size with estimated power closer to the
+    # target power will have a higher number of replication
     power_j <- predict_fit(fit_1,
                            newdata = list(n = n_j))
     nrep_j <- nrep_from_power(power_j = power_j,
@@ -368,6 +422,7 @@ n_from_power <- function(object,
                               tolerance = power_tolerance_in_final,
                               nrep_min = nrep_seq[1],
                               nrep_max = final_nrep_seq[1])
+
     if (progress) {
       cat("- Sample sizes to try:",
           paste0(n_j, collapse = ", "),
@@ -376,18 +431,26 @@ n_from_power <- function(object,
           paste0(nrep_j, collapse = ", "),
           "\n")
     }
+
+    # ** by_n_j **
+    # The results for this trial (based on n_j)
     by_n_j <- power4test_by_n(object,
                               n = n_j,
                               R = R_seq[1],
                               progress = simulation_progress,
                               by_nrep = nrep_j)
+
+    # Add the results to by_n_1
     by_n_1 <- c(by_n_1, by_n_j)
+
     if (progress) {
       cat("- Rejection Rates:\n")
       tmp <- get_rejection_rates_by_n(by_n_1)
       print(tmp)
       cat("\n")
     }
+
+    # Update the power curve
     fit_1 <- power_curve_n(by_n_1,
                            formula = power_curve,
                            start = stats::coef(fit_1),
@@ -395,26 +458,38 @@ n_from_power <- function(object,
                            nls_control = nls_control,
                            nls_args = nls_args,
                            verbose = progress)
+
+    # Get the rejection rates of all sample sizes tried.
     tmp1 <- get_rejection_rates_by_n(by_n_1,
                                      all_columns = TRUE)
     tmp1$reject <- tmp1$sig
     tmp2 <- range(tmp1$reject)
+
+    # Is the desired sample size likely already in the range
+    # of sample sizes examined, based on the estimated power?
     target_in_range <- (target_power > tmp2[1]) &&
                        (target_power < tmp2[2])
+
     if (target_in_range) {
+      # The desired sample size probably within the range examined
+
       tmp3 <- abs(tmp1$reject - target_power)
       n_out_i <- which.min(tmp3)
       # If ties, the smallest sample size will be used
+
+      # ** n_out, power_out, nrep_out, ci_out, by_n_out **
+      # The results of the candidate solution,
+      # - The sample size with power closest to the target power
       n_out <- tmp1$n[n_out_i]
       power_out <- tmp1$reject[n_out_i]
       nrep_out <- tmp1$nrep[n_out_i]
       by_n_ci <- rejection_rates_add_ci(by_n_1,
                                         level = ci_level)
       ci_out <- unlist(by_n_ci[n_out_i, c("reject_ci_lo", "reject_ci_hi")])
+      by_n_out <- by_n_1[[n_out_i]]
+
       if (progress) {
         cat("- Sample size with closest power:", n_out, "\n")
-      }
-      if (progress) {
         cat("- Estimated power for ",
             n_out,
             ": ",
@@ -422,8 +497,14 @@ n_from_power <- function(object,
             "\n",
             sep = "")
       }
-      by_n_out <- by_n_1[[n_out_i]]
+
     } else {
+      # The desired sample size may not be within the range examined
+      # Use the latest power curve to estimate the desired sample size.
+      # Inaccurate, but help approaching the target sample size.
+
+      # ** n_out, power_out, nrep_out, ci_out, by_n_out **
+      # Considered a candidate solution.
       n_out <- estimate_n_range(power_n_fit = fit_1,
                                 target_power = target_power,
                                 k = 1,
@@ -433,12 +514,6 @@ n_from_power <- function(object,
                                 interval = n_interval,
                                 extendInt = extendInt,
                                 n_to_exclude = as.numeric(names(by_n_1)))
-      if (progress) {
-        cat("- Extrapolated sample size:", n_out, "\n")
-      }
-      # Use only final_nrep * .50 because it is an estimate
-      # test_nrep <- max(final_nrep * .50,
-      #                  nrep_j)
       by_n_out <- power4test_by_n(object,
                                   n = n_out,
                                   nrep = nrep_seq[1],
@@ -449,7 +524,9 @@ n_from_power <- function(object,
       by_n_out_ci <- rejection_rates_add_ci(by_n_out,
                                             level = ci_level)
       ci_out <- unlist(by_n_out_ci[1, c("reject_ci_lo", "reject_ci_hi")])
+
       if (progress) {
+        cat("- Extrapolated sample size:", n_out, "\n")
         cat("- Estimated power for ",
             n_out,
             ": ",
@@ -457,8 +534,15 @@ n_from_power <- function(object,
             "\n",
             sep = "")
       }
-      # Update the results
+
+      # Add the results for the new sample size to
+      # the collection of results
       by_n_1 <- c(by_n_1, by_n_out)
+
+      # Update by_n_out
+      by_n_out <- by_n_out[[1]]
+
+      # Update the power curve
       fit_1 <- power_curve_n(by_n_1,
                             formula = power_curve,
                             start = stats::coef(fit_1),
@@ -466,8 +550,6 @@ n_from_power <- function(object,
                             nls_control = nls_control,
                             nls_args = nls_args,
                             verbose = progress)
-      # Update by_n_out
-      by_n_out <- by_n_out[[1]]
     }
 
     if (progress) {
@@ -478,28 +560,46 @@ n_from_power <- function(object,
       cat("\n")
     }
 
+    # Check results accumulated so far
+
     by_n_ci <- rejection_rates_add_ci(by_n_1,
                                       level = ci_level)
     i0 <- (by_n_ci$reject_ci_lo < target_power) &
           (by_n_ci$reject_ci_hi > target_power)
+
+    # Is there at least one CI hitting the target power?
     if (any(i0)) {
-      # Update based on CI and SE
+      # At least one CI hits the target power
+
       ci_hit <- TRUE
+
+      # Find the sample size with CI hitting the target power
+      # and has the smallest SE.
       i1 <- rank(by_n_ci$reject_se)
       # If ties, the smallest sample size will be used
       i2 <- which(i1 == min(i1[i0]))[1]
+
+      # Updated *_out objects
       by_n_out <- by_n_1[[i2]]
       n_out <- by_n_ci$n[i2]
       power_out <- by_n_ci$reject[i2]
       nrep_out <- by_n_ci$nrep[i2]
       ci_out <- unlist(by_n_ci[i2, c("reject_ci_lo", "reject_ci_hi")])
+
     } else {
+      # No CI hits the target power
+
       ci_hit <- FALSE
     }
 
     if (ci_hit) {
+      # Is the nrep of the candidate already equal to
+      # target nrep for the final solution?
+
       if (nrep_out == final_nrep) {
-        # Used maximum
+        # Desired accuracy (based on nrep) achieved.
+        # Exit the loop and finalize the results.
+
         if (progress) {
           cat("- Estimated power is close enough to target power (",
               formatC(target_power, digits = 4, format = "f"), "). ",
@@ -507,21 +607,28 @@ n_from_power <- function(object,
               "\n",
               sep = "")
         }
+
         break
       } else {
-        # Increase minimum nrep
+        # Move to the next step in the sequences
+        # E.g., increase nrep.
+
         if (length(nrep_seq) > 1) {
           nrep_seq <- nrep_seq[-1]
           final_nrep_seq <- final_nrep_seq[-1]
+
           if (progress) {
             cat("- Minimum number of replications changed to",
                 nrep_seq[1], "\n")
           }
+
           R_seq <- R_seq[-1]
           ns_per_trial_seq <- ns_per_trial_seq[-1]
         }
       }
     } else {
+      # No sample size has CI hitting the target power.
+
       if (progress) {
         cat("- Estimated power is not close enough to target power (",
             formatC(target_power, digits = 4, format = "f"), "). ",
@@ -533,7 +640,8 @@ n_from_power <- function(object,
 
   }
 
-  # No need for final estimation
+  # End of the loop of trials.
+
   if (progress) {
     cat("\n\n--- Final Stage ---\n\n")
     tmp <- format(Sys.time(), "%Y-%m-%d %X")
@@ -550,8 +658,15 @@ n_from_power <- function(object,
     cat("\n")
   }
 
+  # Is solution found?
+  # - At least one CI hits the target power
+  # - The maximum number of replications reached.
+
   if (ci_hit && nrep_out == final_nrep) {
     # Created when ci_hit set to TRUE
+
+    # ** n_final, by_n_final, power_final, ci_final, nrep_final, i_final **
+    # The solution.
     n_final <- n_out
     by_n_final <- by_n_out
     power_final <- power_out
@@ -559,6 +674,8 @@ n_from_power <- function(object,
     nrep_final <- nrep_out
     i_final <- i2
   } else {
+    # No solution found.
+    # Set the NAs to denote this.
     n_final <- NA
     by_n_final <- NA
     power_final <- NA
@@ -567,6 +684,9 @@ n_from_power <- function(object,
     i_final <- NA
   }
 
+  # ** n_x **
+  # The estimated sample size based on power_curve.
+  # Used as a suggestion when no solution was found.
   n_x <- NA
   if (ci_hit) {
     n_x <- estimate_n_range(power_n_fit = fit_1,
@@ -604,6 +724,9 @@ n_from_power <- function(object,
           "by setting 'n_interval'.\n")
     }
   }
+
+  # === Finalize the Output ===
+
   my_call <- as.list(match.call())[-1]
   args <- formals()
   args <- utils::modifyList(args,
