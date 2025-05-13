@@ -23,6 +23,11 @@ set_n_range <- function(object,
     n_out <- round(n_out)
     return(n_out)
   } else {
+    # If power0 == target_power,
+    # Be conservative and decrease power by a small amount,
+    if (power0 == target_power) {
+      power0 <- target_power * .80
+    }
     b <- power0 / n0
     n_end <- min(round(target_power / b),
                  n_max)
@@ -44,7 +49,7 @@ power_curve_n <- function(object,
   reject0 <- get_rejection_rates_by_n(object,
                                       all_columns = TRUE)
   reject0$power <- reject0$sig
-  nls_contorl0 <- list(maxiter = 5000)
+  nls_contorl0 <- list(maxiter = 1000)
   nls_contorl1 <- utils::modifyList(nls_contorl0,
                                     nls_control)
 
@@ -62,22 +67,28 @@ power_curve_n <- function(object,
   # Try weights
   nls_args1b <- utils::modifyList(nls_args1,
                                   list(weights = reject0$nrep))
-  fit <- tryCatch(suppressWarnings(do.call(stats::nls,
-                                           nls_args1b)),
-                   error = function(e) e)
-  if (inherits(fit, "nls")) {
-    return(fit)
-  }
-  # Do not use weights
-  fit <- tryCatch(suppressWarnings(do.call(stats::nls,
-                                           nls_args1)),
-                   error = function(e) e)
-  if (inherits(fit, "nls")) {
-    return(fit)
-  }
-
-  if (verbose) {
-    message("- 'nls()' estimation failed. Switch to logistic regression.")
+  # Do not do nls if too few cases
+  if (nrow(reject0) >= 4) {
+    fit <- tryCatch(suppressWarnings(do.call(stats::nls,
+                                            nls_args1b)),
+                    error = function(e) e)
+    if (inherits(fit, "nls")) {
+      return(fit)
+    }
+    # Do not use weights
+    fit <- tryCatch(suppressWarnings(do.call(stats::nls,
+                                            nls_args1)),
+                    error = function(e) e)
+    if (inherits(fit, "nls")) {
+      return(fit)
+    }
+    if (verbose) {
+      message("- 'nls()' estimation failed. Switch to logistic regression.")
+    }
+  } else {
+    if (verbose) {
+      message("- 'nls()' estimation skipped when less than 4 sample sizes examined.")
+    }
   }
 
   # Do logistic
