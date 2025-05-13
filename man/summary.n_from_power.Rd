@@ -51,10 +51,45 @@ to be printed in details.
 }
 \examples{
 
-# TO PREPARE
-x <- 1
-\donttest{
-}
+mod <-
+"
+m ~ a*x
+y ~ b*m + x
+ab := a * b
+"
+
+mod_es <- c("y ~ m" = "l",
+            "m ~ x" = "m",
+            "y ~ x" = "n")
+
+sim_only <- power4test(nrep = 10,
+                       model = mod,
+                       pop_es = mod_es,
+                       n = 100,
+                       do_the_test = FALSE,
+                       iseed = 1234)
+
+test_out <- power4test(object = sim_only,
+                       test_fun = test_parameters,
+                       test_args = list(pars = "ab"))
+
+# In real analysis, to have more stable results:
+# - Use a larger final_nrep (e.g., 500).
+# - Use the default ns_per_trial of 3, or just remove it.
+
+# If the default values are OK, this call is sufficient:
+# power_vs_n <- n_from_power(test_out,
+#                            target_power = .80,
+#                            seed = 4567)
+power_vs_n <- n_from_power(test_out,
+                           progress = TRUE,
+                           target_power = .80,
+                           final_nrep = 10,
+                           ns_per_trial = 1,
+                           nrep_steps = 1,
+                           max_trials = 1,
+                           seed = 4567)
+summary(power_vs_n)
 
 }
 \seealso{
