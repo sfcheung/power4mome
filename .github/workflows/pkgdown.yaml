@@ -58,7 +58,7 @@ jobs:
           mm_loc_old <- file.path(mm_dir, "mm.old")
           mm_loc_new <- file.path(mm_dir, "mm.new")
           file.copy(mm_loc, mm_loc_old, overwrite = TRUE)
-          mm_url <- "https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.0.1/mermaid.min.js"
+          mm_url <- "https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.0.2/mermaid.min.js"
           utils::download.file(mm_url, mm_loc_new)
           file.copy(mm_loc_new, mm_loc, overwrite = TRUE)
         shell: Rscript {0}
