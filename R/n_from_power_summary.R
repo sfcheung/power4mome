@@ -3,7 +3,7 @@
 #' @description The summary method of
 #' the output of [n_from_power()].
 #'
-#' @details It simply prepare the
+#' @details It simply prepares the
 #' results of [n_from_power()]
 #' to be printed in details.
 #'
@@ -12,7 +12,8 @@
 #' `summary.n_from_power`, which is
 #' simply the output of [n_from_power()],
 #' with a `print` method dedicated for
-#' detailed summary.
+#' detailed summary. Please refer
+#' to [n_from_power()] for the contents.
 #'
 #' @param object An `n_from_power`-class
 #' object, such as the output of
