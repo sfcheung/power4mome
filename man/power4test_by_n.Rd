@@ -6,7 +6,14 @@
 \alias{get_rejection_rates_by_n}
 \title{Power By Sample Sizes}
 \usage{
-power4test_by_n(object, n = NULL, progress = TRUE, ..., by_seed = NULL)
+power4test_by_n(
+  object,
+  n = NULL,
+  progress = TRUE,
+  ...,
+  by_seed = NULL,
+  by_nrep = NULL
+)
 
 \method{c}{power4test_by_n}(..., sort = TRUE)
 
@@ -39,6 +46,18 @@ seeds for each call to \code{\link[=power4test]{power4test()}}.
 If \code{NULL}, the default, then seeds
 will still be randomly generated but
 the results cannot be easily reproduced.}
+
+\item{by_nrep}{If set to a number,
+it will be used to generate the
+number of replications (\code{nrep}) for
+each call to \code{\link[=power4test]{power4test()}}.
+If set to a numeric vector of the
+same length as \code{n}, then these are
+the \code{nrep} values for each of the
+calls, allowing for different numbers
+of replications.
+If \code{NULL}, the default, then the
+original \code{nrep} will be used.}
 
 \item{sort}{WHen combining \code{power4test_by_n}
 objects, whether they will be sorted

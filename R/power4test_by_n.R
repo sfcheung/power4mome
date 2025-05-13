@@ -50,6 +50,18 @@
 #' will still be randomly generated but
 #' the results cannot be easily reproduced.
 #'
+#' @param by_nrep If set to a number,
+#' it will be used to generate the
+#' number of replications (`nrep`) for
+#' each call to [power4test()].
+#' If set to a numeric vector of the
+#' same length as `n`, then these are
+#' the `nrep` values for each of the
+#' calls, allowing for different numbers
+#' of replications.
+#' If `NULL`, the default, then the
+#' original `nrep` will be used.
+#'
 #' @seealso [power4test()]
 #'
 #' @examples
@@ -93,7 +105,8 @@ power4test_by_n <- function(object,
                             n = NULL,
                             progress = TRUE,
                             ...,
-                            by_seed = NULL) {
+                            by_seed = NULL,
+                            by_nrep = NULL) {
   if (!inherits(object, "power4test") &&
       !inherits(object, "power4test_by_n")) {
     stop("Only support 'power4test' or 'power4test_by_n' objects.")
@@ -121,6 +134,16 @@ power4test_by_n <- function(object,
     seeds <- sample.int(99999999,
                         size = length(n))
   }
+
+  if (length(by_nrep) == length(n)) {
+    new_nrep <- by_nrep
+  } else {
+    if (!is.null(by_nrep)) {
+      new_nrep <- rep(by_nrep, length(n))
+    } else {
+      new_nrep <- NULL
+    }
+  }
   # TODO
   # - Think about to handle MG models,
   #   for which n is a vector.
@@ -131,11 +154,20 @@ power4test_by_n <- function(object,
           paste(x, collapse = ", "),
           "\n")
     }
-    out[[i]] <- power4test(object = object,
-                                         n = x,
-                                         progress = progress,
-                                         iseed = seeds[i],
-                                         ...)
+    if (is.null(new_nrep)) {
+      out[[i]] <- power4test(object = object,
+                             n = x,
+                             progress = progress,
+                             iseed = seeds[i],
+                             ...)
+    } else {
+      out[[i]] <- power4test(object = object,
+                             n = x,
+                             nrep = new_nrep[i],
+                             progress = progress,
+                             iseed = seeds[i],
+                             ...)
+    }
   }
   # names(out) <- c(n_org, n)
   names(out) <- c(n)
