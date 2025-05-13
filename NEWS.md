@@ -1,4 +1,4 @@
-# power4mome 0.0.1.16
+# power4mome 0.0.1.17
 
 - Initialized the package. (0.0.0.9000)
 
@@ -235,3 +235,7 @@
 - Added more columns to the results
   of functions returning rejection
   rates. (0.0.1.16)
+
+- Added `n_from_power()` to search
+  the sample size with the target
+  power. (0.0.1.17)
