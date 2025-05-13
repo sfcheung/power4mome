@@ -5,9 +5,46 @@
 #' detect an effect close to a target
 #' value.
 #'
-#' @details Details
-#'   (Include subjects for verbs.)
-#'   (Use 3rd person forms for verbs.)
+#' @details
+#' This is how to use this function:
+#'
+#' - Specify the model by [power4test()],
+#'   with `do_the_test = FALSE`, and set
+#'   the magnitude of the effect sizes
+#'   to the minimum levels to detect.
+#'
+#' - Add the test using [power4test()]
+#'   using `test_fun` and `test_args`
+#'   (see the help page of [power4test()]
+#'   for details). Run it on the
+#'   starting sample size.
+#'
+#' - Call [n_from_power()] on the output
+#'   of [power4test()] returned with
+#'   the starting sample size. This
+#'   function will iteratively repeat
+#'   the analysis on other sample sizes,
+#'   trying to find a sample size with
+#'   a power level close enough to the
+#'   target power.
+#'
+#' Usually, the default values of the
+#' arguments should be sufficient.
+#'
+#' The results can be viewed using
+#' [summary()], and the output has
+#' a [plot.n_from_power()] method to
+#' plot the relation between power and
+#' sample size for the sample sizes
+#' examined.
+#'
+#' ## Technical Details
+#'
+#' The detailed workflow of this function
+#' can be found in the following webpage:
+#'
+#' https://sfcheung.github.io/power4mome/articles/n_from_power_workflow.html
+#'
 #'
 #' @return
 #' The function [n_from_power()]
@@ -15,7 +52,79 @@
 #' which is a list with the following
 #' elements:
 #'
-# TODO
+#' - `power4test_trials`: The output of
+#' [power4test_by_n()] for all sample
+#' sizes examined.
+#'
+#' - `rejection_rates`: The output of
+#' [get_rejection_rates_by_n()] from
+#' `power4test_trials`.
+#'
+#' - `n_tried`: The sample sizes
+#' examined.
+#'
+#' - `power_tried`: The estimated
+#' rejection rates for all the sample
+#' sizes examined.
+#'
+#' - `n_final`: The sample size in the
+#' solution. `NA` if solution not found.
+#'
+#' - `power_final`: The estimated power
+#' of the sample size in the solution.
+#' `NA` if solution not found.
+#'
+#' - `i_final`: The position of the
+#' solution in `power4test_trials`.
+#' `NA` if solution not found.
+#'
+#' - `ci_final`: The confidence interval
+#' of the estimated power in the solution.
+#' `NA` if solution not found.
+#'
+#' - `ci_level`: The level of confidence
+#' of `ci_final`.
+#'
+#' - `nrep_final`: The number of
+#' replications (`nrep`) when estimating
+#' the power in the solution.
+#'
+#' - `power_curve`: The output of
+#' [stats::nls()], [stats::glm()], or
+#' [stats::lm()] when estimating the
+#' power curve.
+#'
+#' - `target_power`: The requested
+#' target power.
+#'
+#' - `power_tolerance`: The allowed
+#' difference between the solution's
+#' estimated power and the target
+#' power. Determined by the number
+#' of replications and the level of
+#' confidence of the confidence intervals.
+#'
+#' - `n_estimated`: The sample size
+#' with the target power, estimated by
+#' `power_curve`. This is used, when
+#' solution not found, to determine the
+#' range of sample sizes to search when
+#' calling the function again.
+#'
+#' - `start`: The time and date when
+#' the process started.
+#'
+#' - `end`: The time and date when the
+#' process ended.
+#'
+#' - `time_spent`: The time spent in
+#' doing the search.
+#'
+#' - `args`: A named list of the arguments
+#' of [n_from_power()] used in the search.
+#'
+#' - `call`: The call when this function
+#' is called.
 #'
 #' @param object A `power4test` object,
 #' which is the output of [power4test()].
