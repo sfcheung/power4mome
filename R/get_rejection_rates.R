@@ -115,6 +115,8 @@ get_rejection_rates_i_vector <- function(object_i,
     out_i <- data.frame(test = test_name,
                         test_label = "Test",
                         pvalid = object_i$nvalid["sig"] / object_i$nrep,
+                        nvalid = object_i$nvalid["sig"],
+                        nrep = object_i$nrep,
                         rbind(object_i$mean),
                         row.names = NULL)
   } else {
@@ -138,6 +140,8 @@ get_rejection_rates_i_data_frame <- function(object_i,
   if (all_columns) {
     out_i <- data.frame(test = test_name,
                         pvalid = pvalid,
+                        nvalid = object_i$nvalid[, "sig", drop = TRUE],
+                        nrep = object_i$nrep,
                         object_i$mean,
                         row.names = NULL)
     class(out_i) <- class(object_i$mean)
