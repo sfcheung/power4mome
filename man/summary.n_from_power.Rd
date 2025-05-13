@@ -33,7 +33,8 @@ Return an object of the class
 \code{summary.n_from_power}, which is
 simply the output of \code{\link[=n_from_power]{n_from_power()}},
 with a \code{print} method dedicated for
-detailed summary.
+detailed summary. Please refer
+to \code{\link[=n_from_power]{n_from_power()}} for the contents.
 
 The \code{print}-method of \code{summary.n_from_power}
 objects returns the object \code{x}
@@ -45,7 +46,7 @@ The summary method of
 the output of \code{\link[=n_from_power]{n_from_power()}}.
 }
 \details{
-It simply prepare the
+It simply prepares the
 results of \code{\link[=n_from_power]{n_from_power()}}
 to be printed in details.
 }

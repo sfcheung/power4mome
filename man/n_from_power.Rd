@@ -191,6 +191,63 @@ The function \code{\link[=n_from_power]{n_from_power()}}
 returns a \code{n_from_power} object,
 which is a list with the following
 elements:
+\itemize{
+\item \code{power4test_trials}: The output of
+\code{\link[=power4test_by_n]{power4test_by_n()}} for all sample
+sizes examined.
+\item \code{rejection_rates}: The output of
+\code{\link[=get_rejection_rates_by_n]{get_rejection_rates_by_n()}} from
+\code{power4test_trials}.
+\item \code{n_tried}: The sample sizes
+examined.
+\item \code{power_tried}: The estimated
+rejection rates for all the sample
+sizes examined.
+\item \code{n_final}: The sample size in the
+solution. \code{NA} if solution not found.
+\item \code{power_final}: The estimated power
+of the sample size in the solution.
+\code{NA} if solution not found.
+\item \code{i_final}: The position of the
+solution in \code{power4test_trials}.
+\code{NA} if solution not found.
+\item \code{ci_final}: The confidence interval
+of the estimated power in the solution.
+\code{NA} if solution not found.
+\item \code{ci_level}: The level of confidence
+of \code{ci_final}.
+\item \code{nrep_final}: The number of
+replications (\code{nrep}) when estimating
+the power in the solution.
+\item \code{power_curve}: The output of
+\code{\link[stats:nls]{stats::nls()}}, \code{\link[stats:glm]{stats::glm()}}, or
+\code{\link[stats:lm]{stats::lm()}} when estimating the
+power curve.
+\item \code{target_power}: The requested
+target power.
+\item \code{power_tolerance}: The allowed
+difference between the solution's
+estimated power and the target
+power. Determined by the number
+of replications and the level of
+confidence of the confidence intervals.
+\item \code{n_estimated}: The sample size
+with the target power, estimated by
+\code{power_curve}. This is used, when
+solution not found, to determine the
+range of sample sizes to search when
+calling the function again.
+\item \code{start}: The time and date when
+the process started.
+\item \code{end}: The time and date when the
+process ended.
+\item \code{time_spent}: The time spent in
+doing the search.
+\item \code{args}: A named list of the arguments
+of \code{\link[=n_from_power]{n_from_power()}} used in the search.
+\item \code{call}: The call when this function
+is called.
+}
 
 The \code{print}-method of \code{n_from_power}
 objects returns the object \code{x}
@@ -209,9 +266,43 @@ basic information. Call
 \code{print} method for detailed output.
 }
 \details{
-Details
-(Include subjects for verbs.)
-(Use 3rd person forms for verbs.)
+This is how to use this function:
+\itemize{
+\item Specify the model by \code{\link[=power4test]{power4test()}},
+with \code{do_the_test = FALSE}, and set
+the magnitude of the effect sizes
+to the minimum levels to detect.
+\item Add the test using \code{\link[=power4test]{power4test()}}
+using \code{test_fun} and \code{test_args}
+(see the help page of \code{\link[=power4test]{power4test()}}
+for details). Run it on the
+starting sample size.
+\item Call \code{\link[=n_from_power]{n_from_power()}} on the output
+of \code{\link[=power4test]{power4test()}} returned with
+the starting sample size. This
+function will iteratively repeat
+the analysis on other sample sizes,
+trying to find a sample size with
+a power level close enough to the
+target power.
+}
+
+Usually, the default values of the
+arguments should be sufficient.
+
+The results can be viewed using
+\code{\link[=summary]{summary()}}, and the output has
+a \code{\link[=plot.n_from_power]{plot.n_from_power()}} method to
+plot the relation between power and
+sample size for the sample sizes
+examined.
+\subsection{Technical Details}{
+
+The detailed workflow of this function
+can be found in the following webpage:
+
+https://sfcheung.github.io/power4mome/articles/n_from_power_workflow.html
+}
 }
 \examples{
 
