@@ -133,8 +133,15 @@ plot.n_from_power <- function(x,
                               pars_text_final_sample_size = list(y = 0, pos = 3, cex = 1),
                               pars_text_final_power = list(pos = 3, cex = 1),
                               ...) {
+
   what <- match.arg(what, several.ok = TRUE)
   text_what <- match.arg(what, several.ok = TRUE)
+
+  # Was a solution found?
+
+  solution_found <- isFALSE(identical(NA, x$n_final))
+
+  # === Draw the base plot: Power vs. N
 
   do.call(plot_power_n,
           list(object = x$power4test_trials,
@@ -142,12 +149,36 @@ plot.n_from_power <- function(x,
                xlab = xlab,
                ylab = ylab,
                ...))
+
+  # === Add CIs?
+
   if ("ci" %in% what) {
+
+    if (solution_found && ("final_n" %in% what)) {
+      # A solution was found and final_n line is to be drawn.
+      # Draw the final_n CI separately
+
+      # Draw the CI for the final N
+      tmp <- x$power4test_trials[x$i_final]
+      tmp_args <- utils::modifyList(pars_ci_final_sample_size,
+                                    list(object = tmp))
+      do.call(plot_power_n_ci,
+              tmp_args)
+      # Drop final_n from the CI lists
+      tmp_for_ci <- x$power4test_trials[-x$i_final]
+    } else {
+      # Keep all CIs in the same way
+      tmp_for_ci <- x$power4test_trials
+    }
+
+    # Draw the other CIs
     tmp_args <- utils::modifyList(pars_ci,
-                                  list(object = x$power4test_trials))
+                                  list(object = tmp_for_ci))
     do.call(plot_power_n_ci,
             tmp_args)
   }
+
+  # === Draw the power curve?
 
   if ("power_curve" %in% what) {
     tmp_args <- utils::modifyList(pars_ci,
@@ -157,33 +188,37 @@ plot.n_from_power <- function(x,
             tmp_args)
   }
 
+  # === Draw a horizontal line for the target power?
+
   if ("target_power" %in% what) {
     tmp_args <- utils::modifyList(pars_target_power,
                                   list(h = x$target_power))
     do.call(abline,
             tmp_args)
   }
-  if (isFALSE(identical(NA, x$n_final))) {
+
+  if (solution_found) {
+
+    # === Draw a vertical line for the final N?
+
     if ("final_n" %in% what) {
       tmp_args <- utils::modifyList(pars_final_sample_size,
                                     list(v = x$n_final))
       do.call(abline,
               tmp_args)
-      # Assume no duplicated n and power
-      if ("ci" %in% what) {
-        tmp <- x$power4test_trials[x$i_final]
-        tmp_args <- utils::modifyList(pars_ci_final_sample_size,
-                                      list(object = tmp))
-        do.call(plot_power_n_ci,
-                tmp_args)
-      }
     }
+
+    # === Draw a horizontal line for the final power?
+
     if ("final_power" %in% what) {
       tmp_args <- utils::modifyList(pars_final_power,
                                     list(h = x$power_final))
       do.call(abline,
               tmp_args)
     }
+
+    # === Add a label for the final N?
+
     if ("final_n" %in% text_what) {
       tmp_args <- utils::modifyList(pars_text_final_sample_size,
                                     list(x = x$n_final,
@@ -191,6 +226,9 @@ plot.n_from_power <- function(x,
       do.call(text,
               tmp_args)
     }
+
+    # === Add a label for the final power?
+
     if ("final_power" %in% text_what) {
       tmp <- par("usr")
       tmp_args <- utils::modifyList(pars_text_final_power,
@@ -206,6 +244,7 @@ plot.n_from_power <- function(x,
       do.call(text,
               tmp_args)
     }
+
   }
 
   invisible(x)

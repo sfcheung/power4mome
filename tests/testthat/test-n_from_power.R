@@ -40,7 +40,22 @@ tmp <- n_from_power(out,
                     final_nrep = 100,
                     seed = 1234)
 tmp
+summary(tmp)
 plot(tmp)
+plot(tmp,
+     lwd = 4,
+     col = "green",
+     what = c("ci",
+              "final_n",
+              "final_power"))
+plot(tmp,
+     lwd = 4,
+     col = "darkgreen",
+     what = c("ci",
+              "final_n",
+              "final_power"),
+     pars_ci_final_sample_size = list(lwd = 10),
+     pars_final_sample_size = list(lwd = 2, col = "red"))
 
 # Case 2
 
@@ -62,6 +77,8 @@ tmp2 <- n_from_power(out2,
                      progress = TRUE,
                      final_nrep = 100,
                      seed = 1234)
+tmp2
+summary(tmp2)
 plot(tmp2)
 
 # Case 3
@@ -104,6 +121,8 @@ tmp3 <- n_from_power(out3,
                      final_nrep = 100,
                      seed = 1234)
 
+tmp3
+summary(tmp3)
 plot(tmp3)
 
 
