@@ -159,10 +159,46 @@
 #'
 #' @examples
 #'
-#' # TO PREPARE
-#' x <- 1
-#' \donttest{
-#' }
+#' mod <-
+#' "
+#' m ~ a*x
+#' y ~ b*m + x
+#' ab := a * b
+#' "
+#'
+#' mod_es <- c("y ~ m" = "l",
+#'             "m ~ x" = "m",
+#'             "y ~ x" = "n")
+#'
+#' sim_only <- power4test(nrep = 10,
+#'                        model = mod,
+#'                        pop_es = mod_es,
+#'                        n = 100,
+#'                        do_the_test = FALSE,
+#'                        iseed = 1234)
+#'
+#' test_out <- power4test(object = sim_only,
+#'                        test_fun = test_parameters,
+#'                        test_args = list(pars = "ab"))
+#'
+#' # In real analysis, to have more stable results:
+#' # - Use a larger final_nrep (e.g., 500).
+#' # - Use the default ns_per_trial of 3, or just remove it.
+#'
+#' # If the default values are OK, this call is sufficient:
+#' # power_vs_n <- n_from_power(test_out,
+#' #                            target_power = .80,
+#' #                            seed = 4567)
+#' power_vs_n <- n_from_power(test_out,
+#'                            progress = TRUE,
+#'                            target_power = .80,
+#'                            final_nrep = 10,
+#'                            ns_per_trial = 1,
+#'                            nrep_steps = 1,
+#'                            max_trials = 1,
+#'                            seed = 4567)
+#' summary(power_vs_n)
+#' plot(power_vs_n)
 #'
 #' @importFrom graphics abline arrows par points text title
 #'
@@ -256,7 +292,7 @@ n_from_power <- function(object,
   }
 
   nrep_steps <- ceiling(nrep_steps)
-  if (nrep_steps < 1) {
+  if (nrep_steps < 0) {
     stop("'nrep_steps' must be at least 1 (after rounding, if necessary).")
   }
 
@@ -675,6 +711,7 @@ n_from_power <- function(object,
     i_final <- i2
   } else {
     # No solution found.
+    # Force ci_hit to be FALSE.
     # Set the NAs to denote this.
     n_final <- NA
     by_n_final <- NA
