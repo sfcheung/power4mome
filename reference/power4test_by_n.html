@@ -25,7 +25,7 @@ the output."><meta name="google-site-verification" content="0VLBmFnW_UJFI-7gXnOR
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.14</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.17</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,6 +37,7 @@ the output."><meta name="google-site-verification" content="0VLBmFnW_UJFI-7gXnOR
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/main_workflow.html">Main Workflows</a></li>
+    <li><a class="dropdown-item" href="../articles/n_from_power_workflow.html">Workflow of 'n_from_power()'</a></li>
   </ul></li>
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -70,7 +71,14 @@ the output.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">power4test_by_n</span><span class="op">(</span><span class="va">object</span>, n <span class="op">=</span> <span class="cn">NULL</span>, progress <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span>, by_seed <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">power4test_by_n</span><span class="op">(</span></span>
+<span>  <span class="va">object</span>,</span>
+<span>  n <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  progress <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  by_seed <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  by_nrep <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'power4test_by_n'</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">...</span>, sort <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
@@ -117,6 +125,20 @@ seeds for each call to <code><a href="power4test.html">power4test()</a></code>.
 If <code>NULL</code>, the default, then seeds
 will still be randomly generated but
 the results cannot be easily reproduced.</p></dd>
+
+
+<dt id="arg-by-nrep">by_nrep<a class="anchor" aria-label="anchor" href="#arg-by-nrep"></a></dt>
+<dd><p>If set to a number,
+it will be used to generate the
+number of replications (<code>nrep</code>) for
+each call to <code><a href="power4test.html">power4test()</a></code>.
+If set to a numeric vector of the
+same length as <code>n</code>, then these are
+the <code>nrep</code> values for each of the
+calls, allowing for different numbers
+of replications.
+If <code>NULL</code>, the default, then the
+original <code>nrep</code> will be used.</p></dd>
 
 
 <dt id="arg-sort">sort<a class="anchor" aria-label="anchor" href="#arg-sort"></a></dt>

@@ -3,6 +3,7 @@
 <url><loc>https://sfcheung.github.io/power4mome/LICENSE.html</loc></url>
 <url><loc>https://sfcheung.github.io/power4mome/articles/index.html</loc></url>
 <url><loc>https://sfcheung.github.io/power4mome/articles/main_workflow.html</loc></url>
+<url><loc>https://sfcheung.github.io/power4mome/articles/n_from_power_workflow.html</loc></url>
 <url><loc>https://sfcheung.github.io/power4mome/articles/power4mome.html</loc></url>
 <url><loc>https://sfcheung.github.io/power4mome/authors.html</loc></url>
 <url><loc>https://sfcheung.github.io/power4mome/index.html</loc></url>
@@ -13,6 +14,8 @@
 <url><loc>https://sfcheung.github.io/power4mome/reference/gen_mc.html</loc></url>
 <url><loc>https://sfcheung.github.io/power4mome/reference/get_rejection_rates.html</loc></url>
 <url><loc>https://sfcheung.github.io/power4mome/reference/index.html</loc></url>
+<url><loc>https://sfcheung.github.io/power4mome/reference/n_from_power.html</loc></url>
+<url><loc>https://sfcheung.github.io/power4mome/reference/plot.n_from_power.html</loc></url>
 <url><loc>https://sfcheung.github.io/power4mome/reference/pop_es_yaml.html</loc></url>
 <url><loc>https://sfcheung.github.io/power4mome/reference/power4mome-package.html</loc></url>
 <url><loc>https://sfcheung.github.io/power4mome/reference/power4test.html</loc></url>
@@ -30,6 +33,7 @@
 <url><loc>https://sfcheung.github.io/power4mome/reference/sim_data.html</loc></url>
 <url><loc>https://sfcheung.github.io/power4mome/reference/sim_out.html</loc></url>
 <url><loc>https://sfcheung.github.io/power4mome/reference/summarize_tests.html</loc></url>
+<url><loc>https://sfcheung.github.io/power4mome/reference/summary.n_from_power.html</loc></url>
 <url><loc>https://sfcheung.github.io/power4mome/reference/test_cond_indirect.html</loc></url>
 <url><loc>https://sfcheung.github.io/power4mome/reference/test_cond_indirect_effects.html</loc></url>
 <url><loc>https://sfcheung.github.io/power4mome/reference/test_index_of_mome.html</loc></url>
