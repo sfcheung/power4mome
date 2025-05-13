@@ -5,10 +5,12 @@
 #' estimated power against sample size.
 #'
 #' @details
-#' It currently plots only the relation
+#' It currently plots the relation
 #' between estimated power and
-#' sample size. More plots may be added
-#' in the future.
+#' sample size. Other elements
+#' can be requested (see the argument
+#' `what`), and they can be customized
+#' individually.
 #'
 #' @return
 #' The `plot`-method of `n_from_power`
