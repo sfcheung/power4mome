@@ -1,4 +1,4 @@
-# power4mome 0.0.1.18
+# power4mome 0.0.1.19
 
 - Initialized the package. (0.0.0.9000)
 
@@ -243,3 +243,7 @@
 - Updated `psi_std()` to skip checking
   the variances of product terms.
   (0.0.1.18)
+
+- Improved `rejection_rates_add_ci()` to
+  be usable by other functions.
+  (0.0.1.19)
