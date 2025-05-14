@@ -11,7 +11,7 @@ object."><meta name="google-site-verification" content="0VLBmFnW_UJFI-7gXnORPBsW
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.17</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.20</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,7 +50,13 @@ object.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_rejection_rates</span><span class="op">(</span><span class="va">object</span>, all_columns <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_rejection_rates</span><span class="op">(</span></span>
+<span>  <span class="va">object</span>,</span>
+<span>  all_columns <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  ci <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  level <span class="op">=</span> <span class="fl">0.95</span>,</span>
+<span>  se <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -67,6 +73,28 @@ columns stored by a test will be
 printed. Default is <code>FALSE</code> and
 only essential columns related to
 power will be printed.</p></dd>
+
+
+<dt id="arg-ci">ci<a class="anchor" aria-label="anchor" href="#arg-ci"></a></dt>
+<dd><p>If <code>TRUE</code>, confidence
+intervals for the rejection rates
+(column <code>reject</code> or <code>sig</code>) will
+be computed. Normal approximation
+is used.</p></dd>
+
+
+<dt id="arg-level">level<a class="anchor" aria-label="anchor" href="#arg-level"></a></dt>
+<dd><p>The level of confidence
+for the confidence intervals, if
+<code>ci</code> is <code>TRUE</code>.</p></dd>
+
+
+<dt id="arg-se">se<a class="anchor" aria-label="anchor" href="#arg-se"></a></dt>
+<dd><p>If <code>TRUE</code>, standard errors
+for the rejection rates
+(column <code>reject</code> or <code>sig</code>) will
+be computed. Normal approximation
+is used.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -140,11 +168,11 @@ the rejection rate of each test.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Displaying progress enabled. Set 'progress = FALSE' to hide the progress.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Do the test: test_parameters: CIs  </span>
 <span class="r-in"><span><span class="fu">get_rejection_rates</span><span class="op">(</span><span class="va">test_out</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     test test_label pvalid reject</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 test_indirect: x-&gt;m-&gt;y       Test      1      1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  test_parameters: CIs         m~x      1      1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  test_parameters: CIs         y~m      1      1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4  test_parameters: CIs         y~x      1      0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                     test test_label pvalid reject reject_ci_lo reject_ci_hi</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 test_indirect: x-&gt;m-&gt;y       Test      1      1            1            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  test_parameters: CIs         m~x      1      1            1            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  test_parameters: CIs         y~m      1      1            1            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  test_parameters: CIs         y~x      1      0            0            0</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

@@ -9,7 +9,7 @@ the output of n_from_power()."><meta name="google-site-verification" content="0V
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.17</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.20</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -157,7 +157,7 @@ to be printed in details.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --- Pre-iteration Search ---</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-05-13 12:50:16 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-05-14 16:49:32 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Sample sizes to try:  125 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Updating the simulation for sample size: 125 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Displaying progress enabled. Set 'progress = FALSE' to hide the progress.</span>
@@ -166,9 +166,12 @@ to be printed in details.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Update the test(s):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Update test_parameters: CIs (pars: ab) :</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Rejection Rates:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     n                            test test_label pvalid reject</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 100 test_parameters: CIs (pars: ab)         ab      1    0.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 125 test_parameters: CIs (pars: ab)         ab      1    1.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     n                            test test_label pvalid reject reject_ci_lo</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 100 test_parameters: CIs (pars: ab)         ab      1    0.8     0.552082</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 125 test_parameters: CIs (pars: ab)         ab      1    1.0     1.000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   reject_ci_hi</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     1.047918</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     1.000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> - 'nls()' estimation skipped when less than 4 sample sizes examined.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Power Curve:</span>
@@ -187,7 +190,7 @@ to be printed in details.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --- Trial 1 ---</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-05-13 12:50:16 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-05-14 16:49:33 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Sample sizes to try: 98, 60 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Numbers of replications: 10, 10 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Updating the simulation for sample size: 98 </span>
@@ -203,11 +206,16 @@ to be printed in details.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Update the test(s):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Update test_parameters: CIs (pars: ab) :</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Rejection Rates:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     n                            test test_label pvalid reject</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  60 test_parameters: CIs (pars: ab)         ab      1    0.3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  98 test_parameters: CIs (pars: ab)         ab      1    0.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 100 test_parameters: CIs (pars: ab)         ab      1    0.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 125 test_parameters: CIs (pars: ab)         ab      1    1.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     n                            test test_label pvalid reject reject_ci_lo</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  60 test_parameters: CIs (pars: ab)         ab      1    0.3   0.01597423</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  98 test_parameters: CIs (pars: ab)         ab      1    0.8   0.55208199</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 100 test_parameters: CIs (pars: ab)         ab      1    0.8   0.55208199</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 125 test_parameters: CIs (pars: ab)         ab      1    1.0   1.00000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   reject_ci_hi</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    0.5840258</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    1.0479180</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    1.0479180</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    1.0000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> - 'nls()' estimation failed. Switch to logistic regression.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Sample size with closest power: 98 </span>
@@ -229,13 +237,18 @@ to be printed in details.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --- Final Stage ---</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-05-13 12:50:18 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-05-14 16:49:34 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Rejection Rates:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     n                            test test_label pvalid reject</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  60 test_parameters: CIs (pars: ab)         ab      1    0.3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  98 test_parameters: CIs (pars: ab)         ab      1    0.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 100 test_parameters: CIs (pars: ab)         ab      1    0.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 125 test_parameters: CIs (pars: ab)         ab      1    1.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     n                            test test_label pvalid reject reject_ci_lo</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  60 test_parameters: CIs (pars: ab)         ab      1    0.3   0.01597423</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  98 test_parameters: CIs (pars: ab)         ab      1    0.8   0.55208199</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 100 test_parameters: CIs (pars: ab)         ab      1    0.8   0.55208199</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 125 test_parameters: CIs (pars: ab)         ab      1    1.0   1.00000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   reject_ci_hi</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    0.5840258</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    1.0479180</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    1.0479180</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    1.0000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Estimated Power Curve:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -276,7 +289,7 @@ to be printed in details.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> === Technical Information ===</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - The range of sample sizes explored: 60 to 125 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Time spent in the search: 1.861 secs </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Time spent in the search: 1.849 secs </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - The final crude model for the power-sample-size relation:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Model Type: Logistic Regression </span>
@@ -294,11 +307,16 @@ to be printed in details.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Detailed Results:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     n                            test test_label pvalid reject</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  60 test_parameters: CIs (pars: ab)         ab      1    0.3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  98 test_parameters: CIs (pars: ab)         ab      1    0.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 100 test_parameters: CIs (pars: ab)         ab      1    0.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 125 test_parameters: CIs (pars: ab)         ab      1    1.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     n                            test test_label pvalid reject reject_ci_lo</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  60 test_parameters: CIs (pars: ab)         ab      1    0.3        0.016</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  98 test_parameters: CIs (pars: ab)         ab      1    0.8        0.552</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 100 test_parameters: CIs (pars: ab)         ab      1    0.8        0.552</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 125 test_parameters: CIs (pars: ab)         ab      1    1.0        1.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   reject_ci_hi</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1        0.584</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2        1.048</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3        1.048</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4        1.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
