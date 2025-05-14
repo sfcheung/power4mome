@@ -247,7 +247,8 @@ nrep_from_power <- function(power_j,
 
 rejection_rates_add_ci <- function(object,
                                    level = .95,
-                                   add_reject = TRUE) {
+                                   add_reject = TRUE,
+                                   add_se = TRUE) {
   df1 <- get_rejection_rates_by_n(object,
                                   all_columns = TRUE)
   # It works on any data frame with these two columns:
@@ -272,5 +273,8 @@ rejection_rates_add_ci <- function(object,
   a <- stats::qnorm(1 - (1 - level) / 2)
   df1$reject_ci_lo <- reject - a * df1$reject_se
   df1$reject_ci_hi <- reject + a * df1$reject_se
+  if (!add_se) {
+    df1$reject_se <- NULL
+  }
   df1
 }
