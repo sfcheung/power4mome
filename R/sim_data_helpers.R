@@ -216,12 +216,23 @@ psi_std <- function(object,
     stop(msg)
   }
   if (any(diag(out) > 1)) {
-    tmp <- colnames(out)[(diag(out) > 1)]
-    msg <- paste0("Model or implied variance(s) for ",
-                  paste0(tmp, collapse = ", "),
-                  " greater than 1 when standardized. ",
-                  "Please check the model.")
-    stop(msg)
+    # TODO:
+    # - Should skip all derived terms, such as x^2.
+    # - Find a better way to identify derived terms.
+
+    # Skip product terms
+    tmp0 <- colnames(out)
+    tmp1 <- sapply(strsplit(tmp0, ":", fixed = TRUE),
+                   length)
+    tmp2 <- diag(out)[(tmp1 == 1)]
+    if (any(tmp2 > 1)) {
+      tmp <- colnames(out)[(tmp2 >= 1)]
+      msg <- paste0("Model or implied variance(s) for ",
+                    paste0(tmp, collapse = ", "),
+                    " greater than 1 when standardized. ",
+                    "Please check the model.")
+      stop(msg)
+    }
   }
   return(out)
 }

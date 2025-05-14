@@ -1,4 +1,4 @@
-# power4mome 0.0.1.17
+# power4mome 0.0.1.18
 
 - Initialized the package. (0.0.0.9000)
 
@@ -239,3 +239,7 @@
 - Added `n_from_power()` to search
   the sample size with the target
   power. (0.0.1.17)
+
+- Updated `psi_std()` to skip checking
+  the variances of product terms.
+  (0.0.1.18)
