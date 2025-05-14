@@ -41,6 +41,24 @@
 #' only essential columns related to
 #' power will be printed.
 #'
+#' @param ci If `TRUE`, confidence
+#' intervals for the rejection rates
+#' (column `reject` or `sig`) will
+#' be computed. Normal approximation
+#' is used.
+#'
+#' @param level The level of confidence
+#' for the confidence intervals, if
+#' `ci` is `TRUE`.
+#'
+#' @param se If `TRUE`, standard errors
+#' for the rejection rates
+#' (column `reject` or `sig`) will
+#' be computed. Normal approximation
+#' is used.
+#'
+#'
+#'
 #' @seealso [power4test()]
 #'
 #' @examples
@@ -78,29 +96,49 @@
 #'
 #' @export
 get_rejection_rates <- function(object,
-                                all_columns = FALSE) {
+                                all_columns = FALSE,
+                                ci = TRUE,
+                                level = .95,
+                                se = FALSE) {
   out0 <- summarize_tests(object)
   out1 <- lapply(out0,
                  get_rejection_rates_i,
-                 all_columns = all_columns)
-  out2 <- do.call(rbind,
-                  out1)
+                 all_columns = all_columns,
+                 ci = ci,
+                 level = level,
+                 se = se)
+  if (all_columns) {
+    out2 <- do.call(rbind_adv,
+                    out1)
+  } else {
+    out2 <- do.call(rbind,
+                    out1)
+  }
   rownames(out2) <- NULL
   out2
 }
 
 #' @noRd
 get_rejection_rates_i <- function(object_i,
-                                  all_columns = FALSE) {
+                                  all_columns = FALSE,
+                                  ci = ci,
+                                  level = level,
+                                  se = se) {
   if (is.vector(object_i$mean)) {
     out <- get_rejection_rates_i_vector(object_i,
-                                        all_columns = all_columns)
+                                        all_columns = all_columns,
+                                        ci = ci,
+                                        level = level,
+                                        se = se)
     return(out)
   }
   if (length(dim(object_i$mean)) == 2) {
     # Likely a data frame
     out <- get_rejection_rates_i_data_frame(object_i,
-                                            all_columns = all_columns)
+                                            all_columns = all_columns,
+                                            ci = ci,
+                                            level = level,
+                                            se = se)
     return(out)
   }
   stop("Something is wrong. The tests results are not of the supported format.")
@@ -108,7 +146,10 @@ get_rejection_rates_i <- function(object_i,
 
 #' @noRd
 get_rejection_rates_i_vector <- function(object_i,
-                                         all_columns = FALSE) {
+                                         all_columns = FALSE,
+                                         ci = TRUE,
+                                         level = .95,
+                                         se = FALSE) {
   test_args <- object_i$test_attributes
   test_name <- test_args$test_name
   if (all_columns) {
@@ -123,15 +164,33 @@ get_rejection_rates_i_vector <- function(object_i,
     out_i <- data.frame(test = test_name,
                         test_label = "Test",
                         pvalid = object_i$nvalid["sig"] / object_i$nrep,
+                        nvalid = object_i$nvalid["sig"],
                         reject = object_i$mean["sig"],
                         row.names = NULL)
+  }
+  if (se || ci) {
+    out_i <- rejection_rates_add_ci(out_i,
+                                    level = level,
+                                    add_reject = FALSE,
+                                    add_se = se)
+    if (!ci) {
+      out_i$reject_ci_lo <- NULL
+      out_i$reject_ci_hi <- NULL
+    }
+  }
+  if (!all_columns) {
+    # nvalid used only for adding CI and SE
+    out_i$nvalid <- NULL
   }
   out_i
 }
 
 #' @noRd
 get_rejection_rates_i_data_frame <- function(object_i,
-                                             all_columns = FALSE) {
+                                             all_columns = FALSE,
+                                             ci = TRUE,
+                                             level = .95,
+                                             se = FALSE) {
   test_args <- object_i$test_attributes
   test_name <- test_args$test_name
   out_i0 <- object_i$mean
@@ -149,8 +208,74 @@ get_rejection_rates_i_data_frame <- function(object_i,
     out_i <- data.frame(test = test_name,
                         test_label = out_i0$test_label,
                         pvalid = pvalid,
+                        nvalid = object_i$nvalid[, "sig", drop = TRUE],
                         reject = object_i$mean[, "sig", drop = TRUE],
                         row.names = NULL)
   }
+  if (se || ci) {
+    out_i <- rejection_rates_add_ci(out_i,
+                                    level = level,
+                                    add_reject = FALSE,
+                                    add_se = se)
+    if (!ci) {
+      out_i$reject_ci_lo <- NULL
+      out_i$reject_ci_hi <- NULL
+    }
+  }
+  if (!all_columns) {
+    # nvalid used only for adding CI and SE
+    out_i$nvalid <- NULL
+  }
   out_i
+}
+
+#' @noRd
+
+rbind_adv <- function(...) {
+  # Need this function only if all_columns
+  dfs <- list(...)
+  cnames <- lapply(dfs,
+                   colnames)
+  cnames_all <- Reduce(union, cnames)
+  # If all_columns
+  # - test
+  # - test_label
+  # - pvalid
+  # - nvalid
+  # - nrep
+  # - ...
+  # - se, reject_ci_lo, reject_ci_hi (if se || ci)
+  c1 <- lapply(cnames,
+               \(x) setdiff(x, c("test",
+                                 "test_label",
+                                 "pvalid",
+                                 "nvalid",
+                                 "nrep",
+                                 "sig",
+                                 "reject_se",
+                                 "reject_ci_lo",
+                                 "reject_ci_hi")))
+  c2 <- Reduce(union, c1)
+  c3 <- c("test",
+          "test_label",
+          "pvalid",
+          "nvalid",
+          "nrep",
+          c2)
+  cnames_final <- c(c3, setdiff(cnames_all, c3))
+  tmpfct <- function(x) {
+    # Add NA
+    d1 <- setdiff(cnames_final, colnames(x))
+    if (length(d1) == 0) return(x)
+    for (y in d1) {
+      x[y] <- NA
+    }
+    x <- x[cnames_final]
+    return(x)
+  }
+  dfs_out <- lapply(dfs,
+                    tmpfct)
+  dfs_out1 <- do.call(rbind,
+                      dfs_out)
+  dfs_out1
 }

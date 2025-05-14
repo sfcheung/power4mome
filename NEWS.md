@@ -1,4 +1,4 @@
-# power4mome 0.0.1.19
+# power4mome 0.0.1.20
 
 - Initialized the package. (0.0.0.9000)
 
@@ -247,3 +247,8 @@
 - Improved `rejection_rates_add_ci()` to
   be usable by other functions.
   (0.0.1.19)
+
+- Updated `get_rejection_rates()` to
+  report confidence intervals and
+  standard errors of rejection rates.
+  (0.0.1.20)

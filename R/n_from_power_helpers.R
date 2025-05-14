@@ -249,8 +249,13 @@ rejection_rates_add_ci <- function(object,
                                    level = .95,
                                    add_reject = TRUE,
                                    add_se = TRUE) {
-  df1 <- get_rejection_rates_by_n(object,
-                                  all_columns = TRUE)
+  if (!is.data.frame(object)) {
+    df1 <- get_rejection_rates_by_n(object,
+                                    all_columns = TRUE)
+  } else {
+    # Assume it is already an output with rejection rates
+    df1 <- object
+  }
   # It works on any data frame with these two columns:
   # - `sig` or `reject`
   # - `nvalid`
