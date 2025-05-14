@@ -4,7 +4,13 @@
 \alias{get_rejection_rates}
 \title{Rejection Rates of All Tests}
 \usage{
-get_rejection_rates(object, all_columns = FALSE)
+get_rejection_rates(
+  object,
+  all_columns = FALSE,
+  ci = TRUE,
+  level = 0.95,
+  se = FALSE
+)
 }
 \arguments{
 \item{object}{A \code{power4test} object.}
@@ -14,6 +20,22 @@ columns stored by a test will be
 printed. Default is \code{FALSE} and
 only essential columns related to
 power will be printed.}
+
+\item{ci}{If \code{TRUE}, confidence
+intervals for the rejection rates
+(column \code{reject} or \code{sig}) will
+be computed. Normal approximation
+is used.}
+
+\item{level}{The level of confidence
+for the confidence intervals, if
+\code{ci} is \code{TRUE}.}
+
+\item{se}{If \code{TRUE}, standard errors
+for the rejection rates
+(column \code{reject} or \code{sig}) will
+be computed. Normal approximation
+is used.}
 }
 \value{
 A data frame with the number of

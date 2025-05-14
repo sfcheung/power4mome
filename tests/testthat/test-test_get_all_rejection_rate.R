@@ -42,5 +42,36 @@ test_out <- power4test(object = test_out,
                                         mc_ci = FALSE))
 
 expect_no_error(get_rejection_rates(test_out))
+expect_no_error(get_rejection_rates(test_out,
+                                    all_columns = TRUE))
+
+tmp <- get_rejection_rates(test_out,
+                           ci = FALSE)
+expect_false("reject_ci_lo" %in% colnames(tmp))
+
+tmp <- get_rejection_rates(test_out,
+                           se = TRUE)
+expect_true("reject_se" %in% colnames(tmp))
+
+tmp <- get_rejection_rates(test_out,
+                           ci = FALSE,
+                           se = TRUE)
+expect_true("reject_se" %in% colnames(tmp))
+
+tmp <- get_rejection_rates(test_out,
+                           all_columns = TRUE,
+                           ci = FALSE)
+expect_false("reject_ci_lo" %in% colnames(tmp))
+
+tmp <- get_rejection_rates(test_out,
+                           all_columns = TRUE,
+                           se = TRUE)
+expect_true("reject_se" %in% colnames(tmp))
+
+tmp <- get_rejection_rates(test_out,
+                           all_columns = TRUE,
+                           ci = FALSE,
+                           se = TRUE)
+expect_true("reject_se" %in% colnames(tmp))
 
 })
