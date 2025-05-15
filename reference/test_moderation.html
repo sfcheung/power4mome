@@ -11,7 +11,7 @@ terms for a power4test object."><meta name="google-site-verification" content="0
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.20</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.22</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -162,16 +162,15 @@ terms.</p>
 <span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span></span></span>
 <span class="r-in"><span><span class="st">"</span></span></span>
 <span class="r-in"><span><span class="st">m ~ x + w1 + x:w1</span></span></span>
-<span class="r-in"><span><span class="st">y ~ m + w2 + m:w2 + x</span></span></span>
+<span class="r-in"><span><span class="st">y ~ m + x</span></span></span>
 <span class="r-in"><span><span class="st">"</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">mod_es</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"m ~ x"</span> <span class="op">=</span> <span class="st">"n"</span>,</span></span>
 <span class="r-in"><span>            <span class="st">"y ~ x"</span> <span class="op">=</span> <span class="st">"m"</span>,</span></span>
 <span class="r-in"><span>            <span class="st">"m ~ w1"</span> <span class="op">=</span> <span class="st">"n"</span>,</span></span>
-<span class="r-in"><span>            <span class="st">"m ~ x:w1"</span> <span class="op">=</span> <span class="st">"l"</span>,</span></span>
-<span class="r-in"><span>            <span class="st">"y ~ m:w2"</span> <span class="op">=</span> <span class="st">"-s"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>            <span class="st">"m ~ x:w1"</span> <span class="op">=</span> <span class="st">"l"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">sim_only</span> <span class="op">&lt;-</span> <span class="fu"><a href="power4test.html">power4test</a></span><span class="op">(</span>nrep <span class="op">=</span> <span class="fl">5</span>,</span></span>
+<span class="r-in"><span><span class="va">sim_only</span> <span class="op">&lt;-</span> <span class="fu"><a href="power4test.html">power4test</a></span><span class="op">(</span>nrep <span class="op">=</span> <span class="fl">4</span>,</span></span>
 <span class="r-in"><span>                       model <span class="op">=</span> <span class="va">mod</span>,</span></span>
 <span class="r-in"><span>                       pop_es <span class="op">=</span> <span class="va">mod_es</span>,</span></span>
 <span class="r-in"><span>                       n <span class="op">=</span> <span class="fl">100</span>,</span></span>
@@ -194,12 +193,12 @@ terms.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> == Model on Factors/Variables ==</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> m ~ x + w1 + x:w1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> y ~ m + w2 + m:w2 + x</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> y ~ m + x</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> == Model on Variables/Indicators ==</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> m ~ x + w1 + x:w1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> y ~ m + w2 + m:w2 + x</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> y ~ m + x</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ====== Population Values ======</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -211,8 +210,6 @@ terms.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     x:w1              0.150  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   y ~                        </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     m                 0.000  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     w2                0.000  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     m:w2             -0.050  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     x                 0.300  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Covariances:</span>
@@ -220,26 +217,20 @@ terms.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   x ~~                       </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     w1                0.000  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     x:w1              0.000  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     w2                0.000  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   w1 ~~                      </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     x:w1              0.000  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     w2                0.000  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   x:w1 ~~                    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     w2                0.000  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Variances:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                    Population</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    .m                 0.977  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    .y                 0.907  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     m:w2              1.000  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    .y                 0.910  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     x                 1.000  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     w1                1.000  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     x:w1              1.000  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     w2                1.000  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ======================= Data Information =======================</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Number of Replications:  5 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Number of Replications:  4 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Sample Sizes:  100 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call print with 'data_long = TRUE' for further information.</span>
@@ -252,30 +243,29 @@ terms.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ============ &lt;fit&gt; ============</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> lavaan 0.6-19 ended normally after 9 iterations</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lavaan 0.6-19 ended normally after 1 iteration</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Estimator                                         ML</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Optimization method                           NLMINB</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Number of model parameters                        10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Number of model parameters                         7</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Number of observations                           100</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Model Test User Model:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                                       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Test statistic                                12.032</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Degrees of freedom                                 8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   P-value (Chi-square)                           0.150</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Test statistic                                 4.537</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Degrees of freedom                                 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   P-value (Chi-square)                           0.103</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> =============== &lt;test_moderation: CIs &gt; ===============</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mean(s) across replication:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   test_label lhs op  rhs    est    se      z pvalue   cilo  cihi   sig</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     m~x:w1   m  ~ x:w1  0.178 0.106  1.624  0.204 -0.031 0.386 0.600</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     y~m:w2   y  ~ m:w2 -0.123 0.099 -1.247  0.374 -0.318 0.071 0.200</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   test_label lhs op  rhs   est    se     z pvalue   cilo  cihi   sig</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     m~x:w1   m  ~ x:w1 0.150 0.101 1.557  0.160 -0.047 0.348 0.250</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - The column 'sig' shows the rejection rates.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - If the null hypothesis is false, the rate is the power.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Number of valid replications for rejection rate(s): 5 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Number of valid replications for rejection rate(s): 4 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Proportion of valid replications for rejection rate(s): 1.000 </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
