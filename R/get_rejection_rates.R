@@ -160,6 +160,11 @@ get_rejection_rates_i_vector <- function(object_i,
                         nrep = object_i$nrep,
                         rbind(object_i$mean),
                         row.names = NULL)
+    tmp <- gsub("sig",
+                "reject",
+                colnames(out_i),
+                fixed = TRUE)
+    colnames(out_i) <- tmp
   } else {
     out_i <- data.frame(test = test_name,
                         test_label = "Test",
@@ -203,6 +208,11 @@ get_rejection_rates_i_data_frame <- function(object_i,
                         nrep = object_i$nrep,
                         object_i$mean,
                         row.names = NULL)
+    tmp <- gsub("sig",
+                "reject",
+                colnames(out_i),
+                fixed = TRUE)
+    colnames(out_i) <- tmp
     class(out_i) <- class(object_i$mean)
   } else {
     out_i <- data.frame(test = test_name,

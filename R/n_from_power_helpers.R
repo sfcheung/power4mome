@@ -48,7 +48,8 @@ power_curve_n <- function(object,
                           verbose = TRUE) {
   reject0 <- get_rejection_rates_by_n(object,
                                       all_columns = TRUE)
-  reject0$power <- reject0$sig
+  # reject0$power <- reject0$sig
+  reject0$power <- reject0$reject
   nls_contorl0 <- list(maxiter = 1000)
   nls_contorl1 <- utils::modifyList(nls_contorl0,
                                     nls_control)
