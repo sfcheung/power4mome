@@ -1,4 +1,4 @@
-# power4mome 0.0.1.20
+# power4mome 0.0.1.22
 
 - Initialized the package. (0.0.0.9000)
 
@@ -252,3 +252,11 @@
   report confidence intervals and
   standard errors of rejection rates.
   (0.0.1.20)
+
+- Revised `get_rejection_rates()` and
+  related functions. The column of
+  rejection rates is now always named
+  `"reject"`. (0.0.1.21)
+
+- Added more `ptable_pop()` arguments
+  to `power4test()`. (0.0.1.22)

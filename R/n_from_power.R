@@ -607,7 +607,7 @@ n_from_power <- function(object,
     # Get the rejection rates of all sample sizes tried.
     tmp1 <- get_rejection_rates_by_n(by_n_1,
                                      all_columns = TRUE)
-    tmp1$reject <- tmp1$sig
+    # tmp1$reject <- tmp1$sig
     tmp2 <- range(tmp1$reject)
 
     # Is the desired sample size likely already in the range
