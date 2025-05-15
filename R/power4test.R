@@ -168,6 +168,16 @@
 #' argument. Ignored if `ptable` is
 #' specified.
 #'
+#' @param standardized Logical. If
+#' `TRUE`, the default, variances and
+#' error variances are scaled to ensure
+#' the population variances of the
+#' endogenous variables are close to
+#' one, and hence the effect sizes are
+#' standardized effect sizes if the
+#' variances of the continuos exogenous
+#' variables are also equal to one.
+#'
 #' @param n The sample size for each
 #' dataset. Default is 100.
 #'
@@ -336,6 +346,22 @@
 #' vector. See [ptable_pop()] for
 #' further information.
 #'
+#' @param n_std The sample size used to
+#' determine the error variances by
+#' simulation when `std_force_monte_carlo`
+#' is `TRUE`. Default is 100000.
+#'
+#' @param std_force_monte_carlo Logical.
+#' If `FALSE`, the default,
+#' standardization is done analytically
+#' if the model has no product terms,
+#' and by simulation if the model has
+#' product terms. If `TRUE`, simulation
+#' will be used whether the model has
+#' product terms or not. Always fall
+#' back to standardization if
+#' analytical standardization failed.
+#'
 #' @examples
 #'
 #' model_simple_med <-
@@ -377,6 +403,7 @@ power4test <- function(object = NULL,
                        ptable = NULL,
                        model = NULL,
                        pop_es = NULL,
+                       standardized = TRUE,
                        n = NULL,
                        number_of_indicators = NULL,
                        reliability = NULL,
@@ -408,7 +435,9 @@ power4test <- function(object = NULL,
                                "nil" = .00,
                                "s" = .05,
                                "m" = .10,
-                               "l" = .15)) {
+                               "l" = .15),
+                       n_std = 1090000,
+                       std_force_monte_carlo= FALSE) {
 
   # TOOD:
   # - Should allow only limited changes
@@ -497,6 +526,9 @@ power4test <- function(object = NULL,
                             pop_es = args$pop_es,
                             es1 = es1,
                             es2 = es2,
+                            standardized = standardized,
+                            n_std = n_std,
+                            std_force_monte_carlo = std_force_monte_carlo,
                             n = args$n,
                             number_of_indicators = args$number_of_indicators,
                             reliability = args$reliability,
@@ -518,6 +550,9 @@ power4test <- function(object = NULL,
                             pop_es = args$pop_es,
                             es1 = args$es1,
                             es2 = args$es2,
+                            standardized = standardized,
+                            n_std = n_std,
+                            std_force_monte_carlo = std_force_monte_carlo,
                             n = args$n,
                             number_of_indicators = args$number_of_indicators,
                             reliability = args$reliability,

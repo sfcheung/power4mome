@@ -11,6 +11,7 @@ power4test(
   ptable = NULL,
   model = NULL,
   pop_es = NULL,
+  standardized = TRUE,
   n = NULL,
   number_of_indicators = NULL,
   reliability = NULL,
@@ -34,7 +35,9 @@ power4test(
   progress = TRUE,
   ncores = max(1, parallel::detectCores(logical = FALSE) - 1),
   es1 = c(n = 0, nil = 0, s = 0.1, m = 0.3, l = 0.5),
-  es2 = c(n = 0, nil = 0, s = 0.05, m = 0.1, l = 0.15)
+  es2 = c(n = 0, nil = 0, s = 0.05, m = 0.1, l = 0.15),
+  n_std = 1090000,
+  std_force_monte_carlo = FALSE
 )
 
 \method{print}{power4test}(
@@ -83,6 +86,16 @@ specify population effect sizes. See
 set the effect sizes for this
 argument. Ignored if \code{ptable} is
 specified.}
+
+\item{standardized}{Logical. If
+\code{TRUE}, the default, variances and
+error variances are scaled to ensure
+the population variances of the
+endogenous variables are close to
+one, and hence the effect sizes are
+standardized effect sizes if the
+variances of the continuos exogenous
+variables are also equal to one.}
 
 \item{n}{The sample size for each
 dataset. Default is 100.}
@@ -247,6 +260,22 @@ Default is \code{c("n" = .00, "nil" = .00, "s" = .05, "m" = .10, "l" = .15)}.
 Used only if \code{pop_es} is a named
 vector. See \code{\link[=ptable_pop]{ptable_pop()}} for
 further information.}
+
+\item{n_std}{The sample size used to
+determine the error variances by
+simulation when \code{std_force_monte_carlo}
+is \code{TRUE}. Default is 100000.}
+
+\item{std_force_monte_carlo}{Logical.
+If \code{FALSE}, the default,
+standardization is done analytically
+if the model has no product terms,
+and by simulation if the model has
+product terms. If \code{TRUE}, simulation
+will be used whether the model has
+product terms or not. Always fall
+back to standardization if
+analytical standardization failed.}
 
 \item{x}{The object
 to be printed.}
