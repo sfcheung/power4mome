@@ -58,16 +58,15 @@
 #' mod <-
 #' "
 #' m ~ x + w1 + x:w1
-#' y ~ m + w2 + m:w2 + x
+#' y ~ m + x
 #' "
 #'
 #' mod_es <- c("m ~ x" = "n",
 #'             "y ~ x" = "m",
 #'             "m ~ w1" = "n",
-#'             "m ~ x:w1" = "l",
-#'             "y ~ m:w2" = "-s")
+#'             "m ~ x:w1" = "l")
 #'
-#' sim_only <- power4test(nrep = 5,
+#' sim_only <- power4test(nrep = 4,
 #'                        model = mod,
 #'                        pop_es = mod_es,
 #'                        n = 100,
