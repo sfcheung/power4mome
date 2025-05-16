@@ -7,8 +7,8 @@
 #'
 #' @details This is a general function,
 #' to be used by wrappers such as
-#' `power_curve_n` (TODO: To write) and
-#' `power_curve_es` (TODO: To write).
+#' [power_curve_by_n()] and
+#' [power_curve_by_es()].
 #'
 #' @return
 #' TODO: Specify what are returned.
@@ -128,6 +128,8 @@ power_curve_x <- function(object,
                                    nls_control = nls_control)
 
     # Try each formula
+    fit <- NA
+    fit_deviance <- Inf
     for (i in seq_along(formula)) {
 
       nls_args1 <- utils::modifyList(nls_args_fixed$nls_args,
@@ -139,12 +141,15 @@ power_curve_x <- function(object,
                                           control = nls_args_fixed$nls_contorl1,
                                           nrep = reject0$nrep))
       # Do nls
-      fit <- tryCatch(suppressWarnings(do.call(do_nls,
-                                               nls_args1)),
-                      error = function(e) e)
+      fit_i <- tryCatch(suppressWarnings(do.call(do_nls,
+                                                 nls_args1)),
+                        error = function(e) e)
       if (inherits(fit, "nls")) {
-        # Stop the loop if as solution is found.
-        next
+        fit_i_d <- stats::deviance(fit)
+        if (fit_i_d < fit_deviance) {
+          fit <- fit_i
+          fit_deviance <- fit_i_d
+        }
       }
     }
   } else {
@@ -194,13 +199,18 @@ power_curve_x <- function(object,
   # TODO:
   # - Create the power_curve object.
 
-  return(NA)
+  out <- list(fit = fit,
+              reject_df = reject0,
+              predictor = predictor,
+              call = match.call())
+  class(out) <- c("power_curve", class(out))
+  return(out)
 }
 
 #' @rdname power_curve_x
 #' @export
 power_curve_by_n <- function(object,
-                             formula = power ~ (n - c0)^e / (b + (n - c0)^e),
+                             formula = reject ~ (x - c0)^e / (b + (x - c0)^e),
                              start = c(b = 2, c0 = 100, e = 1),
                              lower_bound = c(b = 0, c0 = 0, e = 1),
                              upper_bound = c(b = Inf, c0 = Inf, e = Inf),
@@ -223,15 +233,19 @@ power_curve_by_n <- function(object,
 #' @rdname power_curve_x
 #' @export
 power_curve_by_pop_es <- function(object,
-                                  formula = power ~ (n - c0)^e / (b + (n - c0)^e),
-                                  start = c(b = 2, c0 = 100, e = 1),
-                                  lower_bound = c(b = 0, c0 = 0, e = 1),
-                                  upper_bound = c(b = Inf, c0 = Inf, e = Inf),
+                                  formula = list(reject ~ 1 - 1 / I((1 + (x / d)^a)^b),
+                                                 reject ~ 1 - exp(x / a) / I((1  + exp(x / a))^b),
+                                                 reject ~ 1 - 2 / (exp(x / d) + exp(-x / d)),
+                                                 reject ~ 1 / (1 + a * exp(-b * x))),
+                                  start = list(c(a = 2, b = 4, d = 4),
+                                               c(a = 1, b = 2),
+                                               c(d = 1),
+                                               c(a = 1, b = 1)),
+                                  lower_bound = NULL,
+                                  upper_bound = NULL,
                                   nls_args = list(),
                                   nls_control = list(),
                                   verbose = TRUE) {
-  # TODO:
-  # - Set the models for pop_es
   if (!inherits(object, "power4test_by_pop_es")) {
     stop("'object' is not a power4test_by_pop_es object.")
   }
