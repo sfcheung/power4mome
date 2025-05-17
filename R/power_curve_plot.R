@@ -59,7 +59,7 @@
 #' Passed to [plot()] when drawing
 #' the base plot.
 #'
-#' @seealso [power_curve()]
+#' @seealso [power_curve_x()]
 #'
 #' @examples
 #'
@@ -147,7 +147,7 @@ plot.power_curve <- function(x,
   if ("ci" %in% what) {
 
     tmp_args <- utils::modifyList(pars_ci,
-                                  list(object = reject_df))
+                                  list(reject_df = reject_df))
     do.call(plot_power_curve_x_ci,
             tmp_args)
   }
@@ -175,9 +175,9 @@ plot_power_curve_x_ci <- function(reject_df,
   # Some CIs may be of zero width
   i <- !(reject_df$reject_ci_lo == reject_df$reject_ci_hi)
   if (any(i)) {
-    arrows(x0 = reject_df$n[i],
+    arrows(x0 = reject_df$x[i],
            y0 = reject_df$reject_ci_lo[i],
-           x1 = reject_df$n[i],
+           x1 = reject_df$x[i],
            y1 = reject_df$reject_ci_hi[i],
            length = length,
            angle = angle,
@@ -197,14 +197,13 @@ plot_power_curve_x_curve <- function(x,
                                      ...) {
   # x is a power_curve object
   reject_df <- x$reject_df
-  x_new <- seq(min(reject_df$n),
-               max(reject_df$n),
+  x_new <- seq(min(reject_df$x),
+               max(reject_df$x),
                length.out = curve_points)
-  if (inherits(power_n_fit, "nls") || inherits(power_n_fit, "lm")) {
-    # TODO:
-    # - Write a predict method for power_curve objects
-    y_new <- predict(x,
-                     newdata = list(n = x_new))
+  fit <- x$fit
+  if (inherits(fit, "nls") || inherits(fit, "lm")) {
+    y_new <- stats::predict(x,
+                            newdata = list(x = x_new))
     points(x = x_new,
            y = y_new,
            type = type,

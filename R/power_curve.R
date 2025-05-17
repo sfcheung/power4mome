@@ -8,7 +8,7 @@
 #' @details This is a general function,
 #' to be used by wrappers such as
 #' [power_curve_by_n()] and
-#' [power_curve_by_es()].
+#' [power_curve_by_pop_es()].
 #'
 #' @return
 #' TODO: Specify what are returned.
@@ -69,9 +69,7 @@
 #' the messages will be printed when
 #' trying different models.
 #'
-#' @param
-#'
-#' @seealso [power4test_by_n()] and [power4test_by_es()]
+#' @seealso [power4test_by_n()] and [power4test_by_pop_es()]
 #'
 #' @examples
 #' x <- 1
@@ -82,12 +80,12 @@
 #' @export
 power_curve_x <- function(object,
                           formula = NULL,
-                          start = c(b = 2, c0 = 100, e = 1),
-                          lower_bound = c(b = 0, c0 = 0, e = 1),
-                          upper_bound = c(b = Inf, c0 = Inf, e = Inf),
+                          start = NULL,
+                          lower_bound = NULL,
+                          upper_bound = NULL,
                           nls_args = list(),
                           nls_control = list(),
-                          verbose = TRUE) {
+                          verbose = FALSE) {
 
   # reject ~ I((x - c0)^e) / (b + I((x - c0)^e))
   # The formula used depends on the nature of the predictors
@@ -101,6 +99,42 @@ power_curve_x <- function(object,
     stop("'object' is neither a power4test_by_n or power4test_by_n object.")
   }
 
+  if (class0 == "power4test_by_n") {
+    if (is.null(formula)) {
+      formula <- reject ~ I((x - c0)^e) / (b + I((x - c0)^e))
+    }
+    if (is.null(start)) {
+      start <- c(b = 2, c0 = 100, e = 1)
+    }
+    if (is.null(lower_bound)) {
+      lower_bound <- c(b = 0, c0 = 0, e = 1)
+    }
+    if (is.null(upper_bound)) {
+      upper_bound <- c(b = Inf, c0 = Inf, e = Inf)
+    }
+  }
+
+  if (class0 == "power4test_by_pop_es") {
+    if (is.null(formula)) {
+      formula <- list(reject ~ 1 - 1 / I((1 + (x / d)^a)^b),
+                      reject ~ 1 - exp(x / a) / I((1  + exp(x / a))^b),
+                      reject ~ 1 - 2 / (exp(x / d) + exp(-x / d)),
+                      reject ~ 1 / (1 + a * exp(-b * x)))
+    }
+    if (is.null(start)) {
+      start <- list(c(a = 2, b = 4, d = 4),
+                    c(a = 1, b = 2),
+                    c(d = 1),
+                    c(a = 1, b = 1))
+    }
+    if (is.null(lower_bound)) {
+      lower_bound <- list(NULL, NULL, NULL, NULL)
+    }
+    if (is.null(upper_bound)) {
+      upper_bound <- list(NULL, NULL, NULL, NULL)
+    }
+  }
+
   reject0 <- switch(class0,
                     power4test_by_n = get_rejection_rates_by_n(object,
                                                                all_columns = TRUE),
@@ -112,40 +146,44 @@ power_curve_x <- function(object,
                       power4test_by_pop_es = "es")
 
   #reject0$power <- reject0$reject
-  reject0$x <- reject0[predictor]
+  reject0$x <- reject0[[predictor]]
 
   model_found <- FALSE
 
   if (nrow(reject0) >= 4) {
 
     # === nls ===
-
     nls_args_fixed <- fix_nls_args(formula = formula,
                                    start = start,
                                    lower_bound = lower_bound,
                                    upper_bound = upper_bound,
-                                   nsl_args = nls_args,
+                                   nls_args = nls_args,
                                    nls_control = nls_control)
-
     # Try each formula
     fit <- NA
     fit_deviance <- Inf
-    for (i in seq_along(formula)) {
-
+    for (i in seq_along(nls_args_fixed$formula)) {
       nls_args1 <- utils::modifyList(nls_args_fixed$nls_args,
-                                     list(formula = nls_args_fixed$formula[[i]],
-                                          data = reject0,
-                                          start = nls_args_fixed$start[[i]],
-                                          lower = nls_args_fixed$lower_bound[[i]],
-                                          upper = nls_args_fixed$upper_bound[[i]],
+                                     list(data = reject0,
                                           control = nls_args_fixed$nls_contorl1,
                                           nrep = reject0$nrep))
-      # Do nls
+      nls_args_fixed_i <- list(formula = nls_args_fixed$formula[[i]],
+                               start = nls_args_fixed$start[[i]],
+                               lower = nls_args_fixed$lower_bound[[i]],
+                               upper = nls_args_fixed$upper_bound[[i]])
+      for (xx in names(nls_args_fixed_i)) {
+        if (is.null(nls_args_fixed_i[[xx]])) {
+          nls_args_fixed_i[[xx]] <- NULL
+        }
+      }
+      nls_args1 <- utils::modifyList(nls_args1,
+                                     nls_args_fixed_i)
+      # Do nls0
       fit_i <- tryCatch(suppressWarnings(do.call(do_nls,
                                                  nls_args1)),
                         error = function(e) e)
-      if (inherits(fit, "nls")) {
-        fit_i_d <- stats::deviance(fit)
+      if (inherits(fit_i, "nls")) {
+        fit_i_d <- stats::deviance(fit_i)
         if (fit_i_d < fit_deviance) {
           fit <- fit_i
           fit_deviance <- fit_i_d
@@ -155,6 +193,7 @@ power_curve_x <- function(object,
   } else {
     if (verbose) {
       message("- 'nls()' estimation skipped when less than 4 values of predictor examined.")
+      print(fit)
     }
   }
 
@@ -163,41 +202,47 @@ power_curve_x <- function(object,
   } else {
     if (verbose) {
       message("- 'nls()' estimation failed. Switch to logistic regression.")
+      message("The last model tried:")
+      print(nls_args_fixed$formula[[length(nls_args_fixed$formula)]])
+      print(fit_i)
     }
   }
 
   # === Logistic ===
 
-  # Do logistic
-  fit <- do_logistic(reject_df = reject0)
+  if (!model_found) {
+    # Do logistic
+    fit <- do_logistic(reject_df = reject0)
 
-  if (inherits(fit, "glm")) {
-    model_found <- TRUE
-  } else {
-    if (verbose) {
-      message("- Logistic regression failed. Switch to linear regression.")
+    if (inherits(fit, "glm")) {
+      model_found <- TRUE
+    } else {
+      if (verbose) {
+        message("- Logistic regression failed. Switch to linear regression.")
+        print(fit)
+      }
     }
   }
 
   # === OLS Regression ===
 
+  if (!model_found) {
   # Last resort: OLS regression
-  fit <- do_lm(reject_df = reject0,
-               weights = reject0$nrep)
+    fit <- do_lm(reject_df = reject0,
+                weights = reject0$nrep)
 
-  if (inherits(fit, "lm")) {
-    model_found <- TRUE
-  } else {
-    if (verbose) {
-      message("- OLS regression failed. No power curve estimated.")
+    if (inherits(fit, "lm")) {
+      model_found <- TRUE
+    } else {
+      if (verbose) {
+        message("- OLS regression failed. No power curve estimated.")
+        print(fit)
+      }
     }
   }
 
   # TODO:
   # - Consider using `splinefun()` as a last resort.
-
-  # TODO:
-  # - Create the power_curve object.
 
   out <- list(fit = fit,
               reject_df = reject0,
@@ -241,8 +286,8 @@ print.power_curve <- function(x,
                               row.names = FALSE,
                               ...) {
   cat("Call:\n")
-  print(out$call)
-  cat("Predictor: ",
+  print(x$call)
+  cat("\nPredictor: ",
       x$predictor,
       " (",
       switch(x$predictor,
@@ -251,7 +296,9 @@ print.power_curve <- function(x,
       ")\n",
       sep = "")
   cat("\nModel:\n")
-  print(x$fit)
+  tmp <- x$fit
+  tmp$data <- "(Omitted)"
+  print(tmp)
   if (data_used) {
     cat("\nData Used:\n")
     print(x$reject_df,
@@ -266,7 +313,7 @@ print.power_curve <- function(x,
 #' @rdname power_curve_x
 #' @export
 power_curve_by_n <- function(object,
-                             formula = reject ~ (x - c0)^e / (b + (x - c0)^e),
+                             formula = reject ~ I((x - c0)^e) / (b + I((x - c0)^e)),
                              start = c(b = 2, c0 = 100, e = 1),
                              lower_bound = c(b = 0, c0 = 0, e = 1),
                              upper_bound = c(b = Inf, c0 = Inf, e = Inf),
@@ -318,12 +365,11 @@ power_curve_by_pop_es <- function(object,
 #' @noRd
 do_nls <- function(...,
                    nrep = NULL) {
-  args <- match.args()
+  args <- list(...)
   # Try weights
   if (!is.null(nrep)) {
     args1 <- utils::modifyList(args,
-                              list(data = data,
-                                   weights = nrep))
+                              list(weights = nrep))
     fit <- tryCatch(suppressWarnings(do.call(stats::nls,
                                      args1)),
                    error = function(e) e)
@@ -358,7 +404,7 @@ do_logistic <- function(reject_df) {
                 y = reject1$nrep,
                 SIMPLIFY = FALSE)
   tmp <- unlist(tmp)
-  reject1 <- data.frame(n = rep(reject1$n,
+  reject1 <- data.frame(x = rep(reject1$x,
                                 times = reject1$nrep),
                         sig = tmp)
   # Rename sig to reject,
@@ -425,7 +471,6 @@ fix_nls_args <- function(formula,
   if (!is.list(upper_bound)) {
     upper_bound <- list(upper_bound)
   }
-
   # Default argument values
   nls_contorl0 <- list(maxiter = 1000)
   nls_contorl1 <- utils::modifyList(nls_contorl0,

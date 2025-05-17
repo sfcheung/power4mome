@@ -2,7 +2,7 @@
 #'
 #' @description Compute the predicted
 #' values in a model fitted by
-#' `power_curve()`.
+#' [power_curve_x()].
 #'
 #' @details
 #' It retrieve the stored results
@@ -23,7 +23,7 @@
 #' Passed to the corresponding
 #' `predict` method.
 #'
-#' @seealso [power_curve()].
+#' @seealso [power_curve_x()].
 #'
 #' @examples
 #' # TODO:
@@ -36,10 +36,10 @@ predict.power_curve <- function(object,
                                 newdata,
                                 ...) {
   fit <- object$fit
-  if (missing) {
+  if (missing(newdata)) {
     newdata <- object$reject_df
   }
-  if (inherits(object, "glm")) {
+  if (inherits(fit, "glm")) {
     out <- stats::predict(object = fit,
                           newdata = newdata,
                           type = "response",
