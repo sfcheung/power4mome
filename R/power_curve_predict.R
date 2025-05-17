@@ -2,7 +2,7 @@
 #'
 #' @description Compute the predicted
 #' values in a model fitted by
-#' [power_curve_x()].
+#' [power_curve()].
 #'
 #' @details
 #' It retrieve the stored results
@@ -23,7 +23,7 @@
 #' Passed to the corresponding
 #' `predict` method.
 #'
-#' @seealso [power_curve_x()].
+#' @seealso [power_curve()].
 #'
 #' @examples
 #' # TODO:

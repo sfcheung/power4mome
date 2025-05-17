@@ -37,8 +37,8 @@ out1 <- power4test_by_n(sim_only,
 
 get_rejection_rates_by_n(out1)
 
-expect_no_error(pout1 <- power_curve_x(out1,
-                                       verbose = TRUE))
+expect_no_error(pout1 <- power_curve(out1,
+                                     verbose = TRUE))
 expect_no_error(print(pout1))
 
 expect_no_error(print(pout1, data_used = TRUE))
@@ -60,8 +60,8 @@ out2 <- power4test_by_pop_es(sim_only,
 get_rejection_rates_by_pop_es(out2,
                               all_columns = TRUE)
 
-expect_no_error(pout2 <- power_curve_x(out2,
-                                       verbose = TRUE))
+expect_no_error(pout2 <- power_curve(out2,
+                                     verbose = TRUE))
 expect_no_error(print(out2))
 
 expect_no_error(print(pout2, data_used = TRUE))

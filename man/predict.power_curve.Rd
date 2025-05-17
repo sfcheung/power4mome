@@ -25,7 +25,7 @@ the predicted rejection rates.
 \description{
 Compute the predicted
 values in a model fitted by
-\code{\link[=power_curve_x]{power_curve_x()}}.
+\code{\link[=power_curve]{power_curve()}}.
 }
 \details{
 It retrieve the stored results
@@ -38,5 +38,5 @@ x <- 1
 
 }
 \seealso{
-\code{\link[=power_curve_x]{power_curve_x()}}.
+\code{\link[=power_curve]{power_curve()}}.
 }

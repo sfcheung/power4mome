@@ -127,5 +127,5 @@ plot(power_vs_n)
 
 }
 \seealso{
-\code{\link[=power_curve_x]{power_curve_x()}}
+\code{\link[=power_curve]{power_curve()}}
 }

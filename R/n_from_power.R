@@ -470,13 +470,13 @@ n_from_power <- function(object,
   #                        nls_control = nls_control,
   #                        nls_args = nls_args,
   #                        verbose = progress)
-  fit_i <- power_curve_x(by_n_i,
-                         formula = power_model,
-                         start = start,
-                         lower_bound = lower_bound,
-                         nls_control = nls_control,
-                         nls_args = nls_args,
-                         verbose = progress)
+  fit_i <- power_curve(by_n_i,
+                       formula = power_model,
+                       start = start,
+                       lower_bound = lower_bound,
+                       nls_control = nls_control,
+                       nls_args = nls_args,
+                       verbose = progress)
 
   if (progress) {
     cat("- Power Curve:\n")
@@ -613,13 +613,13 @@ n_from_power <- function(object,
     #                        nls_control = nls_control,
     #                        nls_args = nls_args,
     #                        verbose = progress)
-    fit_i <- power_curve_x(by_n_1,
-                           formula = power_model,
-                           start = start,
-                           lower_bound = lower_bound,
-                           nls_control = nls_control,
-                           nls_args = nls_args,
-                           verbose = progress)
+    fit_i <- power_curve(by_n_1,
+                         formula = power_model,
+                         start = start,
+                         lower_bound = lower_bound,
+                         nls_control = nls_control,
+                         nls_args = nls_args,
+                         verbose = progress)
 
     # Get the rejection rates of all sample sizes tried.
     tmp1 <- get_rejection_rates_by_n(by_n_1,
@@ -712,13 +712,13 @@ n_from_power <- function(object,
       #                       nls_control = nls_control,
       #                       nls_args = nls_args,
       #                       verbose = progress)
-      fit_i <- power_curve_x(by_n_1,
-                             formula = power_model,
-                             start = stats::coef(fit_1),
-                             lower_bound = lower_bound,
-                             nls_control = nls_control,
-                             nls_args = nls_args,
-                             verbose = progress)
+      fit_i <- power_curve(by_n_1,
+                           formula = power_model,
+                           start = stats::coef(fit_1),
+                           lower_bound = lower_bound,
+                           nls_control = nls_control,
+                           nls_args = nls_args,
+                           verbose = progress)
     }
 
     if (progress) {

@@ -59,7 +59,7 @@
 #' Passed to [plot()] when drawing
 #' the base plot.
 #'
-#' @seealso [power_curve_x()]
+#' @seealso [power_curve()]
 #'
 #' @examples
 #'
@@ -148,7 +148,7 @@ plot.power_curve <- function(x,
 
     tmp_args <- utils::modifyList(pars_ci,
                                   list(reject_df = reject_df))
-    do.call(plot_power_curve_x_ci,
+    do.call(plot_power_curve_ci,
             tmp_args)
   }
 
@@ -157,7 +157,7 @@ plot.power_curve <- function(x,
   if ("power_curve" %in% what) {
     tmp_args <- utils::modifyList(pars_ci,
                                   list(x = x))
-    do.call(plot_power_curve_x_curve,
+    do.call(plot_power_curve_curve,
             tmp_args)
   }
 
@@ -165,12 +165,12 @@ plot.power_curve <- function(x,
 }
 
 #' @noRd
-plot_power_curve_x_ci <- function(reject_df,
-                                  length = .1,
-                                  angle = 90,
-                                  code = 3,
-                                  col = "grey50",
-                                  ...) {
+plot_power_curve_ci <- function(reject_df,
+                                length = .1,
+                                angle = 90,
+                                code = 3,
+                                col = "grey50",
+                                ...) {
   # object should be a data frame with CIs already computed
   # Some CIs may be of zero width
   i <- !(reject_df$reject_ci_lo == reject_df$reject_ci_hi)
@@ -189,12 +189,12 @@ plot_power_curve_x_ci <- function(reject_df,
 
 #' @noRd
 
-plot_power_curve_x_curve <- function(x,
-                                     type = "l",
-                                     lwd = 2,
-                                     col = "red",
-                                     curve_points = 20,
-                                     ...) {
+plot_power_curve_curve <- function(x,
+                                   type = "l",
+                                   lwd = 2,
+                                   col = "red",
+                                   curve_points = 20,
+                                   ...) {
   # x is a power_curve object
   reject_df <- x$reject_df
   x_new <- seq(min(reject_df$x),

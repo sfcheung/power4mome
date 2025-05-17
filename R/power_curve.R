@@ -78,14 +78,14 @@
 #' }
 #'
 #' @export
-power_curve_x <- function(object,
-                          formula = NULL,
-                          start = NULL,
-                          lower_bound = NULL,
-                          upper_bound = NULL,
-                          nls_args = list(),
-                          nls_control = list(),
-                          verbose = FALSE) {
+power_curve <- function(object,
+                        formula = NULL,
+                        start = NULL,
+                        lower_bound = NULL,
+                        upper_bound = NULL,
+                        nls_args = list(),
+                        nls_control = list(),
+                        verbose = FALSE) {
 
   # reject ~ I((x - c0)^e) / (b + I((x - c0)^e))
   # The formula used depends on the nature of the predictors
@@ -255,7 +255,7 @@ power_curve_x <- function(object,
   return(out)
 }
 
-#' @rdname power_curve_x
+#' @rdname power_curve
 #'
 #' @param x A `power_curve` object.
 #'
@@ -313,7 +313,7 @@ print.power_curve <- function(x,
   invisible(x)
 }
 
-#' @rdname power_curve_x
+#' @rdname power_curve
 #' @export
 power_curve_by_n <- function(object,
                              formula = reject ~ I((x - c0)^e) / (b + I((x - c0)^e)),
@@ -326,17 +326,17 @@ power_curve_by_n <- function(object,
   if (!inherits(object, "power4test_by_n")) {
     stop("'object' is not a power4test_by_n object.")
   }
-  power_curve_x(object = object,
-                formula = formula,
-                start = start,
-                lower_bound = lower_bound,
-                upper_bound = upper_bound,
-                nls_args = nls_args,
-                nls_control = nls_control,
-                verbose = verbose)
+  power_curve(object = object,
+              formula = formula,
+              start = start,
+              lower_bound = lower_bound,
+              upper_bound = upper_bound,
+              nls_args = nls_args,
+              nls_control = nls_control,
+              verbose = verbose)
 }
 
-#' @rdname power_curve_x
+#' @rdname power_curve
 #' @export
 power_curve_by_pop_es <- function(object,
                                   formula = list(reject ~ 1 - 1 / I((1 + (x / d)^a)^b),
@@ -355,14 +355,14 @@ power_curve_by_pop_es <- function(object,
   if (!inherits(object, "power4test_by_pop_es")) {
     stop("'object' is not a power4test_by_pop_es object.")
   }
-  power_curve_x(object = object,
-                formula = formula,
-                start = start,
-                lower_bound = lower_bound,
-                upper_bound = upper_bound,
-                nls_args = nls_args,
-                nls_control = nls_control,
-                verbose = verbose)
+  power_curve(object = object,
+              formula = formula,
+              start = start,
+              lower_bound = lower_bound,
+              upper_bound = upper_bound,
+              nls_args = nls_args,
+              nls_control = nls_control,
+              verbose = verbose)
 }
 
 #' @noRd
