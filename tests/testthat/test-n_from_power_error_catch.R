@@ -52,9 +52,9 @@ tmp <- n_from_power(out,
                     final_nrep = 50,
                     n_interval = c(10, 60),
                     extendInt = "yes",
-                    max_trials = 2,
+                    max_trials = 3,
                     seed = 1234,
-                    progress = FALSE,
+                    progress = TRUE,
                     simulation_progress = FALSE)
 summary(tmp)
 expect_true(!is.na(tmp$power_final))

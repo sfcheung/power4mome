@@ -225,26 +225,27 @@
 #' to be included in the sample sizes
 #' to be searched.
 #'
-#' @param power_curve The nonlinear
+#' @param power_model The nonlinear
 #' model to be used when estimating
 #' the relation between power and
 #' sample size. Should be a formula
 #' acceptable by [stats::nls()],
-#' with `power` on the left-hand side,
-#' and `n` in the right-hand
+#' with `reject` on the left-hand side,
+#' and `x` (stands for sample size)
+#' on the right-hand
 #' side, with one or more parameters.
 #' Users rarely need to change the
 #' default value.
 #'
 #' @param start A named numeric vector
-#' of the starting values for `power_curve`
+#' of the starting values for `power_model`
 #' when fitted by [stats::nls()].
 #' Users rarely need to change the
 #' default values.
 #'
 #' @param lower_bound A named numeric vector
 #' of the lower bounds for parameters
-#' in `power_curve`
+#' in `power_model`
 #' when fitted by [stats::nls()].
 #' Users rarely need to change the
 #' default values.
@@ -328,7 +329,7 @@ n_from_power <- function(object,
                          nrep_steps = 1,
                          seed = NULL,
                          n_include_interval = FALSE,
-                         power_curve = power ~ I((n - c0)^e) / (b + I((n - c0)^e)),
+                         power_model = reject ~ I((x - c0)^e) / (b + I((x - c0)^e)),
                          start = c(b = 2, c0 = 100, e = 1),
                          lower_bound = c(b = 0, c0 = 0, e = 1),
                          nls_control = list(),
@@ -462,8 +463,15 @@ n_from_power <- function(object,
 
   # ** fit_i **
   # The current power curve, based on by_n_i
-  fit_i <- power_curve_n(by_n_i,
-                         formula = power_curve,
+  # fit_i <- power_curve_n(by_n_i,
+  #                        formula = power_curve,
+  #                        start = start,
+  #                        lower_bound = lower_bound,
+  #                        nls_control = nls_control,
+  #                        nls_args = nls_args,
+  #                        verbose = progress)
+  fit_i <- power_curve_x(by_n_i,
+                         formula = power_model,
                          start = start,
                          lower_bound = lower_bound,
                          nls_control = nls_control,
@@ -547,7 +555,7 @@ n_from_power <- function(object,
     # ** n_j **
     # The vector of sample sizes to be tried in this trial
     # Determined using by latest power curve (fit_1)
-    n_j <- estimate_n_range(power_n_fit = fit_1,
+    n_j <- estimate_n_range(power_n_fit = fit_1$fit,
                             target_power = target_power,
                             k = ns_per_trial_seq[1],
                             tolerance = power_tolerance_in_interval,
@@ -560,8 +568,10 @@ n_from_power <- function(object,
     # Adjust the numbers of replication for each sample size.
     # A sample size with estimated power closer to the
     # target power will have a higher number of replication
-    power_j <- predict_fit(fit_1,
-                           newdata = list(n = n_j))
+    # power_j <- predict_fit(fit_1,
+    #                        newdata = list(n = n_j))
+    power_j <- predict(fit_1,
+                       newdata = list(x = n_j))
     nrep_j <- nrep_from_power(power_j = power_j,
                               target_power = target_power,
                               tolerance = power_tolerance_in_final,
@@ -596,9 +606,16 @@ n_from_power <- function(object,
     }
 
     # Update the power curve
-    fit_1 <- power_curve_n(by_n_1,
-                           formula = power_curve,
-                           start = stats::coef(fit_1),
+    # fit_1 <- power_curve_n(by_n_1,
+    #                        formula = power_curve,
+    #                        start = stats::coef(fit_1),
+    #                        lower_bound = lower_bound,
+    #                        nls_control = nls_control,
+    #                        nls_args = nls_args,
+    #                        verbose = progress)
+    fit_i <- power_curve_x(by_n_1,
+                           formula = power_model,
+                           start = start,
                            lower_bound = lower_bound,
                            nls_control = nls_control,
                            nls_args = nls_args,
@@ -650,7 +667,7 @@ n_from_power <- function(object,
 
       # ** n_out, power_out, nrep_out, ci_out, by_n_out **
       # Considered a candidate solution.
-      n_out <- estimate_n_range(power_n_fit = fit_1,
+      n_out <- estimate_n_range(power_n_fit = fit_1$fit,
                                 target_power = target_power,
                                 k = 1,
                                 tolerance = 0,
@@ -688,13 +705,20 @@ n_from_power <- function(object,
       by_n_out <- by_n_out[[1]]
 
       # Update the power curve
-      fit_1 <- power_curve_n(by_n_1,
-                            formula = power_curve,
-                            start = stats::coef(fit_1),
-                            lower_bound = lower_bound,
-                            nls_control = nls_control,
-                            nls_args = nls_args,
-                            verbose = progress)
+      # fit_1 <- power_curve_n(by_n_1,
+      #                       formula = power_curve,
+      #                       start = stats::coef(fit_1),
+      #                       lower_bound = lower_bound,
+      #                       nls_control = nls_control,
+      #                       nls_args = nls_args,
+      #                       verbose = progress)
+      fit_i <- power_curve_x(by_n_1,
+                             formula = power_model,
+                             start = stats::coef(fit_1),
+                             lower_bound = lower_bound,
+                             nls_control = nls_control,
+                             nls_args = nls_args,
+                             verbose = progress)
     }
 
     if (progress) {
@@ -721,6 +745,8 @@ n_from_power <- function(object,
       # Find the sample size with CI hitting the target power
       # and has the smallest SE.
       i1 <- rank(by_n_ci$reject_se)
+      # Do not consider those with nrep < final_nrep
+      i1[by_n_ci$nrep < final_nrep] <- Inf
       # If ties, the smallest sample size will be used
       i2 <- which(i1 == min(i1[i0]))[1]
 
@@ -835,7 +861,7 @@ n_from_power <- function(object,
   # Used as a suggestion when no solution was found.
   n_x <- NA
   if (ci_hit) {
-    n_x <- estimate_n_range(power_n_fit = fit_1,
+    n_x <- estimate_n_range(power_n_fit = fit_1$fit,
                             target_power = target_power,
                             k = 1,
                             tolerance = 0,
@@ -847,7 +873,7 @@ n_from_power <- function(object,
   }
 
   if (progress) {
-    if (ci_hit) {
+    if (ci_hit && nrep_out == final_nrep) {
       cat("\n")
       cat("- Final Sample Size:", n_out, "\n")
       cat("- Final Estimated Power:",

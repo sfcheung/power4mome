@@ -147,7 +147,7 @@ print.summary.n_from_power <- function(x,
       format(x$time_spent, digits = 4),
       "\n")
   if (isFALSE(identical(NA, x$power_curve))) {
-    tmp <- class(x$power_curve)[1]
+    tmp <- class(x$power_curve$fit)[1]
     power_curve_name <- switch(tmp,
                                nls = "Nonlinear Regression Model",
                                glm = "Logistic Regression",

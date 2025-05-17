@@ -150,6 +150,8 @@ power_curve_x <- function(object,
 
   model_found <- FALSE
 
+  fit <- NA
+
   if (nrow(reject0) >= 4) {
 
     # === nls ===
@@ -160,7 +162,6 @@ power_curve_x <- function(object,
                                    nls_args = nls_args,
                                    nls_control = nls_control)
     # Try each formula
-    fit <- NA
     fit_deviance <- Inf
     for (i in seq_along(nls_args_fixed$formula)) {
       nls_args1 <- utils::modifyList(nls_args_fixed$nls_args,
@@ -190,21 +191,23 @@ power_curve_x <- function(object,
         }
       }
     }
+
+    if (inherits(fit, "nls")) {
+      model_found <- TRUE
+    } else {
+      if (verbose) {
+        message("- 'nls()' estimation failed. Switch to logistic regression.")
+        # message("The last model tried:")
+        # print(nls_args_fixed$formula[[length(nls_args_fixed$formula)]])
+        # tmp <- fit_i
+        # tmp$data <- "(Omitted)"
+        # print(tmp)
+      }
+    }
+
   } else {
     if (verbose) {
       message("- 'nls()' estimation skipped when less than 4 values of predictor examined.")
-      print(fit)
-    }
-  }
-
-  if (inherits(fit, "nls")) {
-    model_found <- TRUE
-  } else {
-    if (verbose) {
-      message("- 'nls()' estimation failed. Switch to logistic regression.")
-      message("The last model tried:")
-      print(nls_args_fixed$formula[[length(nls_args_fixed$formula)]])
-      print(fit_i)
     }
   }
 
@@ -219,7 +222,7 @@ power_curve_x <- function(object,
     } else {
       if (verbose) {
         message("- Logistic regression failed. Switch to linear regression.")
-        print(fit)
+        # print(fit)
       }
     }
   }
@@ -236,7 +239,7 @@ power_curve_x <- function(object,
     } else {
       if (verbose) {
         message("- OLS regression failed. No power curve estimated.")
-        print(fit)
+        # print(fit)
       }
     }
   }
