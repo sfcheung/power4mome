@@ -208,6 +208,62 @@ power_curve_x <- function(object,
 }
 
 #' @rdname power_curve_x
+#'
+#' @param x A `power_curve` object.
+#'
+#' @param data_used Logical. Whether
+#' the rejection rates data frame
+#' used to fit the model is printed.
+#'
+#' @param digits,right,row.names
+#' Arguments of the same names used
+#' by the `print` method of a
+#' `data.frame` object. Used when `data_used`
+#' is `TRUE` and the rejection rates
+#' data frame is printed.
+#'
+#' @param ... For the `print` method of
+#' `power_curve` objects, they are optional
+#' arguments to be passed to
+#' [print.data.frame()] when printing
+#' the rejection rates data frame.
+#'
+#' @return
+#' The `print` method of `power_curve`
+#' object returns `x` invisibly. Called
+#' for its sideeffect.
+#'
+#' @export
+print.power_curve <- function(x,
+                              data_used = FALSE,
+                              digits = 3,
+                              right = FALSE,
+                              row.names = FALSE,
+                              ...) {
+  cat("Call:\n")
+  print(out$call)
+  cat("Predictor: ",
+      x$predictor,
+      " (",
+      switch(x$predictor,
+             n = "Sample Size",
+             es = "Effect Size"),
+      ")\n",
+      sep = "")
+  cat("\nModel:\n")
+  print(x$fit)
+  if (data_used) {
+    cat("\nData Used:\n")
+    print(x$reject_df,
+          digits = digits,
+          right = right,
+          row.names = row.names,
+          ...)
+  }
+  invisible(x)
+}
+
+#' @rdname power_curve_x
 #' @export
 power_curve_by_n <- function(object,
                              formula = reject ~ (x - c0)^e / (b + (x - c0)^e),

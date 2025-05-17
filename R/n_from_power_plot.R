@@ -181,6 +181,9 @@ plot.n_from_power <- function(x,
 
   # === Draw the base plot: Power vs. N
 
+  # TODO:
+  # - Decide: Use plot.power_curve?
+
   do.call(plot_power_n,
           list(object = x$power4test_trials,
                main = main,
@@ -217,6 +220,9 @@ plot.n_from_power <- function(x,
   }
 
   # === Draw the power curve?
+
+  # TODO:
+  # - Decide: Use plot.power_curve?
 
   if ("power_curve" %in% what) {
     tmp_args <- utils::modifyList(pars_ci,
