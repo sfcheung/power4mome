@@ -14,6 +14,7 @@
   xlab = "Sample Size",
   ylab = "Estimated Power",
   pars_ci = list(),
+  pars_power_curve = list(),
   pars_ci_final_sample_size = list(lwd = 2, length = 0.2, col = "blue"),
   pars_target_power = list(lty = "dotted"),
   pars_final_sample_size = list(lty = "dotted"),
@@ -71,6 +72,11 @@ respectively.}
 arguments to be passed to \code{\link[=arrows]{arrows()}}
 to customize the drawing of the
 confidence intervals.}
+
+\item{pars_power_curve}{A named list of
+arguments to be passed to \code{\link[=points]{points()}}
+to customize the drawing of the
+power curve.}
 
 \item{pars_ci_final_sample_size}{A named list of
 arguments to be passed to \code{\link[=arrows]{arrows()}}

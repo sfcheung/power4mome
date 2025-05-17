@@ -64,6 +64,11 @@
 #' to customize the drawing of the
 #' confidence intervals.
 #'
+#' @param pars_power_curve A named list of
+#' arguments to be passed to [points()]
+#' to customize the drawing of the
+#' power curve.
+#'
 #' @param pars_ci_final_sample_size A named list of
 #' arguments to be passed to [arrows()]
 #' to customize the drawing of the
@@ -162,6 +167,7 @@ plot.n_from_power <- function(x,
                               xlab = "Sample Size",
                               ylab = "Estimated Power",
                               pars_ci = list(),
+                              pars_power_curve = list(),
                               pars_ci_final_sample_size = list(lwd = 2,
                                                                length = .2,
                                                                col = "blue"),
@@ -180,6 +186,9 @@ plot.n_from_power <- function(x,
   solution_found <- isFALSE(identical(NA, x$n_final))
 
   # === Draw the base plot: Power vs. N
+
+  # It is intended *not* to use plot.power_curve().
+  # It is possible that the fit failed.
 
   do.call(plot_power_n,
           list(object = x$power4test_trials,
@@ -218,8 +227,10 @@ plot.n_from_power <- function(x,
 
   # === Draw the power curve?
 
+  # It is intentional *not* to use the power curve plot method.
+
   if ("power_curve" %in% what) {
-    tmp_args <- utils::modifyList(pars_ci,
+    tmp_args <- utils::modifyList(pars_power_curve,
                                   list(object = x$power4test_trials,
                                        power_n_fit = x$power_curve))
     do.call(plot_power_curve,
@@ -317,9 +328,9 @@ plot_power_curve <- function(object,
   x_new <- seq(min(reject0$n),
                max(reject0$n),
                length.out = 20)
-  if (inherits(power_n_fit, "nls") || inherits(power_n_fit, "lm")) {
-    y_new <- predict_fit(power_n_fit,
-                         newdata = list(n = x_new))
+  if (inherits(power_n_fit$fit, "nls") || inherits(power_n_fit$fit, "lm")) {
+    y_new <- stats::predict(power_n_fit,
+                            newdata = list(x = x_new))
     points(x = x_new,
            y = y_new,
            type = type,

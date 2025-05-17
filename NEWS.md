@@ -1,4 +1,4 @@
-# power4mome 0.0.1.22
+# power4mome 0.0.1.23
 
 - Initialized the package. (0.0.0.9000)
 
@@ -260,3 +260,9 @@
 
 - Added more `ptable_pop()` arguments
   to `power4test()`. (0.0.1.22)
+
+- Added `power_curve()` to estimate the
+  relation between rejection rates and
+  a predictor. Updated `n_from_power()`
+  to use `power_curve()` internally.
+  (0.0.1.23)
