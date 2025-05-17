@@ -56,6 +56,9 @@ reference:
   - n_from_power
   - plot.n_from_power
   - summary.n_from_power
+  - power_curve
+  - plot.power_curve
+  - predict.power_curve
 - title: Test Functions
   desc:  >
     Built-in functions for
