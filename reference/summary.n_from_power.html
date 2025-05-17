@@ -9,7 +9,7 @@ the output of n_from_power()."><meta name="google-site-verification" content="0V
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.22</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.23</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -157,7 +157,7 @@ to be printed in details.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --- Pre-iteration Search ---</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-05-15 14:14:26 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-05-17 17:38:02 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Sample sizes to try:  125 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Updating the simulation for sample size: 125 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Displaying progress enabled. Set 'progress = FALSE' to hide the progress.</span>
@@ -173,13 +173,21 @@ to be printed in details.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1     1.047918</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2     1.000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> - 'nls()' estimation skipped when less than 4 sample sizes examined.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> - 'nls()' estimation skipped when less than 4 values of predictor examined.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Power Curve:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> power_curve(object = by_n_i, formula = power_model, start = start, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     lower_bound = lower_bound, nls_args = nls_args, nls_control = nls_control, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     verbose = progress)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Call:  stats::glm(formula = sig ~ n, family = "binomial", data = reject1)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Predictor: n (Sample Size)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Model:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:  stats::glm(formula = reject ~ x, family = "binomial", data = reject1)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Coefficients:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)            n  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)            x  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    -75.3328       0.7672  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Degrees of Freedom: 19 Total (i.e. Null);  18 Residual</span>
@@ -190,77 +198,102 @@ to be printed in details.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --- Trial 1 ---</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-05-15 14:14:27 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Sample sizes to try: 98, 60 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Numbers of replications: 10, 10 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-05-17 17:38:03 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Sample sizes to try: 98, 101 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Numbers of replications: 10, 7 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Updating the simulation for sample size: 98 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Displaying progress enabled. Set 'progress = FALSE' to hide the progress.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Re-simulate the data:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Fit the model(s):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Update the test(s):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Update test_parameters: CIs (pars: ab) :</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Updating the simulation for sample size: 60 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Updating the simulation for sample size: 101 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Displaying progress enabled. Set 'progress = FALSE' to hide the progress.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Re-simulate the data:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Fit the model(s):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Update the test(s):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Update test_parameters: CIs (pars: ab) :</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Rejection Rates:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     n                            test test_label pvalid reject reject_ci_lo</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  60 test_parameters: CIs (pars: ab)         ab      1    0.3   0.01597423</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  98 test_parameters: CIs (pars: ab)         ab      1    0.8   0.55208199</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 100 test_parameters: CIs (pars: ab)         ab      1    0.8   0.55208199</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 125 test_parameters: CIs (pars: ab)         ab      1    1.0   1.00000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     n                            test test_label pvalid    reject reject_ci_lo</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  98 test_parameters: CIs (pars: ab)         ab      1 0.8000000     0.552082</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 100 test_parameters: CIs (pars: ab)         ab      1 0.8000000     0.552082</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 101 test_parameters: CIs (pars: ab)         ab      1 0.8571429     0.597918</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 125 test_parameters: CIs (pars: ab)         ab      1 1.0000000     1.000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   reject_ci_hi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    0.5840258</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2    1.0479180</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3    1.0479180</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4    1.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     1.047918</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     1.047918</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     1.116368</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4     1.000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> - 'nls()' estimation failed. Switch to logistic regression.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Sample size with closest power: 98 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Estimated power for 98: 0.8000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Updating the simulation for sample size: 99 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Displaying progress enabled. Set 'progress = FALSE' to hide the progress.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Re-simulate the data:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Fit the model(s):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Update the test(s):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Update test_parameters: CIs (pars: ab) :</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Extrapolated sample size: 99 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Estimated power for 99: 0.7000</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> - 'nls()' estimation failed. Switch to logistic regression.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Power Curve:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> power_curve(object = by_n_i, formula = power_model, start = start, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     lower_bound = lower_bound, nls_args = nls_args, nls_control = nls_control, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     verbose = progress)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Call:  stats::glm(formula = sig ~ n, family = "binomial", data = reject1)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Predictor: n (Sample Size)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Model:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:  stats::glm(formula = reject ~ x, family = "binomial", data = reject1)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Coefficients:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)            n  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    -4.88278      0.06534  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)            x  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    -75.3328       0.7672  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Degrees of Freedom: 39 Total (i.e. Null);  38 Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Null Deviance:	    47.05 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Residual Deviance: 33.13 	AIC: 37.13</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Degrees of Freedom: 19 Total (i.e. Null);  18 Residual</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Null Deviance:	    13 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Residual Deviance: 10.01 	AIC: 14.01</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Estimated power is close enough to target power (0.8000). (CI: [0.5521,1.0479])</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --- Final Stage ---</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-05-15 14:14:28 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-05-17 17:38:04 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Rejection Rates:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     n                            test test_label pvalid reject reject_ci_lo</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  60 test_parameters: CIs (pars: ab)         ab      1    0.3   0.01597423</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  98 test_parameters: CIs (pars: ab)         ab      1    0.8   0.55208199</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 100 test_parameters: CIs (pars: ab)         ab      1    0.8   0.55208199</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 125 test_parameters: CIs (pars: ab)         ab      1    1.0   1.00000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     n                            test test_label pvalid    reject reject_ci_lo</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  98 test_parameters: CIs (pars: ab)         ab      1 0.8000000    0.5520820</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  99 test_parameters: CIs (pars: ab)         ab      1 0.7000000    0.4159742</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 100 test_parameters: CIs (pars: ab)         ab      1 0.8000000    0.5520820</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 101 test_parameters: CIs (pars: ab)         ab      1 0.8571429    0.5979180</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 125 test_parameters: CIs (pars: ab)         ab      1 1.0000000    1.0000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   reject_ci_hi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    0.5840258</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2    1.0479180</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    1.0479180</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    0.9840258</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3    1.0479180</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4    1.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    1.1163677</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5    1.0000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Estimated Power Curve:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> power_curve(object = by_n_i, formula = power_model, start = start, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     lower_bound = lower_bound, nls_args = nls_args, nls_control = nls_control, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     verbose = progress)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Call:  stats::glm(formula = sig ~ n, family = "binomial", data = reject1)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Predictor: n (Sample Size)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Model:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:  stats::glm(formula = reject ~ x, family = "binomial", data = reject1)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Coefficients:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)            n  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    -4.88278      0.06534  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)            x  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    -75.3328       0.7672  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Degrees of Freedom: 39 Total (i.e. Null);  38 Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Null Deviance:	    47.05 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Residual Deviance: 33.13 	AIC: 37.13</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Degrees of Freedom: 19 Total (i.e. Null);  18 Residual</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Null Deviance:	    13 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Residual Deviance: 10.01 	AIC: 14.01</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Final Sample Size: 98 </span>
@@ -288,35 +321,45 @@ to be printed in details.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> === Technical Information ===</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - The range of sample sizes explored: 60 to 125 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Time spent in the search: 2.044 secs </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - The range of sample sizes explored: 98 to 125 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Time spent in the search: 2.253 secs </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - The final crude model for the power-sample-size relation:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Model Type: Logistic Regression </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> power_curve(object = by_n_i, formula = power_model, start = start, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     lower_bound = lower_bound, nls_args = nls_args, nls_control = nls_control, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     verbose = progress)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Call:  stats::glm(formula = sig ~ n, family = "binomial", data = reject1)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Predictor: n (Sample Size)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Model:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:  stats::glm(formula = reject ~ x, family = "binomial", data = reject1)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Coefficients:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)            n  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    -4.88278      0.06534  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)            x  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    -75.3328       0.7672  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Degrees of Freedom: 39 Total (i.e. Null);  38 Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Null Deviance:	    47.05 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Residual Deviance: 33.13 	AIC: 37.13</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Degrees of Freedom: 19 Total (i.e. Null);  18 Residual</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Null Deviance:	    13 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Residual Deviance: 10.01 	AIC: 14.01</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Detailed Results:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     n                            test test_label pvalid reject reject_ci_lo</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  60 test_parameters: CIs (pars: ab)         ab      1    0.3        0.016</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  98 test_parameters: CIs (pars: ab)         ab      1    0.8        0.552</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 100 test_parameters: CIs (pars: ab)         ab      1    0.8        0.552</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 125 test_parameters: CIs (pars: ab)         ab      1    1.0        1.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  98 test_parameters: CIs (pars: ab)         ab      1  0.800        0.552</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  99 test_parameters: CIs (pars: ab)         ab      1  0.700        0.416</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 100 test_parameters: CIs (pars: ab)         ab      1  0.800        0.552</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 101 test_parameters: CIs (pars: ab)         ab      1  0.857        0.598</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 125 test_parameters: CIs (pars: ab)         ab      1  1.000        1.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   reject_ci_hi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1        0.584</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2        1.048</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1        1.048</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2        0.984</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3        1.048</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4        1.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4        1.116</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5        1.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
