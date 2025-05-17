@@ -19,8 +19,8 @@
 )
 }
 \arguments{
-\item{x}{A \code{n_from_power} object,
-the output of \code{\link[=n_from_power]{n_from_power()}}.}
+\item{x}{A \code{power_curve} object,
+the output of \code{\link[=power_curve]{power_curve()}}.}
 
 \item{what}{A character vector of
 what to include in the
@@ -81,49 +81,102 @@ individually.
 }
 \examples{
 
-# TODO:
-# - To revise
-
-mod <-
+model_simple_med <-
 "
-m ~ a*x
-y ~ b*m + x
-ab := a * b
+m ~ x
+y ~ m + x
 "
 
-mod_es <- c("y ~ m" = "l",
-            "m ~ x" = "m",
-            "y ~ x" = "n")
+model_simple_med_es <- c("y ~ m" = "l",
+                         "m ~ x" = "m",
+                         "y ~ x" = "s")
 
 sim_only <- power4test(nrep = 10,
-                       model = mod,
-                       pop_es = mod_es,
-                       n = 100,
+                       model = model_simple_med,
+                       pop_es = model_simple_med_es,
+                       n = 50,
+                       fit_model_args = list(fit_function = "lm"),
                        do_the_test = FALSE,
-                       iseed = 1234)
+                       iseed = 1234,
+                       parallel = FALSE,
+                       progress = FALSE)
 
-test_out <- power4test(object = sim_only,
-                       test_fun = test_parameters,
-                       test_args = list(pars = "ab"))
+# By n
 
-# In real analysis, to have more stable results:
-# - Use a larger final_nrep (e.g., 500).
-# - Use the default ns_per_trial of 3, or just remove it.
+out1 <- power4test_by_n(sim_only,
+                        nrep = 10,
+                        test_fun = test_parameters,
+                        test_args = list(par = "y~x"),
+                        n = c(25, 100, 200, 1000),
+                        by_seed = 1234,
+                        parallel = FALSE,
+                        progress = FALSE)
 
-# If the default values are OK, this call is sufficient:
-# power_vs_n <- n_from_power(test_out,
-#                            target_power = .80,
-#                            seed = 4567)
-power_vs_n <- n_from_power(test_out,
-                           progress = TRUE,
-                           target_power = .80,
-                           final_nrep = 10,
-                           ns_per_trial = 1,
-                           nrep_steps = 1,
-                           max_trials = 1,
-                           seed = 4567)
-summary(power_vs_n)
-plot(power_vs_n)
+pout1 <- power_curve(out1)
+model_simple_med <-
+"
+m ~ x
+y ~ m + x
+"
+
+model_simple_med_es <- c("y ~ m" = "l",
+                         "m ~ x" = "m",
+                         "y ~ x" = "s")
+
+sim_only <- power4test(nrep = 10,
+                       model = model_simple_med,
+                       pop_es = model_simple_med_es,
+                       n = 50,
+                       fit_model_args = list(fit_function = "lm"),
+                       do_the_test = FALSE,
+                       iseed = 1234,
+                       parallel = FALSE,
+                       progress = FALSE)
+
+# By n
+
+out1 <- power4test_by_n(sim_only,
+                        nrep = 10,
+                        test_fun = test_parameters,
+                        test_args = list(par = "y~x"),
+                        n = c(25, 100, 200, 1000),
+                        by_seed = 1234,
+                        parallel = FALSE,
+                        progress = FALSE)
+
+pout1 <- power_curve(out1)
+pout1
+plot(pout1)
+
+# By pop_es
+
+out2 <- power4test_by_pop_es(sim_only,
+                             nrep = 10,
+                             test_fun = test_parameters,
+                             test_args = list(par = "y~x"),
+                             pop_es_name = "y ~ x",
+                             pop_es_values = seq(0, .7, .15),
+                             by_seed = 1234,
+                             parallel = FALSE,
+                             progress = FALSE)
+
+pout2 <- power_curve(out2)
+plot(pout2)
+
+# By pop_es
+
+out2 <- power4test_by_pop_es(sim_only,
+                             nrep = 10,
+                             test_fun = test_parameters,
+                             test_args = list(par = "y~x"),
+                             pop_es_name = "y ~ x",
+                             pop_es_values = seq(0, .7, .15),
+                             by_seed = 1234,
+                             parallel = FALSE,
+                             progress = FALSE)
+
+pout2 <- power_curve(out2)
+plot(pout2)
 
 }
 \seealso{
