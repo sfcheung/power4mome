@@ -57,6 +57,9 @@ plot(tmp,
      pars_ci_final_sample_size = list(lwd = 10),
      pars_final_sample_size = list(lwd = 2, col = "red"))
 
+plot(tmp,
+     pars_power_curve = list(col = "blue", lwd = 4, type = "o"))
+
 # Case 2
 
 out2 <- power4test(nrep = 50,

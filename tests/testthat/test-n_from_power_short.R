@@ -32,14 +32,22 @@ out <- power4test(nrep = 50,
 out_power <- get_rejection_rates(out)
 out_power
 
+# tmp <- n_from_power(out,
+#                     target_power = .80,
+#                     final_nrep = 60,
+#                     max_trials = 2,
+#                     seed = 1234,
+#                     progress = TRUE,
+#                     simulation_progress = TRUE)
+
 expect_no_error(tmp <- n_from_power(out,
                     target_power = .80,
                     final_nrep = 60,
                     max_trials = 2,
                     seed = 1234,
-                    progress = FALSE,
+                    progress = TRUE,
                     simulation_progress = FALSE))
-summary(tmp)
+expect_no_error(print(summary(tmp)))
 expect_true((tmp$power_final > .70) &&
             (tmp$power_final < .90))
 
@@ -58,14 +66,22 @@ out <- power4test(nrep = 10,
 out_power <- get_rejection_rates(out)
 out_power
 
+# tmp <- n_from_power(out,
+#                     target_power = .80,
+#                     final_nrep = 60,
+#                     max_trials = 2,
+#                     seed = 1234,
+#                     progress = TRUE,
+#                     simulation_progress = FALSE)
+
 expect_no_error(tmp <- n_from_power(out,
                     target_power = .80,
                     final_nrep = 60,
                     max_trials = 2,
                     seed = 1234,
-                    progress = FALSE,
+                    progress = TRUE,
                     simulation_progress = FALSE))
-summary(tmp)
+expect_no_error(print(summary(tmp)))
 expect_true((tmp$power_final > .60) &&
             (tmp$power_final < .90))
 })

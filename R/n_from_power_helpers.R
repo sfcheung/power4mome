@@ -39,105 +39,106 @@ set_n_range <- function(object,
   }
 }
 
-power_curve_n <- function(object,
-                          formula = power ~ (n - c0)^e / (b + (n - c0)^e),
-                          start = c(b = 2, c0 = 100, e = 1),
-                          lower_bound = c(b = 0, c0 = 0, e = 1),
-                          nls_args = list(),
-                          nls_control = list(),
-                          verbose = TRUE) {
-  reject0 <- get_rejection_rates_by_n(object,
-                                      all_columns = TRUE)
-  # reject0$power <- reject0$sig
-  reject0$power <- reject0$reject
-  nls_contorl0 <- list(maxiter = 1000)
-  nls_contorl1 <- utils::modifyList(nls_contorl0,
-                                    nls_control)
+# Not Used
+# power_curve_n <- function(object,
+#                           formula = power ~ (n - c0)^e / (b + (n - c0)^e),
+#                           start = c(b = 2, c0 = 100, e = 1),
+#                           lower_bound = c(b = 0, c0 = 0, e = 1),
+#                           nls_args = list(),
+#                           nls_control = list(),
+#                           verbose = TRUE) {
+#   reject0 <- get_rejection_rates_by_n(object,
+#                                       all_columns = TRUE)
+#   # reject0$power <- reject0$sig
+#   reject0$power <- reject0$reject
+#   nls_contorl0 <- list(maxiter = 1000)
+#   nls_contorl1 <- utils::modifyList(nls_contorl0,
+#                                     nls_control)
 
-  nls_args0 <- list(algorithm = "port")
-  nls_args1 <- utils::modifyList(nls_args0,
-                                 nls_args)
-  # Override these arguments
-  nls_args1 <- utils::modifyList(nls_args1,
-                                 list(formula = formula,
-                                      data = reject0,
-                                      start = start,
-                                      lower = lower_bound,
-                                      control = nls_contorl1))
-  # Do nls
-  # Try weights
-  nls_args1b <- utils::modifyList(nls_args1,
-                                  list(weights = reject0$nrep))
-  # Do not do nls if too few cases
-  if (nrow(reject0) >= 4) {
-    fit <- tryCatch(suppressWarnings(do.call(stats::nls,
-                                            nls_args1b)),
-                    error = function(e) e)
-    if (inherits(fit, "nls")) {
-      return(fit)
-    }
-    # Do not use weights
-    fit <- tryCatch(suppressWarnings(do.call(stats::nls,
-                                            nls_args1)),
-                    error = function(e) e)
-    if (inherits(fit, "nls")) {
-      return(fit)
-    }
-    if (verbose) {
-      message("- 'nls()' estimation failed. Switch to logistic regression.")
-    }
-  } else {
-    if (verbose) {
-      message("- 'nls()' estimation skipped when less than 4 sample sizes examined.")
-    }
-  }
+#   nls_args0 <- list(algorithm = "port")
+#   nls_args1 <- utils::modifyList(nls_args0,
+#                                  nls_args)
+#   # Override these arguments
+#   nls_args1 <- utils::modifyList(nls_args1,
+#                                  list(formula = formula,
+#                                       data = reject0,
+#                                       start = start,
+#                                       lower = lower_bound,
+#                                       control = nls_contorl1))
+#   # Do nls
+#   # Try weights
+#   nls_args1b <- utils::modifyList(nls_args1,
+#                                   list(weights = reject0$nrep))
+#   # Do not do nls if too few cases
+#   if (nrow(reject0) >= 4) {
+#     fit <- tryCatch(suppressWarnings(do.call(stats::nls,
+#                                             nls_args1b)),
+#                     error = function(e) e)
+#     if (inherits(fit, "nls")) {
+#       return(fit)
+#     }
+#     # Do not use weights
+#     fit <- tryCatch(suppressWarnings(do.call(stats::nls,
+#                                             nls_args1)),
+#                     error = function(e) e)
+#     if (inherits(fit, "nls")) {
+#       return(fit)
+#     }
+#     if (verbose) {
+#       message("- 'nls()' estimation failed. Switch to logistic regression.")
+#     }
+#   } else {
+#     if (verbose) {
+#       message("- 'nls()' estimation skipped when less than 4 sample sizes examined.")
+#     }
+#   }
 
-  # Do logistic
-  # nrep is used and so no need for weight
-  reject1 <- reject0[, c("n", "power", "nrep")]
-  reject1$sig <- round(reject1$power * reject1$nrep)
-  reject1$ns <- reject1$nrep - reject1$sig
-  tmp <- mapply(function(x, y) {
-                  c(rep(1, x), rep(0, y - x))
-                },
-                x = reject1$sig,
-                y = reject1$nrep,
-                SIMPLIFY = FALSE)
-  tmp <- unlist(tmp)
-  reject1 <- data.frame(n = rep(reject1$n, times = reject1$nrep),
-                        sig = tmp)
-  fit <- tryCatch(stats::glm(sig ~ n,
-                              data = reject1,
-                              family = "binomial"),
-                  error = function(e) e,
-                  warning = function(w) w)
-  # Also catch warning such as
-  # - "fitted probabilities numerically 0 or 1 occurred>"
-  if (inherits(fit, "glm")) {
-    return(fit)
-  }
+#   # Do logistic
+#   # nrep is used and so no need for weight
+#   reject1 <- reject0[, c("n", "power", "nrep")]
+#   reject1$sig <- round(reject1$power * reject1$nrep)
+#   reject1$ns <- reject1$nrep - reject1$sig
+#   tmp <- mapply(function(x, y) {
+#                   c(rep(1, x), rep(0, y - x))
+#                 },
+#                 x = reject1$sig,
+#                 y = reject1$nrep,
+#                 SIMPLIFY = FALSE)
+#   tmp <- unlist(tmp)
+#   reject1 <- data.frame(n = rep(reject1$n, times = reject1$nrep),
+#                         sig = tmp)
+#   fit <- tryCatch(stats::glm(sig ~ n,
+#                               data = reject1,
+#                               family = "binomial"),
+#                   error = function(e) e,
+#                   warning = function(w) w)
+#   # Also catch warning such as
+#   # - "fitted probabilities numerically 0 or 1 occurred>"
+#   if (inherits(fit, "glm")) {
+#     return(fit)
+#   }
 
-  if (verbose) {
-    message("- Logistic regression failed. Switch to linear regression.")
-  }
-  # Last resort: OLS regression
-  # Try weights
-  fit <- tryCatch(stats::lm(power ~ n,
-                            data = reject0,
-                            weights = reject0$nrep),
-                  error = function(e) e)
-  if (inherits(fit, "lm")) {
-    return(fit)
-  }
-  # Do not use weights
-  fit <- tryCatch(stats::lm(power ~ n,
-                            data = reject0),
-                  error = function(e) e)
+#   if (verbose) {
+#     message("- Logistic regression failed. Switch to linear regression.")
+#   }
+#   # Last resort: OLS regression
+#   # Try weights
+#   fit <- tryCatch(stats::lm(power ~ n,
+#                             data = reject0,
+#                             weights = reject0$nrep),
+#                   error = function(e) e)
+#   if (inherits(fit, "lm")) {
+#     return(fit)
+#   }
+#   # Do not use weights
+#   fit <- tryCatch(stats::lm(power ~ n,
+#                             data = reject0),
+#                   error = function(e) e)
 
-  # TODO:
-  # - Consider using `splinefun()` as a last resort.
-  return(NA)
-}
+#   # TODO:
+#   # - Consider using `splinefun()` as a last resort.
+#   return(NA)
+# }
 
 estimate_n <- function(power_n_fit,
                        target_power = .80,
@@ -146,8 +147,8 @@ estimate_n <- function(power_n_fit,
   f <- function(n) {
     # stats::predict(power_n_fit,
     #                newdata = list(n = n)) - target_power
-    predict_fit(power_n_fit,
-                newdata = list(n = n)) - target_power
+    stats::predict(power_n_fit,
+                   newdata = list(x = n)) - target_power
   }
   n_target <- tryCatch(stats::uniroot(f,
                              interval = interval,
@@ -187,37 +188,80 @@ estimate_n_range <- function(power_n_fit,
                              extendInt = extendInt)
                 })
   out <- ceiling(out)
+
+  # If NA, have to do random sampling
+  i <- is.na(out)
+  if (any(i)) {
+    # Duplication is OK because it will be fixed later
+    out[i] <- sample(seq(interval[1],
+                         interval[2]),
+                     size = sum(i),
+                     replace = FALSE)
+  }
+
   # Check invalid Ns
 
-  i <- rep(FALSE, length(out))
-  if (isFALSE(extendInt %in% c("yes", "upX"))) {
-    i[out > interval[2]] <- TRUE
-  }
-  if (isFALSE(extendInt %in% c("yes", "downX"))) {
-    i[out < interval[1]] <- TRUE
-  }
-
-  # Ns used are considered invalid
-  i[out %in% n_to_exclude] <- TRUE
-
-  # Duplicated are considered invalid
-  i[duplicated(out)] <- TRUE
-
-  i[is.na(out)] <- TRUE
+  i <- check_n(ns = out,
+               interval = interval,
+               n_to_exclude = n_to_exclude,
+               extendInt = extendInt)
 
   if (isFALSE(any(i))) {
     return(out)
   }
   # Replace invalid Ns by random Ns
   # Do not use the full interval
+  # But can include Ns already considered
   new_interval1 <- min(n_to_exclude, interval)
-  new_interval2 <- min(ceiling(max(n_to_exclude) * 1.25),
+  new_interval2 <- max(ceiling(max(n_to_exclude) * 1.25),
                        interval[2])
   n_pool <- setdiff(seq(new_interval1, new_interval2),
                     c(n_to_exclude, out[!i]))
-  n_new <- sample(n_pool, size = sum(i))
-  out[i] <- n_new
+  for (q in 1:10) {
+    out[i] <- out[i] + sample(c(seq(1, q),
+                                -seq(1, q)),
+                              size = sum(i),
+                              replace = TRUE)
+    i <- check_n(out,
+                 interval = c(new_interval1, new_interval2),
+                 n_to_exclude = n_to_exclude,
+                 extendInt = extendInt)
+    if (isFALSE(any(i))) {
+      # All ns OK
+      break
+    }
+  }
+  if (any(i)) {
+    # Have to do random sample
+    n_pool <- setdiff(seq(new_interval1, new_interval2),
+                      c(n_to_exclude, out[!i]))
+    n_new <- sample(n_pool, size = sum(i))
+    out[i] <- n_new
+  }
   return(out)
+}
+
+check_n <- function(ns,
+                    interval,
+                    n_to_exclude,
+                    extendInt) {
+  i <- rep(FALSE, length(ns))
+  if (isFALSE(extendInt %in% c("yes", "upX"))) {
+    i[ns > interval[2]] <- TRUE
+  }
+  if (isFALSE(extendInt %in% c("yes", "downX"))) {
+    i[ns < interval[1]] <- TRUE
+  }
+
+  # Ns used are considered invalid
+  i[ns %in% n_to_exclude] <- TRUE
+
+  # Duplicated are considered invalid
+  i[duplicated(ns)] <- TRUE
+
+  i[is.na(ns)] <- TRUE
+
+  i
 }
 
 predict_fit <- function(object,

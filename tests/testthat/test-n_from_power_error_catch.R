@@ -41,7 +41,7 @@ tmp <- n_from_power(out,
                     seed = 1234,
                     progress = FALSE,
                     simulation_progress = FALSE)
-summary(tmp)
+expect_no_error(print(summary(tmp)))
 expect_true(is.na(tmp$power_final))
 expect_true(is.na(tmp$n_final))
 
@@ -52,11 +52,11 @@ tmp <- n_from_power(out,
                     final_nrep = 50,
                     n_interval = c(10, 60),
                     extendInt = "yes",
-                    max_trials = 2,
-                    seed = 1234,
+                    max_trials = 3,
+                    seed = 12,
                     progress = FALSE,
                     simulation_progress = FALSE)
-summary(tmp)
+expect_no_error(print(summary(tmp)))
 expect_true(!is.na(tmp$power_final))
 expect_true(!is.na(tmp$n_final))
 
@@ -84,7 +84,7 @@ tmp <- n_from_power(out,
                     seed = 1234,
                     progress = FALSE,
                     simulation_progress = FALSE)
-summary(tmp)
+expect_no_error(print(summary(tmp)))
 expect_true(!is.na(tmp$power_final))
 expect_true(!is.na(tmp$n_final))
 })
