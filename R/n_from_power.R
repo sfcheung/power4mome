@@ -555,7 +555,7 @@ n_from_power <- function(object,
     # ** n_j **
     # The vector of sample sizes to be tried in this trial
     # Determined using by latest power curve (fit_1)
-    n_j <- estimate_n_range(power_n_fit = fit_1$fit,
+    n_j <- estimate_n_range(power_n_fit = fit_1,
                             target_power = target_power,
                             k = ns_per_trial_seq[1],
                             tolerance = power_tolerance_in_interval,
@@ -570,7 +570,7 @@ n_from_power <- function(object,
     # target power will have a higher number of replication
     # power_j <- predict_fit(fit_1,
     #                        newdata = list(n = n_j))
-    power_j <- predict(fit_1,
+    power_j <- stats::predict(fit_1,
                        newdata = list(x = n_j))
     nrep_j <- nrep_from_power(power_j = power_j,
                               target_power = target_power,
@@ -667,7 +667,7 @@ n_from_power <- function(object,
 
       # ** n_out, power_out, nrep_out, ci_out, by_n_out **
       # Considered a candidate solution.
-      n_out <- estimate_n_range(power_n_fit = fit_1$fit,
+      n_out <- estimate_n_range(power_n_fit = fit_1,
                                 target_power = target_power,
                                 k = 1,
                                 tolerance = 0,
@@ -861,7 +861,7 @@ n_from_power <- function(object,
   # Used as a suggestion when no solution was found.
   n_x <- NA
   if (ci_hit) {
-    n_x <- estimate_n_range(power_n_fit = fit_1$fit,
+    n_x <- estimate_n_range(power_n_fit = fit_1,
                             target_power = target_power,
                             k = 1,
                             tolerance = 0,

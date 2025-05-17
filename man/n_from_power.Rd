@@ -22,7 +22,7 @@ n_from_power(
   nrep_steps = 1,
   seed = NULL,
   n_include_interval = FALSE,
-  power_curve = power ~ I((n - c0)^e)/(b + I((n - c0)^e)),
+  power_model = reject ~ I((x - c0)^e)/(b + I((x - c0)^e)),
   start = c(b = 2, c0 = 100, e = 1),
   lower_bound = c(b = 0, c0 = 0, e = 1),
   nls_control = list(),
@@ -133,26 +133,27 @@ Whether \code{n_interval} is mandatory
 to be included in the sample sizes
 to be searched.}
 
-\item{power_curve}{The nonlinear
+\item{power_model}{The nonlinear
 model to be used when estimating
 the relation between power and
 sample size. Should be a formula
 acceptable by \code{\link[stats:nls]{stats::nls()}},
-with \code{power} on the left-hand side,
-and \code{n} in the right-hand
+with \code{reject} on the left-hand side,
+and \code{x} (stands for sample size)
+on the right-hand
 side, with one or more parameters.
 Users rarely need to change the
 default value.}
 
 \item{start}{A named numeric vector
-of the starting values for \code{power_curve}
+of the starting values for \code{power_model}
 when fitted by \code{\link[stats:nls]{stats::nls()}}.
 Users rarely need to change the
 default values.}
 
 \item{lower_bound}{A named numeric vector
 of the lower bounds for parameters
-in \code{power_curve}
+in \code{power_model}
 when fitted by \code{\link[stats:nls]{stats::nls()}}.
 Users rarely need to change the
 default values.}
