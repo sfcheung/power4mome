@@ -408,7 +408,28 @@ sim_data <- function(nrep = 10,
 #' of arguments to be passed to
 #' [lavaan::sem()] when the model is
 #' fitted to a sample combined from
-#  all samples stored.
+#' all samples stored.
+#'
+#' @param est_type The type of estimates
+#' to be printed. Can be a character
+#' vector of one to two elements. If
+#' only `"standardized"`, then the
+#' standardized estimates are printed.
+#' If only `"unstandardized"`, then the
+#' unstandardized estimates are printed.
+#' If a vector like
+#' `c("standardized", "unstandardized")`,
+#' then both unstandardized and
+#' standardized estimates are printed.
+#'
+#' @param variances Logical. Whether
+#' variances and error variances are printed.
+#' Default depends on `est_type`. If
+#' `"unstandardized"` is in `est_type`,
+#' then default is `TRUE` If
+#' only `"standardized"` is in `est_type`,
+#' then default is `FALSE`.
+#'
 #'
 #' @return
 #' The `print` method of `sim_data`
@@ -422,7 +443,22 @@ print.sim_data <- function(x,
                            digits_descriptive = 2,
                            data_long = TRUE,
                            fit_to_all_args = list(),
+                           est_type = "standardized",
+                           variances = NULL,
                            ...) {
+
+  est_type <- match.arg(est_type,
+                        choices = c("standardized", "unstandardized"),
+                        several.ok = TRUE)
+
+  if (is.null(variances)) {
+    if (identical("standardized", est_type)) {
+      variances <- FALSE
+    } else {
+      variances <- TRUE
+    }
+  }
+
   # This line needed for printing boot_out and mc_out
   requireNamespace("manymome", quietly = TRUE)
 
@@ -549,13 +585,50 @@ print.sim_data <- function(x,
                                           fit_to_all_args)
     fit_all <- do.call(lavaan::sem,
                        fit_to_all_args1)
-    est_all <- lavaan::standardizedSolution(fit_all,
+
+    if (isTRUE(identical(est_type, "standardized"))) {
+      # Standardized Only
+      est_all <- lavaan::standardizedSolution(fit_all,
+                                              se = FALSE,
+                                              pvalue = FALSE,
+                                              ci = FALSE,
+                                              output = "text")
+      if (!variances) {
+        i <- est_all$lhs == est_all$rhs
+        est_all <- est_all[!i, ]
+      }
+      tmp_est_hdr <- "Standardized Estimates"
+    }
+
+    if (isTRUE(identical(est_type, "unstandardized"))) {
+      # Unstandardized Only
+      est_all <- lavaan::parameterEstimates(fit_all,
                                             se = FALSE,
                                             pvalue = FALSE,
                                             ci = FALSE,
+                                            standardized = FALSE,
                                             output = "text")
-    i <- est_all$lhs == est_all$rhs
-    est_all <- est_all[!i, ]
+      if (!variances) {
+        i <- est_all$lhs == est_all$rhs
+        est_all <- est_all[!i, ]
+      }
+      tmp_est_hdr <- "Unstandardized Estimates"
+    }
+
+    if (isTRUE(all(c("unstandardized", "standardized") %in% est_type))) {
+      # Both unstandardized and standardized
+      est_all <- lavaan::parameterEstimates(fit_all,
+                                            se = FALSE,
+                                            pvalue = FALSE,
+                                            ci = FALSE,
+                                            standardized = TRUE,
+                                            output = "text")
+      if (!variances) {
+        i <- est_all$lhs == est_all$rhs
+        est_all <- est_all[!i, ]
+      }
+      tmp_est_hdr <- "Unstandardized and Standardized Estimates"
+    }
 
     cat(header_str("Descriptive Statistics",
                   hw = .4,
@@ -575,12 +648,14 @@ print.sim_data <- function(x,
 
     cat("Total Sample Size:", n * nrep, "\n")
 
-    cat(header_str("Standardized Estimates",
+    cat(header_str(tmp_est_hdr,
                   hw = .4,
                   prefix = "\n",
                   suffix = "\n\n"))
 
-    cat("Variances and error variances omitted.\n")
+    if (!variances) {
+      cat("Variances and error variances omitted.\n")
+    }
 
     print(est_all,
           nd = digits)

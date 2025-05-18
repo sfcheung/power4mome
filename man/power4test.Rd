@@ -308,7 +308,7 @@ of arguments to be passed to
 fitted to a sample combined from}
 
 \item{...}{Optional arguments to
-be passed to other print methods.}
+be passed to other print methods}
 }
 \value{
 An object of the class \code{power4test},
