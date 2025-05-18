@@ -1,4 +1,4 @@
-# power4mome 0.0.1.25
+# power4mome 0.0.1.26
 
 - Initialized the package. (0.0.0.9000)
 
