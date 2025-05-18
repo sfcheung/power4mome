@@ -1,4 +1,4 @@
-# power4mome 0.0.1.23
+# power4mome 0.0.1.24
 
 - Initialized the package. (0.0.0.9000)
 
@@ -266,3 +266,9 @@
   a predictor. Updated `n_from_power()`
   to use `power_curve()` internally.
   (0.0.1.23)
+
+- The `print` method of `sim_out` objects
+  can print the standardized and/or
+  unstandardized estimates when fitting
+  a model to the merged data.
+  (0.0.1.24)

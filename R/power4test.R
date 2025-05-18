@@ -837,7 +837,7 @@ power4test <- function(object = NULL,
 #  all samples stored.
 #'
 #' @param ... Optional arguments to
-#' be passed to other print methods.
+#' be passed to other print methods
 #'
 #' @return
 #' The `print` method of `power4test`

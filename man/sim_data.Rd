@@ -27,6 +27,8 @@ sim_data(
   digits_descriptive = 2,
   data_long = TRUE,
   fit_to_all_args = list(),
+  est_type = "standardized",
+  variances = NULL,
   ...
 )
 }
@@ -117,7 +119,28 @@ information will be printed.}
 \item{fit_to_all_args}{A named list
 of arguments to be passed to
 \code{\link[lavaan:sem]{lavaan::sem()}} when the model is
-fitted to a sample combined from}
+fitted to a sample combined from
+all samples stored.}
+
+\item{est_type}{The type of estimates
+to be printed. Can be a character
+vector of one to two elements. If
+only \code{"standardized"}, then the
+standardized estimates are printed.
+If only \code{"unstandardized"}, then the
+unstandardized estimates are printed.
+If a vector like
+\code{c("standardized", "unstandardized")},
+then both unstandardized and
+standardized estimates are printed.}
+
+\item{variances}{Logical. Whether
+variances and error variances are printed.
+Default depends on \code{est_type}. If
+\code{"unstandardized"} is in \code{est_type},
+then default is \code{TRUE} If
+only \code{"standardized"} is in \code{est_type},
+then default is \code{FALSE}.}
 }
 \value{
 The function \code{\link[=sim_out]{sim_out()}} returns
