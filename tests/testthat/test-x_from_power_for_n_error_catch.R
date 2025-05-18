@@ -2,7 +2,7 @@ skip_on_cran()
 
 library(testthat)
 
-test_that("n_from_power", {
+test_that("x_from_power: n", {
 
 mod <-
 "
@@ -32,10 +32,11 @@ out_power
 
 # Failed in the search
 
-tmp <- n_from_power(out,
+tmp <- x_from_power(out,
+                    x = "n",
                     target_power = .90,
                     final_nrep = 50,
-                    n_interval = c(10, 35),
+                    x_interval = c(10, 35),
                     extendInt = "no",
                     max_trials = 2,
                     seed = 1234,
@@ -43,14 +44,15 @@ tmp <- n_from_power(out,
                     simulation_progress = FALSE)
 expect_no_error(print(summary(tmp)))
 expect_true(is.na(tmp$power_final))
-expect_true(is.na(tmp$n_final))
+expect_true(is.na(tmp$x_final))
 
 # Can extend the search
 
-tmp <- n_from_power(out,
+tmp <- x_from_power(out,
+                    x = "n",
                     target_power = .90,
                     final_nrep = 50,
-                    n_interval = c(10, 60),
+                    x_interval = c(10, 60),
                     extendInt = "yes",
                     max_trials = 3,
                     seed = 12,
@@ -58,7 +60,7 @@ tmp <- n_from_power(out,
                     simulation_progress = FALSE)
 expect_no_error(print(summary(tmp)))
 expect_true(!is.na(tmp$power_final))
-expect_true(!is.na(tmp$n_final))
+expect_true(!is.na(tmp$x_final))
 
 # Can extend the search
 
@@ -75,10 +77,11 @@ out <- power4test(nrep = 20,
 out_power <- get_rejection_rates(out)
 out_power
 
-tmp <- n_from_power(out,
+tmp <- x_from_power(out,
+                    x = "n",
                     target_power = .50,
                     final_nrep = 20,
-                    n_interval = c(100, 120),
+                    x_interval = c(100, 120),
                     extendInt = "yes",
                     max_trials = 2,
                     seed = 1234,
@@ -86,5 +89,5 @@ tmp <- n_from_power(out,
                     simulation_progress = FALSE)
 expect_no_error(print(summary(tmp)))
 expect_true(!is.na(tmp$power_final))
-expect_true(!is.na(tmp$n_final))
+expect_true(!is.na(tmp$x_final))
 })

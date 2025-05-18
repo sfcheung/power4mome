@@ -2,7 +2,7 @@ skip("A long test with parallel processing. Test interactively.")
 
 library(testthat)
 
-test_that("n_from_power", {
+test_that("x_from_power: n", {
 
 # Case 1
 
@@ -35,7 +35,8 @@ out <- power4test(nrep = 20,
 out_power <- get_rejection_rates(out)
 out_power
 
-tmp <- n_from_power(out,
+tmp <- x_from_power(out,
+                    x = "n",
                     progress = TRUE,
                     final_nrep = 100,
                     seed = 1234)
@@ -46,16 +47,16 @@ plot(tmp,
      lwd = 4,
      col = "green",
      what = c("ci",
-              "final_n",
+              "final_x",
               "final_power"))
 plot(tmp,
      lwd = 4,
      col = "darkgreen",
      what = c("ci",
-              "final_n",
+              "final_x",
               "final_power"),
-     pars_ci_final_sample_size = list(lwd = 10),
-     pars_final_sample_size = list(lwd = 2, col = "red"))
+     pars_ci_final_x = list(lwd = 10),
+     pars_final_x = list(lwd = 2, col = "red"))
 
 plot(tmp,
      pars_power_curve = list(col = "blue", lwd = 4, type = "o"))
@@ -76,7 +77,8 @@ out2 <- power4test(nrep = 50,
                    iseed = 1234,
                    parallel = TRUE)
 
-tmp2 <- n_from_power(out2,
+tmp2 <- x_from_power(out2,
+                     x = "n",
                      progress = TRUE,
                      final_nrep = 100,
                      seed = 1234)
@@ -119,7 +121,8 @@ out3 <- power4test(nrep = 50,
 
 get_rejection_rates(out3)
 
-tmp3 <- n_from_power(out3,
+tmp3 <- x_from_power(out3,
+                     x = "n",
                      progress = TRUE,
                      final_nrep = 100,
                      seed = 1234)

@@ -1,4 +1,4 @@
-# power4mome 0.0.1.26
+# power4mome 0.0.1.27
 
 - Initialized the package. (0.0.0.9000)
 
@@ -283,3 +283,8 @@
   to `get_rejection_rates_by_es()`, to
   be consistent with the name
   `power4test_by_es()`. (0.0.1.26)
+
+- Replaced `n_from_power()` by the
+  more general version `x_from_power()`,
+  and updated related functions.
+  (0.0.1.27)
