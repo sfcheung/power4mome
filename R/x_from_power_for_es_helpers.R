@@ -126,7 +126,6 @@ estimate_es_range <- function(power_es_fit,
                               interval = interval,
                               extendInt = extendInt)
                 })
-  out <- ceiling(out)
 
   # If NA, have to do random sampling
   i <- is.na(out)
@@ -134,7 +133,7 @@ estimate_es_range <- function(power_es_fit,
     # Duplication is OK because it will be fixed later
     out[i] <- stats::runif(n = sum(i),
                            min = interval[1],
-                           mx = interval[2])
+                           max = interval[2])
   }
 
   # Check invalid es values

@@ -56,6 +56,20 @@
 #' will still be randomly generated but
 #' the results cannot be easily reproduced.
 #'
+#'
+#' @param by_nrep If set to a number,
+#' it will be used to generate the
+#' number of replications (`nrep`) for
+#' each call to [power4test()].
+#' If set to a numeric vector of the
+#' same length as `n`, then these are
+#' the `nrep` values for each of the
+#' calls, allowing for different numbers
+#' of replications.
+#' If `NULL`, the default, then the
+#' original `nrep` will be used.
+#'
+#'
 #' @seealso [power4test()]
 #'
 #' @examples
@@ -104,7 +118,8 @@ power4test_by_es <- function(object,
                                  pop_es_values = NULL,
                                  progress = TRUE,
                                  ...,
-                                 by_seed = NULL) {
+                                 by_seed = NULL,
+                                 by_nrep = NULL) {
   if (!inherits(object, "power4test") &&
       !inherits(object, "power4test_by_es")) {
     stop("Only support 'power4test' or 'power4test_by_es' objects.")
@@ -130,6 +145,16 @@ power4test_by_es <- function(object,
     seeds <- sample.int(99999999,
                         size = length(pop_es_values))
   }
+
+  if (length(by_nrep) == length(pop_es_values)) {
+    new_nrep <- by_nrep
+  } else {
+    if (!is.null(by_nrep)) {
+      new_nrep <- rep(by_nrep, length(pop_es_values))
+    } else {
+      new_nrep <- NULL
+    }
+  }
   # TODO
   # - Think about to handle MG models,
   #   for which pop_values can be vectors.
@@ -145,11 +170,20 @@ power4test_by_es <- function(object,
     }
     tmp <- as.character(x)
     names(tmp) <- pop_es_name
-    out[[p_name]] <- power4test(object = object,
-                                pop_es = tmp,
-                                progress = progress,
-                                iseed = seeds[i],
-                                ...)
+    if (is.null(new_nrep)) {
+      out[[p_name]] <- power4test(object = object,
+                                  pop_es = tmp,
+                                  progress = progress,
+                                  iseed = seeds[i],
+                                  ...)
+    } else {
+      out[[p_name]] <- power4test(object = object,
+                                  pop_es = tmp,
+                                  nrep = new_nrep[i],
+                                  progress = progress,
+                                  iseed = seeds[i],
+                                  ...)
+    }
     attr(out[[p_name]], "pop_es_name") <- pop_es_name
     attr(out[[p_name]], "pop_es_value") <- x
   }
