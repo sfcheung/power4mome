@@ -214,7 +214,7 @@ visualize the power curve.
 
 This function can be used directly,
 but is also used internally by
-functions such as \code{\link[=n_from_power]{n_from_power()}}.
+functions such as \code{\link[=x_from_power]{x_from_power()}}.
 }
 \examples{
 

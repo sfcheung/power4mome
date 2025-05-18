@@ -1,28 +1,28 @@
-#' @title Summarize 'n_from_power' Results
+#' @title Summarize 'x_from_power' Results
 #'
 #' @description The summary method of
-#' the output of [n_from_power()].
+#' the output of [x_from_power()].
 #'
 #' @details It simply prepares the
-#' results of [n_from_power()]
+#' results of [x_from_power()]
 #' to be printed in details.
 #'
 #' @return
 #' Return an object of the class
-#' `summary.n_from_power`, which is
-#' simply the output of [n_from_power()],
+#' `summary.x_from_power`, which is
+#' simply the output of [x_from_power()],
 #' with a `print` method dedicated for
 #' detailed summary. Please refer
-#' to [n_from_power()] for the contents.
+#' to [x_from_power()] for the contents.
 #'
-#' @param object An `n_from_power`-class
+#' @param object An `x_from_power`-class
 #' object, such as the output of
-#' [n_from_power()].
+#' [x_from_power()].
 #'
 #' @param ... Additional arguments.
 #' Not used for now.
 #'
-#' @seealso [n_from_power()]
+#' @seealso [x_from_power()]
 #'
 #' @examples
 #'
@@ -50,58 +50,72 @@
 #'
 #' # In real analysis, to have more stable results:
 #' # - Use a larger final_nrep (e.g., 500).
-#' # - Use the default ns_per_trial of 3, or just remove it.
+#' # - Use the default xs_per_trial of 3, or just remove it.
 #'
 #' # If the default values are OK, this call is sufficient:
-#' # power_vs_n <- n_from_power(test_out,
+#' # power_vs_n <- x_from_power(test_out,
+#' #                            x = "n",
 #' #                            target_power = .80,
 #' #                            seed = 4567)
-#' power_vs_n <- n_from_power(test_out,
+#' power_vs_n <- x_from_power(test_out,
+#'                            x = "n",
 #'                            progress = TRUE,
 #'                            target_power = .80,
 #'                            final_nrep = 10,
-#'                            ns_per_trial = 1,
+#'                            xs_per_trial = 1,
 #'                            nrep_steps = 1,
 #'                            max_trials = 1,
 #'                            seed = 4567)
 #' summary(power_vs_n)
 #'
 #' @export
-summary.n_from_power <- function(object,
+summary.x_from_power <- function(object,
                                  ...) {
-  class(object) <- "summary.n_from_power"
+  class(object) <- "summary.x_from_power"
   return(object)
 }
 
-#' @rdname summary.n_from_power
+#' @rdname summary.x_from_power
 #'
 #' @param x The output of
-#' [summary.n_from_power()], the
+#' [summary.x_from_power()], the
 #' `summary` method of
-#' an `n_from_power` object,
+#' an `x_from_power` object,
 #' which is the output of
-#' [n_from_power()].
+#' [x_from_power()].
 #'
 #' @param digits The number of digits
 #' after the decimal when printing
 #' the results.
 #'
 #' @return
-#' The `print`-method of `summary.n_from_power`
+#' The `print`-method of `summary.x_from_power`
 #' objects returns the object `x`
 #' invisibly.
 #' It is called for its side effect.
 #'
 #' @export
-print.summary.n_from_power <- function(x,
+print.summary.x_from_power <- function(x,
                                        digits = 3,
                                        ...) {
 
-  cat("\n====== n_from_power Results ======\n\n")
+  cat("\n====== x_from_power Results ======\n\n")
   my_call <- x$call
   cat("Call:\n")
   print(my_call)
-  solution_found <- !is.na(x$n_final)
+  solution_found <- !is.na(x$x_final)
+
+  predictor <- x$x
+  cat("Predictor (x):",
+      switch(predictor,
+             n = "Sample Size",
+             es = "Effect Size"),
+      "\n")
+  if (predictor == "es") {
+    cat("Parameter Name (pop_es_name):",
+        x$pop_es_name,
+        "\n")
+  }
 
   cat("\n- Target Power:",
       formatC(x$target_power, digits = digits, format = "f"),
@@ -109,7 +123,12 @@ print.summary.n_from_power <- function(x,
 
   cat("\n=== Major Results ===\n\n")
   if (solution_found) {
-    cat("- Final Sample Size:", x$n_final, "\n")
+    x_final_str <- formatC(x$x_final,
+                           digits = switch(predictor,
+                                           n = 0,
+                                           es = digits),
+                           format = "f")
+    cat("- Final Value:", x_final_str, "\n")
     cat("- Final Estimated Power:",
         formatC(x$power_final, digits = digits, format = "f"),
         "\n")
@@ -121,19 +140,24 @@ print.summary.n_from_power <- function(x,
     cat("- Based on", x$nrep_final, "replications.\n")
   } else {
     cat("- Solution not found.\n")
-    catwrap(paste(c("- None of the sample sizes examined",
+    catwrap(paste(c("- None of the values examined",
                     "in the interval meet the target power."),
                     collapse = " "),
             exdent = 2)
-    if (isFALSE(identical(NA, x$n_estimated))) {
-      cat("- The crude estimate of required sample size is ",
-          x$n_estimated,
+    if (isFALSE(identical(NA, x$x_estimated))) {
+      x_estimated_str <- formatC(x$x_estimated,
+                                 digits = switch(predictor,
+                                                 n = 0,
+                                                 es = digits),
+                                 format = "f")
+      cat("- The crude estimate of required value is ",
+          x_estimated_str,
           ".\n", sep = "")
       cat("- Note: Estimated by the power curve.\n")
     }
     catwrap(paste(c("- Try changing the settings, such as",
-                    "expanding the range of sample sizes",
-                    "by setting 'n_interval' to one that",
+                    "expanding the range of values",
+                    "by setting 'x_interval' to one that",
                     "includes the crude estimate, if",
                     "available."),
                     collapse = " "),
@@ -141,8 +165,8 @@ print.summary.n_from_power <- function(x,
   }
 
   cat("\n=== Technical Information ===\n\n")
-  cat("- The range of sample sizes explored:",
-      paste(range(x$n_tried), collapse = " to "), "\n")
+  cat("- The range of values explored:",
+      paste(range(x$x_tried), collapse = " to "), "\n")
   cat("- Time spent in the search:",
       format(x$time_spent, digits = 4),
       "\n")
@@ -152,14 +176,12 @@ print.summary.n_from_power <- function(x,
                                nls = "Nonlinear Regression Model",
                                glm = "Logistic Regression",
                                lm = "Linear Regression")
-    cat("- The final crude model for the power-sample-size relation:\n")
+    cat("- The final crude model for the power-predictor relation:\n")
     cat("\nModel Type:",
         power_curve_name,
         "\n\n")
     tmp1 <- x$power_curve
-    if (identical(tmp, "nls")) {
-      tmp1$data <- "(Internal)"
-    }
+    # Use the print method of power_curve objects
     print(tmp1)
     cat("\n")
   }

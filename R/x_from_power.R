@@ -1,7 +1,10 @@
-#' @title Sample Size Determination
+#' @title Sample Size and Effect Size Determination
 #'
 #' @description It searches by simulation
-#' the sample size with power to
+#' the sample size (given other factors,
+#' such as effect sizes) or effect size
+#' (given other factors, such as sample
+#' size) with power to
 #' detect an effect close to a target
 #' value.
 #'
@@ -17,14 +20,20 @@
 #'   using `test_fun` and `test_args`
 #'   (see the help page of [power4test()]
 #'   for details). Run it on the
-#'   starting sample size.
+#'   starting sample size or
+#'   effect size.
 #'
-#' - Call [n_from_power()] on the output
-#'   of [power4test()] returned with
-#'   the starting sample size. This
+#' - Call [x_from_power()] on the output
+#'   of [power4test()] returned from
+#'   the previous step. This
 #'   function will iteratively repeat
-#'   the analysis on other sample sizes,
-#'   trying to find a sample size with
+#'   the analysis on either other sample
+#'   sizes, or other values for a
+#'   selected population values (the
+#'   effect sizes),
+#'   trying to find a value (a sample
+#'   size, or a population value of
+#'   the selected parameter) with
 #'   a power level close enough to the
 #'   target power.
 #'
@@ -33,45 +42,47 @@
 #'
 #' The results can be viewed using
 #' [summary()], and the output has
-#' a [plot.n_from_power()] method to
+#' a [plot.x_from_power()] method to
 #' plot the relation between power and
 #' sample size for the sample sizes
 #' examined.
 #'
 #' ## Technical Details
 #'
-#' The detailed workflow of this function
-#' can be found in the following webpage:
-#'
-#' https://sfcheung.github.io/power4mome/articles/n_from_power_workflow.html
-#'
+#' (TODO: To draft)
 #'
 #' @return
-#' The function [n_from_power()]
-#' returns a `n_from_power` object,
+#' The function [x_from_power()]
+#' returns a `x_from_power` object,
 #' which is a list with the following
 #' elements:
 #'
 #' - `power4test_trials`: The output of
 #' [power4test_by_n()] for all sample
-#' sizes examined.
+#' sizes examined, or of
+#' [power4test_by_es()] for all
+#' population values of the selected
+#' parameter examined.
 #'
 #' - `rejection_rates`: The output of
-#' [get_rejection_rates_by_n()] from
-#' `power4test_trials`.
+#' [get_rejection_rates_by_n()] or
+#' [get_rejection_rates_by_es()]
+#' as appropriate.
 #'
-#' - `n_tried`: The sample sizes
+#' - `x_tried`: The sample sizes or
+#' population values
 #' examined.
 #'
 #' - `power_tried`: The estimated
-#' rejection rates for all the sample
-#' sizes examined.
+#' rejection rates for all the values
+#' examined.
 #'
-#' - `n_final`: The sample size in the
+#' - `x_final`: The sample size or
+#' population values in the
 #' solution. `NA` if solution not found.
 #'
 #' - `power_final`: The estimated power
-#' of the sample size in the solution.
+#' of the value in the solution.
 #' `NA` if solution not found.
 #'
 #' - `i_final`: The position of the
@@ -90,8 +101,7 @@
 #' the power in the solution.
 #'
 #' - `power_curve`: The output of
-#' [stats::nls()], [stats::glm()], or
-#' [stats::lm()] when estimating the
+#' [power_curve()] when estimating the
 #' power curve.
 #'
 #' - `target_power`: The requested
@@ -104,11 +114,12 @@
 #' of replications and the level of
 #' confidence of the confidence intervals.
 #'
-#' - `n_estimated`: The sample size
+#' - `x_estimated`: The value
+#' (sample size or population value)
 #' with the target power, estimated by
 #' `power_curve`. This is used, when
 #' solution not found, to determine the
-#' range of sample sizes to search when
+#' range of the values to search when
 #' calling the function again.
 #'
 #' - `start`: The time and date when
@@ -121,7 +132,7 @@
 #' doing the search.
 #'
 #' - `args`: A named list of the arguments
-#' of [n_from_power()] used in the search.
+#' of [x_from_power()] used in the search.
 #'
 #' - `call`: The call when this function
 #' is called.
@@ -129,12 +140,24 @@
 #' @param object A `power4test` object,
 #' which is the output of [power4test()].
 #'
+#' @param x What is `x`, the value to
+#' be searched. Can be `"n"`, the sample
+#' size, or `"es"`, the population value
+#' of a parameter (set by `pop_es_name`).
+#'
+#' @param pop_es_name The name of the
+#' parameter. Required if `x` is `"es"`.
+#' See the help page
+#' of [ptable_pop()] on the names for
+#' the argument `pop_es`.
+#'
 #' @param target_power The target power,
 #' a value greater than 0 and less than
 #' one.
 #'
-#' @param ns_per_trial The initial number
-#' of sample sizes to consider in each
+#' @param xs_per_trial The initial number
+#' of values (sample sizes or population
+#' values) to consider in each
 #' trial. Should be an integer at least
 #' 1. Rounded
 #' up if not an integer.
@@ -147,24 +170,29 @@
 #' @param power_min,power_max The minimum
 #' and maximum values, respectively,
 #' of power
-#' when determining the sample sizes to
+#' when determining the values to
 #' try in each trail. Default is .01.
 #'
-#' @param n_interval A vector of
-#' two values, the minimum sample size
-#' and the maximum sample size, in
-#' the search for sample sizes.
+#' @param x_interval A vector of
+#' two values, the minimum value
+#' and the maximum sample values, in
+#' the search for the values
+#' (sample sizes or population values).
 #'
-#' @param extendInt Whether `n_interval`
+#' @param extendInt Whether `x_interval`
 #' can be expanded when estimating the
-#' sample sizes to try. The value will
+#' the values to try. The value will
 #' be passed to the argument of the
-#' same name in [stats::uniroot()],
-#' but the default value is `"upX"`.
-#' That is, sample size higher than
-#' the maximum in `n_interval` is
+#' same name in [stats::uniroot()].
+#' If `x` is `"n"`, then the default
+#' value is `"upX"`.
+#' That is, a value higher than
+#' the maximum in `x_interval` is
 #' allowed, if predicted by the tentative
-#' model.
+#' model. Otherwise, the default value
+#' is `"no"`. See the help page of
+#' [stats::uniroot()] for further
+#' information.
 #'
 #' @param progress Logical. Whether
 #' the searching progress is reported.
@@ -177,15 +205,16 @@
 #' functions.
 #'
 #' @param max_trials The maximum number
-#' of trials in searching the sample
-#' size with the target power. Rounded
+#' of trials in searching the value
+#' with the target power. Rounded
 #' up if not an integer.
 #'
 #' @param final_nrep The number of
 #' replications in the final stage,
 #' also the maximum number of replications
-#' in each call to [power4test()] or
-#' [power4test_by_n()].
+#' in each call to [power4test()],
+#' [power4test_by_n()], or
+#' [power4test_by_es()].
 #'
 #' @param final_R The number of
 #' Monte Carlo simulation or
@@ -211,7 +240,7 @@
 #' the power. Should be at least 1.
 #' Increasing this number will result
 #' in more trials and take longer to
-#' run, but will try more sample sizes.
+#' run, but will try more values.
 #' Rounded up if not an integer.
 #'
 #' @param seed If not `NULL`, [set.seed()]
@@ -220,9 +249,9 @@
 #' possible if many stages of
 #' parallel processing is involved.
 #'
-#' @param n_include_interval Logical.
-#' Whether `n_interval` is mandatory
-#' to be included in the sample sizes
+#' @param x_include_interval Logical.
+#' Whether `x_interval` is mandatory
+#' to be included in the values
 #' to be searched.
 #'
 #' @param power_model The nonlinear
@@ -234,19 +263,36 @@
 #' and `x` (stands for sample size)
 #' on the right-hand
 #' side, with one or more parameters.
+#' Can also be set to a list of
+#' models.
 #' Users rarely need to change the
-#' default value.
+#' default value. If `NULL`, the default,
+#' then the default model(s) will be
+#' determined by [power_curve()].
 #'
 #' @param start A named numeric vector
 #' of the starting values for `power_model`
-#' when fitted by [stats::nls()].
+#' when fitted by [stats::nls()]. If
+#' `power_model` is a list, this should
+#' be a list of the same length.
 #' Users rarely need to change the
 #' default values.
 #'
 #' @param lower_bound A named numeric vector
 #' of the lower bounds for parameters
 #' in `power_model`
-#' when fitted by [stats::nls()].
+#' when fitted by [stats::nls()]. If
+#' `power_model` is a list, this should
+#' be a list of the same length.
+#' Users rarely need to change the
+#' default values.
+#'
+#' @param upper_bound A named numeric vector
+#' of the upper bounds for parameters
+#' in `power_model`
+#' when fitted by [stats::nls()]. If
+#' `power_model` is a list, this should
+#' be a list of the same length.
 #' Users rarely need to change the
 #' default values.
 #'
@@ -265,9 +311,13 @@
 #' override internal default values,
 #' and also override `nls_args`.
 #'
-#' @seealso [power4test()]
+#' @seealso [power4test()], [power4test_by_n()],
+#' and [power4test_by_es()].
 #'
 #' @examples
+#'
+#' # TODO:
+#' # - Update the example
 #'
 #' mod <-
 #' "
@@ -293,17 +343,19 @@
 #'
 #' # In real analysis, to have more stable results:
 #' # - Use a larger final_nrep (e.g., 500).
-#' # - Use the default ns_per_trial of 3, or just remove it.
+#' # - Use the default xs_per_trial of 3, or just remove it.
 #'
 #' # If the default values are OK, this call is sufficient:
-#' # power_vs_n <- n_from_power(test_out,
+#' # power_vs_n <- x_from_power(test_out,
+#' #                            x = "n",
 #' #                            target_power = .80,
 #' #                            seed = 4567)
-#' power_vs_n <- n_from_power(test_out,
+#' power_vs_n <- x_from_power(test_out,
+#'                            x = "n",
 #'                            progress = TRUE,
 #'                            target_power = .80,
 #'                            final_nrep = 10,
-#'                            ns_per_trial = 1,
+#'                            xs_per_trial = 1,
 #'                            nrep_steps = 1,
 #'                            max_trials = 1,
 #'                            seed = 4567)
@@ -313,14 +365,18 @@
 #' @importFrom graphics abline arrows par points text title
 #'
 #' @export
-n_from_power <- function(object,
+x_from_power <- function(object,
+                         x,
+                         pop_es_name = NULL,
                          target_power = .80,
-                         ns_per_trial = 3,
+                         xs_per_trial = 3,
                          ci_level = .95,
                          power_min = .01,
                          power_max = .90,
-                         n_interval = c(50, 2000),
-                         extendInt = c("upX", "no", "yes", "downX"),
+                         x_interval = switch(x,
+                                             n = c(50, 2000),
+                                             es = c(0, .7)),
+                         extendInt = NULL,
                          progress = TRUE,
                          simulation_progress = TRUE,
                          max_trials = 10,
@@ -328,10 +384,11 @@ n_from_power <- function(object,
                          final_R = 1000,
                          nrep_steps = 1,
                          seed = NULL,
-                         n_include_interval = FALSE,
-                         power_model = reject ~ I((x - c0)^e) / (b + I((x - c0)^e)),
-                         start = c(b = 2, c0 = 100, e = 1),
-                         lower_bound = c(b = 0, c0 = 0, e = 1),
+                         x_include_interval = FALSE,
+                         power_model = NULL,
+                         start = NULL,
+                         lower_bound = NULL,
+                         upper_bound = NULL,
                          nls_control = list(),
                          nls_args = list()
                          ) {
@@ -351,7 +408,8 @@ n_from_power <- function(object,
   # - Final power4test object.
   # - Final model by nls.
 
-  extendInt <- match.arg(extendInt)
+  x <- match.arg(x,
+                 choices = c("n", "pop_es"))
 
   a <- abs(stats::qnorm((1 - ci_level) / 2))
   power_tolerance_in_interval <- a * sqrt(target_power * (1 - target_power) / final_nrep)
@@ -365,12 +423,12 @@ n_from_power <- function(object,
          ") not between 0 and 1.")
   }
 
-  if (ns_per_trial < 1) {
-    stop("'ns_per_trial' (",
-         ns_per_trial,
+  if (xs_per_trial < 1) {
+    stop("'xs_per_trial' (",
+         xs_per_trial,
          ") is less than 1.")
   }
-  ns_per_trial <- ceiling(ns_per_trial)
+  xs_per_trial <- ceiling(xs_per_trial)
 
   if (power_min <= 0 || power_max >= 1) {
     stop("'power_min' and 'power_max' must be between 0 and 1.")
@@ -384,17 +442,32 @@ n_from_power <- function(object,
     stop("'target_power' must be between 'power_min' and 'power_max'.")
   }
 
-  if (min(n_interval) < 0) {
-    stop("The minimum value of 'n_interval' cannot be negative")
-  }
-  if (length(n_interval) != 2) {
-    stop("'n_interval' must be a vector with exactly two values.")
-  }
-  if (n_interval[2] < n_interval[1]) {
-    stop("'n_interval' must be of the form c(minimum, maximum).")
+  if (x == "n") {
+    if (min(x_interval) < 0) {
+      stop("The minimum value of 'n_interval' cannot be negative")
+    }
   }
 
-  n_max <- max(n_interval)
+  if (length(x_interval) != 2) {
+    stop("'x_interval' must be a vector with exactly two values.")
+  }
+  if (x_interval[2] < x_interval[1]) {
+    stop("'x_interval' must be of the form c(minimum, maximum).")
+  }
+
+  if (is.null(extendInt)) {
+    if (x == "n") {
+      extendInt <- match.arg(extendInt,
+                             choices = c("upX", "no", "yes", "downX"))
+    }
+    if (x == "es") {
+      extendInt <- match.arg(extendInt,
+                             choices = c("no", "yes", "upX", "downX"))
+    }
+  }
+
+  x_max <- max(x_interval)
+  x_min <- min(x_interval)
 
   max_trials <- ceiling(max_trials)
   if (max_trials < 1) {
@@ -420,81 +493,99 @@ n_from_power <- function(object,
     cat("- Start at", tmp, "\n")
   }
 
-  # Set the initial sample sizes to try
+  # Set the initial values to try
 
-  n_i <- set_n_range(object,
+  x_i <- set_x_range(object,
+                     x = x,
+                     pop_es_name = pop_es_name,
                      target_power = target_power,
-                     k = ns_per_trial,
-                     n_max = n_max)
-  # Exclude the sample size in the input object
-  n0 <- attr(object, "args")$n
-  n_i <- setdiff(n_i, n0)
-  if (n_include_interval) {
-    # Include the lowest and highest sample sizes in interval
-    n_i <- c(n_interval, n_i)
+                     k = xs_per_trial,
+                     x_max = x_max,
+                     x_min = x_min)
+  # Exclude the value in the input object
+  x0 <- switch(x,
+               n = attr(object, "args")$n,
+               es = pop_es(object,
+                           pop_es_name = pop_es_name))
+  x_i <- setdiff(x_i, x0)
+  if (x_include_interval) {
+    # Include the lowest and highest values in interval
+    x_i <- sort(c(x_interval, x_i))
   }
-  n_i <- sort(unique(n_i))
+  x_i <- sort(unique(x_i))
 
   if (progress) {
-    cat("- Sample sizes to try: ",
-        paste0(n_i, collapse = ", "),
+    x_i_str <- formatC(x_i,
+                       digits = switch(x, n = 0, es = 4),
+                       format = "f")
+    cat("- Value(s) to try: ",
+        paste0(x_i_str, collapse = ", "),
         "\n")
   }
 
-  # ** by_n_i **
-  # The current (i-th) set of sample size examined,
+  # ** by_x_i **
+  # The current (i-th) set of values examined,
   # along with their results.
-  by_n_i <- power4test_by_n(object,
-                            n = n_i,
-                            progress = simulation_progress)
+  by_x_i <- switch(x,
+                   n = power4test_by_n(object,
+                                       n = x_i,
+                                       progress = simulation_progress),
+                   es = power4test_by_es(object,
+                                         pop_es_name = pop_es_name,
+                                         pop_es_values = x_i))
 
   # Add the input object to the list
   tmp <- list(object)
-  class(tmp) <- c("power4test_by_n", class(tmp))
-  names(tmp) <- as.character(n0)
-  by_n_i <- c(by_n_i, tmp)
+  if (x == "n") {
+    class(tmp) <- c("power4test_by_n", class(tmp))
+    names(tmp) <- as.character(x0)
+  }
+  if (x == "es") {
+    class(tmp) <- c("power4test_by_es", class(tmp))
+    names(tmp) <- paste0(pop_es_name,
+                         " = ",
+                          as.character(x0))
+    attr(tmp[[1]], "pop_es_name") <- pop_es_name
+    attr(tmp[[1]], "pop_es_value") <- x0
+  }
+  by_x_i <- c(by_x_i, tmp)
 
   if (progress) {
     cat("- Rejection Rates:\n")
-    tmp <- get_rejection_rates_by_n(by_n_i)
+    tmp <- switch(x,
+                  n = get_rejection_rates_by_n(by_x_i),
+                  es = get_rejection_rates_by_es(by_x_1))
     print(tmp)
     cat("\n")
   }
 
   # ** fit_i **
-  # The current power curve, based on by_n_i
-  # fit_i <- power_curve_n(by_n_i,
-  #                        formula = power_curve,
-  #                        start = start,
-  #                        lower_bound = lower_bound,
-  #                        nls_control = nls_control,
-  #                        nls_args = nls_args,
-  #                        verbose = progress)
-  fit_i <- power_curve(by_n_i,
+  # The current power curve, based on by_x_i
+  fit_i <- power_curve(by_x_i,
                        formula = power_model,
                        start = start,
                        lower_bound = lower_bound,
+                       upper_bound = upper_bound,
                        nls_control = nls_control,
                        nls_args = nls_args,
                        verbose = progress)
 
   if (progress) {
     cat("- Power Curve:\n")
-    fit_tmp <- fit_i
-    fit_tmp$data <- "(Omitted)"
-    print(fit_tmp)
+    # Can use the print method of power_curve objects
+    print(fit_i)
     cat("\n")
   }
 
-  # ** by_n_1 **
-  # The collection of all sample sizes tried and their results
-  # to be updated when new sample size is tried.
+  # ** by_x_1 **
+  # The collection of all values tried and their results
+  # to be updated when new value is tried.
   # Used after the end of the loop.
-  by_n_1 <- by_n_i
+  by_x_1 <- by_x_i
 
   # ** fit_1 **
   # The latest power curve
-  # To be updated whenever by_n_1 is updated.
+  # To be updated whenever by_x_1 is updated.
   # Used after the end of the loop.
   fit_1 <- fit_i
 
@@ -503,11 +594,15 @@ n_from_power <- function(object,
   # to successively increase precision and speed by
   # - increasing the number of replication,
   # - increasing the number of resampling, and
-  # - decreasing the number of sample sizes to try.
+  # - decreasing the number of values to try.
 
   # The sequence of the numbers of replication
-  new_nrep <- get_rejection_rates_by_n(by_n_1,
-                                        all_columns = TRUE)$nrep
+  new_nrep <- switch(x,
+                     n = get_rejection_rates_by_n(by_x_1,
+                                                  all_columns = TRUE)$nrep,
+                     es = get_rejection_rates_by_es(by_x_1,
+                                                    all_columns = TRUE)$nrep)
+
   new_nrep <- ceiling(mean(new_nrep))
   nrep_seq <- ceiling(seq(from = new_nrep,
                           to = final_nrep,
@@ -520,16 +615,16 @@ n_from_power <- function(object,
   R0 <- attr(object, "args")$R
   if (!is.null(R0)) {
     R_seq <- ceiling(seq(from = R0,
-                        to = final_R,
-                        length.out = nrep_steps + 1))
+                         to = final_R,
+                         length.out = nrep_steps + 1))
   } else {
     R_seq <- NULL
   }
 
-  # The sequence of the numbers of sample sizes per trial
-  ns_per_trial_seq <- ceiling(seq(from = ns_per_trial,
-                                   to = 2,
-                                   length.out = nrep_steps + 1))
+  # The sequence of the numbers of values per trial
+  xs_per_trial_seq <- ceiling(seq(from = xs_per_trial,
+                                  to = 2,
+                                  length.out = nrep_steps + 1))
   ci_hit <- FALSE
 
   # === Loop Over The Trials ===
@@ -546,32 +641,38 @@ n_from_power <- function(object,
       # After the first trial,
       # Check whether at least one CI hit the target power.
       # If yes, reduce the range of power levels when
-      # selecting the sample sizes to try.
+      # selecting the values to try.
       # Necessary because the number of replication may have
       # increased, requiring narrower CI.
       power_tolerance_in_interval <- max(abs(ci_out - power_out))
     }
 
-    # ** n_j **
-    # The vector of sample sizes to be tried in this trial
+    # ** x_j **
+    # The vector of values to be tried in this trial
     # Determined using by latest power curve (fit_1)
-    n_j <- estimate_n_range(power_n_fit = fit_1,
+    x_tried <- switch(x,
+                      n = as.numeric(names(by_x_1)),
+                      es = sapply(by_x_1,
+                                  \(x) {attr(x, "pop_es_value")},
+                                  USE.NAMES = FALSE))
+    x_j <- estimate_x_range(power_x_fit = fit_1,
+                            x = x,
                             target_power = target_power,
-                            k = ns_per_trial_seq[1],
+                            k = xs_per_trial_seq[1],
                             tolerance = power_tolerance_in_interval,
                             power_min = power_min,
                             power_max = power_max,
-                            interval = n_interval,
+                            interval = x_interval,
                             extendInt = extendInt,
-                            n_to_exclude = as.numeric(names(by_n_1)))
+                            x_to_exclude = x_tried)
 
-    # Adjust the numbers of replication for each sample size.
-    # A sample size with estimated power closer to the
+    # Adjust the numbers of replication for each value.
+    # A value with estimated power closer to the
     # target power will have a higher number of replication
     # power_j <- predict_fit(fit_1,
     #                        newdata = list(n = n_j))
     power_j <- stats::predict(fit_1,
-                       newdata = list(x = n_j))
+                              newdata = list(x = x_j))
     nrep_j <- nrep_from_power(power_j = power_j,
                               target_power = target_power,
                               tolerance = power_tolerance_in_final,
@@ -579,81 +680,94 @@ n_from_power <- function(object,
                               nrep_max = final_nrep_seq[1])
 
     if (progress) {
-      cat("- Sample sizes to try:",
-          paste0(n_j, collapse = ", "),
+      x_j_str <- formatC(x_j,
+                          digits = switch(x, n = 0, es = 4),
+                          format = "f")
+      cat("- Value(s) to try:",
+          paste0(x_j_str, collapse = ", "),
           "\n")
       cat("- Numbers of replications:",
           paste0(nrep_j, collapse = ", "),
           "\n")
     }
 
-    # ** by_n_j **
+    # ** by_x_j **
     # The results for this trial (based on n_j)
-    by_n_j <- power4test_by_n(object,
-                              n = n_j,
-                              R = R_seq[1],
-                              progress = simulation_progress,
-                              by_nrep = nrep_j)
+    by_x_j <- switch(x,
+                     n = power4test_by_n(object,
+                                         n = x_j,
+                                         R = R_seq[1],
+                                         progress = simulation_progress,
+                                         by_nrep = nrep_j),
+                     es = power4test_by_es(object,
+                                           pop_es_name = pop_es_name,
+                                           pop_es_values = x_j,
+                                           R = R_seq[1],
+                                           progress = simulation_progress,
+                                           by_nrep = nrep_j))
 
-    # Add the results to by_n_1
-    by_n_1 <- c(by_n_1, by_n_j)
+    # Add the results to by_x_1
+    by_x_1 <- c(by_x_1, by_x_j)
 
     if (progress) {
       cat("- Rejection Rates:\n")
-      tmp <- get_rejection_rates_by_n(by_n_1)
+      tmp <- switch(x,
+                    n = get_rejection_rates_by_n(by_x_1),
+                    es = get_rejection_rates_by_es(by_x_1))
       print(tmp)
       cat("\n")
     }
 
-    # Update the power curve
-    # fit_1 <- power_curve_n(by_n_1,
-    #                        formula = power_curve,
-    #                        start = stats::coef(fit_1),
-    #                        lower_bound = lower_bound,
-    #                        nls_control = nls_control,
-    #                        nls_args = nls_args,
-    #                        verbose = progress)
-    fit_i <- power_curve(by_n_1,
+    fit_i <- power_curve(by_x_1,
                          formula = power_model,
                          start = start,
                          lower_bound = lower_bound,
+                         upper_bound = upper_bound,
                          nls_control = nls_control,
                          nls_args = nls_args,
                          verbose = progress)
 
-    # Get the rejection rates of all sample sizes tried.
-    tmp1 <- get_rejection_rates_by_n(by_n_1,
-                                     all_columns = TRUE)
+    # Get the rejection rates of all values tried.
+    tmp1 <- switch(x,
+                   n = get_rejection_rates_by_n(by_x_1,
+                                                all_columns = TRUE),
+                   es = get_rejection_rates_by_es(by_x_1,
+                                                  all_columns = TRUE))
     # tmp1$reject <- tmp1$sig
     tmp2 <- range(tmp1$reject)
 
-    # Is the desired sample size likely already in the range
-    # of sample sizes examined, based on the estimated power?
+    # Is the desired value likely already in the range
+    # of values examined, based on the estimated power?
     target_in_range <- (target_power > tmp2[1]) &&
                        (target_power < tmp2[2])
 
     if (target_in_range) {
-      # The desired sample size probably within the range examined
+      # The desired value probably within the range examined
 
       tmp3 <- abs(tmp1$reject - target_power)
-      n_out_i <- which.min(tmp3)
-      # If ties, the smallest sample size will be used
+      x_out_i <- which.min(tmp3)
+      # If ties, the smallest value will be used
 
-      # ** n_out, power_out, nrep_out, ci_out, by_n_out **
+      # ** x_out, power_out, nrep_out, ci_out, by_x_out **
       # The results of the candidate solution,
-      # - The sample size with power closest to the target power
-      n_out <- tmp1$n[n_out_i]
-      power_out <- tmp1$reject[n_out_i]
-      nrep_out <- tmp1$nrep[n_out_i]
-      by_n_ci <- rejection_rates_add_ci(by_n_1,
+      # - The value with power closest to the target power
+      x_out <- switch(x,
+                      n = tmp1$n[x_out_i],
+                      es = tmp1$es[x_out_i])
+      power_out <- tmp1$reject[x_out_i]
+      nrep_out <- tmp1$nrep[x_out_i]
+      by_x_ci <- rejection_rates_add_ci(by_x_1,
                                         level = ci_level)
-      ci_out <- unlist(by_n_ci[n_out_i, c("reject_ci_lo", "reject_ci_hi")])
-      by_n_out <- by_n_1[[n_out_i]]
+      ci_out <- unlist(by_x_ci[x_out_i, c("reject_ci_lo", "reject_ci_hi")])
+      by_x_out <- by_x_1[[x_out_i]]
 
       if (progress) {
-        cat("- Sample size with closest power:", n_out, "\n")
+        x_out_str <- formatC(x_out,
+                             digits = switch(x, n = 0, es = 4),
+                             format = "f")
+        cat("- Value with closest power:", x_out_str, "\n")
         cat("- Estimated power for ",
-            n_out,
+            x_out_str,
             ": ",
             formatC(power_out, digits = 4, format = "f"),
             "\n",
@@ -661,61 +775,73 @@ n_from_power <- function(object,
       }
 
     } else {
-      # The desired sample size may not be within the range examined
-      # Use the latest power curve to estimate the desired sample size.
-      # Inaccurate, but help approaching the target sample size.
+      # The desired value may not be within the range examined
+      # Use the latest power curve to estimate the desired value.
+      # Inaccurate, but help approaching the target value.
 
-      # ** n_out, power_out, nrep_out, ci_out, by_n_out **
+      # ** x_out, power_out, nrep_out, ci_out, by_x_out **
       # Considered a candidate solution.
-      n_out <- estimate_n_range(power_n_fit = fit_1,
+      x_tried <- switch(x,
+                        n = as.numeric(names(by_x_1)),
+                        es = sapply(by_x_1,
+                                    \(x) {attr(x, "pop_es_value")},
+                                    USE.NAMES = FALSE))
+      x_out <- estimate_x_range(power_x_fit = fit_1,
+                                x = x,
                                 target_power = target_power,
                                 k = 1,
                                 tolerance = 0,
                                 power_min = power_min,
                                 power_max = power_max,
-                                interval = n_interval,
+                                interval = x_interval,
                                 extendInt = extendInt,
-                                n_to_exclude = as.numeric(names(by_n_1)))
-      by_n_out <- power4test_by_n(object,
-                                  n = n_out,
-                                  nrep = nrep_seq[1],
-                                  R = R_seq[1],
-                                  progress = simulation_progress)
+                                x_to_exclude = x_tried)
+      by_x_out <- switch(x,
+                         n = power4test_by_n(object,
+                                             n = x_out,
+                                             nrep = nrep_seq[1],
+                                             R = R_seq[1],
+                                             progress = simulation_progress),
+                         es = power4test_by_es(object,
+                                               pop_es_name = pop_es_name,
+                                               pop_es_values = x_out,
+                                               nrep = nrep_seq[1],
+                                               R = R_seq[1],
+                                               progress = simulation_progress))
       nrep_out <- nrep_seq[1]
-      power_out <- get_rejection_rates_by_n(by_n_out)[1, "reject"]
-      by_n_out_ci <- rejection_rates_add_ci(by_n_out,
+      power_out <- switch(x,
+                          n = get_rejection_rates_by_n(by_x_out)[1, "reject"],
+                          es = get_rejection_rates_by_es(by_x_out)[1, "reject"])
+      by_x_out_ci <- rejection_rates_add_ci(by_x_out,
                                             level = ci_level)
-      ci_out <- unlist(by_n_out_ci[1, c("reject_ci_lo", "reject_ci_hi")])
+      ci_out <- unlist(by_x_out_ci[1, c("reject_ci_lo", "reject_ci_hi")])
 
       if (progress) {
-        cat("- Extrapolated sample size:", n_out, "\n")
+        x_out_str <- formatC(x_out,
+                             digits = switch(x, n = 0, es = 4),
+                             format = "f")
+        cat("- Extrapolated value:", x_out_str, "\n")
         cat("- Estimated power for ",
-            n_out,
+            x_out_str,
             ": ",
             formatC(power_out, digits = 4, format = "f"),
             "\n",
             sep = "")
       }
 
-      # Add the results for the new sample size to
+      # Add the results for the new value to
       # the collection of results
-      by_n_1 <- c(by_n_1, by_n_out)
+      by_x_1 <- c(by_x_1, by_x_out)
 
       # Update by_n_out
-      by_n_out <- by_n_out[[1]]
+      by_x_out <- by_x_out[[1]]
 
       # Update the power curve
-      # fit_1 <- power_curve_n(by_n_1,
-      #                       formula = power_curve,
-      #                       start = stats::coef(fit_1),
-      #                       lower_bound = lower_bound,
-      #                       nls_control = nls_control,
-      #                       nls_args = nls_args,
-      #                       verbose = progress)
-      fit_i <- power_curve(by_n_1,
+      fit_i <- power_curve(by_x_1,
                            formula = power_model,
                            start = stats::coef(fit_1),
                            lower_bound = lower_bound,
+                           upper_bound = upper_bound,
                            nls_control = nls_control,
                            nls_args = nls_args,
                            verbose = progress)
@@ -723,18 +849,16 @@ n_from_power <- function(object,
 
     if (progress) {
       cat("- Power Curve:\n")
-      fit_tmp <- fit_1
-      fit_tmp$data <- "(Omitted)"
-      print(fit_tmp)
+      print(fit_i)
       cat("\n")
     }
 
     # Check results accumulated so far
 
-    by_n_ci <- rejection_rates_add_ci(by_n_1,
+    by_x_ci <- rejection_rates_add_ci(by_x_1,
                                       level = ci_level)
-    i0 <- (by_n_ci$reject_ci_lo < target_power) &
-          (by_n_ci$reject_ci_hi > target_power)
+    i0 <- (by_x_ci$reject_ci_lo < target_power) &
+          (by_x_ci$reject_ci_hi > target_power)
 
     # Is there at least one CI hitting the target power?
     if (any(i0)) {
@@ -742,20 +866,22 @@ n_from_power <- function(object,
 
       ci_hit <- TRUE
 
-      # Find the sample size with CI hitting the target power
+      # Find the value with CI hitting the target power
       # and has the smallest SE.
-      i1 <- rank(by_n_ci$reject_se)
+      i1 <- rank(by_x_ci$reject_se)
       # Do not consider those with nrep < final_nrep
-      i1[by_n_ci$nrep < final_nrep] <- Inf
-      # If ties, the smallest sample size will be used
+      i1[by_x_ci$nrep < final_nrep] <- Inf
+      # If ties, the smallest value will be used
       i2 <- which(i1 == min(i1[i0]))[1]
 
       # Updated *_out objects
-      by_n_out <- by_n_1[[i2]]
-      n_out <- by_n_ci$n[i2]
-      power_out <- by_n_ci$reject[i2]
-      nrep_out <- by_n_ci$nrep[i2]
-      ci_out <- unlist(by_n_ci[i2, c("reject_ci_lo", "reject_ci_hi")])
+      by_x_out <- by_x_1[[i2]]
+      x_out <- switch(x,
+                      n = by_x_ci$n[i2],
+                      es = by_x_ci$es[i2])
+      power_out <- by_x_ci$reject[i2]
+      nrep_out <- by_x_ci$nrep[i2]
+      ci_out <- unlist(by_x_ci[i2, c("reject_ci_lo", "reject_ci_hi")])
 
     } else {
       # No CI hits the target power
@@ -794,11 +920,11 @@ n_from_power <- function(object,
           }
 
           R_seq <- R_seq[-1]
-          ns_per_trial_seq <- ns_per_trial_seq[-1]
+          xs_per_trial_seq <- xs_per_trial_seq[-1]
         }
       }
     } else {
-      # No sample size has CI hitting the target power.
+      # No value has CI hitting the target power.
 
       if (progress) {
         cat("- Estimated power is not close enough to target power (",
@@ -819,13 +945,13 @@ n_from_power <- function(object,
     cat("- Start at", tmp, "\n")
 
     cat("- Rejection Rates:\n")
-    tmp <- get_rejection_rates_by_n(by_n_1)
+    tmp <- switch(x,
+                  n = get_rejection_rates_by_n(by_x_1),
+                  x = get_rejection_rates_by_es(by_x_1))
     print(tmp)
     cat("\n")
     cat("- Estimated Power Curve:\n")
-    fit_tmp <- fit_1
-    fit_tmp$data <- "(Omitted)"
-    print(fit_tmp)
+    print(fit_1)
     cat("\n")
   }
 
@@ -833,13 +959,13 @@ n_from_power <- function(object,
   # - At least one CI hits the target power
   # - The maximum number of replications reached.
 
-  if (ci_hit && nrep_out == final_nrep) {
+  if (ci_hit && (nrep_out == final_nrep)) {
     # Created when ci_hit set to TRUE
 
-    # ** n_final, by_n_final, power_final, ci_final, nrep_final, i_final **
+    # ** x_final, by_x_final, power_final, ci_final, nrep_final, i_final **
     # The solution.
-    n_final <- n_out
-    by_n_final <- by_n_out
+    x_final <- x_out
+    by_x_final <- by_x_out
     power_final <- power_out
     ci_final <- ci_out
     nrep_final <- nrep_out
@@ -848,34 +974,42 @@ n_from_power <- function(object,
     # No solution found.
     # Force ci_hit to be FALSE.
     # Set the NAs to denote this.
-    n_final <- NA
-    by_n_final <- NA
+    x_final <- NA
+    by_x_final <- NA
     power_final <- NA
     ci_final <- NA
     nrep_final <- NA
     i_final <- NA
   }
 
-  # ** n_x **
-  # The estimated sample size based on power_curve.
+  # ** x_x **
+  # The estimated value based on power_curve.
   # Used as a suggestion when no solution was found.
-  n_x <- NA
+  x_x <- NA
   if (ci_hit) {
-    n_x <- estimate_n_range(power_n_fit = fit_1,
+    x_tried <- switch(x,
+                      n = as.numeric(names(by_x_1)),
+                      es = sapply(by_x_1,
+                                  \(x) {attr(x, "pop_es_value")},
+                                  USE.NAMES = FALSE))
+    x_x <- estimate_x_range(power_x_fit = fit_1,
+                            x = x,
                             target_power = target_power,
                             k = 1,
                             tolerance = 0,
                             power_min = power_min,
                             power_max = power_max,
-                            interval = n_interval,
+                            interval = x_interval,
                             extendInt = "yes",
-                            n_to_exclude = as.numeric(names(by_n_1)))
+                            x_to_exclude = x_tried)
   }
-
   if (progress) {
-    if (ci_hit && nrep_out == final_nrep) {
+    if (ci_hit && (nrep_out == final_nrep)) {
       cat("\n")
-      cat("- Final Sample Size:", n_out, "\n")
+      x_out_str <- formatC(x_out,
+                           digits = switch(x, n = 0, es = 4),
+                           format = "f")
+      cat("- Final Value:", x_out_str, "\n")
       cat("- Final Estimated Power:",
           formatC(power_final, digits = 4, format = "f"), "\n")
       cat("- Confidence Interval: [",
@@ -885,15 +1019,18 @@ n_from_power <- function(object,
           formatC(ci_level*100, digits = 2, format = "f"), "%", "\n", sep = "")
     } else {
       cat("\n")
-      cat("- None of the sample sizes examined",
+      cat("- None of the value(s) examined",
           "in the interval meet the target power.\n")
-      if (!is.na(n_x)) {
-        cat("- The estimated required sample size is ",
-            n_x,
+      if (!is.na(x_x)) {
+        x_x_str <- formatC(x_x,
+                           digits = switch(x, n = 0, es = 4),
+                           format = "f")
+        cat("- The estimated required value is ",
+            x_x_str,
             ".\n", sep = "")
       }
-      cat("- Try expanding the range of sample sizes",
-          "by setting 'n_interval'.\n")
+      cat("- Try expanding the range of values",
+          "by setting 'x_interval'.\n")
     }
   }
 
@@ -904,14 +1041,20 @@ n_from_power <- function(object,
   args <- utils::modifyList(args,
                             my_call)
   args$object <- NULL
-  reject_1 <- get_rejection_rates_by_n(by_n_1)
+  reject_1 <- switch(x,
+                     n = get_rejection_rates_by_n(by_x_1),
+                     es = get_rejection_rates_by_es(by_x_1))
   time_end <- Sys.time()
 
-  out <- list(power4test_trials = by_n_1,
+  out <- list(x = x,
+              pop_es_name = pop_es_name,
+              power4test_trials = by_x_1,
               rejection_rates = reject_1,
-              n_tried = reject_1$n,
+              x_tried = switch(x,
+                               n = reject_1$n,
+                               es = reject_1$es),
               power_tried = reject_1$reject,
-              n_final = n_final,
+              x_final = x_final,
               power_final = power_final,
               i_final = i_final,
               ci_final = ci_final,
@@ -920,24 +1063,24 @@ n_from_power <- function(object,
               power_curve = fit_1,
               target_power = target_power,
               power_tolerance = power_tolerance_in_final,
-              n_estimated = n_x,
+              x_estimated = x_x,
               start = time_start,
               end = time_end,
               time_spent = difftime(time_end, time_start),
               args = args,
               call = match.call())
-  class(out) <- c("n_from_power", class(out))
+  class(out) <- c("x_from_power", class(out))
   return(out)
 }
 
-#' @rdname n_from_power
+#' @rdname x_from_power
 #'
 #' @param x The output of
-#' [n_from_power()], the
+#' [x_from_power()], the
 #' `print` method of
-#' an `n_from_power` object,
+#' an `x_from_power` object,
 #' which is the output of
-#' [n_from_power()].
+#' [x_from_power()].
 #'
 #' @param digits The number of digits
 #' after the decimal when printing
@@ -949,30 +1092,46 @@ n_from_power <- function(object,
 #' @description
 #' The `print` method only print
 #' basic information. Call
-#' [summary.n_from_power()] and its
+#' [summary.x_from_power()] and its
 #' `print` method for detailed output.
 #'
 #' @return
-#' The `print`-method of `n_from_power`
+#' The `print`-method of `x_from_power`
 #' objects returns the object `x`
 #' invisibly.
 #' It is called for its side effect.
 #'
 #' @export
-print.n_from_power <- function(x,
+print.x_from_power <- function(x,
                                digits = 3,
                                ...) {
 
   my_call <- x$call
   cat("Call:\n")
   print(my_call)
-  solution_found <- !is.na(x$n_final)
+  solution_found <- !is.na(x$x_final)
+  predictor <- x$x
+  cat("Predictor (x):",
+      switch(predictor,
+             n = "Sample Size",
+             es = "Effect Size"),
+      "\n")
+  if (predictor == "es") {
+    cat("Parameter Name (pop_es_name):",
+        x$pop_es_name,
+        "\n")
+  }
 
   cat("- Target Power:",
       formatC(x$target_power, digits = digits, format = "f"),
       "\n")
   if (solution_found) {
-    cat("- Final Sample Size:", x$n_final, "\n")
+    x_final_str <- formatC(x$x_final,
+                           digits = switch(predictor,
+                                           n = 0,
+                                           es = digits),
+                           format = "f")
+    cat("- Final Value:", x_final_str, "\n")
     cat("- Final Estimated Power:",
         formatC(x$power_final, digits = digits, format = "f"),
         "\n")
@@ -983,31 +1142,3 @@ print.n_from_power <- function(x,
   invisible(x)
 }
 
-
-#'
-#' @noRd
-# Helper for printing
-catwrap <- function(x,
-                    width = 0.9 * getOption("width"),
-                    indent = 0,
-                    exdent = 0,
-                    prefix = "",
-                    simplify = TRUE,
-                    initial = prefix,
-                    sep = "\n",
-                    fill = FALSE,
-                    labels = NULL,
-                    append = FALSE) {
-  out <- strwrap(x,
-                 width = width,
-                 indent = indent,
-                 exdent = exdent,
-                 prefix = prefix,
-                 simplify = simplify,
-                 initial = initial)
-  cat(out,
-      sep = sep,
-      fill = fill,
-      labels = labels,
-      append = append)
-}

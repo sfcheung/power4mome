@@ -67,7 +67,7 @@
 #'
 #' This function can be used directly,
 #' but is also used internally by
-#' functions such as [n_from_power()].
+#' functions such as [x_from_power()].
 #'
 #' @return
 #' It returns a list which is a
