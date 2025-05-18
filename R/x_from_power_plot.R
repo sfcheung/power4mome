@@ -190,7 +190,7 @@ plot.x_from_power <- function(x,
   # It is intended *not* to use plot.power_curve().
   # It is possible that the fit failed.
 
-  do.call(plot_power_n,
+  do.call(plot_power_x,
           list(object = x$power4test_trials,
                main = main,
                xlab = xlab,

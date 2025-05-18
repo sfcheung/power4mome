@@ -277,41 +277,45 @@ nrep_from_power <- function(power_j,
   return(out)
 }
 
-rejection_rates_add_ci <- function(object,
-                                   level = .95,
-                                   add_reject = TRUE,
-                                   add_se = TRUE) {
-  if (!is.data.frame(object)) {
-    df1 <- get_rejection_rates_by_n(object,
-                                    all_columns = TRUE)
-  } else {
-    # Assume it is already an output with rejection rates
-    df1 <- object
-  }
-  # It works on any data frame with these two columns:
-  # - `sig` or `reject`
-  # - `nvalid`
-  # It adds these columns:
-  # - `reject` (if add_reject is TRUE)
-  # - `reject_se`
-  # - `reject_ci_lo`
-  # - `reject_ci_hi`
+# TODO:
+# - Check. Should write a general rejection_rates_add_ci()
+#   that works for _by_n and _by_es.
 
-  tmp <- match(c("sig", "reject"), colnames(df1))
-  if (all(is.na(tmp))) {
-    stop("CI cannot be computed because 'reject' or 'sig' column not found.")
-  }
-  tmp <- tmp[!is.na(tmp)][1]
-  reject <- df1[, tmp, drop = TRUE]
-  if (add_reject && isFALSE("reject" %in% colnames(df1))) {
-    df1$reject <- df1$sig
-  }
-  df1$reject_se <- sqrt(reject * (1 - reject) / df1$nvalid)
-  a <- stats::qnorm(1 - (1 - level) / 2)
-  df1$reject_ci_lo <- reject - a * df1$reject_se
-  df1$reject_ci_hi <- reject + a * df1$reject_se
-  if (!add_se) {
-    df1$reject_se <- NULL
-  }
-  df1
-}
+# rejection_rates_add_ci <- function(object,
+#                                    level = .95,
+#                                    add_reject = TRUE,
+#                                    add_se = TRUE) {
+#   if (!is.data.frame(object)) {
+#     df1 <- get_rejection_rates_by_n(object,
+#                                     all_columns = TRUE)
+#   } else {
+#     # Assume it is already an output with rejection rates
+#     df1 <- object
+#   }
+#   # It works on any data frame with these two columns:
+#   # - `sig` or `reject`
+#   # - `nvalid`
+#   # It adds these columns:
+#   # - `reject` (if add_reject is TRUE)
+#   # - `reject_se`
+#   # - `reject_ci_lo`
+#   # - `reject_ci_hi`
+
+#   tmp <- match(c("sig", "reject"), colnames(df1))
+#   if (all(is.na(tmp))) {
+#     stop("CI cannot be computed because 'reject' or 'sig' column not found.")
+#   }
+#   tmp <- tmp[!is.na(tmp)][1]
+#   reject <- df1[, tmp, drop = TRUE]
+#   if (add_reject && isFALSE("reject" %in% colnames(df1))) {
+#     df1$reject <- df1$sig
+#   }
+#   df1$reject_se <- sqrt(reject * (1 - reject) / df1$nvalid)
+#   a <- stats::qnorm(1 - (1 - level) / 2)
+#   df1$reject_ci_lo <- reject - a * df1$reject_se
+#   df1$reject_ci_hi <- reject + a * df1$reject_se
+#   if (!add_se) {
+#     df1$reject_se <- NULL
+#   }
+#   df1
+# }
