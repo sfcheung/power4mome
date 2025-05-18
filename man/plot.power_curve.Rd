@@ -150,7 +150,7 @@ plot(pout1)
 
 # By pop_es
 
-out2 <- power4test_by_pop_es(sim_only,
+out2 <- power4test_by_es(sim_only,
                              nrep = 10,
                              test_fun = test_parameters,
                              test_args = list(par = "y~x"),
@@ -165,7 +165,7 @@ plot(pout2)
 
 # By pop_es
 
-out2 <- power4test_by_pop_es(sim_only,
+out2 <- power4test_by_es(sim_only,
                              nrep = 10,
                              test_fun = test_parameters,
                              test_args = list(par = "y~x"),

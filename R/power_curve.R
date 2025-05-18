@@ -8,16 +8,16 @@
 #' @details It retrieve the information
 #' from the output of
 #' [power4test_by_n()] or
-#' [power4test_by_pop_es()], and
+#' [power4test_by_es()], and
 #' estimate the power curve: the
 #' relation between the characteristic
 #' being varied, sample size for
 #' [power4test_by_n()] and the
 #' population effect size for
-#' [power4test_by_pop_es()], and the
+#' [power4test_by_es()], and the
 #' rejection rate of the test conducted
 #' by [power4test_by_n()] or
-#' [power4test_by_pop_es()]. This
+#' [power4test_by_es()]. This
 #' rejection rate is the power when the
 #' population value of the effect size
 #' being tested is nonzero.
@@ -93,9 +93,9 @@
 #'  function.
 #'
 #' @param object An object of the class
-#' `power4test_by_n` or `power4test_by_pop_es`,
+#' `power4test_by_n` or `power4test_by_es`,
 #' which is the output of [power4test_by_n()]
-#' or [power4test_by_pop_es()].
+#' or [power4test_by_es()].
 #'
 #' @param formula A formula of the model
 #' for [stats::nls()]. It can also be
@@ -150,7 +150,7 @@
 #' the messages will be printed when
 #' trying different models.
 #'
-#' @seealso [power4test_by_n()] and [power4test_by_pop_es()]
+#' @seealso [power4test_by_n()] and [power4test_by_es()]
 #'
 #' @examples
 #'
@@ -192,7 +192,7 @@
 #'
 #' # By pop_es
 #'
-#' out2 <- power4test_by_pop_es(sim_only,
+#' out2 <- power4test_by_es(sim_only,
 #'                              nrep = 10,
 #'                              test_fun = test_parameters,
 #'                              test_args = list(par = "y~x"),
@@ -224,7 +224,7 @@ power_curve <- function(object,
 
   class0 <- class(object)[1]
   if (!(class0 %in% c("power4test_by_n",
-                      "power4test_by_pop_es"))) {
+                      "power4test_by_es"))) {
     stop("'object' is neither a power4test_by_n or power4test_by_n object.")
   }
 
@@ -243,7 +243,7 @@ power_curve <- function(object,
     }
   }
 
-  if (class0 == "power4test_by_pop_es") {
+  if (class0 == "power4test_by_es") {
     if (is.null(formula)) {
       formula <- list(reject ~ 1 - 1 / I((1 + (x / d)^a)^b),
                       reject ~ 1 - exp(x / a) / I((1  + exp(x / a))^b),
@@ -267,12 +267,12 @@ power_curve <- function(object,
   reject0 <- switch(class0,
                     power4test_by_n = get_rejection_rates_by_n(object,
                                                                all_columns = TRUE),
-                    power4test_by_pop_es = get_rejection_rates_by_pop_es(object,
+                    power4test_by_es = get_rejection_rates_by_pop_es(object,
                                                                           all_columns = TRUE))
 
   predictor <- switch(class0,
                       power4test_by_n = "n",
-                      power4test_by_pop_es = "es")
+                      power4test_by_es = "es")
 
   #reject0$power <- reject0$reject
   reject0$x <- reject0[[predictor]]
@@ -481,8 +481,8 @@ power_curve_by_pop_es <- function(object,
                                   nls_args = list(),
                                   nls_control = list(),
                                   verbose = TRUE) {
-  if (!inherits(object, "power4test_by_pop_es")) {
-    stop("'object' is not a power4test_by_pop_es object.")
+  if (!inherits(object, "power4test_by_es")) {
+    stop("'object' is not a power4test_by_es object.")
   }
   power_curve(object = object,
               formula = formula,

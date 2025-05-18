@@ -1,4 +1,4 @@
-# power4mome 0.0.1.24
+# power4mome 0.0.1.25
 
 - Initialized the package. (0.0.0.9000)
 
@@ -272,3 +272,9 @@
   unstandardized estimates when fitting
   a model to the merged data.
   (0.0.1.24)
+
+- Renamed `power4test_by_pop_es()` to
+  `power4test_by_es()`, because `"n"`
+  and `"es"` (not `"pop_es"`) are used
+  in other functions to distinguish the
+  predictor used. (0.0.1.25)

@@ -46,9 +46,9 @@ power_curve_by_pop_es(
 }
 \arguments{
 \item{object}{An object of the class
-\code{power4test_by_n} or \code{power4test_by_pop_es},
+\code{power4test_by_n} or \code{power4test_by_es},
 which is the output of \code{\link[=power4test_by_n]{power4test_by_n()}}
-or \code{\link[=power4test_by_pop_es]{power4test_by_pop_es()}}.}
+or \code{\link[=power4test_by_es]{power4test_by_es()}}.}
 
 \item{formula}{A formula of the model
 for \code{\link[stats:nls]{stats::nls()}}. It can also be
@@ -156,16 +156,16 @@ effect size.
 It retrieve the information
 from the output of
 \code{\link[=power4test_by_n]{power4test_by_n()}} or
-\code{\link[=power4test_by_pop_es]{power4test_by_pop_es()}}, and
+\code{\link[=power4test_by_es]{power4test_by_es()}}, and
 estimate the power curve: the
 relation between the characteristic
 being varied, sample size for
 \code{\link[=power4test_by_n]{power4test_by_n()}} and the
 population effect size for
-\code{\link[=power4test_by_pop_es]{power4test_by_pop_es()}}, and the
+\code{\link[=power4test_by_es]{power4test_by_es()}}, and the
 rejection rate of the test conducted
 by \code{\link[=power4test_by_n]{power4test_by_n()}} or
-\code{\link[=power4test_by_pop_es]{power4test_by_pop_es()}}. This
+\code{\link[=power4test_by_es]{power4test_by_es()}}. This
 rejection rate is the power when the
 population value of the effect size
 being tested is nonzero.
@@ -256,7 +256,7 @@ plot(pout1)
 
 # By pop_es
 
-out2 <- power4test_by_pop_es(sim_only,
+out2 <- power4test_by_es(sim_only,
                              nrep = 10,
                              test_fun = test_parameters,
                              test_args = list(par = "y~x"),
@@ -272,5 +272,5 @@ plot(pout2)
 
 }
 \seealso{
-\code{\link[=power4test_by_n]{power4test_by_n()}} and \code{\link[=power4test_by_pop_es]{power4test_by_pop_es()}}
+\code{\link[=power4test_by_n]{power4test_by_n()}} and \code{\link[=power4test_by_es]{power4test_by_es()}}
 }
