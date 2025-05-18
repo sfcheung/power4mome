@@ -57,7 +57,7 @@ out2 <- power4test_by_es(sim_only,
                              parallel = FALSE,
                              progress = FALSE)
 
-get_rejection_rates_by_pop_es(out2,
+get_rejection_rates_by_es(out2,
                               all_columns = TRUE)
 
 expect_no_error(pout2 <- power_curve(out2,
