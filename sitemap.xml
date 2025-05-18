@@ -14,9 +14,8 @@
 <url><loc>https://sfcheung.github.io/power4mome/reference/gen_mc.html</loc></url>
 <url><loc>https://sfcheung.github.io/power4mome/reference/get_rejection_rates.html</loc></url>
 <url><loc>https://sfcheung.github.io/power4mome/reference/index.html</loc></url>
-<url><loc>https://sfcheung.github.io/power4mome/reference/n_from_power.html</loc></url>
-<url><loc>https://sfcheung.github.io/power4mome/reference/plot.n_from_power.html</loc></url>
 <url><loc>https://sfcheung.github.io/power4mome/reference/plot.power_curve.html</loc></url>
+<url><loc>https://sfcheung.github.io/power4mome/reference/plot.x_from_power.html</loc></url>
 <url><loc>https://sfcheung.github.io/power4mome/reference/pop_es_yaml.html</loc></url>
 <url><loc>https://sfcheung.github.io/power4mome/reference/power4mome-package.html</loc></url>
 <url><loc>https://sfcheung.github.io/power4mome/reference/power4test.html</loc></url>
@@ -36,12 +35,13 @@
 <url><loc>https://sfcheung.github.io/power4mome/reference/sim_data.html</loc></url>
 <url><loc>https://sfcheung.github.io/power4mome/reference/sim_out.html</loc></url>
 <url><loc>https://sfcheung.github.io/power4mome/reference/summarize_tests.html</loc></url>
-<url><loc>https://sfcheung.github.io/power4mome/reference/summary.n_from_power.html</loc></url>
+<url><loc>https://sfcheung.github.io/power4mome/reference/summary.x_from_power.html</loc></url>
 <url><loc>https://sfcheung.github.io/power4mome/reference/test_cond_indirect.html</loc></url>
 <url><loc>https://sfcheung.github.io/power4mome/reference/test_cond_indirect_effects.html</loc></url>
 <url><loc>https://sfcheung.github.io/power4mome/reference/test_index_of_mome.html</loc></url>
 <url><loc>https://sfcheung.github.io/power4mome/reference/test_indirect_effect.html</loc></url>
 <url><loc>https://sfcheung.github.io/power4mome/reference/test_moderation.html</loc></url>
 <url><loc>https://sfcheung.github.io/power4mome/reference/test_parameters.html</loc></url>
+<url><loc>https://sfcheung.github.io/power4mome/reference/x_from_power.html</loc></url>
 </urlset>
 
