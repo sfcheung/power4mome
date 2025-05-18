@@ -3,7 +3,7 @@
 \name{power4test_by_es}
 \alias{power4test_by_es}
 \alias{c.power4test_by_es}
-\alias{get_rejection_rates_by_pop_es}
+\alias{get_rejection_rates_by_es}
 \title{Power By Effect Sizes}
 \usage{
 power4test_by_es(
@@ -17,7 +17,7 @@ power4test_by_es(
 
 \method{c}{power4test_by_es}(..., sort = TRUE)
 
-get_rejection_rates_by_pop_es(object_by_es, all_columns = FALSE)
+get_rejection_rates_by_es(object_by_es, all_columns = FALSE)
 }
 \arguments{
 \item{object}{A \code{power4test} object,
@@ -79,7 +79,7 @@ a \code{power4test_by_es} object with
 all the elements (tests for different
 sample sizes) combined.
 
-The function \code{\link[=get_rejection_rates_by_pop_es]{get_rejection_rates_by_pop_es()}}
+The function \code{\link[=get_rejection_rates_by_es]{get_rejection_rates_by_es()}}
 returns a data frame which is
 similar to the output of
 \code{\link[=get_rejection_rates]{get_rejection_rates()}}, with a
@@ -95,9 +95,9 @@ The method \code{\link[=c.power4test_by_es]{c.power4test_by_es()}}
 is used to combine tests from different
 runs of \code{\link[=power4test_by_es]{power4test_by_es()}}.
 
-The function \code{\link[=get_rejection_rates_by_pop_es]{get_rejection_rates_by_pop_es()}}
+The function \code{\link[=get_rejection_rates_by_es]{get_rejection_rates_by_es()}}
 is used to extract the rejection
-rates form a \code{get_rejection_rates_by_pop_es}
+rates form a \code{get_rejection_rates_by_es}
 object, with effect sizes added to
 the output.
 }
@@ -153,7 +153,7 @@ power_all_test_only_new_es <- power4test(object = test_out,
 out <- power4test_by_es(test_out,
                             pop_es_name = "y ~ m",
                             pop_es_values = c(.10, .20))
-out_reject <- get_rejection_rates_by_pop_es(out)
+out_reject <- get_rejection_rates_by_es(out)
 out_reject
 
 }
