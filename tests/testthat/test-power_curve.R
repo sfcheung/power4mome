@@ -47,7 +47,7 @@ expect_no_error(print(pout1, data_used = TRUE))
 
 # By es
 
-out2 <- power4test_by_pop_es(sim_only,
+out2 <- power4test_by_es(sim_only,
                              nrep = 50,
                              test_fun = test_parameters,
                              test_args = list(par = "y~x"),

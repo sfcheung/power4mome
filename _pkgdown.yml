@@ -51,7 +51,7 @@ reference:
 - contents:
   - power4test
   - power4test_by_n
-  - power4test_by_pop_es
+  - power4test_by_es
   - get_rejection_rates
   - n_from_power
   - plot.n_from_power

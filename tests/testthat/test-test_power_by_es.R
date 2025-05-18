@@ -34,13 +34,13 @@ test_out <- power4test(object = sim_only,
 power_all_test_only_new_es <- power4test(object = test_out,
                                          pop_es = c("y ~ m" = ".10"))
 
-out <- power4test_by_pop_es(test_out,
+out <- power4test_by_es(test_out,
                             pop_es_name = "y ~ m",
                             pop_es_values = c(.10, .20),
                             by_seed = 1357)
 out_reject <- get_rejection_rates_by_pop_es(out)
 
-out2 <- power4test_by_pop_es(object = sim_only,
+out2 <- power4test_by_es(object = sim_only,
                              pop_es_name = "y ~ m",
                              pop_es_values = c(.10, .20),
                              test_fun = test_indirect_effect,

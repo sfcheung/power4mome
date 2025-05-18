@@ -24,7 +24,7 @@ sim_only <- power4test(nrep = 3,
                        do_the_test = FALSE,
                        iseed = 1234)
 
-out1 <- power4test_by_pop_es(sim_only,
+out1 <- power4test_by_es(sim_only,
                              pop_es_name = "y ~ m",
                              pop_es_values = c(.10, .20),
                              test_fun = test_indirect_effect,
@@ -35,7 +35,7 @@ out1 <- power4test_by_pop_es(sim_only,
                                               mc_ci = FALSE),
                              by_seed = 1234)
 
-out2 <- power4test_by_pop_es(out1,
+out2 <- power4test_by_es(out1,
                              pop_es_name = "y ~ m",
                              pop_es_values = c(.05, .15),
                              by_seed = 2345)
