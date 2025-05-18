@@ -4,18 +4,18 @@ range of effect sizes.
 The method c.power4test_by_es()
 is used to combine tests from different
 runs of power4test_by_es().
-The function get_rejection_rates_by_pop_es()
+The function get_rejection_rates_by_es()
 is used to extract the rejection
-rates form a get_rejection_rates_by_pop_es
+rates form a get_rejection_rates_by_es
 object, with effect sizes added to
 the output."><meta property="og:description" content="Estimate power for a
 range of effect sizes.
 The method c.power4test_by_es()
 is used to combine tests from different
 runs of power4test_by_es().
-The function get_rejection_rates_by_pop_es()
+The function get_rejection_rates_by_es()
 is used to extract the rejection
-rates form a get_rejection_rates_by_pop_es
+rates form a get_rejection_rates_by_es
 object, with effect sizes added to
 the output."><meta name="google-site-verification" content="0VLBmFnW_UJFI-7gXnORPBsWxqZwmzuGpK-TeVRLBjQ"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -62,9 +62,9 @@ range of effect sizes.</p>
 <p>The method <code>c.power4test_by_es()</code>
 is used to combine tests from different
 runs of <code>power4test_by_es()</code>.</p>
-<p>The function <code>get_rejection_rates_by_pop_es()</code>
+<p>The function <code>get_rejection_rates_by_es()</code>
 is used to extract the rejection
-rates form a <code>get_rejection_rates_by_pop_es</code>
+rates form a <code>get_rejection_rates_by_es</code>
 object, with effect sizes added to
 the output.</p>
     </div>
@@ -83,7 +83,7 @@ the output.</p>
 <span><span class="co"># S3 method for class 'power4test_by_es'</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">...</span>, sort <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">get_rejection_rates_by_pop_es</span><span class="op">(</span><span class="va">object_by_es</span>, all_columns <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">get_rejection_rates_by_es</span><span class="op">(</span><span class="va">object_by_es</span>, all_columns <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -166,7 +166,7 @@ each effect size.</p>
 a <code>power4test_by_es</code> object with
 all the elements (tests for different
 sample sizes) combined.</p>
-<p>The function <code>get_rejection_rates_by_pop_es()</code>
+<p>The function <code>get_rejection_rates_by_es()</code>
 returns a data frame which is
 similar to the output of
 <code><a href="get_rejection_rates.html">get_rejection_rates()</a></code>, with a
@@ -257,7 +257,7 @@ power over a range of effect sizes.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Generate bootstrap estimates:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Update the test(s):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Update test_indirect: x-&gt;m-&gt;y :</span>
-<span class="r-in"><span><span class="va">out_reject</span> <span class="op">&lt;-</span> <span class="fu">get_rejection_rates_by_pop_es</span><span class="op">(</span><span class="va">out</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">out_reject</span> <span class="op">&lt;-</span> <span class="fu">get_rejection_rates_by_es</span><span class="op">(</span><span class="va">out</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">out_reject</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     par  es                   test test_label pvalid reject reject_ci_lo</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 y ~ m 0.1 test_indirect: x-&gt;m-&gt;y       Test      1    0.0    0.0000000</span>
