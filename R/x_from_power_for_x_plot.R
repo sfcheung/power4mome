@@ -231,6 +231,7 @@ plot.x_from_power <- function(x,
 
       # Draw the CI for the final x
       tmp <- x$power4test_trials[x$i_final]
+      class(tmp) <- class(x$power4test_trials)
       tmp_args <- utils::modifyList(pars_ci_final_x,
                                     list(object = tmp,
                                          predictor = predictor))
@@ -238,6 +239,7 @@ plot.x_from_power <- function(x,
               tmp_args)
       # Drop final_n from the CI lists
       tmp_for_ci <- x$power4test_trials[-x$i_final]
+      class(tmp_for_ci) <- class(x$power4test_trials)
     } else {
       # Keep all CIs in the same way
       tmp_for_ci <- x$power4test_trials
