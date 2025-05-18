@@ -293,7 +293,6 @@ get_rejection_rates_by_es <- function(object_by_es,
                         out_i)
     out_i
   }
-  browser()
   out <- mapply(tmpfct,
                 x = object_by_es,
                 # pv = attr(object_by_es, "pop_es_values"),
