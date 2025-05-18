@@ -140,6 +140,17 @@
 #' @param object A `power4test` object,
 #' which is the output of [power4test()].
 #'
+#' @param x What is `x`, the value to
+#' be searched. Can be `"n"`, the sample
+#' size, or `"es"`, the population value
+#' of a parameter (set by `pop_es_name`).
+#'
+#' @param pop_es_name The name of the
+#' parameter. Required if `x` is `"es"`.
+#' See the help page
+#' of [ptable_pop()] on the names for
+#' the argument `pop_es`.
+#'
 #' @param target_power The target power,
 #' a value greater than 0 and less than
 #' one.
@@ -353,9 +364,10 @@
 #'
 #' @export
 x_from_power <- function(object,
-                         x = c("n", "pop_es"),
+                         x,
+                         pop_es_name = NULL,
                          target_power = .80,
-                         ns_per_trial = 3,
+                         xs_per_trial = 3,
                          ci_level = .95,
                          power_min = .01,
                          power_max = .90,
@@ -392,6 +404,9 @@ x_from_power <- function(object,
   # - Final power4test object.
   # - Final model by nls.
 
+  x <- match.arg(x,
+                 choices = c("n", "pop_es"))
+
   a <- abs(stats::qnorm((1 - ci_level) / 2))
   power_tolerance_in_interval <- a * sqrt(target_power * (1 - target_power) / final_nrep)
   power_tolerance_in_final <- a * sqrt(target_power * (1 - target_power) / final_nrep)
@@ -423,28 +438,32 @@ x_from_power <- function(object,
     stop("'target_power' must be between 'power_min' and 'power_max'.")
   }
 
-  if (min(n_interval) < 0) {
-    stop("The minimum value of 'n_interval' cannot be negative")
+  if (x == "n") {
+    if (min(x_interval) < 0) {
+      stop("The minimum value of 'n_interval' cannot be negative")
+    }
   }
-  if (length(n_interval) != 2) {
-    stop("'n_interval' must be a vector with exactly two values.")
+
+  if (length(x_interval) != 2) {
+    stop("'x_interval' must be a vector with exactly two values.")
   }
-  if (n_interval[2] < n_interval[1]) {
-    stop("'n_interval' must be of the form c(minimum, maximum).")
+  if (x_interval[2] < n_interval[1]) {
+    stop("'x_interval' must be of the form c(minimum, maximum).")
   }
 
   if (is.null(extendInt)) {
-    if (predictor == "n") {
+    if (x == "n") {
       extendInt <- match.arg(extendInt,
                              choices = c("upX", "no", "yes", "downX"))
     }
-    if (predictor == "es") {
+    if (x == "es") {
       extendInt <- match.arg(extendInt,
                              choices = c("no", "yes", "upX", "downX"))
     }
   }
 
-  n_max <- max(n_interval)
+  x_max <- max(x_interval)
+  x_min <- min(x_interval)
 
   max_trials <- ceiling(max_trials)
   if (max_trials < 1) {
@@ -470,9 +489,11 @@ x_from_power <- function(object,
     cat("- Start at", tmp, "\n")
   }
 
-  # Set the initial sample sizes to try
+  # Set the initial values to try
 
-  n_i <- set_n_range(object,
+  # CONTINUE HERE
+
+  n_i <- set_x_range(object,
                      target_power = target_power,
                      k = ns_per_trial,
                      n_max = n_max)
