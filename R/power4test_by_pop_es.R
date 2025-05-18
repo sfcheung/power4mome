@@ -18,14 +18,14 @@
 #' power over a range of effect sizes.
 #'
 #' @return The function
-#' [power4test_by_pop_es()] returns a
-#' `power4test_by_pop_es` object, which is a
+#' [power4test_by_es()] returns a
+#' `power4test_by_es` object, which is a
 #' list of `power4test` objects, one for
 #' each effect size.
 #'
 #' @param object A `power4test` object,
-#' or a `power4test_by_pop_es` object.
-#' If it is a `power4test_by_pop_es` object,
+#' or a `power4test_by_es` object.
+#' If it is a `power4test_by_es` object,
 #' the first element will be used
 #' for running the simulation.
 #'
@@ -43,10 +43,10 @@
 #' progress of the simulation will be
 #' displayed.
 #'
-#' @param ... For [power4test_by_pop_es()],
+#' @param ... For [power4test_by_es()],
 #' they are arguments to be passed
-#' to [power4test()]. For [power4test_by_pop_es()],
-#' they are [power4test_by_pop_es()] outputs
+#' to [power4test()]. For [power4test_by_es()],
+#' they are [power4test_by_es()] outputs
 #' to be combined together.
 #'
 #' @param by_seed If set to a number,
@@ -92,25 +92,25 @@
 #' power_all_test_only_new_es <- power4test(object = test_out,
 #'                                          pop_es = c("y ~ m" = ".10"))
 #'
-#' out <- power4test_by_pop_es(test_out,
+#' out <- power4test_by_es(test_out,
 #'                             pop_es_name = "y ~ m",
 #'                             pop_es_values = c(.10, .20))
 #' out_reject <- get_rejection_rates_by_pop_es(out)
 #' out_reject
 #'
 #' @export
-power4test_by_pop_es <- function(object,
+power4test_by_es <- function(object,
                                  pop_es_name = NULL,
                                  pop_es_values = NULL,
                                  progress = TRUE,
                                  ...,
                                  by_seed = NULL) {
   if (!inherits(object, "power4test") &&
-      !inherits(object, "power4test_by_pop_es")) {
-    stop("Only support 'power4test' or 'power4test_by_pop_es' objects.")
+      !inherits(object, "power4test_by_es")) {
+    stop("Only support 'power4test' or 'power4test_by_es' objects.")
   }
-  # Use the first object if the object is a power4test_by_pop_es object:
-  if (inherits(object, "power4test_by_pop_es")) {
+  # Use the first object if the object is a power4test_by_es object:
+  if (inherits(object, "power4test_by_es")) {
     object <- object[[1]]
   }
   if (!is.null(object$sim_all[[1]]$group_name)) {
@@ -153,31 +153,31 @@ power4test_by_pop_es <- function(object,
     attr(out[[p_name]], "pop_es_name") <- pop_es_name
     attr(out[[p_name]], "pop_es_value") <- x
   }
-  class(out) <- c("power4test_by_pop_es", class(out))
+  class(out) <- c("power4test_by_es", class(out))
   # attr(out, "pop_es_name") <- pop_es_name
   # attr(out, "pop_es_values") <- pop_es_values
   out
 }
 
 
-#' @rdname power4test_by_pop_es
+#' @rdname power4test_by_es
 #'
-#' @param sort WHen combining `power4test_by_pop_es`
+#' @param sort WHen combining `power4test_by_es`
 #' objects, whether they will be sorted
 #' by effect size. Default is `TRUE`.
 #'
 #' @return
-#' The method [c.power4test_by_pop_es()] returns
-#' a `power4test_by_pop_es` object with
+#' The method [c.power4test_by_es()] returns
+#' a `power4test_by_es` object with
 #' all the elements (tests for different
 #' sample sizes) combined.
 #'
 #' @description
-#' The method [c.power4test_by_pop_es()]
+#' The method [c.power4test_by_es()]
 #' is used to combine tests from different
-#' runs of [power4test_by_pop_es()].
+#' runs of [power4test_by_es()].
 #' @export
-c.power4test_by_pop_es <- function(...,
+c.power4test_by_es <- function(...,
                                    sort = TRUE) {
   # Check whether they have the same ptable
   tmp <- list(...)
@@ -205,7 +205,7 @@ c.power4test_by_pop_es <- function(...,
 
   all_pop_es_values <- sapply(out,
                               \(x) {attr(x, "pop_es_value")})
-  class(out) <- c("power4test_by_pop_es", class(out))
+  class(out) <- c("power4test_by_es", class(out))
   # attr(out, "pop_es_name") <- all_pop_es_name
   # attr(out, "pop_es_values") <- all_pop_es_values
   if (!sort) {
@@ -213,16 +213,16 @@ c.power4test_by_pop_es <- function(...,
   }
   i <- order(all_pop_es_values)
   out <- out[i]
-  class(out) <- c("power4test_by_pop_es", class(out))
+  class(out) <- c("power4test_by_es", class(out))
   # attr(out, "pop_es_name") <- all_pop_es_name
   # attr(out, "pop_es_values") <- all_pop_es_values[i]
   return(out)
 }
 
-#' @rdname power4test_by_pop_es
-#' @param object_by_es A `power4test_by_pop_es`
+#' @rdname power4test_by_es
+#' @param object_by_es A `power4test_by_es`
 #' object, which is an output of
-#' [power4test_by_pop_es()].
+#' [power4test_by_es()].
 #'
 #' @param all_columns If `TRUE`, all
 #' columns stored by a test will be
