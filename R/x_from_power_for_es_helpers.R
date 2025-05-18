@@ -126,7 +126,6 @@ estimate_es_range <- function(power_es_fit,
                               interval = interval,
                               extendInt = extendInt)
                 })
-  out <- ceiling(out)
 
   # If NA, have to do random sampling
   i <- is.na(out)
