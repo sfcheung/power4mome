@@ -409,7 +409,7 @@ x_from_power <- function(object,
   # - Final model by nls.
 
   x <- match.arg(x,
-                 choices = c("n", "pop_es"))
+                 choices = c("n", "es"))
 
   a <- abs(stats::qnorm((1 - ci_level) / 2))
   power_tolerance_in_interval <- a * sqrt(target_power * (1 - target_power) / final_nrep)
@@ -554,7 +554,7 @@ x_from_power <- function(object,
     cat("- Rejection Rates:\n")
     tmp <- switch(x,
                   n = get_rejection_rates_by_n(by_x_i),
-                  es = get_rejection_rates_by_es(by_x_1))
+                  es = get_rejection_rates_by_es(by_x_i))
     print(tmp)
     cat("\n")
   }
