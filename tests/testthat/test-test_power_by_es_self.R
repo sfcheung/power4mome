@@ -40,9 +40,9 @@ out2 <- power4test_by_es(out1,
                              pop_es_values = c(.05, .15),
                              by_seed = 2345)
 
-out_reject1 <- get_rejection_rates_by_pop_es(out1)
+out_reject1 <- get_rejection_rates_by_es(out1)
 out_reject1
-out_reject2 <- get_rejection_rates_by_pop_es(out2)
+out_reject2 <- get_rejection_rates_by_es(out2)
 out_reject2
 
 expect_equal(out_reject1$es,
@@ -51,7 +51,7 @@ expect_equal(out_reject2$es,
              c(.05, .15))
 
 out <- c(out1, out2)
-out_reject <- get_rejection_rates_by_pop_es(out)
+out_reject <- get_rejection_rates_by_es(out)
 expect_equal(out_reject$es,
              c(.05, .10, .15, .20))
 

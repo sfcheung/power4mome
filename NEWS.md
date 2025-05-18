@@ -278,3 +278,8 @@
   and `"es"` (not `"pop_es"`) are used
   in other functions to distinguish the
   predictor used. (0.0.1.25)
+
+- Renamed `get_rejection_rates_by_pop_es()`
+  to `get_rejection_rates_by_es()`, to
+  be consistent with the name
+  `power4test_by_es()`. (0.0.1.26)
