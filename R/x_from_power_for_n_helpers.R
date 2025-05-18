@@ -263,29 +263,3 @@ check_n <- function(ns,
 
   i
 }
-
-predict_fit <- function(object,
-                        newdata) {
-  if (inherits(object, "glm")) {
-    out <- stats::predict(object = object,
-                          newdata = newdata,
-                          type = "response")
-  } else {
-    out <- stats::predict(object = object,
-                          newdata = newdata)
-  }
-  return(out)
-}
-
-nrep_from_power <- function(power_j,
-                            target_power,
-                            tolerance,
-                            nrep_min,
-                            nrep_max) {
-  a <- abs(power_j - target_power)
-  a <- pmin(a, tolerance)
-  b <- 1 - a / tolerance
-  d <- nrep_max - nrep_min
-  out <- round(nrep_min + b * d)
-  return(out)
-}

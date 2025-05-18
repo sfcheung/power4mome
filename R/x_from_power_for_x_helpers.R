@@ -197,3 +197,16 @@ rejection_rates_add_ci <- function(object,
   }
   df1
 }
+
+predict_fit <- function(object,
+                        newdata) {
+  if (inherits(object, "glm")) {
+    out <- stats::predict(object = object,
+                          newdata = newdata,
+                          type = "response")
+  } else {
+    out <- stats::predict(object = object,
+                          newdata = newdata)
+  }
+  return(out)
+}
