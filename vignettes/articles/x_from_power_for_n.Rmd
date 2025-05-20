@@ -41,7 +41,7 @@ Basic knowledge about fitting models
 by `lavaan` is required. Readers are
 also expected to know how to use
 `power4test()`
-(see this [get-started](https://sfcheung.github.io/power4mome/power4mome.html)
+(see this [get-started](power4mome.html)
 for an introduction).
 
 # Scope
@@ -655,7 +655,7 @@ summary(out_n)
 #> === Technical Information ===
 #> 
 #> - The range of values explored: 50 to 131 
-#> - Time spent in the search: 3.173 mins 
+#> - Time spent in the search: 3.475 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 

@@ -47,7 +47,7 @@ Basic knowledge about fitting models
 by `lavaan` is required. Readers are
 also expected to know how to use
 `power4test()`
-(see this [get-started](https://sfcheung.github.io/power4mome/power4mome.html)
+(see this [get-started](power4mome.html)
 for an introduction).
 
 # Scope
