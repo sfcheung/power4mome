@@ -1,7 +1,7 @@
 ---
 title: "Power Analysis for Moderation, Mediation, and Moderated-Mediation"
 author: "Shu Fai Cheung & Sing-Hang Cheung"
-date: "2025-05-08"
+date: "2025-05-20"
 output:
   rmarkdown::html_vignette:
     options:
@@ -77,16 +77,6 @@ used. This is the basic workflow:
 5.  Call `get_rejection_rates()` to
     compute the power.
 
-# Packages
-
-Only the package `power4mome` is needed
-in this vignette.
-
-
-``` r
-library(power4mome)
-```
-
 # Mediation
 
 Let's consider a simple mediation
@@ -114,7 +104,7 @@ need to add any labels to this model.
 This will be taken care of by the
 test functions, through the use of
 the package
-[`manymome`](https://sfcheung.github.io/manymome/index.html02224-z)
+[`manymome`](https://sfcheung.github.io/manymome/index.html)
 [@cheung_manymome_2024].
 
 
@@ -425,7 +415,7 @@ This is the call:
 
 
 ``` r
-out <- power4test(nrep = 100,
+out <- power4test(nrep = 400,
                   model = mod,
                   pop_es = mod_es,
                   n = 50,
@@ -491,6 +481,12 @@ These are the new arguments used:
   automatically but can be set directly
   by the `ncores` argument.]
 
+For `nrep = 400`, the 95% confidence
+limits
+for a power of .80 are about .04 below
+and above .80. This should be precise
+enough for estimating the the power.
+
 This is the default printout:
 
 
@@ -527,7 +523,7 @@ out
 #> 
 #> ======================= Data Information =======================
 #> 
-#> Number of Replications:  100 
+#> Number of Replications:  400 
 #> Sample Sizes:  50 
 #> 
 #> Call print with 'data_long = TRUE' for further information.
@@ -588,8 +584,8 @@ The output is simply a data frame:
 
 ``` r
 out_power
-#>                     test test_label pvalid reject
-#> 1 test_indirect: x->m->y       Test      1   0.43
+#>                     test test_label pvalid reject reject_ci_lo reject_ci_hi
+#> 1 test_indirect: x->m->y       Test      1 0.4675    0.4186045    0.5163955
 ```
 
 
@@ -598,12 +594,17 @@ In the example above, the estimated
 power of the test of the indirect
 effect, conducted by Monte Carlo
 confidence interval, is
-0.430.^[`pvalid` is
+0.468.^[`pvalid` is
 the proportion of valid results
 across replications. `1` means that
 the test conducted normally in all
 replications.]
 
+By default, 95% confidence intervals
+based on normal approximation are
+also printed. In this example,
+the 95% confidence interval is
+[0.419; 0.516].
 
 # Moderation
 
@@ -817,7 +818,7 @@ is 50 and the model is fitted by `lm()`:
 
 
 ``` r
-out <- power4test(nrep = 500,
+out <- power4test(nrep = 400,
                   model = mod,
                   pop_es = mod_es,
                   n = 50,
@@ -859,8 +860,8 @@ again to estimate the power:
 ``` r
 out_power <- get_rejection_rates(out)
 out_power
-#>                    test test_label pvalid reject
-#> 1 test_moderation: CIs       y~x:w      1  0.118
+#>                    test test_label pvalid reject reject_ci_lo reject_ci_hi
+#> 1 test_moderation: CIs       y~x:w      1 0.1175    0.0859431    0.1490569
 ```
 
 
@@ -868,7 +869,8 @@ out_power
 The estimated
 power of the test of the product term,
 `x:w`, is
-0.118.
+0.117, with 95% confidence
+interval [0.086; 0.149].
 
 The function `power4test()` also supports
 redoing an analysis using a new value
@@ -893,15 +895,19 @@ the sample size is 200.
 ``` r
 out_new_n_reject <- get_rejection_rates(out_new_n)
 out_new_n_reject
-#>                    test test_label pvalid reject
-#> 1 test_moderation: CIs       y~x:w      1  0.296
+#>                    test test_label pvalid reject reject_ci_lo reject_ci_hi
+#> 1 test_moderation: CIs       y~x:w      1  0.295    0.2503086    0.3396914
 ```
 
 
 
-The estimated power is 0.296
+The estimated power is 0.295,
+95% confidence interval
+[0.250; 0.340],
 when the sample size is
-200. This process can be
+200.
+
+This process can be
 repeated to find the required sample
 size for a target power. (The function
 `power4test_by_n()` can be used To
@@ -1055,7 +1061,7 @@ print(out,
 #> 
 #> ============ <fit> ============
 #> 
-#> lavaan 0.6-19 ended normally after 2 iterations
+#> lavaan 0.6-19 ended normally after 1 iteration
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
@@ -1095,7 +1101,7 @@ the power when sample size is 100.
 
 
 ``` r
-out <- power4test(nrep = 500,
+out <- power4test(nrep = 400,
                   model = mod,
                   pop_es = mod_es,
                   n = 100,
@@ -1135,7 +1141,9 @@ again to estimate the power:
 out_power <- get_rejection_rates(out)
 out_power
 #>                                          test test_label pvalid reject
-#> 1 test_index_of_mome: x->m->y, moderated by w       Test      1  0.052
+#> 1 test_index_of_mome: x->m->y, moderated by w       Test      1 0.0525
+#>   reject_ci_lo reject_ci_hi
+#> 1   0.03064316   0.07435684
 ```
 
 
@@ -1144,7 +1152,8 @@ The estimated
 power of the test of moderated mediation
 effect, conducted by a test of the
 index of moderated mediation, is
-0.052.
+0.052,
+95% confidence interval [0.031; 0.074].
 
 As shown above, we can rerun the analysis
 using a larger sample size:
@@ -1165,12 +1174,15 @@ the sample size is 500.
 out_new_n_reject <- get_rejection_rates(out_new_n)
 out_new_n_reject
 #>                                          test test_label pvalid reject
-#> 1 test_index_of_mome: x->m->y, moderated by w       Test      1   0.22
+#> 1 test_index_of_mome: x->m->y, moderated by w       Test      1 0.2125
+#>   reject_ci_lo reject_ci_hi
+#> 1    0.1724112    0.2525888
 ```
 
 
 
-The estimated power is 0.220
+The estimated power is 0.212,
+95% confidence interval [0.172; 0.253],
 when the sample size is
 500. This process can be
 repeated to find the required sample
@@ -1268,7 +1280,7 @@ out_new_xw <- power4test(out,
 ```
 
 - Instead of manually rerunning the
-  analyais, it is possible to rerun the
+  analysis, it is possible to rerun the
   analysis over a sequence of sample sizes
   or population values. See the help
   pages of `power4test_by_n()` and

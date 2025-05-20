@@ -164,7 +164,7 @@ power4test_by_es <- function(object,
                      " = ",
                      as.character(x))
     if (progress) {
-      cat("Updating the simulation for new value:",
+      cat("\nUpdating the simulation for new value:",
           p_name,
           "\n")
     }
