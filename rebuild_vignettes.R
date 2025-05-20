@@ -3,7 +3,7 @@
 base_dir <- getwd()
 
 setwd("vignettes/")
-knitr::knit("power4mome.Rmd.originaL", output = "power4mome.Rmd")
+knitr::knit("power4mome.Rmd.original", output = "power4mome.Rmd")
 
 setwd(base_dir)
 
@@ -12,5 +12,6 @@ setwd(base_dir)
 base_dir <- getwd()
 
 setwd("vignettes/articles")
+knitr::knit("x_from_power_for_n.Rmd.original", output = "x_from_power_for_n.Rmd")
 
 setwd(base_dir)
