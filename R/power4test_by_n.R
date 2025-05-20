@@ -150,7 +150,7 @@ power4test_by_n <- function(object,
   for (i in seq_along(n)) {
     x <- n[i]
     if (progress) {
-      cat("Updating the simulation for sample size:",
+      cat("\nUpdating the simulation for sample size:",
           paste(x, collapse = ", "),
           "\n")
     }

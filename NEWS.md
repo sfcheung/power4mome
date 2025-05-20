@@ -1,4 +1,4 @@
-# power4mome 0.0.1.28
+# power4mome 0.0.1.29
 
 - Initialized the package. (0.0.0.9000)
 
@@ -292,3 +292,8 @@
 - Updated `x_from_power()` to fully
   support `x = "es"`.
   (0.0.1.28)
+
+- Minor changes to the printout of
+  progress for `power4test_by_n()`
+  and `power4test_by_es()`.
+  (0.0.1.29)
