@@ -82,15 +82,6 @@ used. This is the basic workflow:
 5.  Call `get_rejection_rates()` to
     compute the power.
 
-# Packages
-
-Only the package `power4mome` is needed
-in this vignette.
-
-```{r}
-library(power4mome)
-```
-
 # Mediation
 
 Let's consider a simple mediation
@@ -117,7 +108,7 @@ need to add any labels to this model.
 This will be taken care of by the
 test functions, through the use of
 the package
-[`manymome`](https://sfcheung.github.io/manymome/index.html02224-z)
+[`manymome`](https://sfcheung.github.io/manymome/index.html)
 [@cheung_manymome_2024].
 
 
@@ -289,7 +280,7 @@ to test the indirect effect from `x` to
 This is the call:
 
 ```{r results=FALSE}
-out <- power4test(nrep = 100,
+out <- power4test(nrep = 400,
                   model = mod,
                   pop_es = mod_es,
                   n = 50,
@@ -355,6 +346,12 @@ These are the new arguments used:
   automatically but can be set directly
   by the `ncores` argument.]
 
+For `nrep = 400`, the 95% confidence
+limits
+for a power of .80 are about .04 below
+and above .80. This should be precise
+enough for estimating the the power.
+
 This is the default printout:
 
 ```{r}
@@ -386,6 +383,9 @@ out_reject <- tmp[1, "reject"]
 out_reject_str <- formatC(out_reject,
                           digits = 3,
                           format = "f")
+out_reject_ci <- sprintf("[%4.3f; %4.3f]",
+                         tmp[1, "reject_ci_lo"],
+                         tmp[1, "reject_ci_hi"])
 ```
 
 In the example above, the estimated
@@ -398,6 +398,11 @@ across replications. `1` means that
 the test conducted normally in all
 replications.]
 
+By default, 95% confidence intervals
+based on normal approximation are
+also printed. In this example,
+the 95% confidence interval is
+`r out_reject_ci`.
 
 # Moderation
 
@@ -504,7 +509,7 @@ estimate the power when the sample size
 is 50 and the model is fitted by `lm()`:
 
 ```{r results=FALSE}
-out <- power4test(nrep = 500,
+out <- power4test(nrep = 400,
                   model = mod,
                   pop_es = mod_es,
                   n = 50,
@@ -553,12 +558,16 @@ out_reject <- tmp[1, "reject"]
 out_reject_str <- formatC(out_reject,
                           digits = 3,
                           format = "f")
+out_reject_ci <- sprintf("[%4.3f; %4.3f]",
+                         tmp[1, "reject_ci_lo"],
+                         tmp[1, "reject_ci_hi"])
 ```
 
 The estimated
 power of the test of the product term,
 `x:w`, is
-`r out_reject_str`.
+`r out_reject_str`, with 95% confidence
+interval `r out_reject_ci`.
 
 The function `power4test()` also supports
 redoing an analysis using a new value
@@ -591,11 +600,18 @@ out_reject <- tmp[1, "reject"]
 out_reject_str <- formatC(out_reject,
                           digits = 3,
                           format = "f")
+out_reject_ci <- sprintf("[%4.3f; %4.3f]",
+                         tmp[1, "reject_ci_lo"],
+                         tmp[1, "reject_ci_hi"])
 ```
 
-The estimated power is `r out_reject_str`
+The estimated power is `r out_reject_str`,
+95% confidence interval
+`r out_reject_ci`,
 when the sample size is
-`r args_new_n$n`. This process can be
+`r args_new_n$n`.
+
+This process can be
 repeated to find the required sample
 size for a target power. (The function
 `power4test_by_n()` can be used To
@@ -683,7 +699,7 @@ Let's estimate
 the power when sample size is 100.
 
 ```{r results=FALSE}
-out <- power4test(nrep = 500,
+out <- power4test(nrep = 400,
                   model = mod,
                   pop_es = mod_es,
                   n = 100,
@@ -729,13 +745,17 @@ out_reject <- tmp[1, "reject"]
 out_reject_str <- formatC(out_reject,
                           digits = 3,
                           format = "f")
+out_reject_ci <- sprintf("[%4.3f; %4.3f]",
+                         tmp[1, "reject_ci_lo"],
+                         tmp[1, "reject_ci_hi"])
 ```
 
 The estimated
 power of the test of moderated mediation
 effect, conducted by a test of the
 index of moderated mediation, is
-`r out_reject_str`.
+`r out_reject_str`,
+95% confidence interval `r out_reject_ci`.
 
 As shown above, we can rerun the analysis
 using a larger sample size:
@@ -763,9 +783,13 @@ out_reject <- tmp[1, "reject"]
 out_reject_str <- formatC(out_reject,
                           digits = 3,
                           format = "f")
+out_reject_ci <- sprintf("[%4.3f; %4.3f]",
+                         tmp[1, "reject_ci_lo"],
+                         tmp[1, "reject_ci_hi"])
 ```
 
-The estimated power is `r out_reject_str`
+The estimated power is `r out_reject_str`,
+95% confidence interval `r out_reject_ci`,
 when the sample size is
 `r args_new_n$n`. This process can be
 repeated to find the required sample
@@ -863,7 +887,7 @@ out_new_xw <- power4test(out,
 ```
 
 - Instead of manually rerunning the
-  analyais, it is possible to rerun the
+  analysis, it is possible to rerun the
   analysis over a sequence of sample sizes
   or population values. See the help
   pages of `power4test_by_n()` and
