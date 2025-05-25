@@ -584,8 +584,16 @@ The output is simply a data frame:
 
 ``` r
 out_power
-#>                     test test_label pvalid reject reject_ci_lo reject_ci_hi
-#> 1 test_indirect: x->m->y       Test      1 0.4675    0.4186045    0.5163955
+#>                     test test_label   p.v reject r.cilo r.cihi
+#> 1 test_indirect: x->m->y       Test 1.000  0.468  0.419  0.516
+#> Notes:
+#> - p.v: The proportion of valid replications.
+#> - reject: The proportion of 'significant' replications, that is, the
+#>   rejection rate.If the null hypothesis is true, this is the Type I
+#>   error rate. If the null hypothesis is false, this is the power.
+#> - r.cilo,r.cihi: The confidence interval of the rejection rate, based
+#>   on normal approximation.
+#> - Refer to the tests for the meanings of other columns.
 ```
 
 
@@ -860,8 +868,16 @@ again to estimate the power:
 ``` r
 out_power <- rejection_rates(out)
 out_power
-#>                    test test_label pvalid reject reject_ci_lo reject_ci_hi
-#> 1 test_moderation: CIs       y~x:w      1 0.1175    0.0859431    0.1490569
+#>                    test test_label   p.v reject r.cilo r.cihi
+#> 1 test_moderation: CIs       y~x:w 1.000  0.117  0.086  0.149
+#> Notes:
+#> - p.v: The proportion of valid replications.
+#> - reject: The proportion of 'significant' replications, that is, the
+#>   rejection rate.If the null hypothesis is true, this is the Type I
+#>   error rate. If the null hypothesis is false, this is the power.
+#> - r.cilo,r.cihi: The confidence interval of the rejection rate, based
+#>   on normal approximation.
+#> - Refer to the tests for the meanings of other columns.
 ```
 
 
@@ -895,8 +911,16 @@ the sample size is 200.
 ``` r
 out_new_n_reject <- rejection_rates(out_new_n)
 out_new_n_reject
-#>                    test test_label pvalid reject reject_ci_lo reject_ci_hi
-#> 1 test_moderation: CIs       y~x:w      1  0.295    0.2503086    0.3396914
+#>                    test test_label   p.v reject r.cilo r.cihi
+#> 1 test_moderation: CIs       y~x:w 1.000  0.295  0.250  0.340
+#> Notes:
+#> - p.v: The proportion of valid replications.
+#> - reject: The proportion of 'significant' replications, that is, the
+#>   rejection rate.If the null hypothesis is true, this is the Type I
+#>   error rate. If the null hypothesis is false, this is the power.
+#> - r.cilo,r.cihi: The confidence interval of the rejection rate, based
+#>   on normal approximation.
+#> - Refer to the tests for the meanings of other columns.
 ```
 
 
@@ -1140,10 +1164,18 @@ again to estimate the power:
 ``` r
 out_power <- rejection_rates(out)
 out_power
-#>                                          test test_label pvalid reject
-#> 1 test_index_of_mome: x->m->y, moderated by w       Test      1 0.0525
-#>   reject_ci_lo reject_ci_hi
-#> 1   0.03064316   0.07435684
+#>                                          test test_label   p.v reject r.cilo
+#> 1 test_index_of_mome: x->m->y, moderated by w       Test 1.000  0.052  0.031
+#>   r.cihi
+#> 1  0.074
+#> Notes:
+#> - p.v: The proportion of valid replications.
+#> - reject: The proportion of 'significant' replications, that is, the
+#>   rejection rate.If the null hypothesis is true, this is the Type I
+#>   error rate. If the null hypothesis is false, this is the power.
+#> - r.cilo,r.cihi: The confidence interval of the rejection rate, based
+#>   on normal approximation.
+#> - Refer to the tests for the meanings of other columns.
 ```
 
 
@@ -1173,10 +1205,18 @@ the sample size is 500.
 ``` r
 out_new_n_reject <- rejection_rates(out_new_n)
 out_new_n_reject
-#>                                          test test_label pvalid reject
-#> 1 test_index_of_mome: x->m->y, moderated by w       Test      1 0.2125
-#>   reject_ci_lo reject_ci_hi
-#> 1    0.1724112    0.2525888
+#>                                          test test_label   p.v reject r.cilo
+#> 1 test_index_of_mome: x->m->y, moderated by w       Test 1.000  0.212  0.172
+#>   r.cihi
+#> 1  0.253
+#> Notes:
+#> - p.v: The proportion of valid replications.
+#> - reject: The proportion of 'significant' replications, that is, the
+#>   rejection rate.If the null hypothesis is true, this is the Type I
+#>   error rate. If the null hypothesis is false, this is the power.
+#> - r.cilo,r.cihi: The confidence interval of the rejection rate, based
+#>   on normal approximation.
+#> - Refer to the tests for the meanings of other columns.
 ```
 
 
