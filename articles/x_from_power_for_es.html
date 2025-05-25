@@ -66,7 +66,7 @@
                         <h4 data-toc-skip class="author">Shu Fai Cheung,
 Wendie Yang, &amp; Sing-Hang Cheung</h4>
             
-            <h4 data-toc-skip class="date">2025-05-24</h4>
+            <h4 data-toc-skip class="date">2025-05-25</h4>
       
 
       <div class="d-none name"><code>x_from_power_for_es.Rmd</code></div>
@@ -82,7 +82,7 @@ Wendie Yang, &amp; Sing-Hang Cheung</h4>
 package <a href="https://sfcheung.github.io/power4mome/">power4mome</a>
 to do find by simulation, given the sample size and other factors, given
 a desired power, what is the minimum effect size to be detected with
-this level of power.</p>
+this level of power (see the note below on “minimum”).</p>
 <p>The illustration will use an indirect effect tested by Monte Carlo
 confidence interval as an example, though the procedure is similar for
 other tests supported by <code><a href="../reference/power4test.html">power4test()</a></code>.</p>
@@ -153,6 +153,16 @@ on the values of <em>both</em> <em>a</em> and <em>b</em>.</p>
 can be detected with a power of .80 given a sample size, we should still
 manipulate one parameter (e.g., <em>a</em> or <em>b</em>) one at a
 time.</p>
+<p>Two additional notes on the notion “minimum”. First, for simplicity,
+only positive population values are considered. However, there may be
+cases in which the population values under consideration are negative.
+In these cases, “minimum” refers to minimum in <em>magnitude</em>.</p>
+<p>Second, there may be cases in which, even keeping the values
+considered positive, the relation between power and the parameter being
+varied is U-shaped. In these cases, two or more values of the selected
+parameters may have the same target power. The plot of the relation
+(described lated) should be examined to see whether the solution is
+likely the minimum value in the range examined.</p>
 <p>This will be illustrated in this vignette.</p>
 <div class="section level3">
 <h3 id="specify-the-population-model">Specify the Population Model<a class="anchor" aria-label="anchor" href="#specify-the-population-model"></a>
@@ -603,7 +613,7 @@ corresponding indirect effect is about 0.112</p>
 <span><span class="co">#&gt; === Technical Information ===</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - The range of values explored: 0.287205207942574 to 0.37417900451784 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 5.473 mins </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 3.852 mins </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
@@ -718,7 +728,7 @@ varied:</p>
 <span><span class="co">#&gt; === Technical Information ===</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - The range of values explored: 0.290860248271345 to 0.347615451859909 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 5.555 mins </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 3.755 mins </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
