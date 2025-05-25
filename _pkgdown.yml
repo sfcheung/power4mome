@@ -52,7 +52,7 @@ reference:
   - power4test
   - power4test_by_n
   - power4test_by_es
-  - get_rejection_rates
+  - rejection_rates
   - x_from_power
   - plot.x_from_power
   - summary.x_from_power

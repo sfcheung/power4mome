@@ -3,7 +3,6 @@
 \name{power4test_by_es}
 \alias{power4test_by_es}
 \alias{c.power4test_by_es}
-\alias{get_rejection_rates_by_es}
 \title{Power By Effect Sizes}
 \usage{
 power4test_by_es(
@@ -17,8 +16,6 @@ power4test_by_es(
 )
 
 \method{c}{power4test_by_es}(..., sort = TRUE)
-
-get_rejection_rates_by_es(object_by_es, all_columns = FALSE)
 }
 \arguments{
 \item{object}{A \code{power4test} object,
@@ -69,16 +66,6 @@ original \code{nrep} will be used.}
 \item{sort}{WHen combining \code{power4test_by_es}
 objects, whether they will be sorted
 by effect size. Default is \code{TRUE}.}
-
-\item{object_by_es}{A \code{power4test_by_es}
-object, which is an output of
-\code{\link[=power4test_by_es]{power4test_by_es()}}.}
-
-\item{all_columns}{If \code{TRUE}, all
-columns stored by a test will be
-printed. Default is \code{FALSE} and
-only essential columns related to
-power will be printed.}
 }
 \value{
 The function
@@ -91,14 +78,6 @@ The method \code{\link[=c.power4test_by_es]{c.power4test_by_es()}} returns
 a \code{power4test_by_es} object with
 all the elements (tests for different
 sample sizes) combined.
-
-The function \code{\link[=get_rejection_rates_by_es]{get_rejection_rates_by_es()}}
-returns a data frame which is
-similar to the output of
-\code{\link[=get_rejection_rates]{get_rejection_rates()}}, with a
-column added for the effect size (\code{pop_es_name} and
-\code{pop_es_values})
-for each test.
 }
 \description{
 Estimate power for a
@@ -107,12 +86,6 @@ range of effect sizes.
 The method \code{\link[=c.power4test_by_es]{c.power4test_by_es()}}
 is used to combine tests from different
 runs of \code{\link[=power4test_by_es]{power4test_by_es()}}.
-
-The function \code{\link[=get_rejection_rates_by_es]{get_rejection_rates_by_es()}}
-is used to extract the rejection
-rates form a \code{get_rejection_rates_by_es}
-object, with effect sizes added to
-the output.
 }
 \details{
 This function regenerates
@@ -166,7 +139,7 @@ power_all_test_only_new_es <- power4test(object = test_out,
 out <- power4test_by_es(test_out,
                             pop_es_name = "y ~ m",
                             pop_es_values = c(.10, .20))
-out_reject <- get_rejection_rates_by_es(out)
+out_reject <- rejection_rates(out)
 out_reject
 
 }

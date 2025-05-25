@@ -38,7 +38,7 @@ out <- power4test_by_es(test_out,
                             pop_es_name = "y ~ m",
                             pop_es_values = c(.10, .20),
                             by_seed = 1357)
-out_reject <- get_rejection_rates_by_es(out)
+out_reject <- rejection_rates(out)
 
 out2 <- power4test_by_es(object = sim_only,
                              pop_es_name = "y ~ m",
@@ -51,7 +51,7 @@ out2 <- power4test_by_es(object = sim_only,
                                               mc_ci = FALSE),
                              by_seed = 1357)
 
-out_reject2 <- get_rejection_rates_by_es(out2)
+out_reject2 <- rejection_rates(out2)
 out_reject2
 
 expect_equal(out[[2]]$sim_all[[1]]$mm_lm_dat_out[1, ],

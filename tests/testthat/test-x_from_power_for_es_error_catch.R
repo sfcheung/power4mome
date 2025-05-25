@@ -27,7 +27,7 @@ out <- power4test(nrep = 20,
                   iseed = 1234,
                   parallel = FALSE,
                   progress = FALSE)
-out_power <- get_rejection_rates(out)
+out_power <- rejection_rates(out)
 out_power
 
 # Failed in the search
@@ -83,7 +83,7 @@ out <- power4test(nrep = 20,
                   iseed = 1234,
                   parallel = FALSE,
                   progress = FALSE)
-out_power <- get_rejection_rates(out)
+out_power <- rejection_rates(out)
 out_power
 
 tmp <- x_from_power(out,

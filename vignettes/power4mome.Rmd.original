@@ -79,7 +79,7 @@ used. This is the basic workflow:
 4.  Call `power4test()` again, with the
     test to do specified.
 
-5.  Call `get_rejection_rates()` to
+5.  Call `rejection_rates()` to
     compute the power.
 
 # Mediation
@@ -365,10 +365,10 @@ of significant results, the *rejection*
 *rate*, because the
 null hypothesis is false. The rejection
 rate can be retrieved by
-`get_rejection_rates()`.
+`rejection_rates()`.
 
 ```{r}
-out_power <- get_rejection_rates(out)
+out_power <- rejection_rates(out)
 ```
 
 The output is simply a data frame:
@@ -544,11 +544,11 @@ These are the new arguments used:
 
 ## Compute the Power
 
-We can ues `get_rejection_rates()`
+We can ues `rejection_rates()`
 again to estimate the power:
 
 ```{r}
-out_power <- get_rejection_rates(out)
+out_power <- rejection_rates(out)
 out_power
 ```
 
@@ -590,7 +590,7 @@ This is the estimated power when
 the sample size is `r args_new_n$n`.
 
 ```{r}
-out_new_n_reject <- get_rejection_rates(out_new_n)
+out_new_n_reject <- rejection_rates(out_new_n)
 out_new_n_reject
 ```
 
@@ -731,11 +731,11 @@ These are the new arguments used:
 
 ## Compute the Power
 
-We can ues `get_rejection_rates()`
+We can ues `rejection_rates()`
 again to estimate the power:
 
 ```{r}
-out_power <- get_rejection_rates(out)
+out_power <- rejection_rates(out)
 out_power
 ```
 
@@ -773,7 +773,7 @@ This is the estimated power when
 the sample size is `r args_new_n$n`.
 
 ```{r}
-out_new_n_reject <- get_rejection_rates(out_new_n)
+out_new_n_reject <- rejection_rates(out_new_n)
 out_new_n_reject
 ```
 

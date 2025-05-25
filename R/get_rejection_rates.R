@@ -1,17 +1,24 @@
 
-#' @title Rejection Rates of All Tests
+#' @title Rejection Rates
 #'
 #' @description Get all rejection rates
 #' of all tests stored in a `power4test`
-#' object.
+#' object or other supported objects.
 #'
 #' @details
-#' It loops over the tests stored
+#' For a `power4test` object,
+#' it loops over the tests stored
 #' in a `power4test` object and retrieve
 #' the rejection rate of each test.
 #'
 #' @return
-#' A data frame with the number of
+#' The `rejection_rates` method returns
+#' a `rejection_rates_df` object,
+#' with a `print` method.
+#' If the input is a
+#' `power4test` object, it is
+#' a data-frame like object with the
+#' number of
 #' rows equal to the number of tests.
 #' Note that some tests, such as
 #' the test by [test_parameters()],
@@ -33,33 +40,22 @@
 #'  each test. If the null hypothesis
 #'  is false, then this is the power.
 #'
-#' @param object A `power4test` object.
+#' @param object The object
+#' from which the rejection rates
+#' are to be extracted, such as
+#' a `power4test` object,
+#' a `power4test_by_n` object,
+#' or a `power4test_by_es` object.
 #'
-#' @param all_columns If `TRUE`, all
-#' columns stored by a test will be
-#' printed. Default is `FALSE` and
-#' only essential columns related to
-#' power will be printed.
+#' @param ... Optional arguments. For
+#' the `print` method, these arguments
+#' will be passed to the `print` method
+#' of `data.frame` objects [print.data.frame()].
+#' Not used for other methods.
 #'
-#' @param ci If `TRUE`, confidence
-#' intervals for the rejection rates
-#' (column `reject` or `sig`) will
-#' be computed. Normal approximation
-#' is used.
-#'
-#' @param level The level of confidence
-#' for the confidence intervals, if
-#' `ci` is `TRUE`.
-#'
-#' @param se If `TRUE`, standard errors
-#' for the rejection rates
-#' (column `reject` or `sig`) will
-#' be computed. Normal approximation
-#' is used.
-#'
-#'
-#'
-#' @seealso [power4test()]
+#' @seealso [power4test()],
+#' [power4test_by_n()], and
+#' [power4test_by_es()].
 #'
 #' @examples
 #'
@@ -92,17 +88,57 @@
 #'                                         mc_ci = FALSE))
 #' test_out <- power4test(object = test_out,
 #'                        test_fun = test_parameters)
-#' get_rejection_rates(test_out)
+#' rejection_rates(test_out)
+#'
+#' # See the help pages of power4test_by_n() and power4test_by_es()
+#' # for other examples.
 #'
 #' @export
-get_rejection_rates <- function(object,
-                                all_columns = FALSE,
-                                ci = TRUE,
-                                level = .95,
-                                se = FALSE) {
+rejection_rates <- function(object,
+                            ...) {
+  UseMethod("rejection_rates")
+}
+
+#' @export
+#' @rdname rejection_rates
+rejection_rates.default <- function(object,
+                                    ...) {
+  stop("The object is not of a supported class.")
+}
+
+#' @param all_columns If `TRUE`, all
+#' columns stored by a test will be
+#' printed. Default is `FALSE` and
+#' only essential columns related to
+#' power will be printed.
+#'
+#' @param ci If `TRUE`, confidence
+#' intervals for the rejection rates
+#' (column `reject` or `sig`) will
+#' be computed. Normal approximation
+#' is used.
+#'
+#' @param level The level of confidence
+#' for the confidence intervals, if
+#' `ci` is `TRUE`.
+#'
+#' @param se If `TRUE`, standard errors
+#' for the rejection rates
+#' (column `reject` or `sig`) will
+#' be computed. Normal approximation
+#' is used.
+#'
+#' @export
+#' @rdname rejection_rates
+rejection_rates.power4test <- function(object,
+                                       all_columns = FALSE,
+                                       ci = TRUE,
+                                       level = .95,
+                                       se = FALSE,
+                                       ...) {
   out0 <- summarize_tests(object)
   out1 <- lapply(out0,
-                 get_rejection_rates_i,
+                 rejection_rates_i,
                  all_columns = all_columns,
                  ci = ci,
                  level = level,
@@ -115,17 +151,19 @@ get_rejection_rates <- function(object,
                     out1)
   }
   rownames(out2) <- NULL
+  class(out2) <- c("rejection_rates_df",
+                   class(out2))
   out2
 }
 
 #' @noRd
-get_rejection_rates_i <- function(object_i,
+rejection_rates_i <- function(object_i,
                                   all_columns = FALSE,
                                   ci = ci,
                                   level = level,
                                   se = se) {
   if (is.vector(object_i$mean)) {
-    out <- get_rejection_rates_i_vector(object_i,
+    out <- rejection_rates_i_vector(object_i,
                                         all_columns = all_columns,
                                         ci = ci,
                                         level = level,
@@ -134,7 +172,7 @@ get_rejection_rates_i <- function(object_i,
   }
   if (length(dim(object_i$mean)) == 2) {
     # Likely a data frame
-    out <- get_rejection_rates_i_data_frame(object_i,
+    out <- rejection_rates_i_data_frame(object_i,
                                             all_columns = all_columns,
                                             ci = ci,
                                             level = level,
@@ -145,7 +183,7 @@ get_rejection_rates_i <- function(object_i,
 }
 
 #' @noRd
-get_rejection_rates_i_vector <- function(object_i,
+rejection_rates_i_vector <- function(object_i,
                                          all_columns = FALSE,
                                          ci = TRUE,
                                          level = .95,
@@ -191,11 +229,11 @@ get_rejection_rates_i_vector <- function(object_i,
 }
 
 #' @noRd
-get_rejection_rates_i_data_frame <- function(object_i,
-                                             all_columns = FALSE,
-                                             ci = TRUE,
-                                             level = .95,
-                                             se = FALSE) {
+rejection_rates_i_data_frame <- function(object_i,
+                                         all_columns = FALSE,
+                                         ci = TRUE,
+                                         level = .95,
+                                         se = FALSE) {
   test_args <- object_i$test_attributes
   test_name <- test_args$test_name
   out_i0 <- object_i$mean
@@ -288,4 +326,225 @@ rbind_adv <- function(...) {
   dfs_out1 <- do.call(rbind,
                       dfs_out)
   dfs_out1
+}
+
+#' @return
+#' The `rejection_rates` method for
+#' for `power4test_by_es` objects
+#' returns an object of the
+#' class `rejection_rates_df_by_es`,
+#' which is a subclass of
+#' `rejection_rates_df`.
+#' It is a data frame which is
+#' similar to the output of
+#' [rejection_rates()], with a
+#' column added for the effect size (`pop_es_name` and
+#' `pop_es_values`)
+#' for each test.
+#'
+#' @details
+#' The `rejection_rates` method for
+#' `power4test_by_es` objects
+#' is used to extract the rejection
+#' rates from a `power4test_by_es`
+#' object, with effect sizes added to
+#' the output.
+#'
+#' @rdname rejection_rates
+#' @export
+rejection_rates.power4test_by_es <- function(object,
+                                             all_columns = FALSE,
+                                             ...) {
+  out <- rejection_rates_by_es(object_by_es = object,
+                               all_columns = all_columns)
+  class(out) <- c("rejection_rates_df_by_es",
+                  "rejection_rates_df",
+                  class(out))
+  out
+}
+
+#' @return
+#' The `rejection_rates` method for
+#' for `power4test_by_n` objects
+#' returns an object of the
+#' class `rejection_rates_df_by_n`,
+#' which is a subclass of
+#' `rejection_rates_df`.
+#' It is a data frame which is
+#' similar to the output of
+#' for a `power4test` object, with a
+#' column `n` added for the sample size
+#' for each test.
+#'
+#' @details
+#' The `rejection_rates` method for
+#' `power4test_by_n` objects
+#' is used to extract the rejection
+#' rates, with sample sizes added to
+#' the output.
+#'
+#' @rdname rejection_rates
+#' @export
+rejection_rates.power4test_by_n <- function(object,
+                                            all_columns = FALSE,
+                                            ...) {
+  out <- rejection_rates_by_n(object_by_n = object,
+                              all_columns = all_columns)
+  class(out) <- c("rejection_rates_df_by_n",
+                  "rejection_rates_df",
+                  class(out))
+  out
+}
+
+#' @param x The `rejection_rates_df`
+#' object to be printed.
+#'
+#' @param digits The number of digits
+#' after the decimal place to be
+#' printed.
+#'
+#' @param annotation Logical. Whether
+#' additional notes will be printed.
+#'
+#' @param abbreviate_col_names Logical.
+#' Whether some column names will be
+#' abbreviated.
+#'
+#' @rdname rejection_rates
+#' @export
+print.rejection_rates_df <- function(x,
+                                     digits = 3,
+                                     annotation = TRUE,
+                                     abbreviate_col_names = TRUE,
+                                     ...) {
+  x0 <- x
+  class(x0) <- "data.frame"
+
+  # Handle special columns
+  if ("nvalid" %in% colnames(x0)) {
+    x0$nvalid <- as.character(x0$nvalid)
+  }
+  if ("nrep" %in% colnames(x0)) {
+    x0$nrep <- as.character(x0$nrep)
+  }
+
+  # In by_n
+  if ("n" %in% colnames(x0)) {
+    x0$n <- as.character(x0$n)
+  }
+
+  abbr_names <- c(pvalid = "p.v",
+                  nvalid = "n.v",
+                  reject_se = "r.se",
+                  reject_ci_lo = "r.cilo",
+                  reject_ci_hi = "r.cihi")
+
+  # Abbreviate column names
+  if (abbreviate_col_names) {
+    cnames <- colnames(x0)
+    for (i in seq_along(abbr_names)) {
+      cnames <- gsub(names(abbr_names)[i],
+                     abbr_names[i],
+                     cnames,
+                     fixed = TRUE)
+    }
+    colnames(x0) <- cnames
+  }
+
+  x1 <- format_num_cols(x0,
+                        digits = digits)
+  print(x1,
+        ...)
+
+  if (annotation) {
+    cat("Notes:\n")
+
+    if ("n" %in% colnames(x1)) {
+      catwrap(paste0("- ",
+                     "n",
+                     ": The sample size in a trial."),
+              exdent = 2)
+    }
+    if ("par" %in% colnames(x1)) {
+      catwrap(paste0("- ",
+                     "par",
+                     ": The parameter being varied."),
+              exdent = 2)
+    }
+    if ("es" %in% colnames(x1)) {
+      catwrap(paste0("- ",
+                     "es",
+                     ": The population value of 'par' in a trial."),
+              exdent = 2)
+    }
+    tmp <- ifelse(abbreviate_col_names,
+                  abbr_names["pvalid"],
+                  "pvalid")
+    if (tmp %in% colnames(x1)) {
+      catwrap(paste0("- ",
+                     tmp,
+                     ": The proportion of valid replications."),
+              exdent = 2)
+    }
+    tmp <- ifelse(abbreviate_col_names,
+                  abbr_names["nvalid"],
+                  "nvalid")
+    if (tmp %in% colnames(x1)) {
+      catwrap(paste0("- ",
+                     tmp,
+                     ": The number of valid replications."),
+              exdent = 2)
+    }
+    if ("nrep" %in% colnames(x1)) {
+      tmp <- "nrep"
+      catwrap(paste0("- ",
+                     tmp,
+                     ": The number of replications."),
+              exdent = 2)
+    }
+    if ("est" %in% colnames(x1)) {
+      catwrap(paste0("- est: The mean of the estimates in a test across replications."),
+              exdent = 2)
+    }
+    if ("cilo" %in% colnames(x1)) {
+      catwrap(paste0("- cilo, cihi: The mean of the lower/upper limits of ",
+                     "the confidence intervals in a test ",
+                     "across replications."),
+              exdent = 2)
+    }
+    if ("reject" %in% colnames(x1)) {
+      catwrap(paste0("- reject: The proportion of 'significant' replications, ",
+                     "that is, the rejection rate.",
+                     "If the null hypothesis is true, this is the Type I error rate. ",
+                     "If the null hypothesis is false, this is the power."),
+              exdent = 2)
+    }
+    tmp <- ifelse(abbreviate_col_names,
+                  abbr_names["reject_se"],
+                  "reject_se")
+    if (tmp %in% colnames(x1)) {
+      catwrap(paste0("- ",
+                     tmp,
+                     ": The standard error of the rejection rate, ",
+                     "based on normal approximation."),
+              exdent = 2)
+    }
+    tmp1 <- ifelse(abbreviate_col_names,
+                   abbr_names["reject_ci_lo"],
+                   "reject_ci_lo")
+    tmp2 <- ifelse(abbreviate_col_names,
+                   abbr_names["reject_ci_hi"],
+                   "reject_ci_hi")
+    if (tmp1 %in% colnames(x1)) {
+      tmp <- paste0(tmp1, ",", tmp2)
+      catwrap(paste0("- ",
+                     tmp,
+                     ": The confidence interval ",
+                     "of the rejection rate, based on normal approximation."),
+              exdent = 2)
+    }
+    catwrap(paste0("- Refer to the tests for the meanings of other columns."),
+            exdent = 2)
+  }
+
 }

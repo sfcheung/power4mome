@@ -38,13 +38,13 @@ out1 <- power4test_by_es(test_out,
                              pop_es_name = "y ~ m",
                              pop_es_values = c(.10, .20),
                              by_seed = 1234)
-out1_reject <- get_rejection_rates_by_es(out1)
+out1_reject <- rejection_rates(out1)
 
 out2 <- power4test_by_es(test_out,
                              pop_es_name = "y ~ m",
                              pop_es_values = c(.10, .20),
                              by_seed = 1234)
-out2_reject <- get_rejection_rates_by_es(out2)
+out2_reject <- rejection_rates(out2)
 
 expect_identical(out1_reject,
                  out2_reject)

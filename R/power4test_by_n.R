@@ -97,7 +97,7 @@
 #'
 #' out <- power4test_by_n(test_out,
 #'                        n = c(100, 110, 120))
-#' out_reject <- get_rejection_rates_by_n(out)
+#' out_reject <- rejection_rates(out)
 #' out_reject
 #'
 #' @export
@@ -221,7 +221,6 @@ c.power4test_by_n <- function(...,
   return(out)
 }
 
-#' @rdname power4test_by_n
 #' @param object_by_n A `power4test_by_n`
 #' object, which is an output of
 #' [power4test_by_n()].
@@ -233,26 +232,26 @@ c.power4test_by_n <- function(...,
 #' power will be printed.
 #'
 #' @return
-#' The function [get_rejection_rates_by_n()]
+#' The function
 #' returns a data frame which is
 #' similar to the output of
-#' [get_rejection_rates()], with a
+#' [rejection_rates()], with a
 #' column `n` added for the sample size
 #' for each test.
 #'
 #' @description
-#' The function [get_rejection_rates_by_n()]
+#' The function
 #' is used to extract the rejection
-#' rates form a `get_rejection_rates_by_n`
+#' rates form a `power4test_by_n`
 #' object, with sample sizes added to
 #' the output.
 #'
-#' @export
-get_rejection_rates_by_n <- function(object_by_n,
-                                     all_columns = FALSE) {
+#' @noRd
+rejection_rates_by_n <- function(object_by_n,
+                                 all_columns = FALSE) {
   tmpfct <- function(x, n) {
-    out_i <- get_rejection_rates(x,
-                                 all_columns = all_columns)
+    out_i <- rejection_rates(x,
+                             all_columns = all_columns)
     out_i <- data.frame(n = n,
                         out_i)
     out_i

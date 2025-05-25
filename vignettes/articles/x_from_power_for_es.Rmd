@@ -90,7 +90,7 @@ basic workflow:
     test to do specified, using the
     sample size to be examined.
 
-5.  Call `get_rejection_rates()` to
+5.  Call `rejection_rates()` to
     compute the power and verify that
     the test is setup correctly.
 
@@ -736,7 +736,7 @@ summary(out_es_a)
 #> === Technical Information ===
 #> 
 #> - The range of values explored: 0.287205207942574 to 0.37417900451784 
-#> - Time spent in the search: 3.852 mins 
+#> - Time spent in the search: 3.83 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -762,19 +762,29 @@ summary(out_es_a)
 #> 
 #> - Detailed Results:
 #> 
-#>    par    es                   test test_label pvalid reject reject_ci_lo reject_ci_hi
-#> 1  m~x 0.287 test_indirect: x->m->y       Test      1  0.685        0.639        0.731
-#> 2  m~x 0.287 test_indirect: x->m->y       Test      1  0.698        0.652        0.743
-#> 3  m~x 0.300 test_indirect: x->m->y       Test      1  0.720        0.596        0.844
-#> 4  m~x 0.312 test_indirect: x->m->y       Test      1  0.760        0.642        0.878
-#> 5  m~x 0.317 test_indirect: x->m->y       Test      1  0.780        0.665        0.895
-#> 6  m~x 0.325 test_indirect: x->m->y       Test      1  0.745        0.685        0.805
-#> 7  m~x 0.327 test_indirect: x->m->y       Test      1  0.748        0.705        0.790
-#> 8  m~x 0.330 test_indirect: x->m->y       Test      1  0.790        0.750        0.830
-#> 9  m~x 0.333 test_indirect: x->m->y       Test      1  0.820        0.714        0.926
-#> 10 m~x 0.340 test_indirect: x->m->y       Test      1  0.760        0.642        0.878
-#> 11 m~x 0.372 test_indirect: x->m->y       Test      1  0.840        0.804        0.876
-#> 12 m~x 0.374 test_indirect: x->m->y       Test      1  0.812        0.774        0.851
+#>    par    es                   test test_label   p.v reject r.cilo r.cihi
+#> 1  m~x 0.287 test_indirect: x->m->y       Test 1.000  0.685  0.639  0.731
+#> 2  m~x 0.287 test_indirect: x->m->y       Test 1.000  0.698  0.652  0.743
+#> 3  m~x 0.300 test_indirect: x->m->y       Test 1.000  0.720  0.596  0.844
+#> 4  m~x 0.312 test_indirect: x->m->y       Test 1.000  0.760  0.642  0.878
+#> 5  m~x 0.317 test_indirect: x->m->y       Test 1.000  0.780  0.665  0.895
+#> 6  m~x 0.325 test_indirect: x->m->y       Test 1.000  0.745  0.685  0.805
+#> 7  m~x 0.327 test_indirect: x->m->y       Test 1.000  0.748  0.705  0.790
+#> 8  m~x 0.330 test_indirect: x->m->y       Test 1.000  0.790  0.750  0.830
+#> 9  m~x 0.333 test_indirect: x->m->y       Test 1.000  0.820  0.714  0.926
+#> 10 m~x 0.340 test_indirect: x->m->y       Test 1.000  0.760  0.642  0.878
+#> 11 m~x 0.372 test_indirect: x->m->y       Test 1.000  0.840  0.804  0.876
+#> 12 m~x 0.374 test_indirect: x->m->y       Test 1.000  0.812  0.774  0.851
+#> Notes:
+#> - par: The parameter being varied.
+#> - es: The population value of 'par' in a trial.
+#> - p.v: The proportion of valid replications.
+#> - reject: The proportion of 'significant' replications, that is, the rejection rate.If
+#>   the null hypothesis is true, this is the Type I error rate. If the null hypothesis is
+#>   false, this is the power.
+#> - r.cilo,r.cihi: The confidence interval of the rejection rate, based on normal
+#>   approximation.
+#> - Refer to the tests for the meanings of other columns.
 ```
 
 It reports the 95% confidence interval
@@ -889,7 +899,7 @@ summary(out_es_b)
 #> === Technical Information ===
 #> 
 #> - The range of values explored: 0.290860248271345 to 0.347615451859909 
-#> - Time spent in the search: 3.755 mins 
+#> - Time spent in the search: 4.113 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -915,19 +925,29 @@ summary(out_es_b)
 #> 
 #> - Detailed Results:
 #> 
-#>    par    es                   test test_label pvalid reject reject_ci_lo reject_ci_hi
-#> 1  y~m 0.291 test_indirect: x->m->y       Test      1  0.703        0.658        0.747
-#> 2  y~m 0.291 test_indirect: x->m->y       Test      1  0.698        0.652        0.743
-#> 3  y~m 0.300 test_indirect: x->m->y       Test      1  0.720        0.596        0.844
-#> 4  y~m 0.307 test_indirect: x->m->y       Test      1  0.720        0.596        0.844
-#> 5  y~m 0.315 test_indirect: x->m->y       Test      1  0.730        0.668        0.792
-#> 6  y~m 0.317 test_indirect: x->m->y       Test      1  0.820        0.714        0.926
-#> 7  y~m 0.318 test_indirect: x->m->y       Test      1  0.750        0.708        0.792
-#> 8  y~m 0.321 test_indirect: x->m->y       Test      1  0.767        0.726        0.809
-#> 9  y~m 0.325 test_indirect: x->m->y       Test      1  0.760        0.642        0.878
-#> 10 y~m 0.333 test_indirect: x->m->y       Test      1  0.860        0.764        0.956
-#> 11 y~m 0.345 test_indirect: x->m->y       Test      1  0.850        0.815        0.885
-#> 12 y~m 0.348 test_indirect: x->m->y       Test      1  0.823        0.785        0.860
+#>    par    es                   test test_label   p.v reject r.cilo r.cihi
+#> 1  y~m 0.291 test_indirect: x->m->y       Test 1.000  0.703  0.658  0.747
+#> 2  y~m 0.291 test_indirect: x->m->y       Test 1.000  0.698  0.652  0.743
+#> 3  y~m 0.300 test_indirect: x->m->y       Test 1.000  0.720  0.596  0.844
+#> 4  y~m 0.307 test_indirect: x->m->y       Test 1.000  0.720  0.596  0.844
+#> 5  y~m 0.315 test_indirect: x->m->y       Test 1.000  0.730  0.668  0.792
+#> 6  y~m 0.317 test_indirect: x->m->y       Test 1.000  0.820  0.714  0.926
+#> 7  y~m 0.318 test_indirect: x->m->y       Test 1.000  0.750  0.708  0.792
+#> 8  y~m 0.321 test_indirect: x->m->y       Test 1.000  0.767  0.726  0.809
+#> 9  y~m 0.325 test_indirect: x->m->y       Test 1.000  0.760  0.642  0.878
+#> 10 y~m 0.333 test_indirect: x->m->y       Test 1.000  0.860  0.764  0.956
+#> 11 y~m 0.345 test_indirect: x->m->y       Test 1.000  0.850  0.815  0.885
+#> 12 y~m 0.348 test_indirect: x->m->y       Test 1.000  0.823  0.785  0.860
+#> Notes:
+#> - par: The parameter being varied.
+#> - es: The population value of 'par' in a trial.
+#> - p.v: The proportion of valid replications.
+#> - reject: The proportion of 'significant' replications, that is, the rejection rate.If
+#>   the null hypothesis is true, this is the Type I error rate. If the null hypothesis is
+#>   false, this is the power.
+#> - r.cilo,r.cihi: The confidence interval of the rejection rate, based on normal
+#>   approximation.
+#> - Refer to the tests for the meanings of other columns.
 ```
 
 It reports the 95% confidence interval

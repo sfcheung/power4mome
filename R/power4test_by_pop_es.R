@@ -109,7 +109,7 @@
 #' out <- power4test_by_es(test_out,
 #'                             pop_es_name = "y ~ m",
 #'                             pop_es_values = c(.10, .20))
-#' out_reject <- get_rejection_rates_by_es(out)
+#' out_reject <- rejection_rates(out)
 #' out_reject
 #'
 #' @export
@@ -253,7 +253,6 @@ c.power4test_by_es <- function(...,
   return(out)
 }
 
-#' @rdname power4test_by_es
 #' @param object_by_es A `power4test_by_es`
 #' object, which is an output of
 #' [power4test_by_es()].
@@ -265,27 +264,27 @@ c.power4test_by_es <- function(...,
 #' power will be printed.
 #'
 #' @return
-#' The function [get_rejection_rates_by_es()]
+#' The function
 #' returns a data frame which is
 #' similar to the output of
-#' [get_rejection_rates()], with a
+#' [rejection_rates()], with a
 #' column added for the effect size (`pop_es_name` and
 #' `pop_es_values`)
 #' for each test.
 #'
 #' @description
-#' The function [get_rejection_rates_by_es()]
+#' The function
 #' is used to extract the rejection
-#' rates form a `get_rejection_rates_by_es`
+#' rates form a `power4test_by_es`
 #' object, with effect sizes added to
 #' the output.
 #'
-#' @export
-get_rejection_rates_by_es <- function(object_by_es,
-                                          all_columns = FALSE) {
+#' @noRd
+rejection_rates_by_es <- function(object_by_es,
+                                  all_columns = FALSE) {
   tmpfct <- function(x) {
-    out_i <- get_rejection_rates(x,
-                                 all_columns = all_columns)
+    out_i <- rejection_rates(x,
+                             all_columns = all_columns)
     pn <- attr(x, "pop_es_name")
     pv <- attr(x, "pop_es_value")
     out_i <- data.frame(par = pn,

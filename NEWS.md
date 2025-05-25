@@ -1,4 +1,4 @@
-# power4mome 0.0.1.29
+# power4mome 0.0.1.34
 
 - Initialized the package. (0.0.0.9000)
 
@@ -297,3 +297,31 @@
   progress for `power4test_by_n()`
   and `power4test_by_es()`.
   (0.0.1.29)
+
+- Fixed a minor bug in the internal
+  function `fix_nls_args()`.
+  (0.0.1.30)
+
+- Renamed `get_rejection_rates*` to
+  `rejection_rates*` because this
+  looks more consistent with
+  the common naming convention.
+  (0.0.1.31)
+
+- Convert `rejection_rates()` to an
+  S3 generic method.
+  (0.0.1.32)
+
+- Add `rejection_rates` methods for
+  `power4test_by_n` and `power4test_by_es`
+  objects. The original functions
+  `rejection_rates_by_n()` and
+  `rejection_rates_by_es()` are no longer
+  exported. All relevant functions are
+  revised to use the `rejection_rates` method
+  instead of these two functions.
+  (0.0.1.33)
+
+- Created a class for the output of
+  `rejection_rates` and added a print
+  method. (0.0.1.34)

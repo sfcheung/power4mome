@@ -35,7 +35,7 @@ out1 <- power4test_by_n(sim_only,
                         parallel = FALSE,
                         progress = FALSE)
 
-get_rejection_rates_by_n(out1)
+rejection_rates(out1)
 
 expect_no_error(pout1 <- power_curve(out1,
                                      verbose = TRUE))
@@ -57,8 +57,8 @@ out2 <- power4test_by_es(sim_only,
                              parallel = FALSE,
                              progress = FALSE)
 
-get_rejection_rates_by_es(out2,
-                              all_columns = TRUE)
+rejection_rates(out2,
+                all_columns = TRUE)
 
 expect_no_error(pout2 <- power_curve(out2,
                                      verbose = TRUE))

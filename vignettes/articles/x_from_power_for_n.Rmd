@@ -88,7 +88,7 @@ values. This is the basic workflow:
     test to do specified, using an initial
     sample size.
 
-5.  Call `get_rejection_rates()` to
+5.  Call `rejection_rates()` to
     compute the power and verify that
     the test is setup correctly.
 
@@ -655,7 +655,7 @@ summary(out_n)
 #> === Technical Information ===
 #> 
 #> - The range of values explored: 50 to 131 
-#> - Time spent in the search: 2.591 mins 
+#> - Time spent in the search: 2.469 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -681,16 +681,25 @@ summary(out_n)
 #> 
 #> - Detailed Results:
 #> 
-#>     n                   test test_label pvalid reject reject_ci_lo reject_ci_hi
-#> 1  50 test_indirect: x->m->y       Test      1  0.400        0.264        0.536
-#> 2  75 test_indirect: x->m->y       Test      1  0.700        0.573        0.827
-#> 3  81 test_indirect: x->m->y       Test      1  0.682        0.637        0.728
-#> 4  97 test_indirect: x->m->y       Test      1  0.786        0.678        0.893
-#> 5 100 test_indirect: x->m->y       Test      1  0.740        0.618        0.862
-#> 6 103 test_indirect: x->m->y       Test      1  0.782        0.742        0.823
-#> 7 104 test_indirect: x->m->y       Test      1  0.861        0.812        0.910
-#> 8 113 test_indirect: x->m->y       Test      1  0.792        0.683        0.902
-#> 9 131 test_indirect: x->m->y       Test      1  0.882        0.851        0.914
+#>     n                   test test_label   p.v reject r.cilo r.cihi
+#> 1  50 test_indirect: x->m->y       Test 1.000  0.400  0.264  0.536
+#> 2  75 test_indirect: x->m->y       Test 1.000  0.700  0.573  0.827
+#> 3  81 test_indirect: x->m->y       Test 1.000  0.682  0.637  0.728
+#> 4  97 test_indirect: x->m->y       Test 1.000  0.786  0.678  0.893
+#> 5 100 test_indirect: x->m->y       Test 1.000  0.740  0.618  0.862
+#> 6 103 test_indirect: x->m->y       Test 1.000  0.782  0.742  0.823
+#> 7 104 test_indirect: x->m->y       Test 1.000  0.861  0.812  0.910
+#> 8 113 test_indirect: x->m->y       Test 1.000  0.792  0.683  0.902
+#> 9 131 test_indirect: x->m->y       Test 1.000  0.882  0.851  0.914
+#> Notes:
+#> - n: The sample size in a trial.
+#> - p.v: The proportion of valid replications.
+#> - reject: The proportion of 'significant' replications, that is, the
+#>   rejection rate.If the null hypothesis is true, this is the Type I
+#>   error rate. If the null hypothesis is false, this is the power.
+#> - r.cilo,r.cihi: The confidence interval of the rejection rate, based
+#>   on normal approximation.
+#> - Refer to the tests for the meanings of other columns.
 ```
 
 It reports the 95% confidence interval

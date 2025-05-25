@@ -35,13 +35,13 @@ test_out <- power4test(object = sim_only,
 out1 <- power4test_by_n(test_out,
                         n = c(100, 110),
                         by_seed = 1234)
-out1_reject <- get_rejection_rates_by_n(out1)
+out1_reject <- rejection_rates(out1)
 out1_reject
 
 out2 <- power4test_by_n(test_out,
                         n = c(100, 110),
                         by_seed = 1234)
-out2_reject <- get_rejection_rates_by_n(out2)
+out2_reject <- rejection_rates(out2)
 out2_reject
 
 expect_identical(out1_reject,
