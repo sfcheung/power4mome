@@ -4,7 +4,9 @@
 \alias{rejection_rates}
 \alias{rejection_rates.default}
 \alias{rejection_rates.power4test}
-\title{Rejection Rates of All Tests}
+\alias{rejection_rates.power4test_by_es}
+\alias{rejection_rates.power4test_by_n}
+\title{Rejection Rates}
 \usage{
 rejection_rates(object, ...)
 
@@ -18,15 +20,21 @@ rejection_rates(object, ...)
   se = FALSE,
   ...
 )
+
+\method{rejection_rates}{power4test_by_es}(object, all_columns = FALSE, ...)
+
+\method{rejection_rates}{power4test_by_n}(object, all_columns = FALSE, ...)
 }
 \arguments{
 \item{object}{The object
 from which the rejection rates
 are to be extracted, such as
-a \code{power4test} object.}
+a \code{power4test} object,
+a \code{power4test_by_n} object,
+or a \code{power4test_by_es} object.}
 
-\item{...}{Optional arguments, to
-be passed to the next method.}
+\item{...}{Optional arguments. Not
+used.}
 
 \item{all_columns}{If \code{TRUE}, all
 columns stored by a test will be
@@ -51,7 +59,9 @@ be computed. Normal approximation
 is used.}
 }
 \value{
-A data frame with the number of
+The \code{rejection_rates} method for
+\code{power4test} objects returns
+a data frame with the number of
 rows equal to the number of tests.
 Note that some tests, such as
 the test by \code{\link[=test_parameters]{test_parameters()}},
@@ -71,21 +81,46 @@ each test. If the null hypothesis
 is false, then this is the power.
 }
 
-The function is an S3 method that
-can be used for other objects in
-the packages, such as the output
-of \code{\link[=power4test_by_n]{power4test_by_n()}} and
-\code{\link[=power4test_by_es]{power4test_by_es()}}.
+The \code{rejection_rates} method for
+for \code{power4test_by_es} objects
+returns a data frame which is
+similar to the output of
+\code{\link[=rejection_rates]{rejection_rates()}}, with a
+column added for the effect size (\code{pop_es_name} and
+\code{pop_es_values})
+for each test.
+
+The \code{rejection_rates} method for
+for \code{power4test_by_n} objects
+returns a data frame which is
+similar to the output of
+for a \code{power4test} object, with a
+column \code{n} added for the sample size
+for each test.
 }
 \description{
 Get all rejection rates
 of all tests stored in a \code{power4test}
-object.
+object or other supported objects.
 }
 \details{
-It loops over the tests stored
+For a \code{power4test} object,
+it loops over the tests stored
 in a \code{power4test} object and retrieve
 the rejection rate of each test.
+
+The \code{rejection_rates} method for
+\code{power4test_by_es} objects
+is used to extract the rejection
+rates from a \code{power4test_by_es}
+object, with effect sizes added to
+the output.
+
+The \code{rejection_rates} method for
+\code{power4test_by_n} objects
+is used to extract the rejection
+rates, with sample sizes added to
+the output.
 }
 \examples{
 
@@ -120,7 +155,12 @@ test_out <- power4test(object = test_out,
                        test_fun = test_parameters)
 rejection_rates(test_out)
 
+# See the help pages of power4test_by_n() and power4test_by_es()
+# for other examples.
+
 }
 \seealso{
-\code{\link[=power4test]{power4test()}}
+\code{\link[=power4test]{power4test()}},
+\code{\link[=power4test_by_n]{power4test_by_n()}}, and
+\code{\link[=power4test_by_es]{power4test_by_es()}}.
 }

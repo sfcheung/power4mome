@@ -1,17 +1,20 @@
 
-#' @title Rejection Rates of All Tests
+#' @title Rejection Rates
 #'
 #' @description Get all rejection rates
 #' of all tests stored in a `power4test`
-#' object.
+#' object or other supported objects.
 #'
 #' @details
-#' It loops over the tests stored
+#' For a `power4test` object,
+#' it loops over the tests stored
 #' in a `power4test` object and retrieve
 #' the rejection rate of each test.
 #'
 #' @return
-#' A data frame with the number of
+#' The `rejection_rates` method for
+#' `power4test` objects returns
+#' a data frame with the number of
 #' rows equal to the number of tests.
 #' Note that some tests, such as
 #' the test by [test_parameters()],
@@ -33,21 +36,19 @@
 #'  each test. If the null hypothesis
 #'  is false, then this is the power.
 #'
-#' The function is an S3 method that
-#' can be used for other objects in
-#' the packages, such as the output
-#' of [power4test_by_n()] and
-#' [power4test_by_es()].
-#'
 #' @param object The object
 #' from which the rejection rates
 #' are to be extracted, such as
-#' a `power4test` object.
+#' a `power4test` object,
+#' a `power4test_by_n` object,
+#' or a `power4test_by_es` object.
 #'
-#' @param ... Optional arguments, to
-#' be passed to the next method.
+#' @param ... Optional arguments. Not
+#' used.
 #'
-#' @seealso [power4test()]
+#' @seealso [power4test()],
+#' [power4test_by_n()], and
+#' [power4test_by_es()].
 #'
 #' @examples
 #'
@@ -81,6 +82,9 @@
 #' test_out <- power4test(object = test_out,
 #'                        test_fun = test_parameters)
 #' rejection_rates(test_out)
+#'
+#' # See the help pages of power4test_by_n() and power4test_by_es()
+#' # for other examples.
 #'
 #' @export
 rejection_rates <- function(object,
@@ -313,4 +317,56 @@ rbind_adv <- function(...) {
   dfs_out1 <- do.call(rbind,
                       dfs_out)
   dfs_out1
+}
+
+#' @return
+#' The `rejection_rates` method for
+#' for `power4test_by_es` objects
+#' returns a data frame which is
+#' similar to the output of
+#' [rejection_rates()], with a
+#' column added for the effect size (`pop_es_name` and
+#' `pop_es_values`)
+#' for each test.
+#'
+#' @details
+#' The `rejection_rates` method for
+#' `power4test_by_es` objects
+#' is used to extract the rejection
+#' rates from a `power4test_by_es`
+#' object, with effect sizes added to
+#' the output.
+#'
+#' @rdname rejection_rates
+#' @export
+rejection_rates.power4test_by_es <- function(object,
+                                             all_columns = FALSE,
+                                             ...) {
+  rejection_rates_by_es(object_by_es = object,
+                        all_columns = all_columns)
+}
+
+#' @return
+#' The `rejection_rates` method for
+#' for `power4test_by_n` objects
+#' returns a data frame which is
+#' similar to the output of
+#' for a `power4test` object, with a
+#' column `n` added for the sample size
+#' for each test.
+#'
+#' @details
+#' The `rejection_rates` method for
+#' `power4test_by_n` objects
+#' is used to extract the rejection
+#' rates, with sample sizes added to
+#' the output.
+#'
+#' @rdname rejection_rates
+#' @export
+rejection_rates.power4test_by_n <- function(object,
+                                            all_columns = FALSE,
+                                            ...) {
+  rejection_rates_by_n(object_by_n = object,
+                       all_columns = all_columns)
 }

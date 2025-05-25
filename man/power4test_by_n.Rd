@@ -3,7 +3,6 @@
 \name{power4test_by_n}
 \alias{power4test_by_n}
 \alias{c.power4test_by_n}
-\alias{rejection_rates_by_n}
 \title{Power By Sample Sizes}
 \usage{
 power4test_by_n(
@@ -16,8 +15,6 @@ power4test_by_n(
 )
 
 \method{c}{power4test_by_n}(..., sort = TRUE)
-
-rejection_rates_by_n(object_by_n, all_columns = FALSE)
 }
 \arguments{
 \item{object}{A \code{power4test} object,
@@ -62,16 +59,6 @@ original \code{nrep} will be used.}
 \item{sort}{WHen combining \code{power4test_by_n}
 objects, whether they will be sorted
 by sample sizes. Default is \code{TRUE}.}
-
-\item{object_by_n}{A \code{power4test_by_n}
-object, which is an output of
-\code{\link[=power4test_by_n]{power4test_by_n()}}.}
-
-\item{all_columns}{If \code{TRUE}, all
-columns stored by a test will be
-printed. Default is \code{FALSE} and
-only essential columns related to
-power will be printed.}
 }
 \value{
 The function
@@ -84,13 +71,6 @@ The method \code{\link[=c.power4test_by_n]{c.power4test_by_n()}} returns
 a \code{power4test_by_n} object with
 all the elements (tests for different
 sample sizes) combined.
-
-The function \code{\link[=rejection_rates_by_n]{rejection_rates_by_n()}}
-returns a data frame which is
-similar to the output of
-\code{\link[=rejection_rates]{rejection_rates()}}, with a
-column \code{n} added for the sample size
-for each test.
 }
 \description{
 Estimate power for a
@@ -99,12 +79,6 @@ range of sample sizes.
 The method \code{\link[=c.power4test_by_n]{c.power4test_by_n()}}
 is used to combine tests from different
 runs of \code{\link[=power4test_by_n]{power4test_by_n()}}.
-
-The function \code{\link[=rejection_rates_by_n]{rejection_rates_by_n()}}
-is used to extract the rejection
-rates form a \code{rejection_rates_by_n}
-object, with sample sizes added to
-the output.
 }
 \details{
 This function regenerates
@@ -154,7 +128,7 @@ test_out <- power4test(object = sim_only,
 
 out <- power4test_by_n(test_out,
                        n = c(100, 110, 120))
-out_reject <- rejection_rates_by_n(out)
+out_reject <- rejection_rates(out)
 out_reject
 
 }

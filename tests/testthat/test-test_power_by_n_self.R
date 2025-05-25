@@ -38,9 +38,9 @@ out2 <- power4test_by_n(out1,
                         n = c(50, 150),
                         by_seed = 2345)
 
-out_reject1 <- rejection_rates_by_n(out1)
+out_reject1 <- rejection_rates(out1)
 out_reject1
-out_reject2 <- rejection_rates_by_n(out2)
+out_reject2 <- rejection_rates(out2)
 out_reject2
 
 expect_equal(out_reject1$n,
@@ -49,7 +49,7 @@ expect_equal(out_reject2$n,
              c(50, 150))
 
 out <- c(out1, out2)
-out_reject <- rejection_rates_by_n(out)
+out_reject <- rejection_rates(out)
 expect_equal(out_reject$n,
              c(50, 100, 150, 300))
 

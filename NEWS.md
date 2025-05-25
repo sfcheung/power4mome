@@ -1,4 +1,4 @@
-# power4mome 0.0.1.32
+# power4mome 0.0.1.33
 
 - Initialized the package. (0.0.0.9000)
 
@@ -311,3 +311,13 @@
 - Convert `rejection_rates()` to an
   S3 generic method.
   (0.0.1.32)
+
+- Add `rejection_rates` methods for
+  `power4test_by_n` and `power4test_by_es`
+  objects. The original functions
+  `rejection_rates_by_n()` and
+  `rejection_rates_by_es()` are no longer
+  exported. All relevant functions are
+  revised to use the `rejection_rates` method
+  instead of these two functions.
+  (0.0.1.33)

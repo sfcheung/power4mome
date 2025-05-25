@@ -233,9 +233,7 @@ sizes examined, or of
 population values of the selected
 parameter examined.
 \item \code{rejection_rates}: The output of
-\code{\link[=rejection_rates_by_n]{rejection_rates_by_n()}} or
-\code{\link[=rejection_rates_by_es]{rejection_rates_by_es()}}
-as appropriate.
+\code{\link[=rejection_rates]{rejection_rates()}}.
 \item \code{x_tried}: The sample sizes or
 population values
 examined.
