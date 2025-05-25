@@ -6,7 +6,7 @@
 [![R-CMD-check](https://github.com/sfcheung/power4mome/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/sfcheung/power4mome/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-(Version 0.0.1.33, updated on 2025-05-25, [release history](https://sfcheung.github.io/power4mome/news/index.html))
+(Version 0.0.1.34, updated on 2025-05-25, [release history](https://sfcheung.github.io/power4mome/news/index.html))
 
 IMPORTANT: A work-in-progress. Not ready for use.
 
