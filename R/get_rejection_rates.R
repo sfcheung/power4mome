@@ -354,9 +354,16 @@ rbind_adv <- function(...) {
 #' @export
 rejection_rates.power4test_by_es <- function(object,
                                              all_columns = FALSE,
+                                             ci = TRUE,
+                                             level = .95,
+                                             se = FALSE,
                                              ...) {
   out <- rejection_rates_by_es(object_by_es = object,
-                               all_columns = all_columns)
+                               all_columns = all_columns,
+                               ci = ci,
+                               level = level,
+                               se = se,
+                               ...)
   class(out) <- c("rejection_rates_df_by_es",
                   "rejection_rates_df",
                   class(out))
@@ -387,9 +394,16 @@ rejection_rates.power4test_by_es <- function(object,
 #' @export
 rejection_rates.power4test_by_n <- function(object,
                                             all_columns = FALSE,
+                                            ci = TRUE,
+                                            level = .95,
+                                            se = FALSE,
                                             ...) {
   out <- rejection_rates_by_n(object_by_n = object,
-                              all_columns = all_columns)
+                              all_columns = all_columns,
+                              ci = ci,
+                              level = level,
+                              se = se,
+                              ...)
   class(out) <- c("rejection_rates_df_by_n",
                   "rejection_rates_df",
                   class(out))
