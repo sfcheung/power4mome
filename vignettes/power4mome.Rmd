@@ -1,7 +1,7 @@
 ---
 title: "Power Analysis for Moderation, Mediation, and Moderated-Mediation"
 author: "Shu Fai Cheung & Sing-Hang Cheung"
-date: "2025-05-20"
+date: "2025-05-25"
 output:
   rmarkdown::html_vignette:
     options:
@@ -74,7 +74,7 @@ used. This is the basic workflow:
 4.  Call `power4test()` again, with the
     test to do specified.
 
-5.  Call `get_rejection_rates()` to
+5.  Call `rejection_rates()` to
     compute the power.
 
 # Mediation
@@ -572,11 +572,11 @@ of significant results, the *rejection*
 *rate*, because the
 null hypothesis is false. The rejection
 rate can be retrieved by
-`get_rejection_rates()`.
+`rejection_rates()`.
 
 
 ``` r
-out_power <- get_rejection_rates(out)
+out_power <- rejection_rates(out)
 ```
 
 The output is simply a data frame:
@@ -853,12 +853,12 @@ These are the new arguments used:
 
 ## Compute the Power
 
-We can ues `get_rejection_rates()`
+We can ues `rejection_rates()`
 again to estimate the power:
 
 
 ``` r
-out_power <- get_rejection_rates(out)
+out_power <- rejection_rates(out)
 out_power
 #>                    test test_label pvalid reject reject_ci_lo reject_ci_hi
 #> 1 test_moderation: CIs       y~x:w      1 0.1175    0.0859431    0.1490569
@@ -893,7 +893,7 @@ the sample size is 200.
 
 
 ``` r
-out_new_n_reject <- get_rejection_rates(out_new_n)
+out_new_n_reject <- rejection_rates(out_new_n)
 out_new_n_reject
 #>                    test test_label pvalid reject reject_ci_lo reject_ci_hi
 #> 1 test_moderation: CIs       y~x:w      1  0.295    0.2503086    0.3396914
@@ -1133,12 +1133,12 @@ These are the new arguments used:
 
 ## Compute the Power
 
-We can ues `get_rejection_rates()`
+We can ues `rejection_rates()`
 again to estimate the power:
 
 
 ``` r
-out_power <- get_rejection_rates(out)
+out_power <- rejection_rates(out)
 out_power
 #>                                          test test_label pvalid reject
 #> 1 test_index_of_mome: x->m->y, moderated by w       Test      1 0.0525
@@ -1171,7 +1171,7 @@ the sample size is 500.
 
 
 ``` r
-out_new_n_reject <- get_rejection_rates(out_new_n)
+out_new_n_reject <- rejection_rates(out_new_n)
 out_new_n_reject
 #>                                          test test_label pvalid reject
 #> 1 test_index_of_mome: x->m->y, moderated by w       Test      1 0.2125
