@@ -6,6 +6,7 @@
 \alias{rejection_rates.power4test}
 \alias{rejection_rates.power4test_by_es}
 \alias{rejection_rates.power4test_by_n}
+\alias{print.rejection_rates_df}
 \title{Rejection Rates}
 \usage{
 rejection_rates(object, ...)
@@ -24,6 +25,8 @@ rejection_rates(object, ...)
 \method{rejection_rates}{power4test_by_es}(object, all_columns = FALSE, ...)
 
 \method{rejection_rates}{power4test_by_n}(object, all_columns = FALSE, ...)
+
+\method{print}{rejection_rates_df}(x, digits = 3, annotation = TRUE, abbreviate_col_names = TRUE, ...)
 }
 \arguments{
 \item{object}{The object
@@ -33,8 +36,11 @@ a \code{power4test} object,
 a \code{power4test_by_n} object,
 or a \code{power4test_by_es} object.}
 
-\item{...}{Optional arguments. Not
-used.}
+\item{...}{Optional arguments. For
+the \code{print} method, these arguments
+will be passed to the \code{print} method
+of \code{data.frame} objects \code{\link[=print.data.frame]{print.data.frame()}}.
+Not used for other methods.}
 
 \item{all_columns}{If \code{TRUE}, all
 columns stored by a test will be
@@ -57,11 +63,29 @@ for the rejection rates
 (column \code{reject} or \code{sig}) will
 be computed. Normal approximation
 is used.}
+
+\item{x}{The \code{rejection_rates_df}
+object to be printed.}
+
+\item{digits}{The number of digits
+after the decimal place to be
+printed.}
+
+\item{annotation}{Logical. Whether
+additional notes will be printed.}
+
+\item{abbreviate_col_names}{Logical.
+Whether some column names will be
+abbreviated.}
 }
 \value{
-The \code{rejection_rates} method for
-\code{power4test} objects returns
-a data frame with the number of
+The \code{rejection_rates} method returns
+a \code{rejection_rates_df} object,
+with a \code{print} method.
+If the input is a
+\code{power4test} object, it is
+a data-frame like object with the
+number of
 rows equal to the number of tests.
 Note that some tests, such as
 the test by \code{\link[=test_parameters]{test_parameters()}},
@@ -83,7 +107,11 @@ is false, then this is the power.
 
 The \code{rejection_rates} method for
 for \code{power4test_by_es} objects
-returns a data frame which is
+returns an object of the
+class \code{rejection_rates_df_by_es},
+which is a subclass of
+\code{rejection_rates_df}.
+It is a data frame which is
 similar to the output of
 \code{\link[=rejection_rates]{rejection_rates()}}, with a
 column added for the effect size (\code{pop_es_name} and
@@ -92,7 +120,11 @@ for each test.
 
 The \code{rejection_rates} method for
 for \code{power4test_by_n} objects
-returns a data frame which is
+returns an object of the
+class \code{rejection_rates_df_by_n},
+which is a subclass of
+\code{rejection_rates_df}.
+It is a data frame which is
 similar to the output of
 for a \code{power4test} object, with a
 column \code{n} added for the sample size

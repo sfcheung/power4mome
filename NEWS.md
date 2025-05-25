@@ -1,4 +1,4 @@
-# power4mome 0.0.1.33
+# power4mome 0.0.1.34
 
 - Initialized the package. (0.0.0.9000)
 
@@ -321,3 +321,7 @@
   revised to use the `rejection_rates` method
   instead of these two functions.
   (0.0.1.33)
+
+- Created a class for the output of
+  `rejection_rates` and added a print
+  method. (0.0.1.34)
