@@ -281,10 +281,12 @@ c.power4test_by_es <- function(...,
 #'
 #' @noRd
 rejection_rates_by_es <- function(object_by_es,
-                                  all_columns = FALSE) {
+                                  all_columns = FALSE,
+                                  ...) {
   tmpfct <- function(x) {
     out_i <- rejection_rates(x,
-                             all_columns = all_columns)
+                             all_columns = all_columns,
+                             ...)
     pn <- attr(x, "pop_es_name")
     pv <- attr(x, "pop_es_value")
     out_i <- data.frame(par = pn,

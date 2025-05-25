@@ -1,4 +1,4 @@
-# power4mome 0.0.1.34
+# power4mome 0.0.1.35
 
 - Initialized the package. (0.0.0.9000)
 
@@ -325,3 +325,9 @@
 - Created a class for the output of
   `rejection_rates` and added a print
   method. (0.0.1.34)
+
+- Updated the arguments of the print
+  method for `rejection_rate()` output
+  of `power4test_by_es` and
+  `power4test_by_es` objects.
+  (0.0.1.35)

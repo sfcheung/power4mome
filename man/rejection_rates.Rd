@@ -22,9 +22,23 @@ rejection_rates(object, ...)
   ...
 )
 
-\method{rejection_rates}{power4test_by_es}(object, all_columns = FALSE, ...)
+\method{rejection_rates}{power4test_by_es}(
+  object,
+  all_columns = FALSE,
+  ci = TRUE,
+  level = 0.95,
+  se = FALSE,
+  ...
+)
 
-\method{rejection_rates}{power4test_by_n}(object, all_columns = FALSE, ...)
+\method{rejection_rates}{power4test_by_n}(
+  object,
+  all_columns = FALSE,
+  ci = TRUE,
+  level = 0.95,
+  se = FALSE,
+  ...
+)
 
 \method{print}{rejection_rates_df}(x, digits = 3, annotation = TRUE, abbreviate_col_names = TRUE, ...)
 }

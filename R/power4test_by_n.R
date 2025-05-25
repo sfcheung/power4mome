@@ -248,10 +248,12 @@ c.power4test_by_n <- function(...,
 #'
 #' @noRd
 rejection_rates_by_n <- function(object_by_n,
-                                 all_columns = FALSE) {
+                                 all_columns = FALSE,
+                                 ...) {
   tmpfct <- function(x, n) {
     out_i <- rejection_rates(x,
-                             all_columns = all_columns)
+                             all_columns = all_columns,
+                             ...)
     out_i <- data.frame(n = n,
                         out_i)
     out_i
