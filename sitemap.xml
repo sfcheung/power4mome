@@ -14,7 +14,6 @@
 <url><loc>https://sfcheung.github.io/power4mome/reference/fit_model.html</loc></url>
 <url><loc>https://sfcheung.github.io/power4mome/reference/gen_boot.html</loc></url>
 <url><loc>https://sfcheung.github.io/power4mome/reference/gen_mc.html</loc></url>
-<url><loc>https://sfcheung.github.io/power4mome/reference/get_rejection_rates.html</loc></url>
 <url><loc>https://sfcheung.github.io/power4mome/reference/index.html</loc></url>
 <url><loc>https://sfcheung.github.io/power4mome/reference/plot.power_curve.html</loc></url>
 <url><loc>https://sfcheung.github.io/power4mome/reference/plot.x_from_power.html</loc></url>
@@ -29,6 +28,7 @@
 <url><loc>https://sfcheung.github.io/power4mome/reference/rbeta_rs.html</loc></url>
 <url><loc>https://sfcheung.github.io/power4mome/reference/rbeta_rs2.html</loc></url>
 <url><loc>https://sfcheung.github.io/power4mome/reference/rbinary_rs.html</loc></url>
+<url><loc>https://sfcheung.github.io/power4mome/reference/rejection_rates.html</loc></url>
 <url><loc>https://sfcheung.github.io/power4mome/reference/rexp_rs.html</loc></url>
 <url><loc>https://sfcheung.github.io/power4mome/reference/rlnorm_rs.html</loc></url>
 <url><loc>https://sfcheung.github.io/power4mome/reference/rpgnorm_rs.html</loc></url>

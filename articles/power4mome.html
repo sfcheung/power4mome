@@ -23,7 +23,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.29</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.34</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -66,7 +66,7 @@
                         <h4 data-toc-skip class="author">Shu Fai Cheung
 &amp; Sing-Hang Cheung</h4>
             
-            <h4 data-toc-skip class="date">2025-05-20</h4>
+            <h4 data-toc-skip class="date">2025-05-25</h4>
       
 
       <div class="d-none name"><code>power4mome.Rmd</code></div>
@@ -119,7 +119,7 @@ datasets generated. Repeat previous steps until the model is specified
 correctly.</p></li>
 <li><p>Call <code><a href="../reference/power4test.html">power4test()</a></code> again, with the test to do
 specified.</p></li>
-<li><p>Call <code><a href="../reference/get_rejection_rates.html">get_rejection_rates()</a></code> to compute the
+<li><p>Call <code><a href="../reference/rejection_rates.html">rejection_rates()</a></code> to compute the
 power.</p></li>
 </ol>
 </div>
@@ -527,14 +527,22 @@ estimating the the power.</p>
 <p>The power estimate is simply the proportion of significant results,
 the <em>rejection</em> <em>rate</em>, because the null hypothesis is
 false. The rejection rate can be retrieved by
-<code><a href="../reference/get_rejection_rates.html">get_rejection_rates()</a></code>.</p>
+<code><a href="../reference/rejection_rates.html">rejection_rates()</a></code>.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">out_power</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_rejection_rates.html">get_rejection_rates</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">out_power</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rejection_rates.html">rejection_rates</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span></span></code></pre></div>
 <p>The output is simply a data frame:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">out_power</span></span>
-<span><span class="co">#&gt;                     test test_label pvalid reject reject_ci_lo reject_ci_hi</span></span>
-<span><span class="co">#&gt; 1 test_indirect: x-&gt;m-&gt;y       Test      1 0.4675    0.4186045    0.5163955</span></span></code></pre></div>
+<span><span class="co">#&gt;                     test test_label   p.v reject r.cilo r.cihi</span></span>
+<span><span class="co">#&gt; 1 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.468  0.419  0.516</span></span>
+<span><span class="co">#&gt; Notes:</span></span>
+<span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>
+<span><span class="co">#&gt; - reject: The proportion of 'significant' replications, that is, the</span></span>
+<span><span class="co">#&gt;   rejection rate.If the null hypothesis is true, this is the Type I</span></span>
+<span><span class="co">#&gt;   error rate. If the null hypothesis is false, this is the power.</span></span>
+<span><span class="co">#&gt; - r.cilo,r.cihi: The confidence interval of the rejection rate, based</span></span>
+<span><span class="co">#&gt;   on normal approximation.</span></span>
+<span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span></code></pre></div>
 <p>In the example above, the estimated power of the test of the indirect
 effect, conducted by Monte Carlo confidence interval, is 0.468.<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content="&lt;p&gt;&lt;code&gt;pvalid&lt;/code&gt; is the proportion of valid results
 across replications. &lt;code&gt;1&lt;/code&gt; means that the test conducted
@@ -745,13 +753,21 @@ equivalent to using the &lt;em&gt;t&lt;/em&gt; test when the model is fitted by
 <div class="section level3">
 <h3 id="compute-the-power-1">Compute the Power<a class="anchor" aria-label="anchor" href="#compute-the-power-1"></a>
 </h3>
-<p>We can ues <code><a href="../reference/get_rejection_rates.html">get_rejection_rates()</a></code> again to estimate the
+<p>We can ues <code><a href="../reference/rejection_rates.html">rejection_rates()</a></code> again to estimate the
 power:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">out_power</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_rejection_rates.html">get_rejection_rates</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">out_power</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rejection_rates.html">rejection_rates</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span></span>
 <span><span class="va">out_power</span></span>
-<span><span class="co">#&gt;                    test test_label pvalid reject reject_ci_lo reject_ci_hi</span></span>
-<span><span class="co">#&gt; 1 test_moderation: CIs       y~x:w      1 0.1175    0.0859431    0.1490569</span></span></code></pre></div>
+<span><span class="co">#&gt;                    test test_label   p.v reject r.cilo r.cihi</span></span>
+<span><span class="co">#&gt; 1 test_moderation: CIs       y~x:w 1.000  0.117  0.086  0.149</span></span>
+<span><span class="co">#&gt; Notes:</span></span>
+<span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>
+<span><span class="co">#&gt; - reject: The proportion of 'significant' replications, that is, the</span></span>
+<span><span class="co">#&gt;   rejection rate.If the null hypothesis is true, this is the Type I</span></span>
+<span><span class="co">#&gt;   error rate. If the null hypothesis is false, this is the power.</span></span>
+<span><span class="co">#&gt; - r.cilo,r.cihi: The confidence interval of the rejection rate, based</span></span>
+<span><span class="co">#&gt;   on normal approximation.</span></span>
+<span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span></code></pre></div>
 <p>The estimated power of the test of the product term,
 <code>x:w</code>, is 0.117, with 95% confidence interval [0.086;
 0.149].</p>
@@ -765,10 +781,18 @@ analysis using a new value for the sample size. Simply set the output of
 <span><span class="va">out_new_n</span></span></code></pre></div>
 <p>This is the estimated power when the sample size is 200.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">out_new_n_reject</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_rejection_rates.html">get_rejection_rates</a></span><span class="op">(</span><span class="va">out_new_n</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">out_new_n_reject</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rejection_rates.html">rejection_rates</a></span><span class="op">(</span><span class="va">out_new_n</span><span class="op">)</span></span>
 <span><span class="va">out_new_n_reject</span></span>
-<span><span class="co">#&gt;                    test test_label pvalid reject reject_ci_lo reject_ci_hi</span></span>
-<span><span class="co">#&gt; 1 test_moderation: CIs       y~x:w      1  0.295    0.2503086    0.3396914</span></span></code></pre></div>
+<span><span class="co">#&gt;                    test test_label   p.v reject r.cilo r.cihi</span></span>
+<span><span class="co">#&gt; 1 test_moderation: CIs       y~x:w 1.000  0.295  0.250  0.340</span></span>
+<span><span class="co">#&gt; Notes:</span></span>
+<span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>
+<span><span class="co">#&gt; - reject: The proportion of 'significant' replications, that is, the</span></span>
+<span><span class="co">#&gt;   rejection rate.If the null hypothesis is true, this is the Type I</span></span>
+<span><span class="co">#&gt;   error rate. If the null hypothesis is false, this is the power.</span></span>
+<span><span class="co">#&gt; - r.cilo,r.cihi: The confidence interval of the rejection rate, based</span></span>
+<span><span class="co">#&gt;   on normal approximation.</span></span>
+<span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span></code></pre></div>
 <p>The estimated power is 0.295, 95% confidence interval [0.250; 0.340],
 when the sample size is 200.</p>
 <p>This process can be repeated to find the required sample size for a
@@ -966,15 +990,23 @@ mediator, it support any number of mediators along a path.<a class="footnote-ref
 <div class="section level3">
 <h3 id="compute-the-power-2">Compute the Power<a class="anchor" aria-label="anchor" href="#compute-the-power-2"></a>
 </h3>
-<p>We can ues <code><a href="../reference/get_rejection_rates.html">get_rejection_rates()</a></code> again to estimate the
+<p>We can ues <code><a href="../reference/rejection_rates.html">rejection_rates()</a></code> again to estimate the
 power:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">out_power</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_rejection_rates.html">get_rejection_rates</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">out_power</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rejection_rates.html">rejection_rates</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span></span>
 <span><span class="va">out_power</span></span>
-<span><span class="co">#&gt;                                          test test_label pvalid reject</span></span>
-<span><span class="co">#&gt; 1 test_index_of_mome: x-&gt;m-&gt;y, moderated by w       Test      1 0.0525</span></span>
-<span><span class="co">#&gt;   reject_ci_lo reject_ci_hi</span></span>
-<span><span class="co">#&gt; 1   0.03064316   0.07435684</span></span></code></pre></div>
+<span><span class="co">#&gt;                                          test test_label   p.v reject r.cilo</span></span>
+<span><span class="co">#&gt; 1 test_index_of_mome: x-&gt;m-&gt;y, moderated by w       Test 1.000  0.052  0.031</span></span>
+<span><span class="co">#&gt;   r.cihi</span></span>
+<span><span class="co">#&gt; 1  0.074</span></span>
+<span><span class="co">#&gt; Notes:</span></span>
+<span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>
+<span><span class="co">#&gt; - reject: The proportion of 'significant' replications, that is, the</span></span>
+<span><span class="co">#&gt;   rejection rate.If the null hypothesis is true, this is the Type I</span></span>
+<span><span class="co">#&gt;   error rate. If the null hypothesis is false, this is the power.</span></span>
+<span><span class="co">#&gt; - r.cilo,r.cihi: The confidence interval of the rejection rate, based</span></span>
+<span><span class="co">#&gt;   on normal approximation.</span></span>
+<span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span></code></pre></div>
 <p>The estimated power of the test of moderated mediation effect,
 conducted by a test of the index of moderated mediation, is 0.052, 95%
 confidence interval [0.031; 0.074].</p>
@@ -985,12 +1017,20 @@ size:</p>
 <span>                        n <span class="op">=</span> <span class="fl">500</span><span class="op">)</span></span></code></pre></div>
 <p>This is the estimated power when the sample size is 500.</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">out_new_n_reject</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_rejection_rates.html">get_rejection_rates</a></span><span class="op">(</span><span class="va">out_new_n</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">out_new_n_reject</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rejection_rates.html">rejection_rates</a></span><span class="op">(</span><span class="va">out_new_n</span><span class="op">)</span></span>
 <span><span class="va">out_new_n_reject</span></span>
-<span><span class="co">#&gt;                                          test test_label pvalid reject</span></span>
-<span><span class="co">#&gt; 1 test_index_of_mome: x-&gt;m-&gt;y, moderated by w       Test      1 0.2125</span></span>
-<span><span class="co">#&gt;   reject_ci_lo reject_ci_hi</span></span>
-<span><span class="co">#&gt; 1    0.1724112    0.2525888</span></span></code></pre></div>
+<span><span class="co">#&gt;                                          test test_label   p.v reject r.cilo</span></span>
+<span><span class="co">#&gt; 1 test_index_of_mome: x-&gt;m-&gt;y, moderated by w       Test 1.000  0.212  0.172</span></span>
+<span><span class="co">#&gt;   r.cihi</span></span>
+<span><span class="co">#&gt; 1  0.253</span></span>
+<span><span class="co">#&gt; Notes:</span></span>
+<span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>
+<span><span class="co">#&gt; - reject: The proportion of 'significant' replications, that is, the</span></span>
+<span><span class="co">#&gt;   rejection rate.If the null hypothesis is true, this is the Type I</span></span>
+<span><span class="co">#&gt;   error rate. If the null hypothesis is false, this is the power.</span></span>
+<span><span class="co">#&gt; - r.cilo,r.cihi: The confidence interval of the rejection rate, based</span></span>
+<span><span class="co">#&gt;   on normal approximation.</span></span>
+<span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span></code></pre></div>
 <p>The estimated power is 0.212, 95% confidence interval [0.172; 0.253],
 when the sample size is 500. This process can be repeated to find the
 required sample size for a target power.</p>
@@ -1105,7 +1145,7 @@ Hayes, A. F. (2015). An index and test of linear moderated mediation.
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer>

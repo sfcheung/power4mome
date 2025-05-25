@@ -1,5 +1,5 @@
 pandoc: 3.1.11
-pkgdown: 2.1.2
+pkgdown: 2.1.3
 pkgdown_sha: ~
 articles:
   articles/main_workflow: main_workflow.html
@@ -7,7 +7,7 @@ articles:
   power4mome: power4mome.html
   articles/x_from_power_for_es: x_from_power_for_es.html
   articles/x_from_power_for_n: x_from_power_for_n.html
-last_built: 2025-05-25T01:58Z
+last_built: 2025-05-25T11:47Z
 urls:
   reference: https://sfcheung.github.io/power4mome/reference
   article: https://sfcheung.github.io/power4mome/articles

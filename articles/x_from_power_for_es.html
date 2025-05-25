@@ -23,7 +23,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.29</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.34</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -126,7 +126,7 @@ datasets generated. Repeat previous steps until the model is specified
 correctly.</p></li>
 <li><p>Call <code><a href="../reference/power4test.html">power4test()</a></code> again, with the test to do
 specified, using the sample size to be examined.</p></li>
-<li><p>Call <code><a href="../reference/get_rejection_rates.html">get_rejection_rates()</a></code> to compute the power and
+<li><p>Call <code><a href="../reference/rejection_rates.html">rejection_rates()</a></code> to compute the power and
 verify that the test is setup correctly.</p></li>
 <li><p>Call <code><a href="../reference/x_from_power.html">x_from_power()</a></code> to estimated the minimum effect
 size that can be detected, given other factors, including the sample
@@ -613,7 +613,7 @@ corresponding indirect effect is about 0.112</p>
 <span><span class="co">#&gt; === Technical Information ===</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - The range of values explored: 0.287205207942574 to 0.37417900451784 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 3.852 mins </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 3.83 mins </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
@@ -639,19 +639,29 @@ corresponding indirect effect is about 0.112</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - Detailed Results:</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;    par    es                   test test_label pvalid reject reject_ci_lo reject_ci_hi</span></span>
-<span><span class="co">#&gt; 1  m~x 0.287 test_indirect: x-&gt;m-&gt;y       Test      1  0.685        0.639        0.731</span></span>
-<span><span class="co">#&gt; 2  m~x 0.287 test_indirect: x-&gt;m-&gt;y       Test      1  0.698        0.652        0.743</span></span>
-<span><span class="co">#&gt; 3  m~x 0.300 test_indirect: x-&gt;m-&gt;y       Test      1  0.720        0.596        0.844</span></span>
-<span><span class="co">#&gt; 4  m~x 0.312 test_indirect: x-&gt;m-&gt;y       Test      1  0.760        0.642        0.878</span></span>
-<span><span class="co">#&gt; 5  m~x 0.317 test_indirect: x-&gt;m-&gt;y       Test      1  0.780        0.665        0.895</span></span>
-<span><span class="co">#&gt; 6  m~x 0.325 test_indirect: x-&gt;m-&gt;y       Test      1  0.745        0.685        0.805</span></span>
-<span><span class="co">#&gt; 7  m~x 0.327 test_indirect: x-&gt;m-&gt;y       Test      1  0.748        0.705        0.790</span></span>
-<span><span class="co">#&gt; 8  m~x 0.330 test_indirect: x-&gt;m-&gt;y       Test      1  0.790        0.750        0.830</span></span>
-<span><span class="co">#&gt; 9  m~x 0.333 test_indirect: x-&gt;m-&gt;y       Test      1  0.820        0.714        0.926</span></span>
-<span><span class="co">#&gt; 10 m~x 0.340 test_indirect: x-&gt;m-&gt;y       Test      1  0.760        0.642        0.878</span></span>
-<span><span class="co">#&gt; 11 m~x 0.372 test_indirect: x-&gt;m-&gt;y       Test      1  0.840        0.804        0.876</span></span>
-<span><span class="co">#&gt; 12 m~x 0.374 test_indirect: x-&gt;m-&gt;y       Test      1  0.812        0.774        0.851</span></span></code></pre></div>
+<span><span class="co">#&gt;    par    es                   test test_label   p.v reject r.cilo r.cihi</span></span>
+<span><span class="co">#&gt; 1  m~x 0.287 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.685  0.639  0.731</span></span>
+<span><span class="co">#&gt; 2  m~x 0.287 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.698  0.652  0.743</span></span>
+<span><span class="co">#&gt; 3  m~x 0.300 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.720  0.596  0.844</span></span>
+<span><span class="co">#&gt; 4  m~x 0.312 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.760  0.642  0.878</span></span>
+<span><span class="co">#&gt; 5  m~x 0.317 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.780  0.665  0.895</span></span>
+<span><span class="co">#&gt; 6  m~x 0.325 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.745  0.685  0.805</span></span>
+<span><span class="co">#&gt; 7  m~x 0.327 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.748  0.705  0.790</span></span>
+<span><span class="co">#&gt; 8  m~x 0.330 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.790  0.750  0.830</span></span>
+<span><span class="co">#&gt; 9  m~x 0.333 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.820  0.714  0.926</span></span>
+<span><span class="co">#&gt; 10 m~x 0.340 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.760  0.642  0.878</span></span>
+<span><span class="co">#&gt; 11 m~x 0.372 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.840  0.804  0.876</span></span>
+<span><span class="co">#&gt; 12 m~x 0.374 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.812  0.774  0.851</span></span>
+<span><span class="co">#&gt; Notes:</span></span>
+<span><span class="co">#&gt; - par: The parameter being varied.</span></span>
+<span><span class="co">#&gt; - es: The population value of 'par' in a trial.</span></span>
+<span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>
+<span><span class="co">#&gt; - reject: The proportion of 'significant' replications, that is, the rejection rate.If</span></span>
+<span><span class="co">#&gt;   the null hypothesis is true, this is the Type I error rate. If the null hypothesis is</span></span>
+<span><span class="co">#&gt;   false, this is the power.</span></span>
+<span><span class="co">#&gt; - r.cilo,r.cihi: The confidence interval of the rejection rate, based on normal</span></span>
+<span><span class="co">#&gt;   approximation.</span></span>
+<span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span></code></pre></div>
 <p>It reports the 95% confidence interval of the estimated power,
 [0.774; 0.851].</p>
 <p>It also reports major technical information regarding the search,
@@ -728,7 +738,7 @@ varied:</p>
 <span><span class="co">#&gt; === Technical Information ===</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - The range of values explored: 0.290860248271345 to 0.347615451859909 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 3.755 mins </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 4.113 mins </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
@@ -754,19 +764,29 @@ varied:</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - Detailed Results:</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;    par    es                   test test_label pvalid reject reject_ci_lo reject_ci_hi</span></span>
-<span><span class="co">#&gt; 1  y~m 0.291 test_indirect: x-&gt;m-&gt;y       Test      1  0.703        0.658        0.747</span></span>
-<span><span class="co">#&gt; 2  y~m 0.291 test_indirect: x-&gt;m-&gt;y       Test      1  0.698        0.652        0.743</span></span>
-<span><span class="co">#&gt; 3  y~m 0.300 test_indirect: x-&gt;m-&gt;y       Test      1  0.720        0.596        0.844</span></span>
-<span><span class="co">#&gt; 4  y~m 0.307 test_indirect: x-&gt;m-&gt;y       Test      1  0.720        0.596        0.844</span></span>
-<span><span class="co">#&gt; 5  y~m 0.315 test_indirect: x-&gt;m-&gt;y       Test      1  0.730        0.668        0.792</span></span>
-<span><span class="co">#&gt; 6  y~m 0.317 test_indirect: x-&gt;m-&gt;y       Test      1  0.820        0.714        0.926</span></span>
-<span><span class="co">#&gt; 7  y~m 0.318 test_indirect: x-&gt;m-&gt;y       Test      1  0.750        0.708        0.792</span></span>
-<span><span class="co">#&gt; 8  y~m 0.321 test_indirect: x-&gt;m-&gt;y       Test      1  0.767        0.726        0.809</span></span>
-<span><span class="co">#&gt; 9  y~m 0.325 test_indirect: x-&gt;m-&gt;y       Test      1  0.760        0.642        0.878</span></span>
-<span><span class="co">#&gt; 10 y~m 0.333 test_indirect: x-&gt;m-&gt;y       Test      1  0.860        0.764        0.956</span></span>
-<span><span class="co">#&gt; 11 y~m 0.345 test_indirect: x-&gt;m-&gt;y       Test      1  0.850        0.815        0.885</span></span>
-<span><span class="co">#&gt; 12 y~m 0.348 test_indirect: x-&gt;m-&gt;y       Test      1  0.823        0.785        0.860</span></span></code></pre></div>
+<span><span class="co">#&gt;    par    es                   test test_label   p.v reject r.cilo r.cihi</span></span>
+<span><span class="co">#&gt; 1  y~m 0.291 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.703  0.658  0.747</span></span>
+<span><span class="co">#&gt; 2  y~m 0.291 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.698  0.652  0.743</span></span>
+<span><span class="co">#&gt; 3  y~m 0.300 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.720  0.596  0.844</span></span>
+<span><span class="co">#&gt; 4  y~m 0.307 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.720  0.596  0.844</span></span>
+<span><span class="co">#&gt; 5  y~m 0.315 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.730  0.668  0.792</span></span>
+<span><span class="co">#&gt; 6  y~m 0.317 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.820  0.714  0.926</span></span>
+<span><span class="co">#&gt; 7  y~m 0.318 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.750  0.708  0.792</span></span>
+<span><span class="co">#&gt; 8  y~m 0.321 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.767  0.726  0.809</span></span>
+<span><span class="co">#&gt; 9  y~m 0.325 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.760  0.642  0.878</span></span>
+<span><span class="co">#&gt; 10 y~m 0.333 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.860  0.764  0.956</span></span>
+<span><span class="co">#&gt; 11 y~m 0.345 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.850  0.815  0.885</span></span>
+<span><span class="co">#&gt; 12 y~m 0.348 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.823  0.785  0.860</span></span>
+<span><span class="co">#&gt; Notes:</span></span>
+<span><span class="co">#&gt; - par: The parameter being varied.</span></span>
+<span><span class="co">#&gt; - es: The population value of 'par' in a trial.</span></span>
+<span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>
+<span><span class="co">#&gt; - reject: The proportion of 'significant' replications, that is, the rejection rate.If</span></span>
+<span><span class="co">#&gt;   the null hypothesis is true, this is the Type I error rate. If the null hypothesis is</span></span>
+<span><span class="co">#&gt;   false, this is the power.</span></span>
+<span><span class="co">#&gt; - r.cilo,r.cihi: The confidence interval of the rejection rate, based on normal</span></span>
+<span><span class="co">#&gt;   approximation.</span></span>
+<span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span></code></pre></div>
 <p>It reports the 95% confidence interval of the estimated power,
 [0.785; 0.860].</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
@@ -820,7 +840,7 @@ Science</em>, <em>25</em>(2), 334–339. <a href="https://doi.org/10.1177/095679
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer>

@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.29</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.34</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,7 +40,7 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.0.1.29" id="power4mome-00129">power4mome 0.0.1.29<a class="anchor" aria-label="anchor" href="#power4mome-00129"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.0.1.34" id="power4mome-00134">power4mome 0.0.1.34<a class="anchor" aria-label="anchor" href="#power4mome-00134"></a></h2>
 <ul><li><p>Initialized the package. (0.0.0.9000)</p></li>
 <li><p>Major functions drafted and the main workflows are finalized. Ready for documenting the changes. (0.0.0.9001)</p></li>
 <li><p>Documented how to set <code>pop_es</code>. (0.0.0.9002)</p></li>
@@ -73,7 +73,7 @@
 <li><p>Added a print method for <code>power4test</code> objects. (0.0.0.9027)</p></li>
 <li><p><code>sim_out</code> can now be used to update a <code>sim_out</code> object by adding elements to <code>extra</code>. (0.0.0.9028)</p></li>
 <li><p><code><a href="../reference/power4test.html">power4test()</a></code> can updata a <code>power4test</code> object using only a new <code>nrep</code>. (0.0.0.9029)</p></li>
-<li><p>Added <code><a href="../reference/get_rejection_rates.html">get_rejection_rates()</a></code> to extract rejection rates from all stored tests. (0.0.0.9030)</p></li>
+<li><p>Added <code>get_rejection_rates()</code> to extract rejection rates from all stored tests. (0.0.0.9030)</p></li>
 <li><p>Added <code><a href="../reference/power4test_by_n.html">power4test_by_n()</a></code> and <code>power4test_by_pop_es()</code> for finding the power for a range of sample sizes or effect sizes. (0.0.0.9031)</p></li>
 <li><p>Update the help pages and the examples. (0.0.0.9032)</p></li>
 <li><p>Minor fixes on the <code>boot_ci</code> and <code>mc_ci</code> arguments of <code><a href="../reference/test_indirect_effect.html">test_indirect_effect()</a></code> and <code><a href="../reference/test_index_of_mome.html">test_index_of_mome()</a></code>. (0.0.0.9033)</p></li>
@@ -101,16 +101,21 @@
 <li><p>Added <code>n_from_power()</code> to search the sample size with the target power. (0.0.1.17)</p></li>
 <li><p>Updated <code>psi_std()</code> to skip checking the variances of product terms. (0.0.1.18)</p></li>
 <li><p>Improved <code>rejection_rates_add_ci()</code> to be usable by other functions. (0.0.1.19)</p></li>
-<li><p>Updated <code><a href="../reference/get_rejection_rates.html">get_rejection_rates()</a></code> to report confidence intervals and standard errors of rejection rates. (0.0.1.20)</p></li>
-<li><p>Revised <code><a href="../reference/get_rejection_rates.html">get_rejection_rates()</a></code> and related functions. The column of rejection rates is now always named <code>"reject"</code>. (0.0.1.21)</p></li>
+<li><p>Updated <code>get_rejection_rates()</code> to report confidence intervals and standard errors of rejection rates. (0.0.1.20)</p></li>
+<li><p>Revised <code>get_rejection_rates()</code> and related functions. The column of rejection rates is now always named <code>"reject"</code>. (0.0.1.21)</p></li>
 <li><p>Added more <code><a href="../reference/ptable_pop.html">ptable_pop()</a></code> arguments to <code><a href="../reference/power4test.html">power4test()</a></code>. (0.0.1.22)</p></li>
 <li><p>Added <code><a href="../reference/power_curve.html">power_curve()</a></code> to estimate the relation between rejection rates and a predictor. Updated <code>n_from_power()</code> to use <code><a href="../reference/power_curve.html">power_curve()</a></code> internally. (0.0.1.23)</p></li>
 <li><p>The <code>print</code> method of <code>sim_out</code> objects can print the standardized and/or unstandardized estimates when fitting a model to the merged data. (0.0.1.24)</p></li>
 <li><p>Renamed <code>power4test_by_pop_es()</code> to <code><a href="../reference/power4test_by_es.html">power4test_by_es()</a></code>, because <code>"n"</code> and <code>"es"</code> (not <code>"pop_es"</code>) are used in other functions to distinguish the predictor used. (0.0.1.25)</p></li>
-<li><p>Renamed <code>get_rejection_rates_by_pop_es()</code> to <code><a href="../reference/power4test_by_es.html">get_rejection_rates_by_es()</a></code>, to be consistent with the name <code><a href="../reference/power4test_by_es.html">power4test_by_es()</a></code>. (0.0.1.26)</p></li>
+<li><p>Renamed <code>get_rejection_rates_by_pop_es()</code> to <code>get_rejection_rates_by_es()</code>, to be consistent with the name <code><a href="../reference/power4test_by_es.html">power4test_by_es()</a></code>. (0.0.1.26)</p></li>
 <li><p>Replaced <code>n_from_power()</code> by the more general version <code><a href="../reference/x_from_power.html">x_from_power()</a></code>, and updated related functions. (0.0.1.27)</p></li>
 <li><p>Updated <code><a href="../reference/x_from_power.html">x_from_power()</a></code> to fully support <code>x = "es"</code>. (0.0.1.28)</p></li>
 <li><p>Minor changes to the printout of progress for <code><a href="../reference/power4test_by_n.html">power4test_by_n()</a></code> and <code><a href="../reference/power4test_by_es.html">power4test_by_es()</a></code>. (0.0.1.29)</p></li>
+<li><p>Fixed a minor bug in the internal function <code>fix_nls_args()</code>. (0.0.1.30)</p></li>
+<li><p>Renamed <code>get_rejection_rates*</code> to <code>rejection_rates*</code> because this looks more consistent with the common naming convention. (0.0.1.31)</p></li>
+<li><p>Convert <code><a href="../reference/rejection_rates.html">rejection_rates()</a></code> to an S3 generic method. (0.0.1.32)</p></li>
+<li><p>Add <code>rejection_rates</code> methods for <code>power4test_by_n</code> and <code>power4test_by_es</code> objects. The original functions <code>rejection_rates_by_n()</code> and <code>rejection_rates_by_es()</code> are no longer exported. All relevant functions are revised to use the <code>rejection_rates</code> method instead of these two functions. (0.0.1.33)</p></li>
+<li><p>Created a class for the output of <code>rejection_rates</code> and added a print method. (0.0.1.34)</p></li>
 </ul></div>
   </main></div>
 
@@ -120,7 +125,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer></div>
