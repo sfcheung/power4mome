@@ -240,82 +240,82 @@ print this object:
 ``` r
 print(out,
       data_long = TRUE)
-#>
+#> 
 #> ====================== Model Information ======================
-#>
+#> 
 #> == Model on Factors/Variables ==
-#>
+#> 
 #> m ~ x
 #> y ~ m + x
-#>
+#> 
 #> == Model on Variables/Indicators ==
-#>
+#> 
 #> m ~ x
 #> y ~ m + x
-#>
+#> 
 #> ====== Population Values ======
-#>
+#> 
 #> Regressions:
 #>                    Population
-#>   m ~
-#>     x                 0.500
-#>   y ~
-#>     m                 0.300
-#>     x                 0.100
-#>
+#>   m ~                        
+#>     x                 0.500  
+#>   y ~                        
+#>     m                 0.300  
+#>     x                 0.100  
+#> 
 #> Variances:
 #>                    Population
-#>    .m                 0.750
-#>    .y                 0.870
-#>     x                 1.000
-#>
+#>    .m                 0.750  
+#>    .y                 0.870  
+#>     x                 1.000  
+#> 
 #> ======================= Data Information =======================
-#>
-#> Number of Replications:  2
-#> Sample Sizes:  50000
-#>
+#> 
+#> Number of Replications:  2 
+#> Sample Sizes:  50000 
+#> 
 #> ==== Descriptive Statistics ====
-#>
+#> 
 #>   vars     n mean sd skew kurtosis se
 #> m    1 1e+05 0.00  1 0.01     0.03  0
 #> y    2 1e+05 0.01  1 0.01     0.00  0
 #> x    3 1e+05 0.00  1 0.01     0.01  0
-#>
+#> 
 #> ===== Parameter Estimates Based on All 2 Samples Combined =====
-#>
-#> Total Sample Size: 100000
-#>
+#> 
+#> Total Sample Size: 100000 
+#> 
 #> ==== Standardized Estimates ====
-#>
+#> 
 #> Variances and error variances omitted.
-#>
+#> 
 #> Regressions:
 #>                     est.std
-#>   m ~
+#>   m ~                      
 #>     x                 0.500
-#>   y ~
+#>   y ~                      
 #>     m                 0.295
 #>     x                 0.102
-#>
-#>
+#> 
+#> 
 #> ==================== Extra Element(s) Found ====================
-#>
+#> 
 #> - fit
-#>
+#> 
 #> === Element(s) of the First Dataset ===
-#>
+#> 
 #> ============ <fit> ============
-#>
+#> 
 #> lavaan 0.6-19 ended normally after 1 iteration
-#>
+#> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
 #>   Number of model parameters                         5
-#>
+#> 
 #>   Number of observations                         50000
-#>
+#> 
 #> Model Test User Model:
-#>
+#>                                                       
 #>   Test statistic                                 0.000
 #>   Degrees of freedom                                 0
 ```
@@ -461,81 +461,81 @@ This is the default printout:
 ``` r
 print(out,
       test_long = TRUE)
-#>
+#> 
 #> ====================== Model Information ======================
-#>
+#> 
 #> == Model on Factors/Variables ==
-#>
+#> 
 #> m ~ x
 #> y ~ m + x
-#>
+#> 
 #> == Model on Variables/Indicators ==
-#>
+#> 
 #> m ~ x
 #> y ~ m + x
-#>
+#> 
 #> ====== Population Values ======
-#>
+#> 
 #> Regressions:
 #>                    Population
-#>   m ~
-#>     x                 0.500
-#>   y ~
-#>     m                 0.300
-#>     x                 0.100
-#>
+#>   m ~                        
+#>     x                 0.500  
+#>   y ~                        
+#>     m                 0.300  
+#>     x                 0.100  
+#> 
 #> Variances:
 #>                    Population
-#>    .m                 0.750
-#>    .y                 0.870
-#>     x                 1.000
-#>
+#>    .m                 0.750  
+#>    .y                 0.870  
+#>     x                 1.000  
+#> 
 #> ======================= Data Information =======================
-#>
-#> Number of Replications:  50
-#> Sample Sizes:  50
-#>
+#> 
+#> Number of Replications:  50 
+#> Sample Sizes:  50 
+#> 
 #> Call print with 'data_long = TRUE' for further information.
-#>
+#> 
 #> ==================== Extra Element(s) Found ====================
-#>
+#> 
 #> - fit
 #> - mc_out
-#>
+#> 
 #> === Element(s) of the First Dataset ===
-#>
+#> 
 #> ============ <fit> ============
-#>
+#> 
 #> lavaan 0.6-19 ended normally after 1 iteration
-#>
+#> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
 #>   Number of model parameters                         5
-#>
+#> 
 #>   Number of observations                            50
-#>
+#> 
 #> Model Test User Model:
-#>
+#>                                                       
 #>   Test statistic                                 0.000
 #>   Degrees of freedom                                 0
-#>
+#> 
 #> =========== <mc_out> ===========
-#>
-#>
+#> 
+#> 
 #> == A 'mc_out' class object ==
-#>
-#> Number of Monte Carlo replications: 2000
-#>
-#>
+#> 
+#> Number of Monte Carlo replications: 2000 
+#> 
+#> 
 #> =============== <test_indirect: x->m->y> ===============
-#>
+#> 
 #> Mean(s) across replication:
 #>    est   cilo  cihi   sig
 #>  0.139 -0.026 0.337 0.400
-#>
+#> 
 #> - The value 'sig' is the rejection rate.
 #> - If the null hypothesis is false, this is the power.
-#> - Number of valid replications for rejection rate: 50
+#> - Number of valid replications for rejection rate: 50 
 #> - Proportion of valid replications for rejection rate: 1.000
 ```
 
@@ -611,12 +611,12 @@ This is the basic output:
 ``` r
 out_n
 #> Call:
-#> x_from_power(object = out, x = "n", target_power = 0.8, final_nrep = 400,
+#> x_from_power(object = out, x = "n", target_power = 0.8, final_nrep = 400, 
 #>     seed = 1234)
-#> Predictor (x): Sample Size
-#> - Target Power: 0.800
-#> - Final Value: 103
-#> - Final Estimated Power: 0.782
+#> Predictor (x): Sample Size 
+#> - Target Power: 0.800 
+#> - Final Value: 103 
+#> - Final Estimated Power: 0.782 
 #> Call `summary()` for detailed results.
 ```
 
@@ -634,53 +634,53 @@ method:
 
 ``` r
 summary(out_n)
-#>
+#> 
 #> ====== x_from_power Results ======
-#>
+#> 
 #> Call:
-#> x_from_power(object = out, x = "n", target_power = 0.8, final_nrep = 400,
+#> x_from_power(object = out, x = "n", target_power = 0.8, final_nrep = 400, 
 #>     seed = 1234)
-#> Predictor (x): Sample Size
-#>
-#> - Target Power: 0.800
-#>
+#> Predictor (x): Sample Size 
+#> 
+#> - Target Power: 0.800 
+#> 
 #> === Major Results ===
-#>
-#> - Final Value: 103
-#> - Final Estimated Power: 0.782
+#> 
+#> - Final Value: 103 
+#> - Final Estimated Power: 0.782 
 #> - Confidence Interval: [0.742; 0.823]
 #> - Level of confidence: 95.0%
 #> - Based on 400 replications.
-#>
+#> 
 #> === Technical Information ===
-#>
-#> - The range of values explored: 50 to 131
-#> - Time spent in the search: 2.591 mins
+#> 
+#> - The range of values explored: 50 to 131 
+#> - Time spent in the search: 2.565 mins 
 #> - The final crude model for the power-predictor relation:
-#>
-#> Model Type: Logistic Regression
-#>
+#> 
+#> Model Type: Logistic Regression 
+#> 
 #> Call:
-#> power_curve(object = by_x_i, formula = power_model, start = start,
-#>     lower_bound = lower_bound, upper_bound = upper_bound, nls_args = nls_args,
+#> power_curve(object = by_x_i, formula = power_model, start = start, 
+#>     lower_bound = lower_bound, upper_bound = upper_bound, nls_args = nls_args, 
 #>     nls_control = nls_control, verbose = progress)
-#>
+#> 
 #> Predictor: n (Sample Size)
-#>
+#> 
 #> Model:
-#>
+#> 
 #> Call:  stats::glm(formula = reject ~ x, family = "binomial", data = reject1)
-#>
+#> 
 #> Coefficients:
-#> (Intercept)            x
-#>    -1.75189      0.03008
-#>
+#> (Intercept)            x  
+#>    -1.75189      0.03008  
+#> 
 #> Degrees of Freedom: 149 Total (i.e. Null);  148 Residual
-#> Null Deviance:	    200.2
+#> Null Deviance:	    200.2 
 #> Residual Deviance: 187.7 	AIC: 191.7
-#>
+#> 
 #> - Detailed Results:
-#>
+#> 
 #>     n                   test test_label pvalid reject reject_ci_lo reject_ci_hi
 #> 1  50 test_indirect: x->m->y       Test      1  0.400        0.264        0.536
 #> 2  75 test_indirect: x->m->y       Test      1  0.700        0.573        0.827
