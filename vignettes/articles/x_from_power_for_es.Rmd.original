@@ -35,7 +35,7 @@ to do find by simulation, given the
 sample size and other factors, given a
 desired power, what is the minimum effect
 size to be detected with this level of
-power.
+power (see the note below on "minimum").
 
 The illustration will use an indirect
 effect tested by Monte Carlo confidence
@@ -136,6 +136,27 @@ find the minimum *ab* that can be detected
 with a power of .80 given a sample size,
 we should still manipulate one parameter
 (e.g., *a* or *b*) one at a time.
+
+Two additional notes on the notion
+"minimum". First, for simplicity, only
+positive population values are considered.
+However, there may be cases in which
+the population values under consideration
+are negative. In these cases, "minimum"
+refers to minimum in *magnitude*.
+
+Second, there may be cases in which,
+even keeping the values considered
+positive, the relation between power
+and the parameter being varied is
+U-shaped. In these cases, two or more
+values of the selected parameters may
+have the same target power.
+The plot of the relation (described lated)
+should be examined to see whether the
+solution is likely the minimum value
+in the range examined.
+
 
 This will be illustrated in this vignette.
 
