@@ -1,4 +1,4 @@
-# power4mome 0.0.1.29
+# power4mome 0.0.1.30
 
 - Initialized the package. (0.0.0.9000)
 
@@ -297,3 +297,7 @@
   progress for `power4test_by_n()`
   and `power4test_by_es()`.
   (0.0.1.29)
+
+- Fixed a minor bug in the internal
+  function `fix_nls_args()`.
+  (0.0.1.30)

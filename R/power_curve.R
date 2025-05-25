@@ -612,13 +612,13 @@ fix_nls_args <- function(formula,
   # But can be overridden
   nls_args0 <- list(algorithm = "port")
   nls_args1 <- utils::modifyList(nls_args0,
-                                  nls_args)
+                                 nls_args)
 
   out <- list(formula = formula,
               start = start,
               lower_bound = lower_bound,
               upper_bound = upper_bound,
-              nls_args = nls_args,
+              nls_args = nls_args1,
               nls_control = nls_control)
 
   return(out)
