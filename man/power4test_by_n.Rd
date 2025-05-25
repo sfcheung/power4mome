@@ -3,7 +3,7 @@
 \name{power4test_by_n}
 \alias{power4test_by_n}
 \alias{c.power4test_by_n}
-\alias{get_rejection_rates_by_n}
+\alias{rejection_rates_by_n}
 \title{Power By Sample Sizes}
 \usage{
 power4test_by_n(
@@ -17,7 +17,7 @@ power4test_by_n(
 
 \method{c}{power4test_by_n}(..., sort = TRUE)
 
-get_rejection_rates_by_n(object_by_n, all_columns = FALSE)
+rejection_rates_by_n(object_by_n, all_columns = FALSE)
 }
 \arguments{
 \item{object}{A \code{power4test} object,
@@ -85,10 +85,10 @@ a \code{power4test_by_n} object with
 all the elements (tests for different
 sample sizes) combined.
 
-The function \code{\link[=get_rejection_rates_by_n]{get_rejection_rates_by_n()}}
+The function \code{\link[=rejection_rates_by_n]{rejection_rates_by_n()}}
 returns a data frame which is
 similar to the output of
-\code{\link[=get_rejection_rates]{get_rejection_rates()}}, with a
+\code{\link[=rejection_rates]{rejection_rates()}}, with a
 column \code{n} added for the sample size
 for each test.
 }
@@ -100,9 +100,9 @@ The method \code{\link[=c.power4test_by_n]{c.power4test_by_n()}}
 is used to combine tests from different
 runs of \code{\link[=power4test_by_n]{power4test_by_n()}}.
 
-The function \code{\link[=get_rejection_rates_by_n]{get_rejection_rates_by_n()}}
+The function \code{\link[=rejection_rates_by_n]{rejection_rates_by_n()}}
 is used to extract the rejection
-rates form a \code{get_rejection_rates_by_n}
+rates form a \code{rejection_rates_by_n}
 object, with sample sizes added to
 the output.
 }
@@ -154,7 +154,7 @@ test_out <- power4test(object = sim_only,
 
 out <- power4test_by_n(test_out,
                        n = c(100, 110, 120))
-out_reject <- get_rejection_rates_by_n(out)
+out_reject <- rejection_rates_by_n(out)
 out_reject
 
 }

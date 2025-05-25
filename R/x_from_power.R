@@ -65,8 +65,8 @@
 #' parameter examined.
 #'
 #' - `rejection_rates`: The output of
-#' [get_rejection_rates_by_n()] or
-#' [get_rejection_rates_by_es()]
+#' [rejection_rates_by_n()] or
+#' [rejection_rates_by_es()]
 #' as appropriate.
 #'
 #' - `x_tried`: The sample sizes or
@@ -553,8 +553,8 @@ x_from_power <- function(object,
   if (progress) {
     cat("- Rejection Rates:\n")
     tmp <- switch(x,
-                  n = get_rejection_rates_by_n(by_x_i),
-                  es = get_rejection_rates_by_es(by_x_i))
+                  n = rejection_rates_by_n(by_x_i),
+                  es = rejection_rates_by_es(by_x_i))
     print(tmp)
     cat("\n")
   }
@@ -598,9 +598,9 @@ x_from_power <- function(object,
 
   # The sequence of the numbers of replication
   new_nrep <- switch(x,
-                     n = get_rejection_rates_by_n(by_x_1,
+                     n = rejection_rates_by_n(by_x_1,
                                                   all_columns = TRUE)$nrep,
-                     es = get_rejection_rates_by_es(by_x_1,
+                     es = rejection_rates_by_es(by_x_1,
                                                     all_columns = TRUE)$nrep)
 
   new_nrep <- ceiling(mean(new_nrep))
@@ -712,8 +712,8 @@ x_from_power <- function(object,
     if (progress) {
       cat("- Rejection Rates:\n")
       tmp <- switch(x,
-                    n = get_rejection_rates_by_n(by_x_1),
-                    es = get_rejection_rates_by_es(by_x_1))
+                    n = rejection_rates_by_n(by_x_1),
+                    es = rejection_rates_by_es(by_x_1))
       print(tmp)
       cat("\n")
     }
@@ -728,9 +728,9 @@ x_from_power <- function(object,
 
     # Get the rejection rates of all values tried.
     tmp1 <- switch(x,
-                   n = get_rejection_rates_by_n(by_x_1,
+                   n = rejection_rates_by_n(by_x_1,
                                                 all_columns = TRUE),
-                   es = get_rejection_rates_by_es(by_x_1,
+                   es = rejection_rates_by_es(by_x_1,
                                                   all_columns = TRUE))
     # tmp1$reject <- tmp1$sig
     tmp2 <- range(tmp1$reject)
@@ -809,8 +809,8 @@ x_from_power <- function(object,
                                                progress = simulation_progress))
       nrep_out <- nrep_seq[1]
       power_out <- switch(x,
-                          n = get_rejection_rates_by_n(by_x_out)[1, "reject"],
-                          es = get_rejection_rates_by_es(by_x_out)[1, "reject"])
+                          n = rejection_rates_by_n(by_x_out)[1, "reject"],
+                          es = rejection_rates_by_es(by_x_out)[1, "reject"])
       by_x_out_ci <- rejection_rates_add_ci(by_x_out,
                                             level = ci_level)
       ci_out <- unlist(by_x_out_ci[1, c("reject_ci_lo", "reject_ci_hi")])
@@ -951,8 +951,8 @@ x_from_power <- function(object,
 
     cat("- Rejection Rates:\n")
     tmp <- switch(x,
-                  n = get_rejection_rates_by_n(by_x_1),
-                  es = get_rejection_rates_by_es(by_x_1))
+                  n = rejection_rates_by_n(by_x_1),
+                  es = rejection_rates_by_es(by_x_1))
     print(tmp)
     cat("\n")
     cat("- Estimated Power Curve:\n")
@@ -1047,8 +1047,8 @@ x_from_power <- function(object,
                             my_call)
   args$object <- NULL
   reject_1 <- switch(x,
-                     n = get_rejection_rates_by_n(by_x_1),
-                     es = get_rejection_rates_by_es(by_x_1))
+                     n = rejection_rates_by_n(by_x_1),
+                     es = rejection_rates_by_es(by_x_1))
   time_end <- Sys.time()
 
   out <- list(x = x,

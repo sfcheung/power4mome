@@ -92,17 +92,17 @@
 #'                                         mc_ci = FALSE))
 #' test_out <- power4test(object = test_out,
 #'                        test_fun = test_parameters)
-#' get_rejection_rates(test_out)
+#' rejection_rates(test_out)
 #'
 #' @export
-get_rejection_rates <- function(object,
-                                all_columns = FALSE,
-                                ci = TRUE,
-                                level = .95,
-                                se = FALSE) {
+rejection_rates <- function(object,
+                            all_columns = FALSE,
+                            ci = TRUE,
+                            level = .95,
+                            se = FALSE) {
   out0 <- summarize_tests(object)
   out1 <- lapply(out0,
-                 get_rejection_rates_i,
+                 rejection_rates_i,
                  all_columns = all_columns,
                  ci = ci,
                  level = level,
@@ -119,13 +119,13 @@ get_rejection_rates <- function(object,
 }
 
 #' @noRd
-get_rejection_rates_i <- function(object_i,
+rejection_rates_i <- function(object_i,
                                   all_columns = FALSE,
                                   ci = ci,
                                   level = level,
                                   se = se) {
   if (is.vector(object_i$mean)) {
-    out <- get_rejection_rates_i_vector(object_i,
+    out <- rejection_rates_i_vector(object_i,
                                         all_columns = all_columns,
                                         ci = ci,
                                         level = level,
@@ -134,7 +134,7 @@ get_rejection_rates_i <- function(object_i,
   }
   if (length(dim(object_i$mean)) == 2) {
     # Likely a data frame
-    out <- get_rejection_rates_i_data_frame(object_i,
+    out <- rejection_rates_i_data_frame(object_i,
                                             all_columns = all_columns,
                                             ci = ci,
                                             level = level,
@@ -145,7 +145,7 @@ get_rejection_rates_i <- function(object_i,
 }
 
 #' @noRd
-get_rejection_rates_i_vector <- function(object_i,
+rejection_rates_i_vector <- function(object_i,
                                          all_columns = FALSE,
                                          ci = TRUE,
                                          level = .95,
@@ -191,11 +191,11 @@ get_rejection_rates_i_vector <- function(object_i,
 }
 
 #' @noRd
-get_rejection_rates_i_data_frame <- function(object_i,
-                                             all_columns = FALSE,
-                                             ci = TRUE,
-                                             level = .95,
-                                             se = FALSE) {
+rejection_rates_i_data_frame <- function(object_i,
+                                         all_columns = FALSE,
+                                         ci = TRUE,
+                                         level = .95,
+                                         se = FALSE) {
   test_args <- object_i$test_attributes
   test_name <- test_args$test_name
   out_i0 <- object_i$mean

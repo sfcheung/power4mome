@@ -11,7 +11,7 @@ set_es_range <- function(object,
                 pop_es_name = pop_es_name)
   es0_sign <- sign(es0)
   es0_abs <- abs(es0)
-  reject0 <- get_rejection_rates(object)
+  reject0 <- rejection_rates(object)
   power0 <- reject0$reject[1]
   if (es0 >= es_max) {
     # Use x_max because es_max and es_min are internal arguments

@@ -1,4 +1,4 @@
-# power4mome 0.0.1.30
+# power4mome 0.0.1.31
 
 - Initialized the package. (0.0.0.9000)
 
@@ -301,3 +301,9 @@
 - Fixed a minor bug in the internal
   function `fix_nls_args()`.
   (0.0.1.30)
+
+- Renamed `get_rejection_rates*` to
+  `rejection_rates*` because this
+  looks more consistent with
+  the common naming convention.
+  (0.0.1.31)

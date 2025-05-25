@@ -159,12 +159,12 @@ rejection_rates_add_ci <- function(object,
                                    add_se = TRUE) {
   if (!is.data.frame(object)) {
     if (inherits(object, "power4test_by_es")) {
-      df1 <- get_rejection_rates_by_es(object,
-                                       all_columns = TRUE)
+      df1 <- rejection_rates_by_es(object,
+                                   all_columns = TRUE)
     }
     if (inherits(object, "power4test_by_n")) {
-      df1 <- get_rejection_rates_by_n(object,
-                                      all_columns = TRUE)
+      df1 <- rejection_rates_by_n(object,
+                                  all_columns = TRUE)
     }
   } else {
     # Assume it is already an output with rejection rates

@@ -4,7 +4,7 @@ set_n_range <- function(object,
                         k = 4,
                         n_max = 1000) {
   n0 <- attr(object, "args")$n
-  reject0 <- get_rejection_rates(object)
+  reject0 <- rejection_rates(object)
   power0 <- reject0$reject[1]
   if (n0 >= n_max) {
     stop("Initial sample size (",
@@ -47,8 +47,8 @@ set_n_range <- function(object,
 #                           nls_args = list(),
 #                           nls_control = list(),
 #                           verbose = TRUE) {
-#   reject0 <- get_rejection_rates_by_n(object,
-#                                       all_columns = TRUE)
+#   reject0 <- rejection_rates_by_n(object,
+#                                   all_columns = TRUE)
 #   # reject0$power <- reject0$sig
 #   reject0$power <- reject0$reject
 #   nls_contorl0 <- list(maxiter = 1000)

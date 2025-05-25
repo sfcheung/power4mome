@@ -32,7 +32,7 @@ out <- power4test(nrep = 20,
                                    mc_ci = TRUE),
                   iseed = 1234,
                   parallel = TRUE)
-out_power <- get_rejection_rates(out)
+out_power <- rejection_rates(out)
 out_power
 
 tmp <- x_from_power(out,
@@ -119,7 +119,7 @@ out3 <- power4test(nrep = 50,
                    iseed = 1234,
                    parallel = TRUE)
 
-get_rejection_rates(out3)
+rejection_rates(out3)
 
 tmp3 <- x_from_power(out3,
                      x = "n",

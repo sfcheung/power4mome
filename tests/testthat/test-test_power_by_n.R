@@ -35,7 +35,7 @@ test_out <- power4test(object = sim_only,
 out <- power4test_by_n(test_out,
                        n = c(100, 110),
                        by_seed = 1234)
-out_reject <- get_rejection_rates_by_n(out)
+out_reject <- rejection_rates_by_n(out)
 out_reject
 
 out2 <- power4test_by_n(object = sim_only,
@@ -47,7 +47,7 @@ out2 <- power4test_by_n(object = sim_only,
                                          boot_ci = TRUE,
                                          mc_ci = FALSE),
                         by_seed = 1234)
-out_reject2 <- get_rejection_rates_by_n(out2)
+out_reject2 <- rejection_rates_by_n(out2)
 out_reject2
 
 expect_equal(out[[2]]$sim_all[[1]]$mm_lm_dat_out[1, ],

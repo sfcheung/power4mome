@@ -29,7 +29,7 @@ out <- power4test(nrep = 50,
                   iseed = 1234,
                   parallel = FALSE,
                   progress = FALSE)
-out_power <- get_rejection_rates(out)
+out_power <- rejection_rates(out)
 out_power
 
 expect_no_error(tmp <- x_from_power(out,
@@ -55,7 +55,7 @@ out <- power4test(nrep = 10,
                   iseed = 1234,
                   parallel = FALSE,
                   progress = FALSE)
-out_power <- get_rejection_rates(out)
+out_power <- rejection_rates(out)
 out_power
 
 expect_no_error(tmp <- x_from_power(out,
