@@ -2,18 +2,31 @@
 % Please edit documentation in R/get_rejection_rates.R
 \name{rejection_rates}
 \alias{rejection_rates}
+\alias{rejection_rates.default}
+\alias{rejection_rates.power4test}
 \title{Rejection Rates of All Tests}
 \usage{
-rejection_rates(
+rejection_rates(object, ...)
+
+\method{rejection_rates}{default}(object, ...)
+
+\method{rejection_rates}{power4test}(
   object,
   all_columns = FALSE,
   ci = TRUE,
   level = 0.95,
-  se = FALSE
+  se = FALSE,
+  ...
 )
 }
 \arguments{
-\item{object}{A \code{power4test} object.}
+\item{object}{The object
+from which the rejection rates
+are to be extracted, such as
+a \code{power4test} object.}
+
+\item{...}{Optional arguments, to
+be passed to the next method.}
 
 \item{all_columns}{If \code{TRUE}, all
 columns stored by a test will be
@@ -57,6 +70,12 @@ tests across all replications.
 each test. If the null hypothesis
 is false, then this is the power.
 }
+
+The function is an S3 method that
+can be used for other objects in
+the packages, such as the output
+of \code{\link[=power4test_by_n]{power4test_by_n()}} and
+\code{\link[=power4test_by_es]{power4test_by_es()}}.
 }
 \description{
 Get all rejection rates

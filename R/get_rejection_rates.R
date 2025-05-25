@@ -33,31 +33,19 @@
 #'  each test. If the null hypothesis
 #'  is false, then this is the power.
 #'
-#' @param object A `power4test` object.
+#' The function is an S3 method that
+#' can be used for other objects in
+#' the packages, such as the output
+#' of [power4test_by_n()] and
+#' [power4test_by_es()].
 #'
-#' @param all_columns If `TRUE`, all
-#' columns stored by a test will be
-#' printed. Default is `FALSE` and
-#' only essential columns related to
-#' power will be printed.
+#' @param object The object
+#' from which the rejection rates
+#' are to be extracted, such as
+#' a `power4test` object.
 #'
-#' @param ci If `TRUE`, confidence
-#' intervals for the rejection rates
-#' (column `reject` or `sig`) will
-#' be computed. Normal approximation
-#' is used.
-#'
-#' @param level The level of confidence
-#' for the confidence intervals, if
-#' `ci` is `TRUE`.
-#'
-#' @param se If `TRUE`, standard errors
-#' for the rejection rates
-#' (column `reject` or `sig`) will
-#' be computed. Normal approximation
-#' is used.
-#'
-#'
+#' @param ... Optional arguments, to
+#' be passed to the next method.
 #'
 #' @seealso [power4test()]
 #'
@@ -96,10 +84,47 @@
 #'
 #' @export
 rejection_rates <- function(object,
-                            all_columns = FALSE,
-                            ci = TRUE,
-                            level = .95,
-                            se = FALSE) {
+                            ...) {
+  UseMethod("rejection_rates")
+}
+
+#' @export
+#' @rdname rejection_rates
+rejection_rates.default <- function(object,
+                                    ...) {
+  stop("The object is not of a supported class.")
+}
+
+#' @param all_columns If `TRUE`, all
+#' columns stored by a test will be
+#' printed. Default is `FALSE` and
+#' only essential columns related to
+#' power will be printed.
+#'
+#' @param ci If `TRUE`, confidence
+#' intervals for the rejection rates
+#' (column `reject` or `sig`) will
+#' be computed. Normal approximation
+#' is used.
+#'
+#' @param level The level of confidence
+#' for the confidence intervals, if
+#' `ci` is `TRUE`.
+#'
+#' @param se If `TRUE`, standard errors
+#' for the rejection rates
+#' (column `reject` or `sig`) will
+#' be computed. Normal approximation
+#' is used.
+#'
+#' @export
+#' @rdname rejection_rates
+rejection_rates.power4test <- function(object,
+                                       all_columns = FALSE,
+                                       ci = TRUE,
+                                       level = .95,
+                                       se = FALSE,
+                                       ...) {
   out0 <- summarize_tests(object)
   out1 <- lapply(out0,
                  rejection_rates_i,

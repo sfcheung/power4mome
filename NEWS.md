@@ -1,4 +1,4 @@
-# power4mome 0.0.1.31
+# power4mome 0.0.1.32
 
 - Initialized the package. (0.0.0.9000)
 
@@ -307,3 +307,7 @@
   looks more consistent with
   the common naming convention.
   (0.0.1.31)
+
+- Convert `rejection_rates()` to an
+  S3 generic method.
+  (0.0.1.32)
