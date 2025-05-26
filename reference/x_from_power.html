@@ -38,10 +38,13 @@ print method for detailed output."><meta name="google-site-verification" content
       <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/power4mome.html">Get started</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/main_workflow.html">Main Workflows</a></li>
-    <li><a class="dropdown-item" href="../articles/n_from_power_workflow.html">Workflow of 'n_from_power()'</a></li>
-    <li><a class="dropdown-item" href="../articles/x_from_power_for_es.html">Effect Size Given Desired Power</a></li>
-    <li><a class="dropdown-item" href="../articles/x_from_power_for_n.html">Sample Size Given Desired Power</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>&lt;Given Power, Find x&gt;</h6></li>
+    <li><a class="dropdown-item" href="../articles/x_from_power_for_n.html">Determine the sample size with the target power</a></li>
+    <li><a class="dropdown-item" href="../articles/x_from_power_for_es.html">Determine the effect size with the target power</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>&lt;Technical Appendices&gt;</h6></li>
+    <li><a class="dropdown-item" href="../articles/main_workflow.html">Workflow of `power4test()`</a></li>
+    <li><a class="dropdown-item" href="../articles/x_from_power_workflow.html">Workflow of `x_from_power()`</a></li>
   </ul></li>
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -513,7 +516,7 @@ and <code><a href="power4test_by_es.html">power4test_by_es()</a></code>.</p></di
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --- Pre-iteration Search ---</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-05-25 12:36:00 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-05-26 13:00:04 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Value(s) to try:  125 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Updating the simulation for sample size: 125 </span>
@@ -561,7 +564,7 @@ and <code><a href="power4test_by_es.html">power4test_by_es()</a></code>.</p></di
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --- Trial 1 ---</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-05-25 12:36:00 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-05-26 13:00:04 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Value(s) to try: 98, 101 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Numbers of replications: 10, 7 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -630,7 +633,7 @@ and <code><a href="power4test_by_es.html">power4test_by_es()</a></code>.</p></di
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --- Final Stage ---</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-05-25 12:36:02 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-05-26 13:00:06 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Rejection Rates:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     n                            test test_label   p.v reject r.cilo r.cihi</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1  98 test_parameters: CIs (pars: ab)         ab 1.000  0.800  0.552  1.048</span>
@@ -696,7 +699,7 @@ and <code><a href="power4test_by_es.html">power4test_by_es()</a></code>.</p></di
 <span class="r-out co"><span class="r-pr">#&gt;</span> === Technical Information ===</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - The range of values explored: 98 to 125 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Time spent in the search: 2.23 secs </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Time spent in the search: 2.165 secs </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - The final crude model for the power-predictor relation:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Model Type: Logistic Regression </span>
