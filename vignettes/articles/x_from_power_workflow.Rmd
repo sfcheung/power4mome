@@ -1,0 +1,317 @@
+---
+title: "Workflow of 'x_from_power()'"
+author: "Shu Fai Cheung & Sing-Hang Cheung"
+output:
+  html_document:
+    fig.align: "center"
+    toc: true
+    number_sections: false
+bibliography: references.bib
+csl: apa.csl
+---
+
+```{r echo = FALSE}
+library(DiagrammeR)
+```
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Goal
+
+This technical appendix describes the
+workflow of `x_from_power()` in
+[power4mome](https://sfcheung.github.io/power4mome/).
+
+# `x_from_power()`
+
+The following is the workflow of `x_from_power()`. Simulation
+is to be done for each value of `x`, and this
+can be slow when Monte Carlo or bootstrapping confidence
+intervals are involved in the test. It is not feasible,
+and also not necessary, to accurately estimate the levels
+of power along many values across a range of `x`, if the
+goal is to find *the* value of `x` with the target power.
+Therefore, steps are taken to
+balance speed and precision when finding the solution.
+
+```{r fig-n_from_power, fig.cap = "From Power to x (Sample Size or Effect Size [Parameter Value])", echo = FALSE}
+# https://mermaid.live/edit#pako:eNqtV21v2kgQ_isrnyoZibShBJr41KtsDAWSVFXSfjggshazgCOz5tbr1FyU_36zb_aapNX1epGSeGbn9ZnxzPrRibMVcTxnnWbf4i1mHH0JFxShV69QnOI8D8karcgaFylH6yRNvd-G8DMa_X4sRBjLGAVjWmw0CuHnmVjOwQehKy0VhkIOpIRczg8pQQlNeIJTJYDSZLPlG0aIJZFm2d4-XqYFqU_zLC14klFb4kBSyK-WIWXCf3S-zgoTYiMCITHz3fnCGSUgwLcElcilKGOI5K2Fc9cSEr4_B4mQcMJ2CSVSzGT1gCHYHG2SB0IbB4zkgHHuoZzwqIwYphviCpN30mTgLpxhzpMd5gR9zr4R5qG9-HfGSc6j5SGibkvE0WSSXNhQUQ3AxDVhG4JwavkDqTLqGKHQFblxhJUhFBfsgWhXkSTAzckfgA2PEq0E9fVDHxS_7lciPHHWsc-C-qzpbQgHt4RLIHLyV0FoDOBka0QZ2edtdAO_GIAuc7SHYDgDpCzDoxfUhfZNbgl9_I7Qb9LPsWGhFYhcbkWjAgxHR8Hj48IZTFCcUc5xAvogtwHzEqEPC-fpyUhaiKhCQz9A-YVbhW1KHkgKBjKIC7N4W3sZNBuolEKcHTxoM9UDdYugEyhHGd2bVglCoeyv7oucSxzREudkheCNaLiFMEoov5CI1izbRfJU25Pc2uTQ7r79T3WfNCerfq-LEoxeasRaznRH8LEJ4I8aUndkp4ZwLAo1aZYHapAnK2VNoidAMIiuGvDYlRz7rvXCx9CQiQyqmjRuGWUFb6FvCd-aMNMsB8uybqBkR2HSG_tWh0gLbZ2WfJQlkE9xov6LN0EiBJSVaGM0NCMsQf4Yu8q9bFChiHcNhEVj_OxwAWvBLyYjjQz-ZWuMg_BXmmMimsOnBzSADklonBa6K773Mk98PUUg_G0iy_rl5uvQhDMJ3OZKwLoZYFIo8wndPHMgMXCXLZTvIFvRLbAd6QqzldqmlfVBnSv9z30ymT1LYeRf3Q5rialARZ-K7GwApr44NL7Q-_cAKcVpJDhNOSnoc3iPMGSUwfiSQygla34kKDD9REo1pWDYm1kfwUiOjubuVER_jctkV-wQLXZL1ahSKodGwfGWrD7U8pciClcl01JAvxx8yw7qUpa5ukCIW4CH5PJQr7F54z1ocWmirYDWz6oqmgDf-kmNWPWsmVagge2SZvzI7Sf_f3R25TbWijX7ns8J5BZibSTres5V0bVeesfKqDJXe7wGj58hJMzUCwb476EELqYiq2rtoGx5T2LeqhRns_mbhXNDeMGopbhw3tyZa5h06vv67lgsNwzvt9V9ag5eTyaQKpah38oNq3V9rRuoq5UiBuqSpIhQXYYUMVRacGvV6kPJD45dy3vp_ItoSXQFz3fmOqHEA3UtAAL9SXLN02eD-uxTZrNUPEGoNrsihmonK2KkVqoiPqq9qYjxUXhVGedi8j1fYx9MvONGiGO_ZprYxkG1Go2Qb3aaYkyq7WQ0fLN1DCMwi8MwBmYJGEZYGQmbVieNCCe-ntGaDPRM1uTAVjIZTGZHRa1gkt8G86H4K_pOFLJCZqJDm-qJWlFqRjWimvo22_idzqr512Br_KYSP9tI88A2o4do026VD3BshRet-N_DQH3_zKuxNBJ0hcK0GeNlw-Ez9mWT69dME8ZlUI1fxbjSk7GimpldKf61GTGSnEkAnLazg-mGkxV80z6K44UDVdzBrceDR_0lu3AW9AlEccGz2wONHY-zgrQdlhWbreOtYaUAVciNGyYYMNlV3D2msyzbGRWySnjGrtVHtPyWliKO9-iUjtfrvz7tdXtnZxcXp93Td_3OWds5ON5Jp9frvL7odrsX5_3zztt-t_vUdv6WZnuvu71Ov3Pa75_2em8v3p332s6GiXx0jIADYQMoCHe8zvn5287TPyG_BaM
+mermaid('
+flowchart TD
+  %% classDef default fill:#EEEEFF;
+  %% classDef errornode fill:#FFDDDD;
+  %% classDef startend fill:#DDFFDD;
+
+  style initial fill: lightgreen
+  style loop fill: lightblue
+  style solution fill: lightyellow
+  style exit fill: lightyellow
+  style found fill: lightgreen
+
+  ZA(["Find the x (n or es)"])
+  AA[["Determine the initial values given the initial results: set_x_range()"]]
+  AB("Estimate Power: power4test_by_n() or power4test_by_es()")
+  AC("Merge all results: by_x_1")
+  AD("Fit a power curve: power_curve() -> fit_i")
+  %% ADA("Update fit_1")
+  %% ADB("Update by_x_1")
+  AE("Set the sequences of nreps, Rs, and xs per trial")
+  %% AF("Set the sequence of Rs")
+  %% AG("Set the sequence of # of ns per trial")
+
+  BA("Start a trial")
+
+  BB{{"CI conttains target power?"}}
+
+  BBA("Update the interval of power levels to search")
+
+  BC[["Determine xs to try: estimate_x_range() --> x_j"]]
+  BD[["Adjust nrep based on power levels of xs: nrep_from_power() --> nrep_j"]]
+  BE("Estimate power: power4test_by_n() or power4test_by_es() --> by_x_j")
+  BF("Merge all results --> by_x_1")
+  BG("Update the power curve: power_curve() --> fit_1")
+
+  BH{{"Is target power inside the range of estimated power levels?"}}
+
+  BHA("Find the candidate solution (x_out) with power closest to the target power")
+  BHAA("Update x_out, power_out, nrep_out, ci_out, and by_x_out")
+
+  BHB("Estimate the candidate x by the power curve")
+  BHBA("Estiamte the power of x: power4test_by_n() or power4test_by_es()")
+  BHBB("Update x_out, power_out, nrep_out, ci_out, and by_x_out")
+  BHBC("Merge all results --> by_x_1")
+  BHBD("Update the power curve: power_curve() --> fit_1")
+
+  BI{{"Any CIs include the target power?"}}
+
+  BIA("Set ci_hit to TRUE")
+  BIB("Find the x (a) with CI including the target power and (b) smallest standard error")
+  BIC("Update n_out, power_out, nrep_out, ci_out, and by_x_out")
+
+  BIZ("Set ci_hit to FALSE")
+
+  BJ{{"ci_hit TRUE?"}}
+
+  BJA{{"nrep_out == final_nrep?"}}
+
+  BJAA{{"At least one nrep left?"}}
+
+  BJAAA("Next nrep, R, and xs_per_trial")
+
+  BJZ("Maximum number of trials reached?")
+
+  BK{{"(ci_hit) and (nrep_out == final_nrep)?"}}
+
+  BKA("Solution found: Set to the solution: x_final, by_x_final, power_final, ci_final, nrep_final, i_final")
+
+  BKB("Solution not found: Set to NA: x_final, by_x_final, power_final, ci_final, nrep_final, i_final")
+
+  BL("Determine x estimated by the power curve (used if solution not found): power_curve() --> x_estimated")
+
+  BM("Prepare the output (an x_from_power object)")
+
+  ZZ[/"Return the output"/]
+
+  ZA --> AA
+
+  subgraph initial [Pre-Iteration Search]
+
+  AA --> AB
+  AB --> AC
+  AC --> AD
+  AD --> AE
+
+  end
+
+  AE --> BA
+
+  subgraph loop [Trial Loop]
+
+  BA --> BB
+  BB -- Yes --> BBA --> BC
+  BB -- No --> BC
+  BC --> BD
+  BD --> BE
+  BE --> BF
+  BF --> BG
+  BG --> BH
+
+  subgraph solution [Any candidate solution?]
+
+  BH -- Yes --> BHA
+  BH -- No --> BHB
+
+  BHA --> BHAA
+  BHAA --> BI
+
+  BHB --> BHBA
+  BHBA --> BHBB
+  BHBB --> BHBC
+  BHBC --> BHBD
+
+  BHBD --> BI
+
+  BI -- Yes --> BIA
+  BIA --> BIB
+  BIB --> BIC
+
+  BI -- No --> BIZ
+
+  end
+
+  subgraph exit [Exit the Loop?]
+
+  BIC --> BJ
+  BIZ --> BJ
+
+  BJ -- Yes --> BJA
+
+  BJ -- No --> BJZ
+
+  BJA -- No --> BJAA
+  BJAA -- Yes --> BJAAA
+  BJAA -- No --> BJZ
+  BJAAA --> BJZ
+
+  end
+
+  BJZ -- No --> BA
+  BJAA -- No --> BA
+
+  end
+
+  subgraph found [Solution Found?]
+
+  BJA -- Yes --> BK
+
+  BJZ -- Yes --> BK
+
+  BK -- Yes --> BKA
+  BK -- No --> BKB
+
+  BKA --> BL
+  BKB --> BL
+
+  end
+
+  BL --> BM
+
+  BM --> ZZ
+
+', height = 4050, width = 800)
+```
+
+In `x_from_power`, `x` can be a sample
+size (`n`) or a population value (`es`,
+"effect size") of the selected model
+parameter.
+
+# Annotation
+
+- `by_x_1`
+
+  - The collection of all values tried and their results.
+    It is updated whenever new value(s) is/are tried.
+
+- `fit_1`
+
+  - The latest power curve estimated by
+    `power_curve`, using the values tried,
+    stored in `by_x_1`. It is updated whenever
+    `by_x_1` is updated.
+
+- `x_j`
+
+  - The value(s) for which power levels
+    will be estimated in a trial.
+
+- `nrep_j`
+
+  - The number of replications to be used
+    when estimate the power level for
+    a value of `x`. In a trial, the
+    numbers of replications can be different
+    for different values, for efficiency.
+
+- `by_x_j`
+
+  - The results for of `power4test_by_n()`
+    or `power4test_by_es()` given
+    `x_j` for a trial.
+
+- `x_out`
+
+  - The value of `x` which is a *candidate*
+    solution (e.g., with estimated power
+    closest to the target value).
+
+- `power_out`, `nrep_out`, `ci_out`, `by_x_out`
+
+  - Results based on `x_out`.
+
+- `ci_hit`
+
+  - Logical. Set to `TRUE` if there is at
+    least one value of `x` with the
+    confidence interval of the estimated
+    power including the target power.
+
+- `final_nrep`
+
+  - The desired number of replications
+    for the solution. This value determines
+    the desired level of precision
+    (the width of the confidence interval)
+    in the solution.
+
+- The sequences of values for `nrep`, `R`,
+  and the number of `x` in a trial.
+
+  - The initial number of replications (`nrep`)
+    can be smaller than `final_nrep`,
+    such that the initial trials, though
+    with lower precision (wider
+    confidence intervals), are faster to
+    run. As the solution is likely to be
+    be found (values of `x` with estimated
+    power close to the target value found),
+    `nrep` will be increased successively
+    to `final_nrep`, such that a trial is
+    slower to run but has a higher precision.
+    Other values that affect the speed,
+    such as the number of values of `x`
+    (`xs_per_trial`)
+    and the number of iterations (`R`) in
+    Monte Carlo confidence intervals
+    and bootstrapping, are also increased
+    successively.
+
+- `x_final`
+
+  - The value of `x` in the solution (e.g., with estimated power
+    closest to the target value), if
+    found.
+
+- `power_final`, `nrep_final`, `ci_final`, `by_x_final`
+
+  - Results based on `x_final`.
+
+- Main functions used
+
+  - `power4test_by_n()` and `power4test_by_es()`,
+    for estimating the power levels for a set of values
+    of `x`.
+
+  - `power_curve()`, for estimating the relation between
+    power and the value of `x`, based on the values of
+    `x` having been examined.
+
+  - The internal function `estimate_x_range()`, for
+    determining the value(s) of `x` to be examined in a
+    trial, given the value(s) examined so far and the
+    tentative power curve.
