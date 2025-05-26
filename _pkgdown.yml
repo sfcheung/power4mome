@@ -27,21 +27,21 @@ navbar:
   structure:
     left:  [intro, articles, reference, tutorials, news]
     right: [search, github]
-#  components:
-#    articles:
-#      text: Articles
-#      menu:
-#      - text: "<Section Title>"
-#      - text: Title
-#        href: articles/doc1.html
-#      - text: Title
-#        href: articles/doc2.html
-#      - text: -------
-#      - text: "<Section Title>"
-#      - text: Title
-#        href: articles/doc3.html
-#      - text: Title
-#        href: articles/doc4.html
+  components:
+    articles:
+      text: Articles
+      menu:
+      - text: "<Given Power, Find x>"
+      - text: Determine the sample size with the target power
+        href: articles/x_from_power_for_n.html
+      - text: Determine the effect size with the target power
+        href: articles/x_from_power_for_es.html
+      - text: -------
+      - text: "<Technical Appendices>"
+      - text: Workflow of `power4test()`
+        href: articles/main_workflow.html
+      - text: Workflow of `x_from_power()`
+        href: articles/x_from_power_workflow.html
 
 reference:
 - title: Main Functions
