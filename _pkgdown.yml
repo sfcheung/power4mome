@@ -39,9 +39,11 @@ navbar:
       - text: -------
       - text: "<Technical Appendices>"
       - text: Workflow of `power4test()`
-        href: articles/main_workflow.html
+        href: articles/power4test_workflow.html
       - text: Workflow of `x_from_power()`
         href: articles/x_from_power_workflow.html
+      - text: Workflow of `sim_data_i()`
+        href: articles/sim_data_i_workflow.html
 
 reference:
 - title: Main Functions

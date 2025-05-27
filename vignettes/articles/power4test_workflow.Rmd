@@ -1,5 +1,5 @@
 ---
-title: "Main Workflows"
+title: "Workflow of `power4test()`"
 author: "Shu Fai Cheung & Sing-Hang Cheung"
 output:
   html_document:
@@ -9,8 +9,6 @@ output:
 bibliography: references.bib
 csl: apa.csl
 ---
-
-(**DRAFT: WORK-IN-PROGRESS**)
 
 ```{r echo = FALSE}
 library(DiagrammeR)
@@ -26,13 +24,12 @@ knitr::opts_chunk$set(
 # Goal
 
 This technical appendix describes the
-workflows of major functions in
+workflow of `power4test()` in
 [power4mome](https://sfcheung.github.io/power4mome/).
 
 # From Population to Power (`power4test()`)
 
-The workflow of `power4test()`, the main
-function that can do all these tasks in
+The main `power4test()` can do all these tasks in
 one call:
 
 - Generate `nrep` datasets (`nrep` replications)
@@ -58,8 +55,10 @@ Power can then be estimated for each of
 the conducted tests by functions such
 as `rejection_rates()`.
 
+The following is the workflow:
+
 ```{r fig-pop_to_power, fig.cap = "From Population to Power", echo = FALSE}
-# https://mermaid.live/edit#pako:eNp1U11v4jAQ_CsrnyqBRCkJ5CA56aSElLdK1fWeIBWyyAaiS2JkO-JaxH_v2gbSo7o87cfM7MRrH9lG5MgiVlTisNlxqeF3mjUAd3ewqbhSKRaQY8HbSkNRVlX07ZG-xeLHLQilFLIhsTNssUjp-wJTmmZgk59RaWpwFnVGLpe9VcZeDCxjr31TXbrao9JlzTXCszigvDbj1UPGnsW-rbguRQM1eagGgEWBGw2qfEdFmR5m7OHVEOIVaaWoUdZlg6B3CPsbNnAyuMUGpRmXc80VahWRWL02Wa9P061YYsQWpQZ-ZmoByDe7Cymi_9Rr2-pIsbUcQ1UqDaK4DoCePaZuTv_iOblhkChIVLSUjnQddGXNjbknlFs0trhlO3HR6s7O_H92uF3T10lnhW5OYtbzC3UrG3ueVqkQEnJRNlvQBwGU1EKSEVRaXXaX2lUIyzENoAXY03NTaWhEEmvT6uymN3Yt8daiKf7j0V0VuL__CbHdgQttnNg4cXXXSD7Fc7eBLp67MHaHZxP7ZlIXxs6lTejqfkLNEzZgNV08Xub05o7WGKO_rzFjEYU5l38yljUnwvFWi5e3ZsMiLVscMCna7Y5FBa8UZe2e1oRpybeS19fqnjdLIboc81IL-eSeuH3pFsOiI_vLIj8IhzN_7I0nvv_dC_wgGLA3Kk-GE28aTr1wFI6m4Wx2GrB3q-oPR54_G4VB4I29kR-Ox6cP5tlTaw
+# https://mermaid.live/edit#pako:eNp9Vttu4zYQ_RWCxQIy4CSOfImtAl1YUt2n9KHbl3W0MBh5dGkl0SCpZh3D_94hqav34gdb5Jw5nDkzQ_lCY34E6tGk4G9xxoQif4dRRUhcMClDSMgRElYXiiR5UXi__I6f3e7XEQKE4KJCmgaz24X4GWOkQmqojg0kDDUIIRok1bkAIvPywOvmHFLkaabOUGBUY8iRKTbEpAJgwJLk6lBiKMUQ81rUYI_68IHs985LRD_peCL6ZaJ393bvL1C1qIjKgAiQmLMkCRcEpMpLpvIqJSf-BoI4JivPrhYK7ZOOaTu7XCIaZBD_a4jU-QSEJySvTjWed71a1MtDRLdIcKoLZOYVsTE75mcyJZAkECtM-B0kcRB3AInbkpUno8M7EKfSOBXfR_Thi2V1W9o2LsJf_9E8b7nKiFZOAiblNFJPCKuOD5ihgbYpO3plzJZYU29dndW2OhNskSoFR04wI_IfQ2ElkXWcESZvo9Psw0S6PD5aHQzxi64FKKPVN3JoghQqEExBF77XtYGjZTep-5pml1sa46sjVJwAi7vEvb45es9tU4oi12olA5GaIreHTVqZ_RsPJO21a5y6gwYa-r7W8I82nWde4XfARMEJluCVcyWVYKe23UB-bNvF941M33XVaFYi2raqTteWwdPKHcp4IJLvj2jGR_6ERANbGk0UaJpnECloiZlRwmvntz8v-JG0zFwDvWojrfvGQwb_ZiwNlY7xyPU46k6VBFvm50MZ6nhDbufRTEVlk-yD8JDxoG19-OFN-OMhaU67mRUM2cy_JsvAEA6aHS8Hz_O6m_Du7jfc-qHBbWbaLO3KLMhnrJPZ67f-5GYnmFkfXFi7uRfr1xSLnHUXLIoxrNV3UOaObWDdoDUDa49uuDHaG_f-_kX_8bw1Y2AI_FsC3xL7fjssOq1ho1vrtjf6Xftak9-bWjlarm27NEMwtAV2MY7G3guWdvActLZgO1A7mA1rYl6doX3c2i6y5dzvBxXu_dpI_ZGVTmkJomT5EV_MF42OKPZTCRH18LF5I0c0qq4IZbXin85VTD0laphSwes0o17CComr-oQVhDBnWJ-y2z2xas952brAMVdcPNt_AuYPgYFQ70K_Us9dLe6X69Xmcb2ZL2ZPs_lySs_Uu1s9zu4X86flk-su1-vlfH6d0nfD6t4_LtzNcr5-clfr2Wq1mNJU6GyaCDFLEAGvK0W9zWbmXv8HiRDA3g
 mermaid('
 flowchart TD
   classDef default fill:#EEEEFF;
@@ -140,44 +139,4 @@ flowchart TD
   C0 -- No --> CB:::startend
 
 ', height = 1750, width = 840)
-```
-
-# Generate Simulated Data (`sim_data()`)
-
-The internal function `sim_data_i()` is called `m`
-times by `sim_data()` to generate `m` datasets.
-
-```{r fig-sim_data, fig.cap = "The Workflow of sim_data_i()", echo = FALSE}
-# https://mermaid.live/edit#pako:eNqFVE1v4jAQ_SuWV5WoRCkJsCVeaaWWwJ566p5CKuQmE7DkxJHt0G1R__uObQole9hIETPmzZs3H86BFqoEymgl1Wux49qS32neEFJIbkwKFSmh4p20pBJSsm9LfFarHxcI0FrpBmmOmNUqxecSYyxSQ1MeIWnqQB7i3qsrkmWDdU6fHCynz9fu9H59m9NH5JWEYyRUFRSWGPEOJqe3zw7ysMagX9CA5haI3QFpueY1WNDE8heQjLT4K2HTqnZwjcwhLHPU95dgCeRV2B1BZCe5Faohey67c7KFS7ZQzR6wS__kwnCriOR7zhtSe9U1t1oUYFjwN5_-pZjFUYwUxhJV9WL_oyn1mjS48vmJQsNWgzEO7tkMqZT2knEEaguN6gwSaeFkO3n1RtZnRWlPUZ-OmBYKUYnCK_qUsryYRcktJ5VWtU_rw4ZEtS6AS_kWyhJN6UhQW1_MxsWfFS17io7s2P1TJ7Ksh8E0PrfqbNtZQ_iL2gMZ-JVkuEYhx0ZcBwa_cYyx06be3PwkD35bgpmFzfHOwg8umFkYonf81UmDmYVWemfpiwhmFgryDor-kvJLAvzjC-3RS08eHdIadM1FiVf34K8RxVpryClD83hnc5o3HwjlnVVPb01BmdUdDKlW3XZHWcWlQa9rsQ-QCr7Ffp5OW95kSp19KAXO6TF8LPw3w2MoO9A_lMWzZDSPJ9FkGsffo1k8mw3pGx5PR9PoLrmLknEyvkvm848hffes8WgcxfNxMptFk2gcJ5PJx1_iPnd2
-mermaid('
-flowchart TD
-  classDef default fill:#EEEEFF;
-  classDef errornode fill:#FFDDDD;
-  classDef startend fill:#DDFFDD;
-
-  %% ZZ(["Start"])
-  A[/"Model and effect sizes"/]
-  B[["Generate the parameter tabel: ptable_pop()"]]
-  BZ[/"A parameter table with population values"/]
-  C[["Convert the parameter table to lavaan model matrices: model_matrices_pop()"]]
-  CZ[/"A list of model matrices with population values"/]
-  D[["Create a list of regression models for the endogenous variables: mm_lm()"]]
-  DZ[/"A list of regression model specification"/]
-  E[["Generate data from the model, optionally with indicator variables: mm_lm_data()"]]
-  EZ[/"A list of data frames"/]
-  ZZZ[/"A list of all the outputs above (class: sim_data_i)"/]
-
-  A:::startend --> B
-  B --> BZ
-  BZ --> C
-  C --> CZ
-  CZ --> D
-  D --> DZ
-  DZ --> E
-  E --> EZ
-  EZ --> ZZZ:::startend
-  BZ --> ZZZ
-  CZ --> ZZZ
-  DZ --> ZZZ
-', height = 1100, width = 500)
 ```

@@ -1,0 +1,77 @@
+---
+title: "Workflows of `sim_data_i()"
+author: "Shu Fai Cheung & Sing-Hang Cheung"
+output:
+  html_document:
+    fig.align: "center"
+    toc: true
+    number_sections: false
+bibliography: references.bib
+csl: apa.csl
+---
+
+```{r echo = FALSE}
+library(DiagrammeR)
+```
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Goal
+
+This technical appendix describes the
+workflow of the internal function `sim_data_i()` in
+[power4mome](https://sfcheung.github.io/power4mome/).
+
+# Generate Simulated Data (`sim_data_i()`)
+
+The internal function `sim_data_i()` is called `m`
+times by `sim_data()` to generate `m` datasets.
+This is the workflow of `sim_data_i()`:
+
+```{r fig-sim_data, fig.cap = "The Workflow of sim_data_i()", echo = FALSE}
+# https://mermaid.live/edit#pako:eNp9VNtO4zAQ_RXLKyQqFSi9pK1XWgmadp94Yp9CUGWSSWvJsSPbKQuIf9-xHcK2izZPM_aZM2cuzhstdAmU0Urq52LPjSO_0lwRUkhubQoVKaHirXSkElKyb2v8NpvvRwgwRhuFNB1ms0nxO8ZYh9Sgyg6Sph6EEA86OyNZdv6Q03sPyunjwJ_ePFzl9A5ZJeEYB1UFhSNWvILN6dWjh9w-YNBPUGC4A-L2QBpueA0ODHH8SQI5FxVRGsPappECygEjTbjZNro5H2CuSJT5ZDf_hD8LtyeIbCV3Qity4LL9TL_y6VdaHQC79lV2p4nkB84VqUMdNXdGFGC_khUQ2w_EsbxVJ08K64iuTtn-rzINKg34FvGewsDOgLUeHtgsqbQJReCQ9A6Ubi0SGeEL-VpwvZX1p8b0RONpAmIbKEQliqDxQ9z6aIIld5xURtdBSAgbEt34AC7lSyxUqNKToNpeXidm6-M_Fa1PFHXsOKG-N1l2gsE0IbduXdM6S_iTPuAWhTVmuHwxx1YMIkPYU8ZYv90XFz_IbdioaGZxu4KzCqOMZhbHGpzw3NJoZrGVwVmHIqKZxYKCg6L_Stk9oNv-rjtYnRykvU-HtAZTc1His3_ztznFmmvIKUOze-85zdU7Qnnr9P2LKihzpoUhNbrd7SmruLTotQ32A1LBd9jX_rThKtO6_giBUuC47uJ_JvxuAoSyN_qbsnEyvZwtkuX1YjmZjuajyWxIXyi7SK5Hl9PJfDYfj2eLxWwyeR_S18A6vryejpezyWI-ThajJJkO6c74ajqF2BUwK90qR9lyOUre_wDTm5TY
+
+mermaid('
+flowchart TD
+  classDef default fill:#EEEEFF;
+  classDef errornode fill:#FFDDDD;
+  classDef startend fill:#DDFFDD;
+
+  %% ZZ(["Start"])
+  A[/"Model and effect sizes"/]
+  B[["Generate the parameter table (if not supplied): ptable_pop()"]]
+  BZ[/"A parameter table with population values"/]
+  C[["Convert the parameter table to lavaan model matrices (if not supplied): model_matrices_pop()"]]
+  CZ[/"A list of model matrices with population values"/]
+  D[["Create a list of regression models for the endogenous variables (if not supplied): mm_lm()"]]
+  DZ[/"A list of regression model specification"/]
+  E[["Generate data from the model, optionally with indicator variables: mm_lm_data()"]]
+  EZ[/"A list of data frames"/]
+  ZZZ[/"A list of all the outputs above (class: sim_data_i)"/]
+
+  A:::startend --> B
+  B --> BZ
+  BZ --> C
+  C --> CZ
+  CZ --> D
+  D --> DZ
+  DZ --> E
+  E --> EZ
+  EZ --> ZZZ:::startend
+  %% BZ --> ZZZ
+  %% CZ --> ZZZ
+  %%DZ --> ZZZ
+', height = 1150, width = 500)
+```
+
+When generating many datasets, some of
+steps do not need to be repeated. Therefore,
+the required objects (e.g., the
+parameter table) will be supplied by
+`sim_data()`, and `sim_data_i()` will
+only do the data generation.
