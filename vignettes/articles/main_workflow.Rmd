@@ -29,9 +29,34 @@ This technical appendix describes the
 workflows of major functions in
 [power4mome](https://sfcheung.github.io/power4mome/).
 
-# From Population to Power
+# From Population to Power (`power4test()`)
 
-The workflow of `power4test()`.
+The workflow of `power4test()`, the main
+function that can do all these tasks in
+one call:
+
+- Generate `nrep` datasets (`nrep` replications)
+  based on a population model and
+  values of the population parameters
+  ("effect sizes") (conducted by `sim_data()`).
+
+- Fit one or more models to each of the
+  datasets (conducted by `fit_model()`).
+
+- (Optional) Generate Monte Carlo or bootstrap estimates
+  based on the fitted model(s), for doing
+  tests by methods such as Monte Carlo
+  or bootstrap confidence intervals
+  (conducted by `gen_mc()` and `gen_boot()`).
+
+- (Optional) Do one or more tests on each of the
+  model fit results (conducted by `do_test()`).
+
+- Return a `power4test()` object.
+
+Power can then be estimated for each of
+the conducted tests by functions such
+as `rejection_rates()`.
 
 ```{r fig-pop_to_power, fig.cap = "From Population to Power", echo = FALSE}
 # https://mermaid.live/edit#pako:eNp1U11v4jAQ_CsrnyqBRCkJ5CA56aSElLdK1fWeIBWyyAaiS2JkO-JaxH_v2gbSo7o87cfM7MRrH9lG5MgiVlTisNlxqeF3mjUAd3ewqbhSKRaQY8HbSkNRVlX07ZG-xeLHLQilFLIhsTNssUjp-wJTmmZgk59RaWpwFnVGLpe9VcZeDCxjr31TXbrao9JlzTXCszigvDbj1UPGnsW-rbguRQM1eagGgEWBGw2qfEdFmR5m7OHVEOIVaaWoUdZlg6B3CPsbNnAyuMUGpRmXc80VahWRWL02Wa9P061YYsQWpQZ-ZmoByDe7Cymi_9Rr2-pIsbUcQ1UqDaK4DoCePaZuTv_iOblhkChIVLSUjnQddGXNjbknlFs0trhlO3HR6s7O_H92uF3T10lnhW5OYtbzC3UrG3ueVqkQEnJRNlvQBwGU1EKSEVRaXXaX2lUIyzENoAXY03NTaWhEEmvT6uymN3Yt8daiKf7j0V0VuL__CbHdgQttnNg4cXXXSD7Fc7eBLp67MHaHZxP7ZlIXxs6lTejqfkLNEzZgNV08Xub05o7WGKO_rzFjEYU5l38yljUnwvFWi5e3ZsMiLVscMCna7Y5FBa8UZe2e1oRpybeS19fqnjdLIboc81IL-eSeuH3pFsOiI_vLIj8IhzN_7I0nvv_dC_wgGLA3Kk-GE28aTr1wFI6m4Wx2GrB3q-oPR54_G4VB4I29kR-Ox6cP5tlTaw
@@ -41,33 +66,80 @@ flowchart TD
   classDef errornode fill:#FFDDDD;
   classDef startend fill:#DDFFDD;
 
+  style sim_out fill: lightyellow
+  style sim_data fill: lightgreen
+  style fit_model fill: lightblue
+
   %% ZZ(["Start"])
-  ZZZ(["Return the results for estimating power"])
-  ZA[/"Population model, effect sizes, et."/]
-  A[["Determine the population model and generate datasets: sim_data()"]]
-  B[["Fit a model to each dataset: fit_model()"]]
+  ZZZ(["Return the results for estimating power (class: power4test)"])
+  ZA0{{"Check the type of input"}}
+  ZA[/"A population model (model), effect sizes (pop_es), sample size (n), etc."/]
+  ZA2[/"A power4test object with datasets (sim_out) and/or test results (test_out)"/]
+
+  A2{{"Any change(s) in values such as sample size (n) and effect size (pop_es)?"}}
+
+  A[["Set the population model and generate datasets: sim_data()"]]
+  B[["Fit the model(s) to each dataset: fit_model()"]]
   AA[/"A list of datasets (class: sim_data)"/]
   BA[/"A list of fit results (class: fit_model)"/]
+
+  BB{{"Generate Monte Carlo or bootstrap estimates?"}}
+  BBA[["Generate Monte Carlo estiamtes for each sample: gen_mc()"]]
+  BBB[["Generate bootstrap estiamtes for each sample: gen_boot()"]]
+
   C[["Merge to a list: sim_out()"]]
-  CA[/"A list of datasets and fit results (class: sim_out)"/]
-  CB(["Return the list for doing two or more tests"])
-  D[["Do the test on each fit reult: do_test()"]]
+  CA[/"A list of datasets and fit results  (class: sim_out)"/]
+  CB(["Return the list for doing tests later (class: power4test)"])
+  D[["Do the test on each fit result: do_test()"]]
   DA[/"A list of test results (class: test_out)"/]
   C0{{"do_the_test?"}}
 
-  ZA:::startend --> A
+  ZA0:::startend --> ZA
+  ZA0:::startend --> ZA2
+  ZA2 --> A2
+  A2 -- Yes --> A
+  A2 -- No --> C0
+  ZA ---> A
+
+  subgraph sim_out ["sim_out()"]
+
+  subgraph sim_data ["sim_data()"]
+
   A --> AA
+
+  end
+
+  subgraph fit_model ["fit_model()"]
+
   B --> BA
+
+  end
+
+  BA --> BB
+
+  BB -- Monte Carlo --> BBA
+  BB -- Bootstrap --> BBB
+  BB -- No --> C
+
+  BBA --> C
+  BBB --> C
+
+  C --> CA
+
+  end
+
+
   AA --> B
   AA --> C
-  BA --> C
-  C --> CA
+
+
   CA --> C0
-  C0 -- TRUE --> D
+  C0 -- Yes --> D
   D --> DA
   DA --> ZZZ:::startend
-  C0 -- FALSE--> CB:::startend
-', height = 1100, width = 500)
+  C0 -- No --> CB:::startend
+
+', height = 1750, width = 840)
 ```
 
 # Generate Simulated Data (`sim_data()`)
