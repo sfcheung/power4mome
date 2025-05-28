@@ -1,0 +1,142 @@
+---
+title: "Workflow of `power4test()`"
+author: "Shu Fai Cheung & Sing-Hang Cheung"
+output:
+  html_document:
+    fig.align: "center"
+    toc: true
+    number_sections: false
+bibliography: references.bib
+csl: apa.csl
+---
+
+```{r echo = FALSE}
+library(DiagrammeR)
+```
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Goal
+
+This technical appendix describes the
+workflow of `power4test()` in
+[power4mome](https://sfcheung.github.io/power4mome/).
+
+# From Population to Power (`power4test()`)
+
+The main `power4test()` can do all these tasks in
+one call:
+
+- Generate `nrep` datasets (`nrep` replications)
+  based on a population model and
+  values of the population parameters
+  ("effect sizes") (conducted by `sim_data()`).
+
+- Fit one or more models to each of the
+  datasets (conducted by `fit_model()`).
+
+- (Optional) Generate Monte Carlo or bootstrap estimates
+  based on the fitted model(s), for doing
+  tests by methods such as Monte Carlo
+  or bootstrap confidence intervals
+  (conducted by `gen_mc()` and `gen_boot()`).
+
+- (Optional) Do one or more tests on each of the
+  model fit results (conducted by `do_test()`).
+
+- Return a `power4test()` object.
+
+Power can then be estimated for each of
+the conducted tests by functions such
+as `rejection_rates()`.
+
+The following is the workflow:
+
+```{r fig-pop_to_power, fig.cap = "From Population to Power", echo = FALSE}
+# https://mermaid.live/edit#pako:eNp9Vttu4zYQ_RWCxQIy4CSOfImtAl1YUt2n9KHbl3W0MBh5dGkl0SCpZh3D_94hqav34gdb5Jw5nDkzQ_lCY34E6tGk4G9xxoQif4dRRUhcMClDSMgRElYXiiR5UXi__I6f3e7XEQKE4KJCmgaz24X4GWOkQmqojg0kDDUIIRok1bkAIvPywOvmHFLkaabOUGBUY8iRKTbEpAJgwJLk6lBiKMUQ81rUYI_68IHs985LRD_peCL6ZaJ393bvL1C1qIjKgAiQmLMkCRcEpMpLpvIqJSf-BoI4JivPrhYK7ZOOaTu7XCIaZBD_a4jU-QSEJySvTjWed71a1MtDRLdIcKoLZOYVsTE75mcyJZAkECtM-B0kcRB3AInbkpUno8M7EKfSOBXfR_Thi2V1W9o2LsJf_9E8b7nKiFZOAiblNFJPCKuOD5ihgbYpO3plzJZYU29dndW2OhNskSoFR04wI_IfQ2ElkXWcESZvo9Psw0S6PD5aHQzxi64FKKPVN3JoghQqEExBF77XtYGjZTep-5pml1sa46sjVJwAi7vEvb45es9tU4oi12olA5GaIreHTVqZ_RsPJO21a5y6gwYa-r7W8I82nWde4XfARMEJluCVcyWVYKe23UB-bNvF941M33XVaFYi2raqTteWwdPKHcp4IJLvj2jGR_6ERANbGk0UaJpnECloiZlRwmvntz8v-JG0zFwDvWojrfvGQwb_ZiwNlY7xyPU46k6VBFvm50MZ6nhDbufRTEVlk-yD8JDxoG19-OFN-OMhaU67mRUM2cy_JsvAEA6aHS8Hz_O6m_Du7jfc-qHBbWbaLO3KLMhnrJPZ67f-5GYnmFkfXFi7uRfr1xSLnHUXLIoxrNV3UOaObWDdoDUDa49uuDHaG_f-_kX_8bw1Y2AI_FsC3xL7fjssOq1ho1vrtjf6Xftak9-bWjlarm27NEMwtAV2MY7G3guWdvActLZgO1A7mA1rYl6doX3c2i6y5dzvBxXu_dpI_ZGVTmkJomT5EV_MF42OKPZTCRH18LF5I0c0qq4IZbXin85VTD0laphSwes0o17CComr-oQVhDBnWJ-y2z2xas952brAMVdcPNt_AuYPgYFQ70K_Us9dLe6X69Xmcb2ZL2ZPs_lySs_Uu1s9zu4X86flk-su1-vlfH6d0nfD6t4_LtzNcr5-clfr2Wq1mNJU6GyaCDFLEAGvK0W9zWbmXv8HiRDA3g
+mermaid('
+flowchart TD
+  classDef default fill:#EEEEFF;
+  classDef errornode fill:#FFDDDD;
+  classDef startend fill:#DDFFDD;
+
+  style sim_out fill: lightyellow
+  style sim_data fill: lightgreen
+  style fit_model fill: lightblue
+
+  %% ZZ(["Start"])
+  ZZZ(["Return the results for estimating power (class: power4test)"])
+  ZA0{{"Check the type of input"}}
+  ZA[/"A population model (model), effect sizes (pop_es), sample size (n), etc."/]
+  ZA2[/"A power4test object with datasets (sim_out) and/or test results (test_out)"/]
+
+  A2{{"Any change(s) in values such as sample size (n) and effect size (pop_es)?"}}
+
+  A[["Set the population model and generate datasets: sim_data()"]]
+  B[["Fit the model(s) to each dataset: fit_model()"]]
+  AA[/"A list of datasets (class: sim_data)"/]
+  BA[/"A list of fit results (class: fit_model)"/]
+
+  BB{{"Generate Monte Carlo or bootstrap estimates?"}}
+  BBA[["Generate Monte Carlo estiamtes for each sample: gen_mc()"]]
+  BBB[["Generate bootstrap estiamtes for each sample: gen_boot()"]]
+
+  C[["Merge to a list: sim_out()"]]
+  CA[/"A list of datasets and fit results  (class: sim_out)"/]
+  CB(["Return the list for doing tests later (class: power4test)"])
+  D[["Do the test on each fit result: do_test()"]]
+  DA[/"A list of test results (class: test_out)"/]
+  C0{{"do_the_test?"}}
+
+  ZA0:::startend --> ZA
+  ZA0:::startend --> ZA2
+  ZA2 --> A2
+  A2 -- Yes --> A
+  A2 -- No --> C0
+  ZA ---> A
+
+  subgraph sim_out ["sim_out()"]
+
+  subgraph sim_data ["sim_data()"]
+
+  A --> AA
+
+  end
+
+  subgraph fit_model ["fit_model()"]
+
+  B --> BA
+
+  end
+
+  BA --> BB
+
+  BB -- Monte Carlo --> BBA
+  BB -- Bootstrap --> BBB
+  BB -- No --> C
+
+  BBA --> C
+  BBB --> C
+
+  C --> CA
+
+  end
+
+
+  AA --> B
+  AA --> C
+
+
+  CA --> C0
+  C0 -- Yes --> D
+  D --> DA
+  DA --> ZZZ:::startend
+  C0 -- No --> CB:::startend
+
+', height = 1750, width = 840)
+```

@@ -30,7 +30,7 @@ This article is a brief illustration of how
 to use `power4test()`
 from the package
 [power4mome](https://sfcheung.github.io/power4mome/)
-to do power analysis of Mediation,
+to do power analysis of mediation,
 moderation, and moderated-mediation
 in a model to be fitted by structural
 equation model modeling using `lavaan`.
@@ -53,7 +53,7 @@ other vignettes.
 # Package
 
 This introduction only needs the following
-package(s):
+package:
 
 ```{r}
 library(power4mome)
@@ -62,7 +62,7 @@ library(power4mome)
 # Workflow
 
 Two functions are sufficient for estimating
-power give a particular model, population
+power given a model, population
 values, sample size, and the test to be
 used. This is the basic workflow:
 
@@ -108,7 +108,7 @@ need to add any labels to this model.
 This will be taken care of by the
 test functions, through the use of
 the package
-[`manymome`](https://sfcheung.github.io/manymome/index.html)
+[`manymome`](https://sfcheung.github.io/manymome/)
 [@cheung_manymome_2024].
 
 
@@ -143,7 +143,8 @@ if this convention is not suitable.]
 
 - Large: .50 (or -.50)
 
-For product term, this is the convention:
+For product term in moderation, this is
+the convention:
 
 - Small: .05 (or -.05)
 
@@ -152,9 +153,10 @@ For product term, this is the convention:
 - Large: .15 (or -.15)
 
 All these values are for the standardized
-solution (the so-called "betas").
+solution (the correlations and
+so-called "betas").
 
-The following string denote the desired
+The following string denotes the desired
 values:
 
 ```{r}
@@ -170,10 +172,10 @@ Each line starts with a *tag*, which
 is the parameter presented in `lavaan`
 syntax. The tag ends with a colon, `:`.
 
-After the colon is population value, which
+After the colon is *population value*, which
 can be:
 
-- A word denoting the value. By default:
+- A string denoting the value. By default:
 
     - `s`: Small. (`-s` for small and negative.)
 
@@ -183,8 +185,8 @@ can be:
 
     - `nil`: Zero.
 
-All regression coefficients and covariances,
-if not specified, are set to zero.
+All other regression coefficients and covariances,
+if not specified in this string, are set to zero.
 
 ## Call `power4test()` to Check the Model
 
@@ -201,7 +203,8 @@ These are the arguments used:
 - `nrep`: The number of replications.
   In this stage, a small number can
   be used. It is more important to
-  have a large sample size.
+  have a large sample size than to have
+  many replications.
 
 - `model`: The model syntax.
 
@@ -225,7 +228,7 @@ These are the arguments used:
   for serial processing.]
 
 The population values can be shown by
-print this object:
+printing this object:
 
 ```{r}
 out
@@ -233,10 +236,20 @@ out
 
 By the default, the population model
 will be fitted to each dataset, hence
-the section `<fit>`.
+the section `<fit>`. Perfect fit is
+expected if the population model is
+a saturated model.
 
-The population values for the regression
+We check the section `Population Values`
+to see whether the values are what we
+expected.
+
+- In this example, the population values for the regression
 paths are what we specified.
+
+If they are different from what we expect,
+check the string for `pop_es` to see whether
+we set the population values correctly.
 
 If necessary, we can check the data
 generation by adding `data_long = TRUE`
@@ -257,13 +270,15 @@ generated using the standardized model.
 
 The section `Parameter Estimates Based on`
 shows the parameter estimates when the
-population model is fitted to all the
-datasets combined. When the total
+*population model* is fitted to *all the
+datasets combined*. When the total
 sample size is large, these estimates
 should be close to the population values.
 
-The results show that population model
-is the desired one.
+The results show that we have specified
+the population model correctly. We
+can proceed to specify the test and
+estimate the power.
 
 ## Call `power4test()` to Do the Target Test {#med_power}
 
@@ -299,10 +314,17 @@ These are the new arguments used:
 
 - `R`: The number of replications used
   to generate the Monte Carlo simulated
-  estimates, 2000 in this example.
+  estimates, 2000 in this example. In
+  real studies, this number should be
+  10000 or even 20000 for Monte Carlo
+  confidence intervals. However, 2000
+  is sufficient because the goal is to
+  estimate power by generating many
+  intervals, rather
+  than to have one single stable interval.
 
 - `ci_type`: The method used to
-  generate estimates. Support Monte
+  generate estimates. Support both Monte
   Carlo (`"mc"`) and nonparametric
   bootstrapping (`"boot"`).^[They
   are implemented by `manymome::do_mc()`
@@ -311,7 +333,7 @@ These are the new arguments used:
   to test an indirect effect, it is very
   slow to do `R` bootstrapping in `nrep`
   datasets (the model will be fitted
-  `R*nrep` times). Therefore, it is
+  `R * nrep` times). Therefore, it is
   preferable to use Monte Carlo to do
   the initial estimation.
 
@@ -320,7 +342,7 @@ These are the new arguments used:
   Any function following a specific
   requirement can be used, and
   `power4mome` comes with several
-  built-in function for some tests.
+  built-in functions for some common tests.
   The function `test_indirect_effect()`
   is used to test an indirect effect
   in the model.
@@ -338,7 +360,7 @@ These are the new arguments used:
 
 - `parallel`: If the test to be conducted
   is slow, which is the case for
-  test done by Monte Carlo or nonparametric
+  tests done by Monte Carlo or nonparametric
   bootstrapping confidence interval,
   it is advised to enable parallel
   processing by setting `parallel` to
@@ -350,7 +372,8 @@ For `nrep = 400`, the 95% confidence
 limits
 for a power of .80 are about .04 below
 and above .80. This should be precise
-enough for estimating the the power.
+enough for determining whether a
+sample size has sufficient power.
 
 This is the default printout:
 
@@ -358,22 +381,41 @@ This is the default printout:
 out
 ```
 
+If `test_long = TRUE` is added when printing
+the output by `print()`, a summary of the
+test will also be printed.
+
+```r
+print(out,
+      test_long = TRUE)
+```
+
+The summary of the test:
+
+```{r echo=FALSE}
+tmp <- capture.output(print(out, test_long = TRUE))
+tmp2 <- rejection_rates(out, all_columns = TRUE)
+est_mean <- sprintf("%4.3f", tmp2[1, "est"])
+cat(tmp[67:76], sep = "\n")
+```
+
+The mean of the estimates across all the
+replications is `r est_mean`, close to
+the population value.
+
 ## Compute the Power
 
 The power estimate is simply the proportion
 of significant results, the *rejection*
 *rate*, because the
-null hypothesis is false. The rejection
-rate can be retrieved by
+null hypothesis is false. In addition to
+using `test_long = TRUE` in `print()`,
+the rejection
+rate can also be retrieved by
 `rejection_rates()`.
 
 ```{r}
 out_power <- rejection_rates(out)
-```
-
-The output is simply a data frame:
-
-```{r}
 out_power
 ```
 
@@ -392,15 +434,20 @@ In the example above, the estimated
 power of the test of the indirect
 effect, conducted by Monte Carlo
 confidence interval, is
-`r out_reject_str`.^[`pvalid` is
-the proportion of valid results
-across replications. `1` means that
-the test conducted normally in all
-replications.]
+`r out_reject_str`, under the column
+`reject`.
 
-By default, 95% confidence intervals
-based on normal approximation are
-also printed. In this example,
+`p.v` is
+the proportion of valid results
+across replications. `1.000` means that
+the test conducted normally in all
+replications.
+
+By default, the 95% confidence interval
+of the rejection rate (power)
+based on normal approximation is
+also printed, under the column
+`r.cilo` and `r.cihi`. In this example,
 the 95% confidence interval is
 `r out_reject_ci`.
 
@@ -412,7 +459,7 @@ with some control variables.
 ## Specify the Population Model and Values {#pop_es_xw}
 
 ```{r}
-mod <-
+mod2 <-
 "
 y ~ x + w + x:w + control
 "
@@ -426,68 +473,69 @@ the `lavaan` style, `x:w`.
 It is
 unrealistic to specific the population
 values for all control variables. Therefore,
-we can just add a proxy, `control`
-to represent the set of control variables
+we can just add a *proxy*, `control`
+to represent the *set of control variables*
 that may be included.
 
 This is the syntax for the population
 values:
 
 ```{r}
-mod_es <-
+mod2_es <-
 "
 .beta.: s
 x ~~ control: s
-y ~ control: m
-y ~ x:w: m
+y ~ control: s
+y ~ x:w: l
 "
 ```
 
-This example introduce one useful
+This example introduces one useful
 tag, `.beta.` For a model with many
 paths, it is inconvenient to specify
-all of them manually. The tag `.beta`
-specify the default value for all
-regression path, which is small (.10)
+all of them manually. The tag `.beta.`
+specify the *default value* for
+*all regression paths not specified explicitly*,
+which is small (.10)
 in this example. If a path is explicitly
 included (such as `y ~ control` and
-`y ~ x:w`), the values will override
-that of `.beta.`.
+`y ~ x:w`), the manually specified value
+will be used instead of `.beta.`.
 
 This example also illustrates that we
 can set the population values for
-correlation (covariance in the
+*correlations* (covariances in the
 standardized solution). Control variables
 are included usually because they may
 correlate with the predictors. Therefore,
 in this example, it is hypothesized
 that there is a small correlation between
-`x` and the control variable (`x ~~ control: s`).
+`x` and the proxy control variable (`x ~~ control: s`).
 
 Last, recall from [this section](#es_convention)
 that the convention for product term
-values are different: `s` denotes
-.05 for product terms.
+values are different: `l` denotes
+.15 for product terms.
 
 ## Call `power4test()` to Check the Model
 
 We check the model first:
 
 ```{r results=FALSE}
-out <- power4test(nrep = 2,
-                  model = mod,
-                  pop_es = mod_es,
-                  n = 50000,
-                  iseed = 1234)
+out2 <- power4test(nrep = 2,
+                   model = mod2,
+                   pop_es = mod2_es,
+                   n = 50000,
+                   iseed = 1234)
 ```
 
 ```{r}
-print(out,
+print(out2,
       data_long = TRUE)
 ```
 
 ```{r echo=FALSE}
-args <- attr(out, "args")
+args <- attr(out2, "args")
 ```
 
 The population values for the regression
@@ -497,6 +545,17 @@ by `r args$nrep` or
 `r formatC(args$n * args$nrep, digit = 0, format = "f")`
 support that the dataset were generated
 correctly.
+
+NOTE: If a product term is involved,
+and the component terms (`x` and `w` in this
+example) are correlated, the population
+standard deviation of this product term
+may not be equal to one [@bohrnstedt_exact_1969].
+Therefore, the
+model can be specified correctly even if
+the standard deviations of product terms
+in the section `Descriptive Statistics`
+are not close to one.
 
 ## Call `power4test()` to Test The Moderation Effect
 
@@ -509,20 +568,20 @@ estimate the power when the sample size
 is 50 and the model is fitted by `lm()`:
 
 ```{r results=FALSE}
-out <- power4test(nrep = 400,
-                  model = mod,
-                  pop_es = mod_es,
-                  n = 50,
-                  fit_model_args = list(fit_function = "lm"),
-                  test_fun = test_moderation,
-                  iseed = 1234,
-                  parallel = TRUE)
+out2 <- power4test(nrep = 400,
+                   model = mod2,
+                   pop_es = mod2_es,
+                   n = 100,
+                   fit_model_args = list(fit_function = "lm"),
+                   test_fun = test_moderation,
+                   iseed = 1234,
+                   parallel = TRUE)
 ```
 
 These are the new arguments used:
 
 - `fit_model_args`: This named list
-  is arguments for `fit_model()`.
+  stores additional arguments for `fit_model()`.
   By default, `lavaan::sem()` is used.
   To fit the model by linear regression
   using `lm()`, add `fit_function = "lm"`
@@ -531,8 +590,8 @@ These are the new arguments used:
   arguments.]
 
 - `test_fun`: It is set to
-  `test_moderation` in this example.
-  This function automatically identify
+  `test_moderation`, provided by `power4mome`.
+  This function automatically identifies
   all product terms in a model and
   test them. The test used depends
   on method used to fit the model.
@@ -548,12 +607,12 @@ We can ues `rejection_rates()`
 again to estimate the power:
 
 ```{r}
-out_power <- rejection_rates(out)
-out_power
+out2_power <- rejection_rates(out2)
+out2_power
 ```
 
 ```{r echo=FALSE}
-tmp <- out_power
+tmp <- out2_power
 out_reject <- tmp[1, "reject"]
 out_reject_str <- formatC(out_reject,
                           digits = 3,
@@ -569,55 +628,6 @@ power of the test of the product term,
 `r out_reject_str`, with 95% confidence
 interval `r out_reject_ci`.
 
-The function `power4test()` also supports
-redoing an analysis using a new value
-for the sample size. Simply set the
-output of `power4test` as the first
-argument, and set the new value for
-`n`:
-
-```{r results=FALSE}
-out_new_n <- power4test(out,
-                        n = 200)
-out_new_n
-```
-
-```{r echo=FALSE}
-args_new_n <- attr(out_new_n, "args")
-```
-
-This is the estimated power when
-the sample size is `r args_new_n$n`.
-
-```{r}
-out_new_n_reject <- rejection_rates(out_new_n)
-out_new_n_reject
-```
-
-```{r echo=FALSE}
-tmp <- out_new_n_reject
-out_reject <- tmp[1, "reject"]
-out_reject_str <- formatC(out_reject,
-                          digits = 3,
-                          format = "f")
-out_reject_ci <- sprintf("[%4.3f; %4.3f]",
-                         tmp[1, "reject_ci_lo"],
-                         tmp[1, "reject_ci_hi"])
-```
-
-The estimated power is `r out_reject_str`,
-95% confidence interval
-`r out_reject_ci`,
-when the sample size is
-`r args_new_n$n`.
-
-This process can be
-repeated to find the required sample
-size for a target power. (The function
-`power4test_by_n()` can be used To
-estimate the power for a sequence of
-sample sizes.)
-
 # Moderated-Mediation
 
 Let's consider a moderated mediation
@@ -626,7 +636,7 @@ model.
 ## Specify the Population Model and Values
 
 ```{r}
-mod <-
+mod3 <-
 "
 m ~ x + w + x:w
 y ~ m + x
@@ -644,7 +654,7 @@ This is the syntax for the population
 values:
 
 ```{r}
-mod_es <-
+mod3_es <-
 "
 .beta.: s
 m ~ x: m
@@ -661,20 +671,20 @@ on setting up this syntax.
 We check the model first:
 
 ```{r results=FALSE}
-out <- power4test(nrep = 2,
-                  model = mod,
-                  pop_es = mod_es,
-                  n = 50000,
-                  iseed = 1234)
+out3 <- power4test(nrep = 2,
+                   model = mod3,
+                   pop_es = mod3_es,
+                   n = 50000,
+                   iseed = 1234)
 ```
 
 ```{r}
-print(out,
+print(out3,
       data_long = TRUE)
 ```
 
 ```{r echo=FALSE}
-args <- attr(out, "args")
+args <- attr(out3, "args")
 ```
 
 The population values and the
@@ -692,32 +702,34 @@ test the *index of moderated-mediation*
 it is the product of the coefficient
 `m ~ x:w` and the coefficient `y ~ m`.
 This can be done by the test function
-`test_index_of_mome()`. Again, Monte
+`test_index_of_mome()`, provided
+by `power4mome`. Again, Monte
 Carlo confidence interval is used.
 
 Let's estimate
 the power when sample size is 100.
 
 ```{r results=FALSE}
-out <- power4test(nrep = 400,
-                  model = mod,
-                  pop_es = mod_es,
-                  n = 100,
-                  R = 2000,
-                  ci_type = "mc",
-                  test_fun = test_index_of_mome,
-                  test_args = list(x = "x",
-                                   m = "m",
-                                   y = "y",
-                                   w = "w",
-                                   mc_ci = TRUE),
-                  iseed = 1234,
-                  parallel = TRUE)
+out3 <- power4test(nrep = 400,
+                   model = mod3,
+                   pop_es = mod3_es,
+                   n = 100,
+                   R = 2000,
+                   ci_type = "mc",
+                   test_fun = test_index_of_mome,
+                   test_args = list(x = "x",
+                                    m = "m",
+                                    y = "y",
+                                    w = "w",
+                                    mc_ci = TRUE),
+                   iseed = 1234,
+                   parallel = TRUE)
 ```
 
 The call is similar to the one used in
 [testing mediation](#med_power).
-These are the new arguments used:
+
+This is the new argument used:
 
 - `test_fun`: It is set to
   `test_index_of_mome()` in this example.
@@ -727,7 +739,7 @@ These are the new arguments used:
   Although this example has only one mediator,
   it support any number of mediators
   along a path.^[The test is implemented
-  by `manymome::test_index_of_mome().]
+  by `manymome::test_index_of_mome()`.]
 
 ## Compute the Power
 
@@ -735,12 +747,12 @@ We can ues `rejection_rates()`
 again to estimate the power:
 
 ```{r}
-out_power <- rejection_rates(out)
-out_power
+out3_power <- rejection_rates(out3)
+out3_power
 ```
 
 ```{r echo=FALSE}
-tmp <- out_power
+tmp <- out3_power
 out_reject <- tmp[1, "reject"]
 out_reject_str <- formatC(out_reject,
                           digits = 3,
@@ -757,28 +769,56 @@ index of moderated mediation, is
 `r out_reject_str`,
 95% confidence interval `r out_reject_ci`.
 
-As shown above, we can rerun the analysis
-using a larger sample size:
+Unlike the previous example on moderation
+tested by regression, estimating the power
+of Monte Carlo confidence intervals is
+substantially slower. However,
+this is necessary because Monte Carlo
+or nonparametric bootstrapping
+confidence interval is the test usually
+used in moderated-mediation (and mediation).
+
+# Repeating a Simulation With A Different Sample Size {#new_n}
+
+The function `power4test()` also supports
+*redoing* an analysis using a new value
+for the sample size (or population effect sizes
+set to `pop_es`). Simply
+
+- set the output of `power4test` as the first
+argument, and
+
+- set the *new value* for `n`.
+
+For example, we can repeat the
+simulation for the test of moderation [above](#pop_es_xw),
+but for a sample size of 200. We
+simply call `power4test()` again,
+set the previous output (`out2` in
+the example for moderation) as the
+first argument, and set `n` to a new
+value (200 in this example):
 
 ```{r results=FALSE}
-out_new_n <- power4test(out,
-                        n = 500)
+out2_new_n <- power4test(out2,
+                         n = 200)
+out2_new_n
 ```
 
 ```{r echo=FALSE}
-args_new_n <- attr(out_new_n, "args")
+args_new_n <- attr(out2_new_n, "args")
 ```
 
 This is the estimated power when
 the sample size is `r args_new_n$n`.
 
 ```{r}
-out_new_n_reject <- rejection_rates(out_new_n)
-out_new_n_reject
+out2_new_n_reject <- rejection_rates(out2_new_n)
+out2_new_n_reject
 ```
 
 ```{r echo=FALSE}
-tmp <- out_new_n_reject
+tmp <- out2_new_n_reject
 out_reject <- tmp[1, "reject"]
 out_reject_str <- formatC(out_reject,
                           digits = 3,
@@ -789,24 +829,86 @@ out_reject_ci <- sprintf("[%4.3f; %4.3f]",
 ```
 
 The estimated power is `r out_reject_str`,
-95% confidence interval `r out_reject_ci`,
+95% confidence interval
+`r out_reject_ci`,
 when the sample size is
-`r args_new_n$n`. This process can be
+`r args_new_n$n`.
+
+This technique can be
 repeated to find the required sample
-size for a target power.
+size for a target power, and can be
+used for all the other scenarios covered
+above, such as mediation and
+moderated-mediation.
 
-Unlike the previous example on moderation
-tested by regression, estimating the power
-of Monte Carlo confidence intervals is
-substantially slower. However, we believe
-this is necessary because Monte Carlo
-or nonparametric bootstrapping
-confidence interval is the test usually
-used in moderated-mediation (and mediation).
+# Find the Sample Size With Desired Power
 
-# Advanced Features
+There are two more efficient ways to
+find the sample size with desired power.
 
-This brief illustration only cover
+## Using `power4test_by_n()`
+
+First, the function
+`power4test_by_n()` can be used To
+estimate the power for a sequence of
+sample sizes. For example, we
+can estimate the power in the moderation
+model above for these sample sizes:
+250, 300, 350, 400.
+
+```{r results=FALSE}
+out2_several_ns <- power4test_by_n(out2,
+                                   n = c(250, 300, 350, 400),
+                                   by_seed = 4567)
+```
+
+The first argument is the output
+of `power4test()` for an arbitrary sample size.
+
+The argument `n` is a numeric vector of
+sample sizes to examine.
+
+The argument `by_seed`, if set to an integer,
+try to make the results reproducible.
+
+The call will take some times to run because
+it is equivalent to calling `power4test()`
+once for each sample size.
+
+The rejection rates for each sample size
+can be retrieved by `rejection_rates()`
+too:
+
+```{r}
+rejection_rates(out2_several_ns)
+```
+
+The results show that, to have a power of
+about .800 to detect the moderation effect,
+a sample size of about 350 is needed.
+
+Please refer to the
+help page of `power4test_by_n()`
+for other examples.
+
+## Using `x_from_power()`
+
+Second, the function `x_from_power()`
+can be used to systematically search
+within an interval the sample size with
+the target power. This takes longer to
+run but, instead of manually trying
+different sample size, this function
+do the search automatically.
+
+See
+[this article](https://sfcheung.github.io/power4mome/articles/x_from_power_for_n.html)
+for an illustration of how to use
+`x_from_power()`.
+
+# Other Advanced Features
+
+This brief illustration only covers
 basic features of `power4mome`. These
 are other advanced features to be
 covered in other articles:
@@ -816,7 +918,7 @@ covered in other articles:
   can be specified in `lavaan` model
   syntax can be the population model,
   although there may be special models
-  in which `power4test` does not support.
+  in which `power4test` does not yet support.
 
 - The population model can be a model
   with latent factors and indicators.
@@ -838,7 +940,7 @@ covered in other articles:
   estimating the power of tests
   conducted by nonparametric
   bootstrapping is supported, although
-  it will take some time to run.
+  it will take longer to run.
 
 - Although this package focuses on
   moderation, mediation, and
@@ -882,23 +984,15 @@ covered in other articles:
   only `pop_es` to a named vector:
 
 ```r
-out_new_xw <- power4test(out,
-                         pop_es = c("m ~ x:w" = ".30"))
+out2_new_xw <- power4test(out2,
+                          pop_es = c("y ~ x:w" = ".30"))
 ```
-
-- Instead of manually rerunning the
-  analysis, it is possible to rerun the
-  analysis over a sequence of sample sizes
-  or population values. See the help
-  pages of `power4test_by_n()` and
-  `power4test_by_pop_es()` for details.
 
 - Basic support for generating
   nonnormal variables, including
-  dichotomous variables. See the
+  dichotomous variables is available. See the
   argument `x_fun` of `power4test()`
   for details.
-
 
 # Limitations
 
@@ -906,9 +1000,8 @@ out_new_xw <- power4test(out,
   not supported for models fitted by
   `lm()` (regression). To estimate
   power of testing mediation or
-  moderated-mediation effects,
+  moderated-mediation effects
+  in models fitted by `lm()`,
   `ci_type = "boot"` is needed.
 
-# Final Remark
-
-# Reference
+# References
