@@ -381,22 +381,41 @@ This is the default printout:
 out
 ```
 
+If `test_long = TRUE` is added when printing
+the output by `print()`, a summary of the
+test will also be printed.
+
+```r
+print(out,
+      test_long = TRUE)
+```
+
+The summary of the test:
+
+```{r echo=FALSE}
+tmp <- capture.output(print(out, test_long = TRUE))
+tmp2 <- rejection_rates(out, all_columns = TRUE)
+est_mean <- sprintf("%4.3f", tmp2[1, "est"])
+cat(tmp[67:76], sep = "\n")
+```
+
+The mean of the estimates across all the
+replications is `r est_mean`, close to
+the population value.
+
 ## Compute the Power
 
 The power estimate is simply the proportion
 of significant results, the *rejection*
 *rate*, because the
-null hypothesis is false. The rejection
-rate can be retrieved by
+null hypothesis is false. In addition to
+using `test_long = TRUE` in `print()`,
+the rejection
+rate can also be retrieved by
 `rejection_rates()`.
 
 ```{r}
 out_power <- rejection_rates(out)
-```
-
-This is the default printout:
-
-```{r}
 out_power
 ```
 
@@ -424,8 +443,9 @@ across replications. `1.000` means that
 the test conducted normally in all
 replications.
 
-By default, 95% confidence intervals
-based on normal approximation are
+By default, the 95% confidence interval
+of the rejection rate (power)
+based on normal approximation is
 also printed, under the column
 `r.cilo` and `r.cihi`. In this example,
 the 95% confidence interval is
@@ -465,8 +485,8 @@ mod2_es <-
 "
 .beta.: s
 x ~~ control: s
-y ~ control: m
-y ~ x:w: m
+y ~ control: s
+y ~ x:w: l
 "
 ```
 
@@ -494,8 +514,8 @@ that there is a small correlation between
 
 Last, recall from [this section](#es_convention)
 that the convention for product term
-values are different: `s` denotes
-.05 for product terms.
+values are different: `l` denotes
+.15 for product terms.
 
 ## Call `power4test()` to Check the Model
 
@@ -551,7 +571,7 @@ is 50 and the model is fitted by `lm()`:
 out2 <- power4test(nrep = 400,
                    model = mod2,
                    pop_es = mod2_es,
-                   n = 50,
+                   n = 100,
                    fit_model_args = list(fit_function = "lm"),
                    test_fun = test_moderation,
                    iseed = 1234,
@@ -709,7 +729,7 @@ out3 <- power4test(nrep = 400,
 The call is similar to the one used in
 [testing mediation](#med_power).
 
-These are the new arguments used:
+This is the new argument used:
 
 - `test_fun`: It is set to
   `test_index_of_mome()` in this example.
@@ -752,7 +772,7 @@ index of moderated mediation, is
 Unlike the previous example on moderation
 tested by regression, estimating the power
 of Monte Carlo confidence intervals is
-substantially slower. However, we believe
+substantially slower. However,
 this is necessary because Monte Carlo
 or nonparametric bootstrapping
 confidence interval is the test usually
@@ -761,23 +781,27 @@ used in moderated-mediation (and mediation).
 # Repeating a Simulation With A Different Sample Size {#new_n}
 
 The function `power4test()` also supports
-redoing an analysis using a new value
+*redoing* an analysis using a new value
 for the sample size (or population effect sizes
-set to `pop_es`). Simply set the
-output of `power4test` as the first
-argument, and set the *new value* for
-`n`. For example, we can repeat the
-simulation for the test of moderation,
+set to `pop_es`). Simply
+
+- set the output of `power4test` as the first
+argument, and
+
+- set the *new value* for `n`.
+
+For example, we can repeat the
+simulation for the test of moderation [above](#pop_es_xw),
 but for a sample size of 200. We
 simply call `power4test()` again,
 set the previous output (`out2` in
 the example for moderation) as the
 first argument, and set `n` to a new
-value (300 in this example):
+value (200 in this example):
 
 ```{r results=FALSE}
 out2_new_n <- power4test(out2,
-                         n = 300)
+                         n = 200)
 out2_new_n
 ```
 
@@ -794,7 +818,7 @@ out2_new_n_reject
 ```
 
 ```{r echo=FALSE}
-tmp <- out_new_n_reject
+tmp <- out2_new_n_reject
 out_reject <- tmp[1, "reject"]
 out_reject_str <- formatC(out_reject,
                           digits = 3,
@@ -814,24 +838,70 @@ This technique can be
 repeated to find the required sample
 size for a target power, and can be
 used for all the other scenarios covered
-above, mediation and moderated-mediation.
+above, such as mediation and
+moderated-mediation.
 
 # Find the Sample Size With Desired Power
 
 There are two more efficient ways to
 find the sample size with desired power.
 
+## Using `power4test_by_n()`
+
 First, the function
 `power4test_by_n()` can be used To
 estimate the power for a sequence of
-sample sizes. Please refer to the
+sample sizes. For example, we
+can estimate the power in the moderation
+model above for these sample sizes:
+250, 300, 350, 400.
+
+```{r results=FALSE}
+out2_several_ns <- power4test_by_n(out2,
+                                   n = c(250, 300, 350, 400),
+                                   by_seed = 4567)
+```
+
+The first argument is the output
+of `power4test()` for an arbitrary sample size.
+
+The argument `n` is a numeric vector of
+sample sizes to examine.
+
+The argument `by_seed`, if set to an integer,
+try to make the results reproducible.
+
+The call will take some times to run because
+it is equivalent to calling `power4test()`
+once for each sample size.
+
+The rejection rates for each sample size
+can be retrieved by `rejection_rates()`
+too:
+
+```{r}
+rejection_rates(out2_several_ns)
+```
+
+The results show that, to have a power of
+about .800 to detect the moderation effect,
+a sample size of about 350 is needed.
+
+Please refer to the
 help page of `power4test_by_n()`
-for examples.
+for other examples.
+
+## Using `x_from_power()`
 
 Second, the function `x_from_power()`
 can be used to systematically search
 within an interval the sample size with
-the target power. See
+the target power. This takes longer to
+run but, instead of manually trying
+different sample size, this function
+do the search automatically.
+
+See
 [this article](https://sfcheung.github.io/power4mome/articles/x_from_power_for_n.html)
 for an illustration of how to use
 `x_from_power()`.
@@ -918,13 +988,6 @@ out2_new_xw <- power4test(out2,
                           pop_es = c("y ~ x:w" = ".30"))
 ```
 
-- Instead of manually rerunning the
-  analysis, it is possible to rerun the
-  analysis over a sequence of sample sizes
-  or population values. See the help
-  pages of `power4test_by_n()` and
-  `power4test_by_pop_es()` for details.
-
 - Basic support for generating
   nonnormal variables, including
   dichotomous variables is available. See the
@@ -941,4 +1004,4 @@ out2_new_xw <- power4test(out2,
   in models fitted by `lm()`,
   `ci_type = "boot"` is needed.
 
-# Reference
+# References
