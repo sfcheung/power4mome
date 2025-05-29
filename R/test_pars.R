@@ -30,6 +30,23 @@
 #' [stats::confint()] applied to
 #' the output of [stats::lm()].
 #'
+#' ## Finding the names of parameters
+#'
+#' To use the argument `pars`, the
+#' names as appeared in the function
+#' [coef()] must be used. For the
+#' output of `lavaan`, this can
+#' usually be inferred from the
+#' parameter syntax (e.g., `y~x`,
+#' no space). If not sure, call
+#' [coef()] on the output of `lavaan`.
+#' If a parameter is labelled, then
+#' the label should be used in `par`.
+#'
+#' If not sure, the function
+#' [find_par_names()] can be used to
+#' find valid names.
+#'
 #' @return
 #' In its normal usage, it returns
 #' the output returned by
@@ -72,7 +89,8 @@
 #' @param pars Optional. If set to
 #' a character vector, only parameters
 #' with `test_label` equal to values in
-#' `pars` will be returned.
+#' `pars` will be returned. See Details
+#' on valid names.
 #'
 #' @param op Optional. If set to a
 #' character vector, only parameters with
@@ -269,4 +287,33 @@ test_parameters <- function(fit = fit,
   attr(out, "test_label") <- "test_label"
   class(out) <- class(est)
   return(out)
+}
+
+#' @param object A `power4test` object.
+#'
+#' @param fit_name The name of the fit
+#' results for which the parameter names
+#' will be displayed. Default is `"fit"`.
+#'
+#' @examples
+#'
+#' # Finding valid parameter names
+#'
+#' find_par_names(sim_only)
+#'
+#' @rdname test_parameters
+#' @export
+find_par_names <- function(object,
+                           fit_name = "fit") {
+  if (!inherits(object, "power4test")) {
+    stop("Only support a 'power4test' object.")
+  }
+  out <- tryCatch(methods::getMethod("coef",
+                                     signature = "lavaan",
+                                     where = asNamespace("lavaan"))(object$sim_all[[1]]$extra[[fit_name]]),
+                  error = function(e) e)
+  if (inherits(out, "error")) {
+    stop("Error in getting the coefficients.")
+  }
+  names(out)
 }
