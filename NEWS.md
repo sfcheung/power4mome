@@ -1,4 +1,4 @@
-# power4mome 0.0.1.35
+# power4mome 0.0.1.36
 
 - Initialized the package. (0.0.0.9000)
 
@@ -331,3 +331,7 @@
   of `power4test_by_es` and
   `power4test_by_es` objects.
   (0.0.1.35)
+
+- Remove `power_curve_by_n()` and
+  `power_curve_by_es()`. No longer
+  needed. (0.0.1.36)

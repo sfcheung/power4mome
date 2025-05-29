@@ -3,8 +3,6 @@
 \name{power_curve}
 \alias{power_curve}
 \alias{print.power_curve}
-\alias{power_curve_by_n}
-\alias{power_curve_by_es}
 \title{Power Curve}
 \usage{
 power_curve(
@@ -19,30 +17,6 @@ power_curve(
 )
 
 \method{print}{power_curve}(x, data_used = FALSE, digits = 3, right = FALSE, row.names = FALSE, ...)
-
-power_curve_by_n(
-  object,
-  formula = reject ~ I((x - c0)^e)/(b + I((x - c0)^e)),
-  start = c(b = 2, c0 = 100, e = 1),
-  lower_bound = c(b = 0, c0 = 0, e = 1),
-  upper_bound = c(b = Inf, c0 = Inf, e = Inf),
-  nls_args = list(),
-  nls_control = list(),
-  verbose = TRUE
-)
-
-power_curve_by_es(
-  object,
-  formula = list(reject ~ 1 - 1/I((1 + (x/d)^a)^b), reject ~ 1 - exp(x/a)/I((1 +
-    exp(x/a))^b), reject ~ 1 - 2/(exp(x/d) + exp(-x/d)), reject ~ 1/(1 + a * exp(-b *
-    x))),
-  start = list(c(a = 2, b = 4, d = 4), c(a = 1, b = 2), c(d = 1), c(a = 1, b = 1)),
-  lower_bound = NULL,
-  upper_bound = NULL,
-  nls_args = list(),
-  nls_control = list(),
-  verbose = TRUE
-)
 }
 \arguments{
 \item{object}{An object of the class

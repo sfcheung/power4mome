@@ -438,58 +438,6 @@ print.power_curve <- function(x,
   invisible(x)
 }
 
-#' @rdname power_curve
-#' @export
-power_curve_by_n <- function(object,
-                             formula = reject ~ I((x - c0)^e) / (b + I((x - c0)^e)),
-                             start = c(b = 2, c0 = 100, e = 1),
-                             lower_bound = c(b = 0, c0 = 0, e = 1),
-                             upper_bound = c(b = Inf, c0 = Inf, e = Inf),
-                             nls_args = list(),
-                             nls_control = list(),
-                             verbose = TRUE) {
-  if (!inherits(object, "power4test_by_n")) {
-    stop("'object' is not a power4test_by_n object.")
-  }
-  power_curve(object = object,
-              formula = formula,
-              start = start,
-              lower_bound = lower_bound,
-              upper_bound = upper_bound,
-              nls_args = nls_args,
-              nls_control = nls_control,
-              verbose = verbose)
-}
-
-#' @rdname power_curve
-#' @export
-power_curve_by_es <- function(object,
-                                  formula = list(reject ~ 1 - 1 / I((1 + (x / d)^a)^b),
-                                                 reject ~ 1 - exp(x / a) / I((1  + exp(x / a))^b),
-                                                 reject ~ 1 - 2 / (exp(x / d) + exp(-x / d)),
-                                                 reject ~ 1 / (1 + a * exp(-b * x))),
-                                  start = list(c(a = 2, b = 4, d = 4),
-                                               c(a = 1, b = 2),
-                                               c(d = 1),
-                                               c(a = 1, b = 1)),
-                                  lower_bound = NULL,
-                                  upper_bound = NULL,
-                                  nls_args = list(),
-                                  nls_control = list(),
-                                  verbose = TRUE) {
-  if (!inherits(object, "power4test_by_es")) {
-    stop("'object' is not a power4test_by_es object.")
-  }
-  power_curve(object = object,
-              formula = formula,
-              start = start,
-              lower_bound = lower_bound,
-              upper_bound = upper_bound,
-              nls_args = nls_args,
-              nls_control = nls_control,
-              verbose = verbose)
-}
-
 #' @noRd
 do_nls <- function(...,
                    nrep = NULL) {
