@@ -11,7 +11,7 @@ for a power4test object."><meta name="google-site-verification" content="0VLBmFn
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.38</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.39</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -66,7 +66,9 @@ for a <code>power4test</code> object.</p>
 <span>  fit_name <span class="op">=</span> <span class="st">"fit"</span>,</span>
 <span>  get_map_names <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  get_test_name <span class="op">=</span> <span class="cn">FALSE</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">find_par_names</span><span class="op">(</span><span class="va">object</span>, fit_name <span class="op">=</span> <span class="st">"fit"</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -91,7 +93,8 @@ fitted by <code>lavaan</code>.</p></dd>
 <dd><p>Optional. If set to
 a character vector, only parameters
 with <code>test_label</code> equal to values in
-<code>pars</code> will be returned.</p></dd>
+<code>pars</code> will be returned. See Details
+on valid names.</p></dd>
 
 
 <dt id="arg-op">op<a class="anchor" aria-label="anchor" href="#arg-op"></a></dt>
@@ -120,13 +123,9 @@ or <code><a href="https://sfcheung.github.io/lmhelprs/reference/lm_list_to_parta
 
 
 <dt id="arg-fit-name">fit_name<a class="anchor" aria-label="anchor" href="#arg-fit-name"></a></dt>
-<dd><p>The name of the
-model fit object to be extracted.
-Default is <code>"fit"</code>. Used only when
-more than one model is fitted in
-each replication. This should be
-the name of the model on which the
-test is to be conducted.</p></dd>
+<dd><p>The name of the fit
+results for which the parameter names
+will be displayed. Default is <code>"fit"</code>.</p></dd>
 
 
 <dt id="arg-get-map-names">get_map_names<a class="anchor" aria-label="anchor" href="#arg-get-map-names"></a></dt>
@@ -142,6 +141,10 @@ should not use this argument.</p></dd>
 by <code><a href="power4test.html">power4test()</a></code> to get the default
 name of this test. Users should not
 use this argument.</p></dd>
+
+
+<dt id="arg-object">object<a class="anchor" aria-label="anchor" href="#arg-object"></a></dt>
+<dd><p>A <code>power4test</code> object.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -190,7 +193,25 @@ conducted by ordinary least squares
 confidence intervals based on
 the <em>t</em> statistic, reported by
 <code><a href="https://rdrr.io/r/stats/confint.html" class="external-link">stats::confint()</a></code> applied to
-the output of <code><a href="https://rdrr.io/r/stats/lm.html" class="external-link">stats::lm()</a></code>.</p>
+the output of <code><a href="https://rdrr.io/r/stats/lm.html" class="external-link">stats::lm()</a></code>.</p><div class="section">
+<h3 id="finding-the-names-of-parameters">Finding the names of parameters<a class="anchor" aria-label="anchor" href="#finding-the-names-of-parameters"></a></h3>
+
+
+<p>To use the argument <code>pars</code>, the
+names as appeared in the function
+<code><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef()</a></code> must be used. For the
+output of <code>lavaan</code>, this can
+usually be inferred from the
+parameter syntax (e.g., <code>y~x</code>,
+no space). If not sure, call
+<code><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef()</a></code> on the output of <code>lavaan</code>.
+If a parameter is labelled, then
+the label should be used in <code>par</code>.</p>
+<p>If not sure, the function
+<code>find_par_names()</code> can be used to
+find valid names.</p>
+</div>
+
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
@@ -480,6 +501,12 @@ the output of <code><a href="https://rdrr.io/r/stats/lm.html" class="external-li
 <span class="r-out co"><span class="r-pr">#&gt;</span> - If the null hypothesis is false, the rate is the power.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Number of valid replications for rejection rate(s): 2 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Proportion of valid replications for rejection rate(s): 1.000 </span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Finding valid parameter names</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">find_par_names</span><span class="op">(</span><span class="va">sim_only</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "a"    "b"    "y~x"  "m~~m" "y~~y"</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
