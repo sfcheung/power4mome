@@ -29,7 +29,8 @@ x_from_power(
   lower_bound = NULL,
   upper_bound = NULL,
   nls_control = list(),
-  nls_args = list()
+  nls_args = list(),
+  save_sim_all = FALSE
 )
 
 \method{print}{x_from_power}(x, digits = 3, ...)
@@ -212,6 +213,14 @@ arguments to be used when calling
 internal default, such as the
 algorithm (default is \code{"port"}).
 Used with cautions.}
+
+\item{save_sim_all}{If \code{FALSE},
+the default, the data in each
+\code{power4test} object for each
+value of \code{x} is not saved,
+to reduce the size of the output.
+If set to \code{TRUE}, the size of the
+output can be very large in size.}
 
 \item{digits}{The number of digits
 after the decimal when printing

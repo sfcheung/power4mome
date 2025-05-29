@@ -309,6 +309,14 @@
 #' override internal default values,
 #' and also override `nls_args`.
 #'
+#' @param save_sim_all If `FALSE`,
+#' the default, the data in each
+#' `power4test` object for each
+#' value of `x` is not saved,
+#' to reduce the size of the output.
+#' If set to `TRUE`, the size of the
+#' output can be very large in size.
+#'
 #' @seealso [power4test()], [power4test_by_n()],
 #' and [power4test_by_es()].
 #'
@@ -388,7 +396,8 @@ x_from_power <- function(object,
                          lower_bound = NULL,
                          upper_bound = NULL,
                          nls_control = list(),
-                         nls_args = list()
+                         nls_args = list(),
+                         save_sim_all = FALSE
                          ) {
 
   # Inputs
@@ -527,10 +536,13 @@ x_from_power <- function(object,
   by_x_i <- switch(x,
                    n = power4test_by_n(object,
                                        n = x_i,
-                                       progress = simulation_progress),
+                                       progress = simulation_progress,
+                                       save_sim_all = save_sim_all),
                    es = power4test_by_es(object,
                                          pop_es_name = pop_es_name,
-                                         pop_es_values = x_i))
+                                         pop_es_values = x_i,
+                                         progress = simulation_progress,
+                                         save_sim_all = save_sim_all))
 
   # Add the input object to the list
   tmp <- list(object)
@@ -546,7 +558,8 @@ x_from_power <- function(object,
     attr(tmp[[1]], "pop_es_name") <- pop_es_name
     attr(tmp[[1]], "pop_es_value") <- x0
   }
-  by_x_i <- c(by_x_i, tmp)
+  by_x_i <- c(by_x_i, tmp,
+              skip_checking_models = TRUE)
 
   if (progress) {
     cat("- Rejection Rates:\n")
@@ -691,16 +704,19 @@ x_from_power <- function(object,
                                          n = x_j,
                                          R = R_seq[1],
                                          progress = simulation_progress,
-                                         by_nrep = nrep_j),
+                                         by_nrep = nrep_j,
+                                         save_sim_all = save_sim_all),
                      es = power4test_by_es(object,
                                            pop_es_name = pop_es_name,
                                            pop_es_values = x_j,
                                            R = R_seq[1],
                                            progress = simulation_progress,
-                                           by_nrep = nrep_j))
+                                           by_nrep = nrep_j,
+                                           save_sim_all = save_sim_all))
 
     # Add the results to by_x_1
-    by_x_1 <- c(by_x_1, by_x_j)
+    by_x_1 <- c(by_x_1, by_x_j,
+                skip_checking_models = TRUE)
 
     if (progress) {
       cat("- Rejection Rates:\n")
@@ -788,13 +804,15 @@ x_from_power <- function(object,
                                              n = x_out,
                                              nrep = nrep_seq[1],
                                              R = R_seq[1],
-                                             progress = simulation_progress),
+                                             progress = simulation_progress,
+                                             save_sim_all = save_sim_all),
                          es = power4test_by_es(object,
                                                pop_es_name = pop_es_name,
                                                pop_es_values = x_out,
                                                nrep = nrep_seq[1],
                                                R = R_seq[1],
-                                               progress = simulation_progress))
+                                               progress = simulation_progress,
+                                               save_sim_all = save_sim_all))
       nrep_out <- nrep_seq[1]
       power_out <- rejection_rates(by_x_out)[1, "reject"]
       by_x_out_ci <- rejection_rates_add_ci(by_x_out,
@@ -816,7 +834,8 @@ x_from_power <- function(object,
 
       # Add the results for the new value to
       # the collection of results
-      by_x_1 <- c(by_x_1, by_x_out)
+      by_x_1 <- c(by_x_1, by_x_out,
+                  skip_checking_models = TRUE)
 
       # Update by_n_out
       by_x_out <- by_x_out[[1]]
