@@ -1,4 +1,4 @@
-# power4mome 0.0.1.38
+# power4mome 0.0.1.39
 
 - Initialized the package. (0.0.0.9000)
 
@@ -351,3 +351,9 @@
 
 - Updated the doc of `do_test()`.
   (0.0.1.38)
+
+- Updated the doc of `test_parameters()`
+  on valid parameter names. Also added
+  a helper `find_par_names()` for finding
+  valid names in a `power4test` object.
+  (0.0.1.39)

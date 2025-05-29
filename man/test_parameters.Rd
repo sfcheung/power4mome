@@ -2,6 +2,7 @@
 % Please edit documentation in R/test_pars.R
 \name{test_parameters}
 \alias{test_parameters}
+\alias{find_par_names}
 \title{Test All Free Parameters}
 \usage{
 test_parameters(
@@ -15,6 +16,8 @@ test_parameters(
   get_map_names = FALSE,
   get_test_name = FALSE
 )
+
+find_par_names(object, fit_name = "fit")
 }
 \arguments{
 \item{fit}{The fit object, to be
@@ -30,7 +33,8 @@ fitted by \code{lavaan}.}
 \item{pars}{Optional. If set to
 a character vector, only parameters
 with \code{test_label} equal to values in
-\code{pars} will be returned.}
+\code{pars} will be returned. See Details
+on valid names.}
 
 \item{op}{Optional. If set to a
 character vector, only parameters with
@@ -51,13 +55,9 @@ be passed to \code{\link[lavaan:parameterEstimates]{lavaan::parameterEstimates()
 \code{\link[lavaan:standardizedSolution]{lavaan::standardizedSolution()}},
 or \code{\link[lmhelprs:lm_list_to_partable]{lmhelprs::lm_list_to_partable()}}.}
 
-\item{fit_name}{The name of the
-model fit object to be extracted.
-Default is \code{"fit"}. Used only when
-more than one model is fitted in
-each replication. This should be
-the name of the model on which the
-test is to be conducted.}
+\item{fit_name}{The name of the fit
+results for which the parameter names
+will be displayed. Default is \code{"fit"}.}
 
 \item{get_map_names}{Logical. Used
 by \code{\link[=power4test]{power4test()}} to determine how
@@ -69,6 +69,8 @@ should not use this argument.}
 by \code{\link[=power4test]{power4test()}} to get the default
 name of this test. Users should not
 use this argument.}
+
+\item{object}{A \code{power4test} object.}
 }
 \value{
 In its normal usage, it returns
@@ -125,6 +127,23 @@ confidence intervals based on
 the \emph{t} statistic, reported by
 \code{\link[stats:confint]{stats::confint()}} applied to
 the output of \code{\link[stats:lm]{stats::lm()}}.
+\subsection{Finding the names of parameters}{
+
+To use the argument \code{pars}, the
+names as appeared in the function
+\code{\link[=coef]{coef()}} must be used. For the
+output of \code{lavaan}, this can
+usually be inferred from the
+parameter syntax (e.g., \code{y~x},
+no space). If not sure, call
+\code{\link[=coef]{coef()}} on the output of \code{lavaan}.
+If a parameter is labelled, then
+the label should be used in \code{par}.
+
+If not sure, the function
+\code{\link[=find_par_names]{find_par_names()}} can be used to
+find valid names.
+}
 }
 \examples{
 
@@ -167,6 +186,11 @@ test_out <- power4test(object = sim_only,
 
 print(test_out,
       test_long = TRUE)
+
+
+# Finding valid parameter names
+
+find_par_names(sim_only)
 
 }
 \seealso{
