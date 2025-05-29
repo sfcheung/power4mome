@@ -62,6 +62,13 @@
 #' If `NULL`, the default, then the
 #' original `nrep` will be used.
 #'
+#' @param save_sim_all If `FALSE`,
+#' the data in each
+#' `power4test` object for each
+#' value is not saved, to reduce
+#' the size of the output. Default
+#' is `TRUE`.
+#'
 #' @seealso [power4test()]
 #'
 #' @examples
@@ -106,7 +113,8 @@ power4test_by_n <- function(object,
                             progress = TRUE,
                             ...,
                             by_seed = NULL,
-                            by_nrep = NULL) {
+                            by_nrep = NULL,
+                            save_sim_all = TRUE) {
   if (!inherits(object, "power4test") &&
       !inherits(object, "power4test_by_n")) {
     stop("Only support 'power4test' or 'power4test_by_n' objects.")
@@ -155,19 +163,23 @@ power4test_by_n <- function(object,
           "\n")
     }
     if (is.null(new_nrep)) {
-      out[[i]] <- power4test(object = object,
+      tmp_out <- power4test(object = object,
                              n = x,
                              progress = progress,
                              iseed = seeds[i],
                              ...)
     } else {
-      out[[i]] <- power4test(object = object,
+      tmp_out <- power4test(object = object,
                              n = x,
                              nrep = new_nrep[i],
                              progress = progress,
                              iseed = seeds[i],
                              ...)
     }
+    if (!save_sim_all) {
+      tmp_out$sim_all <- NULL
+    }
+    out[[i]] <- tmp_out
   }
   # names(out) <- c(n_org, n)
   names(out) <- c(n)
@@ -181,6 +193,16 @@ power4test_by_n <- function(object,
 #' objects, whether they will be sorted
 #' by sample sizes. Default is `TRUE`.
 #'
+#' @param skip_checking_models Whether
+#' the check of the data generation model
+#' will be checked. Default is `TRUE`.
+#' Should be set to `FALSE` only when
+#' users are certain the they are based
+#' on the same model, or when the model
+#' is not saved (e.g., `save_sim_all`
+#' set to `FALSE` when calling
+#' `power4test_by_n()`).
+#'
 #' @return
 #' The method [c.power4test_by_n()] returns
 #' a `power4test_by_n` object with
@@ -193,11 +215,12 @@ power4test_by_n <- function(object,
 #' runs of [power4test_by_n()].
 #' @export
 c.power4test_by_n <- function(...,
-                              sort = TRUE) {
+                              sort = TRUE,
+                              skip_checking_models = FALSE) {
 
   # Check whether they have the same ptable
   tmp <- list(...)
-  if (length(tmp) > 1) {
+  if ((length(tmp) > 1) && !skip_checking_models) {
     ptables <- lapply(tmp,
                       \(x) {x[[1]]$sim_all[[1]]$ptable})
     for (i in seq_along(ptables)[-1]) {
@@ -210,6 +233,8 @@ c.power4test_by_n <- function(...,
   }
   out <- NextMethod()
   out["sort"] <- NULL
+  out["skip_checking_models"] <- NULL
+
   class(out) <- c("power4test_by_n", class(out))
   if (!sort) {
     return(out)

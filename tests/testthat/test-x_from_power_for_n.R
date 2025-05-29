@@ -39,7 +39,8 @@ tmp <- x_from_power(out,
                     x = "n",
                     progress = TRUE,
                     final_nrep = 100,
-                    seed = 1234)
+                    seed = 1234,
+                    save_sim_all = TRUE)
 tmp
 summary(tmp)
 plot(tmp)

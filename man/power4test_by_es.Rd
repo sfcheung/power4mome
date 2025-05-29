@@ -12,10 +12,11 @@ power4test_by_es(
   progress = TRUE,
   ...,
   by_seed = NULL,
-  by_nrep = NULL
+  by_nrep = NULL,
+  save_sim_all = TRUE
 )
 
-\method{c}{power4test_by_es}(..., sort = TRUE)
+\method{c}{power4test_by_es}(..., sort = TRUE, skip_checking_models = FALSE)
 }
 \arguments{
 \item{object}{A \code{power4test} object,
@@ -63,9 +64,26 @@ of replications.
 If \code{NULL}, the default, then the
 original \code{nrep} will be used.}
 
+\item{save_sim_all}{If \code{FALSE},
+the data in each
+\code{power4test} object for each
+value is not saved, to reduce
+the size of the output. Default
+is \code{TRUE}.}
+
 \item{sort}{WHen combining \code{power4test_by_es}
 objects, whether they will be sorted
 by effect size. Default is \code{TRUE}.}
+
+\item{skip_checking_models}{Whether
+the check of the data generation model
+will be checked. Default is \code{TRUE}.
+Should be set to \code{FALSE} only when
+users are certain the they are based
+on the same model, or when the model
+is not saved (e.g., \code{save_sim_all}
+set to \code{FALSE} when calling
+\code{power4test_by_es()}).}
 }
 \value{
 The function

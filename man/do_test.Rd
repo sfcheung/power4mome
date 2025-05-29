@@ -68,7 +68,7 @@ is used.}
 \value{
 An object of the class \code{test_out},
 which is a list of length equal to
-\code{sim_out}. Each element of the list
+\code{sim_all}. Each element of the list
 has two elements:
 \itemize{
 \item \code{test}: The output of \code{test_fun}.
@@ -84,8 +84,15 @@ replication in the output of
 \details{
 Do an arbitrary test in each
 replication using the function set to
-\code{test_fun}. This function should work
-on the output of \code{\link[lavaan:sem]{lavaan::sem()}}.
+\code{test_fun}. This function usually
+should work
+on the output of \code{\link[lavaan:sem]{lavaan::sem()}},
+\code{\link[lmhelprs:many_lm]{lmhelprs::many_lm()}}, or
+\code{\link[stats:lm]{stats::lm()}}, but can also be a
+function that works on the output
+of the function set to \code{fit_function}
+when calling \code{\link[=fit_model]{fit_model()}} or
+\code{\link[=power4test]{power4test()}} (see \code{fit_model_args}).
 
 The test results will be extracted
 from the output of \code{test_fun} by the
@@ -124,18 +131,22 @@ The results can then be used to
 estimate the power of the test.
 
 The package came with some ready-to-use
-test functions as examples:
+test functions:
 \itemize{
 \item \code{\link[=test_indirect_effect]{test_indirect_effect()}}
+\item \code{\link[=test_cond_indirect]{test_cond_indirect()}}
+\item \code{\link[=test_cond_indirect_effects]{test_cond_indirect_effects()}}
 \item \code{\link[=test_moderation]{test_moderation()}}
 \item \code{\link[=test_index_of_mome]{test_index_of_mome()}}
 \item \code{\link[=test_parameters]{test_parameters()}}
 }
 
-This function is used by the
+The function \code{\link[=do_test]{do_test()}} is used by the
 all-in-one function \code{\link[=power4test]{power4test()}}.
 Users usually do not call this
-function directly.
+function directly, though developers
+can use this function for develop
+other functions for power analysis.
 }
 \examples{
 mod <-

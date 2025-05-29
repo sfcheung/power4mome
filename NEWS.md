@@ -1,4 +1,4 @@
-# power4mome 0.0.1.35
+# power4mome 0.0.1.38
 
 - Initialized the package. (0.0.0.9000)
 
@@ -331,3 +331,23 @@
   of `power4test_by_es` and
   `power4test_by_es` objects.
   (0.0.1.35)
+
+- Removed `power_curve_by_n()` and
+  `power_curve_by_es()`. No longer
+  needed. (0.0.1.36)
+
+- Updated `power_by_n()` and
+  `power_by_es()` to have the option not
+  to save the data and model in the
+  `sim_all`, and updated the `c()`
+  method to skip testing the model.
+  This option is used by `x_from_power()`.
+  (0.0.1.37)
+
+- Updated `x_from_power()` not to save
+  the data and model by default.
+  Dramatically reduce the size of the
+  output. (0.0.1.37)
+
+- Updated the doc of `do_test()`.
+  (0.0.1.38)

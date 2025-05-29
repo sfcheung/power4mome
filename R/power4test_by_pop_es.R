@@ -69,6 +69,12 @@
 #' If `NULL`, the default, then the
 #' original `nrep` will be used.
 #'
+#' @param save_sim_all If `FALSE`,
+#' the data in each
+#' `power4test` object for each
+#' value is not saved, to reduce
+#' the size of the output. Default
+#' is `TRUE`.
 #'
 #' @seealso [power4test()]
 #'
@@ -119,7 +125,8 @@ power4test_by_es <- function(object,
                                  progress = TRUE,
                                  ...,
                                  by_seed = NULL,
-                                 by_nrep = NULL) {
+                                 by_nrep = NULL,
+                                 save_sim_all = TRUE) {
   if (!inherits(object, "power4test") &&
       !inherits(object, "power4test_by_es")) {
     stop("Only support 'power4test' or 'power4test_by_es' objects.")
@@ -171,19 +178,23 @@ power4test_by_es <- function(object,
     tmp <- as.character(x)
     names(tmp) <- pop_es_name
     if (is.null(new_nrep)) {
-      out[[p_name]] <- power4test(object = object,
+      tmp_out <- power4test(object = object,
                                   pop_es = tmp,
                                   progress = progress,
                                   iseed = seeds[i],
                                   ...)
     } else {
-      out[[p_name]] <- power4test(object = object,
+      tmp_out <- power4test(object = object,
                                   pop_es = tmp,
                                   nrep = new_nrep[i],
                                   progress = progress,
                                   iseed = seeds[i],
                                   ...)
     }
+    if (!save_sim_all) {
+      tmp_out$sim_all <- NULL
+    }
+    out[[p_name]] <- tmp_out
     attr(out[[p_name]], "pop_es_name") <- pop_es_name
     attr(out[[p_name]], "pop_es_value") <- x
   }
@@ -200,6 +211,16 @@ power4test_by_es <- function(object,
 #' objects, whether they will be sorted
 #' by effect size. Default is `TRUE`.
 #'
+#' @param skip_checking_models Whether
+#' the check of the data generation model
+#' will be checked. Default is `TRUE`.
+#' Should be set to `FALSE` only when
+#' users are certain the they are based
+#' on the same model, or when the model
+#' is not saved (e.g., `save_sim_all`
+#' set to `FALSE` when calling
+#' `power4test_by_es()`).
+#'
 #' @return
 #' The method [c.power4test_by_es()] returns
 #' a `power4test_by_es` object with
@@ -212,10 +233,11 @@ power4test_by_es <- function(object,
 #' runs of [power4test_by_es()].
 #' @export
 c.power4test_by_es <- function(...,
-                                   sort = TRUE) {
+                               sort = TRUE,
+                               skip_checking_models = FALSE) {
   # Check whether they have the same ptable
   tmp <- list(...)
-  if (length(tmp) > 1) {
+  if ((length(tmp) > 1) && !skip_checking_models) {
     ptables <- lapply(tmp,
                       \(x) {x[[1]]$sim_all[[1]]$ptable})
     for (i in seq_along(ptables)[-1]) {
@@ -228,6 +250,7 @@ c.power4test_by_es <- function(...,
   }
   out <- NextMethod()
   out["sort"] <- NULL
+  out["skip_checking_models"] <- NULL
 
   all_pop_es_name <- sapply(out,
                             \(x) {attr(x, "pop_es_name")})

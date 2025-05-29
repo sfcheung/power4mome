@@ -7,8 +7,15 @@
 #' @details
 #' Do an arbitrary test in each
 #' replication using the function set to
-#' `test_fun`. This function should work
-#' on the output of [lavaan::sem()].
+#' `test_fun`. This function usually
+#' should work
+#' on the output of [lavaan::sem()],
+#' [lmhelprs::many_lm()], or
+#' [stats::lm()], but can also be a
+#' function that works on the output
+#' of the function set to `fit_function`
+#' when calling [fit_model()] or
+#' [power4test()] (see `fit_model_args`).
 #'
 #' The test results will be extracted
 #' from the output of `test_fun` by the
@@ -50,9 +57,13 @@
 #' estimate the power of the test.
 #'
 #' The package came with some ready-to-use
-#' test functions as examples:
+#' test functions:
 #'
 #' - [test_indirect_effect()]
+#'
+#' - [test_cond_indirect()]
+#'
+#' - [test_cond_indirect_effects()]
 #'
 #' - [test_moderation()]
 #'
@@ -60,17 +71,19 @@
 #'
 #' - [test_parameters()]
 #'
-#' This function is used by the
+#' The function [do_test()] is used by the
 #' all-in-one function [power4test()].
 #' Users usually do not call this
-#' function directly.
+#' function directly, though developers
+#' can use this function for develop
+#' other functions for power analysis.
 #'
 #' @seealso [power4test()]
 #'
 #' @return
 #' An object of the class `test_out`,
 #' which is a list of length equal to
-#' `sim_out`. Each element of the list
+#' `sim_all`. Each element of the list
 #' has two elements:
 #'
 #' - `test`: The output of `test_fun`.
