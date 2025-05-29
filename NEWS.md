@@ -1,4 +1,4 @@
-# power4mome 0.0.1.37
+# power4mome 0.0.1.38
 
 - Initialized the package. (0.0.0.9000)
 
@@ -348,3 +348,6 @@
   the data and model by default.
   Dramatically reduce the size of the
   output. (0.0.1.37)
+
+- Updated the doc of `do_test()`.
+  (0.0.1.38)
