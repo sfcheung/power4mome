@@ -11,7 +11,7 @@ sim_out()."><meta name="google-site-verification" content="0VLBmFnW_UJFI-7gXnORP
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.35</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.38</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -143,7 +143,7 @@ is used.</p></dd>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>An object of the class <code>test_out</code>,
 which is a list of length equal to
-<code>sim_out</code>. Each element of the list
+<code>sim_all</code>. Each element of the list
 has two elements:</p><ul><li><p><code>test</code>: The output of <code>test_fun</code>.</p></li>
 <li><p><code>test_results</code>: The output of
 <code>results_fun</code>.</p></li>
@@ -152,8 +152,15 @@ has two elements:</p><ul><li><p><code>test</code>: The output of <code>test_fun<
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>Do an arbitrary test in each
 replication using the function set to
-<code>test_fun</code>. This function should work
-on the output of <code><a href="https://rdrr.io/pkg/lavaan/man/sem.html" class="external-link">lavaan::sem()</a></code>.</p>
+<code>test_fun</code>. This function usually
+should work
+on the output of <code><a href="https://rdrr.io/pkg/lavaan/man/sem.html" class="external-link">lavaan::sem()</a></code>,
+<code><a href="https://sfcheung.github.io/lmhelprs/reference/many_lm.html" class="external-link">lmhelprs::many_lm()</a></code>, or
+<code><a href="https://rdrr.io/r/stats/lm.html" class="external-link">stats::lm()</a></code>, but can also be a
+function that works on the output
+of the function set to <code>fit_function</code>
+when calling <code><a href="fit_model.html">fit_model()</a></code> or
+<code><a href="power4test.html">power4test()</a></code> (see <code>fit_model_args</code>).</p>
 <p>The test results will be extracted
 from the output of <code>test_fun</code> by the
 function set to <code>results_fun</code>. If
@@ -185,14 +192,18 @@ done for any reason, it should be
 </ul><p>The results can then be used to
 estimate the power of the test.</p>
 <p>The package came with some ready-to-use
-test functions as examples:</p><ul><li><p><code><a href="test_indirect_effect.html">test_indirect_effect()</a></code></p></li>
+test functions:</p><ul><li><p><code><a href="test_indirect_effect.html">test_indirect_effect()</a></code></p></li>
+<li><p><code><a href="test_cond_indirect.html">test_cond_indirect()</a></code></p></li>
+<li><p><code><a href="test_cond_indirect_effects.html">test_cond_indirect_effects()</a></code></p></li>
 <li><p><code><a href="test_moderation.html">test_moderation()</a></code></p></li>
 <li><p><code><a href="test_index_of_mome.html">test_index_of_mome()</a></code></p></li>
 <li><p><code><a href="test_parameters.html">test_parameters()</a></code></p></li>
-</ul><p>This function is used by the
+</ul><p>The function <code>do_test()</code> is used by the
 all-in-one function <code><a href="power4test.html">power4test()</a></code>.
 Users usually do not call this
-function directly.</p>
+function directly, though developers
+can use this function for develop
+other functions for power analysis.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

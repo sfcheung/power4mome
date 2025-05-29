@@ -27,7 +27,7 @@ print method for detailed output."><meta name="google-site-verification" content
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.35</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.38</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -104,7 +104,8 @@ basic information. Call
 <span>  lower_bound <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  upper_bound <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  nls_control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  nls_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  nls_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  save_sim_all <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'x_from_power'</span></span>
@@ -337,6 +338,16 @@ algorithm (default is <code>"port"</code>).
 Used with cautions.</p></dd>
 
 
+<dt id="arg-save-sim-all">save_sim_all<a class="anchor" aria-label="anchor" href="#arg-save-sim-all"></a></dt>
+<dd><p>If <code>FALSE</code>,
+the default, the data in each
+<code>power4test</code> object for each
+value of <code>x</code> is not saved,
+to reduce the size of the output.
+If set to <code>TRUE</code>, the size of the
+output can be very large in size.</p></dd>
+
+
 <dt id="arg-digits">digits<a class="anchor" aria-label="anchor" href="#arg-digits"></a></dt>
 <dd><p>The number of digits
 after the decimal when printing
@@ -517,7 +528,7 @@ and <code><a href="power4test_by_es.html">power4test_by_es()</a></code>.</p></di
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --- Pre-iteration Search ---</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-05-28 12:21:41 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-05-29 16:12:41 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Value(s) to try:  125 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Updating the simulation for sample size: 125 </span>
@@ -565,7 +576,7 @@ and <code><a href="power4test_by_es.html">power4test_by_es()</a></code>.</p></di
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --- Trial 1 ---</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-05-28 12:21:41 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-05-29 16:12:41 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Value(s) to try: 98, 101 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Numbers of replications: 10, 7 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -634,7 +645,7 @@ and <code><a href="power4test_by_es.html">power4test_by_es()</a></code>.</p></di
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --- Final Stage ---</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-05-28 12:21:43 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-05-29 16:12:43 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Rejection Rates:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     n                            test test_label   p.v reject r.cilo r.cihi</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1  98 test_parameters: CIs (pars: ab)         ab 1.000  0.800  0.552  1.048</span>
@@ -700,7 +711,7 @@ and <code><a href="power4test_by_es.html">power4test_by_es()</a></code>.</p></di
 <span class="r-out co"><span class="r-pr">#&gt;</span> === Technical Information ===</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - The range of values explored: 98 to 125 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Time spent in the search: 2.34 secs </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Time spent in the search: 2.071 secs </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - The final crude model for the power-predictor relation:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Model Type: Logistic Regression </span>

@@ -15,7 +15,7 @@ runs of power4test_by_es()."><meta name="google-site-verification" content="0VLB
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.35</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.38</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -69,11 +69,12 @@ runs of <code>power4test_by_es()</code>.</p>
 <span>  progress <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span>,</span>
 <span>  by_seed <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  by_nrep <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  by_nrep <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  save_sim_all <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'power4test_by_es'</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">...</span>, sort <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">...</span>, sort <span class="op">=</span> <span class="cn">TRUE</span>, skip_checking_models <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -139,10 +140,31 @@ If <code>NULL</code>, the default, then the
 original <code>nrep</code> will be used.</p></dd>
 
 
+<dt id="arg-save-sim-all">save_sim_all<a class="anchor" aria-label="anchor" href="#arg-save-sim-all"></a></dt>
+<dd><p>If <code>FALSE</code>,
+the data in each
+<code>power4test</code> object for each
+value is not saved, to reduce
+the size of the output. Default
+is <code>TRUE</code>.</p></dd>
+
+
 <dt id="arg-sort">sort<a class="anchor" aria-label="anchor" href="#arg-sort"></a></dt>
 <dd><p>WHen combining <code>power4test_by_es</code>
 objects, whether they will be sorted
 by effect size. Default is <code>TRUE</code>.</p></dd>
+
+
+<dt id="arg-skip-checking-models">skip_checking_models<a class="anchor" aria-label="anchor" href="#arg-skip-checking-models"></a></dt>
+<dd><p>Whether
+the check of the data generation model
+will be checked. Default is <code>TRUE</code>.
+Should be set to <code>FALSE</code> only when
+users are certain the they are based
+on the same model, or when the model
+is not saved (e.g., <code>save_sim_all</code>
+set to <code>FALSE</code> when calling
+<code>power4test_by_es()</code>).</p></dd>
 
 </dl></div>
     <div class="section level2">
