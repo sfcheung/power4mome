@@ -31,6 +31,10 @@ navbar:
     articles:
       text: Articles
       menu:
+      - text: "<Scenarios>"
+      - text: Latent factor mediation
+        href: articles/power4test_latent_mediation.html
+      - text: -------
       - text: "<Given Power, Find x>"
       - text: Determine the sample size with the target power
         href: articles/x_from_power_for_n.html

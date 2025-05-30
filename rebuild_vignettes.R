@@ -5,6 +5,8 @@ base_dir <- getwd()
 setwd(paste0(base_dir,"/vignettes/"))
 
 knitr::knit("power4mome.Rmd.original", output = "power4mome.Rmd")
+knitr::knit("power4test_latent_mediation.Rmd.original", output = "power4test_latent_mediation.Rmd")
+
 
 setwd(base_dir)
 
