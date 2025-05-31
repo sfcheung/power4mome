@@ -11,7 +11,7 @@ power_curve()."><meta name="google-site-verification" content="0VLBmFnW_UJFI-7gX
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.39</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.40</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -94,17 +94,19 @@ the predicted rejection rates.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>It works in two modes. If new
+    <p>It works in two modes.</p>
+<p>If new
 data is not supplied (through
-<code>newdata</code>), it retrieve the stored
-results and call the corresponding
+<code>newdata</code>), it retrieves the stored
+results and calls the corresponding
 methods to compute the predicted
 values, which are the predicted
 rejection rates (power levels if
-the population effect size is
+the null hypothesis is false,
+e.g., the population effect size is
 equal to zero).</p>
 <p>If new data is supplied, such as
-the named list with a vector of
+a named list with a vector of
 sample sizes, they will be used to
 compute the predicted rejection
 rates.</p>
@@ -117,15 +119,24 @@ rates.</p>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Specify the population model</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">model_simple_med</span> <span class="op">&lt;-</span></span></span>
 <span class="r-in"><span><span class="st">"</span></span></span>
 <span class="r-in"><span><span class="st">m ~ x</span></span></span>
 <span class="r-in"><span><span class="st">y ~ m + x</span></span></span>
 <span class="r-in"><span><span class="st">"</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">model_simple_med_es</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"y ~ m"</span> <span class="op">=</span> <span class="st">"l"</span>,</span></span>
-<span class="r-in"><span>                         <span class="st">"m ~ x"</span> <span class="op">=</span> <span class="st">"m"</span>,</span></span>
-<span class="r-in"><span>                         <span class="st">"y ~ x"</span> <span class="op">=</span> <span class="st">"s"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Specify the effect sizes (population parameter values)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">model_simple_med_es</span> <span class="op">&lt;-</span></span></span>
+<span class="r-in"><span><span class="st">"</span></span></span>
+<span class="r-in"><span><span class="st">y ~ m: l</span></span></span>
+<span class="r-in"><span><span class="st">m ~ x: m</span></span></span>
+<span class="r-in"><span><span class="st">y ~ x: s</span></span></span>
+<span class="r-in"><span><span class="st">"</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Simulate datasets to check the model</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">sim_only</span> <span class="op">&lt;-</span> <span class="fu"><a href="power4test.html">power4test</a></span><span class="op">(</span>nrep <span class="op">=</span> <span class="fl">10</span>,</span></span>
 <span class="r-in"><span>                       model <span class="op">=</span> <span class="va">model_simple_med</span>,</span></span>
@@ -137,7 +148,7 @@ rates.</p>
 <span class="r-in"><span>                       parallel <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
 <span class="r-in"><span>                       progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># By n</span></span></span>
+<span class="r-in"><span><span class="co"># By n: Do a test for different sample sizes</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">out1</span> <span class="op">&lt;-</span> <span class="fu"><a href="power4test_by_n.html">power4test_by_n</a></span><span class="op">(</span><span class="va">sim_only</span>,</span></span>
 <span class="r-in"><span>                        nrep <span class="op">=</span> <span class="fl">10</span>,</span></span>
@@ -171,7 +182,7 @@ rates.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         1         2         3 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 0.2852909 0.3782246 0.6355494 </span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># By pop_es</span></span></span>
+<span class="r-in"><span><span class="co"># By pop_es: Do a test for different population values of a model parameter</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">out2</span> <span class="op">&lt;-</span> <span class="fu"><a href="power4test_by_es.html">power4test_by_es</a></span><span class="op">(</span><span class="va">sim_only</span>,</span></span>
 <span class="r-in"><span>                             nrep <span class="op">=</span> <span class="fl">10</span>,</span></span>

@@ -11,7 +11,7 @@ sim_out()."><meta name="google-site-verification" content="0VLBmFnW_UJFI-7gXnORP
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.39</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.40</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,7 +84,9 @@ replication in the output of
 <dt id="arg-test-fun">test_fun<a class="anchor" aria-label="anchor" href="#arg-test-fun"></a></dt>
 <dd><p>A function to do the
 test. See 'Details' for the requirement
-of this function.</p></dd>
+of this function. There are some
+built-in test functions in <code>power4mome</code>,
+described in 'Details'.</p></dd>
 
 
 <dt id="arg-test-args">test_args<a class="anchor" aria-label="anchor" href="#arg-test-args"></a></dt>
@@ -146,16 +148,39 @@ is used.</p></dd>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>An object of the class <code>test_out</code>,
 which is a list of length equal to
-<code>sim_all</code>. Each element of the list
-has two elements:</p><ul><li><p><code>test</code>: The output of <code>test_fun</code>.</p></li>
+<code>sim_all</code>, one element for each
+replication. Each element of the list
+has two elements:</p><ul><li><p><code>test</code>: The output of the function
+set to <code>test_fun</code>.</p></li>
 <li><p><code>test_results</code>: The output of
-<code>results_fun</code>.</p></li>
+the function set to <code>results_fun</code>.</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>Do an arbitrary test in each
 replication using the function set to
-<code>test_fun</code>. This function usually
+<code>test_fun</code>.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="the-role-of-do-test-">The role of <code>do_test()</code><a class="anchor" aria-label="anchor" href="#the-role-of-do-test-"></a></h2>
+    <p>The function <code>do_test()</code> is used by
+the all-in-one function
+<code><a href="power4test.html">power4test()</a></code>. Users usually do not
+call this function directly, though
+developers can use this function to
+develop other functions for power
+analysis, or to build their own
+workflows to do the power analysis.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="major-test-related-arguments">Major Test-Related Arguments<a class="anchor" aria-label="anchor" href="#major-test-related-arguments"></a></h2>
+
+<div class="section">
+<h3 id="the-test-function-test-fun-">The test function (test_fun)<a class="anchor" aria-label="anchor" href="#the-test-function-test-fun-"></a></h3>
+
+
+<p>The function set to <code>test_fun</code>,
+the <em>test function</em>, usually
 should work
 on the output of <code><a href="https://rdrr.io/pkg/lavaan/man/sem.html" class="external-link">lavaan::sem()</a></code>,
 <code><a href="https://sfcheung.github.io/lmhelprs/reference/many_lm.html" class="external-link">lmhelprs::many_lm()</a></code>, or
@@ -164,9 +189,41 @@ function that works on the output
 of the function set to <code>fit_function</code>
 when calling <code><a href="fit_model.html">fit_model()</a></code> or
 <code><a href="power4test.html">power4test()</a></code> (see <code>fit_model_args</code>).</p>
+<p>The function has two default
+requirements.</p>
+<p>First, it has an argument <code>fit</code>, to
+be set to the output of
+<code><a href="https://rdrr.io/pkg/lavaan/man/sem.html" class="external-link">lavaan::sem()</a></code> or another output
+stored in the element <code>extra$fit</code> of
+a replication in the <code>sim_all</code>
+object. (This requirement can be
+relaxed; see the section on <code>map_names</code>.)</p>
+<p>That is, the function definition
+should be of this from: <code>FUN(fit, ...)</code>. This is the form of all
+<code>test_*</code> functions in <code>power4mome</code>.</p>
+<p>If other arguments are to be passed
+to the test function, they can be set
+to <code>test_args</code> as a named list.</p>
+<p>Second, the test function must
+returns an output that (a) can be
+processed by the results function
+(see below), or (b) is of
+the required format for the output of
+a results function (see the next
+section). If it already returns
+an output of the required format,
+then there is no need to set the
+results function.</p>
+</div>
+
+<div class="section">
+<h3 id="the-results-function-results-fun-">The results function (results_fun)<a class="anchor" aria-label="anchor" href="#the-results-function-results-fun-"></a></h3>
+
+
 <p>The test results will be extracted
 from the output of <code>test_fun</code> by the
-function set to <code>results_fun</code>. If
+function set to <code>results_fun</code>,
+the <em>results function</em>. If
 the <code>test_fun</code> already returns an
 output of the expected format
 (see below), then set <code>results_fun</code>
@@ -180,63 +237,153 @@ named list (which can be a data frame)
 or a named vector with some
 of the following
 elements:</p><ul><li><p><code>est</code>: Optional. The estimate of a
-parameter.</p></li>
+parameter, if applicable.</p></li>
 <li><p><code>se</code>: Optional. The standard error
-of the estimate.</p></li>
+of the estimate, if applicable.</p></li>
 <li><p><code>cilo</code>: Optional. The lower limit of the
-confidence interval.</p></li>
+confidence interval, if applicable.</p></li>
 <li><p><code>cihi</code>: Optional. The upper limit of the
-confidence interval.</p></li>
+confidence interval, if applicable.</p></li>
 <li><p><code>sig</code>: Required. If <code>1</code>, the test is
 significant. If <code>0</code>, the test is not
 significant. If the test cannot be
 done for any reason, it should be
 <code>NA</code>.</p></li>
 </ul><p>The results can then be used to
-estimate the power of the test.</p>
-<p>The package came with some ready-to-use
+estimate the power or Type I
+error of the test.</p>
+<p>For example, if
+the null hypothesis is false, then
+the proportion of significant, that
+is, the mean of the values of <code>sig</code>
+across replications, is the power.</p>
+</div>
+
+<div class="section">
+<h3 id="built-in-test-functions">Built-in test functions<a class="anchor" aria-label="anchor" href="#built-in-test-functions"></a></h3>
+
+
+<p>The package <code>power4mome</code> has some ready-to-use
 test functions:</p><ul><li><p><code><a href="test_indirect_effect.html">test_indirect_effect()</a></code></p></li>
 <li><p><code><a href="test_cond_indirect.html">test_cond_indirect()</a></code></p></li>
 <li><p><code><a href="test_cond_indirect_effects.html">test_cond_indirect_effects()</a></code></p></li>
 <li><p><code><a href="test_moderation.html">test_moderation()</a></code></p></li>
 <li><p><code><a href="test_index_of_mome.html">test_index_of_mome()</a></code></p></li>
 <li><p><code><a href="test_parameters.html">test_parameters()</a></code></p></li>
-</ul><p>The function <code>do_test()</code> is used by the
-all-in-one function <code><a href="power4test.html">power4test()</a></code>.
-Users usually do not call this
-function directly, though developers
-can use this function for develop
-other functions for power analysis.</p>
+</ul><p>Please refer to their help pages
+for examples.</p>
+</div>
+
+<div class="section">
+<h3 id="the-argument-map-names">The argument map_names<a class="anchor" aria-label="anchor" href="#the-argument-map-names"></a></h3>
+
+
+<p>This argument is for developers using
+a test function that has a different
+name for the argument of the fit
+object (<code>"fit"</code>, the default).</p>
+<p>If <code>test_fun</code> is set to a function
+that works on an output of, say,
+<code><a href="https://rdrr.io/pkg/lavaan/man/sem.html" class="external-link">lavaan::sem()</a></code> but the argument name
+for the output is not <code>fit</code>, the
+mapping can be changed by
+<code>map_names</code>.</p>
+<p>For example,
+<code><a href="https://rdrr.io/pkg/lavaan/man/parameterEstimates.html" class="external-link">lavaan::parameterEstimates()</a></code>
+receives an output of <code><a href="https://rdrr.io/pkg/lavaan/man/sem.html" class="external-link">lavaan::sem()</a></code>
+and reports the test results of model
+parameters. However, the argument
+name for the <code>lavaan</code> output is
+<code>object.</code> To instruct <code>do_test()</code> to
+do the test correctly when setting
+<code>test_fun</code> to
+<code><a href="https://rdrr.io/pkg/lavaan/man/parameterEstimates.html" class="external-link">lavaan::parameterEstimates</a></code>, add
+<code>map_names = c(object = "fit")</code>. The
+element <code>fit</code> in a replication will
+then set to the argument <code>object</code> of
+<code><a href="https://rdrr.io/pkg/lavaan/man/parameterEstimates.html" class="external-link">lavaan::parameterEstimates()</a></code>.</p>
+</div>
+
+    </div>
+    <div class="section level2">
+    <h2 id="the-background-for-having-the-results-fun-argument">The background for having the <code>results_fun</code> argument<a class="anchor" aria-label="anchor" href="#the-background-for-having-the-results-fun-argument"></a></h2>
+    <p>In the early development of
+<code>power4mome</code>, <code>test_fun</code> is designed
+to accept existing functions from
+other packages, such as
+<code><a href="https://sfcheung.github.io/manymome/reference/cond_indirect.html" class="external-link">manymome::indirect_effect()</a></code>. Their
+outputs are not of the required
+format for power analysis, and so
+results functions are needed to
+process their outputs. In the current
+version of <code>power4mome</code>, some
+ready-to-use test functions, usually
+wrappers of these existing functions
+from other packages, have been
+developed, and they no longer need
+results functions to process the
+output. The argument <code>results_fun</code> is
+kept for backward compatibility and
+advanced users to use test functions
+from other packages.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="power4test.html">power4test()</a></code></p></div>
+    <div class="dont-index"><p>See <code><a href="power4test.html">power4test()</a></code> for
+the all-in-one function that uses
+this function. See <code><a href="test_indirect_effect.html">test_indirect_effect()</a></code>,
+<code><a href="test_cond_indirect.html">test_cond_indirect()</a></code>,
+<code><a href="test_cond_indirect_effects.html">test_cond_indirect_effects()</a></code>,
+<code><a href="test_moderation.html">test_moderation()</a></code>,
+<code><a href="test_index_of_mome.html">test_index_of_mome()</a></code>, and
+<code><a href="test_parameters.html">test_parameters()</a></code> for examples of
+test functions.</p></div>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Specify the population model</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span></span></span>
 <span class="r-in"><span><span class="st">"</span></span></span>
 <span class="r-in"><span><span class="st">m ~ x</span></span></span>
 <span class="r-in"><span><span class="st">y ~ m + x</span></span></span>
 <span class="r-in"><span><span class="st">"</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Specify the effect sizes (population parameter values)</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">es</span> <span class="op">&lt;-</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"y ~ m"</span> <span class="op">=</span> <span class="st">"m"</span>,</span></span>
-<span class="r-in"><span>  <span class="st">"m ~ x"</span> <span class="op">=</span> <span class="st">"m"</span>,</span></span>
-<span class="r-in"><span>  <span class="st">"y ~ x"</span> <span class="op">=</span> <span class="st">"n"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="st">"</span></span></span>
+<span class="r-in"><span><span class="st">y ~ m: m</span></span></span>
+<span class="r-in"><span><span class="st">m ~ x: m</span></span></span>
+<span class="r-in"><span><span class="st">y ~ x: n</span></span></span>
+<span class="r-in"><span><span class="st">"</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Generate several simulated datasets</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">data_all</span> <span class="op">&lt;-</span> <span class="fu"><a href="sim_data.html">sim_data</a></span><span class="op">(</span>nrep <span class="op">=</span> <span class="fl">5</span>,</span></span>
 <span class="r-in"><span>                     model <span class="op">=</span> <span class="va">mod</span>,</span></span>
 <span class="r-in"><span>                     pop_es <span class="op">=</span> <span class="va">es</span>,</span></span>
 <span class="r-in"><span>                     n <span class="op">=</span> <span class="fl">100</span>,</span></span>
 <span class="r-in"><span>                     iseed <span class="op">=</span> <span class="fl">1234</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Fit the population model to each datasets</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">fit_all</span> <span class="op">&lt;-</span> <span class="fu"><a href="fit_model.html">fit_model</a></span><span class="op">(</span><span class="va">data_all</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Generate Monte Carlo estimates for forming Monte Carlo confidence intervals</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">mc_all</span> <span class="op">&lt;-</span> <span class="fu"><a href="gen_mc.html">gen_mc</a></span><span class="op">(</span><span class="va">fit_all</span>,</span></span>
 <span class="r-in"><span>                 R <span class="op">=</span> <span class="fl">50</span>,</span></span>
 <span class="r-in"><span>                 iseed <span class="op">=</span> <span class="fl">4567</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Combine the results to a 'sim_all' object</span></span></span>
 <span class="r-in"><span><span class="va">sim_all</span> <span class="op">&lt;-</span> <span class="fu"><a href="sim_out.html">sim_out</a></span><span class="op">(</span>data_all <span class="op">=</span> <span class="va">data_all</span>,</span></span>
 <span class="r-in"><span>                   fit <span class="op">=</span> <span class="va">fit_all</span>,</span></span>
 <span class="r-in"><span>                   mc_out <span class="op">=</span> <span class="va">mc_all</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Test the indirect effect in each replication</span></span></span>
 <span class="r-in"><span><span class="va">test_all</span> <span class="op">&lt;-</span> <span class="fu">do_test</span><span class="op">(</span><span class="va">sim_all</span>,</span></span>
 <span class="r-in"><span>                    test_fun <span class="op">=</span> <span class="va">test_indirect_effect</span>,</span></span>
 <span class="r-in"><span>                    test_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"x"</span>,</span></span>
@@ -246,6 +393,7 @@ other functions for power analysis.</p>
 <span class="r-in"><span>                    parallel <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
 <span class="r-in"><span>                    progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># The results</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">test_all</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">$</span><span class="va">test_results</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        est       cilo       cihi        sig </span>

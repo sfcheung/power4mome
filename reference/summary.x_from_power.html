@@ -9,7 +9,7 @@ the output of x_from_power()."><meta name="google-site-verification" content="0V
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.39</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.40</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -95,7 +95,7 @@ the results.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Return an object of the class
+    <p>It returns an object of the class
 <code>summary.x_from_power</code>, which is
 simply the output of <code><a href="x_from_power.html">x_from_power()</a></code>,
 with a <code>print</code> method dedicated for
@@ -120,16 +120,24 @@ to be printed in details.</p>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Specify the population model</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span></span></span>
 <span class="r-in"><span><span class="st">"</span></span></span>
-<span class="r-in"><span><span class="st">m ~ a*x</span></span></span>
-<span class="r-in"><span><span class="st">y ~ b*m + x</span></span></span>
-<span class="r-in"><span><span class="st">ab := a * b</span></span></span>
+<span class="r-in"><span><span class="st">m ~ x</span></span></span>
+<span class="r-in"><span><span class="st">y ~ m + x</span></span></span>
 <span class="r-in"><span><span class="st">"</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">mod_es</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"y ~ m"</span> <span class="op">=</span> <span class="st">"l"</span>,</span></span>
-<span class="r-in"><span>            <span class="st">"m ~ x"</span> <span class="op">=</span> <span class="st">"m"</span>,</span></span>
-<span class="r-in"><span>            <span class="st">"y ~ x"</span> <span class="op">=</span> <span class="st">"n"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Specify the population values</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">mod_es</span> <span class="op">&lt;-</span></span></span>
+<span class="r-in"><span><span class="st">"</span></span></span>
+<span class="r-in"><span><span class="st">m ~ x: m</span></span></span>
+<span class="r-in"><span><span class="st">y ~ m: l</span></span></span>
+<span class="r-in"><span><span class="st">y ~ x: n</span></span></span>
+<span class="r-in"><span><span class="st">"</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Generate the datasets</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">sim_only</span> <span class="op">&lt;-</span> <span class="fu"><a href="power4test.html">power4test</a></span><span class="op">(</span>nrep <span class="op">=</span> <span class="fl">10</span>,</span></span>
 <span class="r-in"><span>                       model <span class="op">=</span> <span class="va">mod</span>,</span></span>
@@ -141,21 +149,16 @@ to be printed in details.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Simulate the data:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Fit the model(s):</span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Do a test</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">test_out</span> <span class="op">&lt;-</span> <span class="fu"><a href="power4test.html">power4test</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">sim_only</span>,</span></span>
 <span class="r-in"><span>                       test_fun <span class="op">=</span> <span class="va">test_parameters</span>,</span></span>
-<span class="r-in"><span>                       test_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pars <span class="op">=</span> <span class="st">"ab"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>                       test_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pars <span class="op">=</span> <span class="st">"m~x"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Displaying progress enabled. Set 'progress = FALSE' to hide the progress.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Do the test: test_parameters: CIs (pars: ab) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Do the test: test_parameters: CIs (pars: m~x) </span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># In real analysis, to have more stable results:</span></span></span>
-<span class="r-in"><span><span class="co"># - Use a larger final_nrep (e.g., 500).</span></span></span>
-<span class="r-in"><span><span class="co"># - Use the default xs_per_trial of 3, or just remove it.</span></span></span>
+<span class="r-in"><span><span class="co"># Determine the sample size with a power of .80 (default)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># If the default values are OK, this call is sufficient:</span></span></span>
-<span class="r-in"><span><span class="co"># power_vs_n &lt;- x_from_power(test_out,</span></span></span>
-<span class="r-in"><span><span class="co">#                            x = "n",</span></span></span>
-<span class="r-in"><span><span class="co">#                            target_power = .80,</span></span></span>
-<span class="r-in"><span><span class="co">#                            seed = 4567)</span></span></span>
 <span class="r-in"><span><span class="va">power_vs_n</span> <span class="op">&lt;-</span> <span class="fu"><a href="x_from_power.html">x_from_power</a></span><span class="op">(</span><span class="va">test_out</span>,</span></span>
 <span class="r-in"><span>                           x <span class="op">=</span> <span class="st">"n"</span>,</span></span>
 <span class="r-in"><span>                           progress <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
@@ -168,7 +171,7 @@ to be printed in details.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --- Pre-iteration Search ---</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-05-30 12:10:46 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-05-31 16:26:26 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Value(s) to try:  125 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Updating the simulation for sample size: 125 </span>
@@ -176,11 +179,11 @@ to be printed in details.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Re-simulate the data:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Fit the model(s):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Update the test(s):</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Update test_parameters: CIs (pars: ab) :</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Update test_parameters: CIs (pars: m~x) :</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Rejection Rates:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     n                            test test_label   p.v reject r.cilo r.cihi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 100 test_parameters: CIs (pars: ab)         ab 1.000  0.800  0.552  1.048</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 125 test_parameters: CIs (pars: ab)         ab 1.000  1.000  1.000  1.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     n                             test test_label   p.v reject r.cilo r.cihi</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 100 test_parameters: CIs (pars: m~x)        m~x 1.000  0.800  0.552  1.048</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 125 test_parameters: CIs (pars: m~x)        m~x 1.000  1.000  1.000  1.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Notes:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - n: The sample size in a trial.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - p.v: The proportion of valid replications.</span>
@@ -216,7 +219,7 @@ to be printed in details.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --- Trial 1 ---</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-05-30 12:10:47 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-05-31 16:26:26 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Value(s) to try: 98, 101 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Numbers of replications: 10, 7 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -225,20 +228,20 @@ to be printed in details.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Re-simulate the data:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Fit the model(s):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Update the test(s):</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Update test_parameters: CIs (pars: ab) :</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Update test_parameters: CIs (pars: m~x) :</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Updating the simulation for sample size: 101 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Displaying progress enabled. Set 'progress = FALSE' to hide the progress.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Re-simulate the data:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Fit the model(s):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Update the test(s):</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Update test_parameters: CIs (pars: ab) :</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Update test_parameters: CIs (pars: m~x) :</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Rejection Rates:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     n                            test test_label   p.v reject r.cilo r.cihi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  98 test_parameters: CIs (pars: ab)         ab 1.000  0.800  0.552  1.048</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 100 test_parameters: CIs (pars: ab)         ab 1.000  0.800  0.552  1.048</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 101 test_parameters: CIs (pars: ab)         ab 1.000  0.857  0.598  1.116</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 125 test_parameters: CIs (pars: ab)         ab 1.000  1.000  1.000  1.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     n                             test test_label   p.v reject r.cilo r.cihi</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  98 test_parameters: CIs (pars: m~x)        m~x 1.000  0.800  0.552  1.048</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 100 test_parameters: CIs (pars: m~x)        m~x 1.000  0.800  0.552  1.048</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 101 test_parameters: CIs (pars: m~x)        m~x 1.000  0.857  0.598  1.116</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 125 test_parameters: CIs (pars: m~x)        m~x 1.000  1.000  1.000  1.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Notes:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - n: The sample size in a trial.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - p.v: The proportion of valid replications.</span>
@@ -256,9 +259,9 @@ to be printed in details.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Re-simulate the data:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Fit the model(s):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Update the test(s):</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Update test_parameters: CIs (pars: ab) :</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Update test_parameters: CIs (pars: m~x) :</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Extrapolated value: 99 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Estimated power for 99: 0.7000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Estimated power for 99: 0.8000</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> - 'nls()' estimation failed. Switch to logistic regression.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Power Curve:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
@@ -274,25 +277,25 @@ to be printed in details.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Coefficients:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)            x  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    -18.6662       0.2009  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    -16.7613       0.1835  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Degrees of Freedom: 46 Total (i.e. Null);  45 Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Null Deviance:	    42.89 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Residual Deviance: 38.54 	AIC: 42.54</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Null Deviance:	    39.56 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Residual Deviance: 35.92 	AIC: 39.92</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Estimated power is close enough to target power (0.8000). (CI: [0.5521,1.0479])</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --- Final Stage ---</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-05-30 12:10:49 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-05-31 16:26:28 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Rejection Rates:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     n                            test test_label   p.v reject r.cilo r.cihi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  98 test_parameters: CIs (pars: ab)         ab 1.000  0.800  0.552  1.048</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  99 test_parameters: CIs (pars: ab)         ab 1.000  0.700  0.416  0.984</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 100 test_parameters: CIs (pars: ab)         ab 1.000  0.800  0.552  1.048</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 101 test_parameters: CIs (pars: ab)         ab 1.000  0.857  0.598  1.116</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 125 test_parameters: CIs (pars: ab)         ab 1.000  1.000  1.000  1.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     n                             test test_label   p.v reject r.cilo r.cihi</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  98 test_parameters: CIs (pars: m~x)        m~x 1.000  0.800  0.552  1.048</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  99 test_parameters: CIs (pars: m~x)        m~x 1.000  0.800  0.552  1.048</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 100 test_parameters: CIs (pars: m~x)        m~x 1.000  0.800  0.552  1.048</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 101 test_parameters: CIs (pars: m~x)        m~x 1.000  0.857  0.598  1.116</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 125 test_parameters: CIs (pars: m~x)        m~x 1.000  1.000  1.000  1.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Notes:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - n: The sample size in a trial.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - p.v: The proportion of valid replications.</span>
@@ -351,7 +354,7 @@ to be printed in details.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> === Technical Information ===</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - The range of values explored: 98 to 125 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Time spent in the search: 2.415 secs </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Time spent in the search: 2.042 secs </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - The final crude model for the power-predictor relation:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Model Type: Logistic Regression </span>
@@ -377,12 +380,12 @@ to be printed in details.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Detailed Results:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     n                            test test_label   p.v reject r.cilo r.cihi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  98 test_parameters: CIs (pars: ab)         ab 1.000  0.800  0.552  1.048</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  99 test_parameters: CIs (pars: ab)         ab 1.000  0.700  0.416  0.984</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 100 test_parameters: CIs (pars: ab)         ab 1.000  0.800  0.552  1.048</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 101 test_parameters: CIs (pars: ab)         ab 1.000  0.857  0.598  1.116</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 125 test_parameters: CIs (pars: ab)         ab 1.000  1.000  1.000  1.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     n                             test test_label   p.v reject r.cilo r.cihi</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  98 test_parameters: CIs (pars: m~x)        m~x 1.000  0.800  0.552  1.048</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  99 test_parameters: CIs (pars: m~x)        m~x 1.000  0.800  0.552  1.048</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 100 test_parameters: CIs (pars: m~x)        m~x 1.000  0.800  0.552  1.048</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 101 test_parameters: CIs (pars: m~x)        m~x 1.000  0.857  0.598  1.116</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 125 test_parameters: CIs (pars: m~x)        m~x 1.000  1.000  1.000  1.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Notes:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - n: The sample size in a trial.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - p.v: The proportion of valid replications.</span>

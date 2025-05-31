@@ -11,7 +11,7 @@ estimated power against sample size."><meta name="google-site-verification" cont
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.39</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.40</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -142,7 +142,9 @@ the base plot.</p></dd>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>The <code>plot</code>-method of <code>power_curve</code>
-objects
+objects, which are the output of
+<code><a href="power_curve.html">power_curve()</a></code>, returns <code>x</code>
+invisibly. It
 is called for its side effect.</p>
     </div>
     <div class="section level2">
@@ -162,15 +164,24 @@ individually.</p>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Specify the population model</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">model_simple_med</span> <span class="op">&lt;-</span></span></span>
 <span class="r-in"><span><span class="st">"</span></span></span>
 <span class="r-in"><span><span class="st">m ~ x</span></span></span>
 <span class="r-in"><span><span class="st">y ~ m + x</span></span></span>
 <span class="r-in"><span><span class="st">"</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">model_simple_med_es</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"y ~ m"</span> <span class="op">=</span> <span class="st">"l"</span>,</span></span>
-<span class="r-in"><span>                         <span class="st">"m ~ x"</span> <span class="op">=</span> <span class="st">"m"</span>,</span></span>
-<span class="r-in"><span>                         <span class="st">"y ~ x"</span> <span class="op">=</span> <span class="st">"s"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Specify the effect sizes (population parameter values)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">model_simple_med_es</span> <span class="op">&lt;-</span></span></span>
+<span class="r-in"><span><span class="st">"</span></span></span>
+<span class="r-in"><span><span class="st">y ~ m: l</span></span></span>
+<span class="r-in"><span><span class="st">m ~ x: m</span></span></span>
+<span class="r-in"><span><span class="st">y ~ x: s</span></span></span>
+<span class="r-in"><span><span class="st">"</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Simulate datasets to check the model</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">sim_only</span> <span class="op">&lt;-</span> <span class="fu"><a href="power4test.html">power4test</a></span><span class="op">(</span>nrep <span class="op">=</span> <span class="fl">10</span>,</span></span>
 <span class="r-in"><span>                       model <span class="op">=</span> <span class="va">model_simple_med</span>,</span></span>
@@ -182,39 +193,7 @@ individually.</p>
 <span class="r-in"><span>                       parallel <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
 <span class="r-in"><span>                       progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># By n</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">out1</span> <span class="op">&lt;-</span> <span class="fu"><a href="power4test_by_n.html">power4test_by_n</a></span><span class="op">(</span><span class="va">sim_only</span>,</span></span>
-<span class="r-in"><span>                        nrep <span class="op">=</span> <span class="fl">10</span>,</span></span>
-<span class="r-in"><span>                        test_fun <span class="op">=</span> <span class="va">test_parameters</span>,</span></span>
-<span class="r-in"><span>                        test_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>par <span class="op">=</span> <span class="st">"y~x"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>                        n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">25</span>, <span class="fl">100</span>, <span class="fl">200</span>, <span class="fl">1000</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>                        by_seed <span class="op">=</span> <span class="fl">1234</span>,</span></span>
-<span class="r-in"><span>                        parallel <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
-<span class="r-in"><span>                        progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">pout1</span> <span class="op">&lt;-</span> <span class="fu"><a href="power_curve.html">power_curve</a></span><span class="op">(</span><span class="va">out1</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">model_simple_med</span> <span class="op">&lt;-</span></span></span>
-<span class="r-in"><span><span class="st">"</span></span></span>
-<span class="r-in"><span><span class="st">m ~ x</span></span></span>
-<span class="r-in"><span><span class="st">y ~ m + x</span></span></span>
-<span class="r-in"><span><span class="st">"</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">model_simple_med_es</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"y ~ m"</span> <span class="op">=</span> <span class="st">"l"</span>,</span></span>
-<span class="r-in"><span>                         <span class="st">"m ~ x"</span> <span class="op">=</span> <span class="st">"m"</span>,</span></span>
-<span class="r-in"><span>                         <span class="st">"y ~ x"</span> <span class="op">=</span> <span class="st">"s"</span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">sim_only</span> <span class="op">&lt;-</span> <span class="fu"><a href="power4test.html">power4test</a></span><span class="op">(</span>nrep <span class="op">=</span> <span class="fl">10</span>,</span></span>
-<span class="r-in"><span>                       model <span class="op">=</span> <span class="va">model_simple_med</span>,</span></span>
-<span class="r-in"><span>                       pop_es <span class="op">=</span> <span class="va">model_simple_med_es</span>,</span></span>
-<span class="r-in"><span>                       n <span class="op">=</span> <span class="fl">50</span>,</span></span>
-<span class="r-in"><span>                       fit_model_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>fit_function <span class="op">=</span> <span class="st">"lm"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>                       do_the_test <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
-<span class="r-in"><span>                       iseed <span class="op">=</span> <span class="fl">1234</span>,</span></span>
-<span class="r-in"><span>                       parallel <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
-<span class="r-in"><span>                       progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># By n</span></span></span>
+<span class="r-in"><span><span class="co"># By n: Do a test for different sample sizes</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">out1</span> <span class="op">&lt;-</span> <span class="fu"><a href="power4test_by_n.html">power4test_by_n</a></span><span class="op">(</span><span class="va">sim_only</span>,</span></span>
 <span class="r-in"><span>                        nrep <span class="op">=</span> <span class="fl">10</span>,</span></span>
@@ -246,7 +225,7 @@ individually.</p>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">pout1</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="plot.power_curve-1.png" alt="" width="576" height="384"></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># By pop_es</span></span></span>
+<span class="r-in"><span><span class="co"># By pop_es: Do a test for different population values of a model parameter</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">out2</span> <span class="op">&lt;-</span> <span class="fu"><a href="power4test_by_es.html">power4test_by_es</a></span><span class="op">(</span><span class="va">sim_only</span>,</span></span>
 <span class="r-in"><span>                             nrep <span class="op">=</span> <span class="fl">10</span>,</span></span>
@@ -261,21 +240,6 @@ individually.</p>
 <span class="r-in"><span><span class="va">pout2</span> <span class="op">&lt;-</span> <span class="fu"><a href="power_curve.html">power_curve</a></span><span class="op">(</span><span class="va">out2</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">pout2</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="plot.power_curve-2.png" alt="" width="576" height="384"></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># By pop_es</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">out2</span> <span class="op">&lt;-</span> <span class="fu"><a href="power4test_by_es.html">power4test_by_es</a></span><span class="op">(</span><span class="va">sim_only</span>,</span></span>
-<span class="r-in"><span>                             nrep <span class="op">=</span> <span class="fl">10</span>,</span></span>
-<span class="r-in"><span>                             test_fun <span class="op">=</span> <span class="va">test_parameters</span>,</span></span>
-<span class="r-in"><span>                             test_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>par <span class="op">=</span> <span class="st">"y~x"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>                             pop_es_name <span class="op">=</span> <span class="st">"y ~ x"</span>,</span></span>
-<span class="r-in"><span>                             pop_es_values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">.7</span>, <span class="fl">.15</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>                             by_seed <span class="op">=</span> <span class="fl">1234</span>,</span></span>
-<span class="r-in"><span>                             parallel <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
-<span class="r-in"><span>                             progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">pout2</span> <span class="op">&lt;-</span> <span class="fu"><a href="power_curve.html">power_curve</a></span><span class="op">(</span><span class="va">out2</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">pout2</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

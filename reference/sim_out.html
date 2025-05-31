@@ -15,7 +15,7 @@ single object."><meta name="google-site-verification" content="0VLBmFnW_UJFI-7gX
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.39</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.40</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -131,32 +131,37 @@ to <code>fit</code>, under <code>extra</code>. See
 the description of the argument
 <code>...</code> for details.</p>
 <p>The <code>print</code> method of <code>sim_out</code>
-return <code>x</code> invisibly. Called for
+returns <code>x</code> invisibly. Called for
 its side effect.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>It merges into one object the output
 of <code><a href="sim_data.html">sim_data()</a></code>, which is a list of
-<code>M</code> simulated datasets,
+<code>nrep</code> simulated datasets,
 <code><a href="fit_model.html">fit_model()</a></code>, which is a list of the
-<code><a href="https://rdrr.io/pkg/lavaan/man/sem.html" class="external-link">lavaan::sem()</a></code> output for the <code>M</code>
+<code><a href="https://rdrr.io/pkg/lavaan/man/sem.html" class="external-link">lavaan::sem()</a></code> output for the <code>nrep</code>
 datasets, and optionally the output
 of <code><a href="gen_mc.html">gen_mc()</a></code> or <code><a href="gen_boot.html">gen_boot()</a></code>, which is a list of the
-<code>M</code> sets of Monte Carlo or bootstrap estimates
+<code>R</code> sets of Monte Carlo or bootstrap estimates
 based on the results of
-<code><a href="fit_model.html">fit_model()</a></code>. The list has <code>M</code>
-elements, with the data, model fit
+<code><a href="fit_model.html">fit_model()</a></code>. The list has <code>nrep</code>
+elements, each element with the data,
+the model fit
 results, and optionally the Monte
 Carlo estimates matched.</p>
 <p>This object can then be used for testing
 effects of interests, which are
 further processed to estimate the
 power of this test.</p>
-<p>This function is used by the
-all-in-one function <code><a href="power4test.html">power4test()</a></code>.
-Users usually do not call this
-function directly.</p>
+<p>The function <code>sim_out()</code> is used by
+the all-in-one function
+<code><a href="power4test.html">power4test()</a></code>. Users usually do not
+call this function directly, though
+developers can use this function to
+develop other functions for power
+analysis, or to build their own
+workflows to do the power analysis.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
@@ -165,20 +170,36 @@ function directly.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Specify the model</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span></span></span>
 <span class="r-in"><span><span class="st">"m ~ x</span></span></span>
 <span class="r-in"><span><span class="st"> y ~ m + x"</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Specify the population values</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">es</span> <span class="op">&lt;-</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"y ~ m"</span> <span class="op">=</span> <span class="st">"m"</span>,</span></span>
-<span class="r-in"><span>  <span class="st">"m ~ x"</span> <span class="op">=</span> <span class="st">"m"</span>,</span></span>
-<span class="r-in"><span>  <span class="st">"y ~ x"</span> <span class="op">=</span> <span class="st">"n"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="st">"</span></span></span>
+<span class="r-in"><span><span class="st">y ~ m: m</span></span></span>
+<span class="r-in"><span><span class="st">m ~ x: m</span></span></span>
+<span class="r-in"><span><span class="st">y ~ x: n</span></span></span>
+<span class="r-in"><span><span class="st">"</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Generate the simulated datasets</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">dats</span> <span class="op">&lt;-</span> <span class="fu"><a href="sim_data.html">sim_data</a></span><span class="op">(</span>nrep <span class="op">=</span> <span class="fl">5</span>,</span></span>
 <span class="r-in"><span>                 model <span class="op">=</span> <span class="va">mod</span>,</span></span>
 <span class="r-in"><span>                 pop_es <span class="op">=</span> <span class="va">es</span>,</span></span>
 <span class="r-in"><span>                 n <span class="op">=</span> <span class="fl">100</span>,</span></span>
 <span class="r-in"><span>                 iseed <span class="op">=</span> <span class="fl">1234</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Fit the population model to each dataset</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">fits</span> <span class="op">&lt;-</span> <span class="fu"><a href="fit_model.html">fit_model</a></span><span class="op">(</span><span class="va">dats</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Combine the results to one object</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">sim_out_all</span> <span class="op">&lt;-</span> <span class="fu">sim_out</span><span class="op">(</span>data_all <span class="op">=</span> <span class="va">dats</span>,</span></span>
 <span class="r-in"><span>                       fit <span class="op">=</span> <span class="va">fits</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">sim_out_all</span></span></span>
@@ -235,6 +256,44 @@ function directly.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     m                 0.277</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     x                -0.098</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Verify that the elements of fits are set to extra$fit</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lavaan.ugent.be" class="external-link">lavaan</a></span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> This is lavaan 0.6-19</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> lavaan is FREE software! Please report any bugs.</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/lavaan/man/parameterEstimates.html" class="external-link">parameterEstimates</a></span><span class="op">(</span><span class="va">fits</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   lhs op rhs   est    se     z pvalue ci.lower ci.upper</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   m  ~   x 0.382 0.099 3.837  0.000    0.187    0.577</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   y  ~   m 0.266 0.103 2.591  0.010    0.065    0.467</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   y  ~   x 0.108 0.109 0.990  0.322   -0.106    0.322</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   m ~~   m 0.903 0.128 7.071  0.000    0.653    1.153</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5   y ~~   y 0.951 0.134 7.071  0.000    0.687    1.214</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   x ~~   x 0.913 0.000    NA     NA    0.913    0.913</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/lavaan/man/parameterEstimates.html" class="external-link">parameterEstimates</a></span><span class="op">(</span><span class="va">sim_out_all</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">extra</span><span class="op">$</span><span class="va">fit</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   lhs op rhs   est    se     z pvalue ci.lower ci.upper</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   m  ~   x 0.382 0.099 3.837  0.000    0.187    0.577</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   y  ~   m 0.266 0.103 2.591  0.010    0.065    0.467</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   y  ~   x 0.108 0.109 0.990  0.322   -0.106    0.322</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   m ~~   m 0.903 0.128 7.071  0.000    0.653    1.153</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5   y ~~   y 0.951 0.134 7.071  0.000    0.687    1.214</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   x ~~   x 0.913 0.000    NA     NA    0.913    0.913</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/lavaan/man/parameterEstimates.html" class="external-link">parameterEstimates</a></span><span class="op">(</span><span class="va">fits</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   lhs op rhs    est    se      z pvalue ci.lower ci.upper</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   m  ~   x  0.383 0.108  3.559  0.000    0.172    0.594</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   y  ~   m  0.208 0.104  1.995  0.046    0.004    0.413</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   y  ~   x -0.172 0.119 -1.442  0.149   -0.406    0.062</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   m ~~   m  0.988 0.140  7.071  0.000    0.714    1.262</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5   y ~~   y  1.078 0.153  7.071  0.000    0.780    1.377</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   x ~~   x  0.854 0.000     NA     NA    0.854    0.854</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/lavaan/man/parameterEstimates.html" class="external-link">parameterEstimates</a></span><span class="op">(</span><span class="va">sim_out_all</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">extra</span><span class="op">$</span><span class="va">fit</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   lhs op rhs    est    se      z pvalue ci.lower ci.upper</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   m  ~   x  0.383 0.108  3.559  0.000    0.172    0.594</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   y  ~   m  0.208 0.104  1.995  0.046    0.004    0.413</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   y  ~   x -0.172 0.119 -1.442  0.149   -0.406    0.062</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   m ~~   m  0.988 0.140  7.071  0.000    0.714    1.262</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5   y ~~   y  1.078 0.153  7.071  0.000    0.780    1.377</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   x ~~   x  0.854 0.000     NA     NA    0.854    0.854</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

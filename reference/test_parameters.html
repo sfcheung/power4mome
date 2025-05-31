@@ -11,7 +11,7 @@ for a power4test object."><meta name="google-site-verification" content="0VLBmFn
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.39</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.40</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -96,7 +96,8 @@ fitted by <code>lavaan</code>.</p></dd>
 <dd><p>Optional. If set to
 a character vector, only parameters
 with <code>test_label</code> equal to values in
-<code>pars</code> will be returned. See Details
+<code>pars</code> will be returned. See the
+help page
 on valid names.</p></dd>
 
 
@@ -196,11 +197,11 @@ conducted by ordinary least squares
 confidence intervals based on
 the <em>t</em> statistic, reported by
 <code><a href="https://rdrr.io/r/stats/confint.html" class="external-link">stats::confint()</a></code> applied to
-the output of <code><a href="https://rdrr.io/r/stats/lm.html" class="external-link">stats::lm()</a></code>.</p><div class="section">
-<h3 id="finding-the-names-of-parameters">Finding the names of parameters<a class="anchor" aria-label="anchor" href="#finding-the-names-of-parameters"></a></h3>
-
-
-<p>To use the argument <code>pars</code>, the
+the output of <code><a href="https://rdrr.io/r/stats/lm.html" class="external-link">stats::lm()</a></code>.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="find-the-names-of-parameters">Find the names of parameters<a class="anchor" aria-label="anchor" href="#find-the-names-of-parameters"></a></h2>
+    <p>To use the argument <code>pars</code>, the
 names as appeared in the function
 <code><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef()</a></code> must be used. For the
 output of <code>lavaan</code>, this can
@@ -213,8 +214,6 @@ the label should be used in <code>par</code>.</p>
 <p>If not sure, the function
 <code>find_par_names()</code> can be used to
 find valid names.</p>
-</div>
-
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
@@ -224,18 +223,24 @@ find valid names.</p>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
-<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Specify the model</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span></span></span>
 <span class="r-in"><span><span class="st">"</span></span></span>
-<span class="r-in"><span><span class="st">m ~ a*x</span></span></span>
-<span class="r-in"><span><span class="st">y ~ b*m + x</span></span></span>
-<span class="r-in"><span><span class="st">ab := a * b</span></span></span>
+<span class="r-in"><span><span class="st">m ~ x</span></span></span>
+<span class="r-in"><span><span class="st">y ~ m + x</span></span></span>
 <span class="r-in"><span><span class="st">"</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">mod_es</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"y ~ m"</span> <span class="op">=</span> <span class="st">"l"</span>,</span></span>
-<span class="r-in"><span>            <span class="st">"m ~ x"</span> <span class="op">=</span> <span class="st">"m"</span>,</span></span>
-<span class="r-in"><span>            <span class="st">"y ~ x"</span> <span class="op">=</span> <span class="st">"n"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Specify the population values</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">mod_es</span> <span class="op">&lt;-</span></span></span>
+<span class="r-in"><span><span class="st">"</span></span></span>
+<span class="r-in"><span><span class="st">y ~ m: l</span></span></span>
+<span class="r-in"><span><span class="st">m ~ x: m</span></span></span>
+<span class="r-in"><span><span class="st">y ~ x: n</span></span></span>
+<span class="r-in"><span><span class="st">"</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Simulate the data</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">sim_only</span> <span class="op">&lt;-</span> <span class="fu"><a href="power4test.html">power4test</a></span><span class="op">(</span>nrep <span class="op">=</span> <span class="fl">2</span>,</span></span>
 <span class="r-in"><span>                       model <span class="op">=</span> <span class="va">mod</span>,</span></span>
@@ -246,6 +251,8 @@ find valid names.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Displaying progress enabled. Set 'progress = FALSE' to hide the progress.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Simulate the data:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Fit the model(s):</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Do the tests in each replication</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">test_out</span> <span class="op">&lt;-</span> <span class="fu"><a href="power4test.html">power4test</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">sim_only</span>,</span></span>
 <span class="r-in"><span>                       test_fun <span class="op">=</span> <span class="va">test_parameters</span><span class="op">)</span></span></span>
@@ -259,24 +266,22 @@ find valid names.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> == Model on Factors/Variables ==</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> m ~ a*x</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> y ~ b*m + x</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ab := a * b</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> m ~ x</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> y ~ m + x</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> == Model on Variables/Indicators ==</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> m ~ a*x</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> y ~ b*m + x</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ab := a * b</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> m ~ x</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> y ~ m + x</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ====== Population Values ======</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Regressions:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                    Population</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   m ~                        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     x          (a)    0.300  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     x                 0.300  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   y ~                        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     m          (b)    0.500  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     m                 0.500  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     x                 0.000  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Variances:</span>
@@ -284,10 +289,6 @@ find valid names.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    .m                 0.910  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    .y                 0.750  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     x                 1.000  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Defined Parameters:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                    Population</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     ab                0.150  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ======================= Data Information =======================</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -320,18 +321,20 @@ find valid names.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> =============== &lt;test_parameters: CIs &gt; ===============</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mean(s) across replication:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   test_label lhs op rhs label    est    se      z pvalue   cilo  cihi   sig</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1          a   m  ~   x     a  0.382 0.103  3.698  0.000  0.179 0.585 1.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2          b   y  ~   m     b  0.443 0.094  4.715  0.000  0.259 0.627 1.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3        y~x   y  ~   x       -0.029 0.104 -0.226  0.236 -0.232 0.174 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4       m~~m   m ~~   m        0.945 0.134  7.071  0.000  0.683 1.207 1.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5       y~~y   y ~~   y        0.836 0.118  7.071  0.000  0.604 1.068 1.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6         ab  ab := a*b    ab  0.169 0.058  2.909  0.004  0.055 0.283 1.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   test_label lhs op rhs    est    se      z pvalue   cilo  cihi   sig</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1        m~x   m  ~   x  0.382 0.103  3.698  0.000  0.179 0.585 1.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2        y~m   y  ~   m  0.443 0.094  4.715  0.000  0.259 0.627 1.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3        y~x   y  ~   x -0.029 0.104 -0.226  0.236 -0.232 0.174 0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4       m~~m   m ~~   m  0.945 0.134  7.071  0.000  0.683 1.207 1.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5       y~~y   y ~~   y  0.836 0.118  7.071  0.000  0.604 1.068 1.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - The column 'sig' shows the rejection rates.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - If the null hypothesis is false, the rate is the power.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Number of valid replications for rejection rate(s): 2 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Proportion of valid replications for rejection rate(s): 1.000 </span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Do the tests in each replication: Standardized solution</span></span></span>
+<span class="r-in"><span><span class="co"># Delta method SEs will be used to do the tests</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">test_out</span> <span class="op">&lt;-</span> <span class="fu"><a href="power4test.html">power4test</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">sim_only</span>,</span></span>
 <span class="r-in"><span>                       test_fun <span class="op">=</span> <span class="va">test_parameters</span>,</span></span>
@@ -346,24 +349,22 @@ find valid names.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> == Model on Factors/Variables ==</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> m ~ a*x</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> y ~ b*m + x</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ab := a * b</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> m ~ x</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> y ~ m + x</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> == Model on Variables/Indicators ==</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> m ~ a*x</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> y ~ b*m + x</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ab := a * b</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> m ~ x</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> y ~ m + x</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ====== Population Values ======</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Regressions:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                    Population</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   m ~                        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     x          (a)    0.300  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     x                 0.300  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   y ~                        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     m          (b)    0.500  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     m                 0.500  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     x                 0.000  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Variances:</span>
@@ -371,10 +372,6 @@ find valid names.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    .m                 0.910  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    .y                 0.750  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     x                 1.000  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Defined Parameters:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                    Population</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     ab                0.150  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ======================= Data Information =======================</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -407,19 +404,20 @@ find valid names.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ======== &lt;test_parameters: CIs (standardized) &gt; ========</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mean(s) across replication:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   test_label lhs op rhs label    est    se      z pvalue   cilo  cihi   sig</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1          a   m  ~   x     a  0.347 0.085  4.069  0.000  0.180 0.514 1.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2          b   y  ~   m     b  0.446 0.086  5.190  0.000  0.277 0.615 1.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3        y~x   y  ~   x       -0.024 0.094 -0.233  0.232 -0.209 0.160 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4       m~~m   m ~~   m        0.880 0.059 14.888  0.000  0.764 0.995 1.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5       y~~y   y ~~   y        0.791 0.071 11.181  0.000  0.652 0.931 1.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6       x~~x   x ~~   x        1.000 0.000    NaN    NaN  1.000 1.000 1.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7         ab  ab := a*b    ab  0.155 0.050  3.102  0.002  0.057 0.253 1.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   test_label lhs op rhs    est    se      z pvalue   cilo  cihi   sig</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1        m~x   m  ~   x  0.347 0.085  4.069  0.000  0.180 0.514 1.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2        y~m   y  ~   m  0.446 0.086  5.190  0.000  0.277 0.615 1.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3        y~x   y  ~   x -0.024 0.094 -0.233  0.232 -0.209 0.160 0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4       m~~m   m ~~   m  0.880 0.059 14.888  0.000  0.764 0.995 1.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5       y~~y   y ~~   y  0.791 0.071 11.181  0.000  0.652 0.931 1.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6       x~~x   x ~~   x  1.000 0.000    NaN    NaN  1.000 1.000 1.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - The column 'sig' shows the rejection rates.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - If the null hypothesis is false, the rate is the power.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Number of valid replications for rejection rate(s): 2 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Proportion of valid replications for rejection rate(s): 1.000 </span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Do the tests in each replication: Parameters with the selected operator</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">test_out</span> <span class="op">&lt;-</span> <span class="fu"><a href="power4test.html">power4test</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">sim_only</span>,</span></span>
 <span class="r-in"><span>                       test_fun <span class="op">=</span> <span class="va">test_parameters</span>,</span></span>
@@ -434,24 +432,22 @@ find valid names.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> == Model on Factors/Variables ==</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> m ~ a*x</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> y ~ b*m + x</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ab := a * b</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> m ~ x</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> y ~ m + x</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> == Model on Variables/Indicators ==</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> m ~ a*x</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> y ~ b*m + x</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ab := a * b</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> m ~ x</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> y ~ m + x</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ====== Population Values ======</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Regressions:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                    Population</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   m ~                        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     x          (a)    0.300  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     x                 0.300  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   y ~                        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     m          (b)    0.500  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     m                 0.500  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     x                 0.000  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Variances:</span>
@@ -459,10 +455,6 @@ find valid names.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    .m                 0.910  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    .y                 0.750  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     x                 1.000  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Defined Parameters:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                    Population</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     ab                0.150  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ======================= Data Information =======================</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -495,10 +487,10 @@ find valid names.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ============ &lt;test_parameters: CIs (op: ~)&gt; ============</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mean(s) across replication:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   test_label lhs op rhs label    est    se      z pvalue   cilo  cihi   sig</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1          a   m  ~   x     a  0.382 0.103  3.698  0.000  0.179 0.585 1.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2          b   y  ~   m     b  0.443 0.094  4.715  0.000  0.259 0.627 1.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3        y~x   y  ~   x       -0.029 0.104 -0.226  0.236 -0.232 0.174 0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   test_label lhs op rhs    est    se      z pvalue   cilo  cihi   sig</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1        m~x   m  ~   x  0.382 0.103  3.698  0.000  0.179 0.585 1.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2        y~m   y  ~   m  0.443 0.094  4.715  0.000  0.259 0.627 1.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3        y~x   y  ~   x -0.029 0.104 -0.226  0.236 -0.232 0.174 0.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - The column 'sig' shows the rejection rates.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - If the null hypothesis is false, the rate is the power.</span>
@@ -509,7 +501,7 @@ find valid names.</p>
 <span class="r-in"><span><span class="co"># Finding valid parameter names</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">find_par_names</span><span class="op">(</span><span class="va">sim_only</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "a"    "b"    "y~x"  "m~~m" "y~~y"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "m~x"  "y~m"  "y~x"  "m~~m" "y~~y"</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

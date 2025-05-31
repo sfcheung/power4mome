@@ -9,7 +9,7 @@ for a power4test object."><meta name="google-site-verification" content="0VLBmFn
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.39</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.40</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -201,15 +201,24 @@ fitted by regression using
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Specify the model</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">model_simple_med</span> <span class="op">&lt;-</span></span></span>
 <span class="r-in"><span><span class="st">"</span></span></span>
 <span class="r-in"><span><span class="st">m ~ x</span></span></span>
 <span class="r-in"><span><span class="st">y ~ m + x</span></span></span>
 <span class="r-in"><span><span class="st">"</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">model_simple_med_es</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"y ~ m"</span> <span class="op">=</span> <span class="st">"l"</span>,</span></span>
-<span class="r-in"><span>                         <span class="st">"m ~ x"</span> <span class="op">=</span> <span class="st">"m"</span>,</span></span>
-<span class="r-in"><span>                         <span class="st">"y ~ x"</span> <span class="op">=</span> <span class="st">"n"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Specify the population values</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">model_simple_med_es</span> <span class="op">&lt;-</span></span></span>
+<span class="r-in"><span><span class="st">"</span></span></span>
+<span class="r-in"><span><span class="st">y ~ m: l</span></span></span>
+<span class="r-in"><span><span class="st">m ~ x: m</span></span></span>
+<span class="r-in"><span><span class="st">y ~ x: n</span></span></span>
+<span class="r-in"><span><span class="st">"</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Simulate the data</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">sim_only</span> <span class="op">&lt;-</span> <span class="fu"><a href="power4test.html">power4test</a></span><span class="op">(</span>nrep <span class="op">=</span> <span class="fl">5</span>,</span></span>
 <span class="r-in"><span>                       model <span class="op">=</span> <span class="va">model_simple_med</span>,</span></span>
@@ -222,6 +231,8 @@ fitted by regression using
 <span class="r-out co"><span class="r-pr">#&gt;</span> Simulate the data:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Fit the model(s):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Generate Monte Carlo estimates:</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Do the test in each replication</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">test_ind</span> <span class="op">&lt;-</span> <span class="fu"><a href="power4test.html">power4test</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">sim_only</span>,</span></span>
 <span class="r-in"><span>                       test_fun <span class="op">=</span> <span class="va">test_indirect_effect</span>,</span></span>

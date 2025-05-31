@@ -13,7 +13,7 @@ along with other information."><meta name="google-site-verification" content="0V
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.39</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.40</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -108,28 +108,30 @@ Default is 10.</p></dd>
 population model. If <code>NULL</code>, the
 default, <code><a href="ptable_pop.html">ptable_pop()</a></code> will be
 called to generate the <code>ptable_pop</code>
-object.</p></dd>
+object, using arguments such as
+<code>model</code> and <code>pop_es</code>.</p></dd>
 
 
 <dt id="arg-model">model<a class="anchor" aria-label="anchor" href="#arg-model"></a></dt>
 <dd><p>The <code>lavaan</code> model
 syntax of the population model.
-Required. Ignored if <code>ptable</code> is
-specified.</p></dd>
+Ignored if <code>ptable</code> is
+specified. See <a href="ptable_pop.html">ptable_pop</a> on
+how to specify this argument.</p></dd>
 
 
 <dt id="arg-pop-es">pop_es<a class="anchor" aria-label="anchor" href="#arg-pop-es"></a></dt>
 <dd><p>The character to
-specify population effect sizes. See
-'Details' of <code><a href="ptable_pop.html">ptable_pop()</a></code> on how to
-set the effect sizes for this
-argument. Ignored if <code>ptable</code> is
+specify population effect sizes.
+See <a href="ptable_pop.html">ptable_pop</a> on
+how to specify this argument.
+Ignored if <code>ptable</code> is
 specified.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>For sim_data, parameters
-to be passed to <a href="ptable_pop.html">ptable_pop</a>. For
+to be passed to <code><a href="ptable_pop.html">ptable_pop()</a></code>. For
 <code>print.sim_data()</code>, these arguments
 are ignored.</p></dd>
 
@@ -149,17 +151,24 @@ and the seed is not changed.</p></dd>
 <dd><p>A named
 vector to specify the number of
 indicators for each factors. See
-'Details' on how to set this
+the help page on how to set this
 argument. Default is <code>NULL</code> and all
 variables in the model syntax are
-observed variables.</p></dd>
+observed variables.
+See the help page on how
+to use this argument.</p></dd>
 
 
 <dt id="arg-reliability">reliability<a class="anchor" aria-label="anchor" href="#arg-reliability"></a></dt>
 <dd><p>A named vector
+(for a single-group model) or a
+named list of named vectors
+(for a multigroup model)
 to set the reliability coefficient
 of each set of indicators. Default
-is <code>NULL</code>.</p></dd>
+is <code>NULL</code>.
+See the help page on how
+to use this argument.</p></dd>
 
 
 <dt id="arg-x-fun">x_fun<a class="anchor" aria-label="anchor" href="#arg-x-fun"></a></dt>
@@ -168,7 +177,7 @@ generate the exogenous variables. If
 not supplied, or set to <code><a href="https://rdrr.io/r/base/list.html" class="external-link">list()</a></code>, the
 default, the variables are generated
 from a multivariate normal
-distribution. See 'Details' on how
+distribution. See the help page on how
 to use this argument.</p></dd>
 
 
@@ -277,16 +286,33 @@ variable model. Indicators are added
 to the syntax.</p></li>
 <li><p><code>fit0</code>: The output of <code><a href="https://rdrr.io/pkg/lavaan/man/sem.html" class="external-link">lavaan::sem()</a></code>
 with <code>ptable</code> as the model and
-<code>do.fit</code> set to <code>FALSE</code>. Use for
+<code>do.fit</code> set to <code>FALSE</code>. Used for the
 easy retrieval of information
 about the model.</p></li>
 </ul><p>The <code>print</code> method of <code>sim_data</code>
-returns <code>x</code> invisibly. Called for
+returns <code>x</code> invisibly. It is called for
 its side effect.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>It does two tasks:</p><ul><li><p>Determine the actual population
+    <p>The function <code>sim_data()</code> generates
+a list of datasets based on a population
+model.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="the-role-of-sim-data-">The role of <code>sim_data()</code><a class="anchor" aria-label="anchor" href="#the-role-of-sim-data-"></a></h2>
+    <p>The function <code>sim_data()</code> is used by
+the all-in-one function
+<code><a href="power4test.html">power4test()</a></code>. Users usually do not
+call this function directly, though
+developers can use this function to
+develop other functions for power
+analysis, or to build their own
+workflows to do the power analysis.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="workflow">Workflow<a class="anchor" aria-label="anchor" href="#workflow"></a></h2>
+    <p>The function <code>sim_data()</code> does two tasks:</p><ul><li><p>Determine the actual population
 model with population values based
 on:</p><ul><li><p>A model syntax for the observed
 variables (for a path model)
@@ -302,7 +328,7 @@ factor as measured by the
 indicators if the model is a
 latent factor model.</p></li>
 </ul></li>
-<li><p>Generate <em>m</em> simulated datasets
+<li><p>Generate <em>nrep</em> simulated datasets
 from the population model.</p></li>
 </ul><p>The simulated datasets can then be
 used to fit a model, test
@@ -310,53 +336,63 @@ parameters, and estimate power.</p>
 <p>The output is usually used by
 <code><a href="fit_model.html">fit_model()</a></code> to fit a target model,
 by default the population model, to each
-of the dataset.</p><div class="section">
-<h3 id="setting-model-and-pop-es">Setting <code>model</code> and <code>pop_es</code><a class="anchor" aria-label="anchor" href="#setting-model-and-pop-es"></a></h3>
-
-
-<p>Please refer to help page of
-<code><a href="ptable_pop.html">ptable_pop()</a></code> on how to specify
-<code>model</code> and <code>pop_es</code>.</p>
-</div>
-
-<div class="section">
-<h3 id="setting-number-of-indicators-and-reliability">Setting <code>number_of_indicators</code> and <code>reliability</code><a class="anchor" aria-label="anchor" href="#setting-number-of-indicators-and-reliability"></a></h3>
+of the dataset.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="set-number-of-indicators-and-reliability-">Set 'number_of_indicators' and 'reliability'<a class="anchor" aria-label="anchor" href="#set-number-of-indicators-and-reliability-"></a></h2>
+    <p>The arguments <code>number_of_indicators</code>
+and <code>reliability</code> are used to
+specify the number of indicators
+(e.g., items) for each factor,
+and the population reliability
+coefficient of each factor,
+if the variables in the model
+syntax are latent variables.</p><div class="section">
+<h3 id="single-group-model">Single-Group Model<a class="anchor" aria-label="anchor" href="#single-group-model"></a></h3>
 
 
 <p>If a variable in the model is to be
-replaced by indicators, set
+replaced by indicators in the generated
+data, set
 <code>number_of_indicators</code> to a named
 numeric vector. The names are the
 variables of variables with
 indicators, as appeared in the
 <code>model</code> syntax. The value of each
-name is the number of indicators. The
+name is the number of indicators.</p>
+<p>The
 argument <code>reliability</code> should then be
 set a named numeric vector (or list,
 see the section on multigroup models)
 to specify the population reliability
-coefficients ("omega") of each set of
-indicators. The population factor
+coefficient ("omega") of each set of
+indicators. The population standardized factor
 loadings are then computed to ensure
 that the population reliability
 coefficient is of the target value.</p>
 <p>These are examples for a single group
 model:</p>
-<p><code>number of indicator = c(m = 3, x = 4, y = 5)</code></p>
+<div class="sourceCode"><pre><code>number of indicator = c(m = 3, x = 4, y = 5)</code></pre></div>
+
 <p>The numbers of indicators for <code>m</code>,
 <code>x</code>, and <code>y</code> are 3, 4, and 5,
 respectively.</p>
-<p><code>reliability = c(m = .90, x = .80, y = .70)</code></p>
+<div class="sourceCode"><pre><code><span><span class="va">reliability</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>m <span class="op">=</span> <span class="fl">.90</span>, x <span class="op">=</span> <span class="fl">.80</span>, y <span class="op">=</span> <span class="fl">.70</span><span class="op">)</span></span></code></pre></div>
+
 <p>The population reliability
 coefficients of <code>m</code>, <code>x</code>, and <code>y</code> are
-.90, .80, and .70, respectively.</p><div class="section">
-<h4 id="multigroup-models">Multigroup Models<a class="anchor" aria-label="anchor" href="#multigroup-models"></a></h4>
+.90, .80, and .70, respectively.</p>
+</div>
+
+<div class="section">
+<h3 id="multigroup-models">Multigroup Models<a class="anchor" aria-label="anchor" href="#multigroup-models"></a></h3>
 
 
 <p>Multigroup models are supported.
 The number of groups is inferred
 from <code>pop_es</code> (see the help page
-of <code><a href="ptable_pop.html">ptable_pop()</a></code>).</p>
+of <code><a href="ptable_pop.html">ptable_pop()</a></code>), or directly
+from <code>ptable</code>.</p>
 <p>For a multigroup model, the number
 of indicators for each variable
 must be the same across groups.</p>
@@ -377,7 +413,8 @@ numeric vector of the reliability
 coefficient of each group.</p>
 <p>This is an example of <code>reliability</code>
 for a model with 2 groups:</p>
-<p><code>reliability = list(x = .80, m = c(.70, .80))</code></p>
+<div class="sourceCode"><pre><code><span><span class="va">reliability</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">.80</span>, m <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.70</span>, <span class="fl">.80</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+
 <p>The reliability coefficients of <code>x</code> are
 .80 in all groups, while the
 reliability coefficients of <code>m</code> are
@@ -385,7 +422,7 @@ reliability coefficients of <code>m</code> are
 </div>
 
 <div class="section">
-<h4 id="equal-numbers-of-indicators-and-or-reliability-coefficients">Equal Numbers of Indicators and/or Reliability Coefficients<a class="anchor" aria-label="anchor" href="#equal-numbers-of-indicators-and-or-reliability-coefficients"></a></h4>
+<h3 id="equal-numbers-of-indicators-and-or-reliability-coefficients">Equal Numbers of Indicators and/or Reliability Coefficients<a class="anchor" aria-label="anchor" href="#equal-numbers-of-indicators-and-or-reliability-coefficients"></a></h3>
 
 
 <p>If all variables in the model has
@@ -398,14 +435,10 @@ in all groups, <code>reliability</code> can also
 be set to one single value.</p>
 </div>
 
-
-</div>
-
-<div class="section">
-<h3 id="specify-the-distributions-of-exogenous-variables">Specify The Distributions of Exogenous Variables<a class="anchor" aria-label="anchor" href="#specify-the-distributions-of-exogenous-variables"></a></h3>
-
-
-<p>By default, variables are generated
+    </div>
+    <div class="section level2">
+    <h2 id="specify-the-distributions-of-exogenous-variables-using-x-fun-">Specify The Distributions of Exogenous Variables Using 'x_fun'<a class="anchor" aria-label="anchor" href="#specify-the-distributions-of-exogenous-variables-using-x-fun-"></a></h2>
+    <p>By default, variables are generated
 from a multivariate normal distribution.
 If desired, users can supply the
 function used to generate an exogenous
@@ -415,24 +448,24 @@ a named list.</p>
 for which a user function will be used
 to generate the data.</p>
 <p>Each element of the list must also
-be as list. The first element of this
+be a list. The first element of this
 list, can be unnamed, is the
 function to be used. If other arguments
 need to be supplied, they should be
 included as named elements of this list.</p>
 <p>For example:</p>
-<div class="sourceCode"><pre><code>
-x_fun = list(x = list(power4mome::rexp_rs),
+<div class="sourceCode"><pre><code>x_fun = list(x = list(power4mome::rexp_rs),
              w = list(power4mome::rbinary_rs,
-                      p1 = .70)))
-</code></pre></div><p>The variables <code>x</code> and <code>w</code> will be
+                      p1 = .70)))</code></pre></div>
+
+<p>The variables <code>x</code> and <code>w</code> will be
 generated by user-supplied functions.</p>
 <p>For <code>x</code>, the function is
 <code><a href="rexp_rs.html">power4mome::rexp_rs</a></code>. No additional
 argument when calling this function.</p>
 <p>For <code>w</code>, the function is
 <code>power4mome::rbinary_rx</code>. The argument
-<code>p1 = .70</code> will be pasded to this
+<code>p1 = .70</code> will be passed to this
 function when generating the values
 of <code>w</code>.</p>
 <p>These are requirements for the
@@ -442,12 +475,13 @@ the number of values.</p></li>
 <li><p>The <em>population</em> mean and standard
 deviation of the generated values
 must be 0 and 1, respectively.</p></li>
-</ul><p>The package <code>power4mom</code> has
+</ul><p>The package <code>power4mome</code> has
 helper functions for generating
 values from some common nonnormal
-distributions and then scaled them
+distributions and then scaling them
 to have population mean and standard
-deviation equal to 0 and 1, respectively:</p><ul><li><p><code><a href="rbinary_rs.html">rbinary_rs()</a></code>.</p></li>
+deviation equal to 0 and 1 (by default), respectively.
+These are some of them:</p><ul><li><p><code><a href="rbinary_rs.html">rbinary_rs()</a></code>.</p></li>
 <li><p><code><a href="rexp_rs.html">rexp_rs()</a></code>.</p></li>
 <li><p><code><a href="rbeta_rs.html">rbeta_rs()</a></code>.</p></li>
 <li><p><code><a href="rlnorm_rs.html">rlnorm_rs()</a></code>.</p></li>
@@ -459,12 +493,287 @@ possible to generate nonnormal
 multivariate data but we believe this
 is rarely needed when estimating
 power <em>before</em> having the data.</p>
-<p>This function is used by the
-all-in-one function <code><a href="power4test.html">power4test()</a></code>.
-Users usually do not call this
-function directly.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="specify-the-population-model-by-model-">Specify the Population Model by 'model'<a class="anchor" aria-label="anchor" href="#specify-the-population-model-by-model-"></a></h2>
+
+<div class="section">
+<h3 id="single-group-model-1">Single-Group Model<a class="anchor" aria-label="anchor" href="#single-group-model-1"></a></h3>
+
+
+<p>For a single-group model, <code>model</code>
+should be a <code>lavaan</code> model syntax
+string of the <em>form</em> of the model.
+The population values of the model
+parameters are to be determined by
+<code>pop_es</code>.</p>
+<p>If the model has latent factors,
+the syntax in <code>model</code> should specify
+only the <em>structural model</em> for the
+<em>latent factors</em>. There is no
+need to specify the measurement
+part. Other functions will generate
+the measurement part on top of this
+model.</p>
+<p>For example, this is a simple mediation
+model:</p>
+<div class="sourceCode"><pre><code><span><span class="st">"m ~ x</span></span>
+<span><span class="st"> y ~ m + x"</span></span></code></pre></div>
+
+<p>Whether <code>m</code>, <code>x</code>, and <code>y</code> denote
+observed variables or latent factors
+are determined by other functions,
+such as <code><a href="power4test.html">power4test()</a></code>.</p>
 </div>
 
+<div class="section">
+<h3 id="multigroup-model">Multigroup Model<a class="anchor" aria-label="anchor" href="#multigroup-model"></a></h3>
+
+
+<p>Because the model is the population
+model, equality constraints are
+irrelevant and the model syntax
+specifies only the <em>form</em> of the
+model. Therefore, <code>model</code> is
+specified as in the case of single
+group models.</p>
+</div>
+
+    </div>
+    <div class="section level2">
+    <h2 id="specify-pop-es-using-named-vectors">Specify 'pop_es' Using Named Vectors<a class="anchor" aria-label="anchor" href="#specify-pop-es-using-named-vectors"></a></h2>
+    <p>The argument <code>pop_es</code> is for specifying
+the population values of model
+parameters. This section describes
+how to do this using named vectors.</p><div class="section">
+<h3 id="single-group-model-2">Single-Group Model<a class="anchor" aria-label="anchor" href="#single-group-model-2"></a></h3>
+
+
+<p>If <code>pop_es</code> is specified by a named
+vector, it must follow the convention
+below.</p><ul><li><p>The names of the vectors are
+<code>lavaan</code> names for the selected
+parameters. For example, <code>m ~ x</code>
+denotes the path from <code>x</code> to <code>m</code>.</p></li>
+<li><p>Alternatively, the names can be
+either <code>".beta."</code> or <code>".cov."</code>.
+Use <code>".beta."</code> to set the default
+values for all regression coefficients.
+Use <code>".cov."</code> to set the default
+values for all correlations of
+exogenous variables (e.g., predictors).</p></li>
+<li><p>If using <code>lavaan</code> names, can
+specify more than one parameter
+using <code>+</code>. For example, <code>y ~ m + x</code>
+denotes the two paths from <code>m</code> and
+<code>x</code> to <code>y</code>.</p></li>
+<li><p>The value of each element can be
+the label for the effect size: <code>n</code>
+for nil, <code>s</code> for small, <code>m</code> for
+medium, and <code>l</code> for large. The
+value for each label is determined
+by <code>es1</code> and <code>es2</code>. See the section
+on specifying these two arguments.</p></li>
+<li><p>The value of <code>pop_es</code> can also be
+set to a value, but it must be
+quoted as a string, such as <code>"y ~ x" = ".31"</code>.</p></li>
+</ul><p>This is an example:</p>
+<div class="sourceCode"><pre><code><span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">".beta."</span> <span class="op">=</span> <span class="st">"s"</span>,</span>
+<span>  <span class="st">"m1 ~ x"</span> <span class="op">=</span> <span class="st">"-m"</span>,</span>
+<span>  <span class="st">"m2 ~ m1"</span> <span class="op">=</span> <span class="st">"l"</span>,</span>
+<span>  <span class="st">"y ~ x:w"</span> <span class="op">=</span> <span class="st">"s"</span><span class="op">)</span></span></code></pre></div>
+
+<p>In this example,</p><ul><li><p>All regression coefficients are
+set to small (<code>s</code>) by default, unless
+specified otherwise.</p></li>
+<li><p>The path from <code>x</code> to <code>m1</code> is
+set to medium and negative (<code>-m</code>).</p></li>
+<li><p>The path from <code>m1</code> to <code>m2</code> is set
+to large (<code>l</code>).</p></li>
+<li><p>The coefficient of the product
+term <code>x:w</code> when predicting <code>y</code> is
+set to small (<code>s</code>).</p></li>
+</ul></div>
+
+<div class="section">
+<h3 id="multigroup-model-1">Multigroup Model<a class="anchor" aria-label="anchor" href="#multigroup-model-1"></a></h3>
+
+
+<p>The argument <code>pop_es</code> also supports multigroup
+models.</p>
+<p>For <code>pop_es</code>, instead of
+named vectors, named <em>list</em> of
+named vectors should be used.</p><ul><li><p>The names are the parameters, or
+keywords such as <code>.beta.</code> and
+<code>.cov.</code>, like specifying the
+population values for a single
+group model.</p></li>
+<li><p>The elements are character vectors.
+If it has only one element (e.g.,
+a single string), then it is the
+the population value for all groups.
+If it has more than one element
+(e.g., a vector of three strings),
+then they are the population values
+of the groups. For a model of <em>k</em>
+groups, each vector must have
+either <em>k</em> elements or one element.</p></li>
+</ul><p>This is an example:</p>
+<div class="sourceCode"><pre><code><span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"m ~ x"</span> <span class="op">=</span> <span class="st">"m"</span>,</span>
+<span>     <span class="st">"y ~ m"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"s"</span>, <span class="st">"m"</span>, <span class="st">"l"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+
+<p>In this model, the population value
+of the path <code>m ~ x</code> is medium (<code>m</code>) for
+all groups, while the population
+values for the path <code>y ~ m</code> are
+small (<code>s</code>), medium (<code>m</code>), and large (<code>l</code>),
+respectively.</p>
+</div>
+
+    </div>
+    <div class="section level2">
+    <h2 id="specify-pop-es-using-a-multiline-string">Specify 'pop_es' Using a Multiline String<a class="anchor" aria-label="anchor" href="#specify-pop-es-using-a-multiline-string"></a></h2>
+    <p>When setting the argument <code>pop_es</code>,
+instead of using a named vector
+or named list for
+<code>pop_es</code>, the population values of
+model parameters can also be
+specified using a multiline string,
+as illustrated below, to be parsed
+by <code><a href="pop_es_yaml.html">pop_es_yaml()</a></code>.</p><div class="section">
+<h3 id="single-group-model-3">Single-Group Model<a class="anchor" aria-label="anchor" href="#single-group-model-3"></a></h3>
+
+
+<p>This is an example of the multiline string
+for a single-group model:</p>
+<div class="sourceCode"><pre><code><span><span class="va">y</span> <span class="op">~</span> <span class="va">m</span><span class="op">:</span> <span class="va">l</span></span>
+<span><span class="va">m</span> <span class="op">~</span> <span class="va">x</span><span class="op">:</span> <span class="va">m</span></span>
+<span><span class="va">y</span> <span class="op">~</span> <span class="va">x</span><span class="op">:</span> <span class="va">nil</span></span></code></pre></div>
+
+<p>The string must follow this format:</p><ul><li><p>Each line starts with <code>tag:</code>.</p><ul><li><p><code>tag</code> can be the name of a
+parameter, in <code>lavaan</code> model
+syntax format.</p><ul><li><p>For example, <code>m ~ x</code>
+denotes the path from <code>x</code> to <code>m</code>.</p></li>
+</ul></li>
+<li><p>A tag in <code>lavaan</code> model syntax can
+specify more than one parameter
+using <code>+</code>.</p><ul><li><p>For example, <code>y ~ m + x</code>
+denotes the two paths from <code>m</code> and
+<code>x</code> to <code>y</code>.</p></li>
+</ul></li>
+<li><p>Alternatively, the <code>tag</code> can be
+either <code>.beta.</code> or <code>.cov.</code>.</p><ul><li><p>Use <code>.beta.</code> to set the default
+values for all regression coefficients.</p></li>
+<li><p>Use <code>.cov.</code> to set the default
+values for all correlations of
+exogenous variables (e.g., predictors).</p></li>
+</ul></li>
+</ul></li>
+<li><p>After each tag is the value of the
+population value:</p>
+<p>-<code>nil</code> for nil (zero),</p><ul><li><p><code>s</code> for small,</p></li>
+<li><p><code>m</code> for medium, and</p></li>
+<li><p><code>l</code> for large.</p></li>
+</ul><p>Note: <code>n</code> <em>cannot</em> be used in this mode.</p>
+<p>The
+value for each label is determined
+by <code>es1</code> and <code>es2</code> as described
+in <code><a href="ptable_pop.html">ptable_pop()</a></code>.</p><ul><li><p>The value can also be
+set to a numeric value, such as
+<code>.30</code> or <code>-.30</code>.</p></li>
+</ul></li>
+</ul><p>This is another example:</p>
+<div class="sourceCode"><pre><code><span><span class="va">.beta</span><span class="op">:</span> <span class="va">s</span></span>
+<span><span class="va">y</span> <span class="op">~</span> <span class="va">m</span><span class="op">:</span> <span class="va">l</span></span></code></pre></div>
+
+<p>In this example, all regression
+coefficients are <code>small</code>, while
+the path from <code>m</code> to <code>y</code> is large.</p>
+</div>
+
+<div class="section">
+<h3 id="multigroup-model-2">Multigroup Model<a class="anchor" aria-label="anchor" href="#multigroup-model-2"></a></h3>
+
+
+<p>This is an example of the string
+for a multigroup model:</p>
+<div class="sourceCode"><pre><code><span><span class="va">y</span> <span class="op">~</span> <span class="va">m</span><span class="op">:</span> <span class="va">l</span></span>
+<span><span class="va">m</span> <span class="op">~</span> <span class="va">x</span><span class="op">:</span></span>
+<span>  <span class="op">-</span> <span class="va">nil</span></span>
+<span>  <span class="op">-</span> <span class="va">s</span></span>
+<span><span class="va">y</span> <span class="op">~</span> <span class="va">x</span><span class="op">:</span> <span class="va">nil</span></span></code></pre></div>
+
+<p>The format is similar to that for
+a single-group model. If a parameter
+has the same value for all groups,
+then the line can be specified
+as in the case of a single-group
+model: <code>tag: value</code>.</p>
+<p>If a parameter has different
+values across groups, then it must
+be in this format:</p><ul><li><p>A line starts with the tag, followed
+by two or more lines. Each line
+starts with a hyphen <code>-</code> and the
+value for a group.</p></li>
+</ul><p>For example:</p>
+<div class="sourceCode"><pre><code><span><span class="va">m</span> <span class="op">~</span> <span class="va">x</span><span class="op">:</span></span>
+<span>  <span class="op">-</span> <span class="va">nil</span></span>
+<span>  <span class="op">-</span> <span class="va">s</span></span></code></pre></div>
+
+<p>This denotes that the model has
+two groups. The values of the path
+from <code>x</code> to <code>m</code> for the two
+groups are 0 (<code>nil</code>) and
+small (<code>s</code>), respectively.</p>
+<p>Another equivalent way to specify
+the values are using <code>[]</code>, on
+the same line of a tag.</p>
+<p>For example:</p>
+<div class="sourceCode"><pre><code>m ~ x: [nil, s]</code></pre></div>
+
+<p>The number of groups is inferred
+from the number of values for
+a parameter. Therefore, if a tag
+has more than one value, each tag
+must has the same number of value,
+or only one value.</p>
+<p>The tag <code>.beta.</code> and <code>.cov.</code> can
+also be used for multigroup models.</p>
+</div>
+
+<div class="section">
+<h3 id="which-approach-to-use">Which Approach To Use<a class="anchor" aria-label="anchor" href="#which-approach-to-use"></a></h3>
+
+
+<p>Note that using named vectors or
+named lists is more reliable. However,
+using a multiline string is
+more user-friendly. If this method
+failed, please use named vectors or
+named list instead.</p>
+</div>
+
+<div class="section">
+<h3 id="technical-details">Technical Details<a class="anchor" aria-label="anchor" href="#technical-details"></a></h3>
+
+
+<p>The multiline string is parsed by <code><a href="https://rdrr.io/pkg/yaml/man/read_yaml.html" class="external-link">yaml::read_yaml()</a></code>.
+Therefore, the format requirement
+is actually that of YAML. Users
+knowledgeable of YAML can use other
+equivalent way to specify the string.</p>
+</div>
+
+    </div>
+    <div class="section level2">
+    <h2 id="set-the-values-for-effect-size-labels-es-and-es-">Set the Values for Effect Size Labels ('es1' and 'es2')<a class="anchor" aria-label="anchor" href="#set-the-values-for-effect-size-labels-es-and-es-"></a></h2>
+    <p>The vector <code>es1</code> is for correlations
+and regression coefficients, and the
+vector <code>es2</code> is for for standardized
+moderation effect, the coefficients
+of a product term. These labels
+are to be used in interpreting
+the specification in <code>pop_es</code>.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
@@ -473,13 +782,24 @@ function directly.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Specify the model</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span></span></span>
 <span class="r-in"><span><span class="st">"m ~ x</span></span></span>
 <span class="r-in"><span><span class="st"> y ~ m + x"</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Specify the population values</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">es</span> <span class="op">&lt;-</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"y ~ m"</span> <span class="op">=</span> <span class="st">"m"</span>,</span></span>
-<span class="r-in"><span>  <span class="st">"m ~ x"</span> <span class="op">=</span> <span class="st">"m"</span>,</span></span>
-<span class="r-in"><span>  <span class="st">"y ~ x"</span> <span class="op">=</span> <span class="st">"n"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="st">"</span></span></span>
+<span class="r-in"><span><span class="st">y ~ m: m</span></span></span>
+<span class="r-in"><span><span class="st">m ~ x: m</span></span></span>
+<span class="r-in"><span><span class="st">y ~ x: n</span></span></span>
+<span class="r-in"><span><span class="st">"</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Generate the simulated datasets</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">data_all</span> <span class="op">&lt;-</span> <span class="fu">sim_data</span><span class="op">(</span>nrep <span class="op">=</span> <span class="fl">5</span>,</span></span>
 <span class="r-in"><span>                     model <span class="op">=</span> <span class="va">mod</span>,</span></span>
 <span class="r-in"><span>                     pop_es <span class="op">=</span> <span class="va">es</span>,</span></span>

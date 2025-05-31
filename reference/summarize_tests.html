@@ -9,7 +9,7 @@ test results."><meta name="google-site-verification" content="0VLBmFnW_UJFI-7gXn
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.39</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.40</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,7 +84,7 @@ a <code>power4test</code> object.</p></dd>
 
 <dt id="arg-digits">digits<a class="anchor" aria-label="anchor" href="#arg-digits"></a></dt>
 <dd><p>The numbers of digits
-after the decimal when print
+after the decimal when printing
 numeric results.</p></dd>
 
 
@@ -105,7 +105,7 @@ a list of the class <code>test_summary_list</code>.
 Each element contains a summary of a
 test stored. The elements are of
 the class <code>test_summary</code>, with
-these elments:</p><ul><li><p><code>test_attributes</code>: The stored
+these elements:</p><ul><li><p><code>test_attributes</code>: The stored
 information of a test, for printing.</p></li>
 <li><p><code>nrep</code>: The number of datasets
 (replications).</p></li>
@@ -116,20 +116,34 @@ rates.</p></li>
 <li><p><code>nvalid</code>: The number of non-<code>NA</code>
 replications used to compute each
 mean.</p></li>
-</ul><p>The <code>print</code> methods return <code>x</code> invisibly.
+</ul><p>The <code>print</code> methods returns <code>x</code> invisibly.
 They are called for their side
 effects.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>This function is used to extract
+    <p>The function <code>summarize_tests()</code>
+is used to extract
 information from each test stored
 in a <code>power4test</code> object.</p>
 <p>The method <code>print.test_out_list()</code> is
-used to print the contest of a list
+used to print the content of a list
 of test stored in a <code>power4test</code>
 object, with the option to print
 just the names of tests.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="the-role-of-summarize-tests-and-related-functions">The role of <code>summarize_tests()</code> and related functions<a class="anchor" aria-label="anchor" href="#the-role-of-summarize-tests-and-related-functions"></a></h2>
+    <p>The function <code>summarize_tests()</code> and
+related print methods are used by
+the all-in-one function
+<code><a href="power4test.html">power4test()</a></code> and its <code>summary</code>
+method. Users usually do not
+call them directly, though
+developers can use this function to
+develop other functions for power
+analysis, or to build their own
+workflows to do the power analysis.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
@@ -139,20 +153,28 @@ just the names of tests.</p>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Specify the model</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span></span></span>
 <span class="r-in"><span><span class="st">"</span></span></span>
-<span class="r-in"><span><span class="st">m ~ a*x</span></span></span>
-<span class="r-in"><span><span class="st">y ~ b*m + x</span></span></span>
-<span class="r-in"><span><span class="st">ab := a * b</span></span></span>
+<span class="r-in"><span><span class="st">m ~ x</span></span></span>
+<span class="r-in"><span><span class="st">y ~ m + x</span></span></span>
 <span class="r-in"><span><span class="st">"</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">mod_es</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"y ~ m"</span> <span class="op">=</span> <span class="st">"l"</span>,</span></span>
-<span class="r-in"><span>            <span class="st">"m ~ x"</span> <span class="op">=</span> <span class="st">"m"</span>,</span></span>
-<span class="r-in"><span>            <span class="st">"y ~ x"</span> <span class="op">=</span> <span class="st">"n"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Specify the population values</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">es</span> <span class="op">&lt;-</span></span></span>
+<span class="r-in"><span><span class="st">"</span></span></span>
+<span class="r-in"><span><span class="st">y ~ m: l</span></span></span>
+<span class="r-in"><span><span class="st">m ~ x: m</span></span></span>
+<span class="r-in"><span><span class="st">y ~ x: n</span></span></span>
+<span class="r-in"><span><span class="st">"</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Simulated datasets</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">sim_only</span> <span class="op">&lt;-</span> <span class="fu"><a href="power4test.html">power4test</a></span><span class="op">(</span>nrep <span class="op">=</span> <span class="fl">2</span>,</span></span>
 <span class="r-in"><span>                       model <span class="op">=</span> <span class="va">mod</span>,</span></span>
-<span class="r-in"><span>                       pop_es <span class="op">=</span> <span class="va">mod_es</span>,</span></span>
+<span class="r-in"><span>                       pop_es <span class="op">=</span> <span class="va">es</span>,</span></span>
 <span class="r-in"><span>                       n <span class="op">=</span> <span class="fl">100</span>,</span></span>
 <span class="r-in"><span>                       do_the_test <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
 <span class="r-in"><span>                       iseed <span class="op">=</span> <span class="fl">1234</span><span class="op">)</span></span></span>
@@ -160,80 +182,31 @@ just the names of tests.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Simulate the data:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Fit the model(s):</span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Test the parameters in each dataset</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">test_out</span> <span class="op">&lt;-</span> <span class="fu"><a href="power4test.html">power4test</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">sim_only</span>,</span></span>
 <span class="r-in"><span>                       test_fun <span class="op">=</span> <span class="va">test_parameters</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Displaying progress enabled. Set 'progress = FALSE' to hide the progress.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Do the test: test_parameters: CIs  </span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">test_out</span></span></span>
+<span class="r-in"><span><span class="co"># Print the summary</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">summarize_tests</span><span class="op">(</span><span class="va">test_out</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ====================== Model Information ======================</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> =============== &lt;test_parameters: CIs &gt; ===============</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> == Model on Factors/Variables ==</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mean(s) across replication:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   test_label lhs op rhs    est    se      z pvalue   cilo  cihi   sig</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1        m~x   m  ~   x  0.382 0.103  3.698  0.000  0.179 0.585 1.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2        y~m   y  ~   m  0.443 0.094  4.715  0.000  0.259 0.627 1.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3        y~x   y  ~   x -0.029 0.104 -0.226  0.236 -0.232 0.174 0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4       m~~m   m ~~   m  0.945 0.134  7.071  0.000  0.683 1.207 1.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5       y~~y   y ~~   y  0.836 0.118  7.071  0.000  0.604 1.068 1.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> m ~ a*x</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> y ~ b*m + x</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ab := a * b</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> == Model on Variables/Indicators ==</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> m ~ a*x</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> y ~ b*m + x</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ab := a * b</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ====== Population Values ======</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Regressions:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                    Population</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   m ~                        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     x          (a)    0.300  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   y ~                        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     m          (b)    0.500  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     x                 0.000  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Variances:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                    Population</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    .m                 0.910  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    .y                 0.750  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     x                 1.000  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Defined Parameters:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                    Population</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     ab                0.150  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ======================= Data Information =======================</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Number of Replications:  2 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sample Sizes:  100 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Call print with 'data_long = TRUE' for further information.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ==================== Extra Element(s) Found ====================</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - fit</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> === Element(s) of the First Dataset ===</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ============ &lt;fit&gt; ============</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> lavaan 0.6-19 ended normally after 1 iteration</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Estimator                                         ML</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Optimization method                           NLMINB</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Number of model parameters                         5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Number of observations                           100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Model Test User Model:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                                       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Test statistic                                 0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Degrees of freedom                                 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ====================== Test(s) Conducted ======================</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - test_parameters: CIs </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Call print() and set 'test_long = TRUE' for a detailed report.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - The column 'sig' shows the rejection rates.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - If the null hypothesis is false, the rate is the power.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Number of valid replications for rejection rate(s): 2 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Proportion of valid replications for rejection rate(s): 1.000 </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
