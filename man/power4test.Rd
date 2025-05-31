@@ -619,6 +619,165 @@ then set to the argument \code{object} of
 }
 }
 
+\section{Specify 'pop_es' Using a Multiline String}{
+When setting the argumeng \code{pop_es},
+instead of using a named vector
+or named list for
+\code{pop_es}, the population values of
+model parameters can also be
+specified using a multiline string,
+as illustrated below, to be parsed
+by \code{\link[=pop_es_yaml]{pop_es_yaml()}}.
+\subsection{Single-Group Model}{
+
+This is an example of the multiline string
+for a single-group model:
+
+\preformatted{y ~ m: l
+m ~ x: m
+y ~ x: nil}
+
+The string must follow this format:
+\itemize{
+\item Each line starts with \verb{tag:}.
+\itemize{
+\item \code{tag} can be the name of a
+parameter, in \code{lavaan} model
+syntax format.
+\itemize{
+\item For example, \code{m ~ x}
+denotes the path from \code{x} to \code{m}.
+}
+\item A tag in \code{lavaan} model syntax can
+specify more than one parameter
+using \code{+}.
+\itemize{
+\item For example, \code{y ~ m + x}
+denotes the two paths from \code{m} and
+\code{x} to \code{y}.
+}
+\item Alternatively, the \code{tag} can be
+either \code{.beta.} or \code{.cov.}.
+\itemize{
+\item Use \code{.beta.} to set the default
+values for all regression coefficients.
+\item Use \code{.cov.} to set the default
+values for all correlations of
+exogenous variables (e.g., predictors).
+}
+}
+\item After each tag is the value of the
+population value:
+
+-\code{nil} for nil (zero),
+\itemize{
+\item \code{s} for small,
+\item \code{m} for medium, and
+\item \code{l} for large.
+}
+
+Note: \code{n} \emph{cannot} be used in this mode.
+
+The
+value for each label is determined
+by \code{es1} and \code{es2} as described
+in \code{\link[=ptable_pop]{ptable_pop()}}.
+\itemize{
+\item The value can also be
+set to a numeric value, such as
+\code{.30} or \code{-.30}.
+}
+}
+
+This is another example:
+
+\preformatted{.beta: s
+y ~ m: l}
+
+In this example, all regression
+coefficients are \code{small}, while
+the path from \code{m} to \code{y} is large.
+}
+
+\subsection{Multigroup Model}{
+
+This is an example of the string
+for a multigroup model:
+
+\preformatted{y ~ m: l
+m ~ x:
+  - nil
+  - s
+y ~ x: nil}
+
+The format is similar to that for
+a single-group model. If a parameter
+has the same value for all groups,
+then the line can be specified
+as in the case of a single-group
+model: \code{tag: value}.
+
+If a parameter has different
+values across groups, then it must
+be in this format:
+\itemize{
+\item A line starts with the tag, followed
+by two or more lines. Each line
+starts with a hyphen \code{-} and the
+value for a group.
+}
+
+For example:
+
+\preformatted{m ~ x:
+  - nil
+  - s}
+
+This denotes that the model has
+two groups. The values of the path
+from \code{x} to \code{m} for the two
+groups are 0 (\code{nil}) and
+small (\code{s}), respectively.
+
+Another equivalent way to specify
+the values are using \verb{[]}, on
+the same line of a tag.
+
+For example:
+
+\preformatted{m ~ x: [nil, s]}
+
+The number of groups is inferred
+from the number of values for
+a parameter. Therefore, if a tag
+has more than one value, each tag
+must has the same number of value,
+or only one value.
+
+The tag \code{.beta.} and \code{.cov.} can
+also be used for multigroup models.
+}
+
+\subsection{Which Approach To Use}{
+
+Note that using named vectors or
+named lists is more reliable. However,
+using a multiline string is
+more user-friendly. If this method
+failed, please use named vectors or
+named list instead.
+}
+
+\subsection{Technical Details}{
+
+The multiline string is parsed by \code{\link[yaml:read_yaml]{yaml::read_yaml()}}.
+Therefore, the format requirement
+is actually that of YAML. Users
+knowledgeable of YAML can use other
+equivalent way to specify the string.
+}
+}
+
 \examples{
 
 model_simple_med <-

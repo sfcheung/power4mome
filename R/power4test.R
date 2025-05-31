@@ -108,6 +108,8 @@
 #'
 #' @inheritSection do_test Major Test-Related Arguments
 #'
+#' @inheritSection pop_es_yaml Specify 'pop_es' Using a Multiline String
+#'
 # It is a known issue that inherited
 # section cannot be placed before @details
 # https://github.com/r-lib/roxygen2/issues/900
@@ -212,7 +214,9 @@
 #' specify population effect sizes. See
 #' 'Details' of [ptable_pop()] on how to
 #' set the effect sizes for this
-#' argument. Ignored if `ptable` is
+#' argument. Can also be a multiline
+#' string, explained in 'Details'.
+#' Ignored if `ptable` is
 #' specified.
 #'
 #' @param standardized Logical. If
