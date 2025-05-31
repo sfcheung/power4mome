@@ -48,9 +48,7 @@ is used.}
 \item{compute_implied_stats}{Whether
 implied statistics are computed
 in each bootstrap samples. Usually
-not needed and so default to \code{FALSE}
-Required \code{manymome} 0.2.7.1
-or above.}
+not needed and so default to \code{FALSE}}
 }
 \value{
 A \code{boot_list} object, which is a list

@@ -65,8 +65,6 @@
 #' implied statistics are computed
 #' in each bootstrap samples. Usually
 #' not needed and so default to `FALSE`
-#' Required `manymome` 0.2.7.1
-#' or above.
 #'
 #' @return
 #' A `boot_list` object, which is a list
