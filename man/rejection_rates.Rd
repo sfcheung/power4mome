@@ -190,9 +190,12 @@ y ~ m + x
 
 # Specify the effect sizes (population parameter values)
 
-model_simple_med_es <- c("y ~ m" = "l",
-                         "m ~ x" = "m",
-                         "y ~ x" = "n")
+model_simple_med_es <-
+"
+y ~ m: l
+m ~ x: m
+y ~ x: n
+"
 
 # Generate some datasets to check the model
 

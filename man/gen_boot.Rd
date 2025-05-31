@@ -94,9 +94,11 @@ mod <-
 # Specify the effect sizes (population parameter values)
 
 es <-
-c("y ~ m" = "m",
-  "m ~ x" = "m",
-  "y ~ x" = "n")
+"
+y ~ m: m
+m ~ x: m
+y ~ x: n
+"
 
 # Generate several simulated datasets
 
