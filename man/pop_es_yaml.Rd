@@ -27,7 +27,7 @@ values of a model using one single
 string, as in 'lavaan' model syntax.
 }
 \section{Specify 'pop_es' Using a Multiline String}{
-When setting the argumeng \code{pop_es},
+When setting the argument \code{pop_es},
 instead of using a named vector
 or named list for
 \code{pop_es}, the population values of

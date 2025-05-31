@@ -19,9 +19,9 @@ model_matrices_pop(x, ..., drop_list_single_group = TRUE)
 }
 \arguments{
 \item{model}{String. The model defined
-by \code{lavaan} model syntax.}
+by \code{lavaan} model syntax. See 'Details'.}
 
-\item{pop_es}{It can a data frame
+\item{pop_es}{It can be a data frame
 with these columns: \code{lhs}, \code{op},
 \code{rhs}, and \code{pop}. The first three
 columns correspond to those in a
@@ -29,48 +29,58 @@ columns correspond to those in a
 \code{pop} stores the population values.
 The column \code{es} stores the original
 labels, for reference. It can also be
-A named character vector. See 'Details'
+a named character vector (named list
+for multigroup models) or a multiline string,
+which are
+the preferred approaches. See the
+help page
 on how to specify this vector.}
 
-\item{es1}{A named vector to set the
+\item{es1}{Set the
 values for each label of the effect
-size of correlations and regression
+size (population value) for correlations and regression
 paths.
-Default is \code{c("n" = .00, "nil" = .00, "s" = .10, "m" = .30, "l" = .50)}.
 Used only if \code{pop_es} is a named
-vector.}
+vector or a multiline string.
+See the help page on how to specify
+this argument.}
 
-\item{es2}{A named vector to set the
+\item{es2}{Set the
 values for each label of the effect
-size of product term.
-Default is \code{c("n" = .00, "nil" = .00, "s" = .05, "m" = .10, "l" = .15)}.
+size (population value) for product term.
 Used only if \code{pop_es} is a named
-vector.}
+vector or a multiline string.
+See the help page on how to specify
+this argument.}
 
 \item{standardized}{Logical. If
 \code{TRUE}, the default, variances and
 error variances are scaled to ensure
 the population variances of the
 endogenous variables are close to
-one, and hence the effect sizes are
+one, and hence the effect sizes
+(population values) are
 standardized effect sizes if the
-variances of the continuos exogenous
+variances of the continuous exogenous
 variables are also equal to one.}
 
 \item{n_std}{The sample size used to
 determine the error variances by
 simulation when \code{std_force_monte_carlo}
-is \code{TRUE}. Default is 100000.}
+is \code{TRUE}.}
 
 \item{std_force_monte_carlo}{Logical.
 If \code{FALSE}, the default,
 standardization is done analytically
 if the model has no product terms,
 and by simulation if the model has
-product terms. If \code{TRUE}, simulation
+product terms. That is, error variances
+required to ensure implied variances equal
+to one are determined by simulation.
+If \code{TRUE}, simulation
 will be used whether the model has
 product terms or not. Always fall
-back to standardization if
+back to simulation if
 analytical standardization failed.}
 
 \item{x}{It can be a 'lavaan' model
@@ -114,19 +124,74 @@ is \code{TRUE}.
 Generate the complete
 population model using the model
 syntax and user-specified effect
-sizes.
+sizes (population parameter values).
 }
 \details{
 The function \code{\link[=ptable_pop]{ptable_pop()}} generates a \code{lavaan}
 parameter table that can be used
 to generate data based on the population
 values of model parameters.
+}
+\section{The role of \code{ptable_pop()}}{
+The function \code{\link[=ptable_pop]{ptable_pop()}} is used by
+the all-in-one function
+\code{\link[=power4test]{power4test()}}. Users usually do not
+call this function directly, though
+developers can use this function to
+develop other functions for power
+analysis, or to build their own
+workflows to do the power analysis.
+}
 
-This function is used by the
-all-in-one function \code{\link[=power4test]{power4test()}}.
-Users usually do not call this
-function directly.
-\subsection{Setting \code{pop_es} to a named vector}{
+\section{Specify the Population Model by 'model'}{
+\subsection{Single-Group Model}{
+
+For a single-group model, \code{model}
+should be a \code{lavaan} model syntax
+string of the \emph{form} of the model.
+The population values of the model
+parameters are to be determined by
+\code{pop_es}.
+
+If the model has latent factors,
+the syntax in \code{model} should specify
+only the \emph{structural model} for the
+\emph{latent factors}. There is no
+need to specify the measurement
+part. Other functions will generate
+the measurement part on top of this
+model.
+
+For example, this is a simple mediation
+model:
+
+\preformatted{"m ~ x
+ y ~ m + x"}
+
+Whether \code{m}, \code{x}, and \code{y} denote
+observed variables or latent factors
+are determined by other functions,
+such as \code{\link[=power4test]{power4test()}}.
+}
+
+\subsection{Multigroup Model}{
+
+Because the model is the population
+model, equality constraints are
+irrelevant and the model syntax
+specifies only the \emph{form} of the
+model. Therefore, \code{model} is
+specified as in the case of single
+group models.
+}
+}
+
+\section{Specify 'pop_es' Using Named Vectors}{
+The argument \code{pop_es} is for specifying
+the population values of model
+parameters. This section describes
+how to do this using named vectors.
+\subsection{Single-Group Model}{
 
 If \code{pop_es} is specified by a named
 vector, it must follow the convention
@@ -153,26 +218,19 @@ the label for the effect size: \code{n}
 for nil, \code{s} for small, \code{m} for
 medium, and \code{l} for large. The
 value for each label is determined
-by \code{es1} and \code{es2}.
+by \code{es1} and \code{es2}. See the section
+on specifying these two arguments.
 \item The value of \code{pop_es} can also be
 set to a value, but it must be
 quoted as a string, such as \code{"y ~ x" = ".31"}.
 }
 
-The vector \code{es1} is for correlations
-and regression coefficients, and the
-vector \code{es2} is for for standardized
-moderation effect, the coefficients
-of a product term.
-
 This is an example:
 
-\preformatted{
-c(".beta." = "s",
+\preformatted{c(".beta." = "s",
   "m1 ~ x" = "-m",
   "m2 ~ m1" = "l",
-  "y ~ x:w" = "s")
-}
+  "y ~ x:w" = "s")}
 
 In this example,
 \itemize{
@@ -187,45 +245,16 @@ to large (\code{l}).
 term \code{x:w} when predicting \code{y} is
 set to small (\code{s}).
 }
-\subsection{Using One Single String To Set \code{pop_es}}{
-
-An alternative way to set \code{pop_es}
-is using one single string, like
-a \code{lavaan} model syntax.
-
-This is an example, equivalent to
-the example above:
-
-\preformatted{
-"
-.beta.: s
-m1 ~ x: -m
-m2 ~ m1: l
-y ~ x:w: s
-"
 }
 
-See the help page of \code{\link[=pop_es_yaml]{pop_es_yaml()}}
-on how to use this approach.
-}
+\subsection{Multigroup Model}{
 
-}
-
-\subsection{Multigroup Models}{
-
-The function also supports multigroup
+The argument \code{pop_es} also supports multigroup
 models.
 
-Because the model is the population
-model, equality constraints are
-irrelevant and the model syntax
-specifies only the \emph{form} of the
-model. Therefore, \code{model} is
-specified as in the case of single
-group models.
-
-For \code{pop_es}, instead of using a
-named vectors, use as named \emph{list}.
+For \code{pop_es}, instead of
+named vectors, named \emph{list} of
+named vectors should be used.
 \itemize{
 \item The names are the parameters, or
 keywords such as \code{.beta.} and
@@ -246,61 +275,197 @@ either \emph{k} elements or one element.
 
 This is an example:
 
-\preformatted{
-list("m ~ x" = "m",
-     "y ~ m" = c("s", "m", "l"))
-}
+\preformatted{list("m ~ x" = "m",
+     "y ~ m" = c("s", "m", "l"))}
 
 In this model, the population value
-of the path \code{m ~ x} is medium for
+of the path \code{m ~ x} is medium (\code{m}) for
 all groups, while the population
 values for the path \code{y ~ m} are
-small, medium, and large,
+small (\code{s}), medium (\code{m}), and large (\code{l}),
 respectively.
-\subsection{Using One Single String To Set \code{pop_es}}{
+}
+}
 
-The population values for a
-multigroup model can also be set
-using one single string.
+\section{Specify 'pop_es' Using a Multiline String}{
+When setting the argument \code{pop_es},
+instead of using a named vector
+or named list for
+\code{pop_es}, the population values of
+model parameters can also be
+specified using a multiline string,
+as illustrated below, to be parsed
+by \code{\link[=pop_es_yaml]{pop_es_yaml()}}.
+\subsection{Single-Group Model}{
 
-This is an example, equivalent to
-the example above:
+This is an example of the multiline string
+for a single-group model:
 
-\preformatted{
-"
+\preformatted{y ~ m: l
 m ~ x: m
-y ~ m: [s, m, l]
-"
+y ~ x: nil}
+
+The string must follow this format:
+\itemize{
+\item Each line starts with \verb{tag:}.
+\itemize{
+\item \code{tag} can be the name of a
+parameter, in \code{lavaan} model
+syntax format.
+\itemize{
+\item For example, \code{m ~ x}
+denotes the path from \code{x} to \code{m}.
+}
+\item A tag in \code{lavaan} model syntax can
+specify more than one parameter
+using \code{+}.
+\itemize{
+\item For example, \code{y ~ m + x}
+denotes the two paths from \code{m} and
+\code{x} to \code{y}.
+}
+\item Alternatively, the \code{tag} can be
+either \code{.beta.} or \code{.cov.}.
+\itemize{
+\item Use \code{.beta.} to set the default
+values for all regression coefficients.
+\item Use \code{.cov.} to set the default
+values for all correlations of
+exogenous variables (e.g., predictors).
+}
+}
+\item After each tag is the value of the
+population value:
+
+-\code{nil} for nil (zero),
+\itemize{
+\item \code{s} for small,
+\item \code{m} for medium, and
+\item \code{l} for large.
 }
 
-This is another equivalent form:
+Note: \code{n} \emph{cannot} be used in this mode.
 
-\preformatted{
-"
-m ~ x: m
-y ~ m:
- - s
- - m
- - l
-"
+The
+value for each label is determined
+by \code{es1} and \code{es2} as described
+in \code{\link[=ptable_pop]{ptable_pop()}}.
+\itemize{
+\item The value can also be
+set to a numeric value, such as
+\code{.30} or \code{-.30}.
+}
 }
 
-See the help page of \code{\link[=pop_es_yaml]{pop_es_yaml()}}
-on how to use this approach.
+This is another example:
+
+\preformatted{.beta: s
+y ~ m: l}
+
+In this example, all regression
+coefficients are \code{small}, while
+the path from \code{m} to \code{y} is large.
 }
 
+\subsection{Multigroup Model}{
+
+This is an example of the string
+for a multigroup model:
+
+\preformatted{y ~ m: l
+m ~ x:
+  - nil
+  - s
+y ~ x: nil}
+
+The format is similar to that for
+a single-group model. If a parameter
+has the same value for all groups,
+then the line can be specified
+as in the case of a single-group
+model: \code{tag: value}.
+
+If a parameter has different
+values across groups, then it must
+be in this format:
+\itemize{
+\item A line starts with the tag, followed
+by two or more lines. Each line
+starts with a hyphen \code{-} and the
+value for a group.
 }
 
+For example:
+
+\preformatted{m ~ x:
+  - nil
+  - s}
+
+This denotes that the model has
+two groups. The values of the path
+from \code{x} to \code{m} for the two
+groups are 0 (\code{nil}) and
+small (\code{s}), respectively.
+
+Another equivalent way to specify
+the values are using \verb{[]}, on
+the same line of a tag.
+
+For example:
+
+\preformatted{m ~ x: [nil, s]}
+
+The number of groups is inferred
+from the number of values for
+a parameter. Therefore, if a tag
+has more than one value, each tag
+must has the same number of value,
+or only one value.
+
+The tag \code{.beta.} and \code{.cov.} can
+also be used for multigroup models.
+}
+
+\subsection{Which Approach To Use}{
+
+Note that using named vectors or
+named lists is more reliable. However,
+using a multiline string is
+more user-friendly. If this method
+failed, please use named vectors or
+named list instead.
+}
+
+\subsection{Technical Details}{
+
+The multiline string is parsed by \code{\link[yaml:read_yaml]{yaml::read_yaml()}}.
+Therefore, the format requirement
+is actually that of YAML. Users
+knowledgeable of YAML can use other
+equivalent way to specify the string.
+}
+}
+
+\section{Setting the Values for Effect Size Labels ('es1' and 'es2')}{
+The vector \code{es1} is for correlations
+and regression coefficients, and the
+vector \code{es2} is for for standardized
+moderation effect, the coefficients
+of a product term. These labels
+are to be used in interpreting
+the specification in \code{pop_es}.
+}
+
+\section{The role of \code{model_matrices_pop()}}{
 The function \code{\link[=model_matrices_pop]{model_matrices_pop()}}
 generates models matrices with
-population values. For advanced
-users.
+population values, used by \code{\link[=ptable_pop]{ptable_pop()}}.
+Users usually do not
+call this function directly, though
+developers can use this build their own
+workflows to generate the data.
 }
-\section{Functions}{
-\itemize{
-\item \code{model_matrices_pop()}: 
 
-}}
 \examples{
 
 model1 <-
@@ -322,6 +487,37 @@ ptable_final1 <- ptable_pop(model1,
                             pop_es = model1_es)
 ptable_final1
 
+# Use multiline string, illustrated by a simpler model
+
+model2 <-
+"
+m ~ x
+y ~ m + x
+"
+
+model2_es_a <- c("m ~ x" = "s",
+               "y ~ m" = "m",
+               "y ~ x" = "nil")
+
+model2_es_b <-
+"
+m ~ x: s
+y ~ m: m
+y ~ x: nil
+"
+
+ptable_model2_a <- ptable_pop(model2,
+                              pop_es = model2_es_a)
+ptable_model2_b <- ptable_pop(model2,
+                              pop_es = model2_es_b)
+
+ptable_model2_a
+ptable_model2_b
+
+identical(ptable_model2_a,
+          ptable_model2_b)
+
+# model_matrices_pop
 
 model_matrices_pop(ptable_final1)
 

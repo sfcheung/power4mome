@@ -106,9 +106,15 @@
 #' an advanced feature, to be described
 #' in a vignette.
 #'
-#' @inheritSection do_test Major Test-Related Arguments
+#' @inheritSection ptable_pop Specify the Population Model by 'model'
 #'
-#' @inheritSection pop_es_yaml Specify 'pop_es' Using a Multiline String
+#' @inheritSection ptable_pop Specify 'pop_es' Using Named Vectors
+#'
+#' @inheritSection ptable_pop Specify 'pop_es' Using a Multiline String
+#'
+#' @inheritSection ptable_pop Setting the Values for Effect Size Labels ('es1' and 'es2')
+#'
+#' @inheritSection do_test Major Test-Related Arguments
 #'
 # It is a known issue that inherited
 # section cannot be placed before @details
@@ -182,6 +188,8 @@
 #'
 #' @inheritParams fit_model
 #'
+#' @inheritParams ptable_pop
+#'
 #' @param object Optional. If set to a
 #' `power4test` object, it will be
 #' updated using the value(s) in `n`,
@@ -202,32 +210,21 @@
 #' object using `model` and `pop_es`.
 #'
 #' @param model The `lavaan` model
-#' syntax of the population model.
-#' Required. Ignored if `ptable` is
-#' specified. See 'Details' of
-#' [ptable_pop()] on how to use it for
-#' models with latent factors
-#' and indicators. Ignored if `ptable` is
+#' syntax of the population model,
+#' to be used by [ptable_pop()].
+#' See 'Details' of
+#' on how to specify the model.
+#' Ignored if `ptable` is
 #' specified.
 #'
 #' @param pop_es The character vector to
 #' specify population effect sizes. See
-#' 'Details' of [ptable_pop()] on how to
-#' set the effect sizes for this
-#' argument. Can also be a multiline
-#' string, explained in 'Details'.
+#' the help page on how to specify this
+#' argument.
 #' Ignored if `ptable` is
 #' specified.
 #'
-#' @param standardized Logical. If
-#' `TRUE`, the default, variances and
-#' error variances are scaled to ensure
-#' the population variances of the
-#' endogenous variables are close to
-#' one, and hence the effect sizes are
-#' standardized effect sizes if the
-#' variances of the continuos exogenous
-#' variables are also equal to one.
+# @param standardized <- Inhertied
 #'
 #' @param n The sample size for each
 #' dataset. Default is 100.
@@ -346,38 +343,13 @@
 #' cores to use if parallel processing
 #' is used.
 #'
-#' @param es1 A named vector to set the
-#' values for each label of the effect
-#' size of correlations and regression
-#' paths.
-#' Default is `c("n" = .00, "nil" = .00, "s" = .10, "m" = .30, "l" = .50)`.
-#' Used only if `pop_es` is a named
-#' vector. See [ptable_pop()] for
-#' further information.
+# @param es1 <- Inherited
 #'
-#' @param es2 A named vector to set the
-#' values for each label of the effect
-#' size of product term.
-#' Default is `c("n" = .00, "nil" = .00, "s" = .05, "m" = .10, "l" = .15)`.
-#' Used only if `pop_es` is a named
-#' vector. See [ptable_pop()] for
-#' further information.
+# @param es2 <- Inherited
 #'
-#' @param n_std The sample size used to
-#' determine the error variances by
-#' simulation when `std_force_monte_carlo`
-#' is `TRUE`. Default is 100000.
+# @param n_std <- Inherited
 #'
-#' @param std_force_monte_carlo Logical.
-#' If `FALSE`, the default,
-#' standardization is done analytically
-#' if the model has no product terms,
-#' and by simulation if the model has
-#' product terms. If `TRUE`, simulation
-#' will be used whether the model has
-#' product terms or not. Always fall
-#' back to standardization if
-#' analytical standardization failed.
+# @param std_force_monte_carlo <- Inherited
 #'
 #' @examples
 #'
@@ -453,8 +425,8 @@ power4test <- function(object = NULL,
                                "s" = .05,
                                "m" = .10,
                                "l" = .15),
-                       n_std = 1090000,
-                       std_force_monte_carlo= FALSE) {
+                       n_std = 100000,
+                       std_force_monte_carlo = FALSE) {
 
   # TOOD:
   # - Should allow only limited changes

@@ -36,7 +36,7 @@ power4test(
   ncores = max(1, parallel::detectCores(logical = FALSE) - 1),
   es1 = c(n = 0, nil = 0, s = 0.1, m = 0.3, l = 0.5),
   es2 = c(n = 0, nil = 0, s = 0.05, m = 0.1, l = 0.15),
-  n_std = 1090000,
+  n_std = 1e+05,
   std_force_monte_carlo = FALSE
 )
 
@@ -72,20 +72,17 @@ called to generate the \code{ptable_pop}
 object using \code{model} and \code{pop_es}.}
 
 \item{model}{The \code{lavaan} model
-syntax of the population model.
-Required. Ignored if \code{ptable} is
-specified. See 'Details' of
-\code{\link[=ptable_pop]{ptable_pop()}} on how to use it for
-models with latent factors
-and indicators. Ignored if \code{ptable} is
+syntax of the population model,
+to be used by \code{\link[=ptable_pop]{ptable_pop()}}.
+See 'Details' of
+on how to specify the model.
+Ignored if \code{ptable} is
 specified.}
 
 \item{pop_es}{The character vector to
 specify population effect sizes. See
-'Details' of \code{\link[=ptable_pop]{ptable_pop()}} on how to
-set the effect sizes for this
-argument. Can also be a multiline
-string, explained in 'Details'.
+the help page on how to specify this
+argument.
 Ignored if \code{ptable} is
 specified.}
 
@@ -94,9 +91,10 @@ specified.}
 error variances are scaled to ensure
 the population variances of the
 endogenous variables are close to
-one, and hence the effect sizes are
+one, and hence the effect sizes
+(population values) are
 standardized effect sizes if the
-variances of the continuos exogenous
+variances of the continuous exogenous
 variables are also equal to one.}
 
 \item{n}{The sample size for each
@@ -247,37 +245,40 @@ Default is `FALSE.}
 cores to use if parallel processing
 is used.}
 
-\item{es1}{A named vector to set the
+\item{es1}{Set the
 values for each label of the effect
-size of correlations and regression
+size (population value) for correlations and regression
 paths.
-Default is \code{c("n" = .00, "nil" = .00, "s" = .10, "m" = .30, "l" = .50)}.
 Used only if \code{pop_es} is a named
-vector. See \code{\link[=ptable_pop]{ptable_pop()}} for
-further information.}
+vector or a multiline string.
+See the help page on how to specify
+this argument.}
 
-\item{es2}{A named vector to set the
+\item{es2}{Set the
 values for each label of the effect
-size of product term.
-Default is \code{c("n" = .00, "nil" = .00, "s" = .05, "m" = .10, "l" = .15)}.
+size (population value) for product term.
 Used only if \code{pop_es} is a named
-vector. See \code{\link[=ptable_pop]{ptable_pop()}} for
-further information.}
+vector or a multiline string.
+See the help page on how to specify
+this argument.}
 
 \item{n_std}{The sample size used to
 determine the error variances by
 simulation when \code{std_force_monte_carlo}
-is \code{TRUE}. Default is 100000.}
+is \code{TRUE}.}
 
 \item{std_force_monte_carlo}{Logical.
 If \code{FALSE}, the default,
 standardization is done analytically
 if the model has no product terms,
 and by simulation if the model has
-product terms. If \code{TRUE}, simulation
+product terms. That is, error variances
+required to ensure implied variances equal
+to one are determined by simulation.
+If \code{TRUE}, simulation
 will be used whether the model has
 product terms or not. Always fall
-back to standardization if
+back to simulation if
 analytical standardization failed.}
 
 \item{x}{The object
@@ -481,148 +482,152 @@ values for their arguments.
 }
 }
 
-\section{Major Test-Related Arguments}{
-\subsection{The test function (test_fun)}{
+\section{Specify the Population Model by 'model'}{
+\subsection{Single-Group Model}{
 
-The function set to \code{test_fun},
-the \emph{test function}, usually
-should work
-on the output of \code{\link[lavaan:sem]{lavaan::sem()}},
-\code{\link[lmhelprs:many_lm]{lmhelprs::many_lm()}}, or
-\code{\link[stats:lm]{stats::lm()}}, but can also be a
-function that works on the output
-of the function set to \code{fit_function}
-when calling \code{\link[=fit_model]{fit_model()}} or
-\code{\link[=power4test]{power4test()}} (see \code{fit_model_args}).
+For a single-group model, \code{model}
+should be a \code{lavaan} model syntax
+string of the \emph{form} of the model.
+The population values of the model
+parameters are to be determined by
+\code{pop_es}.
 
-The function has two default
-requirements.
+If the model has latent factors,
+the syntax in \code{model} should specify
+only the \emph{structural model} for the
+\emph{latent factors}. There is no
+need to specify the measurement
+part. Other functions will generate
+the measurement part on top of this
+model.
 
-First, it has an argument \code{fit}, to
-be set to the output of
-\code{\link[lavaan:sem]{lavaan::sem()}} or another output
-stored in the element \code{extra$fit} of
-a replication in the \code{sim_all}
-object. (This requirement can be
-relaxed; see the section on \code{map_names}.)
+For example, this is a simple mediation
+model:
 
-That is, the function definition
-should be of this from: \code{FUN(fit, ...)}. This is the form of all
-\verb{test_*} functions in \code{power4mome}.
+\preformatted{"m ~ x
+ y ~ m + x"}
 
-If other arguments are to be passed
-to the test function, they can be set
-to \code{test_args} as a named list.
-
-Second, the test function must
-returns an output that (a) can be
-processed by the results function
-(see below), or (b) is of
-the required format for the output of
-a results function (see the next
-section). If it already returns
-an output of the required format,
-then there is no need to set the
-results function.
+Whether \code{m}, \code{x}, and \code{y} denote
+observed variables or latent factors
+are determined by other functions,
+such as \code{\link[=power4test]{power4test()}}.
 }
 
-\subsection{The results function (results_fun)}{
+\subsection{Multigroup Model}{
 
-The test results will be extracted
-from the output of \code{test_fun} by the
-function set to \code{results_fun},
-the \emph{results function}. If
-the \code{test_fun} already returns an
-output of the expected format
-(see below), then set \code{results_fun}
-to \code{NULL}, the default. The output
-of \code{test_fun} will be used for
-estimating power.
+Because the model is the population
+model, equality constraints are
+irrelevant and the model syntax
+specifies only the \emph{form} of the
+model. Therefore, \code{model} is
+specified as in the case of single
+group models.
+}
+}
 
-The function set to \code{results_fun}
-must accept the output of \code{test_fun},
-as the first argument, and return a
-named list (which can be a data frame)
-or a named vector with some
-of the following
-elements:
+\section{Specify 'pop_es' Using Named Vectors}{
+The argument \code{pop_es} is for specifying
+the population values of model
+parameters. This section describes
+how to do this using named vectors.
+\subsection{Single-Group Model}{
+
+If \code{pop_es} is specified by a named
+vector, it must follow the convention
+below.
 \itemize{
-\item \code{est}: Optional. The estimate of a
-parameter, if applicable.
-\item \code{se}: Optional. The standard error
-of the estimate, if applicable.
-\item \code{cilo}: Optional. The lower limit of the
-confidence interval, if applicable.
-\item \code{cihi}: Optional. The upper limit of the
-confidence interval, if applicable.
-\item \code{sig}: Required. If \code{1}, the test is
-significant. If \code{0}, the test is not
-significant. If the test cannot be
-done for any reason, it should be
-\code{NA}.
+\item The names of the vectors are
+\code{lavaan} names for the selected
+parameters. For example, \code{m ~ x}
+denotes the path from \code{x} to \code{m}.
+\item Alternatively, the names can be
+either \code{".beta."} or \code{".cov."}.
+Use \code{".beta."} to set the default
+values for all regression coefficients.
+Use \code{".cov."} to set the default
+values for all correlations of
+exogenous variables (e.g., predictors).
+\item If using \code{lavaan} names, can
+specify more than one parameter
+using \code{+}. For example, \code{y ~ m + x}
+denotes the two paths from \code{m} and
+\code{x} to \code{y}.
+\item The value of each element can be
+the label for the effect size: \code{n}
+for nil, \code{s} for small, \code{m} for
+medium, and \code{l} for large. The
+value for each label is determined
+by \code{es1} and \code{es2}. See the section
+on specifying these two arguments.
+\item The value of \code{pop_es} can also be
+set to a value, but it must be
+quoted as a string, such as \code{"y ~ x" = ".31"}.
 }
 
-The results can then be used to
-estimate the power or Type I
-error of the test.
+This is an example:
 
-For example, if
-the null hypothesis is false, then
-the proportion of significant, that
-is, the mean of the values of \code{sig}
-across replications, is the power.
-}
+\preformatted{c(".beta." = "s",
+  "m1 ~ x" = "-m",
+  "m2 ~ m1" = "l",
+  "y ~ x:w" = "s")}
 
-\subsection{Built-in test functions}{
-
-The package \code{power4mome} has some ready-to-use
-test functions:
+In this example,
 \itemize{
-\item \code{\link[=test_indirect_effect]{test_indirect_effect()}}
-\item \code{\link[=test_cond_indirect]{test_cond_indirect()}}
-\item \code{\link[=test_cond_indirect_effects]{test_cond_indirect_effects()}}
-\item \code{\link[=test_moderation]{test_moderation()}}
-\item \code{\link[=test_index_of_mome]{test_index_of_mome()}}
-\item \code{\link[=test_parameters]{test_parameters()}}
+\item All regression coefficients are
+set to small (\code{s}) by default, unless
+specified otherwise.
+\item The path from \code{x} to \code{m1} is
+set to medium and negative (\code{-m}).
+\item The path from \code{m1} to \code{m2} is set
+to large (\code{l}).
+\item The coefficient of the product
+term \code{x:w} when predicting \code{y} is
+set to small (\code{s}).
+}
 }
 
-Please refer to their help pages
-for examples.
+\subsection{Multigroup Model}{
+
+The argument \code{pop_es} also supports multigroup
+models.
+
+For \code{pop_es}, instead of
+named vectors, named \emph{list} of
+named vectors should be used.
+\itemize{
+\item The names are the parameters, or
+keywords such as \code{.beta.} and
+\code{.cov.}, like specifying the
+population values for a single
+group model.
+\item The elements are character vectors.
+If it has only one element (e.g.,
+a single string), then it is the
+the population value for all groups.
+If it has more than one element
+(e.g., a vector of three strings),
+then they are the population values
+of the groups. For a model of \emph{k}
+groups, each vector must have
+either \emph{k} elements or one element.
 }
 
-\subsection{The argument map_names}{
+This is an example:
 
-This argument is for developers using
-a test function that has a different
-name for the argument of the fit
-object (\code{"fit"}, the default).
+\preformatted{list("m ~ x" = "m",
+     "y ~ m" = c("s", "m", "l"))}
 
-If \code{test_fun} is set to a function
-that works on an output of, say,
-\code{\link[lavaan:sem]{lavaan::sem()}} but the argument name
-for the output is not \code{fit}, the
-mapping can be changed by
-\code{map_names}.
-
-For example,
-\code{\link[lavaan:parameterEstimates]{lavaan::parameterEstimates()}}
-receives an output of \code{\link[lavaan:sem]{lavaan::sem()}}
-and reports the test results of model
-parameters. However, the argument
-name for the \code{lavaan} output is
-\code{object.} To instruct \code{\link[=do_test]{do_test()}} to
-do the test correctly when setting
-\code{test_fun} to
-\code{lavaan::parameterEstimates}, add
-\code{map_names = c(object = "fit")}. The
-element \code{fit} in a replication will
-then set to the argument \code{object} of
-\code{\link[lavaan:parameterEstimates]{lavaan::parameterEstimates()}}.
+In this model, the population value
+of the path \code{m ~ x} is medium (\code{m}) for
+all groups, while the population
+values for the path \code{y ~ m} are
+small (\code{s}), medium (\code{m}), and large (\code{l}),
+respectively.
 }
 }
 
 \section{Specify 'pop_es' Using a Multiline String}{
-When setting the argumeng \code{pop_es},
+When setting the argument \code{pop_es},
 instead of using a named vector
 or named list for
 \code{pop_es}, the population values of
@@ -777,6 +782,156 @@ Therefore, the format requirement
 is actually that of YAML. Users
 knowledgeable of YAML can use other
 equivalent way to specify the string.
+}
+}
+
+\section{Setting the Values for Effect Size Labels ('es1' and 'es2')}{
+The vector \code{es1} is for correlations
+and regression coefficients, and the
+vector \code{es2} is for for standardized
+moderation effect, the coefficients
+of a product term. These labels
+are to be used in interpreting
+the specification in \code{pop_es}.
+}
+
+\section{Major Test-Related Arguments}{
+\subsection{The test function (test_fun)}{
+
+The function set to \code{test_fun},
+the \emph{test function}, usually
+should work
+on the output of \code{\link[lavaan:sem]{lavaan::sem()}},
+\code{\link[lmhelprs:many_lm]{lmhelprs::many_lm()}}, or
+\code{\link[stats:lm]{stats::lm()}}, but can also be a
+function that works on the output
+of the function set to \code{fit_function}
+when calling \code{\link[=fit_model]{fit_model()}} or
+\code{\link[=power4test]{power4test()}} (see \code{fit_model_args}).
+
+The function has two default
+requirements.
+
+First, it has an argument \code{fit}, to
+be set to the output of
+\code{\link[lavaan:sem]{lavaan::sem()}} or another output
+stored in the element \code{extra$fit} of
+a replication in the \code{sim_all}
+object. (This requirement can be
+relaxed; see the section on \code{map_names}.)
+
+That is, the function definition
+should be of this from: \code{FUN(fit, ...)}. This is the form of all
+\verb{test_*} functions in \code{power4mome}.
+
+If other arguments are to be passed
+to the test function, they can be set
+to \code{test_args} as a named list.
+
+Second, the test function must
+returns an output that (a) can be
+processed by the results function
+(see below), or (b) is of
+the required format for the output of
+a results function (see the next
+section). If it already returns
+an output of the required format,
+then there is no need to set the
+results function.
+}
+
+\subsection{The results function (results_fun)}{
+
+The test results will be extracted
+from the output of \code{test_fun} by the
+function set to \code{results_fun},
+the \emph{results function}. If
+the \code{test_fun} already returns an
+output of the expected format
+(see below), then set \code{results_fun}
+to \code{NULL}, the default. The output
+of \code{test_fun} will be used for
+estimating power.
+
+The function set to \code{results_fun}
+must accept the output of \code{test_fun},
+as the first argument, and return a
+named list (which can be a data frame)
+or a named vector with some
+of the following
+elements:
+\itemize{
+\item \code{est}: Optional. The estimate of a
+parameter, if applicable.
+\item \code{se}: Optional. The standard error
+of the estimate, if applicable.
+\item \code{cilo}: Optional. The lower limit of the
+confidence interval, if applicable.
+\item \code{cihi}: Optional. The upper limit of the
+confidence interval, if applicable.
+\item \code{sig}: Required. If \code{1}, the test is
+significant. If \code{0}, the test is not
+significant. If the test cannot be
+done for any reason, it should be
+\code{NA}.
+}
+
+The results can then be used to
+estimate the power or Type I
+error of the test.
+
+For example, if
+the null hypothesis is false, then
+the proportion of significant, that
+is, the mean of the values of \code{sig}
+across replications, is the power.
+}
+
+\subsection{Built-in test functions}{
+
+The package \code{power4mome} has some ready-to-use
+test functions:
+\itemize{
+\item \code{\link[=test_indirect_effect]{test_indirect_effect()}}
+\item \code{\link[=test_cond_indirect]{test_cond_indirect()}}
+\item \code{\link[=test_cond_indirect_effects]{test_cond_indirect_effects()}}
+\item \code{\link[=test_moderation]{test_moderation()}}
+\item \code{\link[=test_index_of_mome]{test_index_of_mome()}}
+\item \code{\link[=test_parameters]{test_parameters()}}
+}
+
+Please refer to their help pages
+for examples.
+}
+
+\subsection{The argument map_names}{
+
+This argument is for developers using
+a test function that has a different
+name for the argument of the fit
+object (\code{"fit"}, the default).
+
+If \code{test_fun} is set to a function
+that works on an output of, say,
+\code{\link[lavaan:sem]{lavaan::sem()}} but the argument name
+for the output is not \code{fit}, the
+mapping can be changed by
+\code{map_names}.
+
+For example,
+\code{\link[lavaan:parameterEstimates]{lavaan::parameterEstimates()}}
+receives an output of \code{\link[lavaan:sem]{lavaan::sem()}}
+and reports the test results of model
+parameters. However, the argument
+name for the \code{lavaan} output is
+\code{object.} To instruct \code{\link[=do_test]{do_test()}} to
+do the test correctly when setting
+\code{test_fun} to
+\code{lavaan::parameterEstimates}, add
+\code{map_names = c(object = "fit")}. The
+element \code{fit} in a replication will
+then set to the argument \code{object} of
+\code{\link[lavaan:parameterEstimates]{lavaan::parameterEstimates()}}.
 }
 }
 
