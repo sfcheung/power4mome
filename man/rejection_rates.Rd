@@ -45,7 +45,7 @@ rejection_rates(object, ...)
 \arguments{
 \item{object}{The object
 from which the rejection rates
-are to be extracted, such as
+are to be computed, such as
 a \code{power4test} object,
 a \code{power4test_by_n} object,
 or a \code{power4test_by_es} object.}
@@ -54,11 +54,11 @@ or a \code{power4test_by_es} object.}
 the \code{print} method, these arguments
 will be passed to the \code{print} method
 of \code{data.frame} objects \code{\link[=print.data.frame]{print.data.frame()}}.
-Not used for other methods.}
+Not used by other methods.}
 
 \item{all_columns}{If \code{TRUE}, all
 columns stored by a test will be
-printed. Default is \code{FALSE} and
+extracted. Default is \code{FALSE} and
 only essential columns related to
 power will be printed.}
 
@@ -66,24 +66,27 @@ power will be printed.}
 intervals for the rejection rates
 (column \code{reject} or \code{sig}) will
 be computed. Normal approximation
-is used.}
+is used in forming the confidence
+intervals.}
 
 \item{level}{The level of confidence
 for the confidence intervals, if
-\code{ci} is \code{TRUE}.}
+\code{ci} is \code{TRUE}. Default is .95,
+denoting 95\%.}
 
 \item{se}{If \code{TRUE}, standard errors
 for the rejection rates
 (column \code{reject} or \code{sig}) will
 be computed. Normal approximation
-is used.}
+is used to compute the standard
+errors.}
 
 \item{x}{The \code{rejection_rates_df}
 object to be printed.}
 
 \item{digits}{The number of digits
-after the decimal place to be
-printed.}
+to be printed
+after the decimal.}
 
 \item{annotation}{Logical. Whether
 additional notes will be printed.}
@@ -96,8 +99,9 @@ abbreviated.}
 The \code{rejection_rates} method returns
 a \code{rejection_rates_df} object,
 with a \code{print} method.
-If the input is a
-\code{power4test} object, it is
+
+If the input (\code{object}) is a
+\code{power4test} object, the output is
 a data-frame like object with the
 number of
 rows equal to the number of tests.
@@ -106,12 +110,13 @@ the test by \code{\link[=test_parameters]{test_parameters()}},
 conduct one test for each parameters.
 Each such test is counted as one
 test.
-The data frame has these columns:
+
+The data frame has at least these columns:
 \itemize{
 \item \code{test}: The name of the test.
 \item \code{label}: The label for each
 test, or \code{"Test"} if a test only
-does on test (e.g., \code{\link[=test_indirect_effect]{test_indirect_effect()}}).
+does one test (e.g., \code{\link[=test_indirect_effect]{test_indirect_effect()}}).
 \item \code{pvalid}: The proportion of valid
 tests across all replications.
 \item \code{reject}: The rejection rate for
@@ -127,8 +132,8 @@ which is a subclass of
 \code{rejection_rates_df}.
 It is a data frame which is
 similar to the output of
-\code{\link[=rejection_rates]{rejection_rates()}}, with a
-column added for the effect size (\code{pop_es_name} and
+\code{\link[=rejection_rates]{rejection_rates()}}, with two
+columns added for the effect size (\code{pop_es_name} and
 \code{pop_es_values})
 for each test.
 
@@ -143,6 +148,11 @@ similar to the output of
 for a \code{power4test} object, with a
 column \code{n} added for the sample size
 for each test.
+
+The \code{print} method of a
+\code{rejection_rates_df} object return
+the object invisibly. It is called
+for its side-effect.
 }
 \description{
 Get all rejection rates
@@ -152,23 +162,25 @@ object or other supported objects.
 \details{
 For a \code{power4test} object,
 it loops over the tests stored
-in a \code{power4test} object and retrieve
+in a \code{power4test} object and retrieves
 the rejection rate of each test.
 
 The \code{rejection_rates} method for
 \code{power4test_by_es} objects
-is used to extract the rejection
+is used to compute the rejection
 rates from a \code{power4test_by_es}
 object, with effect sizes added to
 the output.
 
 The \code{rejection_rates} method for
 \code{power4test_by_n} objects
-is used to extract the rejection
+is used to compute the rejection
 rates, with sample sizes added to
 the output.
 }
 \examples{
+
+# Specify the population model
 
 model_simple_med <-
 "
@@ -176,9 +188,16 @@ m ~ x
 y ~ m + x
 "
 
-model_simple_med_es <- c("y ~ m" = "l",
-                         "m ~ x" = "m",
-                         "y ~ x" = "n")
+# Specify the effect sizes (population parameter values)
+
+model_simple_med_es <-
+"
+y ~ m: l
+m ~ x: m
+y ~ x: n
+"
+
+# Generate some datasets to check the model
 
 sim_only <- power4test(nrep = 4,
                        model = model_simple_med,
@@ -190,6 +209,8 @@ sim_only <- power4test(nrep = 4,
                        do_the_test = FALSE,
                        iseed = 1234)
 
+# Do the test 'test_indirect_effect' on each datasets
+
 test_out <- power4test(object = sim_only,
                        test_fun = test_indirect_effect,
                        test_args = list(x = "x",
@@ -197,8 +218,15 @@ test_out <- power4test(object = sim_only,
                                         y = "y",
                                         boot_ci = TRUE,
                                         mc_ci = FALSE))
+
+# Do the test 'test_parameters' on each datasets
+# and add the results to 'test_out'
+
 test_out <- power4test(object = test_out,
                        test_fun = test_parameters)
+
+# Compute and print the rejection rates for stored tests
+
 rejection_rates(test_out)
 
 # See the help pages of power4test_by_n() and power4test_by_es()
@@ -208,5 +236,6 @@ rejection_rates(test_out)
 \seealso{
 \code{\link[=power4test]{power4test()}},
 \code{\link[=power4test_by_n]{power4test_by_n()}}, and
-\code{\link[=power4test_by_es]{power4test_by_es()}}.
+\code{\link[=power4test_by_es]{power4test_by_es()}}, which are
+supported by this method.
 }

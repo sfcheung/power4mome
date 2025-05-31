@@ -3,7 +3,7 @@
 #' @description Generate the complete
 #' population model using the model
 #' syntax and user-specified effect
-#' sizes.
+#' sizes (population parameter values).
 #'
 #' @details
 #' The function [ptable_pop()] generates a `lavaan`
@@ -11,12 +11,66 @@
 #' to generate data based on the population
 #' values of model parameters.
 #'
-#' This function is used by the
-#' all-in-one function [power4test()].
-#' Users usually do not call this
-#' function directly.
+#' # The role of `ptable_pop()`
 #'
-#' ## Setting `pop_es` to a named vector
+#' The function [ptable_pop()] is used by
+#' the all-in-one function
+#' [power4test()]. Users usually do not
+#' call this function directly, though
+#' developers can use this function to
+#' develop other functions for power
+#' analysis, or to build their own
+#' workflows to do the power analysis.
+#'
+#' # Specify the Population Model by 'model'
+#'
+#' ## Single-Group Model
+#'
+#' For a single-group model, `model`
+#' should be a `lavaan` model syntax
+#' string of the *form* of the model.
+#' The population values of the model
+#' parameters are to be determined by
+#' `pop_es`.
+#'
+#' If the model has latent factors,
+#' the syntax in `model` should specify
+#' only the *structural model* for the
+#' *latent factors*. There is no
+#' need to specify the measurement
+#' part. Other functions will generate
+#' the measurement part on top of this
+#' model.
+#'
+#' For example, this is a simple mediation
+#' model:
+#'
+#' \preformatted{"m ~ x
+#'  y ~ m + x"}
+#'
+#' Whether `m`, `x`, and `y` denote
+#' observed variables or latent factors
+#' are determined by other functions,
+#' such as [power4test()].
+#'
+#' ## Multigroup Model
+#'
+#' Because the model is the population
+#' model, equality constraints are
+#' irrelevant and the model syntax
+#' specifies only the *form* of the
+#' model. Therefore, `model` is
+#' specified as in the case of single
+#' group models.
+#'
+#' # Specify 'pop_es' Using Named Vectors
+#'
+#' The argument `pop_es` is for specifying
+#' the population values of model
+#' parameters. This section describes
+#' how to do this using named vectors.
+#'
+#' ## Single-Group Model
 #'
 #' If `pop_es` is specified by a named
 #' vector, it must follow the convention
@@ -46,27 +100,20 @@
 #'   for nil, `s` for small, `m` for
 #'   medium, and `l` for large. The
 #'   value for each label is determined
-#'   by `es1` and `es2`.
+#'   by `es1` and `es2`. See the section
+#'   on specifying these two arguments.
 #'
 #' - The value of `pop_es` can also be
 #'   set to a value, but it must be
 #'   quoted as a string, such as `"y ~
 #'   x" = ".31"`.
 #'
-#' The vector `es1` is for correlations
-#' and regression coefficients, and the
-#' vector `es2` is for for standardized
-#' moderation effect, the coefficients
-#' of a product term.
-#'
 #' This is an example:
 #'
-#' \preformatted{
-#' c(".beta." = "s",
+#' \preformatted{c(".beta." = "s",
 #'   "m1 ~ x" = "-m",
 #'   "m2 ~ m1" = "l",
-#'   "y ~ x:w" = "s")
-#' }
+#'   "y ~ x:w" = "s")}
 #'
 #' In this example,
 #'
@@ -84,42 +131,14 @@
 #'  term `x:w` when predicting `y` is
 #'  set to small (`s`).
 #'
-#' ### Using One Single String To Set `pop_es`
+#' ## Multigroup Model
 #'
-#' An alternative way to set `pop_es`
-#' is using one single string, like
-#' a `lavaan` model syntax.
-#'
-#' This is an example, equivalent to
-#' the example above:
-#'
-#' \preformatted{
-#' "
-#' .beta.: s
-#' m1 ~ x: -m
-#' m2 ~ m1: l
-#' y ~ x:w: s
-#' "
-#' }
-#'
-#' See the help page of [pop_es_yaml()]
-#' on how to use this approach.
-#'
-#' ## Multigroup Models
-#'
-#' The function also supports multigroup
+#' The argument `pop_es` also supports multigroup
 #' models.
 #'
-#' Because the model is the population
-#' model, equality constraints are
-#' irrelevant and the model syntax
-#' specifies only the *form* of the
-#' model. Therefore, `model` is
-#' specified as in the case of single
-#' group models.
-#'
-#' For `pop_es`, instead of using a
-#' named vectors, use as named *list*.
+#' For `pop_es`, instead of
+#' named vectors, named *list* of
+#' named vectors should be used.
 #'
 #' - The names are the parameters, or
 #'   keywords such as `.beta.` and
@@ -140,48 +159,179 @@
 #'
 #' This is an example:
 #'
-#' \preformatted{
-#' list("m ~ x" = "m",
-#'      "y ~ m" = c("s", "m", "l"))
-#' }
+#' \preformatted{list("m ~ x" = "m",
+#'      "y ~ m" = c("s", "m", "l"))}
 #'
 #' In this model, the population value
-#' of the path `m ~ x` is medium for
+#' of the path `m ~ x` is medium (`m`) for
 #' all groups, while the population
 #' values for the path `y ~ m` are
-#' small, medium, and large,
+#' small (`s`), medium (`m`), and large (`l`),
 #' respectively.
 #'
-#' ### Using One Single String To Set `pop_es`
+#' # Specify 'pop_es' Using a Multiline String
 #'
-#' The population values for a
-#' multigroup model can also be set
-#' using one single string.
+#' When setting the argument `pop_es`,
+#' instead of using a named vector
+#' or named list for
+#' `pop_es`, the population values of
+#' model parameters can also be
+#' specified using a multiline string,
+#' as illustrated below, to be parsed
+#' by [pop_es_yaml()].
 #'
-#' This is an example, equivalent to
-#' the example above:
+#' ## Single-Group Model
 #'
-#' \preformatted{
-#' "
+#' This is an example of the multiline string
+#' for a single-group model:
+#'
+#' \preformatted{y ~ m: l
 #' m ~ x: m
-#' y ~ m: [s, m, l]
-#' "
-#' }
+#' y ~ x: nil}
 #'
-#' This is another equivalent form:
+#' The string must follow this format:
 #'
-#' \preformatted{
-#' "
-#' m ~ x: m
-#' y ~ m:
-#'  - s
-#'  - m
-#'  - l
-#' "
-#' }
+#' - Each line starts with `tag:`.
 #'
-#' See the help page of [pop_es_yaml()]
-#' on how to use this approach.
+#'   - `tag` can be the name of a
+#'      parameter, in `lavaan` model
+#'      syntax format.
+#'
+#'     - For example, `m ~ x`
+#'       denotes the path from `x` to `m`.
+#'
+#'   - A tag in `lavaan` model syntax can
+#'     specify more than one parameter
+#'     using `+`.
+#'
+#'     - For example, `y ~ m + x`
+#'       denotes the two paths from `m` and
+#'       `x` to `y`.
+#'
+#'   - Alternatively, the `tag` can be
+#'   either `.beta.` or `.cov.`.
+#'
+#'     - Use `.beta.` to set the default
+#'       values for all regression coefficients.
+#'
+#'     - Use `.cov.` to set the default
+#'       values for all correlations of
+#'       exogenous variables (e.g., predictors).
+#'
+#' - After each tag is the value of the
+#'   population value:
+#'
+#'     -`nil` for nil (zero),
+#'
+#'     - `s` for small,
+#'
+#'     - `m` for medium, and
+#'
+#'     - `l` for large.
+#'
+#'   Note: `n` *cannot* be used in this mode.
+#'
+#'   The
+#'   value for each label is determined
+#'   by `es1` and `es2` as described
+#'   in [ptable_pop()].
+#'
+#'   - The value can also be
+#'     set to a numeric value, such as
+#'     `.30` or `-.30`.
+#'
+#' This is another example:
+#'
+#' \preformatted{.beta: s
+#' y ~ m: l}
+#'
+#' In this example, all regression
+#' coefficients are `small`, while
+#' the path from `m` to `y` is large.
+#'
+#' ## Multigroup Model
+#'
+#' This is an example of the string
+#' for a multigroup model:
+#'
+#' \preformatted{y ~ m: l
+#' m ~ x:
+#'   - nil
+#'   - s
+#' y ~ x: nil}
+#'
+#' The format is similar to that for
+#' a single-group model. If a parameter
+#' has the same value for all groups,
+#' then the line can be specified
+#' as in the case of a single-group
+#' model: `tag: value`.
+#'
+#' If a parameter has different
+#' values across groups, then it must
+#' be in this format:
+#'
+#' - A line starts with the tag, followed
+#'   by two or more lines. Each line
+#'   starts with a hyphen `-` and the
+#'   value for a group.
+#'
+#' For example:
+#'
+#' \preformatted{m ~ x:
+#'   - nil
+#'   - s}
+#'
+#' This denotes that the model has
+#' two groups. The values of the path
+#' from `x` to `m` for the two
+#' groups are 0 (`nil`) and
+#' small (`s`), respectively.
+#'
+#' Another equivalent way to specify
+#' the values are using `[]`, on
+#' the same line of a tag.
+#'
+#' For example:
+#'
+#' \preformatted{m ~ x: [nil, s]}
+#'
+#' The number of groups is inferred
+#' from the number of values for
+#' a parameter. Therefore, if a tag
+#' has more than one value, each tag
+#' must has the same number of value,
+#' or only one value.
+#'
+#' The tag `.beta.` and `.cov.` can
+#' also be used for multigroup models.
+#'
+#' ## Which Approach To Use
+#'
+#' Note that using named vectors or
+#' named lists is more reliable. However,
+#' using a multiline string is
+#' more user-friendly. If this method
+#' failed, please use named vectors or
+#' named list instead.
+#'
+#' ## Technical Details
+#'
+#' The multiline string is parsed by [yaml::read_yaml()].
+#' Therefore, the format requirement
+#' is actually that of YAML. Users
+#' knowledgeable of YAML can use other
+#' equivalent way to specify the string.
+#'
+#' # Set the Values for Effect Size Labels ('es1' and 'es2')
+#'
+#' The vector `es1` is for correlations
+#' and regression coefficients, and the
+#' vector `es2` is for for standardized
+#' moderation effect, the coefficients
+#' of a product term. These labels
+#' are to be used in interpreting
+#' the specification in `pop_es`.
 #'
 #' @seealso [power4test()], and
 #' [pop_es_yaml()] on an alternative
@@ -194,9 +344,9 @@
 #' population values.
 #'
 #' @param model String. The model defined
-#' by `lavaan` model syntax.
+#' by `lavaan` model syntax. See 'Details'.
 #'
-#' @param pop_es It can a data frame
+#' @param pop_es It can be a data frame
 #' with these columns: `lhs`, `op`,
 #' `rhs`, and `pop`. The first three
 #' columns correspond to those in a
@@ -204,52 +354,64 @@
 #' `pop` stores the population values.
 #' The column `es` stores the original
 #' labels, for reference. It can also be
-#' A named character vector. See 'Details'
+#' a named character vector (named list
+#' for multigroup models) or a multiline string,
+#' which are
+#' the preferred approaches. See the
+#' help page
 #' on how to specify this vector.
 #'
-#' @param es1 A named vector to set the
+#' @param es1 Set the
 #' values for each label of the effect
-#' size of correlations and regression
+#' size (population value) for correlations and regression
 #' paths.
-#' Default is `c("n" = .00, "nil" = .00, "s" = .10, "m" = .30, "l" = .50)`.
 #' Used only if `pop_es` is a named
-#' vector.
+#' vector or a multiline string.
+#' See the help page on how to specify
+#' this argument.
 #'
-#' @param es2 A named vector to set the
+#' @param es2 Set the
 #' values for each label of the effect
-#' size of product term.
-#' Default is `c("n" = .00, "nil" = .00, "s" = .05, "m" = .10, "l" = .15)`.
+#' size (population value) for product term.
 #' Used only if `pop_es` is a named
-#' vector.
+#' vector or a multiline string.
+#' See the help page on how to specify
+#' this argument.
 #'
 #' @param standardized Logical. If
 #' `TRUE`, the default, variances and
 #' error variances are scaled to ensure
 #' the population variances of the
 #' endogenous variables are close to
-#' one, and hence the effect sizes are
+#' one, and hence the effect sizes
+#' (population values) are
 #' standardized effect sizes if the
-#' variances of the continuos exogenous
+#' variances of the continuous exogenous
 #' variables are also equal to one.
 #'
 #' @param n_std The sample size used to
 #' determine the error variances by
 #' simulation when `std_force_monte_carlo`
-#' is `TRUE`. Default is 100000.
+#' is `TRUE`.
 #'
 #' @param std_force_monte_carlo Logical.
 #' If `FALSE`, the default,
 #' standardization is done analytically
 #' if the model has no product terms,
 #' and by simulation if the model has
-#' product terms. If `TRUE`, simulation
+#' product terms. That is, error variances
+#' required to ensure implied variances equal
+#' to one are determined by simulation.
+#' If `TRUE`, simulation
 #' will be used whether the model has
 #' product terms or not. Always fall
-#' back to standardization if
+#' back to simulation if
 #' analytical standardization failed.
 #'
 #'
 #' @examples
+#'
+#' # Specify the model
 #'
 #' model1 <-
 #' "
@@ -257,6 +419,8 @@
 #' m2 ~ m1 + x2 + c1
 #' y ~  m2 + m1 + x + w + x:w + c1
 #' "
+#'
+#' # Specify the population values
 #'
 #' model1_es <- c("m1 ~ x" = "-m",
 #'                "m2 ~ m1" = "s",
@@ -269,6 +433,36 @@
 #' ptable_final1 <- ptable_pop(model1,
 #'                             pop_es = model1_es)
 #' ptable_final1
+#'
+#' # Use multiline string, illustrated by a simpler model
+#'
+#' model2 <-
+#' "
+#' m ~ x
+#' y ~ m + x
+#' "
+#'
+#' model2_es_a <- c("m ~ x" = "s",
+#'                "y ~ m" = "m",
+#'                "y ~ x" = "nil")
+#'
+#' model2_es_b <-
+#' "
+#' m ~ x: s
+#' y ~ m: m
+#' y ~ x: nil
+#' "
+#'
+#' ptable_model2_a <- ptable_pop(model2,
+#'                               pop_es = model2_es_a)
+#' ptable_model2_b <- ptable_pop(model2,
+#'                               pop_es = model2_es_b)
+#'
+#' ptable_model2_a
+#' ptable_model2_b
+#'
+#' identical(ptable_model2_a,
+#'           ptable_model2_b)
 #'
 #' @export
 # Input:
@@ -499,13 +693,17 @@ split_par_pop <- function(par_pop) {
   out1
 }
 
-#' @describeIn ptable_pop
-#'
 #' @details
+#'
+#' # The role of `model_matrices_pop()`
+#'
 #' The function [model_matrices_pop()]
 #' generates models matrices with
-#' population values. For advanced
-#' users.
+#' population values, used by [ptable_pop()].
+#' Users usually do not
+#' call this function directly, though
+#' developers can use this build their own
+#' workflows to generate the data.
 #'
 #' @return
 #' The function [model_matrices_pop()]
@@ -540,12 +738,14 @@ split_par_pop <- function(par_pop) {
 #' only. Default if `TRUE`.
 #'
 #' @examples
+#' # model_matrices_pop
 #'
 #' model_matrices_pop(ptable_final1)
 #'
 #' model_matrices_pop(model1,
 #'                    pop_es = model1_es)
 #'
+#' @rdname ptable_pop
 #' @export
 
 model_matrices_pop <- function(x,

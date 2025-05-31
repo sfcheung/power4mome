@@ -2,13 +2,13 @@
 % Please edit documentation in R/rlnorm_rs.R
 \name{rlnorm_rs}
 \alias{rlnorm_rs}
-\title{Random Lognormal Variable}
+\title{Random Variable From a Lognormal Distribution}
 \usage{
 rlnorm_rs(n = 10, mui = 0, sigma = 1, rev = FALSE, pmean = 0, psd = 1)
 }
 \arguments{
 \item{n}{The number of random numbers
-to generate. Default is 10.}
+to generate.}
 
 \item{mui}{The parameter \code{mui} to
 be used by \code{\link[stats:Lognormal]{stats::rlnorm()}}.}

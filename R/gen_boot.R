@@ -18,12 +18,19 @@
 #' `manymome` package, such as
 #' [manymome::indirect_effect()].
 #'
+#' # The role of `gen_boot()`
+#'
 #' This function is used by the
 #' all-in-one function [power4test()].
 #' Users usually do not call this
-#' function directly.
+#' function directly, though
+#' developers can use this function to
+#' customize the workflow of the
+#' power analysis.
 #'
-#' @seealso [power4test()]
+#' @seealso See [power4test()] for
+#' the all-in-one function that uses
+#' this function.
 #'
 #' @param fit_all The output of
 #' [fit_model()] or an object of the
@@ -58,28 +65,42 @@
 #' implied statistics are computed
 #' in each bootstrap samples. Usually
 #' not needed and so default to `FALSE`
-#' Required `manymome` 0.2.7.1
-#' or above.
 #'
 #' @return
 #' A `boot_list` object, which is a list
 #' of the output of [manymome::do_boot()].
 #'
 #' @examples
+#'
+#' # Specify the population model
+#'
 #' mod <-
 #' "m ~ x
 #'  y ~ m + x"
+#'
+#' # Specify the effect sizes (population parameter values)
+#'
 #' es <-
-#' c("y ~ m" = "m",
-#'   "m ~ x" = "m",
-#'   "y ~ x" = "n")
+#' "
+#' y ~ m: m
+#' m ~ x: m
+#' y ~ x: n
+#' "
+#'
+#' # Generate several simulated datasets
+#'
 #' data_all <- sim_data(nrep = 2,
 #'                      model = mod,
 #'                      pop_es = es,
 #'                      n = 50,
 #'                      iseed = 1234)
 #'
+#' # Fit the population model to each datasets
+#'
 #' fit_all <- fit_model(data_all)
+#'
+#' # Generate bootstrap estimates for each replication
+#'
 #' boot_all <- gen_boot(fit_all,
 #'                      R = 10,
 #'                      iseed = 4567)

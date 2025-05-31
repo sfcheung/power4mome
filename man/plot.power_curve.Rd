@@ -63,7 +63,9 @@ the base plot.}
 }
 \value{
 The \code{plot}-method of \code{power_curve}
-objects
+objects, which are the output of
+\code{\link[=power_curve]{power_curve()}}, returns \code{x}
+invisibly. It
 is called for its side effect.
 }
 \description{
@@ -81,15 +83,24 @@ individually.
 }
 \examples{
 
+# Specify the population model
+
 model_simple_med <-
 "
 m ~ x
 y ~ m + x
 "
 
-model_simple_med_es <- c("y ~ m" = "l",
-                         "m ~ x" = "m",
-                         "y ~ x" = "s")
+# Specify the effect sizes (population parameter values)
+
+model_simple_med_es <-
+"
+y ~ m: l
+m ~ x: m
+y ~ x: s
+"
+
+# Simulate datasets to check the model
 
 sim_only <- power4test(nrep = 10,
                        model = model_simple_med,
@@ -101,39 +112,7 @@ sim_only <- power4test(nrep = 10,
                        parallel = FALSE,
                        progress = FALSE)
 
-# By n
-
-out1 <- power4test_by_n(sim_only,
-                        nrep = 10,
-                        test_fun = test_parameters,
-                        test_args = list(par = "y~x"),
-                        n = c(25, 100, 200, 1000),
-                        by_seed = 1234,
-                        parallel = FALSE,
-                        progress = FALSE)
-
-pout1 <- power_curve(out1)
-model_simple_med <-
-"
-m ~ x
-y ~ m + x
-"
-
-model_simple_med_es <- c("y ~ m" = "l",
-                         "m ~ x" = "m",
-                         "y ~ x" = "s")
-
-sim_only <- power4test(nrep = 10,
-                       model = model_simple_med,
-                       pop_es = model_simple_med_es,
-                       n = 50,
-                       fit_model_args = list(fit_function = "lm"),
-                       do_the_test = FALSE,
-                       iseed = 1234,
-                       parallel = FALSE,
-                       progress = FALSE)
-
-# By n
+# By n: Do a test for different sample sizes
 
 out1 <- power4test_by_n(sim_only,
                         nrep = 10,
@@ -148,22 +127,7 @@ pout1 <- power_curve(out1)
 pout1
 plot(pout1)
 
-# By pop_es
-
-out2 <- power4test_by_es(sim_only,
-                             nrep = 10,
-                             test_fun = test_parameters,
-                             test_args = list(par = "y~x"),
-                             pop_es_name = "y ~ x",
-                             pop_es_values = seq(0, .7, .15),
-                             by_seed = 1234,
-                             parallel = FALSE,
-                             progress = FALSE)
-
-pout2 <- power_curve(out2)
-plot(pout2)
-
-# By pop_es
+# By pop_es: Do a test for different population values of a model parameter
 
 out2 <- power4test_by_es(sim_only,
                              nrep = 10,

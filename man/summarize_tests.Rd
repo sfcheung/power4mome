@@ -23,7 +23,7 @@ a \code{power4test} object.}
 \item{x}{The object to be printed.}
 
 \item{digits}{The numbers of digits
-after the decimal when print
+after the decimal when printing
 numeric results.}
 
 \item{...}{Optional arguments.
@@ -38,7 +38,7 @@ a list of the class \code{test_summary_list}.
 Each element contains a summary of a
 test stored. The elements are of
 the class \code{test_summary}, with
-these elments:
+these elements:
 \itemize{
 \item \code{test_attributes}: The stored
 information of a test, for printing.
@@ -53,7 +53,7 @@ replications used to compute each
 mean.
 }
 
-The \code{print} methods return \code{x} invisibly.
+The \code{print} methods returns \code{x} invisibly.
 They are called for their side
 effects.
 }
@@ -62,40 +62,66 @@ Extract and summarize
 test results.
 }
 \details{
-This function is used to extract
+The function \code{\link[=summarize_tests]{summarize_tests()}}
+is used to extract
 information from each test stored
 in a \code{power4test} object.
 
 The method \code{print.test_out_list()} is
-used to print the contest of a list
+used to print the content of a list
 of test stored in a \code{power4test}
 object, with the option to print
 just the names of tests.
 }
+\section{The role of \code{summarize_tests()} and related functions}{
+The function \code{\link[=summarize_tests]{summarize_tests()}} and
+related print methods are used by
+the all-in-one function
+\code{\link[=power4test]{power4test()}} and its \code{summary}
+method. Users usually do not
+call them directly, though
+developers can use this function to
+develop other functions for power
+analysis, or to build their own
+workflows to do the power analysis.
+}
+
 \examples{
+
+# Specify the model
 
 mod <-
 "
-m ~ a*x
-y ~ b*m + x
-ab := a * b
+m ~ x
+y ~ m + x
 "
 
-mod_es <- c("y ~ m" = "l",
-            "m ~ x" = "m",
-            "y ~ x" = "n")
+# Specify the population values
+
+es <-
+"
+y ~ m: l
+m ~ x: m
+y ~ x: n
+"
+
+# Simulated datasets
 
 sim_only <- power4test(nrep = 2,
                        model = mod,
-                       pop_es = mod_es,
+                       pop_es = es,
                        n = 100,
                        do_the_test = FALSE,
                        iseed = 1234)
 
+# Test the parameters in each dataset
+
 test_out <- power4test(object = sim_only,
                        test_fun = test_parameters)
 
-test_out
+# Print the summary
+
+summarize_tests(test_out)
 
 }
 \seealso{

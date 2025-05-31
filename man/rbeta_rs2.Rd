@@ -2,13 +2,13 @@
 % Please edit documentation in R/rbeta_rs2.R
 \name{rbeta_rs2}
 \alias{rbeta_rs2}
-\title{Random Beta Variable (User Range)}
+\title{Random Variable From a Beta Distribution (User Range)}
 \usage{
 rbeta_rs2(n = 10, bmean, bsd, blow = 0, bhigh = 1)
 }
 \arguments{
 \item{n}{The number of random numbers
-to generate. Default is 10.}
+to generate.}
 
 \item{bmean}{The population mean.}
 
@@ -41,7 +41,7 @@ desired population mean and standard
 deviation. The random numbers, drawn
 from a beta distribution by
 \code{\link[stats:Beta]{stats::rbeta()}} will then be
-rescaled with the desired range.
+rescaled to the desired population range.
 }
 \examples{
 set.seed(90870962)

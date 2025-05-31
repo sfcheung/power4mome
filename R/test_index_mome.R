@@ -52,7 +52,7 @@
 #'
 #' @examples
 #'
-#'
+#' # Specify the model
 #'
 #' mod <-
 #' "
@@ -60,10 +60,17 @@
 #' y ~ m
 #' "
 #'
-#' mod_es <- c("m ~ x" = "n",
-#'             "y ~ x" = "m",
-#'             "m ~ w" = "n",
-#'             "m ~ x:w" = "l")
+#' # Specify the population values
+#'
+#' mod_es <-
+#' "
+#' m ~ x: n
+#' y ~ x: m
+#' m ~ w: l
+#' m ~ x:w: l
+#' "
+#'
+#' # Simulate the data
 #'
 #' sim_only <- power4test(nrep = 2,
 #'                        model = mod,
@@ -72,6 +79,8 @@
 #'                        R = 100,
 #'                        do_the_test = FALSE,
 #'                        iseed = 1234)
+#'
+#' # Do the test in each replication
 #'
 #' test_out <- power4test(object = sim_only,
 #'                        test_fun = test_index_of_mome,
@@ -83,7 +92,6 @@
 #'
 #' print(test_out,
 #'       test_long = TRUE)
-#'
 #'
 #' @export
 test_index_of_mome <- function(fit = fit,

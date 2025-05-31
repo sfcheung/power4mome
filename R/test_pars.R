@@ -30,7 +30,7 @@
 #' [stats::confint()] applied to
 #' the output of [stats::lm()].
 #'
-#' ## Finding the names of parameters
+#' # Find the names of parameters
 #'
 #' To use the argument `pars`, the
 #' names as appeared in the function
@@ -89,7 +89,8 @@
 #' @param pars Optional. If set to
 #' a character vector, only parameters
 #' with `test_label` equal to values in
-#' `pars` will be returned. See Details
+#' `pars` will be returned. See the
+#' help page
 #' on valid names.
 #'
 #' @param op Optional. If set to a
@@ -115,18 +116,24 @@
 #'
 #' @examples
 #'
-#'
+#' # Specify the model
 #'
 #' mod <-
 #' "
-#' m ~ a*x
-#' y ~ b*m + x
-#' ab := a * b
+#' m ~ x
+#' y ~ m + x
 #' "
 #'
-#' mod_es <- c("y ~ m" = "l",
-#'             "m ~ x" = "m",
-#'             "y ~ x" = "n")
+#' # Specify the population values
+#'
+#' mod_es <-
+#' "
+#' y ~ m: l
+#' m ~ x: m
+#' y ~ x: n
+#' "
+#'
+#' # Simulate the data
 #'
 #' sim_only <- power4test(nrep = 2,
 #'                        model = mod,
@@ -135,11 +142,16 @@
 #'                        do_the_test = FALSE,
 #'                        iseed = 1234)
 #'
+#' # Do the tests in each replication
+#'
 #' test_out <- power4test(object = sim_only,
 #'                        test_fun = test_parameters)
 #'
 #' print(test_out,
 #'       test_long = TRUE)
+#'
+#' # Do the tests in each replication: Standardized solution
+#' # Delta method SEs will be used to do the tests
 #'
 #' test_out <- power4test(object = sim_only,
 #'                        test_fun = test_parameters,
@@ -147,6 +159,8 @@
 #'
 #' print(test_out,
 #'       test_long = TRUE)
+#'
+#' # Do the tests in each replication: Parameters with the selected operator
 #'
 #' test_out <- power4test(object = sim_only,
 #'                        test_fun = test_parameters,

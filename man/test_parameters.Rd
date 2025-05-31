@@ -33,7 +33,8 @@ fitted by \code{lavaan}.}
 \item{pars}{Optional. If set to
 a character vector, only parameters
 with \code{test_label} equal to values in
-\code{pars} will be returned. See Details
+\code{pars} will be returned. See the
+help page
 on valid names.}
 
 \item{op}{Optional. If set to a
@@ -127,8 +128,8 @@ confidence intervals based on
 the \emph{t} statistic, reported by
 \code{\link[stats:confint]{stats::confint()}} applied to
 the output of \code{\link[stats:lm]{stats::lm()}}.
-\subsection{Finding the names of parameters}{
-
+}
+\section{Find the names of parameters}{
 To use the argument \code{pars}, the
 names as appeared in the function
 \code{\link[=coef]{coef()}} must be used. For the
@@ -144,21 +145,27 @@ If not sure, the function
 \code{\link[=find_par_names]{find_par_names()}} can be used to
 find valid names.
 }
-}
+
 \examples{
 
-
+# Specify the model
 
 mod <-
 "
-m ~ a*x
-y ~ b*m + x
-ab := a * b
+m ~ x
+y ~ m + x
 "
 
-mod_es <- c("y ~ m" = "l",
-            "m ~ x" = "m",
-            "y ~ x" = "n")
+# Specify the population values
+
+mod_es <-
+"
+y ~ m: l
+m ~ x: m
+y ~ x: n
+"
+
+# Simulate the data
 
 sim_only <- power4test(nrep = 2,
                        model = mod,
@@ -167,11 +174,16 @@ sim_only <- power4test(nrep = 2,
                        do_the_test = FALSE,
                        iseed = 1234)
 
+# Do the tests in each replication
+
 test_out <- power4test(object = sim_only,
                        test_fun = test_parameters)
 
 print(test_out,
       test_long = TRUE)
+
+# Do the tests in each replication: Standardized solution
+# Delta method SEs will be used to do the tests
 
 test_out <- power4test(object = sim_only,
                        test_fun = test_parameters,
@@ -179,6 +191,8 @@ test_out <- power4test(object = sim_only,
 
 print(test_out,
       test_long = TRUE)
+
+# Do the tests in each replication: Parameters with the selected operator
 
 test_out <- power4test(object = sim_only,
                        test_fun = test_parameters,

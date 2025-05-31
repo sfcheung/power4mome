@@ -4,9 +4,29 @@
 #' test results.
 #'
 #' @details
-#' This function is used to extract
+#' The function [summarize_tests()]
+#' is used to extract
 #' information from each test stored
 #' in a `power4test` object.
+#'
+#' The method `print.test_out_list()` is
+#' used to print the content of a list
+#' of test stored in a `power4test`
+#' object, with the option to print
+#' just the names of tests.
+#'
+#' # The role of `summarize_tests()` and related functions
+#'
+#' The function [summarize_tests()] and
+#' related print methods are used by
+#' the all-in-one function
+#' [power4test()] and its `summary`
+#' method. Users usually do not
+#' call them directly, though
+#' developers can use this function to
+#' develop other functions for power
+#' analysis, or to build their own
+#' workflows to do the power analysis.
 #'
 #' @return
 #' The function [summarize_tests()] returns
@@ -14,7 +34,7 @@
 #' Each element contains a summary of a
 #' test stored. The elements are of
 #' the class `test_summary`, with
-#' these elments:
+#' these elements:
 #'
 #' - `test_attributes`: The stored
 #'  information of a test, for printing.
@@ -39,28 +59,40 @@
 #'
 #' @examples
 #'
+#' # Specify the model
+#'
 #' mod <-
 #' "
-#' m ~ a*x
-#' y ~ b*m + x
-#' ab := a * b
+#' m ~ x
+#' y ~ m + x
 #' "
 #'
-#' mod_es <- c("y ~ m" = "l",
-#'             "m ~ x" = "m",
-#'             "y ~ x" = "n")
+#' # Specify the population values
+#'
+#' es <-
+#' "
+#' y ~ m: l
+#' m ~ x: m
+#' y ~ x: n
+#' "
+#'
+#' # Simulated datasets
 #'
 #' sim_only <- power4test(nrep = 2,
 #'                        model = mod,
-#'                        pop_es = mod_es,
+#'                        pop_es = es,
 #'                        n = 100,
 #'                        do_the_test = FALSE,
 #'                        iseed = 1234)
 #'
+#' # Test the parameters in each dataset
+#'
 #' test_out <- power4test(object = sim_only,
 #'                        test_fun = test_parameters)
 #'
-#' test_out
+#' # Print the summary
+#'
+#' summarize_tests(test_out)
 #'
 #' @export
 summarize_tests <- function(object) {
@@ -79,14 +111,14 @@ summarize_tests <- function(object) {
 #' @param x The object to be printed.
 #'
 #' @param digits The numbers of digits
-#' after the decimal when print
+#' after the decimal when printing
 #' numeric results.
 #'
 #' @param ... Optional arguments.
 #' Not used.
 #'
 #' @return
-#' The `print` methods return `x` invisibly.
+#' The `print` methods returns `x` invisibly.
 #' They are called for their side
 #' effects.
 #'
@@ -171,13 +203,6 @@ print.test_summary <- function(x,
 }
 
 #' @rdname summarize_tests
-#'
-#' @details
-#' The method `print.test_out_list()` is
-#' used to print the contest of a list
-#' of test stored in a `power4test`
-#' object, with the option to print
-#' just the names of tests.
 #'
 #' @param test_long If `TRUE`, a detailed
 #' report will be printed.

@@ -1,4 +1,4 @@
-#' @title Random Lognormal Variable
+#' @title Random Variable From a Lognormal Distribution
 #'
 #' @description Generate random numbers
 #' from a lognormal distribution,
@@ -17,7 +17,7 @@
 #' mean and standard.
 #'
 #' @param n The number of random numbers
-#' to generate. Default is 10.
+#' to generate.
 #'
 #' @param mui The parameter `mui` to
 #' be used by [stats::rlnorm()].

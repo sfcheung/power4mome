@@ -10,37 +10,51 @@
 #' It is an all-in-one function for
 #' estimating the power of a test for
 #' a model, given the sample size
-#' and effect sizes.
+#' and effect sizes (population values
+#' of model parameters).
+#'
+#' @details
+#'
+#' # Workflow
 #'
 #' This is the workflow:
 #'
-#' - If an object with model and data
-#'  already generated is supplied
-#'  through `sim_all`, such as the
-#'  output of [sim_out()] or of
+#' - If `object` is an output
+#'  of the output
+#'  of a previous call to
 #'  [power4test()] with `do_the_test`
-#'  set to `FALSE`, the following steps
+#'  set to `FALSE` and so has only the
+#'  model and the simulated data,
+#'  the following steps
 #'  will be skipped and go directly to
 #'  doing the test.
 #'
 #'    - Call [sim_data()] to determine
 #'      the population model and
-#'      generate the datasets.
+#'      generate the datasets, using
+#'      arguments such as `model` and
+#'      `pop_es`.
 #'
-#'    - Call [fit_model()] to fit the
-#'      model to each of the datasets.
+#'    - Call [fit_model()] to fit a
+#'      model to each of the datasets,
+#'      which is the population model
+#'      by default.
 #'
 #'    - If `R` is not `NULL` and
 #'      `ci_type = "mc"`, call
 #'      [gen_mc()] to generate Monte
 #'      Carlo estimates using
-#'      [manymome::do_mc()].
+#'      [manymome::do_mc()]. The estimates
+#'      can be used by supported functions
+#'      such as [test_indirect_effect()].
 #
 #'    - If `R` is not `NULL` and
 #'      `ci_type = "boot"`, call
 #'      [gen_boot()] to generate
 #'      bootstrap estimates using
-#'      [manymome::do_boot()].
+#'      [manymome::do_boot()]. The estimates
+#'      can be used by supported functions
+#'      such as [test_indirect_effect()].
 #'
 #'    - Merge the results into a
 #'      `sim_out` object by calling
@@ -59,7 +73,7 @@
 #'
 #'    - [do_test()] will be called to do
 #'      the test in the fit output of
-#'      each datasets.
+#'      each dataset.
 #'
 #' - Return a `power4test` object which
 #'   include the output of `sim_out`
@@ -73,55 +87,129 @@
 #' as a parameter, given a specific
 #' effect sizes and sample sizes.
 #'
-#' ## Updating a Condition
+#' Detailed description on major
+#' arguments can be found in sections
+#' below.
 #'
-#' This function can also be used to
+#' NOTE: The technical internal workflow of
+#' of [power4test()] can be found in
+#' this page: <https://sfcheung.github.io/power4mome/articles/power4test_workflow.html>.
+#'
+#' # Updating a Condition
+#'
+#' The function [power4test()] can also be used to
 #' update a condition when only some
-#' selected aspects changed. For example,
-#' without calling this function with
+#' selected aspects is to be changed.
+#'
+#' For example,
+#' instead of calling this function with
 #' all the arguments set just to change
 #' the sample size, it can be called
 #' by supplying an existing
 #' `power4test` object and set only
 #' `n` to a new sample size. The data
 #' and the tests will be updated
-#' automatically.
+#' automatically. See the examples for
+#' an illustration.
 #'
-#' ## Multiple Models
+#' # Adding Another Test
 #'
-#' More than one model can be fitted to
-#' each replication. This is done
-#' by setting `fit_model_args` to
-#' a named list. The names are the names
-#' used to identify the models, and
-#' each element is a list of named
-#' list of arguments for a model.
+#' The function [power4test()] can also be used to
+#' add a test to the output from a
+#' previous call to [power4test()].
 #'
-#' For example:
+#' For example, after simulating the
+#' datasets and doing one test,
+#' the output can be set to `object`
+#' of [power4test()], and set only
+#' `test_fun` and, optionally,
+#' `test_fun_args` to do one more test
+#' on the generated datasets. The output
+#' will be the original
+#' object with the results of the new
+#' test added. See the examples for
+#' an illustration.
 #'
-#' \preformatted{
-#' fit_model_args = list(fit = list(),
-#'                       fit2 = list(model = mod2),
-#'                       fit3 = list(model = mod3))
-#' }
+#' # Model Fitting Arguments ('fit_model_args')
 #'
-#' Three models will be fitted. The
-#' first model is the model ued to
-#' generate the data, named `"fit"`.
-#' The second and first models are
-#' named `"fit2"` and `"fit3"`,
-#' respectively, with `"fit2"` fitted
-#' with `model = mod2` and `"fit3"`
-#' fitted with `model = mod3`.
+#' For power analysis, usually, the
+#' population model (`model`) is to be
+#' fitted, and there is no need to
+#' set `fit_model_args`.
 #'
-#' If Monte Carlos or bootstrap estimates
-#' are to be generated, they will be
-#' generated for each model, using the
-#' values for their arguments.
+#' If power analysis is to be conducted
+#' for fitting a model that is not the
+#' population model, of if non-default
+#' settings are desired when fitting
+#' a model, then the argument `fit_model_args`
+#' needed to be set to customize the
+#' call to [fit_model()].
+#'
+#' For example,
+#' users may want to examine the power
+#' of a test when a misspecified model
+#' is fitted, or the power of a test
+#' when MLR is used as the estimator
+#' when calling [lavaan::sem()].
+#'
+#' See the help page of [fit_model()]
+#' for some examples.
+#'
+#' @inheritSection ptable_pop Specify the Population Model by 'model'
+#'
+#' @inheritSection ptable_pop Specify 'pop_es' Using Named Vectors
+#'
+#' @inheritSection ptable_pop Specify 'pop_es' Using a Multiline String
+#'
+#' @inheritSection ptable_pop Set the Values for Effect Size Labels ('es1' and 'es2')
+#'
+#' @inheritSection sim_data Set 'number_of_indicators' and 'reliability'
+#'
+#' @inheritSection sim_data Specify The Distributions of Exogenous Variables Using 'x_fun'
+#'
+#' @inheritSection do_test Major Test-Related Arguments
+#'
+# It is a known issue that inherited
+# section cannot be placed before @details
+# https://github.com/r-lib/roxygen2/issues/900
+#
+#
+# This advanced feature to be introduced later
+# #' ## Multiple Models
+# #'
+# #' More than one model can be fitted to
+# #' each replication. This is done
+# #' by setting `fit_model_args` to
+# #' a named list. The names are the names
+# #' used to identify the models, and
+# #' each element is a list of named
+# #' list of arguments for a model.
+# #'
+# #' For example:
+# #'
+# #' \preformatted{
+# #' fit_model_args = list(fit = list(),
+# #'                       fit2 = list(model = mod2),
+# #'                       fit3 = list(model = mod3))
+# #' }
+# #'
+# #' Three models will be fitted. The
+# #' first model is the model ued to
+# #' generate the data, named `"fit"`.
+# #' The second and first models are
+# #' named `"fit2"` and `"fit3"`,
+# #' respectively, with `"fit2"` fitted
+# #' with `model = mod2` and `"fit3"`
+# #' fitted with `model = mod3`.
+# #'
+# #' If Monte Carlos or bootstrap estimates
+# #' are to be generated, they will be
+# #' generated for each model, using the
+# #' values for their arguments.
 #'
 #' @return
 #' An object of the class `power4test`,
-#' which is a list of with two elements:
+#' which is a list with two elements:
 #'
 #' - `sim_all`: The output of [sim_out()].
 #'
@@ -133,10 +221,21 @@
 #'    [power4test()] can add new tests
 #'    to a `power4test` object.
 #'
+#' @inheritParams do_test
+#'
+#' @inheritParams fit_model
+#'
+#' @inheritParams ptable_pop
+#'
+#' @inheritParams sim_data
+#'
 #' @param object Optional. If set to a
 #' `power4test` object, it will be
 #' updated using the value(s) in `n`,
-#' `pop_es`, and/or `nrep`. Default is `NULL`.
+#' `pop_es`, and/or `nrep` if they changed,
+#' or a new test will be conducted and
+#' added to `objet`. See the help page
+#' for details. Default is `NULL`.
 #'
 #' @param nrep The number of replications
 #' to generate the simulated datasets.
@@ -153,67 +252,40 @@
 #' object using `model` and `pop_es`.
 #'
 #' @param model The `lavaan` model
-#' syntax of the population model.
-#' Required. Ignored if `ptable` is
-#' specified. See 'Details' of
-#' [ptable_pop()] on how to use it for
-#' models with latent factors
-#' and indicators. Ignored if `ptable` is
+#' syntax of the population model,
+#' to be used by [ptable_pop()].
+#' See 'Details' of
+#' on how to specify the model.
+#' Ignored if `ptable` is
 #' specified.
 #'
-#' @param pop_es The character vector to
-#' specify population effect sizes. See
-#' 'Details' of [ptable_pop()] on how to
-#' set the effect sizes for this
-#' argument. Ignored if `ptable` is
+#' @param pop_es The character vector or
+#' multiline string to
+#' specify population effect sizes
+#' (population values of parameters). See
+#' the help page on how to specify this
+#' argument.
+#' Ignored if `ptable` is
 #' specified.
 #'
-#' @param standardized Logical. If
-#' `TRUE`, the default, variances and
-#' error variances are scaled to ensure
-#' the population variances of the
-#' endogenous variables are close to
-#' one, and hence the effect sizes are
-#' standardized effect sizes if the
-#' variances of the continuos exogenous
-#' variables are also equal to one.
+# @param standardized <- Inherited
 #'
 #' @param n The sample size for each
 #' dataset. Default is 100.
 #'
-#' @param iseed The seed for the random
-#' number generator. Default is `NULL`
-#' and the seed is not changed.
+# @param iseed <- Inherited
 #'
-#' @param number_of_indicators A named
-#' vector to specify the number of
-#' indicators for each factors. See
-#' 'Details' of [sim_data()] on how to set this
-#' argument. Default is `NULL` and all
-#' variables in the model syntax are
-#' observed variables.
+# @param number_of_indicators <- Inherited
 #'
-#' @param reliability A named vector
-#' to set the reliability coefficient
-#' of each set of indicators. Default
-#' is `NULL`. See 'Details' of
-#' [sim_data()] on how to set this
-#' argument.
+# @param reliability <- Inherited
 #'
-#' @param x_fun The function(s) used to
-#' generate the exogenous variables. If
-#' not supplied, or set to `list()`, the
-#' default, the variables are generated
-#' from a multivariate normal
-#' distribution. See 'Details' of
-#' [sim_data()] on how to use this
-#' argument.
+# @param x_fun <- Inherited
 #'
 #' @param fit_model_args A list of the
 #' arguments to be passed to [fit_model()]
 #' when fitting the
 #' model.
-#' Should be a named argument
+#' Should be a named list
 #' with names being the names of the
 #' arguments.
 #'
@@ -231,7 +303,10 @@
 #' `"mc"` for Monte Carlo method
 #' (the default) or `"boot"` for
 #' nonparametric bootstrapping method.
-#' See [sim_data()] on the details.
+#' Relevant for test functions that
+#' make use of estimates generate by
+#' [gen_boot()] or [gen_mc()], such as
+#' [test_indirect_effect()].
 #'
 #' @param gen_mc_args A list of
 #' arguments to be passed to
@@ -251,40 +326,6 @@
 #' arguments. Used only if
 #' `ci_type` is `"boot".
 #'
-#' @param test_fun A function to do the
-#' test. See the help page of
-#' [do_test()] for the requirements of
-#' this function.
-#'
-#' @param test_args A list of arguments
-#' to be passed to the `test_fun`
-#' function. Default is `list()`.
-#'
-#' @param map_names A named character
-#' vector specifying how the content of
-#' the element `extra` in
-#' each replication of `sim_all` map
-#' to the argument of `test_fun`.
-#' Default is `c(fit = "fit")`,
-#' indicating that the element `fit`
-#' in the element `extra` is set to
-#' the argument `fit` of `test_fun`.
-#' That is, for the first replication,
-#' `fit = sim_out[[1]]$extra$fit` when
-#' calling `test_fun`.
-#'
-#' @param results_fun The function to be
-#' used to extract the test results.
-#' See `Details` of [do_test()] for the requirements
-#' of this function. Default is `NULL`,
-#' assuming that the output of
-#' `test_fun` can be used directly.
-#'
-#' @param results_args A list of
-#' arguments to be passed to the
-#' `results_fun` function. Default is
-#' `list()`.
-#'
 #' @param test_name String. The name
 #' of the test. Default is `NULL`,
 #' and the name will be created from
@@ -300,15 +341,19 @@
 #'
 #' @param do_the_test If `TRUE`,
 #' [do_test()] will be called to do the
-#' specified test in the fit output of
-#' each dataset.
+#' test specified by `test_fun` on the
+#' fit output of each dataset.
 #'
 #' @param sim_all If set to either a
 #' `sim_out` object (the output of
 #' [sim_out()] or a `power4test` object
 #' (the output of [power4test()]), the
 #' stored datasets and fit outputs will
-#' be used for doing the test.
+#' be used for doing the test. Setting
+#' `object` to the output of [power4test()]
+#' is now the preferred method, but this
+#' argument is kept for backward
+#' compatibility.
 #'
 #' @param iseed The seed for the random
 #' number generator. Default is `NULL`
@@ -323,64 +368,45 @@
 #'
 #' @param progress If `TRUE`, the progress
 #' of each step will be displayed.
-#' Default is `FALSE.
+#' Default is `FALSE`.
 #'
 #' @param ncores The number of CPU
 #' cores to use if parallel processing
 #' is used.
 #'
-#' @param es1 A named vector to set the
-#' values for each label of the effect
-#' size of correlations and regression
-#' paths.
-#' Default is `c("n" = .00, "nil" = .00, "s" = .10, "m" = .30, "l" = .50)`.
-#' Used only if `pop_es` is a named
-#' vector. See [ptable_pop()] for
-#' further information.
+# @param es1 <- Inherited
 #'
-#' @param es2 A named vector to set the
-#' values for each label of the effect
-#' size of product term.
-#' Default is `c("n" = .00, "nil" = .00, "s" = .05, "m" = .10, "l" = .15)`.
-#' Used only if `pop_es` is a named
-#' vector. See [ptable_pop()] for
-#' further information.
+# @param es2 <- Inherited
 #'
-#' @param n_std The sample size used to
-#' determine the error variances by
-#' simulation when `std_force_monte_carlo`
-#' is `TRUE`. Default is 100000.
+# @param n_std <- Inherited
 #'
-#' @param std_force_monte_carlo Logical.
-#' If `FALSE`, the default,
-#' standardization is done analytically
-#' if the model has no product terms,
-#' and by simulation if the model has
-#' product terms. If `TRUE`, simulation
-#' will be used whether the model has
-#' product terms or not. Always fall
-#' back to standardization if
-#' analytical standardization failed.
+# @param std_force_monte_carlo <- Inherited
 #'
 #' @examples
 #'
+#' # Specify the model
+#'
 #' model_simple_med <-
 #' "
-#' m ~ a * x
-#' y ~ b * m + x
-#' ab := a * b
+#' m ~ x
+#' y ~ m + x
 #' "
 #'
-#' model_simple_med_es <- c("y ~ m" = "l",
-#'                          "m ~ x" = "m",
-#'                          "y ~ x" = "n")
+#' # Specify the population values
+#'
+#' model_simple_med_es <-
+#' "
+#' m ~ x: m
+#' y ~ m: l
+#' y ~ x: n
+#' "
 #'
 #' out <- power4test(nrep = 50,
 #'                   model = model_simple_med,
 #'                   pop_es = model_simple_med_es,
 #'                   n = 100,
 #'                   test_fun = test_parameters,
-#'                   test_args = list(pars = "a"),
+#'                   test_args = list(pars = "m~x"),
 #'                   iseed = 1234,
 #'                   parallel = FALSE,
 #'                   progress = TRUE)
@@ -388,12 +414,26 @@
 #' print(out,
 #'       test_long = TRUE)
 #'
+#' # Change the sample size
+#'
+#' out1 <- power4test(out,
+#'                    n = 200,
+#'                    iseed = 1234,
+#'                    parallel = FALSE,
+#'                    progress = TRUE)
+#'
+#' print(out1,
+#'       test_long = TRUE)
+#'
 #' # Add one more test
 #'
-#' out <- power4test(out,
-#'                   test_fun = test_parameters,
-#'                   test_args = list(op = ":="))
-#' print(out,
+#' out2 <- power4test(out,
+#'                    test_fun = test_parameters,
+#'                    test_args = list(pars = "y~x"),
+#'                    parallel = FALSE,
+#'                    progress = TRUE)
+#'
+#' print(out2,
 #'       test_long = TRUE)
 #'
 #' @export
@@ -436,8 +476,8 @@ power4test <- function(object = NULL,
                                "s" = .05,
                                "m" = .10,
                                "l" = .15),
-                       n_std = 1090000,
-                       std_force_monte_carlo= FALSE) {
+                       n_std = 100000,
+                       std_force_monte_carlo = FALSE) {
 
   # TOOD:
   # - Should allow only limited changes

@@ -3,15 +3,16 @@
 #' @description Estimate the relation
 #' between power and a characteristic,
 #' such as sample size or population
-#' effect size.
+#' effect size (population value of
+#' a model parameter).
 #'
-#' @details It retrieve the information
+#' @details It retrieves the information
 #' from the output of
 #' [power4test_by_n()] or
 #' [power4test_by_es()], and
 #' estimate the power curve: the
 #' relation between the characteristic
-#' being varied, sample size for
+#' varied, sample size for
 #' [power4test_by_n()] and the
 #' population effect size for
 #' [power4test_by_es()], and the
@@ -19,8 +20,9 @@
 #' by [power4test_by_n()] or
 #' [power4test_by_es()]. This
 #' rejection rate is the power when the
+#' null hypothesis is false (e.g., the
 #' population value of the effect size
-#' being tested is nonzero.
+#' being tested is nonzero).
 #'
 #' The model fitted is *not* intended to
 #' be a precise model for the relation
@@ -28,12 +30,15 @@
 #' crude estimate based on the limited
 #' number of values of the
 #' characteristic (e.g., sample size)
-#' examined. The model is intended to be
+#' examined, which can be as small as
+#' four or even smaller. The model is
+#' intended to be
 #' used for only for the range covered,
 #' and for estimating the probable
 #' sample size or effect size with a
 #' desirable level of power. This value
-#' will then be studied by simulation
+#' should then be studied by higher
+#' precision through simulation
 #' using functions such as
 #' [power4test()].
 #'
@@ -63,7 +68,10 @@
 #'   the predictor.
 #'
 #' The output can then be plotted to
-#' visualize the power curve.
+#' visualize the power curve, using
+#' the `plot` method ([plot.power_curve()])
+#' for the output
+#' of [power_curve()].
 #'
 #' This function can be used directly,
 #' but is also used internally by
@@ -74,7 +82,7 @@
 #' `power_curve` object, with the
 #' following elements:
 #'
-#' - `fit`: The model, which is the
+#' - `fit`: The model fitted, which is the
 #'    output of [stats::nls()],
 #'    [stats::glm()], or [stats::lm()].
 #'
@@ -102,19 +110,21 @@
 #' will be fitted successively by
 #' [stats::nls()], with the first
 #' model fitted successfully adopted.
-#' The response variable must be named
+#' The response variable in the formula must be named
 #' `reject`, and the predictor named
 #' `x`. Whether `x` represents `n` or
 #' `es` depends on the class of `object`.
 #' If `NULL`, the default, it will be
-#' determined based on teh type of
+#' determined internally based on the type of
 #' `object`.
 #'
 #' @param start Either a named vector
 #' of the start value(s) of parameter(s)
 #' in `formula`, or a list of named
 #' vectors of the starting value(s)
-#' of the list of formula(s).
+#' of the list of formula(s). If `NULL`,
+#' the default, they will be determined
+#' internally.
 #'
 #' @param lower_bound Either a named vector
 #' of the lower bound(s) of parameter(s)
@@ -122,6 +132,9 @@
 #' vectors of the lower bound(s)
 #' for the list of formula(s). They will
 #' be passed to `lower` of [stats::nls()].
+#' If `NULL`, the default, it will be
+#' determined internally based on the type of
+#' `object`.
 #'
 #' @param upper_bound Either a named vector
 #' of the upper bound(s) of parameter(s)
@@ -129,30 +142,39 @@
 #' vectors of the upper bound(s)
 #' for the list of formula(s). They will
 #' be passed to `upper` of [stats::nls()].
+#' If `NULL`, the default, it will be
+#' determined internally based on the type of
+#' `object`.
 #'
 #' @param nls_args A named list of
 #' arguments to be used when calling
 #' [stats::nls()]. Used to override
 #' internal default, such as the
 #' algorithm (default is `"port"`).
-#' Used with cautions.
+#' Use this argument with cautions.
 #'
 #' @param nls_control A named list of
 #' arguments to be passed the `control`
-#' argument of [stats::nls()] when
-#' estimating the relation between
-#' power and sample size. The values will
+#' argument of [stats::nls()]. The values will
 #' override internal default values,
 #' and also override `nls_args`.
+#' Use this argument with cautions.
 #'
 #' @param verbose Logical. Whether
-#' the messages will be printed when
+#' messages will be printed when
 #' trying different models.
 #'
 #' @seealso [power4test_by_n()] and [power4test_by_es()]
+#' for the output supported by
+#' [power_curve()], [plot.power_curve()]
+#' for the `plot` method and
+#' [predict.power_curve()]
+#' for the `predict` method of the output
+#' of [power_curve()].
 #'
 #' @examples
 #'
+#' # Specify the population model
 #'
 #' model_simple_med <-
 #' "
@@ -160,9 +182,16 @@
 #' y ~ m + x
 #' "
 #'
-#' model_simple_med_es <- c("y ~ m" = "l",
-#'                          "m ~ x" = "m",
-#'                          "y ~ x" = "s")
+#' # Specify the effect sizes (population parameter values)
+#'
+#' model_simple_med_es <-
+#' "
+#' y ~ m: l
+#' m ~ x: m
+#' y ~ x: s
+#' "
+#'
+#' # Simulate datasets to check the model
 #'
 #' sim_only <- power4test(nrep = 10,
 #'                        model = model_simple_med,
@@ -174,7 +203,7 @@
 #'                        parallel = FALSE,
 #'                        progress = FALSE)
 #'
-#' # By n
+#' # By n: Do a test for different sample sizes
 #'
 #' out1 <- power4test_by_n(sim_only,
 #'                         nrep = 10,
@@ -189,7 +218,7 @@
 #' pout1
 #' plot(pout1)
 #'
-#' # By pop_es
+#' # By pop_es: Do a test for different population values of a model parameter
 #'
 #' out2 <- power4test_by_es(sim_only,
 #'                              nrep = 10,
@@ -404,7 +433,7 @@ power_curve <- function(object,
 #' @return
 #' The `print` method of `power_curve`
 #' object returns `x` invisibly. Called
-#' for its sideeffect.
+#' for its side-effect.
 #'
 #' @export
 print.power_curve <- function(x,

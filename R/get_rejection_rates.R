@@ -8,15 +8,16 @@
 #' @details
 #' For a `power4test` object,
 #' it loops over the tests stored
-#' in a `power4test` object and retrieve
+#' in a `power4test` object and retrieves
 #' the rejection rate of each test.
 #'
 #' @return
 #' The `rejection_rates` method returns
 #' a `rejection_rates_df` object,
 #' with a `print` method.
-#' If the input is a
-#' `power4test` object, it is
+#'
+#' If the input (`object`) is a
+#' `power4test` object, the output is
 #' a data-frame like object with the
 #' number of
 #' rows equal to the number of tests.
@@ -25,13 +26,14 @@
 #' conduct one test for each parameters.
 #' Each such test is counted as one
 #' test.
-#' The data frame has these columns:
+#'
+#' The data frame has at least these columns:
 #'
 #' - `test`: The name of the test.
 #'
 #' - `label`: The label for each
 #'  test, or `"Test"` if a test only
-#'  does on test (e.g., [test_indirect_effect()]).
+#'  does one test (e.g., [test_indirect_effect()]).
 #'
 #' - `pvalid`: The proportion of valid
 #'  tests across all replications.
@@ -42,7 +44,7 @@
 #'
 #' @param object The object
 #' from which the rejection rates
-#' are to be extracted, such as
+#' are to be computed, such as
 #' a `power4test` object,
 #' a `power4test_by_n` object,
 #' or a `power4test_by_es` object.
@@ -51,13 +53,16 @@
 #' the `print` method, these arguments
 #' will be passed to the `print` method
 #' of `data.frame` objects [print.data.frame()].
-#' Not used for other methods.
+#' Not used by other methods.
 #'
 #' @seealso [power4test()],
 #' [power4test_by_n()], and
-#' [power4test_by_es()].
+#' [power4test_by_es()], which are
+#' supported by this method.
 #'
 #' @examples
+#'
+#' # Specify the population model
 #'
 #' model_simple_med <-
 #' "
@@ -65,9 +70,16 @@
 #' y ~ m + x
 #' "
 #'
-#' model_simple_med_es <- c("y ~ m" = "l",
-#'                          "m ~ x" = "m",
-#'                          "y ~ x" = "n")
+#' # Specify the effect sizes (population parameter values)
+#'
+#' model_simple_med_es <-
+#' "
+#' y ~ m: l
+#' m ~ x: m
+#' y ~ x: n
+#' "
+#'
+#' # Generate some datasets to check the model
 #'
 #' sim_only <- power4test(nrep = 4,
 #'                        model = model_simple_med,
@@ -79,6 +91,8 @@
 #'                        do_the_test = FALSE,
 #'                        iseed = 1234)
 #'
+#' # Do the test 'test_indirect_effect' on each datasets
+#'
 #' test_out <- power4test(object = sim_only,
 #'                        test_fun = test_indirect_effect,
 #'                        test_args = list(x = "x",
@@ -86,8 +100,15 @@
 #'                                         y = "y",
 #'                                         boot_ci = TRUE,
 #'                                         mc_ci = FALSE))
+#'
+#' # Do the test 'test_parameters' on each datasets
+#' # and add the results to 'test_out'
+#'
 #' test_out <- power4test(object = test_out,
 #'                        test_fun = test_parameters)
+#'
+#' # Compute and print the rejection rates for stored tests
+#'
 #' rejection_rates(test_out)
 #'
 #' # See the help pages of power4test_by_n() and power4test_by_es()
@@ -108,7 +129,7 @@ rejection_rates.default <- function(object,
 
 #' @param all_columns If `TRUE`, all
 #' columns stored by a test will be
-#' printed. Default is `FALSE` and
+#' extracted. Default is `FALSE` and
 #' only essential columns related to
 #' power will be printed.
 #'
@@ -116,17 +137,20 @@ rejection_rates.default <- function(object,
 #' intervals for the rejection rates
 #' (column `reject` or `sig`) will
 #' be computed. Normal approximation
-#' is used.
+#' is used in forming the confidence
+#' intervals.
 #'
 #' @param level The level of confidence
 #' for the confidence intervals, if
-#' `ci` is `TRUE`.
+#' `ci` is `TRUE`. Default is .95,
+#' denoting 95%.
 #'
 #' @param se If `TRUE`, standard errors
 #' for the rejection rates
 #' (column `reject` or `sig`) will
 #' be computed. Normal approximation
-#' is used.
+#' is used to compute the standard
+#' errors.
 #'
 #' @export
 #' @rdname rejection_rates
@@ -337,15 +361,15 @@ rbind_adv <- function(...) {
 #' `rejection_rates_df`.
 #' It is a data frame which is
 #' similar to the output of
-#' [rejection_rates()], with a
-#' column added for the effect size (`pop_es_name` and
+#' [rejection_rates()], with two
+#' columns added for the effect size (`pop_es_name` and
 #' `pop_es_values`)
 #' for each test.
 #'
 #' @details
 #' The `rejection_rates` method for
 #' `power4test_by_es` objects
-#' is used to extract the rejection
+#' is used to compute the rejection
 #' rates from a `power4test_by_es`
 #' object, with effect sizes added to
 #' the output.
@@ -386,7 +410,7 @@ rejection_rates.power4test_by_es <- function(object,
 #' @details
 #' The `rejection_rates` method for
 #' `power4test_by_n` objects
-#' is used to extract the rejection
+#' is used to compute the rejection
 #' rates, with sample sizes added to
 #' the output.
 #'
@@ -414,8 +438,8 @@ rejection_rates.power4test_by_n <- function(object,
 #' object to be printed.
 #'
 #' @param digits The number of digits
-#' after the decimal place to be
-#' printed.
+#' to be printed
+#' after the decimal.
 #'
 #' @param annotation Logical. Whether
 #' additional notes will be printed.
@@ -423,6 +447,12 @@ rejection_rates.power4test_by_n <- function(object,
 #' @param abbreviate_col_names Logical.
 #' Whether some column names will be
 #' abbreviated.
+#'
+#' @return
+#' The `print` method of a
+#' `rejection_rates_df` object return
+#' the object invisibly. It is called
+#' for its side-effect.
 #'
 #' @rdname rejection_rates
 #' @export
@@ -560,5 +590,5 @@ print.rejection_rates_df <- function(x,
     catwrap(paste0("- Refer to the tests for the meanings of other columns."),
             exdent = 2)
   }
-
+  invisible(x)
 }

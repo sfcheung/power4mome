@@ -1,4 +1,4 @@
-#' @title Random Beta Variable (User Range)
+#' @title Random Variable From a Beta Distribution (User Range)
 #'
 #' @description Generate random numbers
 #' from a beta distribution, rescaled to
@@ -13,10 +13,10 @@
 #' deviation. The random numbers, drawn
 #' from a beta distribution by
 #' [stats::rbeta()] will then be
-#' rescaled with the desired range.
+#' rescaled to the desired population range.
 #'
 #' @param n The number of random numbers
-#' to generate. Default is 10.
+#' to generate.
 #'
 #' @param bmean The population mean.
 #'

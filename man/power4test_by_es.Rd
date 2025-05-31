@@ -22,8 +22,9 @@ power4test_by_es(
 \item{object}{A \code{power4test} object,
 or a \code{power4test_by_es} object.
 If it is a \code{power4test_by_es} object,
-the first element will be used
-for running the simulation.}
+the first element, which is a
+\code{power4test} object, will be used
+as the value of this argument.}
 
 \item{pop_es_name}{The name of the
 parameter. See the help page
@@ -41,7 +42,7 @@ displayed.}
 
 \item{...}{For \code{\link[=power4test_by_es]{power4test_by_es()}},
 they are arguments to be passed
-to \code{\link[=power4test]{power4test()}}. For \code{\link[=power4test_by_es]{power4test_by_es()}},
+to \code{\link[=power4test]{power4test()}}. For \code{\link[=c.power4test_by_es]{c.power4test_by_es()}},
 they are \code{\link[=power4test_by_es]{power4test_by_es()}} outputs
 to be combined together.}
 
@@ -57,23 +58,27 @@ it will be used to generate the
 number of replications (\code{nrep}) for
 each call to \code{\link[=power4test]{power4test()}}.
 If set to a numeric vector of the
-same length as \code{n}, then these are
+same length as \code{pop_es_values}, then these are
 the \code{nrep} values for each of the
 calls, allowing for different numbers
-of replications.
+of replications for the population values.
 If \code{NULL}, the default, then the
-original \code{nrep} will be used.}
+original \code{nrep} will be used.
+This argument is used by
+\code{\link[=x_from_power]{x_from_power()}} for efficiency, and
+is rarely used when calling
+this function directly.}
 
 \item{save_sim_all}{If \code{FALSE},
-the data in each
-\code{power4test} object for each
-value is not saved, to reduce
+the dataset in the
+\code{power4test} objects are not saved,
+to reduce
 the size of the output. Default
 is \code{TRUE}.}
 
-\item{sort}{WHen combining \code{power4test_by_es}
+\item{sort}{WHen combining the
 objects, whether they will be sorted
-by effect size. Default is \code{TRUE}.}
+by population values. Default is \code{TRUE}.}
 
 \item{skip_checking_models}{Whether
 the check of the data generation model
@@ -82,32 +87,34 @@ Should be set to \code{FALSE} only when
 users are certain the they are based
 on the same model, or when the model
 is not saved (e.g., \code{save_sim_all}
-set to \code{FALSE} when calling
-\code{power4test_by_es()}).}
+set to \code{FALSE} when the objects
+were generated).
+This argument is used by
+\code{\link[=x_from_power]{x_from_power()}} for efficiency, and
+is rarely used when calling
+the \code{c} method directly.}
 }
 \value{
 The function
 \code{\link[=power4test_by_es]{power4test_by_es()}} returns a
 \code{power4test_by_es} object, which is a
 list of \code{power4test} objects, one for
-each effect size.
+each population value of the parameter.
 
 The method \code{\link[=c.power4test_by_es]{c.power4test_by_es()}} returns
 a \code{power4test_by_es} object with
 all the elements (tests for different
-sample sizes) combined.
+values of \code{pop_es_values}) combined.
 }
 \description{
 Estimate power for a
-range of effect sizes.
-
-The method \code{\link[=c.power4test_by_es]{c.power4test_by_es()}}
-is used to combine tests from different
-runs of \code{\link[=power4test_by_es]{power4test_by_es()}}.
+set of effect sizes (population
+values of a model parameter).
 }
 \details{
 This function regenerates
 datasets for a set of effect sizes
+(population values of a model parmeter)
 and does the stored tests in each of
 them.
 
@@ -118,10 +125,16 @@ must be set to instruct \code{\link[=power4test]{power4test()}}
 on the tests to be conducted.
 
 It is usually used to examine the
-power over a range of effect sizes.
+power over a sets of effect sizes
+(population values).
+
+The method \code{\link[=c.power4test_by_es]{c.power4test_by_es()}}
+is used to combine tests from different
+runs of \code{\link[=power4test_by_es]{power4test_by_es()}}.
 }
 \examples{
 
+# Specify the model
 
 model_simple_med <-
 "
@@ -129,9 +142,14 @@ m ~ x
 y ~ m + x
 "
 
-model_simple_med_es <- c("y ~ m" = "l",
-                         "m ~ x" = "m",
-                         "y ~ x" = "n")
+# Specify the population values
+
+model_simple_med_es <-
+"
+m ~ x: m
+y ~ m: l
+y ~ x: n
+"
 
 sim_only <- power4test(nrep = 2,
                        model = model_simple_med,
@@ -150,9 +168,6 @@ test_out <- power4test(object = sim_only,
                                         y = "y",
                                         boot_ci = TRUE,
                                         mc_ci = FALSE))
-
-power_all_test_only_new_es <- power4test(object = test_out,
-                                         pop_es = c("y ~ m" = ".10"))
 
 out <- power4test_by_es(test_out,
                             pop_es_name = "y ~ m",

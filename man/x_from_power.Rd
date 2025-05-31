@@ -39,11 +39,13 @@ x_from_power(
 \item{object}{A \code{power4test} object,
 which is the output of \code{\link[=power4test]{power4test()}}.}
 
-\item{x}{The output of
-\code{\link[=x_from_power]{x_from_power()}}, the
-\code{print} method of
-an \code{x_from_power} object,
-which is the output of
+\item{x}{For \code{\link[=x_from_power]{x_from_power()}},
+\code{x} set the value to
+be searched. Can be \code{"n"}, the sample
+size, or \code{"es"}, the population value
+of a parameter (set by \code{pop_es_name}).
+For the \code{print} method of \code{x_from_power}
+objects, this is the output of
 \code{\link[=x_from_power]{x_from_power()}}.}
 
 \item{pop_es_name}{The name of the
@@ -68,7 +70,7 @@ up if not an integer.
 \item{ci_level}{The level of confidence
 of the confidence intervals computed
 for the estimated power. Default is
-.95.}
+.95, denoting 95\%.}
 
 \item{power_min, power_max}{The minimum
 and maximum values, respectively,
@@ -78,7 +80,7 @@ try in each trail. Default is .01.}
 
 \item{x_interval}{A vector of
 two values, the minimum value
-and the maximum sample values, in
+and the maximum values of \code{x}, in
 the search for the values
 (sample sizes or population values).}
 
@@ -102,9 +104,10 @@ the searching progress is reported.}
 
 \item{simulation_progress}{Logical.
 Whether the progress in each call
-to \code{\link[=power4test]{power4test()}} or \code{\link[=power4test_by_n]{power4test_by_n()}}
+to \code{\link[=power4test]{power4test()}}, \code{\link[=power4test_by_n]{power4test_by_n()}},
+or \code{\link[=power4test_by_es]{power4test_by_es()}}
 is shown. To be passed to
-the \code{progress} argument of these two
+the \code{progress} argument of these
 functions.}
 
 \item{max_trials}{The maximum number
@@ -123,9 +126,10 @@ in each call to \code{\link[=power4test]{power4test()}},
 Monte Carlo simulation or
 bootstrapping samples in the final
 stage. The \code{R} in calling
-\code{\link[=power4test]{power4test()}} or \code{\link[=power4test_by_n]{power4test_by_n()}}
+\code{\link[=power4test]{power4test()}}, \code{\link[=power4test_by_n]{power4test_by_n()}},
+or \code{\link[=power4test_by_es]{power4test_by_es()}}
 will be stepped up to this value
-when approaching to the target
+when approaching the target
 power. Do not need to be very large
 because the goal is to estimate
 power by replications, not for high
@@ -153,17 +157,18 @@ possible if many stages of
 parallel processing is involved.}
 
 \item{x_include_interval}{Logical.
-Whether \code{x_interval} is mandatory
+Whether the minimum and maximum
+values in \code{x_interval} are mandatory
 to be included in the values
 to be searched.}
 
 \item{power_model}{The nonlinear
 model to be used when estimating
 the relation between power and
-sample size. Should be a formula
+\code{x}. Should be a formula
 acceptable by \code{\link[stats:nls]{stats::nls()}},
 with \code{reject} on the left-hand side,
-and \code{x} (stands for sample size)
+and \code{x}
 on the right-hand
 side, with one or more parameters.
 Can also be set to a list of
@@ -203,16 +208,17 @@ default values.}
 arguments to be passed the \code{control}
 argument of \code{\link[stats:nls]{stats::nls()}} when
 estimating the relation between
-power and sample size. The values will
+power and \code{x}. The values will
 override internal default values,
-and also override \code{nls_args}.}
+and also override \code{nls_args}.
+Use this argument with cautions.}
 
 \item{nls_args}{A named list of
 arguments to be used when calling
 \code{\link[stats:nls]{stats::nls()}}. Used to override
 internal default, such as the
 algorithm (default is \code{"port"}).
-Used with cautions.}
+Use this argument with cautions.}
 
 \item{save_sim_all}{If \code{FALSE},
 the default, the data in each
@@ -231,7 +237,7 @@ Not used for now.}
 }
 \value{
 The function \code{\link[=x_from_power]{x_from_power()}}
-returns a \code{x_from_power} object,
+returns an \code{x_from_power} object,
 which is a list with the following
 elements:
 \itemize{
@@ -250,17 +256,18 @@ examined.
 rejection rates for all the values
 examined.
 \item \code{x_final}: The sample size or
-population values in the
-solution. \code{NA} if solution not found.
+population value in the
+solution. \code{NA} if a solution not found.
 \item \code{power_final}: The estimated power
 of the value in the solution.
-\code{NA} if solution not found.
+\code{NA} if a solution not found.
 \item \code{i_final}: The position of the
 solution in \code{power4test_trials}.
-\code{NA} if solution not found.
+\code{NA} if a solution not found.
 \item \code{ci_final}: The confidence interval
-of the estimated power in the solution.
-\code{NA} if solution not found.
+of the estimated power in the solution,
+formed by normal approximation.
+\code{NA} if a solution not found.
 \item \code{ci_level}: The level of confidence
 of \code{ci_final}.
 \item \code{nrep_final}: The number of
@@ -309,11 +316,6 @@ such as effect sizes) or effect size
 size) with power to
 detect an effect close to a target
 value.
-
-The \code{print} method only print
-basic information. Call
-\code{\link[=summary.x_from_power]{summary.x_from_power()}} and its
-\code{print} method for detailed output.
 }
 \details{
 This is how to use this function:
@@ -334,11 +336,11 @@ the previous step. This
 function will iteratively repeat
 the analysis on either other sample
 sizes, or other values for a
-selected population values (the
+selected model parameter (the
 effect sizes),
 trying to find a value (a sample
 size, or a population value of
-the selected parameter) with
+the selected model parameter) with
 a power level close enough to the
 target power.
 }
@@ -348,30 +350,48 @@ arguments should be sufficient.
 
 The results can be viewed using
 \code{\link[=summary]{summary()}}, and the output has
-a \code{\link[=plot.x_from_power]{plot.x_from_power()}} method to
+a \code{plot} method (\code{\link[=plot.x_from_power]{plot.x_from_power()}}) to
 plot the relation between power and
-sample size for the sample sizes
-examined.
-\subsection{Technical Details}{
+values (of \code{x}) examined.
 
-(TODO: To draft)
+A detailed illustration on how to
+use this function can be found
+from these pages:
+\itemize{
+\item For example sizes: \url{https://sfcheung.github.io/power4mome/articles/x_from_power_for_n.html}
+\item For effect sizes: \url{https://sfcheung.github.io/power4mome/articles/x_from_power_for_es.html}
 }
+
+The technical internal workflow of
+of \code{\link[=x_from_power]{x_from_power()}} can be found in
+this page: \url{https://sfcheung.github.io/power4mome/articles/x_from_power_workflow.html}.
+
+The \code{print} method only print
+basic information. Call the
+\code{summary} method of \code{x_from_power} objects
+(\code{\link[=summary.x_from_power]{summary.x_from_power()}}) and its
+\code{print} method for detailed results
 }
 \examples{
 
-# TODO:
-# - Update the example
+# Specify the population model
 
 mod <-
 "
-m ~ a*x
-y ~ b*m + x
-ab := a * b
+m ~ x
+y ~ m + x
 "
 
-mod_es <- c("y ~ m" = "l",
-            "m ~ x" = "m",
-            "y ~ x" = "n")
+# Specify the population values
+
+mod_es <-
+"
+m ~ x: m
+y ~ m: l
+y ~ x: n
+"
+
+# Generate the datasets
 
 sim_only <- power4test(nrep = 10,
                        model = mod,
@@ -380,18 +400,21 @@ sim_only <- power4test(nrep = 10,
                        do_the_test = FALSE,
                        iseed = 1234)
 
+# Do a test
+
 test_out <- power4test(object = sim_only,
                        test_fun = test_parameters,
-                       test_args = list(pars = "ab"))
+                       test_args = list(pars = "m~x"))
+
+# Determine the sample size with a power of .80 (default)
 
 # In real analysis, to have more stable results:
-# - Use a larger final_nrep (e.g., 500).
+# - Use a larger final_nrep (e.g., 400).
 # - Use the default xs_per_trial of 3, or just remove it.
 
 # If the default values are OK, this call is sufficient:
 # power_vs_n <- x_from_power(test_out,
 #                            x = "n",
-#                            target_power = .80,
 #                            seed = 4567)
 power_vs_n <- x_from_power(test_out,
                            x = "n",
@@ -404,6 +427,7 @@ power_vs_n <- x_from_power(test_out,
                            seed = 4567)
 summary(power_vs_n)
 plot(power_vs_n)
+
 
 }
 \seealso{

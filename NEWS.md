@@ -1,4 +1,4 @@
-# power4mome 0.0.1.39
+# power4mome 0.0.1.40
 
 - Initialized the package. (0.0.0.9000)
 
@@ -357,3 +357,5 @@
   a helper `find_par_names()` for finding
   valid names in a `power4test` object.
   (0.0.1.39)
+
+- Updated all help pages. (0.0.1.40)

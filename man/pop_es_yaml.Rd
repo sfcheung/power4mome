@@ -2,12 +2,12 @@
 % Please edit documentation in R/pop_es_yaml.R
 \name{pop_es_yaml}
 \alias{pop_es_yaml}
-\title{Parse YAML-Stye 'pop_es'}
+\title{Parse YAML-Stye Values For 'pop_es'}
 \usage{
 pop_es_yaml(text)
 }
 \arguments{
-\item{text}{The string to be parsed
+\item{text}{The multiline string to be parsed
 to a specification of population
 values.}
 }
@@ -25,20 +25,28 @@ specification.
 This allows users to specify population
 values of a model using one single
 string, as in 'lavaan' model syntax.
+}
+\section{Specify 'pop_es' Using a Multiline String}{
+When setting the argument \code{pop_es},
+instead of using a named vector
+or named list for
+\code{pop_es}, the population values of
+model parameters can also be
+specified using a multiline string,
+as illustrated below, to be parsed
+by \code{\link[=pop_es_yaml]{pop_es_yaml()}}.
 \subsection{Single-Group Model}{
 
-This is an example of the string
+This is an example of the multiline string
 for a single-group model:
 
-\preformatted{
-y ~ m: l
+\preformatted{y ~ m: l
 m ~ x: m
-y ~ x: nil
-}
+y ~ x: nil}
 
 The string must follow this format:
 \itemize{
-\item Each line start with \verb{tag:}.
+\item Each line starts with \verb{tag:}.
 \itemize{
 \item \code{tag} can be the name of a
 parameter, in \code{lavaan} model
@@ -66,10 +74,17 @@ exogenous variables (e.g., predictors).
 }
 }
 \item After each tag is the value of the
-population value: \code{nil}
-for nil (zero), \code{s} for small, \code{m} for
-medium, and \code{l} for large. (Note:
-\code{n} \emph{cannot} be used in this mode.)
+population value:
+
+-\code{nil} for nil (zero),
+\itemize{
+\item \code{s} for small,
+\item \code{m} for medium, and
+\item \code{l} for large.
+}
+
+Note: \code{n} \emph{cannot} be used in this mode.
+
 The
 value for each label is determined
 by \code{es1} and \code{es2} as described
@@ -83,10 +98,8 @@ set to a numeric value, such as
 
 This is another example:
 
-\preformatted{
-.beta: s
-y ~ m: l
-}
+\preformatted{.beta: s
+y ~ m: l}
 
 In this example, all regression
 coefficients are \code{small}, while
@@ -98,13 +111,11 @@ the path from \code{m} to \code{y} is large.
 This is an example of the string
 for a multigroup model:
 
-\preformatted{
-y ~ m: l
+\preformatted{y ~ m: l
 m ~ x:
   - nil
   - s
-y ~ x: nil
-}
+y ~ x: nil}
 
 The format is similar to that for
 a single-group model. If a parameter
@@ -113,27 +124,26 @@ then the line can be specified
 as in the case of a single-group
 model: \code{tag: value}.
 
-If a parameter has the different
+If a parameter has different
 values across groups, then it must
 be in this format:
 \itemize{
 \item A line starts with the tag, followed
 by two or more lines. Each line
-starts with a hyphen \code{-} adn the
+starts with a hyphen \code{-} and the
 value for a group.
 }
 
 For example:
 
-\preformatted{
-m ~ x:
+\preformatted{m ~ x:
   - nil
-  - s
-}
+  - s}
 
 This denotes that the model has
-two group. The values of the path
-from \code{x} to \code{m} are 0 (\code{nil}) and
+two groups. The values of the path
+from \code{x} to \code{m} for the two
+groups are 0 (\code{nil}) and
 small (\code{s}), respectively.
 
 Another equivalent way to specify
@@ -142,9 +152,7 @@ the same line of a tag.
 
 For example:
 
-\preformatted{
-m ~ x: [nil, s]
-}
+\preformatted{m ~ x: [nil, s]}
 
 The number of groups is inferred
 from the number of values for
@@ -161,21 +169,22 @@ also be used for multigroup models.
 
 Note that using named vectors or
 named lists is more reliable. However,
-using one single string is
+using a multiline string is
 more user-friendly. If this method
-failed, please ues named vectors or
+failed, please use named vectors or
 named list instead.
 }
 
 \subsection{Technical Details}{
 
-The string is parsed by \code{\link[yaml:read_yaml]{yaml::read_yaml()}}.
+The multiline string is parsed by \code{\link[yaml:read_yaml]{yaml::read_yaml()}}.
 Therefore, the format requirement
 is actually that of YAML. Users
 knowledgeable of YAML can use other
 equivalent way to specify the string.
 }
 }
+
 \examples{
 
 mod_es <- c("y ~ m" = "l",
@@ -194,5 +203,7 @@ pop_es_yaml(mod_es_yaml)
 
 }
 \seealso{
-\code{\link[=ptable_pop]{ptable_pop()}}
+\code{\link[=ptable_pop]{ptable_pop()}},
+\code{\link[=power4test]{power4test()}}, and other functions
+that have the \code{pop_es} argument.
 }

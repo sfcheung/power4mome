@@ -22,7 +22,9 @@ do_test(
 
 \item{test_fun}{A function to do the
 test. See 'Details' for the requirement
-of this function.}
+of this function. There are some
+built-in test functions in \code{power4mome},
+described in 'Details'.}
 
 \item{test_args}{A list of arguments
 to be passed to the \code{test_fun}
@@ -68,12 +70,14 @@ is used.}
 \value{
 An object of the class \code{test_out},
 which is a list of length equal to
-\code{sim_all}. Each element of the list
+\code{sim_all}, one element for each
+replication. Each element of the list
 has two elements:
 \itemize{
-\item \code{test}: The output of \code{test_fun}.
+\item \code{test}: The output of the function
+set to \code{test_fun}.
 \item \code{test_results}: The output of
-\code{results_fun}.
+the function set to \code{results_fun}.
 }
 }
 \description{
@@ -84,7 +88,24 @@ replication in the output of
 \details{
 Do an arbitrary test in each
 replication using the function set to
-\code{test_fun}. This function usually
+\code{test_fun}.
+}
+\section{The role of \code{do_test()}}{
+The function \code{\link[=do_test]{do_test()}} is used by
+the all-in-one function
+\code{\link[=power4test]{power4test()}}. Users usually do not
+call this function directly, though
+developers can use this function to
+develop other functions for power
+analysis, or to build their own
+workflows to do the power analysis.
+}
+
+\section{Major Test-Related Arguments}{
+\subsection{The test function (test_fun)}{
+
+The function set to \code{test_fun},
+the \emph{test function}, usually
 should work
 on the output of \code{\link[lavaan:sem]{lavaan::sem()}},
 \code{\link[lmhelprs:many_lm]{lmhelprs::many_lm()}}, or
@@ -94,9 +115,43 @@ of the function set to \code{fit_function}
 when calling \code{\link[=fit_model]{fit_model()}} or
 \code{\link[=power4test]{power4test()}} (see \code{fit_model_args}).
 
+The function has two default
+requirements.
+
+First, it has an argument \code{fit}, to
+be set to the output of
+\code{\link[lavaan:sem]{lavaan::sem()}} or another output
+stored in the element \code{extra$fit} of
+a replication in the \code{sim_all}
+object. (This requirement can be
+relaxed; see the section on \code{map_names}.)
+
+That is, the function definition
+should be of this from: \code{FUN(fit, ...)}. This is the form of all
+\verb{test_*} functions in \code{power4mome}.
+
+If other arguments are to be passed
+to the test function, they can be set
+to \code{test_args} as a named list.
+
+Second, the test function must
+returns an output that (a) can be
+processed by the results function
+(see below), or (b) is of
+the required format for the output of
+a results function (see the next
+section). If it already returns
+an output of the required format,
+then there is no need to set the
+results function.
+}
+
+\subsection{The results function (results_fun)}{
+
 The test results will be extracted
 from the output of \code{test_fun} by the
-function set to \code{results_fun}. If
+function set to \code{results_fun},
+the \emph{results function}. If
 the \code{test_fun} already returns an
 output of the expected format
 (see below), then set \code{results_fun}
@@ -113,13 +168,13 @@ of the following
 elements:
 \itemize{
 \item \code{est}: Optional. The estimate of a
-parameter.
+parameter, if applicable.
 \item \code{se}: Optional. The standard error
-of the estimate.
+of the estimate, if applicable.
 \item \code{cilo}: Optional. The lower limit of the
-confidence interval.
+confidence interval, if applicable.
 \item \code{cihi}: Optional. The upper limit of the
-confidence interval.
+confidence interval, if applicable.
 \item \code{sig}: Required. If \code{1}, the test is
 significant. If \code{0}, the test is not
 significant. If the test cannot be
@@ -128,9 +183,19 @@ done for any reason, it should be
 }
 
 The results can then be used to
-estimate the power of the test.
+estimate the power or Type I
+error of the test.
 
-The package came with some ready-to-use
+For example, if
+the null hypothesis is false, then
+the proportion of significant, that
+is, the mean of the values of \code{sig}
+across replications, is the power.
+}
+
+\subsection{Built-in test functions}{
+
+The package \code{power4mome} has some ready-to-use
 test functions:
 \itemize{
 \item \code{\link[=test_indirect_effect]{test_indirect_effect()}}
@@ -141,36 +206,106 @@ test functions:
 \item \code{\link[=test_parameters]{test_parameters()}}
 }
 
-The function \code{\link[=do_test]{do_test()}} is used by the
-all-in-one function \code{\link[=power4test]{power4test()}}.
-Users usually do not call this
-function directly, though developers
-can use this function for develop
-other functions for power analysis.
+Please refer to their help pages
+for examples.
 }
+
+\subsection{The argument map_names}{
+
+This argument is for developers using
+a test function that has a different
+name for the argument of the fit
+object (\code{"fit"}, the default).
+
+If \code{test_fun} is set to a function
+that works on an output of, say,
+\code{\link[lavaan:sem]{lavaan::sem()}} but the argument name
+for the output is not \code{fit}, the
+mapping can be changed by
+\code{map_names}.
+
+For example,
+\code{\link[lavaan:parameterEstimates]{lavaan::parameterEstimates()}}
+receives an output of \code{\link[lavaan:sem]{lavaan::sem()}}
+and reports the test results of model
+parameters. However, the argument
+name for the \code{lavaan} output is
+\code{object.} To instruct \code{\link[=do_test]{do_test()}} to
+do the test correctly when setting
+\code{test_fun} to
+\code{lavaan::parameterEstimates}, add
+\code{map_names = c(object = "fit")}. The
+element \code{fit} in a replication will
+then set to the argument \code{object} of
+\code{\link[lavaan:parameterEstimates]{lavaan::parameterEstimates()}}.
+}
+}
+
+\section{The background for having the \code{results_fun} argument}{
+In the early development of
+\code{power4mome}, \code{test_fun} is designed
+to accept existing functions from
+other packages, such as
+\code{\link[manymome:cond_indirect]{manymome::indirect_effect()}}. Their
+outputs are not of the required
+format for power analysis, and so
+results functions are needed to
+process their outputs. In the current
+version of \code{power4mome}, some
+ready-to-use test functions, usually
+wrappers of these existing functions
+from other packages, have been
+developed, and they no longer need
+results functions to process the
+output. The argument \code{results_fun} is
+kept for backward compatibility and
+advanced users to use test functions
+from other packages.
+}
+
 \examples{
+
+# Specify the population model
+
 mod <-
 "
 m ~ x
 y ~ m + x
 "
+
+# Specify the effect sizes (population parameter values)
+
 es <-
-c("y ~ m" = "m",
-  "m ~ x" = "m",
-  "y ~ x" = "n")
+"
+y ~ m: m
+m ~ x: m
+y ~ x: n
+"
+
+# Generate several simulated datasets
+
 data_all <- sim_data(nrep = 5,
                      model = mod,
                      pop_es = es,
                      n = 100,
                      iseed = 1234)
+
+# Fit the population model to each datasets
+
 fit_all <- fit_model(data_all)
+
+# Generate Monte Carlo estimates for forming Monte Carlo confidence intervals
+
 mc_all <- gen_mc(fit_all,
                  R = 50,
                  iseed = 4567)
+
+# Combine the results to a 'sim_all' object
 sim_all <- sim_out(data_all = data_all,
                    fit = fit_all,
                    mc_out = mc_all)
 
+# Test the indirect effect in each replication
 test_all <- do_test(sim_all,
                     test_fun = test_indirect_effect,
                     test_args = list(x = "x",
@@ -180,10 +315,19 @@ test_all <- do_test(sim_all,
                     parallel = FALSE,
                     progress = FALSE)
 
+# The results
 lapply(test_all, function(x) x$test_results)
 
 
 }
 \seealso{
-\code{\link[=power4test]{power4test()}}
+See \code{\link[=power4test]{power4test()}} for
+the all-in-one function that uses
+this function. See \code{\link[=test_indirect_effect]{test_indirect_effect()}},
+\code{\link[=test_cond_indirect]{test_cond_indirect()}},
+\code{\link[=test_cond_indirect_effects]{test_cond_indirect_effects()}},
+\code{\link[=test_moderation]{test_moderation()}},
+\code{\link[=test_index_of_mome]{test_index_of_mome()}}, and
+\code{\link[=test_parameters]{test_parameters()}} for examples of
+test functions.
 }

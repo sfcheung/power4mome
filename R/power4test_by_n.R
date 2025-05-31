@@ -1,7 +1,7 @@
 #' @title Power By Sample Sizes
 #'
 #' @description Estimate power for a
-#' range of sample sizes.
+#' set of sample sizes.
 #'
 #' @details This function regenerates
 #' datasets for a set of sample sizes
@@ -15,7 +15,7 @@
 #' on the tests to be conducted.
 #'
 #' It is usually used to examine the
-#' power over a range of sample sizes.
+#' power over a set of sample sizes.
 #'
 #' @return The function
 #' [power4test_by_n()] returns a
@@ -26,8 +26,9 @@
 #' @param object A `power4test` object,
 #' or a `power4test_by_n` object.
 #' If it is a `power4test_by_n` object,
-#' the first element will be used
-#' for running the simulation.
+#' the first element, which is a
+#' `power4test` object, will be used
+#' as the value of this argument.
 #'
 #' @param n A numeric vector of sample
 #' sizes for which the simulation will
@@ -58,14 +59,18 @@
 #' same length as `n`, then these are
 #' the `nrep` values for each of the
 #' calls, allowing for different numbers
-#' of replications.
+#' of replications for the sample sizes.
 #' If `NULL`, the default, then the
 #' original `nrep` will be used.
+#' This argument is used by
+#' [x_from_power()] for efficiency, and
+#' is rarely used when calling
+#' this function directly.
 #'
 #' @param save_sim_all If `FALSE`,
-#' the data in each
-#' `power4test` object for each
-#' value is not saved, to reduce
+#' the dataset in the
+#' `power4test` objects are not saved,
+#' to reduce
 #' the size of the output. Default
 #' is `TRUE`.
 #'
@@ -73,6 +78,7 @@
 #'
 #' @examples
 #'
+#' # Specify the model
 #'
 #' model_simple_med <-
 #' "
@@ -80,9 +86,14 @@
 #' y ~ m + x
 #' "
 #'
-#' model_simple_med_es <- c("y ~ m" = "l",
-#'                          "m ~ x" = "m",
-#'                          "y ~ x" = "n")
+#' # Specify the population values
+#'
+#' model_simple_med_es <-
+#' "
+#' m ~ x: m
+#' y ~ m: l
+#' y ~ x: n
+#' "
 #'
 #' sim_only <- power4test(nrep = 2,
 #'                        model = model_simple_med,
@@ -189,7 +200,7 @@ power4test_by_n <- function(object,
 
 #' @rdname power4test_by_n
 #'
-#' @param sort WHen combining `power4test_by_n`
+#' @param sort When combining the
 #' objects, whether they will be sorted
 #' by sample sizes. Default is `TRUE`.
 #'
@@ -200,8 +211,12 @@ power4test_by_n <- function(object,
 #' users are certain the they are based
 #' on the same model, or when the model
 #' is not saved (e.g., `save_sim_all`
-#' set to `FALSE` when calling
-#' `power4test_by_n()`).
+#' set to `FALSE` when the objects
+#' were generated).
+#' This argument is used by
+#' [x_from_power()] for efficiency, and
+#' is rarely used when calling
+#' the `c` method directly.
 #'
 #' @return
 #' The method [c.power4test_by_n()] returns
@@ -209,7 +224,7 @@ power4test_by_n <- function(object,
 #' all the elements (tests for different
 #' sample sizes) combined.
 #'
-#' @description
+#' @details
 #' The method [c.power4test_by_n()]
 #' is used to combine tests from different
 #' runs of [power4test_by_n()].

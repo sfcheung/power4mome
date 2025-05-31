@@ -48,9 +48,7 @@ is used.}
 \item{compute_implied_stats}{Whether
 implied statistics are computed
 in each Monte Carlo replication. Usually
-not needed and so default to \code{FALSE}
-Required \code{manymome} 0.2.7.1
-or above.}
+not needed and so default to \code{FALSE}.}
 }
 \value{
 A \code{mc_list} object, which is a list
@@ -72,33 +70,57 @@ effects such as indirect effects,
 usually by functions from the
 \code{manymome} package, such as
 \code{\link[manymome:cond_indirect]{manymome::indirect_effect()}}.
-
+}
+\section{The role of \code{gen_mc()}}{
 This function is used by the
 all-in-one function \code{\link[=power4test]{power4test()}}.
 Users usually do not call this
-function directly.
+function directly, though
+developers can use this function to
+customize the workflow of the
+power analysis.
 }
+
 \examples{
+
+# Specify the population model
+
 mod <-
 "m ~ x
  y ~ m + x"
+
+# Specify the effect sizes (population parameter values)
+
 es <-
-c("y ~ m" = "m",
-  "m ~ x" = "m",
-  "y ~ x" = "n")
+"
+y ~ m: m
+m ~ x: m
+y ~ x: n
+"
+
+# Generate several simulated datasets
+
 data_all <- sim_data(nrep = 5,
                      model = mod,
                      pop_es = es,
                      n = 100,
                      iseed = 1234)
 
+# Fit the population model to each datasets
+
 fit_all <- fit_model(data_all)
+
+# Generate Monte Carlo estimates for each replication
+
 mc_all <- gen_mc(fit_all,
                  R = 100,
                  iseed = 4567)
 
+mc_all
 
 }
 \seealso{
-\code{\link[=power4test]{power4test()}}
+See \code{\link[=power4test]{power4test()}} for
+the all-in-one function that uses
+this function.
 }

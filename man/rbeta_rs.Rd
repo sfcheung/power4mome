@@ -2,13 +2,13 @@
 % Please edit documentation in R/rbeta_rs.R
 \name{rbeta_rs}
 \alias{rbeta_rs}
-\title{Random Beta Variable}
+\title{Random Variable From a Beta Distribution}
 \usage{
 rbeta_rs(n = 10, shape1 = 0.5, shape2 = 0.5, pmean = 0, psd = 1)
 }
 \arguments{
 \item{n}{The number of random numbers
-to generate. Default is 10.}
+to generate.}
 
 \item{shape1}{\code{shape1} for
 \code{\link[stats:Beta]{stats::rbeta()}}.}
@@ -39,7 +39,7 @@ deviation. The random numbers, drawn
 from a beta distribution by
 \code{\link[stats:Beta]{stats::rbeta()}} will then be
 rescaled with the desired population
-mean and standard.
+mean and standard deviation.
 }
 \examples{
 set.seed(90870962)

@@ -36,7 +36,7 @@ power4test(
   ncores = max(1, parallel::detectCores(logical = FALSE) - 1),
   es1 = c(n = 0, nil = 0, s = 0.1, m = 0.3, l = 0.5),
   es2 = c(n = 0, nil = 0, s = 0.05, m = 0.1, l = 0.15),
-  n_std = 1090000,
+  n_std = 1e+05,
   std_force_monte_carlo = FALSE
 )
 
@@ -55,7 +55,10 @@ power4test(
 \item{object}{Optional. If set to a
 \code{power4test} object, it will be
 updated using the value(s) in \code{n},
-\code{pop_es}, and/or \code{nrep}. Default is \code{NULL}.}
+\code{pop_es}, and/or \code{nrep} if they changed,
+or a new test will be conducted and
+added to \code{objet}. See the help page
+for details. Default is \code{NULL}.}
 
 \item{nrep}{The number of replications
 to generate the simulated datasets.
@@ -72,19 +75,20 @@ called to generate the \code{ptable_pop}
 object using \code{model} and \code{pop_es}.}
 
 \item{model}{The \code{lavaan} model
-syntax of the population model.
-Required. Ignored if \code{ptable} is
-specified. See 'Details' of
-\code{\link[=ptable_pop]{ptable_pop()}} on how to use it for
-models with latent factors
-and indicators. Ignored if \code{ptable} is
+syntax of the population model,
+to be used by \code{\link[=ptable_pop]{ptable_pop()}}.
+See 'Details' of
+on how to specify the model.
+Ignored if \code{ptable} is
 specified.}
 
-\item{pop_es}{The character vector to
-specify population effect sizes. See
-'Details' of \code{\link[=ptable_pop]{ptable_pop()}} on how to
-set the effect sizes for this
-argument. Ignored if \code{ptable} is
+\item{pop_es}{The character vector or
+multiline string to
+specify population effect sizes
+(population values of parameters). See
+the help page on how to specify this
+argument.
+Ignored if \code{ptable} is
 specified.}
 
 \item{standardized}{Logical. If
@@ -92,9 +96,10 @@ specified.}
 error variances are scaled to ensure
 the population variances of the
 endogenous variables are close to
-one, and hence the effect sizes are
+one, and hence the effect sizes
+(population values) are
 standardized effect sizes if the
-variances of the continuos exogenous
+variances of the continuous exogenous
 variables are also equal to one.}
 
 \item{n}{The sample size for each
@@ -103,32 +108,36 @@ dataset. Default is 100.}
 \item{number_of_indicators}{A named
 vector to specify the number of
 indicators for each factors. See
-'Details' of \code{\link[=sim_data]{sim_data()}} on how to set this
+the help page on how to set this
 argument. Default is \code{NULL} and all
 variables in the model syntax are
-observed variables.}
+observed variables.
+See the help page on how
+to use this argument.}
 
 \item{reliability}{A named vector
+(for a single-group model) or a
+named list of named vectors
+(for a multigroup model)
 to set the reliability coefficient
 of each set of indicators. Default
-is \code{NULL}. See 'Details' of
-\code{\link[=sim_data]{sim_data()}} on how to set this
-argument.}
+is \code{NULL}.
+See the help page on how
+to use this argument.}
 
 \item{x_fun}{The function(s) used to
 generate the exogenous variables. If
 not supplied, or set to \code{list()}, the
 default, the variables are generated
 from a multivariate normal
-distribution. See 'Details' of
-\code{\link[=sim_data]{sim_data()}} on how to use this
-argument.}
+distribution. See the help page on how
+to use this argument.}
 
 \item{fit_model_args}{A list of the
 arguments to be passed to \code{\link[=fit_model]{fit_model()}}
 when fitting the
 model.
-Should be a named argument
+Should be a named list
 with names being the names of the
 arguments.}
 
@@ -146,7 +155,10 @@ intervals to use. Can be either
 \code{"mc"} for Monte Carlo method
 (the default) or \code{"boot"} for
 nonparametric bootstrapping method.
-See \code{\link[=sim_data]{sim_data()}} on the details.}
+Relevant for test functions that
+make use of estimates generate by
+\code{\link[=gen_boot]{gen_boot()}} or \code{\link[=gen_mc]{gen_mc()}}, such as
+\code{\link[=test_indirect_effect]{test_indirect_effect()}}.}
 
 \item{gen_mc_args}{A list of
 arguments to be passed to
@@ -167,9 +179,10 @@ arguments. Used only if
 \code{ci_type} is `"boot".}
 
 \item{test_fun}{A function to do the
-test. See the help page of
-\code{\link[=do_test]{do_test()}} for the requirements of
-this function.}
+test. See 'Details' for the requirement
+of this function. There are some
+built-in test functions in \code{power4mome},
+described in 'Details'.}
 
 \item{test_args}{A list of arguments
 to be passed to the \code{test_fun}
@@ -190,7 +203,7 @@ calling \code{test_fun}.}
 
 \item{results_fun}{The function to be
 used to extract the test results.
-See \code{Details} of \code{\link[=do_test]{do_test()}} for the requirements
+See \code{Details} for the requirements
 of this function. Default is \code{NULL},
 assuming that the output of
 \code{test_fun} can be used directly.}
@@ -215,15 +228,19 @@ of \code{\link[=do_test]{do_test()}}. Default is \code{NULL}.}
 
 \item{do_the_test}{If \code{TRUE},
 \code{\link[=do_test]{do_test()}} will be called to do the
-specified test in the fit output of
-each dataset.}
+test specified by \code{test_fun} on the
+fit output of each dataset.}
 
 \item{sim_all}{If set to either a
 \code{sim_out} object (the output of
 \code{\link[=sim_out]{sim_out()}} or a \code{power4test} object
 (the output of \code{\link[=power4test]{power4test()}}), the
 stored datasets and fit outputs will
-be used for doing the test.}
+be used for doing the test. Setting
+\code{object} to the output of \code{\link[=power4test]{power4test()}}
+is now the preferred method, but this
+argument is kept for backward
+compatibility.}
 
 \item{iseed}{The seed for the random
 number generator. Default is \code{NULL}
@@ -238,43 +255,46 @@ Default is \code{FALSE}.}
 
 \item{progress}{If \code{TRUE}, the progress
 of each step will be displayed.
-Default is `FALSE.}
+Default is \code{FALSE}.}
 
 \item{ncores}{The number of CPU
 cores to use if parallel processing
 is used.}
 
-\item{es1}{A named vector to set the
+\item{es1}{Set the
 values for each label of the effect
-size of correlations and regression
+size (population value) for correlations and regression
 paths.
-Default is \code{c("n" = .00, "nil" = .00, "s" = .10, "m" = .30, "l" = .50)}.
 Used only if \code{pop_es} is a named
-vector. See \code{\link[=ptable_pop]{ptable_pop()}} for
-further information.}
+vector or a multiline string.
+See the help page on how to specify
+this argument.}
 
-\item{es2}{A named vector to set the
+\item{es2}{Set the
 values for each label of the effect
-size of product term.
-Default is \code{c("n" = .00, "nil" = .00, "s" = .05, "m" = .10, "l" = .15)}.
+size (population value) for product term.
 Used only if \code{pop_es} is a named
-vector. See \code{\link[=ptable_pop]{ptable_pop()}} for
-further information.}
+vector or a multiline string.
+See the help page on how to specify
+this argument.}
 
 \item{n_std}{The sample size used to
 determine the error variances by
 simulation when \code{std_force_monte_carlo}
-is \code{TRUE}. Default is 100000.}
+is \code{TRUE}.}
 
 \item{std_force_monte_carlo}{Logical.
 If \code{FALSE}, the default,
 standardization is done analytically
 if the model has no product terms,
 and by simulation if the model has
-product terms. If \code{TRUE}, simulation
+product terms. That is, error variances
+required to ensure implied variances equal
+to one are determined by simulation.
+If \code{TRUE}, simulation
 will be used whether the model has
 product terms or not. Always fall
-back to standardization if
+back to simulation if
 analytical standardization failed.}
 
 \item{x}{The object
@@ -312,7 +332,7 @@ be passed to other print methods}
 }
 \value{
 An object of the class \code{power4test},
-which is a list of with two elements:
+which is a list with two elements:
 \itemize{
 \item \code{sim_all}: The output of \code{\link[=sim_out]{sim_out()}}.
 \item \code{test_all}: A named list of the
@@ -339,34 +359,45 @@ results.
 It is an all-in-one function for
 estimating the power of a test for
 a model, given the sample size
-and effect sizes.
-
+and effect sizes (population values
+of model parameters).
+}
+\section{Workflow}{
 This is the workflow:
 \itemize{
-\item If an object with model and data
-already generated is supplied
-through \code{sim_all}, such as the
-output of \code{\link[=sim_out]{sim_out()}} or of
+\item If \code{object} is an output
+of the output
+of a previous call to
 \code{\link[=power4test]{power4test()}} with \code{do_the_test}
-set to \code{FALSE}, the following steps
+set to \code{FALSE} and so has only the
+model and the simulated data,
+the following steps
 will be skipped and go directly to
 doing the test.
 \itemize{
 \item Call \code{\link[=sim_data]{sim_data()}} to determine
 the population model and
-generate the datasets.
-\item Call \code{\link[=fit_model]{fit_model()}} to fit the
-model to each of the datasets.
+generate the datasets, using
+arguments such as \code{model} and
+\code{pop_es}.
+\item Call \code{\link[=fit_model]{fit_model()}} to fit a
+model to each of the datasets,
+which is the population model
+by default.
 \item If \code{R} is not \code{NULL} and
 \code{ci_type = "mc"}, call
 \code{\link[=gen_mc]{gen_mc()}} to generate Monte
 Carlo estimates using
-\code{\link[manymome:do_mc]{manymome::do_mc()}}.
+\code{\link[manymome:do_mc]{manymome::do_mc()}}. The estimates
+can be used by supported functions
+such as \code{\link[=test_indirect_effect]{test_indirect_effect()}}.
 \item If \code{R} is not \code{NULL} and
 \code{ci_type = "boot"}, call
 \code{\link[=gen_boot]{gen_boot()}} to generate
 bootstrap estimates using
-\code{\link[manymome:do_boot]{manymome::do_boot()}}.
+\code{\link[manymome:do_boot]{manymome::do_boot()}}. The estimates
+can be used by supported functions
+such as \code{\link[=test_indirect_effect]{test_indirect_effect()}}.
 \item Merge the results into a
 \code{sim_out} object by calling
 \code{\link[=sim_out]{sim_out()}}.
@@ -383,7 +414,7 @@ the test.
 \itemize{
 \item \code{\link[=do_test]{do_test()}} will be called to do
 the test in the fit output of
-each datasets.
+each dataset.
 }
 \item Return a \code{power4test} object which
 include the output of \code{sim_out}
@@ -397,73 +428,728 @@ power of one or several tests on a
 particular aspect of the model, such
 as a parameter, given a specific
 effect sizes and sample sizes.
-\subsection{Updating a Condition}{
 
-This function can also be used to
+Detailed description on major
+arguments can be found in sections
+below.
+
+NOTE: The technical internal workflow of
+of \code{\link[=power4test]{power4test()}} can be found in
+this page: \url{https://sfcheung.github.io/power4mome/articles/power4test_workflow.html}.
+}
+
+\section{Updating a Condition}{
+The function \code{\link[=power4test]{power4test()}} can also be used to
 update a condition when only some
-selected aspects changed. For example,
-without calling this function with
+selected aspects is to be changed.
+
+For example,
+instead of calling this function with
 all the arguments set just to change
 the sample size, it can be called
 by supplying an existing
 \code{power4test} object and set only
 \code{n} to a new sample size. The data
 and the tests will be updated
-automatically.
+automatically. See the examples for
+an illustration.
 }
 
-\subsection{Multiple Models}{
+\section{Adding Another Test}{
+The function \code{\link[=power4test]{power4test()}} can also be used to
+add a test to the output from a
+previous call to \code{\link[=power4test]{power4test()}}.
 
-More than one model can be fitted to
-each replication. This is done
-by setting \code{fit_model_args} to
-a named list. The names are the names
-used to identify the models, and
-each element is a list of named
-list of arguments for a model.
+For example, after simulating the
+datasets and doing one test,
+the output can be set to \code{object}
+of \code{\link[=power4test]{power4test()}}, and set only
+\code{test_fun} and, optionally,
+\code{test_fun_args} to do one more test
+on the generated datasets. The output
+will be the original
+object with the results of the new
+test added. See the examples for
+an illustration.
+}
+
+\section{Model Fitting Arguments ('fit_model_args')}{
+For power analysis, usually, the
+population model (\code{model}) is to be
+fitted, and there is no need to
+set \code{fit_model_args}.
+
+If power analysis is to be conducted
+for fitting a model that is not the
+population model, of if non-default
+settings are desired when fitting
+a model, then the argument \code{fit_model_args}
+needed to be set to customize the
+call to \code{\link[=fit_model]{fit_model()}}.
+
+For example,
+users may want to examine the power
+of a test when a misspecified model
+is fitted, or the power of a test
+when MLR is used as the estimator
+when calling \code{\link[lavaan:sem]{lavaan::sem()}}.
+
+See the help page of \code{\link[=fit_model]{fit_model()}}
+for some examples.
+}
+
+\section{Specify the Population Model by 'model'}{
+\subsection{Single-Group Model}{
+
+For a single-group model, \code{model}
+should be a \code{lavaan} model syntax
+string of the \emph{form} of the model.
+The population values of the model
+parameters are to be determined by
+\code{pop_es}.
+
+If the model has latent factors,
+the syntax in \code{model} should specify
+only the \emph{structural model} for the
+\emph{latent factors}. There is no
+need to specify the measurement
+part. Other functions will generate
+the measurement part on top of this
+model.
+
+For example, this is a simple mediation
+model:
+
+\preformatted{"m ~ x
+ y ~ m + x"}
+
+Whether \code{m}, \code{x}, and \code{y} denote
+observed variables or latent factors
+are determined by other functions,
+such as \code{\link[=power4test]{power4test()}}.
+}
+
+\subsection{Multigroup Model}{
+
+Because the model is the population
+model, equality constraints are
+irrelevant and the model syntax
+specifies only the \emph{form} of the
+model. Therefore, \code{model} is
+specified as in the case of single
+group models.
+}
+}
+
+\section{Specify 'pop_es' Using Named Vectors}{
+The argument \code{pop_es} is for specifying
+the population values of model
+parameters. This section describes
+how to do this using named vectors.
+\subsection{Single-Group Model}{
+
+If \code{pop_es} is specified by a named
+vector, it must follow the convention
+below.
+\itemize{
+\item The names of the vectors are
+\code{lavaan} names for the selected
+parameters. For example, \code{m ~ x}
+denotes the path from \code{x} to \code{m}.
+\item Alternatively, the names can be
+either \code{".beta."} or \code{".cov."}.
+Use \code{".beta."} to set the default
+values for all regression coefficients.
+Use \code{".cov."} to set the default
+values for all correlations of
+exogenous variables (e.g., predictors).
+\item If using \code{lavaan} names, can
+specify more than one parameter
+using \code{+}. For example, \code{y ~ m + x}
+denotes the two paths from \code{m} and
+\code{x} to \code{y}.
+\item The value of each element can be
+the label for the effect size: \code{n}
+for nil, \code{s} for small, \code{m} for
+medium, and \code{l} for large. The
+value for each label is determined
+by \code{es1} and \code{es2}. See the section
+on specifying these two arguments.
+\item The value of \code{pop_es} can also be
+set to a value, but it must be
+quoted as a string, such as \code{"y ~ x" = ".31"}.
+}
+
+This is an example:
+
+\preformatted{c(".beta." = "s",
+  "m1 ~ x" = "-m",
+  "m2 ~ m1" = "l",
+  "y ~ x:w" = "s")}
+
+In this example,
+\itemize{
+\item All regression coefficients are
+set to small (\code{s}) by default, unless
+specified otherwise.
+\item The path from \code{x} to \code{m1} is
+set to medium and negative (\code{-m}).
+\item The path from \code{m1} to \code{m2} is set
+to large (\code{l}).
+\item The coefficient of the product
+term \code{x:w} when predicting \code{y} is
+set to small (\code{s}).
+}
+}
+
+\subsection{Multigroup Model}{
+
+The argument \code{pop_es} also supports multigroup
+models.
+
+For \code{pop_es}, instead of
+named vectors, named \emph{list} of
+named vectors should be used.
+\itemize{
+\item The names are the parameters, or
+keywords such as \code{.beta.} and
+\code{.cov.}, like specifying the
+population values for a single
+group model.
+\item The elements are character vectors.
+If it has only one element (e.g.,
+a single string), then it is the
+the population value for all groups.
+If it has more than one element
+(e.g., a vector of three strings),
+then they are the population values
+of the groups. For a model of \emph{k}
+groups, each vector must have
+either \emph{k} elements or one element.
+}
+
+This is an example:
+
+\preformatted{list("m ~ x" = "m",
+     "y ~ m" = c("s", "m", "l"))}
+
+In this model, the population value
+of the path \code{m ~ x} is medium (\code{m}) for
+all groups, while the population
+values for the path \code{y ~ m} are
+small (\code{s}), medium (\code{m}), and large (\code{l}),
+respectively.
+}
+}
+
+\section{Specify 'pop_es' Using a Multiline String}{
+When setting the argument \code{pop_es},
+instead of using a named vector
+or named list for
+\code{pop_es}, the population values of
+model parameters can also be
+specified using a multiline string,
+as illustrated below, to be parsed
+by \code{\link[=pop_es_yaml]{pop_es_yaml()}}.
+\subsection{Single-Group Model}{
+
+This is an example of the multiline string
+for a single-group model:
+
+\preformatted{y ~ m: l
+m ~ x: m
+y ~ x: nil}
+
+The string must follow this format:
+\itemize{
+\item Each line starts with \verb{tag:}.
+\itemize{
+\item \code{tag} can be the name of a
+parameter, in \code{lavaan} model
+syntax format.
+\itemize{
+\item For example, \code{m ~ x}
+denotes the path from \code{x} to \code{m}.
+}
+\item A tag in \code{lavaan} model syntax can
+specify more than one parameter
+using \code{+}.
+\itemize{
+\item For example, \code{y ~ m + x}
+denotes the two paths from \code{m} and
+\code{x} to \code{y}.
+}
+\item Alternatively, the \code{tag} can be
+either \code{.beta.} or \code{.cov.}.
+\itemize{
+\item Use \code{.beta.} to set the default
+values for all regression coefficients.
+\item Use \code{.cov.} to set the default
+values for all correlations of
+exogenous variables (e.g., predictors).
+}
+}
+\item After each tag is the value of the
+population value:
+
+-\code{nil} for nil (zero),
+\itemize{
+\item \code{s} for small,
+\item \code{m} for medium, and
+\item \code{l} for large.
+}
+
+Note: \code{n} \emph{cannot} be used in this mode.
+
+The
+value for each label is determined
+by \code{es1} and \code{es2} as described
+in \code{\link[=ptable_pop]{ptable_pop()}}.
+\itemize{
+\item The value can also be
+set to a numeric value, such as
+\code{.30} or \code{-.30}.
+}
+}
+
+This is another example:
+
+\preformatted{.beta: s
+y ~ m: l}
+
+In this example, all regression
+coefficients are \code{small}, while
+the path from \code{m} to \code{y} is large.
+}
+
+\subsection{Multigroup Model}{
+
+This is an example of the string
+for a multigroup model:
+
+\preformatted{y ~ m: l
+m ~ x:
+  - nil
+  - s
+y ~ x: nil}
+
+The format is similar to that for
+a single-group model. If a parameter
+has the same value for all groups,
+then the line can be specified
+as in the case of a single-group
+model: \code{tag: value}.
+
+If a parameter has different
+values across groups, then it must
+be in this format:
+\itemize{
+\item A line starts with the tag, followed
+by two or more lines. Each line
+starts with a hyphen \code{-} and the
+value for a group.
+}
 
 For example:
 
-\preformatted{
-fit_model_args = list(fit = list(),
-                      fit2 = list(model = mod2),
-                      fit3 = list(model = mod3))
+\preformatted{m ~ x:
+  - nil
+  - s}
+
+This denotes that the model has
+two groups. The values of the path
+from \code{x} to \code{m} for the two
+groups are 0 (\code{nil}) and
+small (\code{s}), respectively.
+
+Another equivalent way to specify
+the values are using \verb{[]}, on
+the same line of a tag.
+
+For example:
+
+\preformatted{m ~ x: [nil, s]}
+
+The number of groups is inferred
+from the number of values for
+a parameter. Therefore, if a tag
+has more than one value, each tag
+must has the same number of value,
+or only one value.
+
+The tag \code{.beta.} and \code{.cov.} can
+also be used for multigroup models.
 }
 
-Three models will be fitted. The
-first model is the model ued to
-generate the data, named \code{"fit"}.
-The second and first models are
-named \code{"fit2"} and \code{"fit3"},
-respectively, with \code{"fit2"} fitted
-with \code{model = mod2} and \code{"fit3"}
-fitted with \code{model = mod3}.
+\subsection{Which Approach To Use}{
 
-If Monte Carlos or bootstrap estimates
-are to be generated, they will be
-generated for each model, using the
-values for their arguments.
+Note that using named vectors or
+named lists is more reliable. However,
+using a multiline string is
+more user-friendly. If this method
+failed, please use named vectors or
+named list instead.
+}
+
+\subsection{Technical Details}{
+
+The multiline string is parsed by \code{\link[yaml:read_yaml]{yaml::read_yaml()}}.
+Therefore, the format requirement
+is actually that of YAML. Users
+knowledgeable of YAML can use other
+equivalent way to specify the string.
 }
 }
+
+\section{Set the Values for Effect Size Labels ('es1' and 'es2')}{
+The vector \code{es1} is for correlations
+and regression coefficients, and the
+vector \code{es2} is for for standardized
+moderation effect, the coefficients
+of a product term. These labels
+are to be used in interpreting
+the specification in \code{pop_es}.
+}
+
+\section{Set 'number_of_indicators' and 'reliability'}{
+The arguments \code{number_of_indicators}
+and \code{reliability} are used to
+specify the number of indicators
+(e.g., items) for each factor,
+and the population reliability
+coefficient of each factor,
+if the variables in the model
+syntax are latent variables.
+\subsection{Single-Group Model}{
+
+If a variable in the model is to be
+replaced by indicators in the generated
+data, set
+\code{number_of_indicators} to a named
+numeric vector. The names are the
+variables of variables with
+indicators, as appeared in the
+\code{model} syntax. The value of each
+name is the number of indicators.
+
+The
+argument \code{reliability} should then be
+set a named numeric vector (or list,
+see the section on multigroup models)
+to specify the population reliability
+coefficient ("omega") of each set of
+indicators. The population standardized factor
+loadings are then computed to ensure
+that the population reliability
+coefficient is of the target value.
+
+These are examples for a single group
+model:
+
+\preformatted{number of indicator = c(m = 3, x = 4, y = 5)}
+
+The numbers of indicators for \code{m},
+\code{x}, and \code{y} are 3, 4, and 5,
+respectively.
+
+\preformatted{reliability = c(m = .90, x = .80, y = .70)}
+
+The population reliability
+coefficients of \code{m}, \code{x}, and \code{y} are
+.90, .80, and .70, respectively.
+}
+
+\subsection{Multigroup Models}{
+
+Multigroup models are supported.
+The number of groups is inferred
+from \code{pop_es} (see the help page
+of \code{\link[=ptable_pop]{ptable_pop()}}), or directly
+from \code{ptable}.
+
+For a multigroup model, the number
+of indicators for each variable
+must be the same across groups.
+
+However, the population reliability
+coefficients can be different
+across groups. For a multigroup model
+of \emph{k} groups,
+with one or more population reliability
+coefficients differ across groups,
+the argument \code{reliability} should be
+set to a named list. The names are
+the variables to which the population
+reliability coefficients are to be
+set. The element for each name is
+either a single value for the common
+reliability coefficient, or a
+numeric vector of the reliability
+coefficient of each group.
+
+This is an example of \code{reliability}
+for a model with 2 groups:
+
+\preformatted{reliability = list(x = .80, m = c(.70, .80))}
+
+The reliability coefficients of \code{x} are
+.80 in all groups, while the
+reliability coefficients of \code{m} are
+.70 in one group and .80 in another.
+}
+
+\subsection{Equal Numbers of Indicators and/or Reliability Coefficients}{
+
+If all variables in the model has
+the same number of indicators,
+\code{number_of_indicators} can be set
+to one single value.
+
+Similarly, if all sets of indicators
+have the same population reliability
+in all groups, \code{reliability} can also
+be set to one single value.
+}
+}
+
+\section{Specify The Distributions of Exogenous Variables Using 'x_fun'}{
+By default, variables are generated
+from a multivariate normal distribution.
+If desired, users can supply the
+function used to generate an exogenous
+variables by setting \code{x_fun} to
+a named list.
+
+The names of the list are the variables
+for which a user function will be used
+to generate the data.
+
+Each element of the list must also
+be a list. The first element of this
+list, can be unnamed, is the
+function to be used. If other arguments
+need to be supplied, they should be
+included as named elements of this list.
+
+For example:
+
+\preformatted{x_fun = list(x = list(power4mome::rexp_rs),
+             w = list(power4mome::rbinary_rs,
+                      p1 = .70)))}
+
+The variables \code{x} and \code{w} will be
+generated by user-supplied functions.
+
+For \code{x}, the function is
+\code{power4mome::rexp_rs}. No additional
+argument when calling this function.
+
+For \code{w}, the function is
+\code{power4mome::rbinary_rx}. The argument
+\code{p1 = .70} will be passed to this
+function when generating the values
+of \code{w}.
+
+These are requirements for the
+user-functions:
+\itemize{
+\item They must return a numeric vector.
+\item They mush has an argument \code{n} for
+the number of values.
+\item The \emph{population} mean and standard
+deviation of the generated values
+must be 0 and 1, respectively.
+}
+
+The package \code{power4mome} has
+helper functions for generating
+values from some common nonnormal
+distributions and then scaling them
+to have population mean and standard
+deviation equal to 0 and 1 (by default), respectively.
+These are some of them:
+\itemize{
+\item \code{\link[=rbinary_rs]{rbinary_rs()}}.
+\item \code{\link[=rexp_rs]{rexp_rs()}}.
+\item \code{\link[=rbeta_rs]{rbeta_rs()}}.
+\item \code{\link[=rlnorm_rs]{rlnorm_rs()}}.
+\item \code{\link[=rpgnorm_rs]{rpgnorm_rs()}}.
+}
+
+To use \code{x_fun}, the variables must
+have zero covariances with other
+variables in the population. It is
+possible to generate nonnormal
+multivariate data but we believe this
+is rarely needed when estimating
+power \emph{before} having the data.
+}
+
+\section{Major Test-Related Arguments}{
+\subsection{The test function (test_fun)}{
+
+The function set to \code{test_fun},
+the \emph{test function}, usually
+should work
+on the output of \code{\link[lavaan:sem]{lavaan::sem()}},
+\code{\link[lmhelprs:many_lm]{lmhelprs::many_lm()}}, or
+\code{\link[stats:lm]{stats::lm()}}, but can also be a
+function that works on the output
+of the function set to \code{fit_function}
+when calling \code{\link[=fit_model]{fit_model()}} or
+\code{\link[=power4test]{power4test()}} (see \code{fit_model_args}).
+
+The function has two default
+requirements.
+
+First, it has an argument \code{fit}, to
+be set to the output of
+\code{\link[lavaan:sem]{lavaan::sem()}} or another output
+stored in the element \code{extra$fit} of
+a replication in the \code{sim_all}
+object. (This requirement can be
+relaxed; see the section on \code{map_names}.)
+
+That is, the function definition
+should be of this from: \code{FUN(fit, ...)}. This is the form of all
+\verb{test_*} functions in \code{power4mome}.
+
+If other arguments are to be passed
+to the test function, they can be set
+to \code{test_args} as a named list.
+
+Second, the test function must
+returns an output that (a) can be
+processed by the results function
+(see below), or (b) is of
+the required format for the output of
+a results function (see the next
+section). If it already returns
+an output of the required format,
+then there is no need to set the
+results function.
+}
+
+\subsection{The results function (results_fun)}{
+
+The test results will be extracted
+from the output of \code{test_fun} by the
+function set to \code{results_fun},
+the \emph{results function}. If
+the \code{test_fun} already returns an
+output of the expected format
+(see below), then set \code{results_fun}
+to \code{NULL}, the default. The output
+of \code{test_fun} will be used for
+estimating power.
+
+The function set to \code{results_fun}
+must accept the output of \code{test_fun},
+as the first argument, and return a
+named list (which can be a data frame)
+or a named vector with some
+of the following
+elements:
+\itemize{
+\item \code{est}: Optional. The estimate of a
+parameter, if applicable.
+\item \code{se}: Optional. The standard error
+of the estimate, if applicable.
+\item \code{cilo}: Optional. The lower limit of the
+confidence interval, if applicable.
+\item \code{cihi}: Optional. The upper limit of the
+confidence interval, if applicable.
+\item \code{sig}: Required. If \code{1}, the test is
+significant. If \code{0}, the test is not
+significant. If the test cannot be
+done for any reason, it should be
+\code{NA}.
+}
+
+The results can then be used to
+estimate the power or Type I
+error of the test.
+
+For example, if
+the null hypothesis is false, then
+the proportion of significant, that
+is, the mean of the values of \code{sig}
+across replications, is the power.
+}
+
+\subsection{Built-in test functions}{
+
+The package \code{power4mome} has some ready-to-use
+test functions:
+\itemize{
+\item \code{\link[=test_indirect_effect]{test_indirect_effect()}}
+\item \code{\link[=test_cond_indirect]{test_cond_indirect()}}
+\item \code{\link[=test_cond_indirect_effects]{test_cond_indirect_effects()}}
+\item \code{\link[=test_moderation]{test_moderation()}}
+\item \code{\link[=test_index_of_mome]{test_index_of_mome()}}
+\item \code{\link[=test_parameters]{test_parameters()}}
+}
+
+Please refer to their help pages
+for examples.
+}
+
+\subsection{The argument map_names}{
+
+This argument is for developers using
+a test function that has a different
+name for the argument of the fit
+object (\code{"fit"}, the default).
+
+If \code{test_fun} is set to a function
+that works on an output of, say,
+\code{\link[lavaan:sem]{lavaan::sem()}} but the argument name
+for the output is not \code{fit}, the
+mapping can be changed by
+\code{map_names}.
+
+For example,
+\code{\link[lavaan:parameterEstimates]{lavaan::parameterEstimates()}}
+receives an output of \code{\link[lavaan:sem]{lavaan::sem()}}
+and reports the test results of model
+parameters. However, the argument
+name for the \code{lavaan} output is
+\code{object.} To instruct \code{\link[=do_test]{do_test()}} to
+do the test correctly when setting
+\code{test_fun} to
+\code{lavaan::parameterEstimates}, add
+\code{map_names = c(object = "fit")}. The
+element \code{fit} in a replication will
+then set to the argument \code{object} of
+\code{\link[lavaan:parameterEstimates]{lavaan::parameterEstimates()}}.
+}
+}
+
 \examples{
+
+# Specify the model
 
 model_simple_med <-
 "
-m ~ a * x
-y ~ b * m + x
-ab := a * b
+m ~ x
+y ~ m + x
 "
 
-model_simple_med_es <- c("y ~ m" = "l",
-                         "m ~ x" = "m",
-                         "y ~ x" = "n")
+# Specify the population values
+
+model_simple_med_es <-
+"
+m ~ x: m
+y ~ m: l
+y ~ x: n
+"
 
 out <- power4test(nrep = 50,
                   model = model_simple_med,
                   pop_es = model_simple_med_es,
                   n = 100,
                   test_fun = test_parameters,
-                  test_args = list(pars = "a"),
+                  test_args = list(pars = "m~x"),
                   iseed = 1234,
                   parallel = FALSE,
                   progress = TRUE)
@@ -471,12 +1157,26 @@ out <- power4test(nrep = 50,
 print(out,
       test_long = TRUE)
 
+# Change the sample size
+
+out1 <- power4test(out,
+                   n = 200,
+                   iseed = 1234,
+                   parallel = FALSE,
+                   progress = TRUE)
+
+print(out1,
+      test_long = TRUE)
+
 # Add one more test
 
-out <- power4test(out,
-                  test_fun = test_parameters,
-                  test_args = list(op = ":="))
-print(out,
+out2 <- power4test(out,
+                   test_fun = test_parameters,
+                   test_args = list(pars = "y~x"),
+                   parallel = FALSE,
+                   progress = TRUE)
+
+print(out2,
       test_long = TRUE)
 
 }

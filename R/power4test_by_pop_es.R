@@ -1,10 +1,12 @@
 #' @title Power By Effect Sizes
 #'
 #' @description Estimate power for a
-#' range of effect sizes.
+#' set of effect sizes (population
+#' values of a model parameter).
 #'
 #' @details This function regenerates
 #' datasets for a set of effect sizes
+#' (population values of a model parmeter)
 #' and does the stored tests in each of
 #' them.
 #'
@@ -15,19 +17,23 @@
 #' on the tests to be conducted.
 #'
 #' It is usually used to examine the
-#' power over a range of effect sizes.
+#' power over a sets of effect sizes
+#' (population values).
 #'
 #' @return The function
 #' [power4test_by_es()] returns a
 #' `power4test_by_es` object, which is a
 #' list of `power4test` objects, one for
-#' each effect size.
+#' each population value of the parameter.
+#'
+#' @inheritParams power4test_by_n
 #'
 #' @param object A `power4test` object,
 #' or a `power4test_by_es` object.
 #' If it is a `power4test_by_es` object,
-#' the first element will be used
-#' for running the simulation.
+#' the first element, which is a
+#' `power4test` object, will be used
+#' as the value of this argument.
 #'
 #' @param pop_es_name The name of the
 #' parameter. See the help page
@@ -39,47 +45,39 @@
 #' of the parameter specified in
 #' `pop_es_names`.
 #'
-#' @param progress Logical. Whether
-#' progress of the simulation will be
-#' displayed.
+# @param progress <- Inherited
 #'
 #' @param ... For [power4test_by_es()],
 #' they are arguments to be passed
-#' to [power4test()]. For [power4test_by_es()],
+#' to [power4test()]. For [c.power4test_by_es()],
 #' they are [power4test_by_es()] outputs
 #' to be combined together.
 #'
-#' @param by_seed If set to a number,
-#' it will be used to generate the
-#' seeds for each call to [power4test()].
-#' If `NULL`, the default, then seeds
-#' will still be randomly generated but
-#' the results cannot be easily reproduced.
-#'
+# @param by_seed <- Inherited
 #'
 #' @param by_nrep If set to a number,
 #' it will be used to generate the
 #' number of replications (`nrep`) for
 #' each call to [power4test()].
 #' If set to a numeric vector of the
-#' same length as `n`, then these are
+#' same length as `pop_es_values`, then these are
 #' the `nrep` values for each of the
 #' calls, allowing for different numbers
-#' of replications.
+#' of replications for the population values.
 #' If `NULL`, the default, then the
 #' original `nrep` will be used.
+#' This argument is used by
+#' [x_from_power()] for efficiency, and
+#' is rarely used when calling
+#' this function directly.
 #'
-#' @param save_sim_all If `FALSE`,
-#' the data in each
-#' `power4test` object for each
-#' value is not saved, to reduce
-#' the size of the output. Default
-#' is `TRUE`.
+# @param save_sim_all <- Inherited
 #'
 #' @seealso [power4test()]
 #'
 #' @examples
 #'
+#' # Specify the model
 #'
 #' model_simple_med <-
 #' "
@@ -87,9 +85,14 @@
 #' y ~ m + x
 #' "
 #'
-#' model_simple_med_es <- c("y ~ m" = "l",
-#'                          "m ~ x" = "m",
-#'                          "y ~ x" = "n")
+#' # Specify the population values
+#'
+#' model_simple_med_es <-
+#' "
+#' m ~ x: m
+#' y ~ m: l
+#' y ~ x: n
+#' "
 #'
 #' sim_only <- power4test(nrep = 2,
 #'                        model = model_simple_med,
@@ -109,9 +112,6 @@
 #'                                         boot_ci = TRUE,
 #'                                         mc_ci = FALSE))
 #'
-#' power_all_test_only_new_es <- power4test(object = test_out,
-#'                                          pop_es = c("y ~ m" = ".10"))
-#'
 #' out <- power4test_by_es(test_out,
 #'                             pop_es_name = "y ~ m",
 #'                             pop_es_values = c(.10, .20))
@@ -120,13 +120,13 @@
 #'
 #' @export
 power4test_by_es <- function(object,
-                                 pop_es_name = NULL,
-                                 pop_es_values = NULL,
-                                 progress = TRUE,
-                                 ...,
-                                 by_seed = NULL,
-                                 by_nrep = NULL,
-                                 save_sim_all = TRUE) {
+                             pop_es_name = NULL,
+                             pop_es_values = NULL,
+                             progress = TRUE,
+                             ...,
+                             by_seed = NULL,
+                             by_nrep = NULL,
+                             save_sim_all = TRUE) {
   if (!inherits(object, "power4test") &&
       !inherits(object, "power4test_by_es")) {
     stop("Only support 'power4test' or 'power4test_by_es' objects.")
@@ -207,27 +207,19 @@ power4test_by_es <- function(object,
 
 #' @rdname power4test_by_es
 #'
-#' @param sort WHen combining `power4test_by_es`
+#' @param sort WHen combining the
 #' objects, whether they will be sorted
-#' by effect size. Default is `TRUE`.
+#' by population values. Default is `TRUE`.
 #'
-#' @param skip_checking_models Whether
-#' the check of the data generation model
-#' will be checked. Default is `TRUE`.
-#' Should be set to `FALSE` only when
-#' users are certain the they are based
-#' on the same model, or when the model
-#' is not saved (e.g., `save_sim_all`
-#' set to `FALSE` when calling
-#' `power4test_by_es()`).
+# @param skip_checking_models <- Inherited
 #'
 #' @return
 #' The method [c.power4test_by_es()] returns
 #' a `power4test_by_es` object with
 #' all the elements (tests for different
-#' sample sizes) combined.
+#' values of `pop_es_values`) combined.
 #'
-#' @description
+#' @details
 #' The method [c.power4test_by_es()]
 #' is used to combine tests from different
 #' runs of [power4test_by_es()].

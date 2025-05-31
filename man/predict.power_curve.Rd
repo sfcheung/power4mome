@@ -31,23 +31,28 @@ values in a model fitted by
 \code{\link[=power_curve]{power_curve()}}.
 }
 \details{
-It works in two modes. If new
+It works in two modes.
+
+If new
 data is not supplied (through
-\code{newdata}), it retrieve the stored
-results and call the corresponding
+\code{newdata}), it retrieves the stored
+results and calls the corresponding
 methods to compute the predicted
 values, which are the predicted
 rejection rates (power levels if
-the population effect size is
+the null hypothesis is false,
+e.g., the population effect size is
 equal to zero).
 
 If new data is supplied, such as
-the named list with a vector of
+a named list with a vector of
 sample sizes, they will be used to
 compute the predicted rejection
 rates.
 }
 \examples{
+
+# Specify the population model
 
 model_simple_med <-
 "
@@ -55,9 +60,16 @@ m ~ x
 y ~ m + x
 "
 
-model_simple_med_es <- c("y ~ m" = "l",
-                         "m ~ x" = "m",
-                         "y ~ x" = "s")
+# Specify the effect sizes (population parameter values)
+
+model_simple_med_es <-
+"
+y ~ m: l
+m ~ x: m
+y ~ x: s
+"
+
+# Simulate datasets to check the model
 
 sim_only <- power4test(nrep = 10,
                        model = model_simple_med,
@@ -69,7 +81,7 @@ sim_only <- power4test(nrep = 10,
                        parallel = FALSE,
                        progress = FALSE)
 
-# By n
+# By n: Do a test for different sample sizes
 
 out1 <- power4test_by_n(sim_only,
                         nrep = 10,
@@ -85,7 +97,7 @@ pout1
 predict(pout1,
         newdata = list(x = c(150, 250, 500)))
 
-# By pop_es
+# By pop_es: Do a test for different population values of a model parameter
 
 out2 <- power4test_by_es(sim_only,
                              nrep = 10,

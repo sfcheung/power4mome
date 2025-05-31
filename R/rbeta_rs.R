@@ -1,4 +1,4 @@
-#' @title Random Beta Variable
+#' @title Random Variable From a Beta Distribution
 #'
 #' @description Generate random numbers
 #' from a beta distribution, rescaled to
@@ -13,10 +13,10 @@
 #' from a beta distribution by
 #' [stats::rbeta()] will then be
 #' rescaled with the desired population
-#' mean and standard.
+#' mean and standard deviation.
 #'
 #' @param n The number of random numbers
-#' to generate. Default is 10.
+#' to generate.
 #'
 #' @param shape1 `shape1` for
 #' [stats::rbeta()].
