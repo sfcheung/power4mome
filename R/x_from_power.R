@@ -29,11 +29,11 @@
 #'   function will iteratively repeat
 #'   the analysis on either other sample
 #'   sizes, or other values for a
-#'   selected population values (the
+#'   selected model parameter (the
 #'   effect sizes),
 #'   trying to find a value (a sample
 #'   size, or a population value of
-#'   the selected parameter) with
+#'   the selected model parameter) with
 #'   a power level close enough to the
 #'   target power.
 #'
@@ -42,18 +42,25 @@
 #'
 #' The results can be viewed using
 #' [summary()], and the output has
-#' a [plot.x_from_power()] method to
+#' a `plot` method ([plot.x_from_power()]) to
 #' plot the relation between power and
-#' sample size for the sample sizes
-#' examined.
+#' values (of `x`) examined.
 #'
-#' ## Technical Details
+#' A detailed illustration on how to
+#' use this function can be found
+#' from these pages:
 #'
-#' (TODO: To draft)
+#' - For example sizes: <https://sfcheung.github.io/power4mome/articles/x_from_power_for_n.html>
+#'
+#' - For effect sizes: <https://sfcheung.github.io/power4mome/articles/x_from_power_for_es.html>
+#'
+#' The technical internal workflow of
+#' of [x_from_power()] can be found in
+#' this page: <https://sfcheung.github.io/power4mome/articles/x_from_power_workflow.html>.
 #'
 #' @return
 #' The function [x_from_power()]
-#' returns a `x_from_power` object,
+#' returns an `x_from_power` object,
 #' which is a list with the following
 #' elements:
 #'
@@ -76,20 +83,21 @@
 #' examined.
 #'
 #' - `x_final`: The sample size or
-#' population values in the
-#' solution. `NA` if solution not found.
+#' population value in the
+#' solution. `NA` if a solution not found.
 #'
 #' - `power_final`: The estimated power
 #' of the value in the solution.
-#' `NA` if solution not found.
+#' `NA` if a solution not found.
 #'
 #' - `i_final`: The position of the
 #' solution in `power4test_trials`.
-#' `NA` if solution not found.
+#' `NA` if a solution not found.
 #'
 #' - `ci_final`: The confidence interval
-#' of the estimated power in the solution.
-#' `NA` if solution not found.
+#' of the estimated power in the solution,
+#' formed by normal approximation.
+#' `NA` if a solution not found.
 #'
 #' - `ci_level`: The level of confidence
 #' of `ci_final`.
@@ -138,10 +146,14 @@
 #' @param object A `power4test` object,
 #' which is the output of [power4test()].
 #'
-#' @param x What is `x`, the value to
+#' @param x For [x_from_power()],
+#' `x` set the value to
 #' be searched. Can be `"n"`, the sample
 #' size, or `"es"`, the population value
 #' of a parameter (set by `pop_es_name`).
+#' For the `print` method of `x_from_power`
+#' objects, this is the output of
+#' [x_from_power()].
 #'
 #' @param pop_es_name The name of the
 #' parameter. Required if `x` is `"es"`.
@@ -163,7 +175,7 @@
 #' @param ci_level The level of confidence
 #' of the confidence intervals computed
 #' for the estimated power. Default is
-#' .95.
+#' .95, denoting 95%.
 #'
 #' @param power_min,power_max The minimum
 #' and maximum values, respectively,
@@ -173,7 +185,7 @@
 #'
 #' @param x_interval A vector of
 #' two values, the minimum value
-#' and the maximum sample values, in
+#' and the maximum values of `x`, in
 #' the search for the values
 #' (sample sizes or population values).
 #'
@@ -197,9 +209,10 @@
 #'
 #' @param simulation_progress Logical.
 #' Whether the progress in each call
-#' to [power4test()] or [power4test_by_n()]
+#' to [power4test()], [power4test_by_n()],
+#' or [power4test_by_es()]
 #' is shown. To be passed to
-#' the `progress` argument of these two
+#' the `progress` argument of these
 #' functions.
 #'
 #' @param max_trials The maximum number
@@ -218,9 +231,10 @@
 #' Monte Carlo simulation or
 #' bootstrapping samples in the final
 #' stage. The `R` in calling
-#' [power4test()] or [power4test_by_n()]
+#' [power4test()], [power4test_by_n()],
+#' or [power4test_by_es()]
 #' will be stepped up to this value
-#' when approaching to the target
+#' when approaching the target
 #' power. Do not need to be very large
 #' because the goal is to estimate
 #' power by replications, not for high
@@ -248,17 +262,18 @@
 #' parallel processing is involved.
 #'
 #' @param x_include_interval Logical.
-#' Whether `x_interval` is mandatory
+#' Whether the minimum and maximum
+#' values in `x_interval` are mandatory
 #' to be included in the values
 #' to be searched.
 #'
 #' @param power_model The nonlinear
 #' model to be used when estimating
 #' the relation between power and
-#' sample size. Should be a formula
+#' `x`. Should be a formula
 #' acceptable by [stats::nls()],
 #' with `reject` on the left-hand side,
-#' and `x` (stands for sample size)
+#' and `x`
 #' on the right-hand
 #' side, with one or more parameters.
 #' Can also be set to a list of
@@ -299,15 +314,16 @@
 #' [stats::nls()]. Used to override
 #' internal default, such as the
 #' algorithm (default is `"port"`).
-#' Used with cautions.
+#' Use this argument with cautions.
 #'
 #' @param nls_control A named list of
 #' arguments to be passed the `control`
 #' argument of [stats::nls()] when
 #' estimating the relation between
-#' power and sample size. The values will
+#' power and `x`. The values will
 #' override internal default values,
 #' and also override `nls_args`.
+#' Use this argument with cautions.
 #'
 #' @param save_sim_all If `FALSE`,
 #' the default, the data in each
@@ -322,19 +338,24 @@
 #'
 #' @examples
 #'
-#' # TODO:
-#' # - Update the example
+#' # Specify the population model
 #'
 #' mod <-
 #' "
-#' m ~ a*x
-#' y ~ b*m + x
-#' ab := a * b
+#' m ~ x
+#' y ~ m + x
 #' "
 #'
-#' mod_es <- c("y ~ m" = "l",
-#'             "m ~ x" = "m",
-#'             "y ~ x" = "n")
+#' # Specify the population values
+#'
+#' mod_es <-
+#' "
+#' m ~ x: m
+#' y ~ m: l
+#' y ~ x: n
+#' "
+#'
+#' # Generate the datasets
 #'
 #' sim_only <- power4test(nrep = 10,
 #'                        model = mod,
@@ -343,18 +364,21 @@
 #'                        do_the_test = FALSE,
 #'                        iseed = 1234)
 #'
+#' # Do a test
+#'
 #' test_out <- power4test(object = sim_only,
 #'                        test_fun = test_parameters,
-#'                        test_args = list(pars = "ab"))
+#'                        test_args = list(pars = "m~x"))
+#'
+#' # Determine the sample size with a power of .80 (default)
 #'
 #' # In real analysis, to have more stable results:
-#' # - Use a larger final_nrep (e.g., 500).
+#' # - Use a larger final_nrep (e.g., 400).
 #' # - Use the default xs_per_trial of 3, or just remove it.
 #'
 #' # If the default values are OK, this call is sufficient:
 #' # power_vs_n <- x_from_power(test_out,
 #' #                            x = "n",
-#' #                            target_power = .80,
 #' #                            seed = 4567)
 #' power_vs_n <- x_from_power(test_out,
 #'                            x = "n",
@@ -367,6 +391,7 @@
 #'                            seed = 4567)
 #' summary(power_vs_n)
 #' plot(power_vs_n)
+#'
 #'
 #' @importFrom graphics abline arrows par points text title
 #'
@@ -1081,12 +1106,6 @@ x_from_power <- function(object,
 
 #' @rdname x_from_power
 #'
-#' @param x The output of
-#' [x_from_power()], the
-#' `print` method of
-#' an `x_from_power` object,
-#' which is the output of
-#' [x_from_power()].
 #'
 #' @param digits The number of digits
 #' after the decimal when printing
@@ -1095,11 +1114,12 @@ x_from_power <- function(object,
 #' @param ... Optional arguments.
 #' Not used for now.
 #'
-#' @description
+#' @details
 #' The `print` method only print
-#' basic information. Call
-#' [summary.x_from_power()] and its
-#' `print` method for detailed output.
+#' basic information. Call the
+#' `summary` method of `x_from_power` objects
+#' ([summary.x_from_power()]) and its
+#' `print` method for detailed results
 #'
 #' @return
 #' The `print`-method of `x_from_power`

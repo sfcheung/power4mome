@@ -25,7 +25,7 @@
 )
 }
 \arguments{
-\item{x}{A \code{x_from_power} object,
+\item{x}{An \code{x_from_power} object,
 the output of \code{\link[=x_from_power]{x_from_power()}}.}
 
 \item{what}{A character vector of
@@ -124,36 +124,43 @@ predictor.}
 }
 \value{
 The \code{plot}-method of \code{x_from_power}
-is called for its side effect.
+returns \code{x} invisibly.
+It is called for its side effect.
 }
 \description{
-It plot the results
+It plots the results
 of 'x_from_power', such as the
 estimated power against sample size.
 }
 \details{
 It currently plots the relation
 between estimated power and
-sample size. Other elements
+the values examined by \code{\link[=x_from_power]{x_from_power()}}.
+Other elements
 can be requested (see the argument
 \code{what}), and they can be customized
 individually.
 }
 \examples{
 
-# TODO:
-# - Update the example
+# Specify the population model
 
 mod <-
 "
-m ~ a*x
-y ~ b*m + x
-ab := a * b
+m ~ x
+y ~ m + x
 "
 
-mod_es <- c("y ~ m" = "l",
-            "m ~ x" = "m",
-            "y ~ x" = "n")
+# Specify the population values
+
+mod_es <-
+"
+m ~ x: m
+y ~ m: l
+y ~ x: n
+"
+
+# Generate the datasets
 
 sim_only <- power4test(nrep = 10,
                        model = mod,
@@ -162,19 +169,14 @@ sim_only <- power4test(nrep = 10,
                        do_the_test = FALSE,
                        iseed = 1234)
 
+# Do a test
+
 test_out <- power4test(object = sim_only,
                        test_fun = test_parameters,
-                       test_args = list(pars = "ab"))
+                       test_args = list(pars = "m~x"))
 
-# In real analysis, to have more stable results:
-# - Use a larger final_nrep (e.g., 500).
-# - Use the default xs_per_trial of 3, or just remove it.
+# Determine the sample size with a power of .80 (default)
 
-# If the default values are OK, this call is sufficient:
-# power_vs_n <- x_from_power(test_out,
-#                            x = "n",
-#                            target_power = .80,
-#                            seed = 4567)
 power_vs_n <- x_from_power(test_out,
                            x = "n",
                            progress = TRUE,
@@ -184,7 +186,6 @@ power_vs_n <- x_from_power(test_out,
                            nrep_steps = 1,
                            max_trials = 1,
                            seed = 4567)
-summary(power_vs_n)
 plot(power_vs_n)
 
 }

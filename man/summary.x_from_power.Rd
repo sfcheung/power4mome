@@ -29,7 +29,7 @@ after the decimal when printing
 the results.}
 }
 \value{
-Return an object of the class
+It returns an object of the class
 \code{summary.x_from_power}, which is
 simply the output of \code{\link[=x_from_power]{x_from_power()}},
 with a \code{print} method dedicated for
@@ -52,16 +52,24 @@ to be printed in details.
 }
 \examples{
 
+# Specify the population model
+
 mod <-
 "
-m ~ a*x
-y ~ b*m + x
-ab := a * b
+m ~ x
+y ~ m + x
 "
 
-mod_es <- c("y ~ m" = "l",
-            "m ~ x" = "m",
-            "y ~ x" = "n")
+# Specify the population values
+
+mod_es <-
+"
+m ~ x: m
+y ~ m: l
+y ~ x: n
+"
+
+# Generate the datasets
 
 sim_only <- power4test(nrep = 10,
                        model = mod,
@@ -70,19 +78,14 @@ sim_only <- power4test(nrep = 10,
                        do_the_test = FALSE,
                        iseed = 1234)
 
+# Do a test
+
 test_out <- power4test(object = sim_only,
                        test_fun = test_parameters,
-                       test_args = list(pars = "ab"))
+                       test_args = list(pars = "m~x"))
 
-# In real analysis, to have more stable results:
-# - Use a larger final_nrep (e.g., 500).
-# - Use the default xs_per_trial of 3, or just remove it.
+# Determine the sample size with a power of .80 (default)
 
-# If the default values are OK, this call is sufficient:
-# power_vs_n <- x_from_power(test_out,
-#                            x = "n",
-#                            target_power = .80,
-#                            seed = 4567)
 power_vs_n <- x_from_power(test_out,
                            x = "n",
                            progress = TRUE,
