@@ -9,15 +9,16 @@
 #' @details
 #' It merges into one object the output
 #' of [sim_data()], which is a list of
-#' `M` simulated datasets,
+#' `nrep` simulated datasets,
 #' [fit_model()], which is a list of the
-#' [lavaan::sem()] output for the `M`
+#' [lavaan::sem()] output for the `nrep`
 #' datasets, and optionally the output
 #' of [gen_mc()] or [gen_boot()], which is a list of the
-#' `M` sets of Monte Carlo or bootstrap estimates
+#' `R` sets of Monte Carlo or bootstrap estimates
 #' based on the results of
-#' [fit_model()]. The list has `M`
-#' elements, with the data, model fit
+#' [fit_model()]. The list has `nrep`
+#' elements, each element with the data,
+#' the model fit
 #' results, and optionally the Monte
 #' Carlo estimates matched.
 #'
@@ -26,10 +27,14 @@
 #' further processed to estimate the
 #' power of this test.
 #'
-#' This function is used by the
-#' all-in-one function [power4test()].
-#' Users usually do not call this
-#' function directly.
+#' The function [sim_out()] is used by
+#' the all-in-one function
+#' [power4test()]. Users usually do not
+#' call this function directly, though
+#' developers can use this function to
+#' develop other functions for power
+#' analysis, or to build their own
+#' workflows to do the power analysis.
 #'
 #' @seealso [power4test()]
 #'
@@ -61,23 +66,47 @@
 #' in `fit_all`.
 #'
 #' @examples
+#'
+#' # Specify the model
+#'
 #' mod <-
 #' "m ~ x
 #'  y ~ m + x"
+#'
+#' # Specify the population values
+#'
 #' es <-
-#' c("y ~ m" = "m",
-#'   "m ~ x" = "m",
-#'   "y ~ x" = "n")
+#' "
+#' y ~ m: m
+#' m ~ x: m
+#' y ~ x: n
+#' "
+#'
+#' # Generate the simulated datasets
+#'
 #' dats <- sim_data(nrep = 5,
 #'                  model = mod,
 #'                  pop_es = es,
 #'                  n = 100,
 #'                  iseed = 1234)
 #'
+#' # Fit the population model to each dataset
+#'
 #' fits <- fit_model(dats)
+#'
+#' # Combine the results to one object
+#'
 #' sim_out_all <- sim_out(data_all = dats,
 #'                        fit = fits)
 #' sim_out_all
+#'
+#' # Verify that the elements of fits are set to extra$fit
+#'
+#' library(lavaan)
+#' parameterEstimates(fits[[1]])
+#' parameterEstimates(sim_out_all[[1]]$extra$fit)
+#' parameterEstimates(fits[[2]])
+#' parameterEstimates(sim_out_all[[2]]$extra$fit)
 #'
 #' @export
 #'
@@ -142,7 +171,7 @@ sim_out <- function(data_all,
 #'
 #' @return
 #' The `print` method of `sim_out`
-#' return `x` invisibly. Called for
+#' returns `x` invisibly. Called for
 #' its side effect.
 #'
 #' @rdname sim_out

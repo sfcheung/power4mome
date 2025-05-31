@@ -54,7 +54,7 @@ the description of the argument
 \code{...} for details.
 
 The \code{print} method of \code{sim_out}
-return \code{x} invisibly. Called for
+returns \code{x} invisibly. Called for
 its side effect.
 }
 \description{
@@ -67,15 +67,16 @@ single object.
 \details{
 It merges into one object the output
 of \code{\link[=sim_data]{sim_data()}}, which is a list of
-\code{M} simulated datasets,
+\code{nrep} simulated datasets,
 \code{\link[=fit_model]{fit_model()}}, which is a list of the
-\code{\link[lavaan:sem]{lavaan::sem()}} output for the \code{M}
+\code{\link[lavaan:sem]{lavaan::sem()}} output for the \code{nrep}
 datasets, and optionally the output
 of \code{\link[=gen_mc]{gen_mc()}} or \code{\link[=gen_boot]{gen_boot()}}, which is a list of the
-\code{M} sets of Monte Carlo or bootstrap estimates
+\code{R} sets of Monte Carlo or bootstrap estimates
 based on the results of
-\code{\link[=fit_model]{fit_model()}}. The list has \code{M}
-elements, with the data, model fit
+\code{\link[=fit_model]{fit_model()}}. The list has \code{nrep}
+elements, each element with the data,
+the model fit
 results, and optionally the Monte
 Carlo estimates matched.
 
@@ -84,29 +85,57 @@ effects of interests, which are
 further processed to estimate the
 power of this test.
 
-This function is used by the
-all-in-one function \code{\link[=power4test]{power4test()}}.
-Users usually do not call this
-function directly.
+The function \code{\link[=sim_out]{sim_out()}} is used by
+the all-in-one function
+\code{\link[=power4test]{power4test()}}. Users usually do not
+call this function directly, though
+developers can use this function to
+develop other functions for power
+analysis, or to build their own
+workflows to do the power analysis.
 }
 \examples{
+
+# Specify the model
+
 mod <-
 "m ~ x
  y ~ m + x"
+
+# Specify the population values
+
 es <-
-c("y ~ m" = "m",
-  "m ~ x" = "m",
-  "y ~ x" = "n")
+"
+y ~ m: m
+m ~ x: m
+y ~ x: n
+"
+
+# Generate the simulated datasets
+
 dats <- sim_data(nrep = 5,
                  model = mod,
                  pop_es = es,
                  n = 100,
                  iseed = 1234)
 
+# Fit the population model to each dataset
+
 fits <- fit_model(dats)
+
+# Combine the results to one object
+
 sim_out_all <- sim_out(data_all = dats,
                        fit = fits)
 sim_out_all
+
+# Verify that the elements of fits are set to extra$fit
+
+library(lavaan)
+parameterEstimates(fits[[1]])
+parameterEstimates(sim_out_all[[1]]$extra$fit)
+parameterEstimates(fits[[2]])
+parameterEstimates(sim_out_all[[2]]$extra$fit)
 
 }
 \seealso{
