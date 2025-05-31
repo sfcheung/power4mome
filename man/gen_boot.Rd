@@ -74,27 +74,46 @@ effects such as indirect effects,
 usually by functions from the
 \code{manymome} package, such as
 \code{\link[manymome:cond_indirect]{manymome::indirect_effect()}}.
-
+}
+\section{The role of \code{gen_boot()}}{
 This function is used by the
 all-in-one function \code{\link[=power4test]{power4test()}}.
 Users usually do not call this
-function directly.
+function directly, though
+developers can use this function to
+customize the workflow of the
+power analysis.
 }
+
 \examples{
+
+# Specify the population model
+
 mod <-
 "m ~ x
  y ~ m + x"
+
+# Specify the effect sizes (population parameter values)
+
 es <-
 c("y ~ m" = "m",
   "m ~ x" = "m",
   "y ~ x" = "n")
+
+# Generate several simulated datasets
+
 data_all <- sim_data(nrep = 2,
                      model = mod,
                      pop_es = es,
                      n = 50,
                      iseed = 1234)
 
+# Fit the population model to each datasets
+
 fit_all <- fit_model(data_all)
+
+# Generate bootstrap estimates for each replication
+
 boot_all <- gen_boot(fit_all,
                      R = 10,
                      iseed = 4567)
