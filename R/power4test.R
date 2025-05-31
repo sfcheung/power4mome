@@ -81,6 +81,31 @@
 #' arguments can be found in sections
 #' below.
 #'
+#' @details
+#' # Model Fitting Arguments
+#'
+#' For power analysis, usually, the
+#' population model (`model`) is to be
+#' fitted, and there is no need to
+#' set `fit_model_args`.
+#'
+#' If power analysis is to be conducted
+#' for fitting a model that is not the
+#' population model, of if non-default
+#' settings are desired when fitting
+#' a model, then the argument `fit_model_args`
+#' needed to be set to customize the
+#' call to [fit_model()]. For example,
+#' users may want to examine the power
+#' of a test when a misspecified model
+#' is fitted, or the power of a test
+#' when MLR is used as the estimator
+#' when calling [lavaan::sem()].
+#'
+#' This is
+#' an advanced feature, to be described
+#' in a vignette.
+#'
 #' @inheritSection do_test Major Test-Related Arguments
 #'
 # It is a known issue that inherited
@@ -152,6 +177,8 @@
 #'    to a `power4test` object.
 #'
 #' @inheritParams do_test
+#'
+#' @inheritParams fit_model
 #'
 #' @param object Optional. If set to a
 #' `power4test` object, it will be

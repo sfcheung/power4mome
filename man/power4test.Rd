@@ -405,6 +405,30 @@ arguments can be found in sections
 below.
 }
 
+\section{Model Fitting Arguments}{
+For power analysis, usually, the
+population model (\code{model}) is to be
+fitted, and there is no need to
+set \code{fit_model_args}.
+
+If power analysis is to be conducted
+for fitting a model that is not the
+population model, of if non-default
+settings are desired when fitting
+a model, then the argument \code{fit_model_args}
+needed to be set to customize the
+call to \code{\link[=fit_model]{fit_model()}}. For example,
+users may want to examine the power
+of a test when a misspecified model
+is fitted, or the power of a test
+when MLR is used as the estimator
+when calling \code{\link[lavaan:sem]{lavaan::sem()}}.
+
+This is
+an advanced feature, to be described
+in a vignette.
+}
+
 \section{Advanced Features}{
 \subsection{Updating a Condition}{
 

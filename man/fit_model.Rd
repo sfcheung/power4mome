@@ -84,7 +84,7 @@ which is a list of the output of
 \code{fit_function} (\code{\link[lavaan:sem]{lavaan::sem()}}
 by default). If an error occurred
 when fitting the model to a dataset,
-then element will be the error
+then this element will be the error
 message from the fit function.
 }
 \description{
@@ -93,40 +93,83 @@ Get the output of
 of the stored datasets.
 }
 \details{
-By default, it extracts the model
+By default, it
+\itemize{
+\item extracts the model
 stored in the output of \code{\link[=sim_data]{sim_data()}},
-fits the model to each dataset
+\item fits the model to each dataset
 simulated using \code{fit_function},
 default to \code{"lavaan"} and
-\code{\link[lavaan:sem]{lavaan::sem()}} will be called, and
-returns the results. If the datasets
+\code{\link[lavaan:sem]{lavaan::sem()}} will be called,
+\item and returns the results.
+}
+
+If the datasets
 were generated from a multigroup
 model when calling \code{\link[=sim_data]{sim_data()}},
 a multigroup model is fitted.
-
+}
+\section{The role of \code{fit_model()}}{
 This function is used by the
 all-in-one function \code{\link[=power4test]{power4test()}}.
 Users usually do not call this
-function directly.
+function directly, though
+developers can use this function to
+custom the model fitting step in
+power analysis.
 }
+
 \examples{
+
+# Specify the population model
+
 mod <-
 "m ~ x
  y ~ m + x"
+
+# Specify the effect sizes (population parameter values)
+
 es <-
 c("y ~ m" = "m",
   "m ~ x" = "m",
   "y ~ x" = "n")
+
+# Generate several simulated datasets
+
 data_all <- sim_data(nrep = 5,
-                 model = mod,
-                 pop_es = es,
-                 n = 100,
-                 iseed = 1234)
+                     model = mod,
+                     pop_es = es,
+                     n = 100,
+                     iseed = 1234)
+
+# Fit the population model to each datasets
 
 fit_all <- fit_model(data_all)
 fit_all[[1]]
 
+# Fit the population model using the MLR estimator
+
+fit_all_mlr <- fit_model(data_all,
+                         estimator = "MLR")
+fit_all_mlr[[1]]
+
+# Fit a model different from the population model,
+# with the MLR estimator
+
+mod2 <-
+"m ~ x
+ y ~ m"
+
+fit_all_mlr2 <- fit_model(data_all,
+                          mod2,
+                          estimator = "MLR")
+fit_all_mlr2[[1]]
+
 }
 \seealso{
-\code{\link[=power4test]{power4test()}}
+See \code{\link[=power4test]{power4test()}} for
+the all-in-one function that uses
+this function, and \code{\link[=sim_data]{sim_data()}}
+for the function generating datasets
+for this function.
 }
