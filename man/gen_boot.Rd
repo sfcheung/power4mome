@@ -122,5 +122,7 @@ boot_all
 
 }
 \seealso{
-\code{\link[=power4test]{power4test()}}
+See \code{\link[=power4test]{power4test()}} for
+the all-in-one function that uses
+this function.
 }
