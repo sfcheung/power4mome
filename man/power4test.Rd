@@ -84,7 +84,9 @@ specified.}
 specify population effect sizes. See
 'Details' of \code{\link[=ptable_pop]{ptable_pop()}} on how to
 set the effect sizes for this
-argument. Ignored if \code{ptable} is
+argument. Can also be a multiline
+string, explained in 'Details'.
+Ignored if \code{ptable} is
 specified.}
 
 \item{standardized}{Logical. If
