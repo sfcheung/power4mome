@@ -54,6 +54,7 @@
 #'
 #' @examples
 #'
+#' # Specify the model
 #'
 #' mod <-
 #' "
@@ -61,10 +62,17 @@
 #' y ~ m + x
 #' "
 #'
-#' mod_es <- c("m ~ x" = "n",
-#'             "y ~ x" = "m",
-#'             "m ~ w1" = "n",
-#'             "m ~ x:w1" = "l")
+#' # Specify the population values
+#'
+#' mod_es <-
+#' "
+#' m ~ x: n
+#' y ~ x: m
+#' m ~ w1: n
+#' m ~ x:w1: l
+#' "
+#'
+#' # Simulate the data
 #'
 #' sim_only <- power4test(nrep = 4,
 #'                        model = mod,
@@ -72,6 +80,8 @@
 #'                        n = 100,
 #'                        do_the_test = FALSE,
 #'                        iseed = 1234)
+#'
+#' # Do the test in each replication
 #'
 #' test_out <- power4test(object = sim_only,
 #'                        test_fun = test_moderation)

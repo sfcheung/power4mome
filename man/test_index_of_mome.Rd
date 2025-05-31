@@ -126,7 +126,7 @@ fitted by regression using
 }
 \examples{
 
-
+# Specify the model
 
 mod <-
 "
@@ -134,10 +134,17 @@ m ~ x + w + x:w
 y ~ m
 "
 
-mod_es <- c("m ~ x" = "n",
-            "y ~ x" = "m",
-            "m ~ w" = "n",
-            "m ~ x:w" = "l")
+# Specify the population values
+
+mod_es <-
+"
+m ~ x: n
+y ~ x: m
+m ~ w: l
+m ~ x:w: l
+"
+
+# Simulate the data
 
 sim_only <- power4test(nrep = 2,
                        model = mod,
@@ -146,6 +153,8 @@ sim_only <- power4test(nrep = 2,
                        R = 100,
                        do_the_test = FALSE,
                        iseed = 1234)
+
+# Do the test in each replication
 
 test_out <- power4test(object = sim_only,
                        test_fun = test_index_of_mome,
@@ -157,7 +166,6 @@ test_out <- power4test(object = sim_only,
 
 print(test_out,
       test_long = TRUE)
-
 
 }
 \seealso{

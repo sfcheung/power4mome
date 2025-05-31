@@ -22,7 +22,7 @@ test_cond_indirect_effects(
 }
 \arguments{
 \item{fit}{The fit object, to be
-passed to \code{\link[manymome:cond_indirect]{manymome::cond_indirect()}}.}
+passed to \code{\link[manymome:cond_indirect]{manymome::cond_indirect_effects()}}.}
 
 \item{x}{The name of the \code{x}-variable,
 the predictor.}
@@ -162,16 +162,27 @@ calling the function.
 }
 \examples{
 
+# Specify the model
+
 model_simple_mod <-
 "
 m ~ x + w + x:w
 y ~ m + x
 "
-model_simple_mod_es <- c("y ~ m" = "l",
-                         "y ~ x" = "n",
-                         "m ~ x" = "m",
-                         "m ~ w" = "n",
-                         "m ~ x:w" = "l")
+
+# Specify the population values
+
+model_simple_mod_es <-
+"
+y ~ m: l
+y ~ x: n
+m ~ x: m
+m ~ w: n
+m ~ x:w: l
+"
+
+# Simulate the data
+
 sim_only <- power4test(nrep = 5,
                        model = model_simple_mod,
                        pop_es = model_simple_mod_es,
@@ -179,6 +190,8 @@ sim_only <- power4test(nrep = 5,
                        R = 100,
                        do_the_test = FALSE,
                        iseed = 1234)
+
+# Do the tests in each replication
 
 test_out <- power4test(object = sim_only,
                        test_fun = test_cond_indirect_effects,

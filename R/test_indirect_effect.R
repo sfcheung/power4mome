@@ -103,15 +103,24 @@
 #'
 #' @examples
 #'
+#' # Specify the model
+#'
 #' model_simple_med <-
 #' "
 #' m ~ x
 #' y ~ m + x
 #' "
 #'
-#' model_simple_med_es <- c("y ~ m" = "l",
-#'                          "m ~ x" = "m",
-#'                          "y ~ x" = "n")
+#' # Specify the population values
+#'
+#' model_simple_med_es <-
+#' "
+#' y ~ m: l
+#' m ~ x: m
+#' y ~ x: n
+#' "
+#'
+#' # Simulate the data
 #'
 #' sim_only <- power4test(nrep = 5,
 #'                        model = model_simple_med,
@@ -120,6 +129,8 @@
 #'                        R = 100,
 #'                        do_the_test = FALSE,
 #'                        iseed = 1234)
+#'
+#' # Do the test in each replication
 #'
 #' test_ind <- power4test(object = sim_only,
 #'                        test_fun = test_indirect_effect,
