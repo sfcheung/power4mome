@@ -58,8 +58,12 @@ reference:
   - power4test
   - power4test_by_n
   - power4test_by_es
-  - rejection_rates
   - x_from_power
+- title: Helper Functions
+  desc:  >
+    Helpers for main functions
+- contents:
+  - rejection_rates
   - plot.x_from_power
   - summary.x_from_power
   - power_curve
@@ -92,13 +96,6 @@ reference:
   - gen_boot
   - sim_out
   - do_test
-- title: Helper Functions
-  desc:  >
-    Miscellaneous helper
-    functions
-- contents:
-  - summarize_tests
-  - pop_es_yaml
 - title: Generate Random Numbers
   desc:  >
     Functions for generating
@@ -113,6 +110,13 @@ reference:
   - rpgnorm_rs
   - rt_rs
   - runif_rs
+- title: Miscellaneous Functions
+  desc:  >
+    Miscellaneous functions
+- contents:
+  - summarize_tests
+  - pop_es_yaml
+
 # - title: Datasets
 #   desc: Datasets used in examples.
 # - contents:
