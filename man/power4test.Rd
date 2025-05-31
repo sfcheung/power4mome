@@ -55,7 +55,10 @@ power4test(
 \item{object}{Optional. If set to a
 \code{power4test} object, it will be
 updated using the value(s) in \code{n},
-\code{pop_es}, and/or \code{nrep}. Default is \code{NULL}.}
+\code{pop_es}, and/or \code{nrep} if they changed,
+or a new test will be conducted and
+added to \code{objet}. See the help page
+for details. Default is \code{NULL}.}
 
 \item{nrep}{The number of replications
 to generate the simulated datasets.
@@ -79,8 +82,10 @@ on how to specify the model.
 Ignored if \code{ptable} is
 specified.}
 
-\item{pop_es}{The character vector to
-specify population effect sizes. See
+\item{pop_es}{The character vector or
+multiline string to
+specify population effect sizes
+(population values of parameters). See
 the help page on how to specify this
 argument.
 Ignored if \code{ptable} is
@@ -132,7 +137,7 @@ to use this argument.}
 arguments to be passed to \code{\link[=fit_model]{fit_model()}}
 when fitting the
 model.
-Should be a named argument
+Should be a named list
 with names being the names of the
 arguments.}
 
@@ -150,7 +155,10 @@ intervals to use. Can be either
 \code{"mc"} for Monte Carlo method
 (the default) or \code{"boot"} for
 nonparametric bootstrapping method.
-See \code{\link[=sim_data]{sim_data()}} on the details.}
+Relevant for test functions that
+make use of estimates generate by
+\code{\link[=gen_boot]{gen_boot()}} or \code{\link[=gen_mc]{gen_mc()}}, such as
+\code{\link[=test_indirect_effect]{test_indirect_effect()}}.}
 
 \item{gen_mc_args}{A list of
 arguments to be passed to
@@ -220,15 +228,19 @@ of \code{\link[=do_test]{do_test()}}. Default is \code{NULL}.}
 
 \item{do_the_test}{If \code{TRUE},
 \code{\link[=do_test]{do_test()}} will be called to do the
-specified test in the fit output of
-each dataset.}
+test specified by \code{test_fun} on the
+fit output of each dataset.}
 
 \item{sim_all}{If set to either a
 \code{sim_out} object (the output of
 \code{\link[=sim_out]{sim_out()}} or a \code{power4test} object
 (the output of \code{\link[=power4test]{power4test()}}), the
 stored datasets and fit outputs will
-be used for doing the test.}
+be used for doing the test. Setting
+\code{object} to the output of \code{\link[=power4test]{power4test()}}
+is now the preferred method, but this
+argument is kept for backward
+compatibility.}
 
 \item{iseed}{The seed for the random
 number generator. Default is \code{NULL}
@@ -243,7 +255,7 @@ Default is \code{FALSE}.}
 
 \item{progress}{If \code{TRUE}, the progress
 of each step will be displayed.
-Default is `FALSE.}
+Default is \code{FALSE}.}
 
 \item{ncores}{The number of CPU
 cores to use if parallel processing
@@ -320,7 +332,7 @@ be passed to other print methods}
 }
 \value{
 An object of the class \code{power4test},
-which is a list of with two elements:
+which is a list with two elements:
 \itemize{
 \item \code{sim_all}: The output of \code{\link[=sim_out]{sim_out()}}.
 \item \code{test_all}: A named list of the
@@ -347,35 +359,45 @@ results.
 It is an all-in-one function for
 estimating the power of a test for
 a model, given the sample size
-and effect sizes.
+and effect sizes (population values
+of model parameters).
 }
 \section{Workflow}{
 This is the workflow:
 \itemize{
-\item If an object with model and data
-already generated is supplied
-through \code{sim_all}, such as the
-output of \code{\link[=sim_out]{sim_out()}} or of
+\item If \code{object} is an output
+of the output
+of a previous call to
 \code{\link[=power4test]{power4test()}} with \code{do_the_test}
-set to \code{FALSE}, the following steps
+set to \code{FALSE} and so has only the
+model and the simulated data,
+the following steps
 will be skipped and go directly to
 doing the test.
 \itemize{
 \item Call \code{\link[=sim_data]{sim_data()}} to determine
 the population model and
-generate the datasets.
-\item Call \code{\link[=fit_model]{fit_model()}} to fit the
-model to each of the datasets.
+generate the datasets, using
+arguments such as \code{model} and
+\code{pop_es}.
+\item Call \code{\link[=fit_model]{fit_model()}} to fit a
+model to each of the datasets,
+which is the population model
+by default.
 \item If \code{R} is not \code{NULL} and
 \code{ci_type = "mc"}, call
 \code{\link[=gen_mc]{gen_mc()}} to generate Monte
 Carlo estimates using
-\code{\link[manymome:do_mc]{manymome::do_mc()}}.
+\code{\link[manymome:do_mc]{manymome::do_mc()}}. The estimates
+can be used by supported functions
+such as \code{\link[=test_indirect_effect]{test_indirect_effect()}}.
 \item If \code{R} is not \code{NULL} and
 \code{ci_type = "boot"}, call
 \code{\link[=gen_boot]{gen_boot()}} to generate
 bootstrap estimates using
-\code{\link[manymome:do_boot]{manymome::do_boot()}}.
+\code{\link[manymome:do_boot]{manymome::do_boot()}}. The estimates
+can be used by supported functions
+such as \code{\link[=test_indirect_effect]{test_indirect_effect()}}.
 \item Merge the results into a
 \code{sim_out} object by calling
 \code{\link[=sim_out]{sim_out()}}.
@@ -392,7 +414,7 @@ the test.
 \itemize{
 \item \code{\link[=do_test]{do_test()}} will be called to do
 the test in the fit output of
-each datasets.
+each dataset.
 }
 \item Return a \code{power4test} object which
 include the output of \code{sim_out}
@@ -410,9 +432,48 @@ effect sizes and sample sizes.
 Detailed description on major
 arguments can be found in sections
 below.
+
+NOTE: The technical internal workflow of
+of \code{\link[=power4test]{power4test()}} can be found in
+this page: \url{https://sfcheung.github.io/power4mome/articles/power4test_workflow.html}.
 }
 
-\section{Model Fitting Arguments}{
+\section{Updating a Condition}{
+The function \code{\link[=power4test]{power4test()}} can also be used to
+update a condition when only some
+selected aspects is to be changed.
+
+For example,
+instead of calling this function with
+all the arguments set just to change
+the sample size, it can be called
+by supplying an existing
+\code{power4test} object and set only
+\code{n} to a new sample size. The data
+and the tests will be updated
+automatically. See the examples for
+an illustration.
+}
+
+\section{Adding Another Test}{
+The function \code{\link[=power4test]{power4test()}} can also be used to
+add a test to the output from a
+previous call to \code{\link[=power4test]{power4test()}}.
+
+For example, after simulating the
+datasets and doing one test,
+the output can be set to \code{object}
+of \code{\link[=power4test]{power4test()}}, and set only
+\code{test_fun} and, optionally,
+\code{test_fun_args} to do one more test
+on the generated datasets. The output
+will be the original
+object with the results of the new
+test added. See the examples for
+an illustration.
+}
+
+\section{Model Fitting Arguments ('fit_model_args')}{
 For power analysis, usually, the
 population model (\code{model}) is to be
 fitted, and there is no need to
@@ -424,66 +485,17 @@ population model, of if non-default
 settings are desired when fitting
 a model, then the argument \code{fit_model_args}
 needed to be set to customize the
-call to \code{\link[=fit_model]{fit_model()}}. For example,
+call to \code{\link[=fit_model]{fit_model()}}.
+
+For example,
 users may want to examine the power
 of a test when a misspecified model
 is fitted, or the power of a test
 when MLR is used as the estimator
 when calling \code{\link[lavaan:sem]{lavaan::sem()}}.
 
-This is
-an advanced feature, to be described
-in a vignette.
-}
-
-\section{Advanced Features}{
-\subsection{Updating a Condition}{
-
-This function can also be used to
-update a condition when only some
-selected aspects changed. For example,
-without calling this function with
-all the arguments set just to change
-the sample size, it can be called
-by supplying an existing
-\code{power4test} object and set only
-\code{n} to a new sample size. The data
-and the tests will be updated
-automatically.
-}
-
-\subsection{Multiple Models}{
-
-More than one model can be fitted to
-each replication. This is done
-by setting \code{fit_model_args} to
-a named list. The names are the names
-used to identify the models, and
-each element is a list of named
-list of arguments for a model.
-
-For example:
-
-\preformatted{
-fit_model_args = list(fit = list(),
-                      fit2 = list(model = mod2),
-                      fit3 = list(model = mod3))
-}
-
-Three models will be fitted. The
-first model is the model ued to
-generate the data, named \code{"fit"}.
-The second and first models are
-named \code{"fit2"} and \code{"fit3"},
-respectively, with \code{"fit2"} fitted
-with \code{model = mod2} and \code{"fit3"}
-fitted with \code{model = mod3}.
-
-If Monte Carlos or bootstrap estimates
-are to be generated, they will be
-generated for each model, using the
-values for their arguments.
-}
+See the help page of \code{\link[=fit_model]{fit_model()}}
+for some examples.
 }
 
 \section{Specify the Population Model by 'model'}{
@@ -1115,23 +1127,29 @@ then set to the argument \code{object} of
 
 \examples{
 
+# Specify the model
+
 model_simple_med <-
 "
-m ~ a * x
-y ~ b * m + x
-ab := a * b
+m ~ x
+y ~ m + x
 "
 
-model_simple_med_es <- c("y ~ m" = "l",
-                         "m ~ x" = "m",
-                         "y ~ x" = "n")
+# Specify the population values
+
+model_simple_med_es <-
+"
+m ~ x: m
+y ~ m: l
+y ~ x: n
+"
 
 out <- power4test(nrep = 50,
                   model = model_simple_med,
                   pop_es = model_simple_med_es,
                   n = 100,
                   test_fun = test_parameters,
-                  test_args = list(pars = "a"),
+                  test_args = list(pars = "m~x"),
                   iseed = 1234,
                   parallel = FALSE,
                   progress = TRUE)
@@ -1139,12 +1157,26 @@ out <- power4test(nrep = 50,
 print(out,
       test_long = TRUE)
 
+# Change the sample size
+
+out1 <- power4test(out,
+                   n = 200,
+                   iseed = 1234,
+                   parallel = FALSE,
+                   progress = TRUE)
+
+print(out1,
+      test_long = TRUE)
+
 # Add one more test
 
-out <- power4test(out,
-                  test_fun = test_parameters,
-                  test_args = list(op = ":="))
-print(out,
+out2 <- power4test(out,
+                   test_fun = test_parameters,
+                   test_args = list(pars = "y~x"),
+                   parallel = FALSE,
+                   progress = TRUE)
+
+print(out2,
       test_long = TRUE)
 
 }
