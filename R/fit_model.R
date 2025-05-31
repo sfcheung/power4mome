@@ -30,7 +30,7 @@
 #' Users usually do not call this
 #' function directly, though
 #' developers can use this function to
-#' custom the model fitting step in
+#' customize the model fitting step in
 #' power analysis.
 #'
 #' @seealso See [power4test()] for
