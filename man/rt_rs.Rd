@@ -2,13 +2,13 @@
 % Please edit documentation in R/rt_rs.R
 \name{rt_rs}
 \alias{rt_rs}
-\title{Random t Distribution Variable}
+\title{Random Variable From a t Distribution}
 \usage{
 rt_rs(n = 10, df = 5, pmean = 0, psd = 1)
 }
 \arguments{
 \item{n}{The number of random numbers
-to generate. Default is 10.}
+to generate.}
 
 \item{df}{\code{df} for \code{\link[stats:TDist]{stats::rt()}}.}
 

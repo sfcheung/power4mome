@@ -1,4 +1,4 @@
-#' @title Random t Distribution Variable
+#' @title Random Variable From a t Distribution
 #'
 #' @description Generate random numbers
 #' from a *t* distribution, rescaled to
@@ -16,7 +16,7 @@
 #' mean and standard.
 #'
 #' @param n The number of random numbers
-#' to generate. Default is 10.
+#' to generate.
 #'
 #' @param df `df` for [stats::rt()].
 #'

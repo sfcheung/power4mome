@@ -18,7 +18,7 @@
 #' standard.
 #'
 #' @param n The number of random numbers
-#' to generate. Default is 10.
+#' to generate.
 #'
 #' @param p1 The probability of being
 #' 1, before rescaling.

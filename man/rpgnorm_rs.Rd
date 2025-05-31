@@ -2,13 +2,13 @@
 % Please edit documentation in R/rpgnorm_rs.R
 \name{rpgnorm_rs}
 \alias{rpgnorm_rs}
-\title{Random Generalized Normal Variable}
+\title{Random Variable From a Generalized Normal Distribution}
 \usage{
 rpgnorm_rs(n = 10, p = 2, pmean = 0, psd = 1)
 }
 \arguments{
 \item{n}{The number of random numbers
-to generate. Default is 10.}
+to generate.}
 
 \item{p}{The parameter of the
 distribution. Must be a positive

@@ -1,6 +1,4 @@
-#' @title Generate random numbers from a
-#' uniform distribution with desired
-#' population mean and SD
+#' @title Random Variable From a Uniform Distribution
 #'
 #' @description Generate random numbers
 #' from a uniform distribution, with
@@ -16,7 +14,7 @@
 #' standard.
 #'
 #' @param n The number of random numbers
-#' to generate. Default is 10.
+#' to generate.
 #'
 #' @param min min for runif.
 #'

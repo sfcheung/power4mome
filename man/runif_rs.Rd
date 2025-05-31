@@ -2,15 +2,13 @@
 % Please edit documentation in R/runif_rs.R
 \name{runif_rs}
 \alias{runif_rs}
-\title{Generate random numbers from a
-uniform distribution with desired
-population mean and SD}
+\title{Random Variable From a Uniform Distribution}
 \usage{
 runif_rs(n = 10, min = 0, max = 1, pmean = 0, psd = 1)
 }
 \arguments{
 \item{n}{The number of random numbers
-to generate. Default is 10.}
+to generate.}
 
 \item{min}{min for runif.}
 

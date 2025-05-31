@@ -8,7 +8,7 @@ rbinary_rs(n = 10, p1 = 0.5, pmean = 0, psd = 1)
 }
 \arguments{
 \item{n}{The number of random numbers
-to generate. Default is 10.}
+to generate.}
 
 \item{p1}{The probability of being
 1, before rescaling.}

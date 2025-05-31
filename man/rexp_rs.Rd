@@ -2,13 +2,13 @@
 % Please edit documentation in R/rexp_rs.R
 \name{rexp_rs}
 \alias{rexp_rs}
-\title{Random Exponential Variable}
+\title{Random Variable From an Exponential Distribution}
 \usage{
 rexp_rs(n = 10, rate = 1, pmean = 0, psd = 1, rev = FALSE)
 }
 \arguments{
 \item{n}{The number of random numbers
-to generate. Default is 10.}
+to generate.}
 
 \item{rate}{\code{rate} for \code{\link[stats:Exponential]{stats::rexp()}}.}
 

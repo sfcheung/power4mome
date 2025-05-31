@@ -1,4 +1,4 @@
-#' @title Random Generalized Normal Variable
+#' @title Random Variable From a Generalized Normal Distribution
 #'
 #' @description Generate random numbers
 #' from generalized normal distribution,
@@ -17,7 +17,7 @@
 #' mean and standard.
 #'
 #' @param n The number of random numbers
-#' to generate. Default is 10.
+#' to generate.
 #'
 #' @param p The parameter of the
 #' distribution. Must be a positive

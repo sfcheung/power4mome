@@ -1,4 +1,4 @@
-#' @title Random Exponential Variable
+#' @title Random Variable From an Exponential Distribution
 #'
 #' @description Generate random numbers
 #' from an exponential distribution,
@@ -17,7 +17,7 @@
 #' mean and standard.
 #'
 #' @param n The number of random numbers
-#' to generate. Default is 10.
+#' to generate.
 #'
 #' @param rate `rate` for [stats::rexp()].
 #'
