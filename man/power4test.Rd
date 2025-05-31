@@ -167,9 +167,10 @@ arguments. Used only if
 \code{ci_type} is `"boot".}
 
 \item{test_fun}{A function to do the
-test. See the help page of
-\code{\link[=do_test]{do_test()}} for the requirements of
-this function.}
+test. See 'Details' for the requirement
+of this function. There are some
+built-in test functions in \code{power4mome},
+described in 'Details'.}
 
 \item{test_args}{A list of arguments
 to be passed to the \code{test_fun}
@@ -190,7 +191,7 @@ calling \code{test_fun}.}
 
 \item{results_fun}{The function to be
 used to extract the test results.
-See \code{Details} of \code{\link[=do_test]{do_test()}} for the requirements
+See \code{Details} for the requirements
 of this function. Default is \code{NULL},
 assuming that the output of
 \code{test_fun} can be used directly.}
@@ -340,7 +341,8 @@ It is an all-in-one function for
 estimating the power of a test for
 a model, given the sample size
 and effect sizes.
-
+}
+\section{Workflow}{
 This is the workflow:
 \itemize{
 \item If an object with model and data
@@ -397,6 +399,13 @@ power of one or several tests on a
 particular aspect of the model, such
 as a parameter, given a specific
 effect sizes and sample sizes.
+
+Detailed description on major
+arguments can be found in sections
+below.
+}
+
+\section{Advanced Features}{
 \subsection{Updating a Condition}{
 
 This function can also be used to
@@ -445,6 +454,147 @@ generated for each model, using the
 values for their arguments.
 }
 }
+
+\section{Major Test-Related Arguments}{
+\subsection{The test function (test_fun)}{
+
+The function set to \code{test_fun},
+the \emph{test function}, usually
+should work
+on the output of \code{\link[lavaan:sem]{lavaan::sem()}},
+\code{\link[lmhelprs:many_lm]{lmhelprs::many_lm()}}, or
+\code{\link[stats:lm]{stats::lm()}}, but can also be a
+function that works on the output
+of the function set to \code{fit_function}
+when calling \code{\link[=fit_model]{fit_model()}} or
+\code{\link[=power4test]{power4test()}} (see \code{fit_model_args}).
+
+The function has two default
+requirements.
+
+First, it has an argument \code{fit}, to
+be set to the output of
+\code{\link[lavaan:sem]{lavaan::sem()}} or another output
+stored in the element \code{extra$fit} of
+a replication in the \code{sim_all}
+object. (This requirement can be
+relaxed; see the section on \code{map_names}.)
+
+That is, the function definition
+should be of this from: \code{FUN(fit, ...)}. This is the form of all
+\verb{test_*} functions in \code{power4mome}.
+
+If other arguments are to be passed
+to the test function, they can be set
+to \code{test_args} as a named list.
+
+Second, the test function must
+returns an output that (a) can be
+processed by the results function
+(see below), or (b) is of
+the required format for the output of
+a results function (see the next
+section). If it already returns
+an output of the required format,
+then there is no need to set the
+results function.
+}
+
+\subsection{The results function (results_fun)}{
+
+The test results will be extracted
+from the output of \code{test_fun} by the
+function set to \code{results_fun},
+the \emph{results function}. If
+the \code{test_fun} already returns an
+output of the expected format
+(see below), then set \code{results_fun}
+to \code{NULL}, the default. The output
+of \code{test_fun} will be used for
+estimating power.
+
+The function set to \code{results_fun}
+must accept the output of \code{test_fun},
+as the first argument, and return a
+named list (which can be a data frame)
+or a named vector with some
+of the following
+elements:
+\itemize{
+\item \code{est}: Optional. The estimate of a
+parameter, if applicable.
+\item \code{se}: Optional. The standard error
+of the estimate, if applicable.
+\item \code{cilo}: Optional. The lower limit of the
+confidence interval, if applicable.
+\item \code{cihi}: Optional. The upper limit of the
+confidence interval, if applicable.
+\item \code{sig}: Required. If \code{1}, the test is
+significant. If \code{0}, the test is not
+significant. If the test cannot be
+done for any reason, it should be
+\code{NA}.
+}
+
+The results can then be used to
+estimate the power or Type I
+error of the test.
+
+For example, if
+the null hypothesis is false, then
+the proportion of significant, that
+is, the mean of the values of \code{sig}
+across replications, is the power.
+}
+
+\subsection{Built-in test functions}{
+
+The package \code{power4mome} has some ready-to-use
+test functions:
+\itemize{
+\item \code{\link[=test_indirect_effect]{test_indirect_effect()}}
+\item \code{\link[=test_cond_indirect]{test_cond_indirect()}}
+\item \code{\link[=test_cond_indirect_effects]{test_cond_indirect_effects()}}
+\item \code{\link[=test_moderation]{test_moderation()}}
+\item \code{\link[=test_index_of_mome]{test_index_of_mome()}}
+\item \code{\link[=test_parameters]{test_parameters()}}
+}
+
+Please refer to their help pages
+for examples.
+}
+
+\subsection{The argument map_names}{
+
+This argument is for developers using
+a test function that has a different
+name for the argument of the fit
+object (\code{"fit"}, the default).
+
+If \code{test_fun} is set to a function
+that works on an output of, say,
+\code{\link[lavaan:sem]{lavaan::sem()}} but the argument name
+for the output is not \code{fit}, the
+mapping can be changed by
+\code{map_names}.
+
+For example,
+\code{\link[lavaan:parameterEstimates]{lavaan::parameterEstimates()}}
+receives an output of \code{\link[lavaan:sem]{lavaan::sem()}}
+and reports the test results of model
+parameters. However, the argument
+name for the \code{lavaan} output is
+\code{object.} To instruct \code{\link[=do_test]{do_test()}} to
+do the test correctly when setting
+\code{test_fun} to
+\code{lavaan::parameterEstimates}, add
+\code{map_names = c(object = "fit")}. The
+element \code{fit} in a replication will
+then set to the argument \code{object} of
+\code{\link[lavaan:parameterEstimates]{lavaan::parameterEstimates()}}.
+}
+}
+
 \examples{
 
 model_simple_med <-

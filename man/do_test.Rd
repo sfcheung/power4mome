@@ -101,7 +101,9 @@ analysis, or to build their own
 workflows to do the power analysis.
 }
 
-\section{The test function (test_fun)}{
+\section{Major Test-Related Arguments}{
+\subsection{The test function (test_fun)}{
+
 The function set to \code{test_fun},
 the \emph{test function}, usually
 should work
@@ -144,7 +146,8 @@ then there is no need to set the
 results function.
 }
 
-\section{The results function (results_fun)}{
+\subsection{The results function (results_fun)}{
+
 The test results will be extracted
 from the output of \code{test_fun} by the
 function set to \code{results_fun},
@@ -190,7 +193,8 @@ is, the mean of the values of \code{sig}
 across replications, is the power.
 }
 
-\section{Built-in test functions}{
+\subsection{Built-in test functions}{
+
 The package \code{power4mome} has some ready-to-use
 test functions:
 \itemize{
@@ -206,7 +210,8 @@ Please refer to their help pages
 for examples.
 }
 
-\section{The argument map_names}{
+\subsection{The argument map_names}{
+
 This argument is for developers using
 a test function that has a different
 name for the argument of the fit
@@ -233,6 +238,7 @@ do the test correctly when setting
 element \code{fit} in a replication will
 then set to the argument \code{object} of
 \code{\link[lavaan:parameterEstimates]{lavaan::parameterEstimates()}}.
+}
 }
 
 \section{The background for having the \code{results_fun} argument}{

@@ -20,7 +20,9 @@
 #' analysis, or to build their own
 #' workflows to do the power analysis.
 #'
-#' # The test function (test_fun)
+#' # Major Test-Related Arguments
+#'
+#' ## The test function (test_fun)
 #'
 #' The function set to `test_fun`,
 #' the *test function*, usually
@@ -64,7 +66,7 @@
 #' then there is no need to set the
 #' results function.
 #'
-#' # The results function (results_fun)
+#' ## The results function (results_fun)
 #'
 #' The test results will be extracted
 #' from the output of `test_fun` by the
@@ -113,7 +115,7 @@
 #' is, the mean of the values of `sig`
 #' across replications, is the power.
 #'
-#' # Built-in test functions
+#' ## Built-in test functions
 #'
 #' The package `power4mome` has some ready-to-use
 #' test functions:
@@ -133,7 +135,7 @@
 #' Please refer to their help pages
 #' for examples.
 #'
-#' # The argument map_names
+#' ## The argument map_names
 #'
 #' This argument is for developers using
 #' a test function that has a different

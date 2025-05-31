@@ -12,6 +12,10 @@
 #' a model, given the sample size
 #' and effect sizes.
 #'
+#' @details
+#'
+#' # Workflow
+#'
 #' This is the workflow:
 #'
 #' - If an object with model and data
@@ -73,6 +77,20 @@
 #' as a parameter, given a specific
 #' effect sizes and sample sizes.
 #'
+#' Detailed description on major
+#' arguments can be found in sections
+#' below.
+#'
+#' @inheritSection do_test Major Test-Related Arguments
+#'
+# It is a known issue that inherited
+# section cannot be placed before @details
+# https://github.com/r-lib/roxygen2/issues/900
+#'
+#' @details
+#'
+#' # Advanced Features
+#'
 #' ## Updating a Condition
 #'
 #' This function can also be used to
@@ -132,6 +150,8 @@
 #'    test because a call to
 #'    [power4test()] can add new tests
 #'    to a `power4test` object.
+#'
+#' @inheritParams do_test
 #'
 #' @param object Optional. If set to a
 #' `power4test` object, it will be
@@ -250,40 +270,6 @@
 #' with names being the names of the
 #' arguments. Used only if
 #' `ci_type` is `"boot".
-#'
-#' @param test_fun A function to do the
-#' test. See the help page of
-#' [do_test()] for the requirements of
-#' this function.
-#'
-#' @param test_args A list of arguments
-#' to be passed to the `test_fun`
-#' function. Default is `list()`.
-#'
-#' @param map_names A named character
-#' vector specifying how the content of
-#' the element `extra` in
-#' each replication of `sim_all` map
-#' to the argument of `test_fun`.
-#' Default is `c(fit = "fit")`,
-#' indicating that the element `fit`
-#' in the element `extra` is set to
-#' the argument `fit` of `test_fun`.
-#' That is, for the first replication,
-#' `fit = sim_out[[1]]$extra$fit` when
-#' calling `test_fun`.
-#'
-#' @param results_fun The function to be
-#' used to extract the test results.
-#' See `Details` of [do_test()] for the requirements
-#' of this function. Default is `NULL`,
-#' assuming that the output of
-#' `test_fun` can be used directly.
-#'
-#' @param results_args A list of
-#' arguments to be passed to the
-#' `results_fun` function. Default is
-#' `list()`.
 #'
 #' @param test_name String. The name
 #' of the test. Default is `NULL`,
