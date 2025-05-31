@@ -196,7 +196,8 @@ the predictor.
 
 The output can then be plotted to
 visualize the power curve, using
-the \code{plot} method for the output
+the \code{plot} method (\code{\link[=plot.power_curve]{plot.power_curve()}})
+for the output
 of \code{\link[=power_curve]{power_curve()}}.
 
 This function can be used directly,
@@ -246,7 +247,7 @@ pout1 <- power_curve(out1)
 pout1
 plot(pout1)
 
-# By pop_es: Do a test for differe population values of a model parameter
+# By pop_es: Do a test for different population values of a model parameter
 
 out2 <- power4test_by_es(sim_only,
                              nrep = 10,
@@ -265,4 +266,10 @@ plot(pout2)
 }
 \seealso{
 \code{\link[=power4test_by_n]{power4test_by_n()}} and \code{\link[=power4test_by_es]{power4test_by_es()}}
+for the output supported by
+\code{\link[=power_curve]{power_curve()}}, \code{\link[=plot.power_curve]{plot.power_curve()}}
+for the \code{plot} method and
+\code{\link[=predict.power_curve]{predict.power_curve()}}
+for the \code{predict} method of the output
+of \code{\link[=power_curve]{power_curve()}}.
 }

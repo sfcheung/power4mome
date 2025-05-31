@@ -69,7 +69,8 @@
 #'
 #' The output can then be plotted to
 #' visualize the power curve, using
-#' the `plot` method for the output
+#' the `plot` method ([plot.power_curve()])
+#' for the output
 #' of [power_curve()].
 #'
 #' This function can be used directly,
@@ -164,6 +165,12 @@
 #' trying different models.
 #'
 #' @seealso [power4test_by_n()] and [power4test_by_es()]
+#' for the output supported by
+#' [power_curve()], [plot.power_curve()]
+#' for the `plot` method and
+#' [predict.power_curve()]
+#' for the `predict` method of the output
+#' of [power_curve()].
 #'
 #' @examples
 #'
@@ -208,7 +215,7 @@
 #' pout1
 #' plot(pout1)
 #'
-#' # By pop_es: Do a test for differe population values of a model parameter
+#' # By pop_es: Do a test for different population values of a model parameter
 #'
 #' out2 <- power4test_by_es(sim_only,
 #'                              nrep = 10,
