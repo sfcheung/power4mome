@@ -112,7 +112,11 @@
 #'
 #' @inheritSection ptable_pop Specify 'pop_es' Using a Multiline String
 #'
-#' @inheritSection ptable_pop Setting the Values for Effect Size Labels ('es1' and 'es2')
+#' @inheritSection ptable_pop Set the Values for Effect Size Labels ('es1' and 'es2')
+#'
+#' @inheritSection sim_data Set 'number_of_indicators' and 'reliability'
+#'
+#' @inheritSection sim_data Specify The Distributions of Exogenous Variables Using 'x_fun'
 #'
 #' @inheritSection do_test Major Test-Related Arguments
 #'
@@ -190,6 +194,8 @@
 #'
 #' @inheritParams ptable_pop
 #'
+#' @inheritParams sim_data
+#'
 #' @param object Optional. If set to a
 #' `power4test` object, it will be
 #' updated using the value(s) in `n`,
@@ -229,33 +235,13 @@
 #' @param n The sample size for each
 #' dataset. Default is 100.
 #'
-#' @param iseed The seed for the random
-#' number generator. Default is `NULL`
-#' and the seed is not changed.
+# @param iseed <- Inherited
 #'
-#' @param number_of_indicators A named
-#' vector to specify the number of
-#' indicators for each factors. See
-#' 'Details' of [sim_data()] on how to set this
-#' argument. Default is `NULL` and all
-#' variables in the model syntax are
-#' observed variables.
+# @param number_of_indicators <- Inherited
 #'
-#' @param reliability A named vector
-#' to set the reliability coefficient
-#' of each set of indicators. Default
-#' is `NULL`. See 'Details' of
-#' [sim_data()] on how to set this
-#' argument.
+# @param reliability <- Inherited
 #'
-#' @param x_fun The function(s) used to
-#' generate the exogenous variables. If
-#' not supplied, or set to `list()`, the
-#' default, the variables are generated
-#' from a multivariate normal
-#' distribution. See 'Details' of
-#' [sim_data()] on how to use this
-#' argument.
+# @param x_fun <- Inherited
 #'
 #' @param fit_model_args A list of the
 #' arguments to be passed to [fit_model()]

@@ -323,7 +323,7 @@
 #' knowledgeable of YAML can use other
 #' equivalent way to specify the string.
 #'
-#' # Setting the Values for Effect Size Labels ('es1' and 'es2')
+#' # Set the Values for Effect Size Labels ('es1' and 'es2')
 #'
 #' The vector `es1` is for correlations
 #' and regression coefficients, and the
@@ -411,12 +411,16 @@
 #'
 #' @examples
 #'
+#' # Specify the model
+#'
 #' model1 <-
 #' "
 #' m1 ~ x + c1
 #' m2 ~ m1 + x2 + c1
 #' y ~  m2 + m1 + x + w + x:w + c1
 #' "
+#'
+#' # Specify the population values
 #'
 #' model1_es <- c("m1 ~ x" = "-m",
 #'                "m2 ~ m1" = "s",

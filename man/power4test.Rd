@@ -103,26 +103,30 @@ dataset. Default is 100.}
 \item{number_of_indicators}{A named
 vector to specify the number of
 indicators for each factors. See
-'Details' of \code{\link[=sim_data]{sim_data()}} on how to set this
+the help page on how to set this
 argument. Default is \code{NULL} and all
 variables in the model syntax are
-observed variables.}
+observed variables.
+See the help page on how
+to use this argument.}
 
 \item{reliability}{A named vector
+(for a single-group model) or a
+named list of named vectors
+(for a multigroup model)
 to set the reliability coefficient
 of each set of indicators. Default
-is \code{NULL}. See 'Details' of
-\code{\link[=sim_data]{sim_data()}} on how to set this
-argument.}
+is \code{NULL}.
+See the help page on how
+to use this argument.}
 
 \item{x_fun}{The function(s) used to
 generate the exogenous variables. If
 not supplied, or set to \code{list()}, the
 default, the variables are generated
 from a multivariate normal
-distribution. See 'Details' of
-\code{\link[=sim_data]{sim_data()}} on how to use this
-argument.}
+distribution. See the help page on how
+to use this argument.}
 
 \item{fit_model_args}{A list of the
 arguments to be passed to \code{\link[=fit_model]{fit_model()}}
@@ -785,7 +789,7 @@ equivalent way to specify the string.
 }
 }
 
-\section{Setting the Values for Effect Size Labels ('es1' and 'es2')}{
+\section{Set the Values for Effect Size Labels ('es1' and 'es2')}{
 The vector \code{es1} is for correlations
 and regression coefficients, and the
 vector \code{es2} is for for standardized
@@ -793,6 +797,180 @@ moderation effect, the coefficients
 of a product term. These labels
 are to be used in interpreting
 the specification in \code{pop_es}.
+}
+
+\section{Set 'number_of_indicators' and 'reliability'}{
+The arguments \code{number_of_indicators}
+and \code{reliability} are used to
+specify the number of indicators
+(e.g., items) for each factor,
+and the population reliability
+coefficient of each factor,
+if the variables in the model
+syntax are latent variables.
+\subsection{Single-Group Model}{
+
+If a variable in the model is to be
+replaced by indicators in the generated
+data, set
+\code{number_of_indicators} to a named
+numeric vector. The names are the
+variables of variables with
+indicators, as appeared in the
+\code{model} syntax. The value of each
+name is the number of indicators.
+
+The
+argument \code{reliability} should then be
+set a named numeric vector (or list,
+see the section on multigroup models)
+to specify the population reliability
+coefficient ("omega") of each set of
+indicators. The population standardized factor
+loadings are then computed to ensure
+that the population reliability
+coefficient is of the target value.
+
+These are examples for a single group
+model:
+
+\preformatted{number of indicator = c(m = 3, x = 4, y = 5)}
+
+The numbers of indicators for \code{m},
+\code{x}, and \code{y} are 3, 4, and 5,
+respectively.
+
+\preformatted{reliability = c(m = .90, x = .80, y = .70)}
+
+The population reliability
+coefficients of \code{m}, \code{x}, and \code{y} are
+.90, .80, and .70, respectively.
+}
+
+\subsection{Multigroup Models}{
+
+Multigroup models are supported.
+The number of groups is inferred
+from \code{pop_es} (see the help page
+of \code{\link[=ptable_pop]{ptable_pop()}}), or directly
+from \code{ptable}.
+
+For a multigroup model, the number
+of indicators for each variable
+must be the same across groups.
+
+However, the population reliability
+coefficients can be different
+across groups. For a multigroup model
+of \emph{k} groups,
+with one or more population reliability
+coefficients differ across groups,
+the argument \code{reliability} should be
+set to a named list. The names are
+the variables to which the population
+reliability coefficients are to be
+set. The element for each name is
+either a single value for the common
+reliability coefficient, or a
+numeric vector of the reliability
+coefficient of each group.
+
+This is an example of \code{reliability}
+for a model with 2 groups:
+
+\preformatted{reliability = list(x = .80, m = c(.70, .80))}
+
+The reliability coefficients of \code{x} are
+.80 in all groups, while the
+reliability coefficients of \code{m} are
+.70 in one group and .80 in another.
+}
+
+\subsection{Equal Numbers of Indicators and/or Reliability Coefficients}{
+
+If all variables in the model has
+the same number of indicators,
+\code{number_of_indicators} can be set
+to one single value.
+
+Similarly, if all sets of indicators
+have the same population reliability
+in all groups, \code{reliability} can also
+be set to one single value.
+}
+}
+
+\section{Specify The Distributions of Exogenous Variables Using 'x_fun'}{
+By default, variables are generated
+from a multivariate normal distribution.
+If desired, users can supply the
+function used to generate an exogenous
+variables by setting \code{x_fun} to
+a named list.
+
+The names of the list are the variables
+for which a user function will be used
+to generate the data.
+
+Each element of the list must also
+be a list. The first element of this
+list, can be unnamed, is the
+function to be used. If other arguments
+need to be supplied, they should be
+included as named elements of this list.
+
+For example:
+
+\preformatted{x_fun = list(x = list(power4mome::rexp_rs),
+             w = list(power4mome::rbinary_rs,
+                      p1 = .70)))}
+
+The variables \code{x} and \code{w} will be
+generated by user-supplied functions.
+
+For \code{x}, the function is
+\code{power4mome::rexp_rs}. No additional
+argument when calling this function.
+
+For \code{w}, the function is
+\code{power4mome::rbinary_rx}. The argument
+\code{p1 = .70} will be passed to this
+function when generating the values
+of \code{w}.
+
+These are requirements for the
+user-functions:
+\itemize{
+\item They must return a numeric vector.
+\item They mush has an argument \code{n} for
+the number of values.
+\item The \emph{population} mean and standard
+deviation of the generated values
+must be 0 and 1, respectively.
+}
+
+The package \code{power4mome} has
+helper functions for generating
+values from some common nonnormal
+distributions and then scaling them
+to have population mean and standard
+deviation equal to 0 and 1 (by default), respectively.
+These are some of them:
+\itemize{
+\item \code{\link[=rbinary_rs]{rbinary_rs()}}.
+\item \code{\link[=rexp_rs]{rexp_rs()}}.
+\item \code{\link[=rbeta_rs]{rbeta_rs()}}.
+\item \code{\link[=rlnorm_rs]{rlnorm_rs()}}.
+\item \code{\link[=rpgnorm_rs]{rpgnorm_rs()}}.
+}
+
+To use \code{x_fun}, the variables must
+have zero covariances with other
+variables in the population. It is
+possible to generate nonnormal
+multivariate data but we believe this
+is rarely needed when estimating
+power \emph{before} having the data.
 }
 
 \section{Major Test-Related Arguments}{

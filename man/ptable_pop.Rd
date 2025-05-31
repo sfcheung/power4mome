@@ -446,7 +446,7 @@ equivalent way to specify the string.
 }
 }
 
-\section{Setting the Values for Effect Size Labels ('es1' and 'es2')}{
+\section{Set the Values for Effect Size Labels ('es1' and 'es2')}{
 The vector \code{es1} is for correlations
 and regression coefficients, and the
 vector \code{es2} is for for standardized
@@ -468,12 +468,16 @@ workflows to generate the data.
 
 \examples{
 
+# Specify the model
+
 model1 <-
 "
 m1 ~ x + c1
 m2 ~ m1 + x2 + c1
 y ~  m2 + m1 + x + w + x:w + c1
 "
+
+# Specify the population values
 
 model1_es <- c("m1 ~ x" = "-m",
                "m2 ~ m1" = "s",

@@ -43,22 +43,24 @@ Default is 10.}
 population model. If \code{NULL}, the
 default, \code{\link[=ptable_pop]{ptable_pop()}} will be
 called to generate the \code{ptable_pop}
-object.}
+object, using arguments such as
+\code{model} and \code{pop_es}.}
 
 \item{model}{The \code{lavaan} model
 syntax of the population model.
-Required. Ignored if \code{ptable} is
-specified.}
+Ignored if \code{ptable} is
+specified. See \link{ptable_pop} on
+how to specify this argument.}
 
 \item{pop_es}{The character to
-specify population effect sizes. See
-'Details' of \code{\link[=ptable_pop]{ptable_pop()}} on how to
-set the effect sizes for this
-argument. Ignored if \code{ptable} is
+specify population effect sizes.
+See \link{ptable_pop} on
+how to specify this argument.
+Ignored if \code{ptable} is
 specified.}
 
 \item{...}{For \link{sim_data}, parameters
-to be passed to \link{ptable_pop}. For
+to be passed to \code{\link[=ptable_pop]{ptable_pop()}}. For
 \code{\link[=print.sim_data]{print.sim_data()}}, these arguments
 are ignored.}
 
@@ -72,22 +74,29 @@ and the seed is not changed.}
 \item{number_of_indicators}{A named
 vector to specify the number of
 indicators for each factors. See
-'Details' on how to set this
+the help page on how to set this
 argument. Default is \code{NULL} and all
 variables in the model syntax are
-observed variables.}
+observed variables.
+See the help page on how
+to use this argument.}
 
 \item{reliability}{A named vector
+(for a single-group model) or a
+named list of named vectors
+(for a multigroup model)
 to set the reliability coefficient
 of each set of indicators. Default
-is \code{NULL}.}
+is \code{NULL}.
+See the help page on how
+to use this argument.}
 
 \item{x_fun}{The function(s) used to
 generate the exogenous variables. If
 not supplied, or set to \code{list()}, the
 default, the variables are generated
 from a multivariate normal
-distribution. See 'Details' on how
+distribution. See the help page on how
 to use this argument.}
 
 \item{parallel}{If \code{TRUE}, parallel
@@ -153,12 +162,12 @@ the following major elements:
 table of the model, with population
 values set in the column \code{start}.
 (It is the output of the
-function \code{ptable_pop()}.)
+function \code{\link[=ptable_pop]{ptable_pop()}}.)
 \item \code{mm_out}: The population model
 represented by model matrices
 as in \code{lavaan}. (It is the output
 of the function
-\code{model_matrices_pop()}.)
+\code{\link[=model_matrices_pop]{model_matrices_pop()}}.)
 \item \code{mm_lm_out}: A list of regression
 model formula, one for each
 endogenous variable. (It is the
@@ -176,13 +185,13 @@ variable model. Indicators are added
 to the syntax.
 \item \code{fit0}: The output of \code{\link[lavaan:sem]{lavaan::sem()}}
 with \code{ptable} as the model and
-\code{do.fit} set to \code{FALSE}. Use for
+\code{do.fit} set to \code{FALSE}. Used for the
 easy retrieval of information
 about the model.
 }
 
 The \code{print} method of \code{sim_data}
-returns \code{x} invisibly. Called for
+returns \code{x} invisibly. It is called for
 its side effect.
 }
 \description{
@@ -192,7 +201,23 @@ simulate a number of datasets,
 along with other information.
 }
 \details{
-It does two tasks:
+The function \code{\link[=sim_data]{sim_data()}} generates
+a list of datasets based on a population
+model.
+}
+\section{The role of \code{sim_data()}}{
+The function \code{\link[=sim_data]{sim_data()}} is used by
+the all-in-one function
+\code{\link[=power4test]{power4test()}}. Users usually do not
+call this function directly, though
+developers can use this function to
+develop other functions for power
+analysis, or to build their own
+workflows to do the power analysis.
+}
+
+\section{Workflow}{
+The function \code{\link[=sim_data]{sim_data()}} does two tasks:
 \itemize{
 \item Determine the actual population
 model with population values based
@@ -212,7 +237,7 @@ factor as measured by the
 indicators if the model is a
 latent factor model.
 }
-\item Generate \emph{m} simulated datasets
+\item Generate \emph{nrep} simulated datasets
 from the population model.
 }
 
@@ -224,29 +249,36 @@ The output is usually used by
 \code{\link[=fit_model]{fit_model()}} to fit a target model,
 by default the population model, to each
 of the dataset.
-\subsection{Setting \code{model} and \code{pop_es}}{
-
-Please refer to help page of
-\code{\link[=ptable_pop]{ptable_pop()}} on how to specify
-\code{model} and \code{pop_es}.
 }
 
-\subsection{Setting \code{number_of_indicators} and \code{reliability}}{
+\section{Set 'number_of_indicators' and 'reliability'}{
+The arguments \code{number_of_indicators}
+and \code{reliability} are used to
+specify the number of indicators
+(e.g., items) for each factor,
+and the population reliability
+coefficient of each factor,
+if the variables in the model
+syntax are latent variables.
+\subsection{Single-Group Model}{
 
 If a variable in the model is to be
-replaced by indicators, set
+replaced by indicators in the generated
+data, set
 \code{number_of_indicators} to a named
 numeric vector. The names are the
 variables of variables with
 indicators, as appeared in the
 \code{model} syntax. The value of each
-name is the number of indicators. The
+name is the number of indicators.
+
+The
 argument \code{reliability} should then be
 set a named numeric vector (or list,
 see the section on multigroup models)
 to specify the population reliability
-coefficients ("omega") of each set of
-indicators. The population factor
+coefficient ("omega") of each set of
+indicators. The population standardized factor
 loadings are then computed to ensure
 that the population reliability
 coefficient is of the target value.
@@ -254,23 +286,26 @@ coefficient is of the target value.
 These are examples for a single group
 model:
 
-\verb{number of indicator = c(m = 3, x = 4, y = 5)}
+\preformatted{number of indicator = c(m = 3, x = 4, y = 5)}
 
 The numbers of indicators for \code{m},
 \code{x}, and \code{y} are 3, 4, and 5,
 respectively.
 
-\code{reliability = c(m = .90, x = .80, y = .70)}
+\preformatted{reliability = c(m = .90, x = .80, y = .70)}
 
 The population reliability
 coefficients of \code{m}, \code{x}, and \code{y} are
 .90, .80, and .70, respectively.
+}
+
 \subsection{Multigroup Models}{
 
 Multigroup models are supported.
 The number of groups is inferred
 from \code{pop_es} (see the help page
-of \code{\link[=ptable_pop]{ptable_pop()}}).
+of \code{\link[=ptable_pop]{ptable_pop()}}), or directly
+from \code{ptable}.
 
 For a multigroup model, the number
 of indicators for each variable
@@ -295,7 +330,7 @@ coefficient of each group.
 This is an example of \code{reliability}
 for a model with 2 groups:
 
-\code{reliability = list(x = .80, m = c(.70, .80))}
+\preformatted{reliability = list(x = .80, m = c(.70, .80))}
 
 The reliability coefficients of \code{x} are
 .80 in all groups, while the
@@ -315,11 +350,9 @@ have the same population reliability
 in all groups, \code{reliability} can also
 be set to one single value.
 }
-
 }
 
-\subsection{Specify The Distributions of Exogenous Variables}{
-
+\section{Specify The Distributions of Exogenous Variables Using 'x_fun'}{
 By default, variables are generated
 from a multivariate normal distribution.
 If desired, users can supply the
@@ -332,7 +365,7 @@ for which a user function will be used
 to generate the data.
 
 Each element of the list must also
-be as list. The first element of this
+be a list. The first element of this
 list, can be unnamed, is the
 function to be used. If other arguments
 need to be supplied, they should be
@@ -340,11 +373,10 @@ included as named elements of this list.
 
 For example:
 
-\preformatted{
-x_fun = list(x = list(power4mome::rexp_rs),
+\preformatted{x_fun = list(x = list(power4mome::rexp_rs),
              w = list(power4mome::rbinary_rs,
-                      p1 = .70)))
-}
+                      p1 = .70)))}
+
 The variables \code{x} and \code{w} will be
 generated by user-supplied functions.
 
@@ -354,7 +386,7 @@ argument when calling this function.
 
 For \code{w}, the function is
 \code{power4mome::rbinary_rx}. The argument
-\code{p1 = .70} will be pasded to this
+\code{p1 = .70} will be passed to this
 function when generating the values
 of \code{w}.
 
@@ -369,12 +401,13 @@ deviation of the generated values
 must be 0 and 1, respectively.
 }
 
-The package \code{power4mom} has
+The package \code{power4mome} has
 helper functions for generating
 values from some common nonnormal
-distributions and then scaled them
+distributions and then scaling them
 to have population mean and standard
-deviation equal to 0 and 1, respectively:
+deviation equal to 0 and 1 (by default), respectively.
+These are some of them:
 \itemize{
 \item \code{\link[=rbinary_rs]{rbinary_rs()}}.
 \item \code{\link[=rexp_rs]{rexp_rs()}}.
@@ -390,21 +423,340 @@ possible to generate nonnormal
 multivariate data but we believe this
 is rarely needed when estimating
 power \emph{before} having the data.
+}
 
-This function is used by the
-all-in-one function \code{\link[=power4test]{power4test()}}.
-Users usually do not call this
-function directly.
+\section{Specify the Population Model by 'model'}{
+\subsection{Single-Group Model}{
+
+For a single-group model, \code{model}
+should be a \code{lavaan} model syntax
+string of the \emph{form} of the model.
+The population values of the model
+parameters are to be determined by
+\code{pop_es}.
+
+If the model has latent factors,
+the syntax in \code{model} should specify
+only the \emph{structural model} for the
+\emph{latent factors}. There is no
+need to specify the measurement
+part. Other functions will generate
+the measurement part on top of this
+model.
+
+For example, this is a simple mediation
+model:
+
+\preformatted{"m ~ x
+ y ~ m + x"}
+
+Whether \code{m}, \code{x}, and \code{y} denote
+observed variables or latent factors
+are determined by other functions,
+such as \code{\link[=power4test]{power4test()}}.
+}
+
+\subsection{Multigroup Model}{
+
+Because the model is the population
+model, equality constraints are
+irrelevant and the model syntax
+specifies only the \emph{form} of the
+model. Therefore, \code{model} is
+specified as in the case of single
+group models.
 }
 }
+
+\section{Specify 'pop_es' Using Named Vectors}{
+The argument \code{pop_es} is for specifying
+the population values of model
+parameters. This section describes
+how to do this using named vectors.
+\subsection{Single-Group Model}{
+
+If \code{pop_es} is specified by a named
+vector, it must follow the convention
+below.
+\itemize{
+\item The names of the vectors are
+\code{lavaan} names for the selected
+parameters. For example, \code{m ~ x}
+denotes the path from \code{x} to \code{m}.
+\item Alternatively, the names can be
+either \code{".beta."} or \code{".cov."}.
+Use \code{".beta."} to set the default
+values for all regression coefficients.
+Use \code{".cov."} to set the default
+values for all correlations of
+exogenous variables (e.g., predictors).
+\item If using \code{lavaan} names, can
+specify more than one parameter
+using \code{+}. For example, \code{y ~ m + x}
+denotes the two paths from \code{m} and
+\code{x} to \code{y}.
+\item The value of each element can be
+the label for the effect size: \code{n}
+for nil, \code{s} for small, \code{m} for
+medium, and \code{l} for large. The
+value for each label is determined
+by \code{es1} and \code{es2}. See the section
+on specifying these two arguments.
+\item The value of \code{pop_es} can also be
+set to a value, but it must be
+quoted as a string, such as \code{"y ~ x" = ".31"}.
+}
+
+This is an example:
+
+\preformatted{c(".beta." = "s",
+  "m1 ~ x" = "-m",
+  "m2 ~ m1" = "l",
+  "y ~ x:w" = "s")}
+
+In this example,
+\itemize{
+\item All regression coefficients are
+set to small (\code{s}) by default, unless
+specified otherwise.
+\item The path from \code{x} to \code{m1} is
+set to medium and negative (\code{-m}).
+\item The path from \code{m1} to \code{m2} is set
+to large (\code{l}).
+\item The coefficient of the product
+term \code{x:w} when predicting \code{y} is
+set to small (\code{s}).
+}
+}
+
+\subsection{Multigroup Model}{
+
+The argument \code{pop_es} also supports multigroup
+models.
+
+For \code{pop_es}, instead of
+named vectors, named \emph{list} of
+named vectors should be used.
+\itemize{
+\item The names are the parameters, or
+keywords such as \code{.beta.} and
+\code{.cov.}, like specifying the
+population values for a single
+group model.
+\item The elements are character vectors.
+If it has only one element (e.g.,
+a single string), then it is the
+the population value for all groups.
+If it has more than one element
+(e.g., a vector of three strings),
+then they are the population values
+of the groups. For a model of \emph{k}
+groups, each vector must have
+either \emph{k} elements or one element.
+}
+
+This is an example:
+
+\preformatted{list("m ~ x" = "m",
+     "y ~ m" = c("s", "m", "l"))}
+
+In this model, the population value
+of the path \code{m ~ x} is medium (\code{m}) for
+all groups, while the population
+values for the path \code{y ~ m} are
+small (\code{s}), medium (\code{m}), and large (\code{l}),
+respectively.
+}
+}
+
+\section{Specify 'pop_es' Using a Multiline String}{
+When setting the argument \code{pop_es},
+instead of using a named vector
+or named list for
+\code{pop_es}, the population values of
+model parameters can also be
+specified using a multiline string,
+as illustrated below, to be parsed
+by \code{\link[=pop_es_yaml]{pop_es_yaml()}}.
+\subsection{Single-Group Model}{
+
+This is an example of the multiline string
+for a single-group model:
+
+\preformatted{y ~ m: l
+m ~ x: m
+y ~ x: nil}
+
+The string must follow this format:
+\itemize{
+\item Each line starts with \verb{tag:}.
+\itemize{
+\item \code{tag} can be the name of a
+parameter, in \code{lavaan} model
+syntax format.
+\itemize{
+\item For example, \code{m ~ x}
+denotes the path from \code{x} to \code{m}.
+}
+\item A tag in \code{lavaan} model syntax can
+specify more than one parameter
+using \code{+}.
+\itemize{
+\item For example, \code{y ~ m + x}
+denotes the two paths from \code{m} and
+\code{x} to \code{y}.
+}
+\item Alternatively, the \code{tag} can be
+either \code{.beta.} or \code{.cov.}.
+\itemize{
+\item Use \code{.beta.} to set the default
+values for all regression coefficients.
+\item Use \code{.cov.} to set the default
+values for all correlations of
+exogenous variables (e.g., predictors).
+}
+}
+\item After each tag is the value of the
+population value:
+
+-\code{nil} for nil (zero),
+\itemize{
+\item \code{s} for small,
+\item \code{m} for medium, and
+\item \code{l} for large.
+}
+
+Note: \code{n} \emph{cannot} be used in this mode.
+
+The
+value for each label is determined
+by \code{es1} and \code{es2} as described
+in \code{\link[=ptable_pop]{ptable_pop()}}.
+\itemize{
+\item The value can also be
+set to a numeric value, such as
+\code{.30} or \code{-.30}.
+}
+}
+
+This is another example:
+
+\preformatted{.beta: s
+y ~ m: l}
+
+In this example, all regression
+coefficients are \code{small}, while
+the path from \code{m} to \code{y} is large.
+}
+
+\subsection{Multigroup Model}{
+
+This is an example of the string
+for a multigroup model:
+
+\preformatted{y ~ m: l
+m ~ x:
+  - nil
+  - s
+y ~ x: nil}
+
+The format is similar to that for
+a single-group model. If a parameter
+has the same value for all groups,
+then the line can be specified
+as in the case of a single-group
+model: \code{tag: value}.
+
+If a parameter has different
+values across groups, then it must
+be in this format:
+\itemize{
+\item A line starts with the tag, followed
+by two or more lines. Each line
+starts with a hyphen \code{-} and the
+value for a group.
+}
+
+For example:
+
+\preformatted{m ~ x:
+  - nil
+  - s}
+
+This denotes that the model has
+two groups. The values of the path
+from \code{x} to \code{m} for the two
+groups are 0 (\code{nil}) and
+small (\code{s}), respectively.
+
+Another equivalent way to specify
+the values are using \verb{[]}, on
+the same line of a tag.
+
+For example:
+
+\preformatted{m ~ x: [nil, s]}
+
+The number of groups is inferred
+from the number of values for
+a parameter. Therefore, if a tag
+has more than one value, each tag
+must has the same number of value,
+or only one value.
+
+The tag \code{.beta.} and \code{.cov.} can
+also be used for multigroup models.
+}
+
+\subsection{Which Approach To Use}{
+
+Note that using named vectors or
+named lists is more reliable. However,
+using a multiline string is
+more user-friendly. If this method
+failed, please use named vectors or
+named list instead.
+}
+
+\subsection{Technical Details}{
+
+The multiline string is parsed by \code{\link[yaml:read_yaml]{yaml::read_yaml()}}.
+Therefore, the format requirement
+is actually that of YAML. Users
+knowledgeable of YAML can use other
+equivalent way to specify the string.
+}
+}
+
+\section{Set the Values for Effect Size Labels ('es1' and 'es2')}{
+The vector \code{es1} is for correlations
+and regression coefficients, and the
+vector \code{es2} is for for standardized
+moderation effect, the coefficients
+of a product term. These labels
+are to be used in interpreting
+the specification in \code{pop_es}.
+}
+
 \examples{
+
+# Specify the model
+
 mod <-
 "m ~ x
  y ~ m + x"
+
+# Specify the population values
+
 es <-
-c("y ~ m" = "m",
-  "m ~ x" = "m",
-  "y ~ x" = "n")
+"
+y ~ m: m
+m ~ x: m
+y ~ x: n
+"
+
+# Generate the simulated datasets
+
 data_all <- sim_data(nrep = 5,
                      model = mod,
                      pop_es = es,
