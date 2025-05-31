@@ -67,28 +67,68 @@
 <div class="row">
   <main id="main" class="col-md-9">
 <p>(Version 0.0.1.40, updated on 2025-06-01, <a href="https://sfcheung.github.io/power4mome/news/index.html">release history</a>)</p>
-<p>IMPORTANT: A work-in-progress. Not ready for use.</p>
 <div class="section level1">
 <div class="page-header"><h1 id="power4mome">power4mome<a class="anchor" aria-label="anchor" href="#power4mome"></a>
 </h1></div>
-<p>Power analysis and sample size determination for moderation, mediation, and moderated mediation</p>
-<p>This package includes functions for power analysis and sample size determination for moderation, mediation, and moderated mediation in models fitted by structural equation modeling.</p>
+<p>This package is for power analysis and sample size determination for moderation, mediation, and moderated-mediation.</p>
+<p>It includes functions for power analysis and sample size determination for moderation, mediation, and moderated-mediation effects in models fitted by structural equation modeling (SEM) or multiple linear regression. For SEM, both latent variable models and path models of observed variables are supported.</p>
 <p>For more information on this package, please visit its GitHub page:</p>
 <p><a href="https://sfcheung.github.io/power4mome/" class="uri">https://sfcheung.github.io/power4mome/</a></p>
+<p>A get-started guide illustrates how to use this package:</p>
+<p><a href="https://sfcheung.github.io/power4mome/articles/power4mome.html" class="uri">https://sfcheung.github.io/power4mome/articles/power4mome.html</a></p>
+</div>
+<div class="section level1">
+<h1 id="philosophy">Philosophy<a class="anchor" aria-label="anchor" href="#philosophy"></a>
+</h1>
+<p>The package was developed with this philosophy:</p>
+<ul>
+<li><p>Easy to specify the population models, even with latent variables.</p></li>
+<li><p>As few manually-set numbers as possible when specifying the population models, with convenient default values.</p></li>
+<li><p>As few restrictions as possible on the form of the models, even when the models have latent factors.</p></li>
+<li><p>As automatic as possible in finding the sample size with the target power.</p></li>
+</ul>
+<p>To achieve this comes with some costs, and some of the goals conflict with other goals: Being flexible usually means being less user-friendly, and being easy to specify the model usually means not supporting some models.</p>
+<p>Therefore, we also try to</p>
+<ul>
+<li><p>balance these goals, and</p></li>
+<li><p>allow the functions to be used in different ways, to accommodate scenarios that prioritize these goals differently.</p></li>
+</ul>
 </div>
 <div class="section level1">
 <h1 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h1>
-<p>Stable release versions of this package can be downloaded below:</p>
-<p><a href="https://github.com/sfcheung/power4mome/releases" class="external-link uri">https://github.com/sfcheung/power4mome/releases</a></p>
 <p>The latest developmental version of this package can be installed by <code><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">remotes::install_github</a></code>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"sfcheung/power4mome"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level1">
+<h1 id="background">Background<a class="anchor" aria-label="anchor" href="#background"></a>
+</h1>
+<p>Some of us the developers have developed the package <a href="https://sfcheung.github.io/manymome/" class="external-link"><code>manymome</code></a> (Cheung &amp; Cheung, 2024) for computing and testing effects in models with mediation, mediation, or moderated-mediation. The tests are usually done by simulation-based methods such as Monte Carlo or bootstrap confidence intervals, due to the complicated sampling distributions of the effects. Therefore, there are no simple ways to determine the power of the test analytically and accurately. The computation becomes more complicated when latent variables are involved, necessitating a simulation-based method to estimate the sample size.</p>
+<p>There are already many excellent packages out there for estimating power in structural equation modeling in general, and some are also specifically for mediation or moderated-mediation. We are not intended to replace with them or reinvent the wheel. We just want to have a tool that meet our own needs:</p>
+<ol style="list-style-type: lower-alpha">
+<li><p>It leverages on the flexibility of <code>manymome</code> in testing an indirect effect or conditional effect with little limitations on the model.</p></li>
+<li><p>It allows users (us and our collaborators) to specify the population model as easy (quickly) as typical power analysis programs.</p></li>
+</ol>
+<p>We ourselves know how to do the power estimation on our own by simulation, if necessary. However, time is a concern and we would like to have an tool that, though specifically designed with mediation, moderation, and moderated-mediation in mind and may be limited in scope (though it is a “big” scope), is easy for our daily use in estimating power.</p>
+<p>So here it is, <code>power4mome</code>, developed with we ourselves as the users, but we believe are also useful for others who need to do power analysis for mediation, moderation, and moderated-mediation.</p>
+</div>
+<div class="section level1">
+<h1 id="not-just-that-">Not Just That …<a class="anchor" aria-label="anchor" href="#not-just-that-"></a>
+</h1>
+<p>But <code>power4mome</code> is not just for mediation, moderation, and moderated-mediation. We avoided hardcoding the functions just for these effects, and have left room for testing other effects, as hinted in some examples in the help pages. They may be introduced later. For now, supporting effects that can be tested by <code>manymome</code> is our priority.</p>
+</div>
+<div class="section level1">
 <h1 id="issues">Issues<a class="anchor" aria-label="anchor" href="#issues"></a>
 </h1>
-<p>If you have any suggestions and found any bugs, please feel feel to open a GitHub issue. Thanks.</p>
+<p>If you have any suggestions and found any bugs, please feel feel to open a GitHub issue:</p>
+<p><a href="https://github.com/sfcheung/power4mome/issues" class="external-link uri">https://github.com/sfcheung/power4mome/issues</a></p>
+<p>Thanks.</p>
+</div>
+<div class="section level1">
+<h1 id="reference">Reference<a class="anchor" aria-label="anchor" href="#reference"></a>
+</h1>
+<p>Cheung, S. F., &amp; Cheung, S.-H. (2024). <em>manymome</em>: An R package for computing the indirect effects, conditional effects, and conditional indirect effects, standardized or unstandardized, and their bootstrap confidence intervals, in many (though not all) models. <em>Behavior Research Methods, 56</em>(5), 4862–4882. <a href="https://doi.org/10.3758/s13428-023-02224-z" class="external-link uri">https://doi.org/10.3758/s13428-023-02224-z</a></p>
 </div>
 
   </main><aside class="col-md-3"><div class="license">
@@ -119,8 +159,8 @@
 <div class="dev-status">
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: Experimental"></a></li>
-<li><a href="https://www.repostatus.org/#wip" class="external-link"><img src="https://www.repostatus.org/badges/latest/wip.svg" alt="Project Status: WIP - Initial development is in progress, but there has not yet been a stable, usable release suitable for the public."></a></li>
+<li><a href="https://lifecycle.r-lib.org/articles/stages.html#stable" class="external-link"><img src="https://img.shields.io/badge/lifecycle-stable-brightgreen.svg" alt="Lifecycle: stable"></a></li>
+<li><a href="https://www.repostatus.org/#active" class="external-link"><img src="https://www.repostatus.org/badges/latest/active.svg" alt="Project Status: Active - The project has reached a stable, usable state and is being actively developed."></a></li>
 <li><a href="https://github.com/sfcheung/power4mome" class="external-link"><img src="https://img.shields.io/github/languages/code-size/sfcheung/power4mome.svg" alt="Code size"></a></li>
 <li><a href="https://github.com/sfcheung/power4mome/commits/main" class="external-link"><img src="https://img.shields.io/github/last-commit/sfcheung/power4mome.svg" alt="Last Commit at Main"></a></li>
 <li><a href="https://github.com/sfcheung/power4mome/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/sfcheung/power4mome/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
