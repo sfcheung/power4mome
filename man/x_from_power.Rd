@@ -52,7 +52,10 @@ with power closest to the
 \code{object}, and all other attempts in
 them will be included in the estimation
 of subsequent attempts and the final
-output.}
+output. Last, it can also be the
+output of a previous call to
+\code{\link[=x_from_power]{x_from_power()}}, and the stored
+trials will be retrieved.}
 
 \item{x}{For \code{\link[=x_from_power]{x_from_power()}},
 \code{x} set the value to

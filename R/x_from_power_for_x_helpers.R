@@ -249,3 +249,20 @@ find_ci_hit <- function(object,
   }
   return(i2)
 }
+
+#' @noRd
+check_x_from_power_as_input <- function(object,
+                                        x,
+                                        pop_es_name) {
+  if (!identical(x, object$x)) {
+    stop("object's x is ", object$x, " but ",
+         "requested x is ", x)
+  }
+  if (x == "es") {
+    if (!identical(pop_es_name, object$pop_es_name)) {
+      stop("object's pop_es_name is ", object$pop_es_name, " but ",
+          "requested pop_es_name is ", pop_es_name)
+    }
+  }
+  return(TRUE)
+}

@@ -165,7 +165,10 @@
 #' `object`, and all other attempts in
 #' them will be included in the estimation
 #' of subsequent attempts and the final
-#' output.
+#' output. Last, it can also be the
+#' output of a previous call to
+#' [x_from_power()], and the stored
+#' trials will be retrieved.
 #'
 #' @param x For [x_from_power()],
 #' `x` set the value to
@@ -563,6 +566,14 @@ x_from_power <- function(object,
   }
 
   # Handle the object
+
+  if (inherits(object, "x_from_power")) {
+    # Throw an error if imcompatible
+    check_x_from_power_as_input(object,
+                                x = x,
+                                pop_es_name = pop_es_name)
+    object <- object$power4test_trials
+  }
 
   is_by_x <- FALSE
   if (inherits(object, "power4test_by_n") ||

@@ -192,7 +192,8 @@ power4test_by_es <- function(object,
                                   ...)
     }
     if (!save_sim_all) {
-      tmp_out$sim_all <- NULL
+      # Keep the first element
+      tmp_out$sim_all <- tmp_out$sim_all[1]
     }
     out[[p_name]] <- tmp_out
     attr(out[[p_name]], "pop_es_name") <- pop_es_name

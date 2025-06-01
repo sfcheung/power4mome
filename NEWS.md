@@ -1,4 +1,4 @@
-# power4mome 0.0.1.42
+# power4mome 0.0.1.43
 
 - Initialized the package. (0.0.0.9000)
 
@@ -370,3 +370,7 @@
   the outputs of `power4test_by_n()`
   and `power4test_by_es()`.
   (0.0.1.42)
+
+- Updated `x_from_power()` to reuse
+  the outputs of `x_from_power()`.
+  (0.0.1.43)
