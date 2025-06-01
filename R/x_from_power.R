@@ -232,6 +232,14 @@
 #' [power4test_by_n()], or
 #' [power4test_by_es()].
 #'
+#' @param initial_R The initial number of
+#' Monte Carlo simulation or
+#' bootstrapping samples. The `R` in calling
+#' [power4test()], [power4test_by_n()],
+#' or [power4test_by_es()]. If `NULL`,
+#' the default, the `R` used in
+#' `object` will be used.
+#'
 #' @param final_R The number of
 #' Monte Carlo simulation or
 #' bootstrapping samples in the final
@@ -418,6 +426,7 @@ x_from_power <- function(object,
                          max_trials = 10,
                          initial_nrep = NULL,
                          final_nrep = 400,
+                         initial_R = NULL,
                          final_R = 1000,
                          nrep_steps = 1,
                          seed = NULL,
@@ -533,6 +542,14 @@ x_from_power <- function(object,
     nrep0 <- ceiling(initial_nrep)
   }
 
+  R_org <- attr(object, "args")$R
+
+  if (is.null(initial_R)) {
+    R0 <- R_org
+  } else {
+    R0 <- ceiling(initial_R)
+  }
+
   # === Initial Trial ===
 
   if (progress) {
@@ -578,12 +595,14 @@ x_from_power <- function(object,
                    n = power4test_by_n(object,
                                        n = x_i,
                                        nrep = nrep0,
+                                       R = R0,
                                        progress = simulation_progress,
                                        save_sim_all = save_sim_all),
                    es = power4test_by_es(object,
                                          pop_es_name = pop_es_name,
                                          pop_es_values = x_i,
                                          nrep = nrep0,
+                                         R = R0,
                                          progress = simulation_progress,
                                          save_sim_all = save_sim_all))
 
@@ -662,7 +681,7 @@ x_from_power <- function(object,
                                 length.out = nrep_steps + 1))
 
   # The sequence of the Rs (for boot and MC CI)
-  R0 <- attr(object, "args")$R
+  # R0 <- attr(object, "args")$R
   if (!is.null(R0)) {
     R_seq <- ceiling(seq(from = R0,
                          to = final_R,

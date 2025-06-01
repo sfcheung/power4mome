@@ -1,4 +1,4 @@
-# power4mome 0.0.1.40
+# power4mome 0.0.1.41
 
 - Initialized the package. (0.0.0.9000)
 
@@ -359,3 +359,9 @@
   (0.0.1.39)
 
 - Updated all help pages. (0.0.1.40)
+
+- Added `initial_R` and `initial_nrep`
+  to `x_from_power()`. (0.0.1.41)
+
+- Changed the default value of `final_nrep`
+  in `x_from_power()` to 400. (0.0.1.41)
