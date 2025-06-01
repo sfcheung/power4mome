@@ -188,7 +188,8 @@ power4test_by_n <- function(object,
                              ...)
     }
     if (!save_sim_all) {
-      tmp_out$sim_all <- NULL
+      # Keep the first element
+      tmp_out$sim_all <- tmp_out$sim_all[1]
     }
     out[[i]] <- tmp_out
   }

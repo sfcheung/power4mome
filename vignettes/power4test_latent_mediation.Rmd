@@ -1,7 +1,6 @@
 ---
 title: "Power Analysis for Latent Variable Mediation"
-author: "Shu Fai Cheung & Sing-Hang Cheung"
-date: "2025-05-30"
+date: "2025-06-01"
 output:
   rmarkdown::html_vignette:
     options:

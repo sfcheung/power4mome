@@ -185,7 +185,7 @@ power_vs_n <- x_from_power(test_out,
                            xs_per_trial = 1,
                            nrep_steps = 1,
                            max_trials = 1,
-                           seed = 4567)
+                           seed = 2345)
 plot(power_vs_n)
 
 }

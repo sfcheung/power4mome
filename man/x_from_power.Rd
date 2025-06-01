@@ -19,7 +19,9 @@ x_from_power(
   progress = TRUE,
   simulation_progress = TRUE,
   max_trials = 10,
-  final_nrep = 500,
+  initial_nrep = 100,
+  final_nrep = 400,
+  initial_R = 250,
   final_R = 1000,
   nrep_steps = 1,
   seed = NULL,
@@ -37,7 +39,23 @@ x_from_power(
 }
 \arguments{
 \item{object}{A \code{power4test} object,
-which is the output of \code{\link[=power4test]{power4test()}}.}
+which is the output of \code{\link[=power4test]{power4test()}}.
+Can also be a \code{power4test_by_n} object,
+the output
+of \code{\link[=power4test_by_n]{power4test_by_n()}}, or
+a \code{power4test_by_es} object, the
+output of
+\code{\link[=power4test_by_es]{power4test_by_es()}}. For these
+two types of objects, the attempt
+with power closest to the
+\code{target_power} will be used as
+\code{object}, and all other attempts in
+them will be included in the estimation
+of subsequent attempts and the final
+output. Last, it can also be the
+output of a previous call to
+\code{\link[=x_from_power]{x_from_power()}}, and the stored
+trials will be retrieved.}
 
 \item{x}{For \code{\link[=x_from_power]{x_from_power()}},
 \code{x} set the value to
@@ -115,12 +133,36 @@ of trials in searching the value
 with the target power. Rounded
 up if not an integer.}
 
+\item{initial_nrep}{The initial
+number of replications. If set
+to \code{NULL}, the \code{nrep} used in
+\code{object} will be used. If higher
+than \code{final_nrep}, it will be
+converted to one-fourth of \code{final_nrep}.
+If lower than the \code{nrep} in \code{object}
+after the conversion,
+then set to \code{nrep} in the \code{object}.}
+
 \item{final_nrep}{The number of
 replications in the final stage,
 also the maximum number of replications
 in each call to \code{\link[=power4test]{power4test()}},
 \code{\link[=power4test_by_n]{power4test_by_n()}}, or
 \code{\link[=power4test_by_es]{power4test_by_es()}}.}
+
+\item{initial_R}{The initial number of
+Monte Carlo simulation or
+bootstrapping samples. The \code{R} in calling
+\code{\link[=power4test]{power4test()}}, \code{\link[=power4test_by_n]{power4test_by_n()}},
+or \code{\link[=power4test_by_es]{power4test_by_es()}}. If set to \code{NULL},
+the \code{R} used in
+\code{object} will be used.
+If higher
+than \code{final_R}, it will be
+converted to one-fourth of \code{final_R}.
+If lower than the \code{R} in \code{object}
+after the conversion,
+then set to \code{R} in `object``.}
 
 \item{final_R}{The number of
 Monte Carlo simulation or
@@ -344,6 +386,14 @@ the selected model parameter) with
 a power level close enough to the
 target power.
 }
+
+If several values of \code{x} (sample
+size or the population value of
+a model parameter) have already been
+examined by \code{\link[=power4test_by_n]{power4test_by_n()}} or
+\code{\link[=power4test_by_es]{power4test_by_es()}}, the output
+of these two functions can also be
+used as \code{object} by \code{\link[=x_from_power]{x_from_power()}}.
 
 Usually, the default values of the
 arguments should be sufficient.

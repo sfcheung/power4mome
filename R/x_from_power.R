@@ -37,6 +37,14 @@
 #'   a power level close enough to the
 #'   target power.
 #'
+#' If several values of `x` (sample
+#' size or the population value of
+#' a model parameter) have already been
+#' examined by [power4test_by_n()] or
+#' [power4test_by_es()], the output
+#' of these two functions can also be
+#' used as `object` by [x_from_power()].
+#'
 #' Usually, the default values of the
 #' arguments should be sufficient.
 #'
@@ -145,6 +153,22 @@
 #'
 #' @param object A `power4test` object,
 #' which is the output of [power4test()].
+#' Can also be a `power4test_by_n` object,
+#' the output
+#' of [power4test_by_n()], or
+#' a `power4test_by_es` object, the
+#' output of
+#' [power4test_by_es()]. For these
+#' two types of objects, the attempt
+#' with power closest to the
+#' `target_power` will be used as
+#' `object`, and all other attempts in
+#' them will be included in the estimation
+#' of subsequent attempts and the final
+#' output. Last, it can also be the
+#' output of a previous call to
+#' [x_from_power()], and the stored
+#' trials will be retrieved.
 #'
 #' @param x For [x_from_power()],
 #' `x` set the value to
@@ -220,12 +244,36 @@
 #' with the target power. Rounded
 #' up if not an integer.
 #'
+#' @param initial_nrep The initial
+#' number of replications. If set
+#' to `NULL`, the `nrep` used in
+#' `object` will be used. If higher
+#' than `final_nrep`, it will be
+#' converted to one-fourth of `final_nrep`.
+#' If lower than the `nrep` in `object`
+#' after the conversion,
+#' then set to `nrep` in the `object`.
+#'
 #' @param final_nrep The number of
 #' replications in the final stage,
 #' also the maximum number of replications
 #' in each call to [power4test()],
 #' [power4test_by_n()], or
 #' [power4test_by_es()].
+#'
+#' @param initial_R The initial number of
+#' Monte Carlo simulation or
+#' bootstrapping samples. The `R` in calling
+#' [power4test()], [power4test_by_n()],
+#' or [power4test_by_es()]. If set to `NULL`,
+#' the `R` used in
+#' `object` will be used.
+#' If higher
+#' than `final_R`, it will be
+#' converted to one-fourth of `final_R`.
+#' If lower than the `R` in `object`
+#' after the conversion,
+#' then set to `R` in `object``.
 #'
 #' @param final_R The number of
 #' Monte Carlo simulation or
@@ -411,7 +459,9 @@ x_from_power <- function(object,
                          progress = TRUE,
                          simulation_progress = TRUE,
                          max_trials = 10,
-                         final_nrep = 500,
+                         initial_nrep = 100,
+                         final_nrep = 400,
+                         initial_R = 250,
                          final_R = 1000,
                          nrep_steps = 1,
                          seed = NULL,
@@ -515,7 +565,63 @@ x_from_power <- function(object,
     set.seed(seed)
   }
 
+  # Handle the object
+
+  if (inherits(object, "x_from_power")) {
+    # Throw an error if imcompatible
+    check_x_from_power_as_input(object,
+                                x = x,
+                                pop_es_name = pop_es_name)
+    object <- object$power4test_trials
+  }
+
+  is_by_x <- FALSE
+  if (inherits(object, "power4test_by_n") ||
+      inherits(object, "power4test_by_es")) {
+    is_by_x <- TRUE
+    object_by_org <- object
+    i_org <- find_ci_hit(object_by_org,
+                         ci_level = ci_level,
+                         target_power = target_power,
+                         final_nrep = 1,
+                         closest_ok = TRUE)
+    object <- object_by_org[[i_org]]
+  } else {
+    object_by_org <- NA
+  }
+
   time_start <- Sys.time()
+
+  # Change nrep?
+
+  nrep_org <- attr(object, "args")$nrep
+
+  if (is.null(initial_nrep)) {
+    nrep0 <- nrep_org
+  } else {
+    # Fix initial_nrep greater than final_nrep
+    if (initial_nrep > final_nrep) {
+      initial_nrep <- ceiling(final_nrep / 4)
+      if ((initial_nrep < 100) && (nrep_org <= final_nrep)) {
+        initial_nrep <- nrep_org
+      }
+    }
+    nrep0 <- ceiling(initial_nrep)
+  }
+
+  R_org <- attr(object, "args")$R
+
+  if (is.null(initial_R)) {
+    R0 <- R_org
+  } else {
+    if (initial_R > final_R) {
+      initial_R <- ceiling(final_R / 4)
+      if ((initial_R < 100) && (R_org <= final_R)) {
+        initial_R <- R_org
+      }
+    }
+    R0 <- ceiling(initial_R)
+  }
 
   # === Initial Trial ===
 
@@ -561,30 +667,41 @@ x_from_power <- function(object,
   by_x_i <- switch(x,
                    n = power4test_by_n(object,
                                        n = x_i,
+                                       nrep = nrep0,
+                                       R = R0,
                                        progress = simulation_progress,
                                        save_sim_all = save_sim_all),
                    es = power4test_by_es(object,
                                          pop_es_name = pop_es_name,
                                          pop_es_values = x_i,
+                                         nrep = nrep0,
+                                         R = R0,
                                          progress = simulation_progress,
                                          save_sim_all = save_sim_all))
 
   # Add the input object to the list
-  tmp <- list(object)
-  if (x == "n") {
-    class(tmp) <- c("power4test_by_n", class(tmp))
-    names(tmp) <- as.character(x0)
+  if (is_by_x) {
+    # Object is an output of *_by_n() or *_by_es()
+    by_x_i <- c(by_x_i,
+                object_by_org,
+                skip_checking_models = TRUE)
+  } else {
+    tmp <- list(object)
+    if (x == "n") {
+      class(tmp) <- c("power4test_by_n", class(tmp))
+      names(tmp) <- as.character(x0)
+    }
+    if (x == "es") {
+      class(tmp) <- c("power4test_by_es", class(tmp))
+      names(tmp) <- paste0(pop_es_name,
+                          " = ",
+                            as.character(x0))
+      attr(tmp[[1]], "pop_es_name") <- pop_es_name
+      attr(tmp[[1]], "pop_es_value") <- x0
+    }
+    by_x_i <- c(by_x_i, tmp,
+                skip_checking_models = TRUE)
   }
-  if (x == "es") {
-    class(tmp) <- c("power4test_by_es", class(tmp))
-    names(tmp) <- paste0(pop_es_name,
-                         " = ",
-                          as.character(x0))
-    attr(tmp[[1]], "pop_es_name") <- pop_es_name
-    attr(tmp[[1]], "pop_es_value") <- x0
-  }
-  by_x_i <- c(by_x_i, tmp,
-              skip_checking_models = TRUE)
 
   if (progress) {
     cat("- Rejection Rates:\n")
@@ -631,10 +748,11 @@ x_from_power <- function(object,
   # - decreasing the number of values to try.
 
   # The sequence of the numbers of replication
-  new_nrep <- rejection_rates(by_x_1,
-                              all_columns = TRUE)$nrep
+  # new_nrep <- rejection_rates(by_x_1,
+  #                             all_columns = TRUE)$nrep
 
-  new_nrep <- ceiling(mean(new_nrep))
+  # new_nrep <- ceiling(mean(new_nrep))
+  new_nrep <- nrep0
   nrep_seq <- ceiling(seq(from = new_nrep,
                           to = final_nrep,
                           length.out = nrep_steps + 1))
@@ -643,7 +761,7 @@ x_from_power <- function(object,
                                 length.out = nrep_steps + 1))
 
   # The sequence of the Rs (for boot and MC CI)
-  R0 <- attr(object, "args")$R
+  # R0 <- attr(object, "args")$R
   if (!is.null(R0)) {
     R_seq <- ceiling(seq(from = R0,
                          to = final_R,
@@ -896,18 +1014,23 @@ x_from_power <- function(object,
 
       ci_hit <- TRUE
 
-      # If only one CI hits, always keep it.
-      if (sum(i0) > 1) {
-        # Find the value with CI hitting the target power
-        # and has the smallest SE.
-        i1 <- rank(by_x_ci$reject_se)
-        # Do not consider those with nrep < final_nrep
-        i1[by_x_ci$nrep < final_nrep] <- Inf
-        # If ties, the smallest value will be used
-        i2 <- which(i1 == min(i1[i0]))[1]
-      } else {
-        i2 <- which(i0)
-      }
+      # # If only one CI hits, always keep it.
+      # if (sum(i0) > 1) {
+      #   # Find the value with CI hitting the target power
+      #   # and has the smallest SE.
+      #   i1 <- rank(by_x_ci$reject_se)
+      #   # Do not consider those with nrep < final_nrep
+      #   i1[by_x_ci$nrep < final_nrep] <- Inf
+      #   # If ties, the smallest value will be used
+      #   i2 <- which(i1 == min(i1[i0]))[1]
+      # } else {
+      #   i2 <- which(i0)
+      # }
+
+      i2 <- find_ci_hit(by_x_1,
+                        ci_level = ci_level,
+                        target_power = target_power,
+                        final_nrep = final_nrep)
 
       # Updated *_out objects
       by_x_out <- by_x_1[[i2]]

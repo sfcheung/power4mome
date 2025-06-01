@@ -1,6 +1,5 @@
 ---
 title: "Effect Size Given Desired Power"
-author: "Shu Fai Cheung, Wendie Yang, & Sing-Hang Cheung"
 date: "`r Sys.Date()`"
 output:
   rmarkdown::html_vignette:
