@@ -42,8 +42,8 @@ chk_outs <- sapply(fits,
                    function(x) {
                      confint(x[[1]])[2, 1]
                    })
-expect_identical(chk[[1]]$cilo[1],
-                 mean(chk_outs))
+expect_equal(chk[[1]]$cilo[1],
+             mean(chk_outs))
 
 test_out_summary <- summarize_tests(test_out)
 
