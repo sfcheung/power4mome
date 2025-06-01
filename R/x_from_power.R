@@ -221,9 +221,14 @@
 #' up if not an integer.
 #'
 #' @param initial_nrep The initial
-#' number of replications. If `NULL`,
-#' the default, the `nrep` used in
-#' `object` will be used.
+#' number of replications. If set
+#' to `NULL`, the `nrep` used in
+#' `object` will be used. If higher
+#' than `final_nrep`, it will be
+#' converted to one-fourth of `final_nrep`.
+#' If lower than the `nrep` in `object`
+#' after the conversion,
+#' then set to `nrep` in the `object`.
 #'
 #' @param final_nrep The number of
 #' replications in the final stage,
@@ -236,9 +241,15 @@
 #' Monte Carlo simulation or
 #' bootstrapping samples. The `R` in calling
 #' [power4test()], [power4test_by_n()],
-#' or [power4test_by_es()]. If `NULL`,
-#' the default, the `R` used in
+#' or [power4test_by_es()]. If set to `NULL`,
+#' the `R` used in
 #' `object` will be used.
+#' If higher
+#' than `final_R`, it will be
+#' converted to one-fourth of `final_R`.
+#' If lower than the `R` in `object`
+#' after the conversion,
+#' then set to `R` in `object``.
 #'
 #' @param final_R The number of
 #' Monte Carlo simulation or
@@ -424,9 +435,9 @@ x_from_power <- function(object,
                          progress = TRUE,
                          simulation_progress = TRUE,
                          max_trials = 10,
-                         initial_nrep = NULL,
+                         initial_nrep = 100,
                          final_nrep = 400,
-                         initial_R = NULL,
+                         initial_R = 250,
                          final_R = 1000,
                          nrep_steps = 1,
                          seed = NULL,
@@ -539,6 +550,13 @@ x_from_power <- function(object,
   if (is.null(initial_nrep)) {
     nrep0 <- nrep_org
   } else {
+    # Fix initial_nrep greater than final_nrep
+    if (initial_nrep > final_nrep) {
+      initial_nrep <- ceiling(final_nrep / 4)
+      if ((initial_nrep < 100) && (nrep_org <= final_nrep)) {
+        initial_nrep <- nrep_org
+      }
+    }
     nrep0 <- ceiling(initial_nrep)
   }
 
@@ -547,6 +565,12 @@ x_from_power <- function(object,
   if (is.null(initial_R)) {
     R0 <- R_org
   } else {
+    if (initial_R > final_R) {
+      initial_R <- ceiling(final_R / 4)
+      if ((initial_R < 100) && (R_org <= final_R)) {
+        initial_R <- R_org
+      }
+    }
     R0 <- ceiling(initial_R)
   }
 

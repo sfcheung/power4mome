@@ -19,9 +19,9 @@ x_from_power(
   progress = TRUE,
   simulation_progress = TRUE,
   max_trials = 10,
-  initial_nrep = NULL,
+  initial_nrep = 100,
   final_nrep = 400,
-  initial_R = NULL,
+  initial_R = 250,
   final_R = 1000,
   nrep_steps = 1,
   seed = NULL,
@@ -118,9 +118,14 @@ with the target power. Rounded
 up if not an integer.}
 
 \item{initial_nrep}{The initial
-number of replications. If \code{NULL},
-the default, the \code{nrep} used in
-\code{object} will be used.}
+number of replications. If set
+to \code{NULL}, the \code{nrep} used in
+\code{object} will be used. If higher
+than \code{final_nrep}, it will be
+converted to one-fourth of \code{final_nrep}.
+If lower than the \code{nrep} in \code{object}
+after the conversion,
+then set to \code{nrep} in the \code{object}.}
 
 \item{final_nrep}{The number of
 replications in the final stage,
@@ -133,9 +138,15 @@ in each call to \code{\link[=power4test]{power4test()}},
 Monte Carlo simulation or
 bootstrapping samples. The \code{R} in calling
 \code{\link[=power4test]{power4test()}}, \code{\link[=power4test_by_n]{power4test_by_n()}},
-or \code{\link[=power4test_by_es]{power4test_by_es()}}. If \code{NULL},
-the default, the \code{R} used in
-\code{object} will be used.}
+or \code{\link[=power4test_by_es]{power4test_by_es()}}. If set to \code{NULL},
+the \code{R} used in
+\code{object} will be used.
+If higher
+than \code{final_R}, it will be
+converted to one-fourth of \code{final_R}.
+If lower than the \code{R} in \code{object}
+after the conversion,
+then set to \code{R} in `object``.}
 
 \item{final_R}{The number of
 Monte Carlo simulation or
