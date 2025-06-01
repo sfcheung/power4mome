@@ -161,7 +161,7 @@
 #'                            xs_per_trial = 1,
 #'                            nrep_steps = 1,
 #'                            max_trials = 1,
-#'                            seed = 4567)
+#'                            seed = 2345)
 #' plot(power_vs_n)
 #'
 #' @importFrom graphics abline arrows par points text title
