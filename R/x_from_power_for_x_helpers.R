@@ -210,3 +210,38 @@ predict_fit <- function(object,
   }
   return(out)
 }
+
+#' @noRd
+find_ci_hit <- function(object,
+                        ci_level = .95,
+                        target_power = .80,
+                        final_nrep = 400,
+                        closest_ok = FALSE) {
+  # If no hit, return NULL
+  # If hit, always return one number
+
+  by_x_ci <- rejection_rates_add_ci(object,
+                                    level = ci_level)
+  i0 <- (by_x_ci$reject_ci_lo < target_power) &
+        (by_x_ci$reject_ci_hi > target_power)
+
+  if (isFALSE(any(i0)) && !closest_ok) {
+    return(NULL)
+  } else {
+    i0 <- which.min(abs(by_x_ci$reject - target_power))
+  }
+
+  # If only one CI hits, always keep it.
+  if (sum(i0) > 1) {
+    # Find the value with CI hitting the target power
+    # and has the smallest SE.
+    i1 <- rank(by_x_ci$reject_se)
+    # Do not consider those with nrep < final_nrep
+    i1[by_x_ci$nrep < final_nrep] <- Inf
+    # If ties, the smallest value will be used
+    i2 <- which(i1 == min(i1[i0]))[1]
+  } else {
+    i2 <- which(i0)
+  }
+  return(i2)
+}
