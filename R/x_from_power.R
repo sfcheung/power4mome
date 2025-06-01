@@ -220,6 +220,11 @@
 #' with the target power. Rounded
 #' up if not an integer.
 #'
+#' @param initial_nrep The initial
+#' number of replications. If `NULL`,
+#' the default, the `nrep` used in
+#' `object` will be used.
+#'
 #' @param final_nrep The number of
 #' replications in the final stage,
 #' also the maximum number of replications
@@ -411,7 +416,8 @@ x_from_power <- function(object,
                          progress = TRUE,
                          simulation_progress = TRUE,
                          max_trials = 10,
-                         final_nrep = 500,
+                         initial_nrep = NULL,
+                         final_nrep = 400,
                          final_R = 1000,
                          nrep_steps = 1,
                          seed = NULL,
@@ -517,6 +523,16 @@ x_from_power <- function(object,
 
   time_start <- Sys.time()
 
+  # Change nrep?
+
+  nrep_org <- attr(object, "args")$nrep
+
+  if (is.null(initial_nrep)) {
+    nrep0 <- nrep_org
+  } else {
+    nrep0 <- ceiling(initial_nrep)
+  }
+
   # === Initial Trial ===
 
   if (progress) {
@@ -561,11 +577,13 @@ x_from_power <- function(object,
   by_x_i <- switch(x,
                    n = power4test_by_n(object,
                                        n = x_i,
+                                       nrep = nrep0,
                                        progress = simulation_progress,
                                        save_sim_all = save_sim_all),
                    es = power4test_by_es(object,
                                          pop_es_name = pop_es_name,
                                          pop_es_values = x_i,
+                                         nrep = nrep0,
                                          progress = simulation_progress,
                                          save_sim_all = save_sim_all))
 
@@ -631,10 +649,11 @@ x_from_power <- function(object,
   # - decreasing the number of values to try.
 
   # The sequence of the numbers of replication
-  new_nrep <- rejection_rates(by_x_1,
-                              all_columns = TRUE)$nrep
+  # new_nrep <- rejection_rates(by_x_1,
+  #                             all_columns = TRUE)$nrep
 
-  new_nrep <- ceiling(mean(new_nrep))
+  # new_nrep <- ceiling(mean(new_nrep))
+  new_nrep <- nrep0
   nrep_seq <- ceiling(seq(from = new_nrep,
                           to = final_nrep,
                           length.out = nrep_steps + 1))
