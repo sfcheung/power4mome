@@ -23,7 +23,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.40</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.44</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,6 +43,9 @@
     <li><a class="dropdown-item" href="../articles/x_from_power_for_n.html">Determine the sample size with the target power</a></li>
     <li><a class="dropdown-item" href="../articles/x_from_power_for_es.html">Determine the effect size with the target power</a></li>
     <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>&lt;Quick Templates&gt;</h6></li>
+    <li><a class="dropdown-item" href="../articles/template_mediation_obs.html">Simple mediation</a></li>
+    <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>&lt;Technical Appendices&gt;</h6></li>
     <li><a class="dropdown-item" href="../articles/power4test_workflow.html">Workflow of `power4test()`</a></li>
     <li><a class="dropdown-item" href="../articles/x_from_power_workflow.html">Workflow of `x_from_power()`</a></li>
@@ -56,6 +59,7 @@
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
 </form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/sfcheung/power4mome/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -70,12 +74,10 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Power Analysis for Moderation, Mediation, and Moderated-Mediation</h1>
-                        <h4 data-toc-skip class="author">Shu Fai Cheung
-&amp; Sing-Hang Cheung</h4>
             
-            <h4 data-toc-skip class="date">2025-05-28</h4>
+            <h4 data-toc-skip class="date">2025-06-01</h4>
       
-
+      <small class="dont-index">Source: <a href="https://github.com/sfcheung/power4mome/blob/main/vignettes/power4mome.Rmd" class="external-link"><code>vignettes/power4mome.Rmd</code></a></small>
       <div class="d-none name"><code>power4mome.Rmd</code></div>
     </div>
 
@@ -686,7 +688,7 @@ convention for product term values are different: <code>l</code> denotes
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Variances:</span></span>
 <span><span class="co">#&gt;                    Population</span></span>
-<span><span class="co">#&gt;    .y                 0.945  </span></span>
+<span><span class="co">#&gt;    .y                 0.946  </span></span>
 <span><span class="co">#&gt;     x                 1.000  </span></span>
 <span><span class="co">#&gt;     w                 1.000  </span></span>
 <span><span class="co">#&gt;     x:w               1.000  </span></span>
@@ -901,7 +903,7 @@ setting up this syntax.</p>
 <span><span class="co">#&gt; Variances:</span></span>
 <span><span class="co">#&gt;                    Population</span></span>
 <span><span class="co">#&gt;    .m                 0.898  </span></span>
-<span><span class="co">#&gt;    .y                 0.882  </span></span>
+<span><span class="co">#&gt;    .y                 0.881  </span></span>
 <span><span class="co">#&gt;     x                 1.000  </span></span>
 <span><span class="co">#&gt;     w                 1.000  </span></span>
 <span><span class="co">#&gt;     x:w               1.000  </span></span>
@@ -955,7 +957,7 @@ setting up this syntax.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ============ &lt;fit&gt; ============</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; lavaan 0.6-19 ended normally after 2 iterations</span></span>
+<span><span class="co">#&gt; lavaan 0.6-19 ended normally after 1 iteration</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Estimator                                         ML</span></span>
 <span><span class="co">#&gt;   Optimization method                           NLMINB</span></span>
@@ -1021,9 +1023,9 @@ power:</p>
 <code class="sourceCode R"><span><span class="va">out3_power</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rejection_rates.html">rejection_rates</a></span><span class="op">(</span><span class="va">out3</span><span class="op">)</span></span>
 <span><span class="va">out3_power</span></span>
 <span><span class="co">#&gt;                                          test test_label   p.v reject r.cilo</span></span>
-<span><span class="co">#&gt; 1 test_index_of_mome: x-&gt;m-&gt;y, moderated by w       Test 1.000  0.052  0.031</span></span>
+<span><span class="co">#&gt; 1 test_index_of_mome: x-&gt;m-&gt;y, moderated by w       Test 1.000  0.050  0.029</span></span>
 <span><span class="co">#&gt;   r.cihi</span></span>
-<span><span class="co">#&gt; 1  0.074</span></span>
+<span><span class="co">#&gt; 1  0.071</span></span>
 <span><span class="co">#&gt; Notes:</span></span>
 <span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>
 <span><span class="co">#&gt; - reject: The proportion of 'significant' replications, that is, the</span></span>
@@ -1033,8 +1035,8 @@ power:</p>
 <span><span class="co">#&gt;   on normal approximation.</span></span>
 <span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span></code></pre></div>
 <p>The estimated power of the test of moderated mediation effect,
-conducted by a test of the index of moderated mediation, is 0.052, 95%
-confidence interval [0.031; 0.074].</p>
+conducted by a test of the index of moderated mediation, is 0.050, 95%
+confidence interval [0.029; 0.071].</p>
 <p>Unlike the previous example on moderation tested by regression,
 estimating the power of Monte Carlo confidence intervals is
 substantially slower. However, this is necessary because Monte Carlo or

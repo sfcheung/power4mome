@@ -23,7 +23,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.40</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.44</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,6 +43,9 @@
     <li><a class="dropdown-item" href="../articles/x_from_power_for_n.html">Determine the sample size with the target power</a></li>
     <li><a class="dropdown-item" href="../articles/x_from_power_for_es.html">Determine the effect size with the target power</a></li>
     <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>&lt;Quick Templates&gt;</h6></li>
+    <li><a class="dropdown-item" href="../articles/template_mediation_obs.html">Simple mediation</a></li>
+    <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>&lt;Technical Appendices&gt;</h6></li>
     <li><a class="dropdown-item" href="../articles/power4test_workflow.html">Workflow of `power4test()`</a></li>
     <li><a class="dropdown-item" href="../articles/x_from_power_workflow.html">Workflow of `x_from_power()`</a></li>
@@ -56,6 +59,7 @@
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
 </form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/sfcheung/power4mome/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -70,12 +74,10 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Sample Size Given Desired Power</h1>
-                        <h4 data-toc-skip class="author">Shu Fai Cheung,
-Wendie Yang, &amp; Sing-Hang Cheung</h4>
             
-            <h4 data-toc-skip class="date">2025-05-25</h4>
+            <h4 data-toc-skip class="date">2025-06-01</h4>
       
-
+      <small class="dont-index">Source: <a href="https://github.com/sfcheung/power4mome/blob/main/vignettes/articles/x_from_power_for_n.Rmd" class="external-link"><code>vignettes/articles/x_from_power_for_n.Rmd</code></a></small>
       <div class="d-none name"><code>x_from_power_for_n.Rmd</code></div>
     </div>
 
@@ -572,8 +574,8 @@ power based on simulation is 0.782.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; === Technical Information ===</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; - The range of values explored: 50 to 131 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 2.469 mins </span></span>
+<span><span class="co">#&gt; - The range of values explored: 50 to 133 </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 1.98 mins </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
@@ -591,24 +593,24 @@ power based on simulation is 0.782.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Coefficients:</span></span>
 <span><span class="co">#&gt; (Intercept)            x  </span></span>
-<span><span class="co">#&gt;    -1.75189      0.03008  </span></span>
+<span><span class="co">#&gt;    -1.59991      0.02858  </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Degrees of Freedom: 149 Total (i.e. Null);  148 Residual</span></span>
-<span><span class="co">#&gt; Null Deviance:       200.2 </span></span>
-<span><span class="co">#&gt; Residual Deviance: 187.7     AIC: 191.7</span></span>
+<span><span class="co">#&gt; Degrees of Freedom: 249 Total (i.e. Null);  248 Residual</span></span>
+<span><span class="co">#&gt; Null Deviance:       321.8 </span></span>
+<span><span class="co">#&gt; Residual Deviance: 306.2     AIC: 310.2</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - Detailed Results:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     n                   test test_label   p.v reject r.cilo r.cihi</span></span>
 <span><span class="co">#&gt; 1  50 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.400  0.264  0.536</span></span>
-<span><span class="co">#&gt; 2  75 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.700  0.573  0.827</span></span>
-<span><span class="co">#&gt; 3  81 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.682  0.637  0.728</span></span>
-<span><span class="co">#&gt; 4  97 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.786  0.678  0.893</span></span>
-<span><span class="co">#&gt; 5 100 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.740  0.618  0.862</span></span>
+<span><span class="co">#&gt; 2  75 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.690  0.599  0.781</span></span>
+<span><span class="co">#&gt; 3  80 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.682  0.637  0.728</span></span>
+<span><span class="co">#&gt; 4  96 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.720  0.632  0.808</span></span>
+<span><span class="co">#&gt; 5 100 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.750  0.665  0.835</span></span>
 <span><span class="co">#&gt; 6 103 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.782  0.742  0.823</span></span>
-<span><span class="co">#&gt; 7 104 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.861  0.812  0.910</span></span>
-<span><span class="co">#&gt; 8 113 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.792  0.683  0.902</span></span>
-<span><span class="co">#&gt; 9 131 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.882  0.851  0.914</span></span>
+<span><span class="co">#&gt; 7 104 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.856  0.806  0.905</span></span>
+<span><span class="co">#&gt; 8 114 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.780  0.699  0.861</span></span>
+<span><span class="co">#&gt; 9 133 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.892  0.862  0.923</span></span>
 <span><span class="co">#&gt; Notes:</span></span>
 <span><span class="co">#&gt; - n: The sample size in a trial.</span></span>
 <span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>
