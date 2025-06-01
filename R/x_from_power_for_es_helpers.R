@@ -27,7 +27,7 @@ set_es_range <- function(object,
           es0,
           ") is equal to or less than 'x_min' (",
           es_min,
-          "). Please increase 'x_min'.")
+          "). Please decrease 'x_min'.")
   }
 
   if (power0 == target_power) {
