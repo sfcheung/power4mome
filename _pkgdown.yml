@@ -40,6 +40,9 @@ navbar:
         href: articles/x_from_power_for_n.html
       - text: Determine the effect size with the target power
         href: articles/x_from_power_for_es.html
+      - text: "<Quick Templates>"
+      - text: Simple mediation
+        href: articles/template_mediation_obs.html
       - text: -------
       - text: "<Technical Appendices>"
       - text: Workflow of `power4test()`
