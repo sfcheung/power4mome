@@ -37,6 +37,14 @@
 #'   a power level close enough to the
 #'   target power.
 #'
+#' If several values of `x` (sample
+#' size or the population value of
+#' a model parameter) have already been
+#' examined by [power4test_by_n()] or
+#' [power4test_by_es()], the output
+#' of these two functions can also be
+#' used as `object` by [x_from_power()].
+#'
 #' Usually, the default values of the
 #' arguments should be sufficient.
 #'
@@ -145,6 +153,19 @@
 #'
 #' @param object A `power4test` object,
 #' which is the output of [power4test()].
+#' Can also be a `power4test_by_n` object,
+#' the output
+#' of [power4test_by_n()], or
+#' a `power4test_by_es` object, the
+#' output of
+#' [power4test_by_es()]. For these
+#' two types of objects, the attempt
+#' with power closest to the
+#' `target_power` will be used as
+#' `object`, and all other attempts in
+#' them will be included in the estimation
+#' of subsequent attempts and the final
+#' output.
 #'
 #' @param x For [x_from_power()],
 #' `x` set the value to
@@ -541,6 +562,23 @@ x_from_power <- function(object,
     set.seed(seed)
   }
 
+  # Handle the object
+
+  is_by_x <- FALSE
+  if (inherits(object, "power4test_by_n") ||
+      inherits(object, "power4test_by_es")) {
+    is_by_x <- TRUE
+    object_by_org <- object
+    i_org <- find_ci_hit(object_by_org,
+                         ci_level = ci_level,
+                         target_power = target_power,
+                         final_nrep = 1,
+                         closest_ok = TRUE)
+    object <- object_by_org[[i_org]]
+  } else {
+    object_by_org <- NA
+  }
+
   time_start <- Sys.time()
 
   # Change nrep?
@@ -631,21 +669,28 @@ x_from_power <- function(object,
                                          save_sim_all = save_sim_all))
 
   # Add the input object to the list
-  tmp <- list(object)
-  if (x == "n") {
-    class(tmp) <- c("power4test_by_n", class(tmp))
-    names(tmp) <- as.character(x0)
+  if (is_by_x) {
+    # Object is an output of *_by_n() or *_by_es()
+    by_x_i <- c(by_x_i,
+                object_by_org,
+                skip_checking_models = TRUE)
+  } else {
+    tmp <- list(object)
+    if (x == "n") {
+      class(tmp) <- c("power4test_by_n", class(tmp))
+      names(tmp) <- as.character(x0)
+    }
+    if (x == "es") {
+      class(tmp) <- c("power4test_by_es", class(tmp))
+      names(tmp) <- paste0(pop_es_name,
+                          " = ",
+                            as.character(x0))
+      attr(tmp[[1]], "pop_es_name") <- pop_es_name
+      attr(tmp[[1]], "pop_es_value") <- x0
+    }
+    by_x_i <- c(by_x_i, tmp,
+                skip_checking_models = TRUE)
   }
-  if (x == "es") {
-    class(tmp) <- c("power4test_by_es", class(tmp))
-    names(tmp) <- paste0(pop_es_name,
-                         " = ",
-                          as.character(x0))
-    attr(tmp[[1]], "pop_es_name") <- pop_es_name
-    attr(tmp[[1]], "pop_es_value") <- x0
-  }
-  by_x_i <- c(by_x_i, tmp,
-              skip_checking_models = TRUE)
 
   if (progress) {
     cat("- Rejection Rates:\n")

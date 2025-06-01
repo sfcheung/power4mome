@@ -220,7 +220,6 @@ find_ci_hit <- function(object,
   # If no hit, return NULL
   # If hit, always return one number
   # If closest_ok, accept a trial with closest power level
-
   by_x_ci <- rejection_rates_add_ci(object,
                                     level = ci_level)
   i0 <- (by_x_ci$reject_ci_lo < target_power) &
@@ -228,7 +227,9 @@ find_ci_hit <- function(object,
 
   if (isFALSE(any(i0))) {
     if (closest_ok) {
-      i0 <- which.min(abs(by_x_ci$reject - target_power))
+      tmp <- which.min(abs(by_x_ci$reject - target_power))
+      i0 <- rep(FALSE, nrow(by_x_ci))
+      i0[tmp] <- TRUE
     } else {
       return(NULL)
     }

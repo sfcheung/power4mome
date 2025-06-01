@@ -39,7 +39,20 @@ x_from_power(
 }
 \arguments{
 \item{object}{A \code{power4test} object,
-which is the output of \code{\link[=power4test]{power4test()}}.}
+which is the output of \code{\link[=power4test]{power4test()}}.
+Can also be a \code{power4test_by_n} object,
+the output
+of \code{\link[=power4test_by_n]{power4test_by_n()}}, or
+a \code{power4test_by_es} object, the
+output of
+\code{\link[=power4test_by_es]{power4test_by_es()}}. For these
+two types of objects, the attempt
+with power closest to the
+\code{target_power} will be used as
+\code{object}, and all other attempts in
+them will be included in the estimation
+of subsequent attempts and the final
+output.}
 
 \item{x}{For \code{\link[=x_from_power]{x_from_power()}},
 \code{x} set the value to
@@ -370,6 +383,14 @@ the selected model parameter) with
 a power level close enough to the
 target power.
 }
+
+If several values of \code{x} (sample
+size or the population value of
+a model parameter) have already been
+examined by \code{\link[=power4test_by_n]{power4test_by_n()}} or
+\code{\link[=power4test_by_es]{power4test_by_es()}}, the output
+of these two functions can also be
+used as \code{object} by \code{\link[=x_from_power]{x_from_power()}}.
 
 Usually, the default values of the
 arguments should be sufficient.

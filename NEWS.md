@@ -1,4 +1,4 @@
-# power4mome 0.0.1.41
+# power4mome 0.0.1.42
 
 - Initialized the package. (0.0.0.9000)
 
@@ -365,3 +365,8 @@
 
 - Changed the default value of `final_nrep`
   in `x_from_power()` to 400. (0.0.1.41)
+
+- Updated `x_from_power()` to use
+  the outputs of `power4test_by_n()`
+  and `power4test_by_es()`.
+  (0.0.1.42)
