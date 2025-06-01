@@ -1,7 +1,6 @@
 ---
 title: "Power Analysis for Moderation, Mediation, and Moderated-Mediation"
-author: "Shu Fai Cheung & Sing-Hang Cheung"
-date: "2025-05-28"
+date: "2025-06-01"
 output:
   rmarkdown::html_vignette:
     options:
@@ -787,7 +786,7 @@ print(out2,
 #> 
 #> Variances:
 #>                    Population
-#>    .y                 0.945  
+#>    .y                 0.946  
 #>     x                 1.000  
 #>     w                 1.000  
 #>     x:w               1.000  
@@ -1046,7 +1045,7 @@ print(out3,
 #> Variances:
 #>                    Population
 #>    .m                 0.898  
-#>    .y                 0.882  
+#>    .y                 0.881  
 #>     x                 1.000  
 #>     w                 1.000  
 #>     x:w               1.000  
@@ -1100,7 +1099,7 @@ print(out3,
 #> 
 #> ============ <fit> ============
 #> 
-#> lavaan 0.6-19 ended normally after 2 iterations
+#> lavaan 0.6-19 ended normally after 1 iteration
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
@@ -1182,9 +1181,9 @@ again to estimate the power:
 out3_power <- rejection_rates(out3)
 out3_power
 #>                                          test test_label   p.v reject r.cilo
-#> 1 test_index_of_mome: x->m->y, moderated by w       Test 1.000  0.052  0.031
+#> 1 test_index_of_mome: x->m->y, moderated by w       Test 1.000  0.050  0.029
 #>   r.cihi
-#> 1  0.074
+#> 1  0.071
 #> Notes:
 #> - p.v: The proportion of valid replications.
 #> - reject: The proportion of 'significant' replications, that is, the
@@ -1201,8 +1200,8 @@ The estimated
 power of the test of moderated mediation
 effect, conducted by a test of the
 index of moderated mediation, is
-0.052,
-95% confidence interval [0.031; 0.074].
+0.050,
+95% confidence interval [0.029; 0.071].
 
 Unlike the previous example on moderation
 tested by regression, estimating the power

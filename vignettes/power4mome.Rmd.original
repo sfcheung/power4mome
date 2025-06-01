@@ -1,6 +1,5 @@
 ---
 title: "Power Analysis for Moderation, Mediation, and Moderated-Mediation"
-author: "Shu Fai Cheung & Sing-Hang Cheung"
 date: "`r Sys.Date()`"
 output:
   rmarkdown::html_vignette:

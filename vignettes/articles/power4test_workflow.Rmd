@@ -1,6 +1,5 @@
 ---
 title: "Workflow of `power4test()`"
-author: "Shu Fai Cheung & Sing-Hang Cheung"
 output:
   html_document:
     fig.align: "center"
