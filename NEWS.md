@@ -1,4 +1,4 @@
-# power4mome 0.0.1.43
+# power4mome 0.0.1.44
 
 - Initialized the package. (0.0.0.9000)
 
@@ -374,3 +374,6 @@
 - Updated `x_from_power()` to reuse
   the outputs of `x_from_power()`.
   (0.0.1.43)
+
+- Fixed some issues related to R CMD Check.
+  (0.0.1.44)
