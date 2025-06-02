@@ -100,7 +100,7 @@ expect_equal(coef(tmp)["Group2.x -> m1 -> m2 -> y"],
              .51,
              ignore_attr = TRUE)
 expect_equal(coef(tmp)["Group1.x -> m1 -> m2 -> y"],
-             .316,
+             .361,
              ignore_attr = TRUE)
 
 })

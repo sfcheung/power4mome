@@ -1,4 +1,4 @@
-# power4mome 0.0.1.48
+# power4mome 0.0.1.49
 
 - Initialized the package. (0.0.0.9000)
 
@@ -394,3 +394,7 @@
 - The `print` method of `sim_data` will
   print population indirect effect(s),
   if any. (0.0.1.48)
+
+- Correct the value for `mi`. (0.0.1.49)
+
+- Improve the search algorithm. (0.0.1.49)

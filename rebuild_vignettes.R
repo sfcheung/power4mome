@@ -16,6 +16,7 @@ setwd(paste0(base_dir,"/vignettes/articles/"))
 knitr::knit("x_from_power_for_n.Rmd.original", output = "x_from_power_for_n.Rmd")
 knitr::knit("x_from_power_for_es.Rmd.original", output = "x_from_power_for_es.Rmd")
 knitr::knit("template_mediation_obs.Rmd.original", output = "template_mediation_obs.Rmd")
+# knitr::knit("template_mediation_obs_ind.Rmd.original", output = "template_mediation_obs_ind.Rmd")
 pkgdown::build_articles("../..")
 
 setwd(base_dir)
