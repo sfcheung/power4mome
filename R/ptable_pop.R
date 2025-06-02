@@ -378,6 +378,13 @@
 #' See the help page on how to specify
 #' this argument.
 #'
+#' @param es_ind The names of labels
+#' denoting the effect size of an
+#' indirect effect. They will be
+#' used to determine the population
+#' values of the component paths along
+#' an indirect path.
+#'
 #' @param standardized Logical. If
 #' `TRUE`, the default, variances and
 #' error variances are scaled to ensure
@@ -477,12 +484,18 @@ ptable_pop <- function(model = NULL,
                                "nil" = .00,
                                "s" = .10,
                                "m" = .30,
-                               "l" = .50),
+                               "l" = .50,
+                               "si" = .141,
+                               "mi" = .316,
+                               "li" = .510),
                        es2 = c("n" = .00,
                                "nil" = .00,
                                "s" = .05,
                                "m" = .10,
                                "l" = .15),
+                       es_ind = c("si",
+                                  "mi",
+                                  "li"),
                        standardized = TRUE,
                        n_std = 100000,
                        std_force_monte_carlo = FALSE) {
@@ -496,7 +509,8 @@ ptable_pop <- function(model = NULL,
                             es1 = es1,
                             es2 = es2,
                             model = model,
-                            to_one_table = TRUE)
+                            to_one_table = TRUE,
+                            es_ind = es_ind)
   ngroups <- max(par_pop$group)
   # Single group ptable
   if (ngroups > 1) {
@@ -625,6 +639,7 @@ ptable_pop <- function(model = NULL,
   attr(ptable1, "pop_es") <- pop_es
   attr(ptable1, "es1") <- es1
   attr(ptable1, "es2") <- es2
+  attr(ptable1, "es_ind") <- es_ind
   # par_pop is one single table with a group column
   attr(ptable1, "par_pop") <- par_pop
   attr(ptable1, "n_std") <- n_std
@@ -649,6 +664,7 @@ update_ptable_pop <- function(object,
   }
   es1 <- attr(object, "es1")
   es2 <- attr(object, "es2")
+  es_ind <- attr(object, "es_ind")
   model <- attr(object, "model")
   old_par_pop <- attr(object, "par_pop")
   if (is.data.frame(old_par_pop)) {
@@ -657,7 +673,8 @@ update_ptable_pop <- function(object,
   new_par_pop <- pop_es2par_pop(new_pop_es,
                                 es1 = es1,
                                 es2 = es2,
-                                model = model)
+                                model = model,
+                                es_ind = es_ind)
   updated_par_pop <- update_par_pop(add = new_par_pop,
                                     par_pop = old_par_pop)
   updated_par_pop <- par_pop_to_one_table(updated_par_pop)
@@ -832,14 +849,16 @@ pop_es2par_pop <- function(pop_es,
                            es1,
                            es2,
                            model,
-                           to_one_table = FALSE) {
+                           to_one_table = FALSE,
+                           es_ind) {
   # Always process par_pop as a list until existing
   if (is.character(pop_es)) {
     pop_es <- fix_par_es(pop_es,
                          model = model)
     par_pop <- set_pop(pop_es,
                        es1 = es1,
-                       es2 = es2)
+                       es2 = es2,
+                       es_ind = es_ind)
     par_pop <- list(par_pop)
   } else if (is.list(pop_es)) {
     if (is.data.frame(pop_es)) {
@@ -858,7 +877,8 @@ pop_es2par_pop <- function(pop_es,
       par_pop <- lapply(pop_es,
                         set_pop,
                         es1 = es1,
-                        es2 = es2)
+                        es2 = es2,
+                        es_ind = es_ind)
     }
   }
   par_pop <- lapply(par_pop,

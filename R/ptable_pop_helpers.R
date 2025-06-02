@@ -65,7 +65,10 @@ set_pop <- function(par_es,
                             "nil" = .00,
                             "s" = .10,
                             "m" = .30,
-                            "l" = .50),
+                            "l" = .50,
+                            "si" = .141,
+                            "mi" = .316,
+                            "li" = .510),
                     es2 = c("n" = .00,
                             "nil" = .00,
                             "s" = .05,
@@ -74,6 +77,7 @@ set_pop <- function(par_es,
                     es_ind = c("si",
                                "mi",
                                "li")) {
+
   num_comp <- max_num_comp(par_es)
   es1 <- expand_ind_labels(es1,
                            es_ind = es_ind,
@@ -173,6 +177,7 @@ fix_par_es <- function(par_es,
       par_es_ind <- par_es_def[i2]
       ind_comp <- sapply(names(par_es_ind),
                          expand_to_components,
+                         simplify = FALSE,
                          USE.NAMES = TRUE)
       if (any(duplicated(unname(unlist(ind_comp))))) {
         stop("The paths in '.ind.' cannot overlap.")
@@ -188,7 +193,8 @@ fix_par_es <- function(par_es,
       all_ind_es <- mapply(tmpfct,
                            x = par_es_ind,
                            y = ind_comp,
-                           USE.NAMES = FALSE)
+                           USE.NAMES = FALSE,
+                           SIMPLIFY = FALSE)
       all_ind_es <- unlist(all_ind_es)
     }
   }
@@ -294,7 +300,7 @@ expand_to_components <- function(x,
 # Find the maximum number of component paths
 max_num_comp <- function(x,
                          num_min = 2) {
-  tmp <- regexpr("\\_([[:alnum:]]+)$", x)
+  tmp <- regexpr("_([[:alnum:]]+)$", x)
   tmp2 <- ifelse(tmp > 0,
                  substring(x,
                            tmp + 1),

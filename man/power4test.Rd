@@ -34,8 +34,9 @@ power4test(
   parallel = FALSE,
   progress = TRUE,
   ncores = max(1, parallel::detectCores(logical = FALSE) - 1),
-  es1 = c(n = 0, nil = 0, s = 0.1, m = 0.3, l = 0.5),
+  es1 = c(n = 0, nil = 0, s = 0.1, m = 0.3, l = 0.5, si = 0.141, mi = 0.316, li = 0.51),
   es2 = c(n = 0, nil = 0, s = 0.05, m = 0.1, l = 0.15),
+  es_ind = c("si", "mi", "li"),
   n_std = 1e+05,
   std_force_monte_carlo = FALSE
 )
@@ -277,6 +278,13 @@ Used only if \code{pop_es} is a named
 vector or a multiline string.
 See the help page on how to specify
 this argument.}
+
+\item{es_ind}{The names of labels
+denoting the effect size of an
+indirect effect. They will be
+used to determine the population
+values of the component paths along
+an indirect path.}
 
 \item{n_std}{The sample size used to
 determine the error variances by
