@@ -568,6 +568,29 @@ print.sim_data <- function(x,
   print(ptable1,
         digits = digits)
 
+  # Multigroup models automatically supported
+  has_w <- FALSE
+  all_ind <- tryCatch(pop_indirect(x),
+                       warning = function(w) w)
+  if (inherits(all_ind, "warning")) {
+    if (grepl("moderator", all_ind$message)) {
+      has_w <- TRUE
+    }
+    all_ind <- suppressWarnings(pop_indirect(x))
+  }
+  if (length(all_ind) > 0) {
+    cat(header_str("Population Indirect Effect(s)",
+                  hw = .4,
+                  prefix = "",
+                  suffix = "\n"))
+    print(all_ind,
+          digits = digits)
+    if (has_w) {
+      cat("\nNOTE: One or more path(s) is/are moderated.\n")
+    }
+    cat("\n")
+  }
+
   k0 <- x_i$number_of_indicators
 
   rel0 <- x_i$reliability
@@ -868,3 +891,33 @@ sim_data_i <- function(repid = 1,
   out
 }
 
+#' @noRd
+pop_indirect <- function(x) {
+  x_i <- x[[1]]
+  ptable0 <- lavaan::parameterTable(x_i$fit0)
+  fit_to_all_args0 <- list(model = x_i$model_final,
+                           data = x_i$mm_lm_dat_out,
+                           se = "none",
+                           test = "none",
+                           group = x_i$group_name,
+                           fixed.x = FALSE)
+  fit_all <- do.call(lavaan::sem,
+                      fit_to_all_args0)
+
+  # TODO:
+  # - Need a better way to find product terms
+  p_terms <- lavaan::lavNames(ptable0, "ov.interaction")
+
+  if (length(p_terms) == 0) {
+    p_terms <- NULL
+  }
+
+  # Multigroup models automatically supported
+  all_paths <- manymome::all_indirect_paths(x[[1]]$fit0,
+                                            exclude = p_terms)
+  all_ind <- manymome::many_indirect_effects(all_paths,
+                                            fit = fit_all,
+                                            est = ptable0)
+
+  all_ind
+}
