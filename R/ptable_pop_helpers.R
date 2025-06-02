@@ -148,8 +148,10 @@ fix_par_es <- function(par_es,
       all_cov <- all_cov[all_cov$lhs != all_cov$rhs, ]
       all_cov <- all_cov[all_cov$exo == 1, ]
       tmp <- lavaan::lavNames(ptable, "ov.interaction")
-      all_cov <- all_cov[!((all_cov$lhs == tmp) |
-                           (all_cov$rhs == tmp)), ]
+      if (length(tmp) > 0) {
+        all_cov <- all_cov[!((all_cov$lhs == tmp) |
+                            (all_cov$rhs == tmp)), ]
+      }
       all_cov <- all_cov[, c("lhs", "op", "rhs")]
       all_cov <- apply(all_cov, 1, paste, collapse = " ")
       all_cov_es <- rep(par_es_def[".cov."], length(all_cov))
