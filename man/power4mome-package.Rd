@@ -12,6 +12,7 @@ Power analysis and sample size determination for moderation, mediation, and mode
 Useful links:
 \itemize{
   \item \url{https://sfcheung.github.io/power4mome/}
+  \item Report bugs at \url{https://github.com/sfcheung/power4mome/issues}
 }
 
 }
