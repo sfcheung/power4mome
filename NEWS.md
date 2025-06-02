@@ -1,4 +1,4 @@
-# power4mome 0.0.1.45
+# power4mome 0.0.1.46
 
 - Initialized the package. (0.0.0.9000)
 
@@ -380,3 +380,6 @@
 
 - Fixed a typo in the help page
   of `power4test()`. (0.0.1.45)
+
+- Fixed a bug in handling `.cov.` in
+  `pop_es`. (0.0.1.46)
