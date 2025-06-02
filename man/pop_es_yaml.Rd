@@ -81,6 +81,10 @@ population value:
 \item \code{s} for small,
 \item \code{m} for medium, and
 \item \code{l} for large.
+\item \code{si}, \code{mi}, and \code{li} for
+small, medium, and large a
+standardized indirect effect,
+respectively.
 }
 
 Note: \code{n} \emph{cannot} be used in this mode.

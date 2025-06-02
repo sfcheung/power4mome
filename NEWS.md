@@ -1,4 +1,4 @@
-# power4mome 0.0.1.46
+# power4mome 0.0.1.47
 
 - Initialized the package. (0.0.0.9000)
 
@@ -383,3 +383,10 @@
 
 - Fixed a bug in handling `.cov.` in
   `pop_es`. (0.0.1.46)
+
+- Added the tag `.ind.` for setting the
+  values of all component paths along
+  an indirect path. This tag is also
+  supported by `power4test_by_es()` and
+  `x_from_power()`.
+  (0.0.1.47)

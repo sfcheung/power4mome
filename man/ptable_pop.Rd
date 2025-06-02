@@ -8,8 +8,9 @@
 ptable_pop(
   model = NULL,
   pop_es = NULL,
-  es1 = c(n = 0, nil = 0, s = 0.1, m = 0.3, l = 0.5),
+  es1 = c(n = 0, nil = 0, s = 0.1, m = 0.3, l = 0.5, si = 0.141, mi = 0.316, li = 0.51),
   es2 = c(n = 0, nil = 0, s = 0.05, m = 0.1, l = 0.15),
+  es_ind = c("si", "mi", "li"),
   standardized = TRUE,
   n_std = 1e+05,
   std_force_monte_carlo = FALSE
@@ -52,6 +53,13 @@ Used only if \code{pop_es} is a named
 vector or a multiline string.
 See the help page on how to specify
 this argument.}
+
+\item{es_ind}{The names of labels
+denoting the effect size of an
+indirect effect. They will be
+used to determine the population
+values of the component paths along
+an indirect path.}
 
 \item{standardized}{Logical. If
 \code{TRUE}, the default, variances and
@@ -208,6 +216,18 @@ values for all regression coefficients.
 Use \code{".cov."} to set the default
 values for all correlations of
 exogenous variables (e.g., predictors).
+\item The names can also be of this form:
+\code{".ind.(<path>)"}, whether \verb{<path>}
+denote path in the model. For
+example, \code{".ind.(x->m->y)"} denotes
+the path from \code{x} through \code{m} to
+\code{y}. Alternatively, the \code{lavaan}
+symbol \code{~} can also be used:
+\code{".ind.(y~m~x)"}. This form is used
+to set the indirect effect (standardized,
+by default) along this path. The
+value for this name will override
+other settings.
 \item If using \code{lavaan} names, can
 specify more than one parameter
 using \code{+}. For example, \code{y ~ m + x}
@@ -245,6 +265,35 @@ to large (\code{l}).
 term \code{x:w} when predicting \code{y} is
 set to small (\code{s}).
 }
+\subsection{Indirect Effect}{
+
+When setting an indirect effect to
+a symbol (default: \code{"si"}, \code{"mi"},
+\code{"li"}, with \code{"i"} added to differentiate
+them from the labels for a direct path),
+the corresponding value is used to
+determine the population values of
+\emph{all} component paths along the pathway.
+All the values are assumed to be equal.
+Therefore, \code{".ind.(x->m->y)" = ".20"}
+is equivalent to setting \code{m ~ x}
+and \code{y ~ m} to the square root of
+.20, such that the corresponding
+indirect effect is equal to the
+designated value.
+
+This behavior, though restricted,
+is for quick manipulation of the
+indirect effect. If different values
+along a pathway, set the value for
+each path directly.
+
+Only nonnegative value is supported.
+Therefore, \code{".ind.(x->m->y)" = "-si"}
+and \code{".ind.(x->m->y)" = "-.20"} will
+throw an error.
+}
+
 }
 
 \subsection{Multigroup Model}{
@@ -342,6 +391,10 @@ population value:
 \item \code{s} for small,
 \item \code{m} for medium, and
 \item \code{l} for large.
+\item \code{si}, \code{mi}, and \code{li} for
+small, medium, and large a
+standardized indirect effect,
+respectively.
 }
 
 Note: \code{n} \emph{cannot} be used in this mode.
@@ -447,8 +500,9 @@ equivalent way to specify the string.
 }
 
 \section{Set the Values for Effect Size Labels ('es1' and 'es2')}{
-The vector \code{es1} is for correlations
-and regression coefficients, and the
+The vector \code{es1} is for correlations,
+regression coefficients, and
+indirect effect, and the
 vector \code{es2} is for for standardized
 moderation effect, the coefficients
 of a product term. These labels

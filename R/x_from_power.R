@@ -756,7 +756,7 @@ x_from_power <- function(object,
   nrep_seq <- ceiling(seq(from = new_nrep,
                           to = final_nrep,
                           length.out = nrep_steps + 1))
-  final_nrep_seq <- ceiling(seq(from = final_nrep * .50,
+  final_nrep_seq <- ceiling(seq(from = ceiling(mean(c(new_nrep, final_nrep))),
                                 to = final_nrep,
                                 length.out = nrep_steps + 1))
 
@@ -984,7 +984,7 @@ x_from_power <- function(object,
       by_x_out <- by_x_out[[1]]
 
       # Update the power curve
-      fit_i <- power_curve(by_x_1,
+      fit_1 <- power_curve(by_x_1,
                            formula = power_model,
                            start = stats::coef(fit_1),
                            lower_bound = lower_bound,
