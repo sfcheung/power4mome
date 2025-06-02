@@ -775,6 +775,8 @@ x_from_power <- function(object,
                                   to = 2,
                                   length.out = nrep_steps + 1))
   ci_hit <- FALSE
+  solution_found <- FALSE
+  exit_loop <- FALSE
 
   # === Loop Over The Trials ===
 
@@ -1014,44 +1016,48 @@ x_from_power <- function(object,
 
       ci_hit <- TRUE
 
-      # # If only one CI hits, always keep it.
-      # if (sum(i0) > 1) {
-      #   # Find the value with CI hitting the target power
-      #   # and has the smallest SE.
-      #   i1 <- rank(by_x_ci$reject_se)
-      #   # Do not consider those with nrep < final_nrep
-      #   i1[by_x_ci$nrep < final_nrep] <- Inf
-      #   # If ties, the smallest value will be used
-      #   i2 <- which(i1 == min(i1[i0]))[1]
-      # } else {
-      #   i2 <- which(i0)
-      # }
-
       i2 <- find_ci_hit(by_x_1,
                         ci_level = ci_level,
                         target_power = target_power,
                         final_nrep = final_nrep)
+      if (!is.na(i2) && !is.null(i2)) {
+        # ci_hit && final_nrep reached
 
-      # Updated *_out objects
-      by_x_out <- by_x_1[[i2]]
-      x_out <- switch(x,
-                      n = by_x_ci$n[i2],
-                      es = by_x_ci$es[i2])
-      power_out <- by_x_ci$reject[i2]
-      nrep_out <- by_x_ci$nrep[i2]
-      ci_out <- unlist(by_x_ci[i2, c("reject_ci_lo", "reject_ci_hi")])
+        solution_found <- TRUE
+
+        # Updated *_out objects
+        by_x_out <- by_x_1[[i2]]
+        x_out <- switch(x,
+                        n = by_x_ci$n[i2],
+                        es = by_x_ci$es[i2])
+        power_out <- by_x_ci$reject[i2]
+        nrep_out <- by_x_ci$nrep[i2]
+        ci_out <- unlist(by_x_ci[i2, c("reject_ci_lo", "reject_ci_hi")])
+      } else {
+        i2 <- find_ci_hit(by_x_1,
+                          ci_level = ci_level,
+                          target_power = target_power,
+                          final_nrep = 0)
+        # Updated *_out objects
+        by_x_out <- by_x_1[[i2]]
+        x_out <- switch(x,
+                        n = by_x_ci$n[i2],
+                        es = by_x_ci$es[i2])
+        power_out <- by_x_ci$reject[i2]
+        nrep_out <- by_x_ci$nrep[i2]
+        ci_out <- unlist(by_x_ci[i2, c("reject_ci_lo", "reject_ci_hi")])
+      }
 
     } else {
       # No CI hits the target power
 
       ci_hit <- FALSE
     }
-
     if (ci_hit) {
       # Is the nrep of the candidate already equal to
       # target nrep for the final solution?
 
-      if (nrep_out == final_nrep) {
+      if (solution_found) {
         # Desired accuracy (based on nrep) achieved.
         # Exit the loop and finalize the results.
 
