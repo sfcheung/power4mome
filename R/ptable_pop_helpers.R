@@ -282,3 +282,21 @@ expand_to_components <- function(x,
                              x2b))
   out
 }
+
+#' @noRd
+# Find the maximum number of component paths
+max_num_comp <- function(x,
+                         num_min = 2) {
+  tmp <- regexpr("\\.([[:alnum:]]+)$", x)
+  tmp2 <- ifelse(tmp > 0,
+                 substring(x,
+                           tmp + 1),
+                 "")
+  out <- as.numeric(tmp2)
+  out <- out[!is.na(out)]
+  if (length(out) == 0) {
+    return(num_min)
+  }
+  out <- max(out, na.rm = TRUE)
+  out
+}
