@@ -559,8 +559,13 @@ designated value.
 This behavior, though restricted,
 is for quick manipulation of the
 indirect effect. If different values
-are to be set for the component paths,
-set them directly.
+along a pathway, set the value for
+each path directly.
+
+Only nonnegative value is supported.
+Therefore, \code{".ind.(x->m->y)" = "-si"}
+and \code{".ind.(x->m->y)" = "-.20"} will
+throw an error.
 }
 
 }

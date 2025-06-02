@@ -167,6 +167,11 @@
 #' along a pathway, set the value for
 #' each path directly.
 #'
+#' Only nonnegative value is supported.
+#' Therefore, `".ind.(x->m->y)" = "-si"`
+#' and `".ind.(x->m->y)" = "-.20"` will
+#' throw an error.
+#'
 #' ## Multigroup Model
 #'
 #' The argument `pop_es` also supports multigroup

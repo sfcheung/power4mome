@@ -184,6 +184,13 @@ fix_par_es <- function(par_es,
       # Expand to component paths
       i2 <- which(grepl("^.ind.", names(par_es_def)))
       par_es_ind <- par_es_def[i2]
+      any_negative <- grepl("^-", trimws(par_es_ind))
+      if (any(any_negative)) {
+        tmp1 <- par_es_ind[any_negative][1]
+        tmp2 <- paste0(names(tmp1), " set to ", tmp1, ".")
+        stop("Cannot set the value of .ind.() to negative value. E.g.,",
+             tmp2)
+      }
       ind_comp <- sapply(names(par_es_ind),
                          expand_to_components,
                          simplify = FALSE,
