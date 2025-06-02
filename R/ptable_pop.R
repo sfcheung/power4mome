@@ -89,6 +89,19 @@
 #'   values for all correlations of
 #'   exogenous variables (e.g., predictors).
 #'
+#' - The names can also be of this form:
+#'   `".ind.(<path>)"`, whether `<path>`
+#'   denote path in the model. For
+#'   example, `".ind.(x->m->y)"` denotes
+#'   the path from `x` through `m` to
+#'   `y`. Alternatively, the `lavaan`
+#'   symbol `~` can also be used:
+#'   `".ind.(y~m~x)"`. This form is used
+#'   to set the indirect effect (standardized,
+#'   by default) along this path. The
+#'   value for this name will override
+#'   other settings.
+#'
 #' - If using `lavaan` names, can
 #'   specify more than one parameter
 #'   using `+`. For example, `y ~ m + x`
@@ -130,6 +143,29 @@
 #' - The coefficient of the product
 #'  term `x:w` when predicting `y` is
 #'  set to small (`s`).
+#'
+#' ### Indirect Effect
+#'
+#' When setting an indirect effect to
+#' a symbol (default: `"si"`, `"mi"`,
+#' `"li"`, with `"i"` added to differentiate
+#' them from the labels for a direct path),
+#' the corresponding value is used to
+#' determine the population values of
+#' *all* component paths along the pathway.
+#' All the values are assumed to be equal.
+#' Therefore, `".ind.(x->m->y)" = ".20"`
+#' is equivalent to setting `m ~ x`
+#' and `y ~ m` to the square root of
+#' .20, such that the corresponding
+#' indirect effect is equal to the
+#' designated value.
+#'
+#' This behavior, though restricted,
+#' is for quick manipulation of the
+#' indirect effect. If different values
+#' are to be set for the component paths,
+#' set them directly.
 #'
 #' ## Multigroup Model
 #'
@@ -229,6 +265,11 @@
 #'
 #'     - `l` for large.
 #'
+#'     - `si`, `mi`, and `li` for
+#'       small, medium, and large a
+#'       standardized indirect effect,
+#'       respectively.
+#'
 #'   Note: `n` *cannot* be used in this mode.
 #'
 #'   The
@@ -325,8 +366,9 @@
 #'
 #' # Set the Values for Effect Size Labels ('es1' and 'es2')
 #'
-#' The vector `es1` is for correlations
-#' and regression coefficients, and the
+#' The vector `es1` is for correlations,
+#' regression coefficients, and
+#' indirect effect, and the
 #' vector `es2` is for for standardized
 #' moderation effect, the coefficients
 #' of a product term. These labels
