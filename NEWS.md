@@ -1,4 +1,4 @@
-# power4mome 0.0.1.47
+# power4mome 0.0.1.48
 
 - Initialized the package. (0.0.0.9000)
 
@@ -390,3 +390,7 @@
   supported by `power4test_by_es()` and
   `x_from_power()`.
   (0.0.1.47)
+
+- The `print` method of `sim_data` will
+  print population indirect effect(s),
+  if any. (0.0.1.48)
