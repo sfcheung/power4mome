@@ -1,4 +1,4 @@
-# power4mome 0.0.1.44
+# power4mome 0.0.1.45
 
 - Initialized the package. (0.0.0.9000)
 
@@ -377,3 +377,6 @@
 
 - Fixed some issues related to R CMD Check.
   (0.0.1.44)
+
+- Fixed a typo in the help page
+  of `power4test()`. (0.0.1.45)
