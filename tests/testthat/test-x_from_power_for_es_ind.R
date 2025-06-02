@@ -50,6 +50,7 @@ tmp3 <- x_from_power(out3,
 tmp3
 summary(tmp3)
 plot(tmp3)
+tmp3$power_curve
 power_curve(tmp3$power4test_trials)
 
 })

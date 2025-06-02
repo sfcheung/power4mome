@@ -984,7 +984,7 @@ x_from_power <- function(object,
       by_x_out <- by_x_out[[1]]
 
       # Update the power curve
-      fit_i <- power_curve(by_x_1,
+      fit_1 <- power_curve(by_x_1,
                            formula = power_model,
                            start = stats::coef(fit_1),
                            lower_bound = lower_bound,
