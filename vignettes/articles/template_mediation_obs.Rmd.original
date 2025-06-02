@@ -20,90 +20,15 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Introduction
+```{r load_pre, child=c("template_x_preamble.txt")}
+```
 
-This and other "Quick Template" vignettes
-are examples of R code to do power
-analysis or determine sample size in
-typical models using
-[power4mome](https://sfcheung.github.io/power4mome/).
-Users can quickly adapt
-them for their scenarios.
-
-# Prerequisite
-
-Basic knowledge about fitting models
-by `lavaan` and `power4mome` is required.
-
-This file is not intended to be an introduction
-on how to use functions in `power4mome`.
-For details on how to use `power4test()`,
-`power4test_by_n()`, and `x_from_power()`,
-refer to the [Get-Started article](https://sfcheung.github.io/power4mome/articles/power4mome.html),
-and the [article](https://sfcheung.github.io/power4mome/articles/x_from_power_for_n.html)
-on finding the sample size
-given desired power using `x_from_power()`,
-as well as the help pages of these
-functions.
+```{r load_pre, child=c("template_x_flowchart.txt")}
+```
 
 # Scope
 
 This file is for simple mediation models.
-
-# Common Flow
-
-The following chart summarizes the steps covered
-below.
-
-```{r temp_med_obs_fig_flowchart, fig.cap="Common Workflow", echo=FALSE, fig.align="center", message=FALSE}
-library(DiagrammeR)
-# https://mermaid.live/edit#pako:eNqFk9tu4jAQhl_F8lUrASUHCHEpUrX0st1KVHuxmxUyZHKQHDtynKVZxLvXcQ4NFKl39sz3z-FPfMR7EQImOGLisE-oVOhtHfCAI7RntCjWEKEQIloyhaKUMcLSOFE7VsL9NcYeQLEE4PdNrUJVDJCSFW8AZIgKmO76mc_0KOwaUCMbUM91_ibA-oheRV4yqlLBkQkH-LalnjZfkV9UT1wsd_JutUxXuci3-naXrlrVTw4vWvQmKyQ4IP4JHkC6Cgp1czvAN_APJGWdpGiuiBdfddtdteUXYir3yYuZsT4hjg6pSpCiMtZDG2lX530bSZFtTeysyCMXKgHZTUCb6zeDG6PLXSxpnrRe_wlw697fc5cJIf0nHY9Xja-DYEMDD3vZ0wY9PKyMlZ2laDzppBfdzZ-gm7_Wc_bNjWZZV-n2G-7aZDrvr2WMseeFhvgw2qMdcJE4267vM9xnIL0MmxqDKB7hDGRG01A_tGPNBFgXzCDARB9bTwMc8JNGaanEpuJ7TJQsYYSlKOMEk4iyQt_KPKQK1inVRmZ9NKf8txBZJ4EwVUI-Ny_bPHCDYHLE75jYnjWZu9bCdxZz33Mdd4QrTGbuZGp7tjubu747s1xrfhrh_6bodOI5lufOp5bnO_bCt0c4lvUy7YDaKJA_RMkVJo5vOacPm8xrNw
-mermaid('
-flowchart TD
-  classDef default fill:lightblue;
-  classDef default2 fill:lightgreen;
-
-  style tryn fill: lightyellow
-  style model fill: lightyellow
-
-  SetModel("Set Population Model")
-  SetES("Set Population Values<br/><i>pop_es</i>")
-  OneN("Try one n<br/><i>power4test()</i>")
-  SeveralN("Try several ns<br/><i>power4test_by_n()</i>")
-  SearchN("Search n with target power<br/><i>x_from_power()</i>")
-  AnotherN("Try another n<br/><i>power4test()</i>")
-
-  subgraph model ["Model"]
-
-  SetModel:::default2 --> SetES:::default2
-
-  end
-
-  SetES ==> OneN
-  OneN -.-> SetES
-
-  subgraph tryn ["Power"]
-
-  OneN <==> AnotherN
-  AnotherN <==> SeveralN
-  AnotherN <==> SearchN
-  OneN <==> SeveralN
-  OneN <==> SearchN
-  SeveralN <==> SearchN
-
-  end
-
-  AnotherN -.-> SetES
-  SeveralN -.-> SetES
-  SearchN -.-> SetES
-', height = 760, width = 500)
-```
-
-In practice, steps can be repeated,
-and population values changed, until
-the desired goal is achieved (e.g.,
-a sample size with power close to
-the target power is found).
 
 # Try One N
 

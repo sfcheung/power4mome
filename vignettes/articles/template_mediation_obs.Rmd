@@ -1,6 +1,6 @@
 ---
 title: "Quick Template: Mediation with Observed Variables"
-date: "2025-06-01"
+date: "2025-06-02"
 output:
   html_document:
     fig.align: "center"
@@ -10,6 +10,7 @@ output:
 bibliography: references.bib
 csl: apa.csl
 ---
+
 
 
 
@@ -39,9 +40,6 @@ given desired power using `x_from_power()`,
 as well as the help pages of these
 functions.
 
-# Scope
-
-This file is for simple mediation models.
 
 # Common Flow
 
@@ -49,7 +47,7 @@ The following chart summarizes the steps covered
 below.
 
 
-```{r temp_med_obs_fig_flowchart, fig.cap="Common Workflow", echo=FALSE, fig.align="center", message=FALSE}
+```{r temp_fig_flowchart, fig.cap="Common Workflow", fig.align="center", message=FALSE}
 library(DiagrammeR)
 # https://mermaid.live/edit#pako:eNqFk9tu4jAQhl_F8lUrASUHCHEpUrX0st1KVHuxmxUyZHKQHDtynKVZxLvXcQ4NFKl39sz3z-FPfMR7EQImOGLisE-oVOhtHfCAI7RntCjWEKEQIloyhaKUMcLSOFE7VsL9NcYeQLEE4PdNrUJVDJCSFW8AZIgKmO76mc_0KOwaUCMbUM91_ibA-oheRV4yqlLBkQkH-LalnjZfkV9UT1wsd_JutUxXuci3-naXrlrVTw4vWvQmKyQ4IP4JHkC6Cgp1czvAN_APJGWdpGiuiBdfddtdteUXYir3yYuZsT4hjg6pSpCiMtZDG2lX530bSZFtTeysyCMXKgHZTUCb6zeDG6PLXSxpnrRe_wlw697fc5cJIf0nHY9Xja-DYEMDD3vZ0wY9PKyMlZ2laDzppBfdzZ-gm7_Wc_bNjWZZV-n2G-7aZDrvr2WMseeFhvgw2qMdcJE4267vM9xnIL0MmxqDKB7hDGRG01A_tGPNBFgXzCDARB9bTwMc8JNGaanEpuJ7TJQsYYSlKOMEk4iyQt_KPKQK1inVRmZ9NKf8txBZJ4EwVUI-Ny_bPHCDYHLE75jYnjWZu9bCdxZz33Mdd4QrTGbuZGp7tjubu747s1xrfhrh_6bodOI5lufOp5bnO_bCt0c4lvUy7YDaKJA_RMkVJo5vOacPm8xrNw
 mermaid('
@@ -93,12 +91,15 @@ flowchart TD
 ', height = 760, width = 500)
 ```
 
-
 In practice, steps can be repeated,
 and population values changed, until
 the desired goal is achieved (e.g.,
 a sample size with power close to
 the target power is found).
+
+# Scope
+
+This file is for simple mediation models.
 
 # Try One N
 
@@ -195,6 +196,14 @@ print(out,
 #>    .m                 0.990
 #>    .y                 0.630
 #>     x                 1.000
+#>
+#> == Population Indirect Effect(s) ==
+#>
+#> ==  Indirect Effect(s)   ==
+#>               ind
+#> x -> m -> y 0.050
+#>
+#>  - The 'ind' column shows the indirect effects.
 #>
 #> ======================= Data Information =======================
 #>
@@ -406,52 +415,50 @@ summary(n_power_80)
 #>
 #> === Major Results ===
 #>
-#> - Final Value: 849
-#> - Final Estimated Power: 0.807
-#> - Confidence Interval: [0.769; 0.846]
+#> - Final Value: 668
+#> - Final Estimated Power: 0.762
+#> - Confidence Interval: [0.721; 0.804]
 #> - Level of confidence: 95.0%
 #> - Based on 400 replications.
 #>
 #> === Technical Information ===
 #>
-#> - The range of values explored: 100 to 849
-#> - Time spent in the search: 2.26 mins
+#> - The range of values explored: 100 to 1492
+#> - Time spent in the search: 2.22 mins
 #> - The final crude model for the power-predictor relation:
 #>
-#> Model Type: Logistic Regression
+#> Model Type: Nonlinear Regression Model
 #>
 #> Call:
-#> power_curve(object = by_x_i, formula = power_model, start = start,
+#> power_curve(object = by_x_1, formula = power_model, start = stats::coef(fit_1),
 #>     lower_bound = lower_bound, upper_bound = upper_bound, nls_args = nls_args,
 #>     nls_control = nls_control, verbose = progress)
 #>
 #> Predictor: n (Sample Size)
 #>
 #> Model:
+#> Nonlinear regression model
+#>   model: reject ~ I((x - c0)^e)/(b + I((x - c0)^e))
+#>    data: "(Omitted)"
+#>        b       c0        e
+#> 2171.282    0.000    1.326
+#>  weighted residual sum-of-squares: 1.548
 #>
-#> Call:  stats::glm(formula = reject ~ x, family = "binomial", data = reject1)
-#>
-#> Coefficients:
-#> (Intercept)            x
-#>    -1.88634      0.00472
-#>
-#> Degrees of Freedom: 599 Total (i.e. Null);  598 Residual
-#> Null Deviance:	    701.9
-#> Residual Deviance: 661.5 	AIC: 665.5
+#> Algorithm "port", convergence message: relative convergence (4)
 #>
 #> - Detailed Results:
 #>
-#>      n                   test test_label   p.v reject r.cilo r.cihi
-#> 1  100 test_indirect: x->m->y       Test 1.000  0.195  0.156  0.234
-#> 2  255 test_indirect: x->m->y       Test 1.000  0.340  0.247  0.433
-#> 3  410 test_indirect: x->m->y       Test 1.000  0.510  0.412  0.608
-#> 4  586 test_indirect: x->m->y       Test 1.000  0.672  0.627  0.718
-#> 5  645 test_indirect: x->m->y       Test 1.000  0.750  0.665  0.835
-#> 6  692 test_indirect: x->m->y       Test 1.000  0.755  0.713  0.797
-#> 7  693 test_indirect: x->m->y       Test 1.000  0.739  0.678  0.800
-#> 8  694 test_indirect: x->m->y       Test 1.000  0.720  0.632  0.808
-#> 9  750 test_indirect: x->m->y       Test 1.000  0.780  0.699  0.861
-#> 10 849 test_indirect: x->m->y       Test 1.000  0.807  0.769  0.846
+#>       n                   test test_label   p.v reject r.cilo r.cihi
+#> 1   100 test_indirect: x->m->y       Test 1.000  0.195  0.156  0.234
+#> 2   255 test_indirect: x->m->y       Test 1.000  0.340  0.247  0.433
+#> 3   410 test_indirect: x->m->y       Test 1.000  0.510  0.412  0.608
+#> 4   645 test_indirect: x->m->y       Test 1.000  0.752  0.668  0.837
+#> 5   668 test_indirect: x->m->y       Test 1.000  0.762  0.721  0.804
+#> 6   693 test_indirect: x->m->y       Test 1.000  0.743  0.689  0.797
+#> 7   694 test_indirect: x->m->y       Test 1.000  0.720  0.632  0.808
+#> 8   750 test_indirect: x->m->y       Test 1.000  0.780  0.699  0.861
+#> 9   936 test_indirect: x->m->y       Test 1.000  0.863  0.829  0.896
+#> 10 1492 test_indirect: x->m->y       Test 1.000  0.963  0.944  0.981
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.
@@ -526,16 +533,16 @@ summary(n_power_80_ns)
 #>
 #> === Major Results ===
 #>
-#> - Final Value: 910
-#> - Final Estimated Power: 0.833
-#> - Confidence Interval: [0.796; 0.869]
+#> - Final Value: 807
+#> - Final Estimated Power: 0.818
+#> - Confidence Interval: [0.780; 0.855]
 #> - Level of confidence: 95.0%
 #> - Based on 400 replications.
 #>
 #> === Technical Information ===
 #>
-#> - The range of values explored: 200 to 910
-#> - Time spent in the search: 2.19 mins
+#> - The range of values explored: 200 to 807
+#> - Time spent in the search: 2.061 mins
 #> - The final crude model for the power-predictor relation:
 #>
 #> Model Type: Logistic Regression
@@ -567,12 +574,12 @@ summary(n_power_80_ns)
 #> 3  300 test_indirect: x->m->y       Test 1.000  0.445  0.396  0.494
 #> 4  420 test_indirect: x->m->y       Test 1.000  0.540  0.442  0.638
 #> 5  539 test_indirect: x->m->y       Test 1.000  0.630  0.535  0.725
-#> 6  594 test_indirect: x->m->y       Test 1.000  0.685  0.639  0.731
+#> 6  651 test_indirect: x->m->y       Test 1.000  0.708  0.663  0.752
 #> 7  666 test_indirect: x->m->y       Test 1.000  0.770  0.688  0.852
-#> 8  721 test_indirect: x->m->y       Test 1.000  0.804  0.749  0.859
+#> 8  721 test_indirect: x->m->y       Test 1.000  0.787  0.736  0.838
 #> 9  722 test_indirect: x->m->y       Test 1.000  0.733  0.689  0.776
 #> 10 785 test_indirect: x->m->y       Test 1.000  0.842  0.770  0.913
-#> 11 910 test_indirect: x->m->y       Test 1.000  0.833  0.796  0.869
+#> 11 807 test_indirect: x->m->y       Test 1.000  0.818  0.780  0.855
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.
@@ -665,6 +672,14 @@ print(out2,
 #>    .m                 0.910
 #>    .y                 0.766
 #>     x                 1.000
+#>
+#> == Population Indirect Effect(s) ==
+#>
+#> ==  Indirect Effect(s)   ==
+#>               ind
+#> x -> m -> y 0.090
+#>
+#>  - The 'ind' column shows the indirect effects.
 #>
 #> ======================= Data Information =======================
 #>
@@ -781,16 +796,16 @@ summary(n2_power_80)
 #>
 #> === Major Results ===
 #>
-#> - Final Value: 110
-#> - Final Estimated Power: 0.812
-#> - Confidence Interval: [0.774; 0.851]
+#> - Final Value: 101
+#> - Final Estimated Power: 0.802
+#> - Confidence Interval: [0.763; 0.842]
 #> - Level of confidence: 95.0%
 #> - Based on 400 replications.
 #>
 #> === Technical Information ===
 #>
-#> - The range of values explored: 96 to 127
-#> - Time spent in the search: 2.156 mins
+#> - The range of values explored: 100 to 120
+#> - Time spent in the search: 2.039 mins
 #> - The final crude model for the power-predictor relation:
 #>
 #> Model Type: Logistic Regression
@@ -817,15 +832,15 @@ summary(n2_power_80)
 #> - Detailed Results:
 #>
 #>     n                   test test_label   p.v reject r.cilo r.cihi
-#> 1  96 test_indirect: x->m->y       Test 1.000  0.780  0.739  0.821
-#> 2 100 test_indirect: x->m->y       Test 1.000  0.745  0.702  0.788
+#> 1 100 test_indirect: x->m->y       Test 1.000  0.745  0.702  0.788
+#> 2 101 test_indirect: x->m->y       Test 1.000  0.802  0.763  0.842
 #> 3 102 test_indirect: x->m->y       Test 1.000  0.770  0.688  0.852
 #> 4 104 test_indirect: x->m->y       Test 1.000  0.790  0.710  0.870
 #> 5 107 test_indirect: x->m->y       Test 1.000  0.780  0.699  0.861
-#> 6 109 test_indirect: x->m->y       Test 1.000  0.755  0.695  0.815
-#> 7 110 test_indirect: x->m->y       Test 1.000  0.812  0.774  0.851
-#> 8 116 test_indirect: x->m->y       Test 1.000  0.876  0.813  0.939
-#> 9 127 test_indirect: x->m->y       Test 1.000  0.863  0.829  0.896
+#> 6 108 test_indirect: x->m->y       Test 1.000  0.787  0.747  0.828
+#> 7 109 test_indirect: x->m->y       Test 1.000  0.755  0.701  0.809
+#> 8 116 test_indirect: x->m->y       Test 1.000  0.888  0.828  0.948
+#> 9 120 test_indirect: x->m->y       Test 1.000  0.840  0.804  0.876
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.
