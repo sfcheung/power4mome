@@ -164,8 +164,8 @@
 #' This behavior, though restricted,
 #' is for quick manipulation of the
 #' indirect effect. If different values
-#' are to be set for the component paths,
-#' set them directly.
+#' along a pathway, set the value for
+#' each path directly.
 #'
 #' ## Multigroup Model
 #'
