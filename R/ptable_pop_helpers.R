@@ -70,7 +70,14 @@ set_pop <- function(par_es,
                             "nil" = .00,
                             "s" = .05,
                             "m" = .10,
-                            "l" = .15)) {
+                            "l" = .15),
+                    es_ind = c("si",
+                               "mi",
+                               "li")) {
+  num_comp <- max_num_comp(par_es)
+  es1 <- expand_ind_labels(es1,
+                           es_ind = es_ind,
+                           num_comp = num_comp)
   es10 <- es_long(es1)
   es20 <- es_long(es2)
   to_set <- lavaan::lavParseModelString(names(par_es),
@@ -174,7 +181,7 @@ fix_par_es <- function(par_es,
         k <- length(y)
         out <- rep(x, k)
         # k indicates the number of component paths
-        out <- paste0(out, ".", k)
+        out <- paste0(out, "_", k)
         names(out) <- y
         out
       }
@@ -287,7 +294,7 @@ expand_to_components <- function(x,
 # Find the maximum number of component paths
 max_num_comp <- function(x,
                          num_min = 2) {
-  tmp <- regexpr("\\.([[:alnum:]]+)$", x)
+  tmp <- regexpr("\\_([[:alnum:]]+)$", x)
   tmp2 <- ifelse(tmp > 0,
                  substring(x,
                            tmp + 1),
@@ -299,4 +306,39 @@ max_num_comp <- function(x,
   }
   out <- max(out, na.rm = TRUE)
   out
+}
+
+
+#' @noRd
+# Expand indirect labels.
+# E.g., si to si.1, si.2, si.3.
+# Output
+# - A numeric vector
+expand_ind_labels <- function(x,
+                              es_ind = c("si",
+                                         "mi",
+                                         "li"),
+                              num_comp = 2) {
+  es_ind_x <- x[es_ind]
+  es_ind_x <- es_ind_x[!is.na(es_ind_x)]
+  if (length(es_ind_x) == 0) {
+    return(x)
+  }
+  es_others <- x[setdiff(names(x), es_ind)]
+  es_ind1 <- union(es_ind, names(es_ind_x))
+  tmpfct <- function(xx,
+                     num_comp) {
+    sapply(seq_len(num_comp),
+           function(yy) {
+             z1 <- paste0(xx, "_", yy)
+             z2 <- es_ind_x[xx]^(1 / yy)
+             stats::setNames(z2, z1)
+           },
+           USE.NAMES = FALSE)
+  }
+  out <- lapply(es_ind1,
+                tmpfct,
+                num_comp = num_comp)
+  out <- unlist(out)
+  c(es_others, out)
 }
