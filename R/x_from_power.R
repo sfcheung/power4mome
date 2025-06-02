@@ -580,6 +580,8 @@ x_from_power <- function(object,
       inherits(object, "power4test_by_es")) {
     is_by_x <- TRUE
     object_by_org <- object
+    # TODO:
+    # - Should quit if solution is already in object
     i_org <- find_ci_hit(object_by_org,
                          ci_level = ci_level,
                          target_power = target_power,
