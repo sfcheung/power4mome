@@ -13,7 +13,7 @@ set_es_range <- function(object,
   es0_abs <- abs(es0)
   reject0 <- rejection_rates(object)
   power0 <- reject0$reject[1]
-  if (es0 >= es_max) {
+  if (es0 > es_max) {
     # Use x_max because es_max and es_min are internal arguments
     stop("Initial population value (",
           es0,
@@ -21,7 +21,7 @@ set_es_range <- function(object,
           es_max,
           "). Please increase 'x_max'.")
   }
-  if (es0 <= es_min) {
+  if (es0 < es_min) {
     # Use x_max because es_max and es_min are internal arguments
     stop("Initial population value (",
           es0,
@@ -69,6 +69,14 @@ pop_es <- function(object,
     }
   }
 
+  is_ind <- FALSE
+  pop_es_name_comp <- tryCatch(expand_to_components(pop_es_name),
+                               error = function(e) e)
+  if (!inherits(pop_es_name_comp, "error")) {
+    if (length(pop_es_name_comp) > 1) {
+      is_ind <- TRUE
+    }
+  }
   ptable <- object$sim_all[[1]]$ptable
   ngroups <- max(ptable$group)
   if (ngroups != 1) {
@@ -78,16 +86,31 @@ pop_es <- function(object,
   ptable$lavlabel2 <- paste0(ptable$lhs,
                              ptable$op,
                              ptable$rhs)
-  pop_es_name0 <- gsub(" ", "", pop_es_name)
-  i0 <- match(pop_es_name0, ptable$lavlabel)
-  i1 <- match(pop_es_name0, ptable$lavlabel2)
-  i <- c(i0, i1)
-  i <- unique(i)
-  i <- i[!is.na(i)]
-  if (length(i) == 0) {
-    stop("'pop_es_name' not a valid name of a parameter in the model.")
+  if (!is_ind) {
+    pop_es_name0 <- gsub(" ", "", pop_es_name)
+    i0 <- match(pop_es_name0, ptable$lavlabel)
+    i1 <- match(pop_es_name0, ptable$lavlabel2)
+    i <- c(i0, i1)
+    i <- unique(i)
+    i <- i[!is.na(i)]
+    if (length(i) == 0) {
+      stop("'pop_es_name' not a valid name of a parameter in the model.")
+    }
+    out <- ptable$start[i]
+  } else {
+    pop_es_name_comp <- gsub(" ", "",
+                             pop_es_name_comp,
+                             fixed = TRUE)
+    i0 <- match(pop_es_name_comp, ptable$lavlabel)
+    i1 <- match(pop_es_name_comp, ptable$lavlabel2)
+    i <- c(i0, i1)
+    i <- unique(i)
+    i <- i[!is.na(i)]
+    if (length(i) == 0) {
+      stop("'pop_es_name' is not a valid path in the model.")
+    }
+    out <- prod(ptable$start[i])
   }
-  out <- ptable$start[i]
   out
 }
 
