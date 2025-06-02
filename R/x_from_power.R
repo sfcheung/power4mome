@@ -756,7 +756,7 @@ x_from_power <- function(object,
   nrep_seq <- ceiling(seq(from = new_nrep,
                           to = final_nrep,
                           length.out = nrep_steps + 1))
-  final_nrep_seq <- ceiling(seq(from = final_nrep * .50,
+  final_nrep_seq <- ceiling(seq(from = ceiling(mean(c(new_nrep, final_nrep))),
                                 to = final_nrep,
                                 length.out = nrep_steps + 1))
 
