@@ -714,7 +714,7 @@ set to a numeric value, such as
 
 This is another example:
 
-\preformatted{.beta: s
+\preformatted{.beta.: s
 y ~ m: l}
 
 In this example, all regression
