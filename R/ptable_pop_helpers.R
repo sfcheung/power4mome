@@ -94,16 +94,25 @@ set_pop <- function(par_es,
       if (!is.na(es_num)) {
         # Effect size specified numerically
         to_set[x, "pop"] <- es_num
-        next
       } else {
-        next
+        # Check if it is a component
+        x_i <- strsplit(par_es[x],
+                        "_",
+                        fixed = TRUE)[[1]]
+        x_i_num <- suppressWarnings(as.numeric(x_i))
+        if (is.numeric(x_i_num) &&
+            all(!is.na(x_i_num))) {
+          es_num <- x_i_num[1] ^ (1 / x_i_num[2])
+          to_set[x, "pop"] <- es_num
+        }
       }
+    } else {
+      # Effect size label found
+      is_inter <- isTRUE(grepl(":", to_set$rhs[x], fixed = TRUE))
+      to_set[x, "pop"] <- ifelse(is_inter,
+                                es20[y],
+                                es10[y])
     }
-    # Effect size label found
-    is_inter <- isTRUE(grepl(":", to_set$rhs[x], fixed = TRUE))
-    to_set[x, "pop"] <- ifelse(is_inter,
-                               es20[y],
-                               es10[y])
   }
   to_set$es <- par_es
   to_set[, c("lhs", "op", "rhs", "pop", "es")]
