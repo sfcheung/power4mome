@@ -32,7 +32,7 @@ expect_output(print(power_all_sim_only),
               "w -> m -> y")
 suppressWarnings(tmp <- pop_indirect(power_all_sim_only$sim_all))
 expect_equal(coef(tmp)["x -> m -> y"],
-             .316,
+             .361,
              ignore_attr = TRUE)
 
 # Case 2

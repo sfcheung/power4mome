@@ -53,7 +53,7 @@ y ~ m2 + m1 + x
 
 model_simple_med_es <-
 "
-.ind.(x->m1->m2->y): mi
+.ind.(x->m1->m2->y): si
 y ~ m1: s
 y ~ x: m
 "
@@ -85,7 +85,7 @@ expect_output(print(power_all_sim_only),
               "x -> m1 -> m2")
 tmp <- pop_indirect(power_all_sim_only$sim_all)
 expect_equal(coef(tmp)[3],
-             .316,
+             .141,
              ignore_attr = TRUE)
 
 })
