@@ -89,6 +89,19 @@
 #'   values for all correlations of
 #'   exogenous variables (e.g., predictors).
 #'
+#' - The names can also be of this form:
+#'   `".ind.(<path>)"`, whether `<path>`
+#'   denote path in the model. For
+#'   example, `".ind.(x->m->y)"` denotes
+#'   the path from `x` through `m` to
+#'   `y`. Alternatively, the `lavaan`
+#'   symbol `~` can also be used:
+#'   `".ind.(y~m~x)"`. This form is used
+#'   to set the indirect effect (standardized,
+#'   by default) along this path. The
+#'   value for this name will override
+#'   other settings.
+#'
 #' - If using `lavaan` names, can
 #'   specify more than one parameter
 #'   using `+`. For example, `y ~ m + x`
@@ -130,6 +143,34 @@
 #' - The coefficient of the product
 #'  term `x:w` when predicting `y` is
 #'  set to small (`s`).
+#'
+#' ### Indirect Effect
+#'
+#' When setting an indirect effect to
+#' a symbol (default: `"si"`, `"mi"`,
+#' `"li"`, with `"i"` added to differentiate
+#' them from the labels for a direct path),
+#' the corresponding value is used to
+#' determine the population values of
+#' *all* component paths along the pathway.
+#' All the values are assumed to be equal.
+#' Therefore, `".ind.(x->m->y)" = ".20"`
+#' is equivalent to setting `m ~ x`
+#' and `y ~ m` to the square root of
+#' .20, such that the corresponding
+#' indirect effect is equal to the
+#' designated value.
+#'
+#' This behavior, though restricted,
+#' is for quick manipulation of the
+#' indirect effect. If different values
+#' along a pathway, set the value for
+#' each path directly.
+#'
+#' Only nonnegative value is supported.
+#' Therefore, `".ind.(x->m->y)" = "-si"`
+#' and `".ind.(x->m->y)" = "-.20"` will
+#' throw an error.
 #'
 #' ## Multigroup Model
 #'
@@ -229,6 +270,11 @@
 #'
 #'     - `l` for large.
 #'
+#'     - `si`, `mi`, and `li` for
+#'       small, medium, and large a
+#'       standardized indirect effect,
+#'       respectively.
+#'
 #'   Note: `n` *cannot* be used in this mode.
 #'
 #'   The
@@ -325,8 +371,9 @@
 #'
 #' # Set the Values for Effect Size Labels ('es1' and 'es2')
 #'
-#' The vector `es1` is for correlations
-#' and regression coefficients, and the
+#' The vector `es1` is for correlations,
+#' regression coefficients, and
+#' indirect effect, and the
 #' vector `es2` is for for standardized
 #' moderation effect, the coefficients
 #' of a product term. These labels
@@ -377,6 +424,13 @@
 #' vector or a multiline string.
 #' See the help page on how to specify
 #' this argument.
+#'
+#' @param es_ind The names of labels
+#' denoting the effect size of an
+#' indirect effect. They will be
+#' used to determine the population
+#' values of the component paths along
+#' an indirect path.
 #'
 #' @param standardized Logical. If
 #' `TRUE`, the default, variances and
@@ -477,12 +531,18 @@ ptable_pop <- function(model = NULL,
                                "nil" = .00,
                                "s" = .10,
                                "m" = .30,
-                               "l" = .50),
+                               "l" = .50,
+                               "si" = .141,
+                               "mi" = .316,
+                               "li" = .510),
                        es2 = c("n" = .00,
                                "nil" = .00,
                                "s" = .05,
                                "m" = .10,
                                "l" = .15),
+                       es_ind = c("si",
+                                  "mi",
+                                  "li"),
                        standardized = TRUE,
                        n_std = 100000,
                        std_force_monte_carlo = FALSE) {
@@ -496,7 +556,8 @@ ptable_pop <- function(model = NULL,
                             es1 = es1,
                             es2 = es2,
                             model = model,
-                            to_one_table = TRUE)
+                            to_one_table = TRUE,
+                            es_ind = es_ind)
   ngroups <- max(par_pop$group)
   # Single group ptable
   if (ngroups > 1) {
@@ -625,6 +686,7 @@ ptable_pop <- function(model = NULL,
   attr(ptable1, "pop_es") <- pop_es
   attr(ptable1, "es1") <- es1
   attr(ptable1, "es2") <- es2
+  attr(ptable1, "es_ind") <- es_ind
   # par_pop is one single table with a group column
   attr(ptable1, "par_pop") <- par_pop
   attr(ptable1, "n_std") <- n_std
@@ -649,6 +711,7 @@ update_ptable_pop <- function(object,
   }
   es1 <- attr(object, "es1")
   es2 <- attr(object, "es2")
+  es_ind <- attr(object, "es_ind")
   model <- attr(object, "model")
   old_par_pop <- attr(object, "par_pop")
   if (is.data.frame(old_par_pop)) {
@@ -657,7 +720,8 @@ update_ptable_pop <- function(object,
   new_par_pop <- pop_es2par_pop(new_pop_es,
                                 es1 = es1,
                                 es2 = es2,
-                                model = model)
+                                model = model,
+                                es_ind = es_ind)
   updated_par_pop <- update_par_pop(add = new_par_pop,
                                     par_pop = old_par_pop)
   updated_par_pop <- par_pop_to_one_table(updated_par_pop)
@@ -832,14 +896,16 @@ pop_es2par_pop <- function(pop_es,
                            es1,
                            es2,
                            model,
-                           to_one_table = FALSE) {
+                           to_one_table = FALSE,
+                           es_ind) {
   # Always process par_pop as a list until existing
   if (is.character(pop_es)) {
     pop_es <- fix_par_es(pop_es,
                          model = model)
     par_pop <- set_pop(pop_es,
                        es1 = es1,
-                       es2 = es2)
+                       es2 = es2,
+                       es_ind = es_ind)
     par_pop <- list(par_pop)
   } else if (is.list(pop_es)) {
     if (is.data.frame(pop_es)) {
@@ -858,7 +924,8 @@ pop_es2par_pop <- function(pop_es,
       par_pop <- lapply(pop_es,
                         set_pop,
                         es1 = es1,
-                        es2 = es2)
+                        es2 = es2,
+                        es_ind = es_ind)
     }
   }
   par_pop <- lapply(par_pop,

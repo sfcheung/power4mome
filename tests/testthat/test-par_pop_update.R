@@ -18,6 +18,7 @@ model_simple_med_es <- c(".beta." = "m",
 par_pop <- pop_es2par_pop(model_simple_med_es,
                           es1 = eval(formals(ptable_pop)$es1),
                           es2 = eval(formals(ptable_pop)$es2),
+                          es_ind = eval(formals(ptable_pop)$es_ind),
                           model = model_simple_med)
 
 par_pop
@@ -25,6 +26,7 @@ par_pop
 par_pop_add <- pop_es2par_pop(c("m ~ x" = "s"),
                               es1 = eval(formals(ptable_pop)$es1),
                               es2 = eval(formals(ptable_pop)$es2),
+                              es_ind = eval(formals(ptable_pop)$es_ind),
                               model = model_simple_med)
 
 par_pop2 <- update_par_pop(add = par_pop_add,
@@ -60,6 +62,7 @@ model_simple_med_es <- list(".beta." = "m",
 par_pop <- pop_es2par_pop(model_simple_med_es,
                           es1 = eval(formals(ptable_pop)$es1),
                           es2 = eval(formals(ptable_pop)$es2),
+                          es_ind = eval(formals(ptable_pop)$es_ind),
                           model = model_simple_med)
 
 par_pop
@@ -67,6 +70,7 @@ par_pop
 par_pop_add <- pop_es2par_pop(list("m ~ x" = c("l", "m")),
                               es1 = eval(formals(ptable_pop)$es1),
                               es2 = eval(formals(ptable_pop)$es2),
+                              es_ind = eval(formals(ptable_pop)$es_ind),
                               model = model_simple_med)
 
 par_pop2 <- update_par_pop(add = par_pop_add,

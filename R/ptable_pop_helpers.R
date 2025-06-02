@@ -65,12 +65,23 @@ set_pop <- function(par_es,
                             "nil" = .00,
                             "s" = .10,
                             "m" = .30,
-                            "l" = .50),
+                            "l" = .50,
+                            "si" = .141,
+                            "mi" = .316,
+                            "li" = .510),
                     es2 = c("n" = .00,
                             "nil" = .00,
                             "s" = .05,
                             "m" = .10,
-                            "l" = .15)) {
+                            "l" = .15),
+                    es_ind = c("si",
+                               "mi",
+                               "li")) {
+
+  num_comp <- max_num_comp(par_es)
+  es1 <- expand_ind_labels(es1,
+                           es_ind = es_ind,
+                           num_comp = num_comp)
   es10 <- es_long(es1)
   es20 <- es_long(es2)
   to_set <- lavaan::lavParseModelString(names(par_es),
@@ -83,16 +94,25 @@ set_pop <- function(par_es,
       if (!is.na(es_num)) {
         # Effect size specified numerically
         to_set[x, "pop"] <- es_num
-        next
       } else {
-        next
+        # Check if it is a component
+        x_i <- strsplit(par_es[x],
+                        "_",
+                        fixed = TRUE)[[1]]
+        x_i_num <- suppressWarnings(as.numeric(x_i))
+        if (is.numeric(x_i_num) &&
+            all(!is.na(x_i_num))) {
+          es_num <- x_i_num[1] ^ (1 / x_i_num[2])
+          to_set[x, "pop"] <- es_num
+        }
       }
+    } else {
+      # Effect size label found
+      is_inter <- isTRUE(grepl(":", to_set$rhs[x], fixed = TRUE))
+      to_set[x, "pop"] <- ifelse(is_inter,
+                                es20[y],
+                                es10[y])
     }
-    # Effect size label found
-    is_inter <- isTRUE(grepl(":", to_set$rhs[x], fixed = TRUE))
-    to_set[x, "pop"] <- ifelse(is_inter,
-                               es20[y],
-                               es10[y])
   }
   to_set$es <- par_es
   to_set[, c("lhs", "op", "rhs", "pop", "es")]
@@ -129,10 +149,13 @@ fix_par_es <- function(par_es,
                        model) {
   par_es_org <- par_es
   i <- match(c(".beta.", ".cov."), names(par_es))
+  i_ind <- which(grepl("^.ind.", names(par_es)))
+  i <- c(i, i_ind)
   par_es_def <- par_es[i]
   par_es_def <- par_es_def[!is.na(par_es_def)]
   all_beta_es <- character(0)
   all_cov_es <- character(0)
+  all_ind_es <- character(0)
   if (!all(is.na(i))) {
     par_es <- par_es[-i[!is.na(i)]]
     ptable <- lavaan::parTable(lavaan::sem(model = model,
@@ -157,6 +180,39 @@ fix_par_es <- function(par_es,
       all_cov_es <- rep(par_es_def[".cov."], length(all_cov))
       names(all_cov_es) <- all_cov
     }
+    if (length(i_ind) > 0) {
+      # Expand to component paths
+      i2 <- which(grepl("^.ind.", names(par_es_def)))
+      par_es_ind <- par_es_def[i2]
+      any_negative <- grepl("^-", trimws(par_es_ind))
+      if (any(any_negative)) {
+        tmp1 <- par_es_ind[any_negative][1]
+        tmp2 <- paste0(names(tmp1), " set to ", tmp1, ".")
+        stop("Cannot set the value of .ind.() to negative value. E.g.,",
+             tmp2)
+      }
+      ind_comp <- sapply(names(par_es_ind),
+                         expand_to_components,
+                         simplify = FALSE,
+                         USE.NAMES = TRUE)
+      if (any(duplicated(unname(unlist(ind_comp))))) {
+        stop("The paths in '.ind.' cannot overlap.")
+      }
+      tmpfct <- function(x, y) {
+        k <- length(y)
+        out <- rep(x, k)
+        # k indicates the number of component paths
+        out <- paste0(out, "_", k)
+        names(out) <- y
+        out
+      }
+      all_ind_es <- mapply(tmpfct,
+                           x = par_es_ind,
+                           y = ind_comp,
+                           USE.NAMES = FALSE,
+                           SIMPLIFY = FALSE)
+      all_ind_es <- unlist(all_ind_es)
+    }
   }
   out <- character(0)
   for (i in seq_along(par_es)) {
@@ -174,6 +230,13 @@ fix_par_es <- function(par_es,
   all_def <- c(all_beta_es, all_cov_es)
   tmp <- setdiff(names(all_def), names(out))
   out <- c(out, all_def[tmp])
+
+  # .ind. override other specification
+  if (length(all_ind_es) > 0) {
+    tmp <- setdiff(names(out), names(all_ind_es))
+    out <- c(all_ind_es, out[tmp])
+  }
+
   out
 }
 
@@ -206,4 +269,98 @@ split_par_es <- function(object) {
                      simplify = TRUE)
             })
   return(out)
+}
+
+#' @noRd
+# Input:
+# - E.g.,
+#   - ".ind.(x1-> m1->m2->y)"
+# Output:
+# - c("m1~x1", "m2~m1", "y~m2")
+expand_to_components <- function(x,
+                                 pattern = c(l2r = "->",
+                                             r2l = "~")) {
+  x0 <- trimws(gsub("^.ind.", "", x))
+  x1 <- sub("\\(", "", x0)
+  x1 <- sub("\\)$", "", x1)
+  x1 <- trimws(x1)
+  style <- ""
+  tmp <- sapply(pattern,
+                \(x) grepl(x, x1, fixed = TRUE))
+  if (sum(tmp) != 1) {
+    tmp2 <- paste0(pattern, collapse = ", ")
+    stop("Only one style (out of these: ",
+         tmp2,
+         ") can be used.")
+  }
+  pattern_used <- pattern[tmp]
+  style <- names(pattern)[tmp]
+
+  x2 <- strsplit(x1,
+                 pattern_used,
+                 fixed = TRUE)[[1]]
+  x2 <- sapply(x2, trimws)
+  x2a <- x2[-length(x2)]
+  x2b <- x2[-1]
+  out <- switch(style,
+                l2r = paste0(x2b,
+                             " ~ ",
+                             x2a),
+                r2l = paste0(x2a,
+                             " ~ ",
+                             x2b))
+  out
+}
+
+#' @noRd
+# Find the maximum number of component paths
+max_num_comp <- function(x,
+                         num_min = 2) {
+  tmp <- regexpr("_([[:alnum:]]+)$", x)
+  tmp2 <- ifelse(tmp > 0,
+                 substring(x,
+                           tmp + 1),
+                 "")
+  out <- as.numeric(tmp2)
+  out <- out[!is.na(out)]
+  if (length(out) == 0) {
+    return(num_min)
+  }
+  out <- max(out, na.rm = TRUE)
+  out
+}
+
+
+#' @noRd
+# Expand indirect labels.
+# E.g., si to si.1, si.2, si.3.
+# Output
+# - A numeric vector
+expand_ind_labels <- function(x,
+                              es_ind = c("si",
+                                         "mi",
+                                         "li"),
+                              num_comp = 2) {
+  es_ind_x <- x[es_ind]
+  es_ind_x <- es_ind_x[!is.na(es_ind_x)]
+  if (length(es_ind_x) == 0) {
+    return(x)
+  }
+  es_others <- x[setdiff(names(x), es_ind)]
+  es_ind1 <- union(es_ind, names(es_ind_x))
+  tmpfct <- function(xx,
+                     num_comp) {
+    sapply(seq_len(num_comp),
+           function(yy) {
+             z1 <- paste0(xx, "_", yy)
+             z2 <- es_ind_x[xx]^(1 / yy)
+             stats::setNames(z2, z1)
+           },
+           USE.NAMES = FALSE)
+  }
+  out <- lapply(es_ind1,
+                tmpfct,
+                num_comp = num_comp)
+  out <- unlist(out)
+  c(es_others, out)
 }
