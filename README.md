@@ -8,7 +8,7 @@
 
 (Version 0.0.1.52, updated on 2025-06-03, [release history](https://sfcheung.github.io/power4mome/news/index.html))
 
-# power4mome
+# power4mome <a href="https://sfcheung.github.io/power4mome/"><img src="man/figures/logo.png" align="right" height="120" alt="power4mome website" /></a>
 
 This package is for power analysis and
 sample size determination for

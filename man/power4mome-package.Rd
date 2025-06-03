@@ -6,6 +6,8 @@
 \alias{power4mome-package}
 \title{power4mome: Power Analysis for Moderation and Mediation}
 \description{
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
+
 Power analysis and sample size determination for moderation, mediation, and moderated mediation in models fitted by structural equation modeling.
 }
 \seealso{
