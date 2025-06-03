@@ -13,7 +13,7 @@ along with other information."><meta name="google-site-verification" content="0V
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.50</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.52</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,6 +78,7 @@ along with other information.</p>
 <span>  reliability <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  x_fun <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  e_fun <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  gen_missing <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  parallel <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  progress <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  ncores <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fu">parallel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">detectCores</a></span><span class="op">(</span>logical <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span></span>
@@ -199,6 +200,25 @@ distribution. Specify in the same
 way as <code>x_fun</code>. Refer to the help
 page on <code>x_fun</code> on how to use this
 argument.</p></dd>
+
+
+<dt id="arg-gen-missing">gen_missing<a class="anchor" aria-label="anchor" href="#arg-gen-missing"></a></dt>
+<dd><p>If not <code>NULL</code>, it
+must be a named list with these
+elements: <code>fun</code> (required), the function for
+generating the missing data, such
+as <code>mice::ampute()</code>; <code>args</code> (optional), a
+named list of arguments to be passed
+to <code>fun</code>, except the one for the
+source data; <code>complete_name</code> (required) the
+name of the argument to receive the
+complete data (e.g., <code>data</code> for
+<code>mice::ampute()</code>); <code>missing_name</code>
+(optional), the name of the dataset
+with missing data in the output of
+<code>fun</code> (e.g., <code>"amp"</code> for <code>mice::ampute()</code>),
+if omitted, the output of <code>fun</code> should
+be the data frame with missing data.</p></dd>
 
 
 <dt id="arg-parallel">parallel<a class="anchor" aria-label="anchor" href="#arg-parallel"></a></dt>
