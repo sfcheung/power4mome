@@ -45,12 +45,12 @@
 #'
 #' # Generate the datasets
 #'
-#' sim_only <- power4test(nrep = 10,
+#' sim_only <- power4test(nrep = 5,
 #'                        model = mod,
 #'                        pop_es = mod_es,
 #'                        n = 100,
 #'                        do_the_test = FALSE,
-#'                        iseed = 1234)
+#'                        iseed = 2345)
 #'
 #' # Do a test
 #'
@@ -64,11 +64,11 @@
 #'                            x = "n",
 #'                            progress = TRUE,
 #'                            target_power = .80,
-#'                            final_nrep = 10,
+#'                            final_nrep = 5,
 #'                            xs_per_trial = 1,
 #'                            nrep_steps = 1,
 #'                            max_trials = 1,
-#'                            seed = 4567)
+#'                            seed = 1234)
 #' summary(power_vs_n)
 #'
 #' @export
