@@ -116,7 +116,8 @@ add_indicator_syntax <- function(model,
 add_indicator_scores <- function(x,
                                  ps,
                                  rels,
-                                 keep_f_scores = FALSE) {
+                                 keep_f_scores = FALSE,
+                                 e_fun = NULL) {
   if (!setequal(names(ps), names(rels))) {
     stop("'ps' and 'rels' do not match in names.")
   }
@@ -128,12 +129,30 @@ add_indicator_scores <- function(x,
   f_scores <- sapply(f_names,
                      function(xx) x[, xx, drop = TRUE],
                      simplify = FALSE)
+  if (is.list(e_fun) && length(e_fun) > 0) {
+    e_fun_names <- names(e_fun)
+    e_fun1 <- sapply(f_names,
+                     function(x, e_fun) {
+                       if (x %in% e_fun_names) {
+                         return(e_fun[[x]])
+                       } else {
+                         return(list())
+                       }
+                     },
+                     e_fun = e_fun,
+                     simplify = FALSE,
+                     USE.NAMES = TRUE)
+  } else {
+    e_fun1 <- vector("list", length(f_names))
+    names(e_fun1) <- f_names
+  }
   prefixes <- f_names
   out0 <- mapply(gen_indicator_scores,
                  f_score = f_scores,
                  p = ps,
                  omega = rels,
                  prefix = prefixes,
+                 e_fun = e_fun1,
                  SIMPLIFY = FALSE)
   out1 <- do.call(cbind,
                   out0)
