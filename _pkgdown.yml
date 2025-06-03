@@ -10,7 +10,7 @@ template:
     pkgdown-nav-height: 80px
     bg: "#EFEFEF"
     fg: "#000000"
-    primary: "#996FB9"
+    primary: "#D60048"
     link-color: "#0000A0"
     base_font: {google: "Hind"}
     heading_font: {google: "Hind"}
