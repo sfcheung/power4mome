@@ -1,4 +1,4 @@
-# power4mome 0.0.1.50
+# power4mome 0.0.1.51
 
 - Initialized the package. (0.0.0.9000)
 
@@ -402,3 +402,6 @@
 - Clarified that the `x_fun` argument can
   also specify the function to generate
   the error terms. (0.0.1.50)
+
+- Added `e_fun` for generating nonnormal
+  error terms for indicators. (0.0.1.51)

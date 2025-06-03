@@ -325,6 +325,18 @@
 #' distribution. See the help page on how
 #' to use this argument.
 #'
+#' @param e_fun The function(s) used to
+#' generate the error terms of indicators,
+#' if any. If
+#' not supplied, or set to `list()`, the
+#' default, the error terms of indicators
+#' are generated
+#' from a multivariate normal
+#' distribution. Specify in the same
+#' way as `x_fun`. Refer to the help
+#' page on `x_fun` on how to use this
+#' argument.
+#'
 #' @param parallel If `TRUE`, parallel
 #' processing will be used to simulate
 #' the datasets. Default is `FALSE`.
@@ -419,6 +431,7 @@ sim_data <- function(nrep = 10,
                      number_of_indicators = NULL,
                      reliability = NULL,
                      x_fun = list(),
+                     e_fun = list(),
                      parallel = FALSE,
                      progress = FALSE,
                      ncores = max(1, parallel::detectCores(logical = FALSE) - 1)) {
@@ -446,6 +459,7 @@ sim_data <- function(nrep = 10,
                 number_of_indicators = number_of_indicators,
                 reliability = reliability,
                 x_fun = x_fun,
+                e_fun = e_fun,
                 iseed = iseed,
                 parallel = parallel,
                 progress = progress,
@@ -791,6 +805,7 @@ sim_data_i <- function(repid = 1,
                        number_of_indicators = NULL,
                        reliability = NULL,
                        x_fun = list(),
+                       e_fun = list(),
                        seed = NULL,
                        drop_list_single_group = TRUE,
                        merge_groups = TRUE) {
@@ -854,7 +869,8 @@ sim_data_i <- function(repid = 1,
                           number_of_indicators = number_of_indicators,
                           reliability = reliability,
                           MoreArgs = list(keep_f_scores = FALSE,
-                                          x_fun = x_fun),
+                                          x_fun = x_fun,
+                                          e_fun = e_fun),
                           SIMPLIFY = FALSE)
 
   model_original <- model

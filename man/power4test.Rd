@@ -16,6 +16,7 @@ power4test(
   number_of_indicators = NULL,
   reliability = NULL,
   x_fun = list(),
+  e_fun = list(),
   fit_model_args = list(),
   R = NULL,
   ci_type = "mc",
@@ -134,6 +135,18 @@ default, the variables are generated
 from a multivariate normal
 distribution. See the help page on how
 to use this argument.}
+
+\item{e_fun}{The function(s) used to
+generate the error terms of indicators,
+if any. If
+not supplied, or set to \code{list()}, the
+default, the error terms of indicators
+are generated
+from a multivariate normal
+distribution. Specify in the same
+way as \code{x_fun}. Refer to the help
+page on \code{x_fun} on how to use this
+argument.}
 
 \item{fit_model_args}{A list of the
 arguments to be passed to \code{\link[=fit_model]{fit_model()}}

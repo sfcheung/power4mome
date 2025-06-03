@@ -38,7 +38,8 @@ mm_lm_data <- function(object,
                        number_of_indicators = NULL,
                        reliability = NULL,
                        keep_f_scores = FALSE,
-                       x_fun = list()) {
+                       x_fun = list(),
+                       e_fun = list()) {
   lm_y <- object$lm_y
   psi <- object$psi
   all_vars <- colnames(psi)
@@ -70,6 +71,7 @@ mm_lm_data <- function(object,
     dat_all <- add_indicator_scores(dat_all,
                                     ps = number_of_indicators,
                                     rels = reliability,
+                                    e_fun = e_fun,
                                     keep_f_scores = keep_f_scores)
   }
   return(as.data.frame(dat_all))
@@ -116,7 +118,8 @@ add_indicator_syntax <- function(model,
 add_indicator_scores <- function(x,
                                  ps,
                                  rels,
-                                 keep_f_scores = FALSE) {
+                                 keep_f_scores = FALSE,
+                                 e_fun = NULL) {
   if (!setequal(names(ps), names(rels))) {
     stop("'ps' and 'rels' do not match in names.")
   }
@@ -128,12 +131,30 @@ add_indicator_scores <- function(x,
   f_scores <- sapply(f_names,
                      function(xx) x[, xx, drop = TRUE],
                      simplify = FALSE)
+  if (is.list(e_fun) && length(e_fun) > 0) {
+    e_fun_names <- names(e_fun)
+    e_fun1 <- sapply(f_names,
+                     function(x, e_fun) {
+                       if (x %in% e_fun_names) {
+                         return(e_fun[[x]])
+                       } else {
+                         return(list())
+                       }
+                     },
+                     e_fun = e_fun,
+                     simplify = FALSE,
+                     USE.NAMES = TRUE)
+  } else {
+    e_fun1 <- vector("list", length(f_names))
+    names(e_fun1) <- f_names
+  }
   prefixes <- f_names
   out0 <- mapply(gen_indicator_scores,
                  f_score = f_scores,
                  p = ps,
                  omega = rels,
                  prefix = prefixes,
+                 e_fun = e_fun1,
                  SIMPLIFY = FALSE)
   out1 <- do.call(cbind,
                   out0)
@@ -158,7 +179,10 @@ add_indicator_scores <- function(x,
 gen_indicator_scores <- function(f_score,
                                  p,
                                  omega,
-                                 prefix = "x") {
+                                 prefix = "x",
+                                 e_fun = list()) {
+  # e_fun is of this form
+  # list(rexp_rs, ....)
   f_score <- matrix(as.vector(f_score),
                     ncol = 1)
   n <- nrow(f_score)
@@ -168,9 +192,23 @@ gen_indicator_scores <- function(f_score,
                     nrow = 1,
                     ncol = p)
   e_sd <- sqrt(1 - lambda0^2)
-  e <- stats::rnorm(n * p,
-                    mean = 0,
-                    sd = e_sd)
+  if (length(e_fun) > 0) {
+    ee_fun <- e_fun[[1]]
+    ee_fun <- match.fun(ee_fun)
+    ee_args <- e_fun[-1]
+    ee_args <- utils::modifyList(ee_args,
+                                 list(n = n * p))
+    e <- do.call(ee_fun,
+                 ee_args)
+    e <- e * e_sd
+  } else {
+    e <- matrix(stats::rnorm(n * p,
+                             mean = 0,
+                             sd = e_sd),
+                nrow = n,
+                ncol = p)
+  }
+
   x <- f_score %*% lambda1 + e
   colnames(x) <- paste0(prefix, seq(from = 1,
                                     to = p))
