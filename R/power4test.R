@@ -282,6 +282,8 @@
 # @param x_fun <- Inherited
 #'
 # @param e_fun <- Inherited
+#
+# @param gen_missing <- Inherited
 #'
 #' @param fit_model_args A list of the
 #' arguments to be passed to [fit_model()]
@@ -451,6 +453,7 @@ power4test <- function(object = NULL,
                        reliability = NULL,
                        x_fun = list(),
                        e_fun = list(),
+                       gen_missing = NULL,
                        fit_model_args = list(),
                        R = NULL,
                        ci_type = "mc",
@@ -585,6 +588,7 @@ power4test <- function(object = NULL,
                             reliability = args$reliability,
                             x_fun = args$x_fun,
                             e_fun = args$e_fun,
+                            gen_missing = args$gen_missing,
                             iseed = args$iseed,
                             parallel = args$parallel,
                             progress = args$progress,
@@ -611,6 +615,7 @@ power4test <- function(object = NULL,
                             reliability = args$reliability,
                             x_fun = args$x_fun,
                             e_fun = args$e_fun,
+                            gen_missing = args$gen_missing,
                             iseed = args$iseed,
                             parallel = args$parallel,
                             progress = args$progress,
