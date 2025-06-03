@@ -29,7 +29,6 @@ mm_lm_dat_out <- mm_lm_data(mm_lm_out,
 chk <- mm_lm_dat_out
 head(chk)
 tmp <- mm_lm_dat_out[, "x2"]
-hist(tmp)
 expect_true(mean(tmp) > median(tmp))
 
 })
