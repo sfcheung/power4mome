@@ -1,4 +1,4 @@
-# power4mome 0.0.1.49
+# power4mome 0.0.1.50
 
 - Initialized the package. (0.0.0.9000)
 
@@ -395,6 +395,10 @@
   print population indirect effect(s),
   if any. (0.0.1.48)
 
-- Correct the value for `mi`. (0.0.1.49)
+- Corrected the value for `mi`. (0.0.1.49)
 
-- Improve the search algorithm. (0.0.1.49)
+- Improved the search algorithm. (0.0.1.49)
+
+- Clarified that the `x_fun` argument can
+  also specify the function to generate
+  the error terms. (0.0.1.50)

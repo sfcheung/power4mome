@@ -158,13 +158,14 @@
 #' in all groups, `reliability` can also
 #' be set to one single value.
 #'
-#' # Specify The Distributions of Exogenous Variables Using 'x_fun'
+#' # Specify The Distributions of Exogenous Variables Or Error Terms Using 'x_fun'
 #'
-#' By default, variables are generated
+#' By default, variables and error
+#' terms are generated
 #' from a multivariate normal distribution.
 #' If desired, users can supply the
 #' function used to generate an exogenous
-#' variables by setting `x_fun` to
+#' variable and error term by setting `x_fun` to
 #' a named list.
 #'
 #' The names of the list are the variables
@@ -196,6 +197,17 @@
 #' `p1 = .70` will be passed to this
 #' function when generating the values
 #' of `w`.
+#'
+#' If a variable is an endogenous
+#' variable (e.g., being predicted by
+#' another variable in a model), then
+#' `x_fun` is used to generate its
+#' *error term*. Its implied population
+#' distribution may still be different
+#' from that generate by `x_fun` because
+#' the distribution also depends on the
+#' distribution of other variables
+#' predicting it.
 #'
 #' These are requirements for the
 #' user-functions:
@@ -305,7 +317,8 @@
 #' to use this argument.
 #'
 #' @param x_fun The function(s) used to
-#' generate the exogenous variables. If
+#' generate the exogenous variables or
+#' error terms. If
 #' not supplied, or set to `list()`, the
 #' default, the variables are generated
 #' from a multivariate normal

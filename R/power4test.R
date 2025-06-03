@@ -165,7 +165,7 @@
 #'
 #' @inheritSection sim_data Set 'number_of_indicators' and 'reliability'
 #'
-#' @inheritSection sim_data Specify The Distributions of Exogenous Variables Using 'x_fun'
+#' @inheritSection sim_data Specify The Distributions of Exogenous Variables Or Error Terms Using 'x_fun'
 #'
 #' @inheritSection do_test Major Test-Related Arguments
 #'

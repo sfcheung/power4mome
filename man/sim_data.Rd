@@ -92,7 +92,8 @@ See the help page on how
 to use this argument.}
 
 \item{x_fun}{The function(s) used to
-generate the exogenous variables. If
+generate the exogenous variables or
+error terms. If
 not supplied, or set to \code{list()}, the
 default, the variables are generated
 from a multivariate normal
@@ -352,12 +353,13 @@ be set to one single value.
 }
 }
 
-\section{Specify The Distributions of Exogenous Variables Using 'x_fun'}{
-By default, variables are generated
+\section{Specify The Distributions of Exogenous Variables Or Error Terms Using 'x_fun'}{
+By default, variables and error
+terms are generated
 from a multivariate normal distribution.
 If desired, users can supply the
 function used to generate an exogenous
-variables by setting \code{x_fun} to
+variable and error term by setting \code{x_fun} to
 a named list.
 
 The names of the list are the variables
@@ -389,6 +391,17 @@ For \code{w}, the function is
 \code{p1 = .70} will be passed to this
 function when generating the values
 of \code{w}.
+
+If a variable is an endogenous
+variable (e.g., being predicted by
+another variable in a model), then
+\code{x_fun} is used to generate its
+\emph{error term}. Its implied population
+distribution may still be different
+from that generate by \code{x_fun} because
+the distribution also depends on the
+distribution of other variables
+predicting it.
 
 These are requirements for the
 user-functions:
