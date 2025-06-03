@@ -17,6 +17,7 @@ sim_data(
   reliability = NULL,
   x_fun = list(),
   e_fun = list(),
+  gen_missing = NULL,
   parallel = FALSE,
   progress = FALSE,
   ncores = max(1, parallel::detectCores(logical = FALSE) - 1)
@@ -112,6 +113,23 @@ distribution. Specify in the same
 way as \code{x_fun}. Refer to the help
 page on \code{x_fun} on how to use this
 argument.}
+
+\item{gen_missing}{If not \code{NULL}, it
+must be a named list with these
+elements: \code{fun} (required), the function for
+generating the missing data, such
+as \code{\link[mice:ampute]{mice::ampute()}}; \code{args} (optional), a
+named list of arguments to be passed
+to \code{fun}, except the one for the
+source data; \code{complete_name} (required) the
+name of the argument to receive the
+complete data (e.g., \code{data} for
+\code{\link[mice:ampute]{mice::ampute()}}); \code{missing_name}
+(optional), the name of the dataset
+with missing data in the output of
+\code{fun} (e.g., \code{"amp"} for \code{\link[mice:ampute]{mice::ampute()}}),
+if omitted, the output of \code{fun} should
+be the data frame with missing data.}
 
 \item{parallel}{If \code{TRUE}, parallel
 processing will be used to simulate
