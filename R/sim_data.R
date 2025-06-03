@@ -921,3 +921,147 @@ pop_indirect <- function(x) {
 
   all_ind
 }
+
+#' @noRd
+sim_data_raw_data_i <- function(repid = 1,
+                                n = 100,
+                                model = NULL,
+                                pop_es = NULL,
+                                ptable = NULL,
+                                mm_out = NULL,
+                                mm_lm_out = NULL,
+                                number_of_indicators = NULL,
+                                reliability = NULL,
+                                x_fun = list(),
+                                raw_data = NULL,
+                                raw_data_group = NULL,
+                                seed = NULL,
+                                drop_list_single_group = TRUE,
+                                merge_groups = TRUE) {
+  if (!is.null(seed)) set.seed(seed)
+  # The raw_data, if supplied, should always be a list of
+  # one or more groups
+  # If ngroups > 1,
+  # each data frame should already has the column of group labels
+  if (!is.data.frame(raw_data[[1]])) {
+    stop("This function requires raw data to run.")
+  }
+  # raw_data mode
+  # - Directly resample raw data -> mm_lm_data_out
+  # - Will ignore ptable, model, and pop_es in data generation
+  # Copy from input
+  # - ptable
+  # - mm_out
+  # - model_original
+  # What to do with the following
+  # - model_final
+  # - fit0: Can do as usual if ptable available
+  # - group_name <- raw_data_group
+  # - group_labels <- Derived from raw data
+  # - number_of_indicators <- Not used
+  # - reliability <- Not used
+  if (is.null(ptable)) {
+    # In raw_data mode, ptable is optional
+  } else {
+    # But if ptable is supplied, then retrieve the model
+    # model can be null
+    model <- attr(ptable, "model")
+  }
+  if (is.null(mm_out) && !is.null(ptable)) {
+    # In raw_data mode, mm_out is optional
+    mm_out <- model_matrices_pop(ptable,
+                                drop_list_single_group = FALSE)
+  }
+  if (is.null(mm_lm_out) && !is.null(mm_out)) {
+    # In raw_data mode, mm_lm_out is optional
+    mm_lm_out <- mm_lm(mm_out,
+                       drop_list_single_group = FALSE)
+  }
+
+  ngroups <- length(raw_data)
+  if (ngroups > 1) {
+    group_labels <- names(raw_data)
+  } else {
+    group_labels <- NULL
+  }
+  n <- sapply(raw_data,
+              nrow)
+
+  # Do not use these
+  # - number_of_indicators
+  # - reliability
+  # mm_lm_dat_out <- Resampled data
+  # mm_lm_dat_out is always a list of one or more data frames
+
+  mm_lm_dat_out <- sapply(raw_data,
+                          resample_data,
+                          simplify = FALSE,
+                          USE.NAMES = TRUE)
+
+  model_original <- model
+  model <- model
+
+  if (!is.null(ptable) || !is.null(model)) {
+    # ptable takes precedence
+    if (!is.null(ptable)) {
+      tmp <- ptable
+      tmp$est <- tmp$start
+    } else {
+      tmp <- model
+    }
+    # fixed.x set to FALSE such that covariances are also displayed
+    fit0 <- lavaan::sem(tmp,
+                        do.fit = FALSE,
+                        fixed.x = FALSE)
+  } else {
+    fit0 <- NULL
+  }
+  if (ngroups > 1) {
+    group_labels <- names(mm_out)
+    group_name <- raw_data_group
+  } else {
+    group_labels <- NULL
+    group_name <- NULL
+  }
+  if (drop_list_single_group && (ngroups == 1)) {
+    # NULL[[1]] is NULL
+    mm_out <- mm_out[[1]]
+    mm_lm_out <- mm_lm_out[[1]]
+    mm_lm_dat_out <- mm_lm_dat_out[[1]]
+  }
+  # if ((ngroups > 1)) {
+    # No need because group values should already in raw_data
+    # for (i in group_labels) {
+    #   mm_lm_dat_out[[i]]$group <- i
+    # }
+  # }
+  if (merge_groups && (ngroups > 1)) {
+    mm_lm_dat_out <- do.call(rbind,
+                             mm_lm_dat_out)
+    rownames(mm_lm_dat_out) <- NULL
+  }
+  out <- list(ptable = ptable,
+              mm_out = mm_out,
+              mm_lm_out = mm_lm_out,
+              mm_lm_dat_out = mm_lm_dat_out,
+              model_original = model_original,
+              model_final = model,
+              fit0 = fit0,
+              group_name = group_name,
+              group_labels = group_labels,
+              number_of_indicators = number_of_indicators,
+              reliability = reliability)
+  class(out) <- c("sim_data_i", class(out))
+  out
+}
+
+#' @noRd
+resample_data <- function(x) {
+  n <- nrow(x)
+  i <- sample.int(n = n,
+                  size = n,
+                  replace = TRUE)
+  out <- x[i, ]
+  row.names(out) <- NULL
+  out
+}
