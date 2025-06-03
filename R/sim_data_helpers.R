@@ -158,7 +158,10 @@ add_indicator_scores <- function(x,
 gen_indicator_scores <- function(f_score,
                                  p,
                                  omega,
-                                 prefix = "x") {
+                                 prefix = "x",
+                                 e_fun = list()) {
+  # e_fun is of this form
+  # list(rexp_rs, ....)
   f_score <- matrix(as.vector(f_score),
                     ncol = 1)
   n <- nrow(f_score)
@@ -168,9 +171,23 @@ gen_indicator_scores <- function(f_score,
                     nrow = 1,
                     ncol = p)
   e_sd <- sqrt(1 - lambda0^2)
-  e <- stats::rnorm(n * p,
-                    mean = 0,
-                    sd = e_sd)
+  if (length(e_fun) > 0) {
+    ee_fun <- e_fun[[1]]
+    ee_fun <- match.fun(ee_fun)
+    ee_args <- e_fun[-1]
+    ee_args <- utils::modifyList(ee_args,
+                                 list(n = n * p))
+    e <- do.call(ee_fun,
+                 ee_args)
+    e <- e * e_sd
+  } else {
+    e <- matrix(stats::rnorm(n * p,
+                             mean = 0,
+                             sd = e_sd),
+                nrow = n,
+                ncol = p)
+  }
+
   x <- f_score %*% lambda1 + e
   colnames(x) <- paste0(prefix, seq(from = 1,
                                     to = p))
