@@ -1,4 +1,4 @@
-# power4mome 0.0.1.51
+# power4mome 0.0.1.52
 
 - Initialized the package. (0.0.0.9000)
 
@@ -405,3 +405,6 @@
 
 - Added `e_fun` for generating nonnormal
   error terms for indicators. (0.0.1.51)
+
+- Add `gen_missing` for generating
+  missing data. (0.0.1.52)
