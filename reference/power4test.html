@@ -15,7 +15,7 @@ results."><meta name="google-site-verification" content="0VLBmFnW_UJFI-7gXnORPBs
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.49</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.50</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -215,7 +215,8 @@ to use this argument.</p></dd>
 
 <dt id="arg-x-fun">x_fun<a class="anchor" aria-label="anchor" href="#arg-x-fun"></a></dt>
 <dd><p>The function(s) used to
-generate the exogenous variables. If
+generate the exogenous variables or
+error terms. If
 not supplied, or set to <code><a href="https://rdrr.io/r/base/list.html" class="external-link">list()</a></code>, the
 default, the variables are generated
 from a multivariate normal
@@ -1060,12 +1061,13 @@ be set to one single value.</p>
 
     </div>
     <div class="section level2">
-    <h2 id="specify-the-distributions-of-exogenous-variables-using-x-fun-">Specify The Distributions of Exogenous Variables Using 'x_fun'<a class="anchor" aria-label="anchor" href="#specify-the-distributions-of-exogenous-variables-using-x-fun-"></a></h2>
-    <p>By default, variables are generated
+    <h2 id="specify-the-distributions-of-exogenous-variables-or-error-terms-using-x-fun-">Specify The Distributions of Exogenous Variables Or Error Terms Using 'x_fun'<a class="anchor" aria-label="anchor" href="#specify-the-distributions-of-exogenous-variables-or-error-terms-using-x-fun-"></a></h2>
+    <p>By default, variables and error
+terms are generated
 from a multivariate normal distribution.
 If desired, users can supply the
 function used to generate an exogenous
-variables by setting <code>x_fun</code> to
+variable and error term by setting <code>x_fun</code> to
 a named list.</p>
 <p>The names of the list are the variables
 for which a user function will be used
@@ -1091,6 +1093,16 @@ argument when calling this function.</p>
 <code>p1 = .70</code> will be passed to this
 function when generating the values
 of <code>w</code>.</p>
+<p>If a variable is an endogenous
+variable (e.g., being predicted by
+another variable in a model), then
+<code>x_fun</code> is used to generate its
+<em>error term</em>. Its implied population
+distribution may still be different
+from that generate by <code>x_fun</code> because
+the distribution also depends on the
+distribution of other variables
+predicting it.</p>
 <p>These are requirements for the
 user-functions:</p><ul><li><p>They must return a numeric vector.</p></li>
 <li><p>They mush has an argument <code>n</code> for
