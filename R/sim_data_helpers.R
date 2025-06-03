@@ -38,7 +38,8 @@ mm_lm_data <- function(object,
                        number_of_indicators = NULL,
                        reliability = NULL,
                        keep_f_scores = FALSE,
-                       x_fun = list()) {
+                       x_fun = list(),
+                       e_fun = list()) {
   lm_y <- object$lm_y
   psi <- object$psi
   all_vars <- colnames(psi)
@@ -70,6 +71,7 @@ mm_lm_data <- function(object,
     dat_all <- add_indicator_scores(dat_all,
                                     ps = number_of_indicators,
                                     rels = reliability,
+                                    e_fun = e_fun,
                                     keep_f_scores = keep_f_scores)
   }
   return(as.data.frame(dat_all))

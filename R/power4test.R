@@ -281,6 +281,8 @@
 #'
 # @param x_fun <- Inherited
 #'
+# @param e_fun <- Inherited
+#'
 #' @param fit_model_args A list of the
 #' arguments to be passed to [fit_model()]
 #' when fitting the
@@ -448,6 +450,7 @@ power4test <- function(object = NULL,
                        number_of_indicators = NULL,
                        reliability = NULL,
                        x_fun = list(),
+                       e_fun = list(),
                        fit_model_args = list(),
                        R = NULL,
                        ci_type = "mc",
@@ -552,6 +555,7 @@ power4test <- function(object = NULL,
         is.null(number_of_indicators) &&
         is.null(reliability) &&
         identical(x_fun, list()) &&
+        identical(e_fun, list()) &&
         is.null(nrep)) {
       update_data <- FALSE
     }
@@ -580,6 +584,7 @@ power4test <- function(object = NULL,
                             number_of_indicators = args$number_of_indicators,
                             reliability = args$reliability,
                             x_fun = args$x_fun,
+                            e_fun = args$e_fun,
                             iseed = args$iseed,
                             parallel = args$parallel,
                             progress = args$progress,
@@ -605,6 +610,7 @@ power4test <- function(object = NULL,
                             number_of_indicators = args$number_of_indicators,
                             reliability = args$reliability,
                             x_fun = args$x_fun,
+                            e_fun = args$e_fun,
                             iseed = args$iseed,
                             parallel = args$parallel,
                             progress = args$progress,
