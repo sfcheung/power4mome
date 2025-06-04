@@ -58,11 +58,13 @@ power_all_test_only <- power4test(object = power_all_test_only,
                                   test_fun = test_parameters,
                                   test_args = list(pars = "b",
                                                    fit_name = "fit2"),
+                                  map_names = c(fit = "fit2"),
                                   test_name = "Model 2")
 power_all_test_only <- power4test(object = power_all_test_only,
                                   test_fun = test_parameters,
                                   test_args = list(pars = "a",
                                                    fit_name = "fit3"),
+                                  map_names = c(fit = "fit3"),
                                   test_name = "Model 3")
 
 print(power_all_test_only$test_all,

@@ -1,4 +1,4 @@
-# power4mome 0.0.1.55
+# power4mome 0.0.1.56
 
 - Initialized the package. (0.0.0.9000)
 
@@ -419,3 +419,6 @@
 
 - Cleared obsolete TODOs in comments.
   (0.0.1.55)
+
+- The argument `map_names` now work
+  properly. (0.0.1.56)
