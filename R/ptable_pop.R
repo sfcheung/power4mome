@@ -899,7 +899,7 @@ pop_es2par_pop <- function(pop_es,
                            to_one_table = FALSE,
                            es_ind) {
   # Always process par_pop as a list until existing
-  if (is.character(pop_es)) {
+  if (is.character(pop_es) || is.numeric(pop_es)) {
     pop_es <- fix_par_es(pop_es,
                          model = model)
     par_pop <- set_pop(pop_es,

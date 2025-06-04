@@ -1,4 +1,4 @@
-# power4mome 0.0.1.53
+# power4mome 0.0.1.54
 
 - Initialized the package. (0.0.0.9000)
 
@@ -412,3 +412,7 @@
 - Adopted a more robust way to process
   `fit_model_args` in `power4test()`.
   (0.0.1.53)
+
+- Fixed the bug that `pop_es` with all
+  numeric cannot be processed.
+  (0.0.1.54)
