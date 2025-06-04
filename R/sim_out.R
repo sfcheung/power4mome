@@ -181,8 +181,6 @@ print.sim_out <- function(x,
                           digits_descriptive = 2,
                           fit_to_all_args = list(),
                           ...) {
-  # TODO:
-  # - Add print method for components in `extra`.
   NextMethod()
   print_extra(x)
   invisible(x)

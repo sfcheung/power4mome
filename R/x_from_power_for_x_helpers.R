@@ -121,10 +121,6 @@ nrep_from_power <- function(power_j,
   return(out)
 }
 
-# TODO:
-# - Check. Should write a general rejection_rates_add_ci()
-#   that works for _by_n and _by_es.
-
 #' @noRd
 # Helper for printing
 catwrap <- function(x,
