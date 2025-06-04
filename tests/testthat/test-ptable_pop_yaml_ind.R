@@ -128,34 +128,4 @@ expect_equal(chk1$start,
              chk2$start,
              tolerance = 1e-1)
 
-# Simple mediation model
-# Effect sizes set numerically
-
-# TODO: All setting an indirect effect to a value
-
-# mod <-
-# "
-# m ~ x
-# y ~ m + x
-# "
-
-# mod_es1 <- c(".beta." = ".21",
-#              ".ind.(y~m~x)" = ".31",
-#              "y ~ x" = "n")
-
-# mod_es2 <-
-# "
-# .beta.: .21
-# m ~ x: .31
-# y ~ x: nil
-# "
-
-# pop_es_yaml(mod_es2)
-
-# chk1 <- ptable_pop(mod, mod_es1)
-# chk2 <- ptable_pop(mod, mod_es2)
-
-# expect_equal(chk1$start,
-#              chk2$start,
-#              tolerance = 1e-1)
 })

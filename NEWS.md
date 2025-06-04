@@ -1,4 +1,4 @@
-# power4mome 0.0.1.54
+# power4mome 0.0.1.55
 
 - Initialized the package. (0.0.0.9000)
 
@@ -416,3 +416,6 @@
 - Fixed the bug that `pop_es` with all
   numeric cannot be processed.
   (0.0.1.54)
+
+- Cleared obsolete TODOs in comments.
+  (0.0.1.55)

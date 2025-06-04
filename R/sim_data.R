@@ -830,11 +830,6 @@ sim_data_i <- function(repid = 1,
                        drop_list_single_group = TRUE,
                        merge_groups = TRUE) {
   if (!is.null(seed)) set.seed(seed)
-  # TODO:
-  # - Set the default values for parameter
-  #   not specified (do this in ptable_pop).
-  # - Can accept ptable, mm_out, and mm_lm_out, to save the
-  #   time in repeating these steps unnecessarily.
   if (is.null(ptable)) {
     ptable <- ptable_pop(model = model,
                         pop_es = pop_es,
