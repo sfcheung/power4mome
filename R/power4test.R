@@ -744,7 +744,6 @@ power4test <- function(object = NULL,
     # internally consistent.
     update_test <- TRUE
   }
-
   test_all <- NULL
 
   if (do_the_test && !update_test) {
@@ -773,7 +772,9 @@ power4test <- function(object = NULL,
                            error = function(e) e)
     if (!inherits(map_names, "error")) {
       if (is.character(map_names0) && !is.null(names(map_names0))) {
+        map_names_user <- map_names
         map_names <- map_names0
+        map_names[names(map_names_user)] <- map_names_user
       }
     }
     test_all <- do_test(sim_all,
