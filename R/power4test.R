@@ -624,29 +624,8 @@ power4test <- function(object = NULL,
     data_all <- do.call(sim_data,
                         sim_data_args)
 
-    # fit_model_args must always be a named list of models
-    fit_k <- FALSE
-    if (length(fit_model_args) > 1) {
-      fit_k <- all(sapply(fit_model_args,
-                          is.list))
-      if (fit_k) {
-        if (is.null(names(fit_model_args))) {
-          # Auto names
-          names(fit_model_args) <- paste0("fit", seq_along(fit_model_args))
-          names(fit_model_args)[1] <- "fit"
-        } else {
-          if (any(names(fit_model_args) %in% "")) {
-            stop("All models in 'fit_model_args' must be named")
-          }
-          if (names(fit_model_args)[1] != "fit") {
-            stop("The first model must be named 'fit'.")
-          }
-        }
-      }
-    } else {
-      # One model or not specified
-      fit_model_args <- list(fit = fit_model_args)
-    }
+    fit_model_args <- fix_fit_model_args(fit_model_args)
+
     fit_args0 <- sapply(fit_model_args,
                         utils::modifyList,
                         val = list(parallel = args$parallel,
@@ -963,4 +942,87 @@ update_test_i <- function(test_i,
   attr(test_new, "test_name") <- test_name
 
   test_new
+}
+
+#' @noRd
+fix_fit_model_args <- function(fit_model_args) {
+  # Conditions
+  # Scenarios:
+  # - [DONE] A list with no element.
+  #   - list()
+  #     - One fit model, and no additional arguments
+  # - [DONE] A list with one element, named "fit"
+  #   - list(fit = list())
+  #   - list(fit = list(missing = "fiml", estimator = "MLR"))
+  #     - One fit model, and these are the arguments
+  #     - The first name must be "fit"
+  # - [DONE] A list with more than one arguments. The first one is not named "fit"
+  #   - list(args = list())
+  #     - One fit model, and the value of args is a list.
+  #   - list(missing = "fiml")
+  #     - One fit model, and this is the arguments
+  #   - list(missing = "fiml", estimator = "MLR")
+  #     - One fit model, and these are the arguments
+  # - [DONE] A list with more than one argument. The first one is named "fit"
+  #   - list(fit = list(),
+  #          fitx = list(missing = "fiml.x", estimator = "ML"))
+  #     - Two or more fit models.
+  #     - The first name must be "fit"
+  #   - list(fit = list(missing = "fiml", estimator = "MLR"),
+  #          fitx = list(missing = "fiml.x", estimator = "ML"))
+  #     - Two or more fit models.
+  #     - The first name must be "fit"
+  if (length(fit_model_args) == 0) {
+    # Zero length list
+    fit_model_args <- list(fit = fit_model_args)
+    return(fit_model_args)
+  }
+  list_names <- names(fit_model_args)
+  if (any(list_names == "")) {
+    # Do not support auto-naming. Too ambiguous.
+    stop("All elements of 'fit_model_args' must be named.")
+  }
+
+  if (list_names[1] != "fit") {
+    # if (length(fit_model_args) == 1) {
+    #   return(fit_model_args)
+    # }
+    # This won't throw an error:
+    # list(fit1 = list(missing = "fiml"),
+    #      fitx = list(missing = "fiml.x",
+    #                  estimator = "ML")))
+    # But leave it this way for now. Users should not do this,
+    # but there is no robust way to differentiat this from:
+    # list(arg1 = list(),
+    #      arg2 = list())
+    fit_model_args <- list(fit = fit_model_args)
+    return(fit_model_args)
+  }
+
+  # Two or more models
+  fit_k <- all(sapply(fit_model_args,
+                      is.list))
+  if (!fit_k) {
+    stop("The elements for all models must be lists.")
+  } else {
+    if (is.null(names(fit_model_args))) {
+      # No longer support auto-naming.
+      # Too ambiguous
+      # This condition won't happen anyway,
+      # because all top elements must be named.
+      # Auto names
+      names(fit_model_args) <- paste0("fit", seq_along(fit_model_args))
+      names(fit_model_args)[1] <- "fit"
+    } else {
+      if (any(names(fit_model_args) %in% "")) {
+        stop("All models in 'fit_model_args' must be named")
+      }
+      if (names(fit_model_args)[1] != "fit") {
+        stop("The first model must be named 'fit'.")
+      }
+    }
+    # Two or more named models, all named.
+    return(fit_model_args)
+  }
+
 }
