@@ -751,7 +751,7 @@ summary(out_es_a)
 #> === Technical Information ===
 #> 
 #> - The range of values explored: 0.28357582045719 to 0.507444912661905 
-#> - Time spent in the search: 2.075 mins 
+#> - Time spent in the search: 2.253 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Nonlinear Regression Model 
@@ -910,7 +910,7 @@ summary(out_es_b)
 #> === Technical Information ===
 #> 
 #> - The range of values explored: 0.286788782745488 to 0.40586513156224 
-#> - Time spent in the search: 2.005 mins 
+#> - Time spent in the search: 2.044 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
