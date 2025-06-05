@@ -762,6 +762,22 @@ print.sim_data <- function(x,
                           range = FALSE),
           digits = digits_descriptive)
 
+    # Print missing data pattern
+
+    mp <- tryCatch(miss_pattern(all_data),
+                   error = function(e) e)
+    if (!inherits(mp, "error")) {
+      if (nrow(mp) != 1) {
+        cat(header_str("Missing Data Pattern",
+                          hw = .4,
+                          prefix = "\n",
+                          suffix = "\n\n"))
+        cat("Missing data is present\n\n")
+        print_miss_pattern(mp,
+                           digits = max(0, digits = digits - 1))
+      }
+    }
+
     tmp <- paste("Parameter Estimates Based on All",
                 nrep,
                 "Samples Combined")
