@@ -789,12 +789,46 @@ print.sim_data <- function(x,
   invisible(x)
 }
 
-#' @noRd
-pool_sim_data <- function(sim_out) {
-  all_data <- lapply(sim_out,
+#' @description
+#' The function
+#'
+#' @param object Either a `sim_data`
+#' object or a `power4test` object.
+#' It extracts the simulated data
+#' and return them, combined to one
+#' single data frame or, if `as_list`
+#' is `TRUE`, as a list of data
+#' frames.
+#'
+#' @param as_list Logical. If `TRUE`,
+#' the simulated datasets is returned as one
+#' single data frame. If `FALSE`, they
+#' are returned as a list of data
+#' frames.
+#'
+#' @return
+#' The function `pool_sim_data()` returns
+#' either one data frame or a list
+#' of data frames, depending on the
+#' argument `as_list`
+#'
+#' @rdname sim_data
+#' @export
+pool_sim_data <- function(object,
+                          as_list = FALSE) {
+  if (!inherits(object, "power4test") &&
+      !inherits(object, "sim_data")) {
+    stop("pool_sim_data() only supports 'power4test' or 'sim_data' objects.")
+  }
+  if (inherits(object, "power4test")) {
+    object <- object$sim_all
+  }
+  all_data <- lapply(object,
                      function(x) x$mm_lm_dat_out)
-  all_data <- do.call(rbind,
-                      all_data)
+  if (!as_list) {
+    all_data <- do.call(rbind,
+                        all_data)
+  }
   all_data
 }
 
