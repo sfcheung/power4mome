@@ -1,4 +1,4 @@
-# power4mome 0.0.1.56
+# power4mome 0.0.1.57
 
 - Initialized the package. (0.0.0.9000)
 
@@ -422,3 +422,6 @@
 
 - The argument `map_names` now work
   properly. (0.0.1.56)
+
+- Rename `gen_missing` to `process_data`.
+  (0.0.1.57)

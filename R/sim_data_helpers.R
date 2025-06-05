@@ -40,7 +40,7 @@ mm_lm_data <- function(object,
                        keep_f_scores = FALSE,
                        x_fun = list(),
                        e_fun = list(),
-                       gen_missing = NULL) {
+                       process_data = NULL) {
   lm_y <- object$lm_y
   psi <- object$psi
   all_vars <- colnames(psi)
@@ -75,18 +75,18 @@ mm_lm_data <- function(object,
                                     e_fun = e_fun,
                                     keep_f_scores = keep_f_scores)
   }
-  if (is.list(gen_missing)) {
-    gen_missing_fun <- match.fun(gen_missing$fun)
+  if (is.list(process_data)) {
+    process_data_fun <- match.fun(process_data$fun)
     tmp <- list(dat_all)
-    names(tmp) <- gen_missing$complete_name
-    if (is.null(gen_missing$args)) {
-      gen_missing$args <- list()
+    names(tmp) <- process_data$sim_data_name
+    if (is.null(process_data$args)) {
+      process_data$args <- list()
     }
-    gen_missing_args <- utils::modifyList(gen_missing$args,
+    process_data_args <- utils::modifyList(process_data$args,
                                           tmp)
-    dat_all_amp <- do.call(gen_missing_fun,
-                           gen_missing_args)
-    m_name <- gen_missing$missing_name
+    dat_all_amp <- do.call(process_data_fun,
+                           process_data_args)
+    m_name <- process_data$processed_data_name
     if (!is.null(m_name)) {
       dat_all <- dat_all_amp[[m_name]]
     } else {

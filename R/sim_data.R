@@ -337,18 +337,21 @@
 #' page on `x_fun` on how to use this
 #' argument.
 #'
-#' @param gen_missing If not `NULL`, it
+#' @param process_data If not `NULL`, it
 #' must be a named list with these
-#' elements: `fun` (required), the function for
-#' generating the missing data, such
-#' as [mice::ampute()]; `args` (optional), a
+#' elements: `fun` (required), the function
+#' to further processing the simulated
+#' data, such as generating missing data using
+#' functions such as [mice::ampute()]; `args` (optional), a
 #' named list of arguments to be passed
 #' to `fun`, except the one for the
-#' source data; `complete_name` (required) the
+#' source data; `sim_data_name` (required) the
 #' name of the argument to receive the
-#' complete data (e.g., `data` for
-#' [mice::ampute()]); `missing_name`
-#' (optional), the name of the dataset
+#' simulated data (e.g., `data` for
+#' [mice::ampute()]); `processed_data_name`
+#' (optional), the name of the data frame
+#' after being processed by `fun`,
+#' such as the data frame
 #' with missing data in the output of
 #' `fun` (e.g., `"amp"` for [mice::ampute()]),
 #' if omitted, the output of `fun` should
@@ -449,7 +452,7 @@ sim_data <- function(nrep = 10,
                      reliability = NULL,
                      x_fun = list(),
                      e_fun = list(),
-                     gen_missing = NULL,
+                     process_data = NULL,
                      parallel = FALSE,
                      progress = FALSE,
                      ncores = max(1, parallel::detectCores(logical = FALSE) - 1)) {
@@ -478,7 +481,7 @@ sim_data <- function(nrep = 10,
                 reliability = reliability,
                 x_fun = x_fun,
                 e_fun = e_fun,
-                gen_missing = gen_missing,
+                process_data = process_data,
                 iseed = iseed,
                 parallel = parallel,
                 progress = progress,
@@ -825,7 +828,7 @@ sim_data_i <- function(repid = 1,
                        reliability = NULL,
                        x_fun = list(),
                        e_fun = list(),
-                       gen_missing = NULL,
+                       process_data = NULL,
                        seed = NULL,
                        drop_list_single_group = TRUE,
                        merge_groups = TRUE) {
@@ -886,7 +889,7 @@ sim_data_i <- function(repid = 1,
                           MoreArgs = list(keep_f_scores = FALSE,
                                           x_fun = x_fun,
                                           e_fun = e_fun,
-                                          gen_missing = gen_missing),
+                                          process_data = process_data),
                           SIMPLIFY = FALSE)
 
   model_original <- model

@@ -17,7 +17,7 @@ power4test(
   reliability = NULL,
   x_fun = list(),
   e_fun = list(),
-  gen_missing = NULL,
+  process_data = NULL,
   fit_model_args = list(),
   R = NULL,
   ci_type = "mc",
@@ -149,18 +149,21 @@ way as \code{x_fun}. Refer to the help
 page on \code{x_fun} on how to use this
 argument.}
 
-\item{gen_missing}{If not \code{NULL}, it
+\item{process_data}{If not \code{NULL}, it
 must be a named list with these
-elements: \code{fun} (required), the function for
-generating the missing data, such
-as \code{\link[mice:ampute]{mice::ampute()}}; \code{args} (optional), a
+elements: \code{fun} (required), the function
+to further processing the simulated
+data, such as generating missing data using
+functions such as \code{\link[mice:ampute]{mice::ampute()}}; \code{args} (optional), a
 named list of arguments to be passed
 to \code{fun}, except the one for the
-source data; \code{complete_name} (required) the
+source data; \code{sim_data_name} (required) the
 name of the argument to receive the
-complete data (e.g., \code{data} for
-\code{\link[mice:ampute]{mice::ampute()}}); \code{missing_name}
-(optional), the name of the dataset
+simulated data (e.g., \code{data} for
+\code{\link[mice:ampute]{mice::ampute()}}); \code{processed_data_name}
+(optional), the name of the data frame
+after being processed by \code{fun},
+such as the data frame
 with missing data in the output of
 \code{fun} (e.g., \code{"amp"} for \code{\link[mice:ampute]{mice::ampute()}}),
 if omitted, the output of \code{fun} should
