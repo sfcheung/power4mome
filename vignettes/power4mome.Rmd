@@ -1,6 +1,6 @@
 ---
 title: "Power Analysis for Moderation, Mediation, and Moderated-Mediation"
-date: "2025-06-01"
+date: "2025-06-05"
 output:
   rmarkdown::html_vignette:
     options:
@@ -259,6 +259,14 @@ out
 #>    .y                 0.870  
 #>     x                 1.000  
 #> 
+#> == Population Indirect Effect(s) ==
+#> 
+#> ==  Indirect Effect(s)   ==
+#>               ind
+#> x -> m -> y 0.150
+#> 
+#>  - The 'ind' column shows the indirect effects.
+#>  
 #> ======================= Data Information =======================
 #> 
 #> Number of Replications:  2 
@@ -342,6 +350,14 @@ print(out,
 #>    .y                 0.870  
 #>     x                 1.000  
 #> 
+#> == Population Indirect Effect(s) ==
+#> 
+#> ==  Indirect Effect(s)   ==
+#>               ind
+#> x -> m -> y 0.150
+#> 
+#>  - The 'ind' column shows the indirect effects.
+#>  
 #> ======================= Data Information =======================
 #> 
 #> Number of Replications:  2 
@@ -543,6 +559,14 @@ out
 #>    .y                 0.870  
 #>     x                 1.000  
 #> 
+#> == Population Indirect Effect(s) ==
+#> 
+#> ==  Indirect Effect(s)   ==
+#>               ind
+#> x -> m -> y 0.150
+#> 
+#>  - The 'ind' column shows the indirect effects.
+#>  
 #> ======================= Data Information =======================
 #> 
 #> Number of Replications:  400 
@@ -600,16 +624,15 @@ The summary of the test:
 
 
 ```
+#> =========== <mc_out> ===========
+#> 
+#> 
+#> == A 'mc_out' class object ==
+#> 
+#> Number of Monte Carlo replications: 2000 
+#> 
+#> 
 #> =============== <test_indirect: x->m->y> ===============
-#> 
-#> Mean(s) across replication:
-#>    est   cilo  cihi   sig
-#>  0.152 -0.009 0.347 0.468
-#> 
-#> - The value 'sig' is the rejection rate.
-#> - If the null hypothesis is false, this is the power.
-#> - Number of valid replications for rejection rate: 400 
-#> - Proportion of valid replications for rejection rate: 1.000
 ```
 
 The mean of the estimates across all the
@@ -1049,6 +1072,17 @@ print(out3,
 #>     x                 1.000  
 #>     w                 1.000  
 #>     x:w               1.000  
+#> 
+#> == Population Indirect Effect(s) ==
+#> 
+#> ==  Indirect Effect(s)   ==
+#>               ind
+#> x -> m -> y 0.090
+#> w -> m -> y 0.030
+#> 
+#>  - The 'ind' column shows the indirect effects.
+#>  
+#> NOTE: One or more path(s) is/are moderated.
 #> 
 #> ======================= Data Information =======================
 #> 

@@ -1,6 +1,6 @@
 ---
 title: "Power Analysis for Latent Variable Mediation"
-date: "2025-06-01"
+date: "2025-06-05"
 output:
   rmarkdown::html_vignette:
     options:
@@ -358,6 +358,14 @@ out
 #>    .fy                0.690  
 #>     fx                1.000  
 #> 
+#> == Population Indirect Effect(s) ==
+#> 
+#> ==  Indirect Effect(s)   ==
+#>                  ind
+#> fx -> fm -> fy 0.250
+#> 
+#>  - The 'ind' column shows the indirect effects.
+#>  
 #> ==== Population Reliability ====
 #> 
 #>   fy  fm  fx
@@ -697,6 +705,14 @@ out
 #>    .fy                0.690  
 #>     fx                1.000  
 #> 
+#> == Population Indirect Effect(s) ==
+#> 
+#> ==  Indirect Effect(s)   ==
+#>                  ind
+#> fx -> fm -> fy 0.250
+#> 
+#>  - The 'ind' column shows the indirect effects.
+#>  
 #> ==== Population Reliability ====
 #> 
 #>   fy  fm  fx
