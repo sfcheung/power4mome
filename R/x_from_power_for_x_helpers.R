@@ -230,7 +230,6 @@ find_ci_hit <- function(object,
       return(NULL)
     }
   }
-  # If only one CI hits, always keep it.
   if (sum(i0) > 1) {
     # Find the value with CI hitting the target power
     # and has the smallest SE.
@@ -244,6 +243,11 @@ find_ci_hit <- function(object,
     }
     i2 <- which(i1 == min(i1[i0], na.rm = TRUE))[1]
   } else {
+    # Still check nrep
+    # To ignore nrep, set nrep to 0.
+    if (by_x_ci$nrep[i0] < final_nrep) {
+      return(NULL)
+    }
     i2 <- which(i0)
   }
   return(i2)

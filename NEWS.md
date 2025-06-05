@@ -1,4 +1,4 @@
-# power4mome 0.0.1.58
+# power4mome 0.0.1.59
 
 - Initialized the package. (0.0.0.9000)
 
@@ -428,3 +428,6 @@
 
 - Added support for printing missing
   data pattern. (0.0.1.58)
+
+- Improved the search algorithm of
+  `x_from_power()`. (0.0.1.59)
