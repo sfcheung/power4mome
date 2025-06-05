@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.57</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.58</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -79,7 +79,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Sample Size Given Desired Power</h1>
             
-            <h4 data-toc-skip class="date">2025-06-01</h4>
+            <h4 data-toc-skip class="date">2025-06-05</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/sfcheung/power4mome/blob/main/vignettes/articles/x_from_power_for_n.Rmd" class="external-link"><code>vignettes/articles/x_from_power_for_n.Rmd</code></a></small>
       <div class="d-none name"><code>x_from_power_for_n.Rmd</code></div>
@@ -279,6 +279,14 @@ and &lt;code&gt;&lt;a href="https://rdrr.io/r/base/Random.html" class="external-
 <span><span class="co">#&gt;    .y                 0.870  </span></span>
 <span><span class="co">#&gt;     x                 1.000  </span></span>
 <span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; == Population Indirect Effect(s) ==</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ==  Indirect Effect(s)   ==</span></span>
+<span><span class="co">#&gt;               ind</span></span>
+<span><span class="co">#&gt; x -&gt; m -&gt; y 0.150</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  - The 'ind' column shows the indirect effects.</span></span>
+<span><span class="co">#&gt;  </span></span>
 <span><span class="co">#&gt; ======================= Data Information =======================</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Number of Replications:  2 </span></span>
@@ -446,6 +454,14 @@ session.</p>
 <span><span class="co">#&gt;    .y                 0.870  </span></span>
 <span><span class="co">#&gt;     x                 1.000  </span></span>
 <span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; == Population Indirect Effect(s) ==</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ==  Indirect Effect(s)   ==</span></span>
+<span><span class="co">#&gt;               ind</span></span>
+<span><span class="co">#&gt; x -&gt; m -&gt; y 0.150</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  - The 'ind' column shows the indirect effects.</span></span>
+<span><span class="co">#&gt;  </span></span>
 <span><span class="co">#&gt; ======================= Data Information =======================</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Number of Replications:  50 </span></span>
@@ -578,8 +594,8 @@ power based on simulation is 0.782.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; === Technical Information ===</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; - The range of values explored: 50 to 133 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 1.98 mins </span></span>
+<span><span class="co">#&gt; - The range of values explored: 50 to 126 </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 2.122 mins </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
@@ -608,13 +624,13 @@ power based on simulation is 0.782.</p>
 <span><span class="co">#&gt;     n                   test test_label   p.v reject r.cilo r.cihi</span></span>
 <span><span class="co">#&gt; 1  50 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.400  0.264  0.536</span></span>
 <span><span class="co">#&gt; 2  75 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.690  0.599  0.781</span></span>
-<span><span class="co">#&gt; 3  80 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.682  0.637  0.728</span></span>
+<span><span class="co">#&gt; 3  89 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.772  0.731  0.814</span></span>
 <span><span class="co">#&gt; 4  96 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.720  0.632  0.808</span></span>
 <span><span class="co">#&gt; 5 100 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.750  0.665  0.835</span></span>
 <span><span class="co">#&gt; 6 103 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.782  0.742  0.823</span></span>
-<span><span class="co">#&gt; 7 104 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.856  0.806  0.905</span></span>
+<span><span class="co">#&gt; 7 104 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.855  0.810  0.899</span></span>
 <span><span class="co">#&gt; 8 114 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.780  0.699  0.861</span></span>
-<span><span class="co">#&gt; 9 133 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.892  0.862  0.923</span></span>
+<span><span class="co">#&gt; 9 126 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.870  0.837  0.903</span></span>
 <span><span class="co">#&gt; Notes:</span></span>
 <span><span class="co">#&gt; - n: The sample size in a trial.</span></span>
 <span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>

@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.57</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.58</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -80,7 +80,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Quick Template: Mediation with Observed Variables</h1>
             
-            <h4 data-toc-skip class="date">2025-06-02</h4>
+            <h4 data-toc-skip class="date">2025-06-05</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/sfcheung/power4mome/blob/main/vignettes/articles/template_mediation_obs.Rmd" class="external-link"><code>vignettes/articles/template_mediation_obs.Rmd</code></a></small>
       <div class="d-none name"><code>template_mediation_obs.Rmd</code></div>
@@ -113,48 +113,6 @@ functions.</p>
 <h2 id="common-flow">Common Flow<a class="anchor" aria-label="anchor" href="#common-flow"></a>
 </h2>
 <p>The following chart summarizes the steps covered below.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rich-iannone.github.io/DiagrammeR/" class="external-link">DiagrammeR</a></span><span class="op">)</span></span>
-<span><span class="co"># https://mermaid.live/edit#pako:eNqFk9tu4jAQhl_F8lUrASUHCHEpUrX0st1KVHuxmxUyZHKQHDtynKVZxLvXcQ4NFKl39sz3z-FPfMR7EQImOGLisE-oVOhtHfCAI7RntCjWEKEQIloyhaKUMcLSOFE7VsL9NcYeQLEE4PdNrUJVDJCSFW8AZIgKmO76mc_0KOwaUCMbUM91_ibA-oheRV4yqlLBkQkH-LalnjZfkV9UT1wsd_JutUxXuci3-naXrlrVTw4vWvQmKyQ4IP4JHkC6Cgp1czvAN_APJGWdpGiuiBdfddtdteUXYir3yYuZsT4hjg6pSpCiMtZDG2lX530bSZFtTeysyCMXKgHZTUCb6zeDG6PLXSxpnrRe_wlw697fc5cJIf0nHY9Xja-DYEMDD3vZ0wY9PKyMlZ2laDzppBfdzZ-gm7_Wc_bNjWZZV-n2G-7aZDrvr2WMseeFhvgw2qMdcJE4267vM9xnIL0MmxqDKB7hDGRG01A_tGPNBFgXzCDARB9bTwMc8JNGaanEpuJ7TJQsYYSlKOMEk4iyQt_KPKQK1inVRmZ9NKf8txBZJ4EwVUI-Ny_bPHCDYHLE75jYnjWZu9bCdxZz33Mdd4QrTGbuZGp7tjubu747s1xrfhrh_6bodOI5lufOp5bnO_bCt0c4lvUy7YDaKJA_RMkVJo5vOacPm8xrNw</span></span>
-<span><span class="fu"><a href="https://rich-iannone.github.io/DiagrammeR/reference/mermaid.html" class="external-link">mermaid</a></span><span class="op">(</span><span class="st">'</span></span>
-<span><span class="st">flowchart TD</span></span>
-<span><span class="st">  classDef default fill:lightblue;</span></span>
-<span><span class="st">  classDef default2 fill:lightgreen;</span></span>
-<span><span class="st"></span></span>
-<span><span class="st">  style tryn fill: lightyellow</span></span>
-<span><span class="st">  style model fill: lightyellow</span></span>
-<span><span class="st"></span></span>
-<span><span class="st">  SetModel("Set Population Model")</span></span>
-<span><span class="st">  SetES("Set Population Values&lt;br/&gt;&lt;i&gt;pop_es&lt;/i&gt;")</span></span>
-<span><span class="st">  OneN("Try one n&lt;br/&gt;&lt;i&gt;power4test()&lt;/i&gt;")</span></span>
-<span><span class="st">  SeveralN("Try several ns&lt;br/&gt;&lt;i&gt;power4test_by_n()&lt;/i&gt;")</span></span>
-<span><span class="st">  SearchN("Search n with target power&lt;br/&gt;&lt;i&gt;x_from_power()&lt;/i&gt;")</span></span>
-<span><span class="st">  AnotherN("Try another n&lt;br/&gt;&lt;i&gt;power4test()&lt;/i&gt;")</span></span>
-<span><span class="st"></span></span>
-<span><span class="st">  subgraph model ["Model"]</span></span>
-<span><span class="st"></span></span>
-<span><span class="st">  SetModel:::default2 --&gt; SetES:::default2</span></span>
-<span><span class="st"></span></span>
-<span><span class="st">  end</span></span>
-<span><span class="st"></span></span>
-<span><span class="st">  SetES ==&gt; OneN</span></span>
-<span><span class="st">  OneN -.-&gt; SetES</span></span>
-<span><span class="st"></span></span>
-<span><span class="st">  subgraph tryn ["Power"]</span></span>
-<span><span class="st"></span></span>
-<span><span class="st">  OneN &lt;==&gt; AnotherN</span></span>
-<span><span class="st">  AnotherN &lt;==&gt; SeveralN</span></span>
-<span><span class="st">  AnotherN &lt;==&gt; SearchN</span></span>
-<span><span class="st">  OneN &lt;==&gt; SeveralN</span></span>
-<span><span class="st">  OneN &lt;==&gt; SearchN</span></span>
-<span><span class="st">  SeveralN &lt;==&gt; SearchN</span></span>
-<span><span class="st"></span></span>
-<span><span class="st">  end</span></span>
-<span><span class="st"></span></span>
-<span><span class="st">  AnotherN -.-&gt; SetES</span></span>
-<span><span class="st">  SeveralN -.-&gt; SetES</span></span>
-<span><span class="st">  SearchN -.-&gt; SetES</span></span>
-<span><span class="st">'</span>, height <span class="op">=</span> <span class="fl">760</span>, width <span class="op">=</span> <span class="fl">500</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <div id="htmlwidget-ac96cb3ee4656e2e9ec3" style="width:500px;height:760px;" class="DiagrammeR html-widget"></div>
 <script type="application/json" data-for="htmlwidget-ac96cb3ee4656e2e9ec3">{"x":{"diagram":"\nflowchart TD\n  classDef default fill:lightblue;\n  classDef default2 fill:lightgreen;\n\n  style tryn fill: lightyellow\n  style model fill: lightyellow\n\n  SetModel(\"Set Population Model\")\n  SetES(\"Set Population Values<br/><i>pop_es<\/i>\")\n  OneN(\"Try one n<br/><i>power4test()<\/i>\")\n  SeveralN(\"Try several ns<br/><i>power4test_by_n()<\/i>\")\n  SearchN(\"Search n with target power<br/><i>x_from_power()<\/i>\")\n  AnotherN(\"Try another n<br/><i>power4test()<\/i>\")\n\n  subgraph model [\"Model\"]\n\n  SetModel:::default2 --> SetES:::default2\n\n  end\n\n  SetES ==> OneN\n  OneN -.-> SetES\n\n  subgraph tryn [\"Power\"]\n\n  OneN <==> AnotherN\n  AnotherN <==> SeveralN\n  AnotherN <==> SearchN\n  OneN <==> SeveralN\n  OneN <==> SearchN\n  SeveralN <==> SearchN\n\n  end\n\n  AnotherN -.-> SetES\n  SeveralN -.-> SetES\n  SearchN -.-> SetES\n"},"evals":[],"jsHooks":[]}</script><p class="caption">
@@ -175,7 +133,7 @@ to the target power is found).</p>
 </h2>
 <p>Estimate the power for a sample size.</p>
 <p>The code:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://sfcheung.github.io/power4mome/">power4mome</a></span><span class="op">)</span></span>
 <span><span class="co">#</span></span>
 <span><span class="co"># ====== Model: Form ======</span></span>
@@ -228,7 +186,7 @@ to the target power is found).</p>
 <span><span class="co"># ====== Compute the Rejection Rate ======</span></span>
 <span><span class="fu"><a href="../reference/rejection_rates.html">rejection_rates</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span></span></code></pre></div>
 <p>The results:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">out</span>,</span>
 <span>      data_long <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt;</span></span>
@@ -350,7 +308,7 @@ to the target power is found).</p>
 <p>To rerun the simulation to estimate power for another sample
 size.</p>
 <p>The code:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#</span></span>
 <span><span class="co"># ===== Reuse the output of power4test() =====</span></span>
 <span><span class="co"># Estimate power for n = 150</span></span>
@@ -361,7 +319,7 @@ size.</p>
 <span><span class="co"># ===== Compute Rejection Rate (Power) =====</span></span>
 <span><span class="fu"><a href="../reference/rejection_rates.html">rejection_rates</a></span><span class="op">(</span><span class="va">out_new_n</span><span class="op">)</span></span></code></pre></div>
 <p>The results:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/rejection_rates.html">rejection_rates</a></span><span class="op">(</span><span class="va">out_new_n</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                     test test_label   p.v reject r.cilo r.cihi</span></span>
 <span><span class="co">#&gt; 1 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.290  0.246  0.334</span></span>
@@ -380,7 +338,7 @@ size.</p>
 <p>Rerun the simulation to estimate power for with several sample
 sizes.</p>
 <p>The code:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#</span></span>
 <span><span class="co"># ===== Reuse the output of power4test() =====</span></span>
 <span><span class="co"># Estimate power for n = 200, 250, 300</span></span>
@@ -392,7 +350,7 @@ sizes.</p>
 <span><span class="co"># ===== Compute Rejection Rate (Power) =====</span></span>
 <span><span class="fu"><a href="../reference/rejection_rates.html">rejection_rates</a></span><span class="op">(</span><span class="va">out_ns</span><span class="op">)</span></span></code></pre></div>
 <p>The results:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/rejection_rates.html">rejection_rates</a></span><span class="op">(</span><span class="va">out_ns</span><span class="op">)</span></span>
 <span><span class="co">#&gt;     n                   test test_label   p.v reject r.cilo r.cihi</span></span>
 <span><span class="co">#&gt; 1 200 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.323  0.277  0.368</span></span>
@@ -421,7 +379,7 @@ size.</p>
 <p>It can take some time to run if estimated power of the sample size is
 too different from the target power.</p>
 <p>The code:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#</span></span>
 <span><span class="co"># ===== Reuse the output of power4test() =====</span></span>
 <span><span class="co"># Call x_from_power()</span></span>
@@ -439,7 +397,7 @@ too different from the target power.</p>
 <span><span class="co"># ===== Plot the (Crude) Power Curve =====</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">n_power_80</span><span class="op">)</span></span></code></pre></div>
 <p>The results:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#</span></span>
 <span><span class="co"># ===== Print the Summary =====</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">n_power_80</span><span class="op">)</span></span>
@@ -463,7 +421,7 @@ too different from the target power.</p>
 <span><span class="co">#&gt; === Technical Information ===</span></span>
 <span><span class="co">#&gt;</span></span>
 <span><span class="co">#&gt; - The range of values explored: 100 to 1492</span></span>
-<span><span class="co">#&gt; - Time spent in the search: 2.22 mins</span></span>
+<span><span class="co">#&gt; - Time spent in the search: 2.122 mins</span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt;</span></span>
 <span><span class="co">#&gt; Model Type: Nonlinear Regression Model</span></span>
@@ -527,7 +485,7 @@ calling <code><a href="../reference/x_from_power.html">x_from_power()</a></code>
 <p>It can take some time to run if estimated levels of power of the
 sample sizes are too different from the target power.</p>
 <p>The code:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#</span></span>
 <span><span class="co"># ===== Reuse the output of power4test_by_n() =====</span></span>
 <span><span class="co"># Call x_from_power()</span></span>
@@ -545,7 +503,7 @@ sample sizes are too different from the target power.</p>
 <span><span class="co"># ===== Plot the (Crude) Power Curve =====</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">n_power_80_ns</span><span class="op">)</span></span></code></pre></div>
 <p>The results:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#</span></span>
 <span><span class="co"># ===== Print the Summary =====</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">n_power_80_ns</span><span class="op">)</span></span>
@@ -569,7 +527,7 @@ sample sizes are too different from the target power.</p>
 <span><span class="co">#&gt; === Technical Information ===</span></span>
 <span><span class="co">#&gt;</span></span>
 <span><span class="co">#&gt; - The range of values explored: 200 to 807</span></span>
-<span><span class="co">#&gt; - Time spent in the search: 2.061 mins</span></span>
+<span><span class="co">#&gt; - Time spent in the search: 1.974 mins</span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt;</span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression</span></span>
@@ -635,7 +593,7 @@ steps.</p>
 <code>y ~ m</code> path to medium (.30) (population indirect effect
 .09).</p>
 <p>The code:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model_es2</span> <span class="op">&lt;-</span></span>
 <span><span class="st">"</span></span>
 <span><span class="st">m ~ x: m</span></span>
@@ -661,7 +619,7 @@ steps.</p>
 <span><span class="co"># ====== Compute the Rejection Rate ======</span></span>
 <span><span class="fu"><a href="../reference/rejection_rates.html">rejection_rates</a></span><span class="op">(</span><span class="va">out2</span><span class="op">)</span></span></code></pre></div>
 <p>The results:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">out2</span>,</span>
 <span>      data_long <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt;</span></span>
@@ -779,7 +737,7 @@ steps.</p>
 <p>For illustration, go directly to searching by
 <code><a href="../reference/x_from_power.html">x_from_power()</a></code>:</p>
 <p>The code:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#</span></span>
 <span><span class="co"># ===== Reuse the output of power4test() =====</span></span>
 <span><span class="va">n2_power_80</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/x_from_power.html">x_from_power</a></span><span class="op">(</span><span class="va">out2</span>,</span>
@@ -792,7 +750,7 @@ steps.</p>
 <span><span class="co"># ===== Plot the (Crude) Power Curve =====</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">n2_power_80</span><span class="op">)</span></span></code></pre></div>
 <p>The results:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#</span></span>
 <span><span class="co"># ===== Print the Summary =====</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">n2_power_80</span><span class="op">)</span></span>
@@ -816,7 +774,7 @@ steps.</p>
 <span><span class="co">#&gt; === Technical Information ===</span></span>
 <span><span class="co">#&gt;</span></span>
 <span><span class="co">#&gt; - The range of values explored: 100 to 120</span></span>
-<span><span class="co">#&gt; - Time spent in the search: 2.039 mins</span></span>
+<span><span class="co">#&gt; - Time spent in the search: 2.087 mins</span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt;</span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression</span></span>
