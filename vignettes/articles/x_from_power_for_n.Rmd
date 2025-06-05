@@ -670,7 +670,7 @@ summary(out_n)
 #> === Technical Information ===
 #> 
 #> - The range of values explored: 50 to 126 
-#> - Time spent in the search: 2.122 mins 
+#> - Time spent in the search: 1.985 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
