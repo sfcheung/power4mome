@@ -510,15 +510,16 @@ miss_pattern <- function(data) {
   # Assume data is either a data frame or a matrix
   n <- nrow(data)
   p <- ncol(data)
-  if (all(complete.cases(data))) {
+  if (sum(complete.cases(data)) == n) {
     # Complete data
     out <- matrix(1,
                   ncol = p,
                   nrow = 1)
     out[1, ] <- 1
-    rownames(out) <- nrow(dat)
+    colnames(out) <- colnames(data)
+    rownames(out) <- nrow(data)
     nvalid <- rep(n, p)
-    names(nvalid) <- colnames(dat)
+    names(nvalid) <- colnames(data)
     attr(out, "nvalid") <- nvalid
     return(out)
   }

@@ -19,4 +19,19 @@ expect_equal(attr(out, "nvalid"),
 expect_equal(as.numeric(rownames(out)[1]),
              sum(complete.cases(dat)))
 
+# Complete data
+set.seed(1234)
+n <- 123
+p <- 8
+dat <- matrix(rnorm(n * p),
+              n, p)
+dat <- as.data.frame(dat)
+
+out <- miss_pattern(dat)
+expect_equal(nrow(out), 1)
+expect_equal(colnames(out),
+             colnames(dat))
+expect_equal(unique(attr(out, "nvalid")),
+             n)
+
 })
