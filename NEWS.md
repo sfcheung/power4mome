@@ -1,4 +1,4 @@
-# power4mome 0.0.1.57
+# power4mome 0.0.1.58
 
 - Initialized the package. (0.0.0.9000)
 
@@ -425,3 +425,6 @@
 
 - Rename `gen_missing` to `process_data`.
   (0.0.1.57)
+
+- Added support for printing missing
+  data pattern. (0.0.1.58)

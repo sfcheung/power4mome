@@ -1,6 +1,6 @@
 ---
 title: "Sample Size Given Desired Power"
-date: "2025-06-01"
+date: "2025-06-05"
 output:
   rmarkdown::html_vignette:
     options:
@@ -268,6 +268,14 @@ print(out,
 #>    .y                 0.870  
 #>     x                 1.000  
 #> 
+#> == Population Indirect Effect(s) ==
+#> 
+#> ==  Indirect Effect(s)   ==
+#>               ind
+#> x -> m -> y 0.150
+#> 
+#>  - The 'ind' column shows the indirect effects.
+#>  
 #> ======================= Data Information =======================
 #> 
 #> Number of Replications:  2 
@@ -489,6 +497,14 @@ print(out,
 #>    .y                 0.870  
 #>     x                 1.000  
 #> 
+#> == Population Indirect Effect(s) ==
+#> 
+#> ==  Indirect Effect(s)   ==
+#>               ind
+#> x -> m -> y 0.150
+#> 
+#>  - The 'ind' column shows the indirect effects.
+#>  
 #> ======================= Data Information =======================
 #> 
 #> Number of Replications:  50 
@@ -653,8 +669,8 @@ summary(out_n)
 #> 
 #> === Technical Information ===
 #> 
-#> - The range of values explored: 50 to 133 
-#> - Time spent in the search: 1.98 mins 
+#> - The range of values explored: 50 to 126 
+#> - Time spent in the search: 2.122 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -683,13 +699,13 @@ summary(out_n)
 #>     n                   test test_label   p.v reject r.cilo r.cihi
 #> 1  50 test_indirect: x->m->y       Test 1.000  0.400  0.264  0.536
 #> 2  75 test_indirect: x->m->y       Test 1.000  0.690  0.599  0.781
-#> 3  80 test_indirect: x->m->y       Test 1.000  0.682  0.637  0.728
+#> 3  89 test_indirect: x->m->y       Test 1.000  0.772  0.731  0.814
 #> 4  96 test_indirect: x->m->y       Test 1.000  0.720  0.632  0.808
 #> 5 100 test_indirect: x->m->y       Test 1.000  0.750  0.665  0.835
 #> 6 103 test_indirect: x->m->y       Test 1.000  0.782  0.742  0.823
-#> 7 104 test_indirect: x->m->y       Test 1.000  0.856  0.806  0.905
+#> 7 104 test_indirect: x->m->y       Test 1.000  0.855  0.810  0.899
 #> 8 114 test_indirect: x->m->y       Test 1.000  0.780  0.699  0.861
-#> 9 133 test_indirect: x->m->y       Test 1.000  0.892  0.862  0.923
+#> 9 126 test_indirect: x->m->y       Test 1.000  0.870  0.837  0.903
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.

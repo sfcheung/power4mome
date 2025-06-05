@@ -3,6 +3,7 @@
 \name{sim_data}
 \alias{sim_data}
 \alias{print.sim_data}
+\alias{pool_sim_data}
 \title{Simulate Datasets Based on a Model}
 \usage{
 sim_data(
@@ -33,6 +34,8 @@ sim_data(
   variances = NULL,
   ...
 )
+
+pool_sim_data(object, as_list = FALSE)
 }
 \arguments{
 \item{nrep}{The number of replications
@@ -185,6 +188,20 @@ Default depends on \code{est_type}. If
 then default is \code{TRUE} If
 only \code{"standardized"} is in \code{est_type},
 then default is \code{FALSE}.}
+
+\item{object}{Either a \code{sim_data}
+object or a \code{power4test} object.
+It extracts the simulated data
+and return them, combined to one
+single data frame or, if \code{as_list}
+is \code{TRUE}, as a list of data
+frames.}
+
+\item{as_list}{Logical. If \code{TRUE},
+the simulated datasets is returned as one
+single data frame. If \code{FALSE}, they
+are returned as a list of data
+frames.}
 }
 \value{
 The function \code{\link[=sim_out]{sim_out()}} returns
@@ -228,12 +245,19 @@ about the model.
 The \code{print} method of \code{sim_data}
 returns \code{x} invisibly. It is called for
 its side effect.
+
+The function \code{pool_sim_data()} returns
+either one data frame or a list
+of data frames, depending on the
+argument \code{as_list}
 }
 \description{
 Get a model matrix and
 effect size specification and
 simulate a number of datasets,
 along with other information.
+
+The function
 }
 \details{
 The function \code{\link[=sim_data]{sim_data()}} generates

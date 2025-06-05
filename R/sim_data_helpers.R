@@ -502,3 +502,93 @@ implied_sigma <- function(mm) {
   sigma <- solve(diag(p) - beta) %*% psi %*% t(solve(diag(p) - beta))
   return(sigma)
 }
+
+#' @noRd
+
+miss_pattern <- function(data) {
+  # It is an internal function
+  # Assume data is either a data frame or a matrix
+  n <- nrow(data)
+  p <- ncol(data)
+  if (sum(stats::complete.cases(data)) == n) {
+    # Complete data
+    out <- matrix(1,
+                  ncol = p,
+                  nrow = 1)
+    out[1, ] <- 1
+    colnames(out) <- colnames(data)
+    rownames(out) <- nrow(data)
+    nvalid <- rep(n, p)
+    names(nvalid) <- colnames(data)
+    attr(out, "nvalid") <- nvalid
+    return(out)
+  }
+  data_na <- !is.na(data)
+  pattern <- apply(data_na,
+                   MARGIN = 1,
+                   \(x) paste0(as.numeric(x), collapse = ""))
+  pattern_n0 <- table(pattern)
+  pattern_n <- as.numeric(pattern_n0)
+  names(pattern_n) <- names(pattern_n0)
+  pattern_n <- pattern_n[order(names(pattern_n), decreasing = TRUE)]
+  n_pattern <- length(pattern_n)
+  tmpfct <- function(x) {
+    as.numeric(strsplit(x, "")[[1]])
+  }
+  out <- do.call(rbind,
+                 lapply(names(pattern_n),
+                        tmpfct))
+  colnames(out) <- colnames(data)
+  rownames(out) <- pattern_n
+
+  nvalid <- colSums(diag(pattern_n) %*% out)
+  names(nvalid) <- colnames(data)
+  attr(out, "nvalid") <- nvalid
+  out
+}
+
+#' @noRd
+print_miss_pattern <- function(mp,
+                               digits = 2) {
+  mp_out <- mp
+  mp_count <- as.numeric(rownames(mp))
+  n <- sum(as.numeric(rownames(mp)))
+  mp_prop <- mp_count / n
+  mp_prop_str <- formatC(mp_prop,
+                          digits = digits + 2,
+                          format = "f")
+  mp_prop_str <- gsub("0.", ".", mp_prop_str,
+                      fixed = TRUE)
+  mp_nvalid <- attr(mp, "nvalid")
+  mp_prop_valid_str <- formatC(mp_nvalid / n,
+                                digits = digits,
+                                format = "f")
+  mp_prop_valid_str <- gsub("0.", ".", mp_prop_valid_str,
+                            fixed = TRUE)
+  mp_out[] <- ifelse(as.character(mp) == 1,
+                      yes = "O",
+                      no = "-")
+  mp_p <- rowSums(mp)
+  mp_out <- cbind(`P Prop` = mp_prop_str,
+                  mp_out,
+                  `# V` = mp_p)
+  mp_out <- rbind(mp_out,
+                  c("V Prop", mp_prop_valid_str, ""))
+  rownames(mp_out) <- NULL
+  print(as.data.frame(mp_out),
+        quote = FALSE,
+        row.names = FALSE,
+        right = TRUE)
+  cat("\nNote:\n")
+  catwrap("- 'O': A variable has data in a pattern.",
+          exdent = 2)
+  catwrap("- '-': A variable has missing data in a pattern.",
+          exdent = 2)
+  catwrap("- P Prop: Proportion of each missing pattern.",
+          exdent = 2)
+  catwrap("- # V: Number of non-missing variable(s) in a pattern.",
+          exdent = 2)
+  catwrap("- V Prop: Proportion of non-missing data of each variables.",
+          exdent = 2)
+  cat("\n")
+}
