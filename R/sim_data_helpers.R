@@ -502,3 +502,46 @@ implied_sigma <- function(mm) {
   sigma <- solve(diag(p) - beta) %*% psi %*% t(solve(diag(p) - beta))
   return(sigma)
 }
+
+#' @noRd
+
+miss_pattern <- function(data) {
+  # It is an internal function
+  # Assume data is either a data frame or a matrix
+  n <- nrow(data)
+  p <- ncol(data)
+  if (all(complete.cases(data))) {
+    # Complete data
+    out <- matrix(1,
+                  ncol = p,
+                  nrow = 1)
+    out[1, ] <- 1
+    rownames(out) <- nrow(dat)
+    nvalid <- rep(n, p)
+    names(nvalid) <- colnames(dat)
+    attr(out, "nvalid") <- nvalid
+    return(out)
+  }
+  data_na <- !is.na(data)
+  pattern <- apply(data_na,
+                   MARGIN = 1,
+                   \(x) paste0(as.numeric(x), collapse = ""))
+  pattern_n0 <- table(pattern)
+  pattern_n <- as.numeric(pattern_n0)
+  names(pattern_n) <- names(pattern_n0)
+  pattern_n <- pattern_n[order(names(pattern_n), decreasing = TRUE)]
+  n_pattern <- length(pattern_n)
+  tmpfct <- function(x) {
+    as.numeric(strsplit(x, "")[[1]])
+  }
+  out <- do.call(rbind,
+                 lapply(names(pattern_n),
+                        tmpfct))
+  colnames(out) <- colnames(data)
+  rownames(out) <- pattern_n
+
+  nvalid <- colSums(diag(pattern_n) %*% out)
+  names(nvalid) <- colnames(data)
+  attr(out, "nvalid") <- nvalid
+  out
+}
