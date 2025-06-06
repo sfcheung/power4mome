@@ -32,7 +32,8 @@ x_from_power(
   upper_bound = NULL,
   nls_control = list(),
   nls_args = list(),
-  save_sim_all = FALSE
+  save_sim_all = FALSE,
+  algorithm = c("power_curve", "bisection")
 )
 
 \method{print}{x_from_power}(x, digits = 3, ...)
@@ -269,6 +270,11 @@ value of \code{x} is not saved,
 to reduce the size of the output.
 If set to \code{TRUE}, the size of the
 output can be very large in size.}
+
+\item{algorithm}{The algorithm for
+finding \code{x}. Can be \code{"power_curve"}
+of \code{"bisection"}. The latter is
+ignored for now.}
 
 \item{digits}{The number of digits
 after the decimal when printing
