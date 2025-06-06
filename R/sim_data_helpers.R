@@ -592,3 +592,15 @@ print_miss_pattern <- function(mp,
           exdent = 2)
   cat("\n")
 }
+
+#' @noRd
+pure_x <- function(fit) {
+  union(lavaan::lavNames(fit, "ov.x"),
+        lavaan::lavNames(fit, "lv.x"))
+}
+
+#' @noRd
+pure_y <- function(fit) {
+  union(lavaan::lavNames(fit, "ov.y"),
+        lavaan::lavNames(fit, "lv.y"))
+}

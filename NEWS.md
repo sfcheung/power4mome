@@ -1,4 +1,4 @@
-# power4mome 0.0.1.59
+# power4mome 0.0.1.60
 
 - Initialized the package. (0.0.0.9000)
 
@@ -431,3 +431,8 @@
 
 - Improved the search algorithm of
   `x_from_power()`. (0.0.1.59)
+
+- Update `print.sim_data()` to compute
+  indirect paths only for "pure x-variables
+  and "pure y-variables", by default.
+  (0.0.1.60)

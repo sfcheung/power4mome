@@ -530,6 +530,14 @@ sim_data <- function(nrep = 10,
 #' only `"standardized"` is in `est_type`,
 #' then default is `FALSE`.
 #'
+#' @param pure_x,pure_y When Logical. When
+#' printing indirect effects, whether
+#' only "pure" x-variables (variables
+#' not predicted by another other variables)
+#' and/or "pure" y-variables (variables
+#' that do not predict any other variables
+#' other than indicators) will be included
+#' in enumerating the paths.
 #'
 #' @return
 #' The `print` method of `sim_data`
@@ -545,6 +553,8 @@ print.sim_data <- function(x,
                            fit_to_all_args = list(),
                            est_type = "standardized",
                            variances = NULL,
+                           pure_x = TRUE,
+                           pure_y = TRUE,
                            ...) {
 
   est_type <- match.arg(est_type,
@@ -619,7 +629,10 @@ print.sim_data <- function(x,
 
   # Multigroup models automatically supported
   has_w <- FALSE
-  all_ind <- tryCatch(pop_indirect(x),
+  all_ind <- tryCatch(pop_indirect(x,
+                                   pure_x = pure_x,
+                                   pure_y = pure_y,
+                                   progress = TRUE),
                        warning = function(w) w)
   if (inherits(all_ind, "warning")) {
     if (grepl("moderator", all_ind$message)) {
@@ -990,7 +1003,10 @@ sim_data_i <- function(repid = 1,
 }
 
 #' @noRd
-pop_indirect <- function(x) {
+pop_indirect <- function(x,
+                         progress = TRUE,
+                         pure_x = TRUE,
+                         pure_y = TRUE) {
   x_i <- x[[1]]
   ptable0 <- lavaan::parameterTable(x_i$fit0)
   fit_to_all_args0 <- list(model = x_i$model_final,
@@ -1010,9 +1026,28 @@ pop_indirect <- function(x) {
     p_terms <- NULL
   }
 
+  x_terms <- NULL
+  y_terms <- NULL
+  if (pure_x) {
+    x_terms <- pure_x(x[[1]]$fit0)
+  }
+  if (pure_y) {
+    y_terms <- pure_y(x[[1]]$fit0)
+  }
+
   # Multigroup models automatically supported
   all_paths <- manymome::all_indirect_paths(x[[1]]$fit0,
-                                            exclude = p_terms)
+                                            exclude = p_terms,
+                                            x = x_terms,
+                                            y = y_terms)
+  if (progress) {
+    cat(paste("(Computing indirect effects for",
+              length(all_paths),
+              "paths ...)\n\n"))
+  }
+  if (length(all_paths) == 0) {
+    return(NULL)
+  }
   all_ind <- manymome::many_indirect_effects(all_paths,
                                             fit = fit_all,
                                             est = ptable0)
