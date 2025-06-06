@@ -6,11 +6,12 @@ articles:
   power4test_latent_mediation: power4test_latent_mediation.html
   articles/power4test_workflow: power4test_workflow.html
   articles/sim_data_i_workflow: sim_data_i_workflow.html
+  articles/template_mediation_obs_serial: template_mediation_obs_serial.html
   articles/template_mediation_obs: template_mediation_obs.html
   articles/x_from_power_for_es: x_from_power_for_es.html
   articles/x_from_power_for_n: x_from_power_for_n.html
   articles/x_from_power_workflow: x_from_power_workflow.html
-last_built: 2025-06-06T00:18Z
+last_built: 2025-06-06T00:56Z
 urls:
   reference: https://sfcheung.github.io/power4mome/reference
   article: https://sfcheung.github.io/power4mome/articles
