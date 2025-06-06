@@ -25,8 +25,12 @@ power_algorithm_bisection <- function(object,
                                       lower_bound = NULL,
                                       upper_bound = NULL,
                                       nls_control = list(),
-                                      nls_args = list()) {
+                                      nls_args = list(),
+                                      extend_maxiter = 3,
+                                      what = c("point", "ub", "lb")) {
   extendInt <- match.arg(extendInt)
+  what <- match.arg(what)
+  x_type <- x
 
   a <- abs(stats::qnorm((1 - ci_level) / 2))
   power_tolerance_in_interval <- a * sqrt(target_power * (1 - target_power) / final_nrep)
@@ -128,7 +132,7 @@ power_algorithm_bisection <- function(object,
                  ci_level = ci_level,
                  progress = progress,
                  digits = digits,
-                 nrep = nrep,
+                 nrep = final_nrep,
                  R = R,
                  what = what,
                  simulation_progress = simulation_progress,
@@ -147,7 +151,7 @@ power_algorithm_bisection <- function(object,
                  ci_level = ci_level,
                  progress = progress,
                  digits = digits,
-                 nrep = nrep,
+                 nrep = final_nrep,
                  R = R,
                  what = what,
                  simulation_progress = simulation_progress,
@@ -167,7 +171,7 @@ power_algorithm_bisection <- function(object,
                                       pop_es_name = pop_es_name,
                                       target_power = target_power,
                                       ci_level = ci_level,
-                                      nrep = nrep,
+                                      nrep = final_nrep,
                                       R = R,
                                       what = what,
                                       simulation_progress = simulation_progress,
@@ -184,7 +188,7 @@ power_algorithm_bisection <- function(object,
                                       extend_maxiter = extend_maxiter,
                                       trace = trace,
                                       digits = digits,
-                                      store_output = store_output)
+                                      store_output = TRUE)
 
   if (interval_updated$extend_status == 0) {
     if (lower != interval_updated$lower) {
@@ -231,7 +235,7 @@ power_algorithm_bisection <- function(object,
                  ci_level = ci_level,
                  progress = progress,
                  digits = digits,
-                 nrep = nrep,
+                 nrep = final_nrep,
                  R = R,
                  what = what,
                  simulation_progress = simulation_progress,
@@ -360,140 +364,140 @@ power_algorithm_bisection <- function(object,
 #' @noRd
 # Too many duplication in arguments
 # Do not use for now.
-bisection_for_power <- function(f,
-                                interval,
-                                ...,
-                                x_type,
-                                lower = min(interval),
-                                upper = max(interval),
-                                start = mean(c(lower, upper)),
-                                f.lower = f(lower, ...),
-                                f.upper = f(upper, ...),
-                                extendInt = c("no", "yes", "downX", "upX"),
-                                tol = .05,
-                                maxiter = 10,
-                                trace = 0,
-                                progress = TRUE,
-                                digits = 3,
-                                store_output = FALSE,
-                                by_x_1 = NULL,
-                                extend_maxiter = 2,
-                                lower_hard = 10,
-                                upper_hard = 1000) {
+# bisection_for_power <- function(f,
+#                                 interval,
+#                                 ...,
+#                                 x_type,
+#                                 lower = min(interval),
+#                                 upper = max(interval),
+#                                 start = mean(c(lower, upper)),
+#                                 f.lower = f(lower, ...),
+#                                 f.upper = f(upper, ...),
+#                                 extendInt = c("no", "yes", "downX", "upX"),
+#                                 tol = .05,
+#                                 maxiter = 10,
+#                                 trace = 0,
+#                                 progress = TRUE,
+#                                 digits = 3,
+#                                 store_output = FALSE,
+#                                 by_x_1 = NULL,
+#                                 extend_maxiter = 2,
+#                                 lower_hard = 10,
+#                                 upper_hard = 1000) {
 
-  extendInt <- match.arg(extendInt)
+#   extendInt <- match.arg(extendInt)
 
-  do_search <- TRUE
+#   do_search <- TRUE
 
-  # Fix the interval
-  interval_updated <- extend_interval(f = f,
-                                      x = x,
-                                      pop_es_name = pop_es_name,
-                                      target_power = target_power,
-                                      ci_level = ci_level,
-                                      nrep = nrep,
-                                      R = R,
-                                      what = what,
-                                      simulation_progress = simulation_progress,
-                                      save_sim_all = save_sim_all,
-                                      progress = progress,
-                                      x_type = x_type,
-                                      lower = lower,
-                                      upper = upper,
-                                      f.lower = f.lower,
-                                      f.upper = f.upper,
-                                      lower_hard = lower_hard,
-                                      upper_hard = upper_hard,
-                                      extendInt = extendInt,
-                                      extend_maxiter = extend_maxiter,
-                                      trace = trace,
-                                      digits = digits,
-                                      store_output = store_output)
-  if (interval_updated$extend_status == 0) {
-    if (lower != interval_updated$lower) {
-      by_x_1 <- c(by_x_1, attr(interval_updated$f.lower, "output"))
-    }
-    if (upper != interval_updated$upper) {
-      by_x_1 <- c(by_x_1, attr(interval_updated$f.upper, "output"))
-    }
-    lower <- interval_updated$lower
-    upper <- interval_updated$upper
-    f.lower <- as.numeric(interval_updated$f.lower)
-    f.upper <- as.numeric(interval_updated$f.upper)
-    if ((start <= lower) || (start >= upper)) {
-      start <- mean(c(lower, upper))
-    }
-  } else {
-    do_search <- FALSE
-  }
+#   # Fix the interval
+#   interval_updated <- extend_interval(f = f,
+#                                       x = x,
+#                                       pop_es_name = pop_es_name,
+#                                       target_power = target_power,
+#                                       ci_level = ci_level,
+#                                       nrep = nrep,
+#                                       R = R,
+#                                       what = what,
+#                                       simulation_progress = simulation_progress,
+#                                       save_sim_all = save_sim_all,
+#                                       progress = progress,
+#                                       x_type = x_type,
+#                                       lower = lower,
+#                                       upper = upper,
+#                                       f.lower = f.lower,
+#                                       f.upper = f.upper,
+#                                       lower_hard = lower_hard,
+#                                       upper_hard = upper_hard,
+#                                       extendInt = extendInt,
+#                                       extend_maxiter = extend_maxiter,
+#                                       trace = trace,
+#                                       digits = digits,
+#                                       store_output = store_output)
+#   if (interval_updated$extend_status == 0) {
+#     if (lower != interval_updated$lower) {
+#       by_x_1 <- c(by_x_1, attr(interval_updated$f.lower, "output"))
+#     }
+#     if (upper != interval_updated$upper) {
+#       by_x_1 <- c(by_x_1, attr(interval_updated$f.upper, "output"))
+#     }
+#     lower <- interval_updated$lower
+#     upper <- interval_updated$upper
+#     f.lower <- as.numeric(interval_updated$f.lower)
+#     f.upper <- as.numeric(interval_updated$f.upper)
+#     if ((start <= lower) || (start >= upper)) {
+#       start <- mean(c(lower, upper))
+#     }
+#   } else {
+#     do_search <- FALSE
+#   }
 
-  # Solution already found?
-  if (abs(f.upper) < tol) {
-    within_i <- TRUE
-    do_search <- FALSE
-  } else if (abs(f.lower) < tol) {
-    within_i <- TRUE
-    do_search <- FALSE
-  }
+#   # Solution already found?
+#   if (abs(f.upper) < tol) {
+#     within_i <- TRUE
+#     do_search <- FALSE
+#   } else if (abs(f.lower) < tol) {
+#     within_i <- TRUE
+#     do_search <- FALSE
+#   }
 
-  if (do_search) {
-    x_i <- start
-    digits_x <- digits
-    if (x_type == "n") {
-      x_i <- ceiling(x_i)
-      digits_x <- 0
-    }
-    f.lower_i <- f.lower
-    f.upper_i <- f.upper
-    lower_i <- lower
-    upper_i <- upper
-    status <- 0
+#   if (do_search) {
+#     x_i <- start
+#     digits_x <- digits
+#     if (x_type == "n") {
+#       x_i <- ceiling(x_i)
+#       digits_x <- 0
+#     }
+#     f.lower_i <- f.lower
+#     f.upper_i <- f.upper
+#     lower_i <- lower
+#     upper_i <- upper
+#     status <- 0
 
-    i <- 1
-    while (i <= maxiter) {
-      if (trace) {
-        cat("\nIteration #", i, "\n\n")
-      }
-      out_i <- do.call(f,
-                       list(x_i,
-                            x_type = x_type,
-                            progress = progress,
-                            store_output = store_output))
-      output_i <- attr(out_i, "output")
-      out_i <- as.numeric(out_i)
-      # TODO:
-      # - Check NA, error, etc.
-      # Convergence?
-      within_i <- abs(out_i) < tol
-      if (within_i) {
-        status <- 1
-        break
-      }
-      # Update interval
-      if (x_type == "n") {
-        x_i <- ceiling(x_i)
-      }
-      if (sign(out_i) == sign(f.lower_i)) {
-        lower_i <- x_i
-        f.lower_i <- out_i
-      } else {
-        upper_i <- x_i
-        f.upper_i <- out_i
-      }
-      x_i <- mean(c(lower_i, upper_i))
-      if (trace) {
-        print_interval(lower = lower_i,
-                       upper = upper_i,
-                       digits = digits,
-                       x_type = x_type)
-      }
-      i <- i + 1
-    }
-  } else {
-    # No iteration
-  }
-  # Finalize the output
-}
+#     i <- 1
+#     while (i <= maxiter) {
+#       if (trace) {
+#         cat("\nIteration #", i, "\n\n")
+#       }
+#       out_i <- do.call(f,
+#                        list(x_i,
+#                             x_type = x_type,
+#                             progress = progress,
+#                             store_output = store_output))
+#       output_i <- attr(out_i, "output")
+#       out_i <- as.numeric(out_i)
+#       # TODO:
+#       # - Check NA, error, etc.
+#       # Convergence?
+#       within_i <- abs(out_i) < tol
+#       if (within_i) {
+#         status <- 1
+#         break
+#       }
+#       # Update interval
+#       if (x_type == "n") {
+#         x_i <- ceiling(x_i)
+#       }
+#       if (sign(out_i) == sign(f.lower_i)) {
+#         lower_i <- x_i
+#         f.lower_i <- out_i
+#       } else {
+#         upper_i <- x_i
+#         f.upper_i <- out_i
+#       }
+#       x_i <- mean(c(lower_i, upper_i))
+#       if (trace) {
+#         print_interval(lower = lower_i,
+#                        upper = upper_i,
+#                        digits = digits,
+#                        x_type = x_type)
+#       }
+#       i <- i + 1
+#     }
+#   } else {
+#     # No iteration
+#   }
+#   # Finalize the output
+# }
 
 
 #' @noRd
