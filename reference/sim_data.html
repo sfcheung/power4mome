@@ -15,7 +15,7 @@ The function"><meta property="og:image" content="https://sfcheung.github.io/powe
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.59</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.60</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -95,6 +95,8 @@ along with other information.</p>
 <span>  fit_to_all_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  est_type <span class="op">=</span> <span class="st">"standardized"</span>,</span>
 <span>  variances <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  pure_x <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  pure_y <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -298,6 +300,17 @@ Default depends on <code>est_type</code>. If
 then default is <code>TRUE</code> If
 only <code>"standardized"</code> is in <code>est_type</code>,
 then default is <code>FALSE</code>.</p></dd>
+
+
+<dt id="arg-pure-x-pure-y">pure_x, pure_y<a class="anchor" aria-label="anchor" href="#arg-pure-x-pure-y"></a></dt>
+<dd><p>When Logical. When
+printing indirect effects, whether
+only "pure" x-variables (variables
+not predicted by another other variables)
+and/or "pure" y-variables (variables
+that do not predict any other variables
+other than indicators) will be included
+in enumerating the paths.</p></dd>
 
 
 <dt id="arg-object">object<a class="anchor" aria-label="anchor" href="#arg-object"></a></dt>
@@ -958,6 +971,8 @@ the specification in <code>pop_es</code>.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    .m                 0.910  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    .y                 0.910  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     x                 1.000  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> (Computing indirect effects for 1 paths ...)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> == Population Indirect Effect(s) ==</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
