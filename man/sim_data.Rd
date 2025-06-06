@@ -32,6 +32,8 @@ sim_data(
   fit_to_all_args = list(),
   est_type = "standardized",
   variances = NULL,
+  pure_x = TRUE,
+  pure_y = TRUE,
   ...
 )
 
@@ -188,6 +190,15 @@ Default depends on \code{est_type}. If
 then default is \code{TRUE} If
 only \code{"standardized"} is in \code{est_type},
 then default is \code{FALSE}.}
+
+\item{pure_x, pure_y}{When Logical. When
+printing indirect effects, whether
+only "pure" x-variables (variables
+not predicted by another other variables)
+and/or "pure" y-variables (variables
+that do not predict any other variables
+other than indicators) will be included
+in enumerating the paths.}
 
 \item{object}{Either a \code{sim_data}
 object or a \code{power4test} object.
