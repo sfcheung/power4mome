@@ -83,7 +83,7 @@ print(out,
 out <- power4test(nrep = 400,
                   model = model,
                   pop_es = model_es,
-                  n = 100,
+                  n = 50,
                   R = 1000,
                   ci_type = "mc",
                   test_fun = test_indirect_effect,
@@ -116,10 +116,10 @@ The code:
 ```{r med_simple_new_n, eval=TRUE, results="hide", message=FALSE}
 #
 # ===== Reuse the output of power4test() =====
-# Estimate power for n = 150
-# Set n to 150
+# Estimate power for n = 60
+# Set n to 60
 out_new_n <- power4test(out,
-                        n = 150)
+                        n = 60)
 #
 # ===== Compute Rejection Rate (Power) =====
 rejection_rates(out_new_n)
@@ -141,10 +141,10 @@ The code:
 ```{r med_simple_ns, eval=TRUE, results="hide", message=FALSE}
 #
 # ===== Reuse the output of power4test() =====
-# Estimate power for n = 200, 250, 300
+# Estimate power for n = 70, 80, 90
 # Use power4test_by_n()
 out_ns <- power4test_by_n(out,
-                          n = c(200, 250, 300),
+                          n = c(70, 80, 90),
                           by_seed = 5789)
 #
 # ===== Compute Rejection Rate (Power) =====
@@ -256,18 +256,19 @@ plot(n_power_80_ns)
 If necessary, change the population value(s)
 and repeat the steps.
 
-For example, set both the `m ~ x` path
-and `y ~ m` path to medium (.30)
-(population indirect effect .09).
+For example, set all the paths along
+the indirect effect to medium (.30).
 
 The code:
 
 ```{r med_simple2, eval=TRUE, results="hide", message=FALSE}
 model_es2 <-
 "
-m ~ x: m
-y ~ m: m
-y ~ x: m
+m1 ~ x: m
+m2 ~ m1: m
+m3 ~ m2: m
+y ~ m3: m
+y ~ x: s
 "
 #
 # ====== Estimate the Power ======
@@ -279,7 +280,7 @@ out2 <- power4test(nrep = 400,
                    ci_type = "mc",
                    test_fun = test_indirect_effect,
                    test_args = list(x = "x",
-                                    m = "m",
+                                    m = c("m1", "m2", "m3"),
                                     y = "y",
                                     mc_ci = TRUE),
                    iseed = 1234,
