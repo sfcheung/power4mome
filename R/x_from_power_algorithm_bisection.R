@@ -607,3 +607,34 @@ gen_objective <- function(object,
 
   f
 }
+
+#' @noRd
+bisection_check_solution <- function(f_i,
+                                     target_power = .80,
+                                     nrep = 10,
+                                     ci_level = .95,
+                                     what = c("point", "ub", "lb"),
+                                     tol = 1e-2,
+                                     goal = c("ci_hit", "close_enough")) {
+  goal <- match.arg(goal)
+  a <- abs(stats::qnorm((1 - ci_level) / 2))
+  se_i <- sqrt(f_i * (1 - f_i) / nrep)
+  cilb <- f_i - a * se_i
+  ciub <- f_i + a * se_i
+
+  if (goal == "ci_hit") {
+    # Ignore what
+    if ((cilb < target_power) && (ciub > target_power)) {
+      return(TRUE)
+    } else {
+      return(FALSE)
+    }
+  }
+  # goal == "close_enough"
+  chk_point <- switch(what,
+                      point = f_i,
+                      ub = ciub,
+                      lb = cilb)
+  out <- abs(chk_point - target_power) < tol
+  out
+}
