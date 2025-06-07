@@ -244,7 +244,6 @@ power_algorithm_bisection <- function(object,
     # by_x_1 <- c(by_x_1, output_i)
     # No need. lower and upper always in by_x_1
   }
-
   if ((interval_updated$extend_status != 0) &&
       (!ok_lower && !ok_upper)) {
     # Interval not OK and no bounds are the solution
@@ -252,7 +251,8 @@ power_algorithm_bisection <- function(object,
       cat(names(interval_updated$extend_status), "\n")
       cat("None of the bounds are solution.\n")
       cat("Try another interval.\n")
-
+      # Should quit
+      do_search <- FALSE
     }
   }
 
@@ -289,6 +289,13 @@ power_algorithm_bisection <- function(object,
       by_x_1 <- c(by_x_1, output_i,
                   skip_checking_models = TRUE)
       reject_i <- rejection_rates(output_i)$reject
+
+      if (progress) {
+        cat("- Rejection Rates:\n")
+        tmp <- rejection_rates(by_x_1)
+        print(tmp)
+        cat("\n")
+      }
 
       # TODO:
       # - Check NA, error, etc.
