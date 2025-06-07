@@ -304,7 +304,7 @@ out <- power4test(nrep = 50,
                                    m = "m",
                                    y = "y",
                                    mc_ci = TRUE),
-                  iseed = 1234,
+                  iseed = 2345,
                   parallel = TRUE)
 ```
 
@@ -395,16 +395,11 @@ do the search.
 This is a simplified description of
 how `x_from_power()` works:
 
-- It rerun the simulation and test
+- It reruns the simulation and test
   in an output of `power4test()`
   for different sample sizes, and then
   estimate the power levels for each
   of them.
-
-- It will try to estimate the relation
-  between the power and the sample size,
-  and select the next sample size(s) to
-  try.
 
 - It will adopt a sample size as the
   solution if (a) the confidence interval
@@ -420,7 +415,7 @@ out_n <- x_from_power(out,
                       x = "n",
                       target_power = .80,
                       final_nrep = 400,
-                      seed = 1234)
+                      seed = 4567)
 ```
 
 The argument used above:
