@@ -315,7 +315,8 @@ extend_interval <- function(f,
                             extend_maxiter = 3,
                             trace = 0,
                             digits = 3,
-                            by_x_1 = NULL) {
+                            by_x_1 = NULL,
+                            overshoot = .5) {
   status_msg <- c("Interval OK" = 0,
                   "Interval not OK but extendInd is no" = 1,
                   "Interval above the solution but extendInd is not yes or downX" = 2,
@@ -394,7 +395,7 @@ extend_interval <- function(f,
         intercept <- -slope * upper +  f.upper
         upper <- lower
         f.upper <- f.lower
-        lower <- 0.5 * -intercept / slope
+        lower <- overshoot * -intercept / slope
         if (x_type == "n") {
           lower <- ceiling(lower)
         }
@@ -436,7 +437,7 @@ extend_interval <- function(f,
         intercept <- -slope * upper +  f.upper
         lower <- upper
         f.lower <- f.upper
-        upper <- 1.5 * -intercept / slope
+        upper <- (1 + overshoot) * -intercept / slope
         if (x_type == "n") {
           upper <- ceiling(upper)
         }
