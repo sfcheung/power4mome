@@ -45,7 +45,8 @@ tmp3 <- x_from_power(out3,
                      final_nrep = 80,
                      max_trials = 4,
                      x_interval = c(0, .90),
-                     seed = 1234)
+                     seed = 1234,
+                     algorithm = "power_curve")
 
 tmp3
 summary(tmp3)

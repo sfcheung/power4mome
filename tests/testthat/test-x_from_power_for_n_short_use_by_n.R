@@ -46,6 +46,7 @@ expect_no_error(tmp <- x_from_power(out,
                     max_trials = 1,
                     seed = 1234,
                     progress = TRUE,
-                    simulation_progress = FALSE))
+                    simulation_progress = FALSE,
+                    algorithm = "power_curve"))
 expect_true(all(c(80, 85) %in% tmp$x_tried))
 })

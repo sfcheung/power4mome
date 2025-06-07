@@ -26,13 +26,11 @@ x_from_power(
   nrep_steps = 1,
   seed = NULL,
   x_include_interval = FALSE,
-  power_model = NULL,
-  start = NULL,
-  lower_bound = NULL,
-  upper_bound = NULL,
-  nls_control = list(),
-  nls_args = list(),
-  save_sim_all = FALSE
+  power_curve_args = list(power_model = NULL, start = NULL, lower_bound = NULL,
+    upper_bound = NULL, nls_control = list(), nls_args = list()),
+  save_sim_all = FALSE,
+  algorithm = c("bisection", "power_curve"),
+  control = list()
 )
 
 \method{print}{x_from_power}(x, digits = 3, ...)
@@ -204,63 +202,16 @@ values in \code{x_interval} are mandatory
 to be included in the values
 to be searched.}
 
-\item{power_model}{The nonlinear
-model to be used when estimating
-the relation between power and
-\code{x}. Should be a formula
-acceptable by \code{\link[stats:nls]{stats::nls()}},
-with \code{reject} on the left-hand side,
-and \code{x}
-on the right-hand
-side, with one or more parameters.
-Can also be set to a list of
-models.
-Users rarely need to change the
-default value. If \code{NULL}, the default,
-then the default model(s) will be
-determined by \code{\link[=power_curve]{power_curve()}}.}
-
-\item{start}{A named numeric vector
-of the starting values for \code{power_model}
-when fitted by \code{\link[stats:nls]{stats::nls()}}. If
-\code{power_model} is a list, this should
-be a list of the same length.
-Users rarely need to change the
-default values.}
-
-\item{lower_bound}{A named numeric vector
-of the lower bounds for parameters
-in \code{power_model}
-when fitted by \code{\link[stats:nls]{stats::nls()}}. If
-\code{power_model} is a list, this should
-be a list of the same length.
-Users rarely need to change the
-default values.}
-
-\item{upper_bound}{A named numeric vector
-of the upper bounds for parameters
-in \code{power_model}
-when fitted by \code{\link[stats:nls]{stats::nls()}}. If
-\code{power_model} is a list, this should
-be a list of the same length.
-Users rarely need to change the
-default values.}
-
-\item{nls_control}{A named list of
-arguments to be passed the \code{control}
-argument of \code{\link[stats:nls]{stats::nls()}} when
-estimating the relation between
-power and \code{x}. The values will
-override internal default values,
-and also override \code{nls_args}.
-Use this argument with cautions.}
-
-\item{nls_args}{A named list of
-arguments to be used when calling
-\code{\link[stats:nls]{stats::nls()}}. Used to override
-internal default, such as the
-algorithm (default is \code{"port"}).
-Use this argument with cautions.}
+\item{power_curve_args}{A named
+list of arguments to be passed
+\code{\link[=power_curve]{power_curve()}} when estimating
+the relation between power and \code{x}
+(sample size or effect size). Please
+refer to \code{\link[=power_curve]{power_curve()}} on available
+arguments. There is one except:
+\code{power_model} is mapped to
+the \code{formula} argument of
+\code{\link[=power_curve]{power_curve()}}.}
 
 \item{save_sim_all}{If \code{FALSE},
 the default, the data in each
@@ -269,6 +220,16 @@ value of \code{x} is not saved,
 to reduce the size of the output.
 If set to \code{TRUE}, the size of the
 output can be very large in size.}
+
+\item{algorithm}{The algorithm for
+finding \code{x}. Can be \code{"power_curve"}
+or \code{"bisection"}.}
+
+\item{control}{A named list of
+additional
+arguments to be passed to the
+algorithm to be used. For advanced
+users.}
 
 \item{digits}{The number of digits
 after the decimal when printing
@@ -412,16 +373,69 @@ from these pages:
 \item For effect sizes: \url{https://sfcheung.github.io/power4mome/articles/x_from_power_for_es.html}
 }
 
-The technical internal workflow of
-of \code{\link[=x_from_power]{x_from_power()}} can be found in
-this page: \url{https://sfcheung.github.io/power4mome/articles/x_from_power_workflow.html}.
-
 The \code{print} method only print
 basic information. Call the
 \code{summary} method of \code{x_from_power} objects
 (\code{\link[=summary.x_from_power]{summary.x_from_power()}}) and its
 \code{print} method for detailed results
 }
+\section{Algorithms}{
+Two algorithms are currently available,
+the simple (though inefficient)
+bisection method, and a method that
+makes use of the estimated crude power
+curve.
+
+Unlike typical root-finding problems,
+the prediction of the level of power
+is stochastic. Moreover, the computational
+cost is high when Monte Carlo or
+bootstrap confidence intervals are
+used to do a test because the estimation
+of the power for one single value of
+\code{x} can sometimes take one minute or
+longer. Therefore, in addition to
+the simple bisection method, a method,
+named \emph{power curve} method, was also
+specifically developed for this
+scenario.
+\subsection{Bisection Method}{
+
+This method, \code{algorithm = "bisection"},
+basically start with
+an interval that probably enclose the
+value of \code{x} with the target power,
+and then successively narrow this
+interval. The mid-point of this
+interval is used as the estimate.
+Though simple, there are cases in
+which it can be slow. Nevertheless,
+preliminary examination suggests that
+this method is good enough for common
+scenarios. Therefore, this method is
+the default algorithm ().
+}
+
+\subsection{Power Curve Method}{
+
+This method, \code{algorithm = "power_curve"},
+starts with a crude
+power curve based on a few points.
+This tentative model is then used
+to suggest the values to examine in
+the next iteration. The form, not
+just the parameters, of the
+model can change across iterations,
+as more and more data points are
+available.
+
+The technical internal workflow of
+this method implemented in
+\code{\link[=x_from_power]{x_from_power()}} can be found in
+this page: \url{https://sfcheung.github.io/power4mome/articles/x_from_power_workflow.html}.
+}
+}
+
 \examples{
 
 # Specify the population model
