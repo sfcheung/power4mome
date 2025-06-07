@@ -55,6 +55,17 @@ out_es_b <- x_from_power(out,
 
 summary(out_es_b)
 
+out_es_b <- x_from_power(out,
+                         x = "es",
+                         pop_es_name = "y~m",
+                         target_power = .80,
+                         final_nrep = 400,
+                         seed = 4567,
+                         algorithm = "power_curve")
+
+summary(out_es_b)
+
+
 out_es_ab <- x_from_power(out,
                          x = "es",
                          pop_es_name = ".ind.(x->m->y)",
