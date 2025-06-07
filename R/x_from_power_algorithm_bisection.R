@@ -28,14 +28,13 @@ power_algorithm_bisection <- function(object,
                                       nls_control = list(),
                                       nls_args = list(),
                                       extend_maxiter = 3,
-                                      what = c("point", "ub", "lb")) {
+                                      what = c("point", "ub", "lb"),
+                                      goal = c("ci_hit", "close_enough")) {
   extendInt <- match.arg(extendInt)
   what <- match.arg(what)
-  x_type <- x
+  goal <- match.arg(goal)
 
-  a <- abs(stats::qnorm((1 - ci_level) / 2))
-  power_tolerance_in_interval <- a * sqrt(target_power * (1 - target_power) / final_nrep)
-  power_tolerance_in_final <- a * sqrt(target_power * (1 - target_power) / final_nrep)
+  x_type <- x
 
   # Create the objective function
   f <- gen_objective(object = object,
@@ -577,8 +576,8 @@ gen_objective <- function(object,
 
     out2_i <- switch(what,
                      point = power_i - target_power,
-                     upper = ci_i[2] - target_power,
-                     lower = ci_i[1] - target_power)
+                     ub = ci_i[2] - target_power,
+                     lb = ci_i[1] - target_power)
     if (store_output) {
       attr(out2_i, "output") <- out_i
     }
