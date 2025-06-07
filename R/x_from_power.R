@@ -622,7 +622,7 @@ x_from_power <- function(object,
     }
     if (x == "es") {
       extendInt <- match.arg(extendInt,
-                             choices = c("no", "yes", "upX", "downX"))
+                             choices = c("yes", "no", "upX", "downX"))
     }
   }
 
