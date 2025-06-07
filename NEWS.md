@@ -1,4 +1,4 @@
-# power4mome 0.0.1.60
+# power4mome 0.0.1.61
 
 - Initialized the package. (0.0.0.9000)
 
@@ -436,3 +436,7 @@
   indirect paths only for "pure x-variables
   and "pure y-variables", by default.
   (0.0.1.60)
+
+- Added the bisection method to
+  `x_from_power()` and set it as the
+  default algorithm. (0.0.1.61)
