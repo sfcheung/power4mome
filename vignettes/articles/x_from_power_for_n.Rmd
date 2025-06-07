@@ -1,6 +1,6 @@
 ---
 title: "Sample Size Given Desired Power"
-date: "2025-06-05"
+date: "2025-06-07"
 output:
   rmarkdown::html_vignette:
     options:
@@ -268,6 +268,8 @@ print(out,
 #>    .y                 0.870  
 #>     x                 1.000  
 #> 
+#> (Computing indirect effects for 1 paths ...)
+#> 
 #> == Population Indirect Effect(s) ==
 #> 
 #> ==  Indirect Effect(s)   ==
@@ -390,7 +392,7 @@ out <- power4test(nrep = 50,
                                    m = "m",
                                    y = "y",
                                    mc_ci = TRUE),
-                  iseed = 1234,
+                  iseed = 2345,
                   parallel = TRUE)
 ```
 
@@ -497,6 +499,8 @@ print(out,
 #>    .y                 0.870  
 #>     x                 1.000  
 #> 
+#> (Computing indirect effects for 1 paths ...)
+#> 
 #> == Population Indirect Effect(s) ==
 #> 
 #> ==  Indirect Effect(s)   ==
@@ -545,8 +549,8 @@ print(out,
 #> =============== <test_indirect: x->m->y> ===============
 #> 
 #> Mean(s) across replication:
-#>    est   cilo  cihi   sig
-#>  0.139 -0.026 0.337 0.400
+#>    est  cilo  cihi   sig
+#>  0.167 0.003 0.367 0.520
 #> 
 #> - The value 'sig' is the rejection rate.
 #> - If the null hypothesis is false, this is the power.
@@ -566,16 +570,11 @@ do the search.
 This is a simplified description of
 how `x_from_power()` works:
 
-- It rerun the simulation and test
+- It reruns the simulation and test
   in an output of `power4test()`
   for different sample sizes, and then
   estimate the power levels for each
   of them.
-
-- It will try to estimate the relation
-  between the power and the sample size,
-  and select the next sample size(s) to
-  try.
 
 - It will adopt a sample size as the
   solution if (a) the confidence interval
@@ -592,7 +591,7 @@ out_n <- x_from_power(out,
                       x = "n",
                       target_power = .80,
                       final_nrep = 400,
-                      seed = 1234)
+                      seed = 4567)
 ```
 
 The argument used above:
@@ -627,11 +626,11 @@ This is the basic output:
 out_n
 #> Call:
 #> x_from_power(object = out, x = "n", target_power = 0.8, final_nrep = 400, 
-#>     seed = 1234)
+#>     seed = 4567)
 #> Predictor (x): Sample Size 
 #> - Target Power: 0.800 
 #> - Final Value: 103 
-#> - Final Estimated Power: 0.782 
+#> - Final Estimated Power: 0.772 
 #> Call `summary()` for detailed results.
 ```
 
@@ -640,7 +639,7 @@ close to .80 power to detect the indirect effect
 by Monte Carlo interval is
 103. The estimated power
 based on simulation is
-0.782.
+0.772.
 
 To obtain a more detailed results for
 the search, we can use the `summary()`
@@ -654,7 +653,7 @@ summary(out_n)
 #> 
 #> Call:
 #> x_from_power(object = out, x = "n", target_power = 0.8, final_nrep = 400, 
-#>     seed = 1234)
+#>     seed = 4567)
 #> Predictor (x): Sample Size 
 #> 
 #> - Target Power: 0.800 
@@ -662,21 +661,21 @@ summary(out_n)
 #> === Major Results ===
 #> 
 #> - Final Value: 103 
-#> - Final Estimated Power: 0.782 
-#> - Confidence Interval: [0.742; 0.823]
+#> - Final Estimated Power: 0.772 
+#> - Confidence Interval: [0.731; 0.814]
 #> - Level of confidence: 95.0%
 #> - Based on 400 replications.
 #> 
 #> === Technical Information ===
 #> 
-#> - The range of values explored: 50 to 126 
-#> - Time spent in the search: 1.985 mins 
+#> - The range of values explored: 50 to 111 
+#> - Time spent in the search: 3.997 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
 #> 
 #> Call:
-#> power_curve(object = by_x_i, formula = power_model, start = start, 
+#> power_curve(object = by_x_1, formula = power_model, start = power_curve_start, 
 #>     lower_bound = lower_bound, upper_bound = upper_bound, nls_args = nls_args, 
 #>     nls_control = nls_control, verbose = progress)
 #> 
@@ -688,24 +687,20 @@ summary(out_n)
 #> 
 #> Coefficients:
 #> (Intercept)            x  
-#>    -1.59991      0.02858  
+#>    -1.10964      0.02385  
 #> 
-#> Degrees of Freedom: 249 Total (i.e. Null);  248 Residual
-#> Null Deviance:	    321.8 
-#> Residual Deviance: 306.2 	AIC: 310.2
+#> Degrees of Freedom: 1649 Total (i.e. Null);  1648 Residual
+#> Null Deviance:	    1839 
+#> Residual Deviance: 1799 	AIC: 1803
 #> 
 #> - Detailed Results:
 #> 
 #>     n                   test test_label   p.v reject r.cilo r.cihi
-#> 1  50 test_indirect: x->m->y       Test 1.000  0.400  0.264  0.536
-#> 2  75 test_indirect: x->m->y       Test 1.000  0.690  0.599  0.781
-#> 3  89 test_indirect: x->m->y       Test 1.000  0.772  0.731  0.814
-#> 4  96 test_indirect: x->m->y       Test 1.000  0.720  0.632  0.808
-#> 5 100 test_indirect: x->m->y       Test 1.000  0.750  0.665  0.835
-#> 6 103 test_indirect: x->m->y       Test 1.000  0.782  0.742  0.823
-#> 7 104 test_indirect: x->m->y       Test 1.000  0.855  0.810  0.899
-#> 8 114 test_indirect: x->m->y       Test 1.000  0.780  0.699  0.861
-#> 9 126 test_indirect: x->m->y       Test 1.000  0.870  0.837  0.903
+#> 1  50 test_indirect: x->m->y       Test 1.000  0.520  0.382  0.658
+#> 2  77 test_indirect: x->m->y       Test 1.000  0.685  0.639  0.731
+#> 3  94 test_indirect: x->m->y       Test 1.000  0.745  0.702  0.788
+#> 4 103 test_indirect: x->m->y       Test 1.000  0.772  0.731  0.814
+#> 5 111 test_indirect: x->m->y       Test 1.000  0.845  0.810  0.880
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.
@@ -719,7 +714,7 @@ summary(out_n)
 
 It reports the 95% confidence interval
 of the estimated power,
-[0.742; 0.823].
+[0.731; 0.814].
 
 It also reports major technical
 information regarding
