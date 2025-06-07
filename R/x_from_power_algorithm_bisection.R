@@ -29,7 +29,8 @@ power_algorithm_bisection <- function(object,
                                       nls_args = list(),
                                       extend_maxiter = 3,
                                       what = c("point", "ub", "lb"),
-                                      goal = c("ci_hit", "close_enough")) {
+                                      goal = c("ci_hit", "close_enough"),
+                                      tol = .02) {
   extendInt <- match.arg(extendInt)
   what <- match.arg(what)
   goal <- match.arg(goal)
@@ -46,7 +47,7 @@ power_algorithm_bisection <- function(object,
                      digits = digits,
                      nrep = final_nrep,
                      R = R,
-                     what = "point",
+                     what = what,
                      simulation_progress = simulation_progress,
                      save_sim_all = save_sim_all,
                      store_output = TRUE)
@@ -99,12 +100,10 @@ power_algorithm_bisection <- function(object,
     by_x_1 <- c(by_x_1, attr(f.upper, "output"))
   }
 
-  # TODO:
-  # - Check whether lower or upper is already a solution
-
   do_search <- TRUE
 
   # Fix the interval
+  # The original interval is returned if it is OK
   interval_updated <- extend_interval(f = f,
                                       x = x,
                                       pop_es_name = pop_es_name,
@@ -148,8 +147,44 @@ power_algorithm_bisection <- function(object,
     do_search <- FALSE
   }
 
-  # TODO:
   # - Check whether lower or upper is already a solution
+  # lower
+  output_lower <- attr(f.lower, "output")
+  reject_lower <- rejection_rates(output_lower)$reject
+  ok_lower <- bisection_check_solution(f_i = reject_lower,
+                                       target_power = target_power,
+                                       nrep = final_nrep,
+                                       ci_level = ci_level,
+                                       what = what,
+                                       goal = goal,
+                                       tol = tol)
+  output_upper <- attr(f.upper, "output")
+  reject_upper <- rejection_rates(output_upper)$reject
+  ok_upper <- bisection_check_solution(f_i = reject_upper,
+                                       target_power = target_power,
+                                       nrep = final_nrep,
+                                       ci_level = ci_level,
+                                       what = what,
+                                       goal = goal,
+                                       tol = tol)
+
+  if (ok_lower || ok_upper) {
+    do_search <- FALSE
+    ci_hit <- switch(goal,
+                     ci_hit = TRUE,
+                     close_enough = NA)
+    if (ok_lower) {
+      x_i <- lower
+      out_i <- f.lower
+      output_i <- output_lower
+      reject_i <- reject_lower
+    } else {
+      x_i <- upper
+      out_i <- f.upper
+      output_i <- output_upper
+      reject_i <- reject_upper
+    }
+  }
 
   if (do_search) {
     x_i <- start
@@ -165,7 +200,7 @@ power_algorithm_bisection <- function(object,
     i <- 1
     while (i <= max_trials) {
       if (progress) {
-        cat("\nIteration #", i, "\n\n")
+        cat("\nIteration #", i, "\n")
       }
       out_i <- f(x_i = x_i,
                  x = x,
@@ -181,22 +216,26 @@ power_algorithm_bisection <- function(object,
                  save_sim_all = save_sim_all,
                  store_output = TRUE)
       output_i <- attr(out_i, "output")
-      by_x_1 <- c(by_x_1, output_i)
-      out_i <- as.numeric(out_i)
+      reject_i <- rejection_rates(output_i)$reject
+
       # TODO:
       # - Check NA, error, etc.
       # Convergence?
-      by_ci_i <- rejection_rates_add_ci(output_i,
-                                        level = ci_level)
-      ci_i <- unlist(by_ci_i[1, c("reject_ci_lo", "reject_ci_hi")])
-      ci_lower_i <- ci_i[1]
-      ci_upper_i <- ci_i[2]
-      if ((ci_lower_i < target_power) &&
-          (ci_upper_i > target_power)) {
-        ci_hit <- TRUE
+      ok <- bisection_check_solution(f_i = reject_i,
+                                     target_power = target_power,
+                                     nrep = final_nrep,
+                                     ci_level = ci_level,
+                                     what = what,
+                                     goal = goal,
+                                     tol = tol)
+      if (ok) {
+        ci_hit <- switch(goal,
+                         ci_hit = TRUE,
+                         close_enough = NA)
         solution_found <- TRUE
         break
       }
+
       # Update interval
       if (x_type == "n") {
         x_i <- ceiling(x_i)
@@ -257,32 +296,50 @@ power_algorithm_bisection <- function(object,
   # in by_x_1.
 
   # ** solution_found **
-  # TRUE is an acceptable solution is found
+  # TRUE if an acceptable solution is found
+
+  if (do_search) {
+    # Store the last results,
+    # regardless of solution
+    by_x_1 <- c(by_x_1, output_i)
+    out_i <- as.numeric(out_i)
+    by_ci_i <- rejection_rates_add_ci(output_i,
+                                      level = ci_level)
+    ci_i <- unlist(by_ci_i[1, c("reject_ci_lo", "reject_ci_hi")])
+
+    i2 <- match(x_i, x_tried)
+    by_x_ci <- rejection_rates_add_ci(by_x_1,
+                                      level = ci_level)
+    x_out <- x_i
+    power_out <- unlist(by_ci_i[1, "reject"])
+    nrep_out <- unlist(by_ci_i[1, "nrep"])
+    ci_out <- ci_i
+    by_x_out <- by_ci_i
+  } else {
+    x_out <- NA
+    power_out <- NA
+    nrep_out <- NA
+    ci_out <- NA
+    by_x_out <- NA
+  }
+
+  # Available regardless of do_search
 
   fit_1 <- power_curve(by_x_1,
-                       formula = power_model,
-                       start = power_curve_start,
-                       lower_bound = lower_bound,
-                       upper_bound = upper_bound,
-                       nls_control = nls_control,
-                       nls_args = nls_args,
-                       verbose = progress)
-
+                      formula = power_model,
+                      start = power_curve_start,
+                      lower_bound = lower_bound,
+                      upper_bound = upper_bound,
+                      nls_control = nls_control,
+                      nls_args = nls_args,
+                      verbose = progress)
   x_tried <- switch(x,
                     n = as.numeric(names(by_x_1)),
                     es = sapply(by_x_1,
                                 \(x) {attr(x, "pop_es_value")},
                                 USE.NAMES = FALSE))
-  i2 <- match(x_i, x_tried)
-  by_x_ci <- rejection_rates_add_ci(by_x_1,
-                                    level = ci_level)
-  x_out <- x_i
-  power_out <- unlist(by_ci_i[1, "reject"])
-  nrep_out <- unlist(by_ci_i[1, "nrep"])
-  ci_out <- ci_i
-  by_x_out <- by_ci_i
 
-  # The final x_i are always returned.
+  # The final x_i are always returned if available
   # ci_hit is used to decide whether
   # final x_i is a solution.
   out <- list(by_x_1 = by_x_1,
@@ -536,7 +593,7 @@ gen_objective <- function(object,
                     es = formatC(x_i,
                                  digits = digits,
                                  format = "f"))
-      cat("\nTrying x =", tmp, "\n\n")
+      cat("\nTry x =", tmp, "\n")
     }
     out_i <- switch(x,
                     n = power4test_by_n(object,
