@@ -19,7 +19,7 @@ value."><meta property="og:image" content="https://sfcheung.github.io/power4mome
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.60</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.61</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -96,13 +96,11 @@ value.</p>
 <span>  nrep_steps <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  seed <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  x_include_interval <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  power_model <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  start <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  lower_bound <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  upper_bound <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  nls_control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  nls_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  save_sim_all <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  power_curve_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>power_model <span class="op">=</span> <span class="cn">NULL</span>, start <span class="op">=</span> <span class="cn">NULL</span>, lower_bound <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>    upper_bound <span class="op">=</span> <span class="cn">NULL</span>, nls_control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>, nls_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  save_sim_all <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  algorithm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bisection"</span>, <span class="st">"power_curve"</span><span class="op">)</span>,</span>
+<span>  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'x_from_power'</span></span>
@@ -315,74 +313,17 @@ to be included in the values
 to be searched.</p></dd>
 
 
-<dt id="arg-power-model">power_model<a class="anchor" aria-label="anchor" href="#arg-power-model"></a></dt>
-<dd><p>The nonlinear
-model to be used when estimating
-the relation between power and
-<code>x</code>. Should be a formula
-acceptable by <code><a href="https://rdrr.io/r/stats/nls.html" class="external-link">stats::nls()</a></code>,
-with <code>reject</code> on the left-hand side,
-and <code>x</code>
-on the right-hand
-side, with one or more parameters.
-Can also be set to a list of
-models.
-Users rarely need to change the
-default value. If <code>NULL</code>, the default,
-then the default model(s) will be
-determined by <code><a href="power_curve.html">power_curve()</a></code>.</p></dd>
-
-
-<dt id="arg-start">start<a class="anchor" aria-label="anchor" href="#arg-start"></a></dt>
-<dd><p>A named numeric vector
-of the starting values for <code>power_model</code>
-when fitted by <code><a href="https://rdrr.io/r/stats/nls.html" class="external-link">stats::nls()</a></code>. If
-<code>power_model</code> is a list, this should
-be a list of the same length.
-Users rarely need to change the
-default values.</p></dd>
-
-
-<dt id="arg-lower-bound">lower_bound<a class="anchor" aria-label="anchor" href="#arg-lower-bound"></a></dt>
-<dd><p>A named numeric vector
-of the lower bounds for parameters
-in <code>power_model</code>
-when fitted by <code><a href="https://rdrr.io/r/stats/nls.html" class="external-link">stats::nls()</a></code>. If
-<code>power_model</code> is a list, this should
-be a list of the same length.
-Users rarely need to change the
-default values.</p></dd>
-
-
-<dt id="arg-upper-bound">upper_bound<a class="anchor" aria-label="anchor" href="#arg-upper-bound"></a></dt>
-<dd><p>A named numeric vector
-of the upper bounds for parameters
-in <code>power_model</code>
-when fitted by <code><a href="https://rdrr.io/r/stats/nls.html" class="external-link">stats::nls()</a></code>. If
-<code>power_model</code> is a list, this should
-be a list of the same length.
-Users rarely need to change the
-default values.</p></dd>
-
-
-<dt id="arg-nls-control">nls_control<a class="anchor" aria-label="anchor" href="#arg-nls-control"></a></dt>
-<dd><p>A named list of
-arguments to be passed the <code>control</code>
-argument of <code><a href="https://rdrr.io/r/stats/nls.html" class="external-link">stats::nls()</a></code> when
-estimating the relation between
-power and <code>x</code>. The values will
-override internal default values,
-and also override <code>nls_args</code>.
-Use this argument with cautions.</p></dd>
-
-
-<dt id="arg-nls-args">nls_args<a class="anchor" aria-label="anchor" href="#arg-nls-args"></a></dt>
-<dd><p>A named list of
-arguments to be used when calling
-<code><a href="https://rdrr.io/r/stats/nls.html" class="external-link">stats::nls()</a></code>. Used to override
-internal default, such as the
-algorithm (default is <code>"port"</code>).
-Use this argument with cautions.</p></dd>
+<dt id="arg-power-curve-args">power_curve_args<a class="anchor" aria-label="anchor" href="#arg-power-curve-args"></a></dt>
+<dd><p>A named
+list of arguments to be passed
+<code><a href="power_curve.html">power_curve()</a></code> when estimating
+the relation between power and <code>x</code>
+(sample size or effect size). Please
+refer to <code><a href="power_curve.html">power_curve()</a></code> on available
+arguments. There is one except:
+<code>power_model</code> is mapped to
+the <code>formula</code> argument of
+<code><a href="power_curve.html">power_curve()</a></code>.</p></dd>
 
 
 <dt id="arg-save-sim-all">save_sim_all<a class="anchor" aria-label="anchor" href="#arg-save-sim-all"></a></dt>
@@ -393,6 +334,20 @@ value of <code>x</code> is not saved,
 to reduce the size of the output.
 If set to <code>TRUE</code>, the size of the
 output can be very large in size.</p></dd>
+
+
+<dt id="arg-algorithm">algorithm<a class="anchor" aria-label="anchor" href="#arg-algorithm"></a></dt>
+<dd><p>The algorithm for
+finding <code>x</code>. Can be <code>"power_curve"</code>
+or <code>"bisection"</code>.</p></dd>
+
+
+<dt id="arg-control">control<a class="anchor" aria-label="anchor" href="#arg-control"></a></dt>
+<dd><p>A named list of
+additional
+arguments to be passed to the
+algorithm to be used. For advanced
+users.</p></dd>
 
 
 <dt id="arg-digits">digits<a class="anchor" aria-label="anchor" href="#arg-digits"></a></dt>
@@ -519,14 +474,70 @@ values (of <code>x</code>) examined.</p>
 use this function can be found
 from these pages:</p><ul><li><p>For example sizes: <a href="https://sfcheung.github.io/power4mome/articles/x_from_power_for_n.html">https://sfcheung.github.io/power4mome/articles/x_from_power_for_n.html</a></p></li>
 <li><p>For effect sizes: <a href="https://sfcheung.github.io/power4mome/articles/x_from_power_for_es.html">https://sfcheung.github.io/power4mome/articles/x_from_power_for_es.html</a></p></li>
-</ul><p>The technical internal workflow of
-of <code>x_from_power()</code> can be found in
-this page: <a href="https://sfcheung.github.io/power4mome/articles/x_from_power_workflow.html">https://sfcheung.github.io/power4mome/articles/x_from_power_workflow.html</a>.</p>
-<p>The <code>print</code> method only print
+</ul><p>The <code>print</code> method only print
 basic information. Call the
 <code>summary</code> method of <code>x_from_power</code> objects
 (<code><a href="summary.x_from_power.html">summary.x_from_power()</a></code>) and its
 <code>print</code> method for detailed results</p>
+    </div>
+    <div class="section level2">
+    <h2 id="algorithms">Algorithms<a class="anchor" aria-label="anchor" href="#algorithms"></a></h2>
+    <p>Two algorithms are currently available,
+the simple (though inefficient)
+bisection method, and a method that
+makes use of the estimated crude power
+curve.</p>
+<p>Unlike typical root-finding problems,
+the prediction of the level of power
+is stochastic. Moreover, the computational
+cost is high when Monte Carlo or
+bootstrap confidence intervals are
+used to do a test because the estimation
+of the power for one single value of
+<code>x</code> can sometimes take one minute or
+longer. Therefore, in addition to
+the simple bisection method, a method,
+named <em>power curve</em> method, was also
+specifically developed for this
+scenario.</p><div class="section">
+<h3 id="bisection-method">Bisection Method<a class="anchor" aria-label="anchor" href="#bisection-method"></a></h3>
+
+
+<p>This method, <code>algorithm = "bisection"</code>,
+basically start with
+an interval that probably enclose the
+value of <code>x</code> with the target power,
+and then successively narrow this
+interval. The mid-point of this
+interval is used as the estimate.
+Though simple, there are cases in
+which it can be slow. Nevertheless,
+preliminary examination suggests that
+this method is good enough for common
+scenarios. Therefore, this method is
+the default algorithm ().</p>
+</div>
+
+<div class="section">
+<h3 id="power-curve-method">Power Curve Method<a class="anchor" aria-label="anchor" href="#power-curve-method"></a></h3>
+
+
+<p>This method, <code>algorithm = "power_curve"</code>,
+starts with a crude
+power curve based on a few points.
+This tentative model is then used
+to suggest the values to examine in
+the next iteration. The form, not
+just the parameters, of the
+model can change across iterations,
+as more and more data points are
+available.</p>
+<p>The technical internal workflow of
+this method implemented in
+<code>x_from_power()</code> can be found in
+this page: <a href="https://sfcheung.github.io/power4mome/articles/x_from_power_workflow.html">https://sfcheung.github.io/power4mome/articles/x_from_power_workflow.html</a>.</p>
+</div>
+
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
@@ -594,18 +605,26 @@ and <code><a href="power4test_by_es.html">power4test_by_es()</a></code>.</p></di
 <span class="r-in"><span>                           max_trials <span class="op">=</span> <span class="fl">1</span>,</span></span>
 <span class="r-in"><span>                           seed <span class="op">=</span> <span class="fl">1234</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> --- Pre-iteration Search ---</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Do the simulation for the upper bound:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-06-06 00:58:10 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Value(s) to try:  125 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Try x = 125 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Updating the simulation for sample size: 125 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Displaying progress enabled. Set 'progress = FALSE' to hide the progress.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Re-simulate the data:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Fit the model(s):</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Generate Monte Carlo estimates:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Update the test(s):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Update test_parameters: CIs (pars: m~x) :</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Estimated power at n: 1.000, 95.0% confidence interval: [1.000,1.000]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> One of the bounds in the interval is already a solution.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> - 'nls()' estimation skipped when less than 4 values of predictor examined.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Solution found.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> --- Final Stage ---</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-06-07 14:30:21 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Rejection Rates:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     n                             test test_label   p.v reject r.cilo r.cihi</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 100 test_parameters: CIs (pars: m~x)        m~x 1.000  0.800  0.449  1.151</span>
@@ -620,10 +639,9 @@ and <code><a href="power4test_by_es.html">power4test_by_es()</a></code>.</p></di
 <span class="r-out co"><span class="r-pr">#&gt;</span>   on normal approximation.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Refer to the tests for the meanings of other columns.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> - 'nls()' estimation skipped when less than 4 values of predictor examined.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Power Curve:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Estimated Power Curve:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> power_curve(object = by_x_i, formula = power_model, start = start, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> power_curve(object = by_x_1, formula = power_model, start = power_curve_start, </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     lower_bound = lower_bound, upper_bound = upper_bound, nls_args = nls_args, </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     nls_control = nls_control, verbose = progress)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -642,121 +660,7 @@ and <code><a href="power4test_by_es.html">power4test_by_es()</a></code>.</p></di
 <span class="r-out co"><span class="r-pr">#&gt;</span> Residual Deviance: 5.004 	AIC: 9.004</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> --- Trial 1 ---</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-06-06 00:58:12 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Value(s) to try: 98, 99 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Numbers of replications: 5, 5 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Updating the simulation for sample size: 98 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Displaying progress enabled. Set 'progress = FALSE' to hide the progress.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Re-simulate the data:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fit the model(s):</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Generate Monte Carlo estimates:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Update the test(s):</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Update test_parameters: CIs (pars: m~x) :</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Updating the simulation for sample size: 99 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Displaying progress enabled. Set 'progress = FALSE' to hide the progress.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Re-simulate the data:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fit the model(s):</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Generate Monte Carlo estimates:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Update the test(s):</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Update test_parameters: CIs (pars: m~x) :</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Rejection Rates:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     n                             test test_label   p.v reject r.cilo r.cihi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  98 test_parameters: CIs (pars: m~x)        m~x 1.000  0.800  0.449  1.151</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  99 test_parameters: CIs (pars: m~x)        m~x 1.000  0.800  0.449  1.151</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 100 test_parameters: CIs (pars: m~x)        m~x 1.000  0.800  0.449  1.151</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 125 test_parameters: CIs (pars: m~x)        m~x 1.000  1.000  1.000  1.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Notes:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - n: The sample size in a trial.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - p.v: The proportion of valid replications.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - reject: The proportion of 'significant' replications, that is, the</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   rejection rate.If the null hypothesis is true, this is the Type I</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   error rate. If the null hypothesis is false, this is the power.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - r.cilo,r.cihi: The confidence interval of the rejection rate, based</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   on normal approximation.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Refer to the tests for the meanings of other columns.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> - 'nls()' estimation failed. Switch to logistic regression.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Updating the simulation for sample size: 96 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Displaying progress enabled. Set 'progress = FALSE' to hide the progress.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Re-simulate the data:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fit the model(s):</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Generate Monte Carlo estimates:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Update the test(s):</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Update test_parameters: CIs (pars: m~x) :</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Extrapolated value: 96 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Estimated power for 96: 0.8000</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> - 'nls()' estimation failed. Switch to logistic regression.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Power Curve:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> power_curve(object = by_x_1, formula = power_model, start = start, </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     lower_bound = lower_bound, upper_bound = upper_bound, nls_args = nls_args, </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     nls_control = nls_control, verbose = progress)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Predictor: n (Sample Size)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Model:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Call:  stats::glm(formula = reject ~ x, family = "binomial", data = reject1)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Coefficients:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)            x  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    -16.5453       0.1812  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Degrees of Freedom: 19 Total (i.e. Null);  18 Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Null Deviance:	    16.91 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Residual Deviance: 15.09 	AIC: 19.09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Estimated power is close enough to target power (0.8000). (CI: [0.4494,1.1506])</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> --- Final Stage ---</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-06-06 00:58:18 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Rejection Rates:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     n                             test test_label   p.v reject r.cilo r.cihi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  96 test_parameters: CIs (pars: m~x)        m~x 1.000  0.800  0.449  1.151</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  98 test_parameters: CIs (pars: m~x)        m~x 1.000  0.800  0.449  1.151</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  99 test_parameters: CIs (pars: m~x)        m~x 1.000  0.800  0.449  1.151</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 100 test_parameters: CIs (pars: m~x)        m~x 1.000  0.800  0.449  1.151</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 125 test_parameters: CIs (pars: m~x)        m~x 1.000  1.000  1.000  1.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Notes:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - n: The sample size in a trial.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - p.v: The proportion of valid replications.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - reject: The proportion of 'significant' replications, that is, the</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   rejection rate.If the null hypothesis is true, this is the Type I</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   error rate. If the null hypothesis is false, this is the power.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - r.cilo,r.cihi: The confidence interval of the rejection rate, based</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   on normal approximation.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Refer to the tests for the meanings of other columns.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Estimated Power Curve:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> power_curve(object = by_x_1, formula = power_model, start = stats::coef(fit_1), </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     lower_bound = lower_bound, upper_bound = upper_bound, nls_args = nls_args, </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     nls_control = nls_control, verbose = progress)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Predictor: n (Sample Size)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Model:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Call:  stats::glm(formula = reject ~ x, family = "binomial", data = reject1)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Coefficients:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)            x  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    -11.6056       0.1325  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Degrees of Freedom: 24 Total (i.e. Null);  23 Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Null Deviance:	    21.98 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Residual Deviance: 20.21 	AIC: 24.21</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Final Value: 96 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Final Value: 100 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Final Estimated Power: 0.8000 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Confidence Interval: [0.4494; 1.1506]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - CI Level: 95.00%</span>
@@ -774,7 +678,7 @@ and <code><a href="power4test_by_es.html">power4test_by_es()</a></code>.</p></di
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> === Major Results ===</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Final Value: 96 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Final Value: 100 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Final Estimated Power: 0.800 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Confidence Interval: [0.449; 1.151]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Level of confidence: 95.0%</span>
@@ -782,14 +686,14 @@ and <code><a href="power4test_by_es.html">power4test_by_es()</a></code>.</p></di
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> === Technical Information ===</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - The range of values explored: 96 to 125 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Time spent in the search: 8.495 secs </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - The range of values explored: 100 to 125 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Time spent in the search: 0.3622 secs </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - The final crude model for the power-predictor relation:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Model Type: Logistic Regression </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> power_curve(object = by_x_1, formula = power_model, start = stats::coef(fit_1), </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> power_curve(object = by_x_1, formula = power_model, start = power_curve_start, </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     lower_bound = lower_bound, upper_bound = upper_bound, nls_args = nls_args, </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     nls_control = nls_control, verbose = progress)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -801,20 +705,17 @@ and <code><a href="power4test_by_es.html">power4test_by_es()</a></code>.</p></di
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Coefficients:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)            x  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    -11.6056       0.1325  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    -75.3328       0.7672  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Degrees of Freedom: 24 Total (i.e. Null);  23 Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Null Deviance:	    21.98 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Residual Deviance: 20.21 	AIC: 24.21</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Degrees of Freedom: 9 Total (i.e. Null);  8 Residual</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Null Deviance:	    6.502 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Residual Deviance: 5.004 	AIC: 9.004</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Detailed Results:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     n                             test test_label   p.v reject r.cilo r.cihi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  96 test_parameters: CIs (pars: m~x)        m~x 1.000  0.800  0.449  1.151</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  98 test_parameters: CIs (pars: m~x)        m~x 1.000  0.800  0.449  1.151</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  99 test_parameters: CIs (pars: m~x)        m~x 1.000  0.800  0.449  1.151</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 100 test_parameters: CIs (pars: m~x)        m~x 1.000  0.800  0.449  1.151</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 125 test_parameters: CIs (pars: m~x)        m~x 1.000  1.000  1.000  1.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 100 test_parameters: CIs (pars: m~x)        m~x 1.000  0.800  0.449  1.151</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 125 test_parameters: CIs (pars: m~x)        m~x 1.000  1.000  1.000  1.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Notes:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - n: The sample size in a trial.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - p.v: The proportion of valid replications.</span>
