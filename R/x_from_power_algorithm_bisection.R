@@ -13,21 +13,22 @@ power_algorithm_bisection <- function(object,
                                       max_trials = 10,
                                       final_nrep = 400,
                                       R = NULL,
-                                      start = mean(x_interval),
-                                      by_x_1 = by_x_1,
-                                      fit_1 = NULL,
-                                      ci_hit = NULL,
-                                      save_sim_all = FALSE,
-                                      solution_found = FALSE,
-                                      digits = 3,
-                                      lower_hard = switch(x, n = 10, es = 0),
-                                      upper_hard = switch(x, n = 10000, es = .999),
                                       power_model = NULL,
                                       power_curve_start = NULL,
                                       lower_bound = NULL,
                                       upper_bound = NULL,
                                       nls_control = list(),
                                       nls_args = list(),
+                                      save_sim_all = FALSE,
+                                      start = mean(x_interval),
+                                      by_x_1 = by_x_1,
+                                      fit_1 = NULL,
+                                      ci_hit = NULL,
+                                      is_by_x = FALSE,
+                                      solution_found = FALSE,
+                                      digits = 3,
+                                      lower_hard = switch(x, n = 10, es = 0),
+                                      upper_hard = switch(x, n = 10000, es = .999),
                                       extend_maxiter = 3,
                                       what = c("point", "ub", "lb"),
                                       goal = c("ci_hit", "close_enough"),
@@ -313,6 +314,9 @@ power_algorithm_bisection <- function(object,
         f.upper_i <- out_i
       }
       x_i <- mean(c(lower_i, upper_i))
+      if (x_type == "n") {
+        x_i <- ceiling(x_i)
+      }
       if (progress) {
         print_interval(lower = lower_i,
                        upper = upper_i,
@@ -378,7 +382,8 @@ power_algorithm_bisection <- function(object,
     by_ci_i <- rejection_rates_add_ci(output_i,
                                       level = ci_level)
     ci_i <- unlist(by_ci_i[1, c("reject_ci_lo", "reject_ci_hi")])
-
+    x_tried <- get_x_tried(by_x_1,
+                           x = x)
     i2 <- match(x_i, x_tried)
     by_x_ci <- rejection_rates_add_ci(by_x_1,
                                       level = ci_level)
@@ -842,6 +847,27 @@ power_algorithm_bisection_pre_i <- function(object,
     x_i <- sort(c(x_interval, x_i))
   }
   x_i <- sort(unique(x_i))
+  if (length(x_i) == 1) {
+    x_interval_min <- min(x_interval)
+    x_interval_max <- max(x_interval)
+    if ((x_i < x_interval_min) ||
+        (x_i > x_interval_max)) {
+      x_i <- x_interval
+    } else {
+      tmp <- mean(x_interval)
+      if (x_i < tmp) {
+        x_i <- c(x_i, x_interval_max)
+      } else if (x_i > tmp) {
+        x_i <- c(x_i, x_interval_min)
+      } else {
+        x_i <- c(mean(c(x_i, x_interval_min)),
+                 mean(c(x_i, x_interval_max)))
+        x_i <- range(x_i)
+      }
+    }
+  } else {
+    x_i <- range(x_i)
+  }
 
   # if (progress) {
   #   x_i_str <- formatC(x_i,
@@ -882,18 +908,18 @@ power_algorithm_bisection_pre_i <- function(object,
   # TODO:
   # - Write an ax.....by_* function.
   if (x == "n") {
-    class(tmp) <- c("power4test_by_n", class(tmp))
-    names(tmp) <- as.character(x0)
+    class(by_x_i) <- c("power4test_by_n", class(by_x_i))
+    names(by_x_i) <- as.character(x0)
   }
   if (x == "es") {
-    class(tmp) <- c("power4test_by_es", class(tmp))
-    names(tmp) <- paste0(pop_es_name,
+    class(by_x_i) <- c("power4test_by_es", class(by_x_i))
+    names(by_x_i) <- paste0(pop_es_name,
                         " = ",
                           as.character(x0))
-    attr(tmp[[1]], "pop_es_name") <- pop_es_name
-    attr(tmp[[1]], "pop_es_value") <- x0
+    attr(by_x_i[[1]], "pop_es_name") <- pop_es_name
+    attr(by_x_i[[1]], "pop_es_value") <- x0
   }
-  # by_x_i <- c(by_x_i, tmp,
+  # by_x_i <- c(by_x_i, by_x_i,
   #             skip_checking_models = TRUE)
   # }
 
@@ -973,15 +999,16 @@ power_algorithm_bisection_pre_i <- function(object,
   #                                 to = 2,
   #                                 length.out = nrep_steps + 1))
 
-  out <- list(x_i = x_i,
-              by_x_i = by_x_i,
+  out <- list(x_i = NULL,
+              by_x_i = NULL,
               fit_i = NULL,
               by_x_1 = by_x_1,
               fit_1 = fit_1,
               nrep_seq = NULL,
               final_nrep_seq = NULL,
               R_seq = NULL,
-              xs_per_trial_seq = NULL)
+              xs_per_trial_seq = NULL,
+              x_interval_updated = x_i)
 
   return(out)
 }
