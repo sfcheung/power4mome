@@ -1,5 +1,5 @@
 ---
-title: "Workflow of 'x_from_power()'"
+title: "Workflow of 'x_from_power()' Using the 'power_curve' Algorithm"
 output:
   html_document:
     fig.align: "center"
@@ -24,11 +24,14 @@ knitr::opts_chunk$set(
 
 This technical appendix describes the
 workflow of `x_from_power()` in
-[power4mome](https://sfcheung.github.io/power4mome/).
+[power4mome](https://sfcheung.github.io/power4mome/)
+when using the `"power_curve"` algorithm.
 
 # `x_from_power()`
 
-The following is the workflow of `x_from_power()`. Simulation
+The following is the workflow of `x_from_power()`,
+when the algorithm `"power_curve"` is used.
+Simulation
 is to be done for each value of `x`, and this
 can be slow when Monte Carlo or bootstrapping confidence
 intervals are involved in the test. It is not feasible,
