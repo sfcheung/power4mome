@@ -62,8 +62,60 @@
 #'
 #' - For effect sizes: <https://sfcheung.github.io/power4mome/articles/x_from_power_for_es.html>
 #'
+#' # Algorithms
+#'
+#' Two algorithms are currently available,
+#' the simple (though inefficient)
+#' bisection method, and a method that
+#' makes use of the estimated crude power
+#' curve.
+#'
+#' Unlike typical root-finding problems,
+#' the prediction of the level of power
+#' is stochastic. Moreover, the computational
+#' cost is high when Monte Carlo or
+#' bootstrap confidence intervals are
+#' used to do a test because the estimation
+#' of the power for one single value of
+#' `x` can sometimes take one minute or
+#' longer. Therefore, in addition to
+#' the simple bisection method, a method,
+#' named *power curve* method, was also
+#' specifically developed for this
+#' scenario.
+#'
+#' ## Bisection Method
+#'
+#' This method, `algorithm = "bisection"`,
+#' basically start with
+#' an interval that probably enclose the
+#' value of `x` with the target power,
+#' and then successively narrow this
+#' interval. The mid-point of this
+#' interval is used as the estimate.
+#' Though simple, there are cases in
+#' which it can be slow. Nevertheless,
+#' preliminary examination suggests that
+#' this method is good enough for common
+#' scenarios. Therefore, this method is
+#' the default algorithm ().
+#'
+#' ## Power Curve Method
+#'
+#' This method, `algorithm = "power_curve"`,
+#' starts with a crude
+#' power curve based on a few points.
+#' This tentative model is then used
+#' to suggest the values to examine in
+#' the next iteration. The form, not
+#' just the parameters, of the
+#' model can change across iterations,
+#' as more and more data points are
+#' available.
+#'
 #' The technical internal workflow of
-#' of [x_from_power()] can be found in
+#' this method implemented in
+#' [x_from_power()] can be found in
 #' this page: <https://sfcheung.github.io/power4mome/articles/x_from_power_workflow.html>.
 #'
 #' @return
@@ -315,64 +367,76 @@
 #' to be included in the values
 #' to be searched.
 #'
-#' @param power_model The nonlinear
-#' model to be used when estimating
-#' the relation between power and
-#' `x`. Should be a formula
-#' acceptable by [stats::nls()],
-#' with `reject` on the left-hand side,
-#' and `x`
-#' on the right-hand
-#' side, with one or more parameters.
-#' Can also be set to a list of
-#' models.
-#' Users rarely need to change the
-#' default value. If `NULL`, the default,
-#' then the default model(s) will be
-#' determined by [power_curve()].
+#' @param power_curve_args A named
+#' list of arguments to be passed
+#' [power_curve()] when estimating
+#' the relation between power and `x`
+#' (sample size or effect size). Please
+#' refer to [power_curve()] on available
+#' arguments. There is one except:
+#' `power_model` is mapped to
+#' the `formula` argument of
+#' [power_curve()].
 #'
-#' @param start A named numeric vector
-#' of the starting values for `power_model`
-#' when fitted by [stats::nls()]. If
-#' `power_model` is a list, this should
-#' be a list of the same length.
-#' Users rarely need to change the
-#' default values.
-#'
-#' @param lower_bound A named numeric vector
-#' of the lower bounds for parameters
-#' in `power_model`
-#' when fitted by [stats::nls()]. If
-#' `power_model` is a list, this should
-#' be a list of the same length.
-#' Users rarely need to change the
-#' default values.
-#'
-#' @param upper_bound A named numeric vector
-#' of the upper bounds for parameters
-#' in `power_model`
-#' when fitted by [stats::nls()]. If
-#' `power_model` is a list, this should
-#' be a list of the same length.
-#' Users rarely need to change the
-#' default values.
-#'
-#' @param nls_args A named list of
-#' arguments to be used when calling
-#' [stats::nls()]. Used to override
-#' internal default, such as the
-#' algorithm (default is `"port"`).
-#' Use this argument with cautions.
-#'
-#' @param nls_control A named list of
-#' arguments to be passed the `control`
-#' argument of [stats::nls()] when
-#' estimating the relation between
-#' power and `x`. The values will
-#' override internal default values,
-#' and also override `nls_args`.
-#' Use this argument with cautions.
-#'
+# #'
+# #' @param power_model The nonlinear
+# #' model to be used when estimating
+# #' the relation between power and
+# #' `x`. Should be a formula
+# #' acceptable by [stats::nls()],
+# #' with `reject` on the left-hand side,
+# #' and `x`
+# #' on the right-hand
+# #' side, with one or more parameters.
+# #' Can also be set to a list of
+# #' models.
+# #' Users rarely need to change the
+# #' default value. If `NULL`, the default,
+# #' then the default model(s) will be
+# #' determined by [power_curve()].
+# #'
+# #' @param start A named numeric vector
+# #' of the starting values for `power_model`
+# #' when fitted by [stats::nls()]. If
+# #' `power_model` is a list, this should
+# #' be a list of the same length.
+# #' Users rarely need to change the
+# #' default values.
+# #'
+# #' @param lower_bound A named numeric vector
+# #' of the lower bounds for parameters
+# #' in `power_model`
+# #' when fitted by [stats::nls()]. If
+# #' `power_model` is a list, this should
+# #' be a list of the same length.
+# #' Users rarely need to change the
+# #' default values.
+# #'
+# #' @param upper_bound A named numeric vector
+# #' of the upper bounds for parameters
+# #' in `power_model`
+# #' when fitted by [stats::nls()]. If
+# #' `power_model` is a list, this should
+# #' be a list of the same length.
+# #' Users rarely need to change the
+# #' default values.
+# #'
+# #' @param nls_args A named list of
+# #' arguments to be used when calling
+# #' [stats::nls()]. Used to override
+# #' internal default, such as the
+# #' algorithm (default is `"port"`).
+# #' Use this argument with cautions.
+# #'
+# #' @param nls_control A named list of
+# #' arguments to be passed the `control`
+# #' argument of [stats::nls()] when
+# #' estimating the relation between
+# #' power and `x`. The values will
+# #' override internal default values,
+# #' and also override `nls_args`.
+# #' Use this argument with cautions.
+# #'
 #' @param save_sim_all If `FALSE`,
 #' the default, the data in each
 #' `power4test` object for each
@@ -383,8 +447,13 @@
 #'
 #' @param algorithm The algorithm for
 #' finding `x`. Can be `"power_curve"`
-#' of `"bisection"`. The latter is
-#' ignored for now.
+#' or `"bisection"`.
+#'
+#' @param control A named list of
+#' additional
+#' arguments to be passed to the
+#' algorithm to be used. For advanced
+#' users.
 #'
 #' @seealso [power4test()], [power4test_by_n()],
 #' and [power4test_by_es()].
@@ -471,14 +540,15 @@ x_from_power <- function(object,
                          nrep_steps = 1,
                          seed = NULL,
                          x_include_interval = FALSE,
-                         power_model = NULL,
-                         start = NULL,
-                         lower_bound = NULL,
-                         upper_bound = NULL,
-                         nls_control = list(),
-                         nls_args = list(),
+                         power_curve_args = list(power_model = NULL,
+                                                 start = NULL,
+                                                 lower_bound = NULL,
+                                                 upper_bound = NULL,
+                                                 nls_control = list(),
+                                                 nls_args = list()),
                          save_sim_all = FALSE,
-                         algorithm = c("power_curve", "bisection")
+                         algorithm = c("bisection", "power_curve"),
+                         control = list()
                          ) {
 
   # Inputs
@@ -645,31 +715,33 @@ x_from_power <- function(object,
       cat("- Start at", tmp, "\n")
     }
 
-    a_out <- power_algorithm_search_by_curve_pre_i(object = object,
-                                                   x = x,
-                                                   pop_es_name = pop_es_name,
-                                                   target_power = target_power,
-                                                   xs_per_trial = xs_per_trial,
-                                                   x_max = x_max,
-                                                   x_min = x_min,
-                                                   nrep0 = nrep0,
-                                                   R0 = R0,
-                                                   progress = progress,
-                                                   x_include_interval = x_include_interval,
-                                                   x_interval = x_interval,
-                                                   simulation_progress = simulation_progress,
-                                                   save_sim_all = save_sim_all,
-                                                   is_by_x = is_by_x,
-                                                   object_by_org = object_by_org,
-                                                   power_model = power_model,
-                                                   start = start,
-                                                   lower_bound = lower_bound,
-                                                   upper_bound = upper_bound,
-                                                   nls_control = nls_control,
-                                                   nls_args = nls_args,
-                                                   final_nrep = final_nrep,
-                                                   nrep_steps = nrep_steps,
-                                                   final_R = final_R)
+    a_out <- do.call(power_algorithm_search_by_curve_pre_i,
+                     c(list(object = object,
+                            x = x,
+                            pop_es_name = pop_es_name,
+                            target_power = target_power,
+                            xs_per_trial = xs_per_trial,
+                            x_max = x_max,
+                            x_min = x_min,
+                            nrep0 = nrep0,
+                            R0 = R0,
+                            progress = progress,
+                            x_include_interval = x_include_interval,
+                            x_interval = x_interval,
+                            simulation_progress = simulation_progress,
+                            save_sim_all = save_sim_all,
+                            is_by_x = is_by_x,
+                            object_by_org = object_by_org,
+                            power_model = power_curve_args$power_model,
+                            start = power_curve_args$start,
+                            lower_bound = power_curve_args$lower_bound,
+                            upper_bound = power_curve_args$upper_bound,
+                            nls_control = power_curve_args$nls_control,
+                            nls_args = power_curve_args$nls_args,
+                            final_nrep = final_nrep,
+                            nrep_steps = nrep_steps,
+                            final_R = final_R),
+                      control))
 
     by_x_1 <- a_out$by_x_1
     fit_1 <- a_out$fit_1
@@ -684,31 +756,33 @@ x_from_power <- function(object,
 
   if (algorithm == "bisection") {
 
-    a_out <- power_algorithm_bisection_pre_i(object = object,
-                                             x = x,
-                                             pop_es_name = pop_es_name,
-                                             target_power = target_power,
-                                             xs_per_trial = xs_per_trial,
-                                             x_max = x_max,
-                                             x_min = x_min,
-                                             nrep0 = nrep0,
-                                             R0 = R0,
-                                             progress = progress,
-                                             x_include_interval = x_include_interval,
-                                             x_interval = x_interval,
-                                             simulation_progress = simulation_progress,
-                                             save_sim_all = save_sim_all,
-                                             is_by_x = is_by_x,
-                                             object_by_org = object_by_org,
-                                             power_model = power_model,
-                                             start = start,
-                                             lower_bound = lower_bound,
-                                             upper_bound = upper_bound,
-                                             nls_control = nls_control,
-                                             nls_args = nls_args,
-                                             final_nrep = final_nrep,
-                                             nrep_steps = nrep_steps,
-                                             final_R = final_R)
+    a_out <- do.call(power_algorithm_bisection_pre_i,
+                     c(list(object = object,
+                            x = x,
+                            pop_es_name = pop_es_name,
+                            target_power = target_power,
+                            xs_per_trial = xs_per_trial,
+                            x_max = x_max,
+                            x_min = x_min,
+                            nrep0 = nrep0,
+                            R0 = R0,
+                            progress = progress,
+                            x_include_interval = x_include_interval,
+                            x_interval = x_interval,
+                            simulation_progress = simulation_progress,
+                            save_sim_all = save_sim_all,
+                            is_by_x = is_by_x,
+                            object_by_org = object_by_org,
+                            power_model = power_curve_args$power_model,
+                            start = power_curve_args$start,
+                            lower_bound = power_curve_args$ower_bound,
+                            upper_bound = power_curve_args$upper_bound,
+                            nls_control = power_curve_args$nls_control,
+                            nls_args = power_curve_args$nls_args,
+                            final_nrep = final_nrep,
+                            nrep_steps = nrep_steps,
+                            final_R = final_R),
+                       control))
 
     x_interval_updated <- a_out$x_interval_updated
     by_x_1 <- a_out$by_x_1
@@ -741,36 +815,38 @@ x_from_power <- function(object,
 
     # === Loop Over The Trials ===
 
-    a_out <- power_algorithm_search_by_curve(object = object,
-                                            x = x,
-                                            pop_es_name = pop_es_name,
-                                            target_power = target_power,
-                                            xs_per_trial_seq = xs_per_trial_seq,
-                                            ci_level = ci_level,
-                                            power_min = power_min,
-                                            power_max = power_max,
-                                            x_interval = x_interval,
-                                            extendInt = extendInt,
-                                            progress = progress,
-                                            simulation_progress = simulation_progress,
-                                            max_trials = max_trials,
-                                            final_nrep = final_nrep,
-                                            power_model = power_model,
-                                            start = start,
-                                            lower_bound = lower_bound,
-                                            upper_bound = upper_bound,
-                                            nls_control = nls_control,
-                                            nls_args = nls_args,
-                                            save_sim_all = save_sim_all,
-                                            power_tolerance_in_interval = power_tolerance_in_interval,
-                                            power_tolerance_in_final = power_tolerance_in_final,
-                                            by_x_1 = by_x_1,
-                                            fit_1 = fit_1,
-                                            ci_hit = ci_hit,
-                                            nrep_seq = nrep_seq,
-                                            final_nrep_seq = final_nrep_seq,
-                                            R_seq = R_seq,
-                                            solution_found = solution_found)
+    a_out <- do.call(power_algorithm_search_by_curve,
+                     c(list(object = object,
+                            x = x,
+                            pop_es_name = pop_es_name,
+                            target_power = target_power,
+                            xs_per_trial_seq = xs_per_trial_seq,
+                            ci_level = ci_level,
+                            power_min = power_min,
+                            power_max = power_max,
+                            x_interval = x_interval,
+                            extendInt = extendInt,
+                            progress = progress,
+                            simulation_progress = simulation_progress,
+                            max_trials = max_trials,
+                            final_nrep = final_nrep,
+                            power_model = power_curve_args$power_model,
+                            start = power_curve_args$start,
+                            lower_bound = power_curve_args$lower_bound,
+                            upper_bound = power_curve_args$upper_bound,
+                            nls_control = power_curve_args$nls_control,
+                            nls_args = power_curve_args$nls_args,
+                            save_sim_all = save_sim_all,
+                            power_tolerance_in_interval = power_tolerance_in_interval,
+                            power_tolerance_in_final = power_tolerance_in_final,
+                            by_x_1 = by_x_1,
+                            fit_1 = fit_1,
+                            ci_hit = ci_hit,
+                            nrep_seq = nrep_seq,
+                            final_nrep_seq = final_nrep_seq,
+                            R_seq = R_seq,
+                            solution_found = solution_found),
+                     control))
 
     by_x_1 <- a_out$by_x_1
     fit_1 <- a_out$fit_1
@@ -802,37 +878,39 @@ x_from_power <- function(object,
     extend_maxiter <- 3
     tol <- .02
 
-    a_out <- power_algorithm_bisection(object = object,
-                                       x = x,
-                                       pop_es_name = pop_es_name,
-                                       target_power = target_power,
-                                       ci_level = ci_level,
-                                       x_interval = x_interval_updated,
-                                       extendInt = extendInt,
-                                       progress = progress,
-                                       simulation_progress = simulation_progress,
-                                       max_trials = max_trials,
-                                       final_nrep = final_nrep,
-                                       R = R_org,
-                                       power_model = power_model,
-                                       power_curve_start = start,
-                                       lower_bound = lower_bound,
-                                       upper_bound = upper_bound,
-                                       nls_control = nls_control,
-                                       nls_args = nls_args,
-                                       save_sim_all = save_sim_all,
-                                       by_x_1 = by_x_1,
-                                       fit_1 = fit_1,
-                                       ci_hit = ci_hit,
-                                       is_by_x = is_by_x,
-                                       solution_found = solution_found,
-                                       digits = 3,
-                                       lower_hard = lower_hard,
-                                       upper_hard = upper_hard,
-                                       extend_maxiter = extend_maxiter,
-                                       what = "point",
-                                       goal = "ci_hit",
-                                       tol = tol)
+    a_out <- do.call(power_algorithm_bisection,
+                     c(list(object = object,
+                            x = x,
+                            pop_es_name = pop_es_name,
+                            target_power = target_power,
+                            ci_level = ci_level,
+                            x_interval = x_interval_updated,
+                            extendInt = extendInt,
+                            progress = progress,
+                            simulation_progress = simulation_progress,
+                            max_trials = max_trials,
+                            final_nrep = final_nrep,
+                            R = R_org,
+                            power_model = power_curve_args$power_model,
+                            power_curve_start = power_curve_args$start,
+                            lower_bound = power_curve_args$lower_bound,
+                            upper_bound = power_curve_args$upper_bound,
+                            nls_control = power_curve_args$nls_control,
+                            nls_args = power_curve_args$nls_args,
+                            save_sim_all = save_sim_all,
+                            by_x_1 = by_x_1,
+                            fit_1 = fit_1,
+                            ci_hit = ci_hit,
+                            is_by_x = is_by_x,
+                            solution_found = solution_found,
+                            digits = 3,
+                            lower_hard = lower_hard,
+                            upper_hard = upper_hard,
+                            extend_maxiter = extend_maxiter,
+                            what = "point",
+                            goal = "ci_hit",
+                            tol = tol),
+                      control))
 
     by_x_1 <- a_out$by_x_1
     fit_1 <- a_out$fit_1

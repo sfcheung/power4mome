@@ -37,7 +37,8 @@ tmp <- x_from_power(out,
                     progress = TRUE,
                     final_nrep = 80,
                     max_trials = 4,
-                    seed = 1234)
+                    seed = 1234,
+                    algorithm = "power_curve")
 tmp
 summary(tmp)
 plot(tmp)
@@ -83,7 +84,8 @@ tmp2 <- x_from_power(out2,
                      progress = TRUE,
                      final_nrep = 80,
                      max_trials = 4,
-                     seed = 1234)
+                     seed = 1234,
+                     algorithm = "power_curve")
 tmp2
 summary(tmp2)
 plot(tmp2)
@@ -130,7 +132,8 @@ tmp3 <- x_from_power(out3,
                      final_nrep = 80,
                      max_trials = 4,
                      x_interval = c(0, .90),
-                     seed = 1234)
+                     seed = 1234,
+                     algorithm = "power_curve")
 
 tmp3
 summary(tmp3)

@@ -41,7 +41,8 @@ tmp <- x_from_power(out,
                     max_trials = 2,
                     seed = 1234,
                     progress = FALSE,
-                    simulation_progress = FALSE)
+                    simulation_progress = FALSE,
+                    algorithm = "power_curve")
 expect_no_error(print(summary(tmp)))
 expect_true(is.na(tmp$power_final))
 expect_true(is.na(tmp$x_final))
@@ -57,7 +58,8 @@ tmp <- x_from_power(out,
                     max_trials = 3,
                     seed = 12,
                     progress = FALSE,
-                    simulation_progress = FALSE)
+                    simulation_progress = FALSE,
+                    algorithm = "power_curve")
 expect_no_error(print(summary(tmp)))
 expect_true(!is.na(tmp$power_final))
 expect_true(!is.na(tmp$x_final))
@@ -86,7 +88,8 @@ tmp <- x_from_power(out,
                     max_trials = 2,
                     seed = 1234,
                     progress = FALSE,
-                    simulation_progress = FALSE)
+                    simulation_progress = FALSE,
+                    algorithm = "power_curve")
 expect_no_error(print(summary(tmp)))
 expect_true(!is.na(tmp$power_final))
 expect_true(!is.na(tmp$x_final))

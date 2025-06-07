@@ -40,7 +40,8 @@ expect_no_error(tmp <- x_from_power(out,
                     max_trials = 2,
                     seed = 1234,
                     progress = TRUE,
-                    simulation_progress = FALSE))
+                    simulation_progress = FALSE,
+                    algorithm = "power_curve"))
 expect_no_error(print(summary(tmp)))
 expect_true((tmp$power_final > .70) &&
             (tmp$power_final < .90))
@@ -66,7 +67,8 @@ expect_no_error(tmp <- x_from_power(out,
                     max_trials = 2,
                     seed = 1234,
                     progress = TRUE,
-                    simulation_progress = FALSE))
+                    simulation_progress = FALSE,
+                    algorithm = "power_curve"))
 expect_no_error(print(summary(tmp)))
 expect_true((tmp$power_final > .60) &&
             (tmp$power_final < .90))

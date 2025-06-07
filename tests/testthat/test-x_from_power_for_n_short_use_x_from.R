@@ -39,7 +39,8 @@ expect_no_error(tmp <- x_from_power(out,
                     max_trials = 1,
                     seed = 1234,
                     progress = TRUE,
-                    simulation_progress = FALSE))
+                    simulation_progress = FALSE,
+                    algorithm = "power_curve"))
 
 expect_no_error(tmp2 <- x_from_power(tmp,
                     x = "n",
@@ -48,7 +49,8 @@ expect_no_error(tmp2 <- x_from_power(tmp,
                     max_trials = 1,
                     seed = 1234,
                     progress = TRUE,
-                    simulation_progress = FALSE))
+                    simulation_progress = FALSE,
+                    algorithm = "power_curve"))
 expect_true(all(tmp$x_tried %in% tmp2$x_tried))
 
 expect_error(tmp2 <- x_from_power(tmp,
@@ -59,7 +61,8 @@ expect_error(tmp2 <- x_from_power(tmp,
                     max_trials = 1,
                     seed = 1234,
                     progress = TRUE,
-                    simulation_progress = FALSE),
+                    simulation_progress = FALSE,
+                    ),
             "but requested x")
 
 })

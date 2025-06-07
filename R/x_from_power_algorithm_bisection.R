@@ -67,7 +67,8 @@ power_algorithm_bisection <- function(object,
                     object = by_x_ci,
                     x = x)
   if (!is.na(tmp)) {
-    output_tmp <- by_x_1[[tmp]]
+    output_tmp <- by_x_1[tmp]
+    class(output_tmp) <- class(by_x_1)
     f.lower <- f(x_i = lower,
                  power_i = reject_tried[tmp],
                  progress = FALSE)
@@ -97,7 +98,8 @@ power_algorithm_bisection <- function(object,
                     object = by_x_ci,
                     x = x)
   if (!is.na(tmp)) {
-    output_tmp <- by_x_1[[tmp]]
+    output_tmp <- by_x_1[tmp]
+    class(output_tmp) <- class(by_x_1)
     f.upper <- f(x_i = upper,
                  power_i = reject_tried[tmp],
                  progress = FALSE)
@@ -178,14 +180,18 @@ power_algorithm_bisection <- function(object,
       tmp <- in_x_tried(test_x = lower,
                         object = by_x_1,
                         x = x)
-      attr(f.lower, "output") <- by_x_1[[tmp]]
+      tmp <- by_x_1[tmp]
+      class(tmp) <- class(by_x_1)
+      attr(f.lower, "output") <- tmp
     }
     f.upper <- interval_updated$f.upper
-    tmp <- in_x_tried(test_x = upper,
-                      object = by_x_1,
-                      x = x)
     if (is.null(attr(f.upper, "output"))) {
-      attr(f.upper, "output") <- by_x_1[[tmp]]
+      tmp <- in_x_tried(test_x = upper,
+                        object = by_x_1,
+                        x = x)
+      tmp <- by_x_1[tmp]
+      class(tmp) <- class(by_x_1)
+      attr(f.upper, "output") <- tmp
     }
     if ((start <= lower) || (start >= upper)) {
       start <- mean(c(lower, upper))
