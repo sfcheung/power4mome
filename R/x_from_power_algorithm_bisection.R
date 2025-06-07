@@ -4,7 +4,8 @@ power_algorithm_bisection <- function(object,
                                       pop_es_name = NULL,
                                       target_power = .80,
                                       ci_level = .95,
-                                      x_interval = c(100, 1000),
+                                      x_interval = switch(x, n = c(100, 1000),
+                                                             es = c(.10, .50)),
                                       extendInt = c("no", "yes", "downX", "upX"),
                                       progress = TRUE,
                                       simulation_progress = TRUE,
@@ -13,8 +14,8 @@ power_algorithm_bisection <- function(object,
                                       R = NULL,
                                       start = mean(x_interval),
                                       by_x_1 = by_x_1,
-                                      fit_1 = fit_1,
-                                      ci_hit = ci_hit,
+                                      fit_1 = NULL,
+                                      ci_hit = NULL,
                                       save_sim_all = FALSE,
                                       solution_found = FALSE,
                                       digits = 3,
@@ -37,80 +38,19 @@ power_algorithm_bisection <- function(object,
   power_tolerance_in_final <- a * sqrt(target_power * (1 - target_power) / final_nrep)
 
   # Create the objective function
-  f <- function(x_i,
-                x,
-                pop_es_name,
-                target_power,
-                ci_level,
-                progress,
-                digits,
-                nrep,
-                R,
-                what = c("point", "ub", "lb"),
-                simulation_progress,
-                save_sim_all = FALSE,
-                store_output = TRUE) {
-    what <- match.arg(what)
-    if (x == "n") {
-      x <- ceiling(x)
-    }
-    # TODO:
-    # - Adaptive nrep?
-    # Static nrep
-    if (progress) {
-      tmp <- switch(x,
-                    n = as.character(x),
-                    es = formatC(x,
-                                 digits = digits,
-                                 format = "f"))
-      cat("\nTrying x =", tmp, "\n\n")
-    }
-
-    out_i <- switch(x,
-                    n = power4test_by_n(object,
-                                        n = x_i,
-                                        R = R,
-                                        progress = simulation_progress,
-                                        by_nrep = nrep,
-                                        save_sim_all = save_sim_all),
-                    es = power4test_by_es(object,
-                                          pop_es_name = pop_es_name,
-                                          pop_es_values = x_i,
-                                          R = R,
-                                          progress = simulation_progress,
-                                          by_nrep = nrep,
-                                          save_sim_all = save_sim_all))
-
-    power_i <- rejection_rates(out_i)$reject
-    a <- abs(stats::qnorm((1 - ci_level) / 2))
-    se_i <- sqrt(power_i * (1 - power_i) / nrep)
-    ci_i <- power_i + c(-a, a) * se_i
-
-    if (progress) {
-      tmp1 <- formatC(power_i, digits = digits, format = "f")
-      tmp2 <- paste0("[",
-                     paste0(formatC(ci_i, digits = digits, format = "f"),
-                            collapse = ","),
-                     "]")
-      cat("\nEstimated power at ", x, ": ",
-          tmp1,
-          ", ", formatC(ci_level*100,
-                       digits = max(0, digits - 2),
-                       format = "f"), "% confidence interval: ",
-          tmp2,
-          "\n",
-          sep = "")
-    }
-
-    out2_i <- switch(what,
-                     point = power_i - target_power,
-                     upper = ci_i[2] - target_power,
-                     lower = ci_i[1] - target_power)
-    if (store_output) {
-      attr(out2_i, "output") <- out_i
-    }
-    out2_i
-  }
+  f <- gen_objective(object = object,
+                     x = x,
+                     pop_es_name = pop_es_name,
+                     target_power = target_power,
+                     ci_level = ci_level,
+                     progress = progress,
+                     digits = digits,
+                     nrep = final_nrep,
+                     R = R,
+                     what = "point",
+                     simulation_progress = simulation_progress,
+                     save_sim_all = save_sim_all,
+                     store_output = TRUE)
 
   # Find f.lower and f.upper
   by_x_ci <- rejection_rates_add_ci(by_x_1,
@@ -119,13 +59,13 @@ power_algorithm_bisection <- function(object,
                     n = by_x_1$n,
                     es = by_x_1$es)
   reject_tried <- by_x_1$reject
-  x_interval_min <- min(x_interval)
-  x_interval_max <- max(x_interval)
-  tmp <- match(x_interval_min, x_tried)
+  lower <- min(x_interval)
+  upper <- max(x_interval)
+  tmp <- match(lower, x_tried)
   if (!is.na(tmp)) {
     f.lower <- reject_tried[tmp]
   } else {
-    f.lower <- f(x_i = x_interval_min,
+    f.lower <- f(x_i = lower,
                  x = x,
                  pop_es_name = pop_es_name,
                  target_power = target_power,
@@ -140,11 +80,11 @@ power_algorithm_bisection <- function(object,
                  store_output = TRUE)
     by_x_1 <- c(by_x_1, attr(f.lower, "output"))
   }
-  tmp <- match(x_interval_max, x_tried)
+  tmp <- match(upper, x_tried)
   if (!is.na(tmp)) {
     f.upper <- reject_tried[tmp]
   } else {
-    f.upper <- f(x_i = x_interval_max,
+    f.upper <- f(x_i = upper,
                  x = x,
                  pop_es_name = pop_es_name,
                  target_power = target_power,
@@ -186,7 +126,7 @@ power_algorithm_bisection <- function(object,
                                       upper_hard = upper_hard,
                                       extendInt = extendInt,
                                       extend_maxiter = extend_maxiter,
-                                      trace = trace,
+                                      trace = as.numeric(progress),
                                       digits = digits,
                                       store_output = TRUE)
 
@@ -270,7 +210,7 @@ power_algorithm_bisection <- function(object,
         f.upper_i <- out_i
       }
       x_i <- mean(c(lower_i, upper_i))
-      if (trace) {
+      if (progress) {
         print_interval(lower = lower_i,
                        upper = upper_i,
                        digits = digits,
@@ -322,7 +262,7 @@ power_algorithm_bisection <- function(object,
 
   fit_1 <- power_curve(by_x_1,
                        formula = power_model,
-                       start = start,
+                       start = power_curve_start,
                        lower_bound = lower_bound,
                        upper_bound = upper_bound,
                        nls_control = nls_control,
@@ -362,152 +302,13 @@ power_algorithm_bisection <- function(object,
 }
 
 #' @noRd
-# Too many duplication in arguments
-# Do not use for now.
-# bisection_for_power <- function(f,
-#                                 interval,
-#                                 ...,
-#                                 x_type,
-#                                 lower = min(interval),
-#                                 upper = max(interval),
-#                                 start = mean(c(lower, upper)),
-#                                 f.lower = f(lower, ...),
-#                                 f.upper = f(upper, ...),
-#                                 extendInt = c("no", "yes", "downX", "upX"),
-#                                 tol = .05,
-#                                 maxiter = 10,
-#                                 trace = 0,
-#                                 progress = TRUE,
-#                                 digits = 3,
-#                                 store_output = FALSE,
-#                                 by_x_1 = NULL,
-#                                 extend_maxiter = 2,
-#                                 lower_hard = 10,
-#                                 upper_hard = 1000) {
-
-#   extendInt <- match.arg(extendInt)
-
-#   do_search <- TRUE
-
-#   # Fix the interval
-#   interval_updated <- extend_interval(f = f,
-#                                       x = x,
-#                                       pop_es_name = pop_es_name,
-#                                       target_power = target_power,
-#                                       ci_level = ci_level,
-#                                       nrep = nrep,
-#                                       R = R,
-#                                       what = what,
-#                                       simulation_progress = simulation_progress,
-#                                       save_sim_all = save_sim_all,
-#                                       progress = progress,
-#                                       x_type = x_type,
-#                                       lower = lower,
-#                                       upper = upper,
-#                                       f.lower = f.lower,
-#                                       f.upper = f.upper,
-#                                       lower_hard = lower_hard,
-#                                       upper_hard = upper_hard,
-#                                       extendInt = extendInt,
-#                                       extend_maxiter = extend_maxiter,
-#                                       trace = trace,
-#                                       digits = digits,
-#                                       store_output = store_output)
-#   if (interval_updated$extend_status == 0) {
-#     if (lower != interval_updated$lower) {
-#       by_x_1 <- c(by_x_1, attr(interval_updated$f.lower, "output"))
-#     }
-#     if (upper != interval_updated$upper) {
-#       by_x_1 <- c(by_x_1, attr(interval_updated$f.upper, "output"))
-#     }
-#     lower <- interval_updated$lower
-#     upper <- interval_updated$upper
-#     f.lower <- as.numeric(interval_updated$f.lower)
-#     f.upper <- as.numeric(interval_updated$f.upper)
-#     if ((start <= lower) || (start >= upper)) {
-#       start <- mean(c(lower, upper))
-#     }
-#   } else {
-#     do_search <- FALSE
-#   }
-
-#   # Solution already found?
-#   if (abs(f.upper) < tol) {
-#     within_i <- TRUE
-#     do_search <- FALSE
-#   } else if (abs(f.lower) < tol) {
-#     within_i <- TRUE
-#     do_search <- FALSE
-#   }
-
-#   if (do_search) {
-#     x_i <- start
-#     digits_x <- digits
-#     if (x_type == "n") {
-#       x_i <- ceiling(x_i)
-#       digits_x <- 0
-#     }
-#     f.lower_i <- f.lower
-#     f.upper_i <- f.upper
-#     lower_i <- lower
-#     upper_i <- upper
-#     status <- 0
-
-#     i <- 1
-#     while (i <= maxiter) {
-#       if (trace) {
-#         cat("\nIteration #", i, "\n\n")
-#       }
-#       out_i <- do.call(f,
-#                        list(x_i,
-#                             x_type = x_type,
-#                             progress = progress,
-#                             store_output = store_output))
-#       output_i <- attr(out_i, "output")
-#       out_i <- as.numeric(out_i)
-#       # TODO:
-#       # - Check NA, error, etc.
-#       # Convergence?
-#       within_i <- abs(out_i) < tol
-#       if (within_i) {
-#         status <- 1
-#         break
-#       }
-#       # Update interval
-#       if (x_type == "n") {
-#         x_i <- ceiling(x_i)
-#       }
-#       if (sign(out_i) == sign(f.lower_i)) {
-#         lower_i <- x_i
-#         f.lower_i <- out_i
-#       } else {
-#         upper_i <- x_i
-#         f.upper_i <- out_i
-#       }
-#       x_i <- mean(c(lower_i, upper_i))
-#       if (trace) {
-#         print_interval(lower = lower_i,
-#                        upper = upper_i,
-#                        digits = digits,
-#                        x_type = x_type)
-#       }
-#       i <- i + 1
-#     }
-#   } else {
-#     # No iteration
-#   }
-#   # Finalize the output
-# }
-
-
-#' @noRd
 extend_interval <- function(f,
                             ...,
                             x_type,
                             lower,
                             upper,
-                            f.lower,
-                            f.upper,
+                            f.lower = f(lower, ...),
+                            f.upper = f(upper, ...),
                             lower_hard,
                             upper_hard,
                             extendInt = c("no", "yes", "downX", "upX"),
@@ -606,8 +407,8 @@ extend_interval <- function(f,
                          x_type = x_type)
         }
         f.lower <- do.call(f,
-                           c(list(x_j = lower),
-                             list(x_type = x_type),
+                           c(list(x_i = lower),
+                             list(x = x_type),
                              args))
         i <- i + 1
       }
@@ -648,8 +449,8 @@ extend_interval <- function(f,
                          x_type = x_type)
         }
         f.upper <- do.call(f,
-                           c(list(x_j = upper),
-                             list(x_type = x_type),
+                           c(list(x_i = upper),
+                             list(x = x_type),
                              args))
         i <- i + 1
       }
@@ -692,4 +493,118 @@ print_interval <- function(lower,
                   format = "f")
   tmp <- paste0("[",paste(tmp, collapse = ", "), "]")
   cat(prefix, tmp, "\n")
+}
+
+#' @noRd
+gen_objective <- function(object,
+                          x,
+                          pop_es_name,
+                          target_power,
+                          ci_level,
+                          progress,
+                          digits,
+                          nrep,
+                          R,
+                          what = c("point", "ub", "lb"),
+                          simulation_progress,
+                          save_sim_all,
+                          store_output) {
+  what <- match.arg(what)
+  # Create the objective function
+  f <- function(x_i,
+                x = x,
+                pop_es_name = pop_es_name,
+                target_power = target_power,
+                ci_level = ci_level,
+                progress = progress,
+                digits = digits,
+                nrep = nrep,
+                R = R,
+                what = what,
+                simulation_progress = simulation_progress,
+                save_sim_all = save_sim_all,
+                store_output = store_output) {
+    what <- match.arg(what)
+    if (x == "n") {
+      x_i <- ceiling(x_i)
+    }
+    # TODO:
+    # - Adaptive nrep?
+    # Static nrep
+    if (progress) {
+      tmp <- switch(x,
+                    n = as.character(x_i),
+                    es = formatC(x_i,
+                                 digits = digits,
+                                 format = "f"))
+      cat("\nTrying x =", tmp, "\n\n")
+    }
+
+    out_i <- switch(x,
+                    n = power4test_by_n(object,
+                                        n = x_i,
+                                        R = R,
+                                        progress = simulation_progress,
+                                        by_nrep = nrep,
+                                        save_sim_all = save_sim_all),
+                    es = power4test_by_es(object,
+                                          pop_es_name = pop_es_name,
+                                          pop_es_values = x_i,
+                                          R = R,
+                                          progress = simulation_progress,
+                                          by_nrep = nrep,
+                                          save_sim_all = save_sim_all))
+
+    power_i <- rejection_rates(out_i)$reject
+    a <- abs(stats::qnorm((1 - ci_level) / 2))
+    se_i <- sqrt(power_i * (1 - power_i) / nrep)
+    ci_i <- power_i + c(-a, a) * se_i
+
+    if (progress) {
+      tmp1 <- formatC(power_i, digits = digits, format = "f")
+      tmp2 <- paste0("[",
+                     paste0(formatC(ci_i, digits = digits, format = "f"),
+                            collapse = ","),
+                     "]")
+      cat("\nEstimated power at ", x, ": ",
+          tmp1,
+          ", ", formatC(ci_level*100,
+                       digits = max(0, digits - 2),
+                       format = "f"), "% confidence interval: ",
+          tmp2,
+          "\n",
+          sep = "")
+    }
+
+    out2_i <- switch(what,
+                     point = power_i - target_power,
+                     upper = ci_i[2] - target_power,
+                     lower = ci_i[1] - target_power)
+    if (store_output) {
+      attr(out2_i, "output") <- out_i
+    }
+    out2_i
+  }
+
+  # Set default values
+  # TODO:
+  # - There should be a better way to do this
+  formals(f)$x <- x
+  if (!is.null(pop_es_name)) {
+    formals(f)$pop_es_name <- pop_es_name
+  }
+  formals(f)$target_power <- target_power
+  formals(f)$ci_level <- ci_level
+  formals(f)$progress <- progress
+  formals(f)$digits <- digits
+  formals(f)$nrep <- nrep
+  if (!is.null(R)) {
+    formals(f)$R <- R
+  }
+  formals(f)$what <- what
+  formals(f)$simulation_progress <- simulation_progress
+  formals(f)$save_sim_all <- save_sim_all
+  formals(f)$store_output <- store_output
+
+  f
 }
