@@ -2,6 +2,7 @@
 power_algorithm_bisection <- function(object,
                                       x,
                                       pop_es_name = NULL,
+                                      ...,
                                       target_power = .80,
                                       ci_level = .95,
                                       x_interval = switch(x, n = c(100, 1000),
@@ -56,8 +57,8 @@ power_algorithm_bisection <- function(object,
   by_x_ci <- rejection_rates_add_ci(by_x_1,
                                     level = ci_level)
   x_tried <- switch(x,
-                    n = by_x_1$n,
-                    es = by_x_1$es)
+                    n = by_x_ci$n,
+                    es = by_x_ci$es)
   reject_tried <- by_x_1$reject
   lower <- min(x_interval)
   upper <- max(x_interval)
@@ -130,10 +131,22 @@ power_algorithm_bisection <- function(object,
 
   if (interval_updated$extend_status == 0) {
     if (lower != interval_updated$lower) {
-      by_x_1 <- c(by_x_1, attr(interval_updated$f.lower, "output"))
+      tmp1 <- rejection_rates_add_ci(by_x_1)
+      x_tried <- switch(x,
+                        n = tmp1$n,
+                        es = tmp1$es)
+      if (is.na(match(lower, x_tried))) {
+        by_x_1 <- c(by_x_1, attr(interval_updated$f.lower, "output"))
+      }
     }
     if (upper != interval_updated$upper) {
-      by_x_1 <- c(by_x_1, attr(interval_updated$f.upper, "output"))
+      tmp1 <- rejection_rates_add_ci(by_x_1)
+      x_tried <- switch(x,
+                        n = tmp1$n,
+                        es = tmp1$es)
+      if (is.na(match(upper, x_tried))) {
+        by_x_1 <- c(by_x_1, attr(interval_updated$f.upper, "output"))
+      }
     }
     lower <- interval_updated$lower
     upper <- interval_updated$upper
@@ -184,6 +197,8 @@ power_algorithm_bisection <- function(object,
       output_i <- output_upper
       reject_i <- reject_upper
     }
+    # by_x_1 <- c(by_x_1, output_i)
+    # No need. lower and upper always in by_x_1
   }
 
   if (do_search) {
@@ -216,6 +231,7 @@ power_algorithm_bisection <- function(object,
                  save_sim_all = save_sim_all,
                  store_output = TRUE)
       output_i <- attr(out_i, "output")
+      by_x_1 <- c(by_x_1, output_i)
       reject_i <- rejection_rates(output_i)$reject
 
       # TODO:
@@ -298,10 +314,17 @@ power_algorithm_bisection <- function(object,
   # ** solution_found **
   # TRUE if an acceptable solution is found
 
-  if (do_search) {
+  if (!do_search &&
+      (!ok_lower && !ok_upper)) {
+    x_out <- NA
+    power_out <- NA
+    nrep_out <- NA
+    ci_out <- NA
+    by_x_out <- NA
+    i2 <- NA
+  } else {
     # Store the last results,
     # regardless of solution
-    by_x_1 <- c(by_x_1, output_i)
     out_i <- as.numeric(out_i)
     by_ci_i <- rejection_rates_add_ci(output_i,
                                       level = ci_level)
@@ -315,12 +338,6 @@ power_algorithm_bisection <- function(object,
     nrep_out <- unlist(by_ci_i[1, "nrep"])
     ci_out <- ci_i
     by_x_out <- by_ci_i
-  } else {
-    x_out <- NA
-    power_out <- NA
-    nrep_out <- NA
-    ci_out <- NA
-    by_x_out <- NA
   }
 
   # Available regardless of do_search
@@ -360,7 +377,6 @@ power_algorithm_bisection <- function(object,
 #' @noRd
 extend_interval <- function(f,
                             ...,
-                            x_type,
                             lower,
                             upper,
                             f.lower = f(lower, ...),
@@ -382,6 +398,8 @@ extend_interval <- function(f,
                   "Interval not OK but extend_maxiter reached" = 6)
   extend_status <- NA
   args <- list(...)
+  # x is always supplied
+  x_type <- args$x
   if (sign(f.lower) != sign(f.upper)) {
     # No need to extend
     return(list(lower = lower,
@@ -465,7 +483,6 @@ extend_interval <- function(f,
         }
         f.lower <- do.call(f,
                            c(list(x_i = lower),
-                             list(x = x_type),
                              args))
         i <- i + 1
       }
@@ -507,7 +524,6 @@ extend_interval <- function(f,
         }
         f.upper <- do.call(f,
                            c(list(x_i = upper),
-                             list(x = x_type),
                              args))
         i <- i + 1
       }
@@ -569,6 +585,7 @@ gen_objective <- function(object,
   what <- match.arg(what)
   # Create the objective function
   f <- function(x_i,
+                ...,
                 x = x,
                 pop_es_name = NULL,
                 target_power = .80,

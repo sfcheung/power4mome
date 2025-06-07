@@ -45,11 +45,26 @@ set.seed(1234)
 a_out <- power_algorithm_bisection(object = out,
                                    x = "n",
                                    by_x_1 = by_x_1,
+                                   x_interval = c(600, 700),
                                    goal = "close_enough",
-                                   tol = .30)
+                                   tol = .05)
+a_out$solution_found
 rejection_rates(a_out$by_x_1)
 plot(a_out$fit_1)
 abline(h = .80)
+
+set.seed(1234)
+a_out <- power_algorithm_bisection(object = out,
+                                   x = "n",
+                                   by_x_1 = by_x_1,
+                                   x_interval = c(600, 700),
+                                   extendInt = "yes",
+                                   goal = "close_enough",
+                                   tol = .05)
+rejection_rates(a_out$by_x_1)
+plot(a_out$fit_1)
+abline(h = .80)
+
 
 # ub
 
@@ -74,6 +89,27 @@ a_out <- power_algorithm_bisection(object = out,
 rejection_rates(a_out$by_x_1)
 plot(a_out$fit_1)
 abline(h = .80)
+
+# Solution already in interval
+
+set.seed(1234)
+a_out <- power_algorithm_bisection(object = out,
+                                   x = "n",
+                                   by_x_1 = by_x_1,
+                                   x_interval = c(775, 800))
+rejection_rates(a_out$by_x_1)
+plot(a_out$fit_1)
+abline(h = .80)
+
+set.seed(1234)
+a_out <- power_algorithm_bisection(object = out,
+                                   x = "n",
+                                   by_x_1 = by_x_1,
+                                   x_interval = c(600, 775))
+rejection_rates(a_out$by_x_1)
+plot(a_out$fit_1)
+abline(h = .80)
+
 
 # es
 
@@ -139,5 +175,6 @@ rejection_rates(a_out$by_x_1)
 plot(a_out$fit_1)
 abline(h = .80)
 
+# Solution already in interval
 
 })
