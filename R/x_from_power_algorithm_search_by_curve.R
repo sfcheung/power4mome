@@ -364,3 +364,185 @@ power_algorithm_search_by_curve <- function(object,
               solution_found = solution_found)
   out
 }
+
+#' @noRd
+
+power_algorithm_search_by_curve_pre_i <- function(object,
+                                                  x,
+                                                  pop_es_name,
+                                                  target_power,
+                                                  xs_per_trial,
+                                                  x_max,
+                                                  x_min,
+                                                  nrep0,
+                                                  R0,
+                                                  progress,
+                                                  x_include_interval,
+                                                  x_interval,
+                                                  simulation_progress,
+                                                  save_sim_all,
+                                                  is_by_x,
+                                                  object_by_org,
+                                                  power_model,
+                                                  start,
+                                                  lower_bound,
+                                                  upper_bound,
+                                                  nls_control,
+                                                  nls_args,
+                                                  final_nrep,
+                                                  nrep_steps,
+                                                  final_R) {
+  x_i <- set_x_range(object,
+                    x = x,
+                    pop_es_name = pop_es_name,
+                    target_power = target_power,
+                    k = xs_per_trial,
+                    x_max = x_max,
+                    x_min = x_min)
+  # Exclude the value in the input object
+  x0 <- switch(x,
+              n = attr(object, "args")$n,
+              es = pop_es(object,
+                          pop_es_name = pop_es_name))
+  x_i <- setdiff(x_i, x0)
+  if (x_include_interval) {
+    # Include the lowest and highest values in interval
+    x_i <- sort(c(x_interval, x_i))
+  }
+  x_i <- sort(unique(x_i))
+
+  if (progress) {
+    x_i_str <- formatC(x_i,
+                      digits = switch(x, n = 0, es = 4),
+                      format = "f")
+    cat("- Value(s) to try: ",
+        paste0(x_i_str, collapse = ", "),
+        "\n")
+  }
+
+  # ** by_x_i **
+  # The current (i-th) set of values examined,
+  # along with their results.
+  by_x_i <- switch(x,
+                  n = power4test_by_n(object,
+                                      n = x_i,
+                                      nrep = nrep0,
+                                      R = R0,
+                                      progress = simulation_progress,
+                                      save_sim_all = save_sim_all),
+                  es = power4test_by_es(object,
+                                        pop_es_name = pop_es_name,
+                                        pop_es_values = x_i,
+                                        nrep = nrep0,
+                                        R = R0,
+                                        progress = simulation_progress,
+                                        save_sim_all = save_sim_all))
+
+  # Add the input object to the list
+  if (is_by_x) {
+    # Object is an output of *_by_n() or *_by_es()
+    by_x_i <- c(by_x_i,
+                object_by_org,
+                skip_checking_models = TRUE)
+  } else {
+    tmp <- list(object)
+    if (x == "n") {
+      class(tmp) <- c("power4test_by_n", class(tmp))
+      names(tmp) <- as.character(x0)
+    }
+    if (x == "es") {
+      class(tmp) <- c("power4test_by_es", class(tmp))
+      names(tmp) <- paste0(pop_es_name,
+                          " = ",
+                            as.character(x0))
+      attr(tmp[[1]], "pop_es_name") <- pop_es_name
+      attr(tmp[[1]], "pop_es_value") <- x0
+    }
+    by_x_i <- c(by_x_i, tmp,
+                skip_checking_models = TRUE)
+  }
+
+  if (progress) {
+    cat("- Rejection Rates:\n")
+    tmp <- rejection_rates(by_x_i)
+    print(tmp)
+    cat("\n")
+  }
+
+  # ** fit_i **
+  # The current power curve, based on by_x_i
+  fit_i <- power_curve(by_x_i,
+                      formula = power_model,
+                      start = start,
+                      lower_bound = lower_bound,
+                      upper_bound = upper_bound,
+                      nls_control = nls_control,
+                      nls_args = nls_args,
+                      verbose = progress)
+
+  if (progress) {
+    cat("- Power Curve:\n")
+    # Can use the print method of power_curve objects
+    print(fit_i)
+    cat("\n")
+  }
+
+  # ** by_x_1 **
+  # The collection of all values tried and their results
+  # to be updated when new value is tried.
+  # Used after the end of the loop.
+  by_x_1 <- by_x_i
+
+  # ** fit_1 **
+  # The latest power curve
+  # To be updated whenever by_x_1 is updated.
+  # Used after the end of the loop.
+  fit_1 <- fit_i
+
+  # === Initialize the Sequences ===
+  # The sequence will be updated when nrep_step is initiated,
+  # to successively increase precision and speed by
+  # - increasing the number of replication,
+  # - increasing the number of resampling, and
+  # - decreasing the number of values to try.
+
+  # The sequence of the numbers of replication
+  # new_nrep <- rejection_rates(by_x_1,
+  #                             all_columns = TRUE)$nrep
+
+  # new_nrep <- ceiling(mean(new_nrep))
+  new_nrep <- nrep0
+  nrep_seq <- ceiling(seq(from = new_nrep,
+                          to = final_nrep,
+                          length.out = nrep_steps + 1))
+  final_nrep_seq <- ceiling(seq(from = ceiling(mean(c(new_nrep, final_nrep))),
+                                to = final_nrep,
+                                length.out = nrep_steps + 1))
+
+  # The sequence of the Rs (for boot and MC CI)
+  # R0 <- attr(object, "args")$R
+  if (!is.null(R0)) {
+    R_seq <- ceiling(seq(from = R0,
+                        to = final_R,
+                        length.out = nrep_steps + 1))
+  } else {
+    R_seq <- NULL
+  }
+
+  # The sequence of the numbers of values per trial
+  xs_per_trial_seq <- ceiling(seq(from = xs_per_trial,
+                                  to = 2,
+                                  length.out = nrep_steps + 1))
+
+  out <- list(x_i = x_i,
+              by_x_i = by_x_i,
+              fit_i = fit_i,
+              by_x_1 = by_x_1,
+              fit_1 = fit_1,
+              nrep_seq = nrep_seq,
+              final_nrep_seq = final_nrep_seq,
+              R_seq = R_seq,
+              xs_per_trial_seq = xs_per_trial_seq)
+
+  return(out)
+}
