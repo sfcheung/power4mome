@@ -14,7 +14,7 @@ x_from_power(
   ci_level = 0.95,
   power_min = 0.01,
   power_max = 0.9,
-  x_interval = switch(x, n = c(50, 2000), es = c(0, 0.7)),
+  x_interval = switch(x, n = c(50, 2000), es = c(0, 0.95)),
   extendInt = NULL,
   progress = TRUE,
   simulation_progress = TRUE,
