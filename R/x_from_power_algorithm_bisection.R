@@ -56,16 +56,25 @@ power_algorithm_bisection <- function(object,
   # Find f.lower and f.upper
   by_x_ci <- rejection_rates_add_ci(by_x_1,
                                     level = ci_level)
-  x_tried <- switch(x,
-                    n = by_x_ci$n,
-                    es = by_x_ci$es)
-  reject_tried <- by_x_1$reject
+  x_tried <- get_x_tried(by_x_ci,
+                         x = x)
+  reject_tried <- by_x_ci$reject
   lower <- min(x_interval)
   upper <- max(x_interval)
-  tmp <- match(lower, x_tried)
+
+  tmp <- in_x_tried(lower,
+                    object = by_x_ci,
+                    x = x)
   if (!is.na(tmp)) {
-    f.lower <- reject_tried[tmp]
+    output_tmp <- by_x_1[[tmp]]
+    f.lower <- f(x_i = lower,
+                 power_i = reject_tried[tmp],
+                 progress = FALSE)
+    attr(f.lower, "output") <- output_tmp
   } else {
+    if (progress) {
+      cat("\nDo the simulation for the lower bound:\n")
+    }
     f.lower <- f(x_i = lower,
                  x = x,
                  pop_es_name = pop_es_name,
@@ -82,10 +91,20 @@ power_algorithm_bisection <- function(object,
     by_x_1 <- c(by_x_1, attr(f.lower, "output"),
                 skip_checking_models = TRUE)
   }
-  tmp <- match(upper, x_tried)
+
+  tmp <- in_x_tried(upper,
+                    object = by_x_ci,
+                    x = x)
   if (!is.na(tmp)) {
-    f.upper <- reject_tried[tmp]
+    output_tmp <- by_x_1[[tmp]]
+    f.upper <- f(x_i = upper,
+                 power_i = reject_tried[tmp],
+                 progress = FALSE)
+    attr(f.upper, "output") <- output_tmp
   } else {
+    if (progress) {
+      cat("\nDo the simulation for the upper bound:\n")
+    }
     f.upper <- f(x_i = upper,
                  x = x,
                  pop_es_name = pop_es_name,
@@ -133,39 +152,50 @@ power_algorithm_bisection <- function(object,
 
   if (interval_updated$extend_status == 0) {
     if (lower != interval_updated$lower) {
-      tmp1 <- rejection_rates_add_ci(by_x_1)
-      x_tried <- switch(x,
-                        n = tmp1$n,
-                        es = tmp1$es)
-      if (is.na(match(lower, x_tried))) {
+      tmp <- in_x_tried(test_x = lower,
+                        object = by_x_1,
+                        x = x)
+      if (is.na(tmp)) {
         by_x_1 <- c(by_x_1, attr(interval_updated$f.lower, "output"),
                     skip_checking_models = TRUE)
       }
     }
     if (upper != interval_updated$upper) {
-      tmp1 <- rejection_rates_add_ci(by_x_1)
-      x_tried <- switch(x,
-                        n = tmp1$n,
-                        es = tmp1$es)
-      if (is.na(match(upper, x_tried))) {
+      tmp <- in_x_tried(test_x = upper,
+                        object = by_x_1,
+                        x = x)
+      if (is.na(tmp)) {
         by_x_1 <- c(by_x_1, attr(interval_updated$f.upper, "output"),
                     skip_checking_models = TRUE)
       }
     }
     lower <- interval_updated$lower
     upper <- interval_updated$upper
+    # The outputs of lower and upper always in by_x_1
     f.lower <- interval_updated$f.lower
+    if (is.null(attr(f.lower, "output"))) {
+      tmp <- in_x_tried(test_x = lower,
+                        object = by_x_1,
+                        x = x)
+      attr(f.lower, "output") <- by_x_1[[tmp]]
+    }
     f.upper <- interval_updated$f.upper
+    tmp <- in_x_tried(test_x = upper,
+                      object = by_x_1,
+                      x = x)
+    if (is.null(attr(f.upper, "output"))) {
+      attr(f.upper, "output") <- by_x_1[[tmp]]
+    }
     if ((start <= lower) || (start >= upper)) {
       start <- mean(c(lower, upper))
     }
   } else {
-    # Interval not OK. Prepare to quit
-    do_search <- FALSE
+    # Interval not OK.
+    # However, it is possible that
+    # one of the bounds is a solution.
   }
 
   # - Check whether lower or upper is already a solution
-  # lower
   output_lower <- attr(f.lower, "output")
   reject_lower <- rejection_rates(output_lower)$reject
   ok_lower <- bisection_check_solution(f_i = reject_lower,
@@ -184,12 +214,15 @@ power_algorithm_bisection <- function(object,
                                        what = what,
                                        goal = goal,
                                        tol = tol)
-
   if (ok_lower || ok_upper) {
+    if (progress) {
+      cat("One of the bounds in the interval is already a solution.\n")
+    }
     do_search <- FALSE
     ci_hit <- switch(goal,
                      ci_hit = TRUE,
                      close_enough = NA)
+    solution_found <- TRUE
     if (ok_lower) {
       x_i <- lower
       out_i <- f.lower
@@ -203,6 +236,17 @@ power_algorithm_bisection <- function(object,
     }
     # by_x_1 <- c(by_x_1, output_i)
     # No need. lower and upper always in by_x_1
+  }
+
+  if ((interval_updated$extend_status != 0) &&
+      (!ok_lower && !ok_upper)) {
+    # Interval not OK and no bounds are the solution
+    if (progress) {
+      cat(names(interval_updated$extend_status), "\n")
+      cat("None of the bounds are solution.\n")
+      cat("Try another interval.\n")
+
+    }
   }
 
   if (do_search) {
@@ -361,6 +405,14 @@ power_algorithm_bisection <- function(object,
                                 \(x) {attr(x, "pop_es_value")},
                                 USE.NAMES = FALSE))
 
+  if (progress) {
+    if (solution_found) {
+      cat("Solution found.\n")
+    } else {
+      cat("Solution not found.\n")
+    }
+  }
+
   # The final x_i are always returned if available
   # ci_hit is used to decide whether
   # final x_i is a solution.
@@ -374,7 +426,8 @@ power_algorithm_bisection <- function(object,
               ci_out = ci_out,
               by_x_out = by_x_out,
               i2 = i2,
-              solution_found = solution_found)
+              solution_found = solution_found,
+              tol = tol)
   out
 
 }
@@ -763,7 +816,9 @@ power_algorithm_bisection_pre_i <- function(object,
                                             final_nrep,
                                             nrep_steps,
                                             final_R) {
-  # This method only need an initial interval
+  # TODO:
+  # - Make use of by_* object's results.
+  # This method only needs an initial interval
   x_i <- set_x_range(object,
                     x = x,
                     pop_es_name = pop_es_name,
