@@ -2,7 +2,7 @@ skip("A long test with parallel processing. Test interactively.")
 
 library(testthat)
 
-test_that("x_from_power: n", {
+test_that("x_from_power: bisection", {
 
 # Case 1
 
@@ -35,23 +35,41 @@ out <- power4test(nrep = 20,
 out_power <- rejection_rates(out)
 out_power
 
-tmp <- x_from_power(out,
-                    x = "n",
-                    progress = TRUE,
-                    final_nrep = 100,
-                    seed = 1234,
-                    save_sim_all = TRUE,
-                    algorithm = "power_curve")
-tmp
-summary(tmp)
-plot(tmp)
-plot(tmp,
+system.time(
+tmp1 <- x_from_power(out,
+                     x = "n",
+                     progress = TRUE,
+                     final_nrep = 100,
+                     seed = 1234,
+                     save_sim_all = TRUE,
+                     algorithm = "power_curve")
+)
+system.time(
+tmp2 <- x_from_power(out,
+                     x = "n",
+                     progress = TRUE,
+                     final_nrep = 100,
+                     seed = 1234,
+                     save_sim_all = TRUE,
+                     algorithm = "bisection")
+)
+
+tmp1
+tmp2
+
+summary(tmp1)
+summary(tmp2)
+
+plot(tmp1)
+plot(tmp2)
+
+plot(tmp2,
      lwd = 4,
      col = "green",
      what = c("ci",
               "final_x",
               "final_power"))
-plot(tmp,
+plot(tmp2,
      lwd = 4,
      col = "darkgreen",
      what = c("ci",
@@ -60,7 +78,7 @@ plot(tmp,
      pars_ci_final_x = list(lwd = 10),
      pars_final_x = list(lwd = 2, col = "red"))
 
-plot(tmp,
+plot(tmp2,
      pars_power_curve = list(col = "blue", lwd = 4, type = "o"))
 
 # Case 2
@@ -79,14 +97,29 @@ out2 <- power4test(nrep = 50,
                    iseed = 1234,
                    parallel = TRUE)
 
-tmp2 <- x_from_power(out2,
+system.time(
+tmp1 <- x_from_power(out2,
                      x = "n",
                      progress = TRUE,
                      final_nrep = 100,
                      seed = 1234,
                      algorithm = "power_curve")
+)
+system.time(
+tmp2 <- x_from_power(out2,
+                     x = "n",
+                     progress = TRUE,
+                     final_nrep = 100,
+                     seed = 1234,
+                     algorithm = "bisection")
+)
+
+tmp1
 tmp2
+summary(tmp1)
 summary(tmp2)
+
+plot(tmp1)
 plot(tmp2)
 
 # Case 3
@@ -124,17 +157,31 @@ out3 <- power4test(nrep = 50,
 
 rejection_rates(out3)
 
-tmp3 <- x_from_power(out3,
+system.time(
+tmp1 <- x_from_power(out3,
                      x = "n",
                      progress = TRUE,
                      final_nrep = 100,
                      seed = 1234,
                      algorithm = "power_curve")
+)
+system.time(
+tmp2 <- x_from_power(out3,
+                     x = "n",
+                     progress = TRUE,
+                     final_nrep = 100,
+                     seed = 1234,
+                     algorithm = "bisection")
+)
 
-tmp3
-summary(tmp3)
-plot(tmp3)
+tmp1
+tmp2
 
+summary(tmp1)
+summary(tmp2)
+
+plot(tmp1)
+plot(tmp2)
 
 
 })

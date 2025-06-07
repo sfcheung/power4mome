@@ -1,0 +1,73 @@
+library(testthat)
+
+test_that("bisection: n", {
+
+ci_from_f <- function(f_i,
+                      nrep,
+                      ci_level = .95) {
+  a <- abs(stats::qnorm((1 - ci_level) / 2))
+  se_i <- sqrt(f_i * (1 - f_i) / nrep)
+  cilb <- f_i - a * se_i
+  ciub <- f_i + a * se_i
+  c(cilb, ciub)
+}
+
+ci_from_f(.70, 100)
+expect_false(bisection_check_solution(.70,
+                                      target_power = .80,
+                                      nrep = 100,
+                                      what = "point",
+                                      tol = 1e-2,
+                                      goal = "ci_hit"))
+
+ci_from_f(.70, 10)
+expect_true(bisection_check_solution(.70,
+                                      target_power = .80,
+                                      nrep = 10,
+                                      what = "point",
+                                      tol = 1e-2,
+                                      goal = "ci_hit"))
+
+expect_false(bisection_check_solution(.70,
+                                      target_power = .80,
+                                      nrep = 10,
+                                      what = "point",
+                                      tol = 1e-2,
+                                      goal = "close_enough"))
+
+expect_true(bisection_check_solution(.79,
+                                      target_power = .80,
+                                      nrep = 10,
+                                      what = "point",
+                                      tol = .02,
+                                      goal = "close_enough"))
+
+ci_from_f(.60, 25)
+expect_true(bisection_check_solution(.60,
+                                      target_power = .80,
+                                      nrep = 25,
+                                      what = "ub",
+                                      tol = .02,
+                                      goal = "close_enough"))
+expect_false(bisection_check_solution(.60,
+                                      target_power = .80,
+                                      nrep = 10,
+                                      what = "ub",
+                                      tol = .02,
+                                      goal = "close_enough"))
+
+ci_from_f(.90, 50)
+expect_true(bisection_check_solution(.90,
+                                      target_power = .80,
+                                      nrep = 50,
+                                      what = "lb",
+                                      tol = .02,
+                                      goal = "close_enough"))
+expect_false(bisection_check_solution(.90,
+                                      target_power = .80,
+                                      nrep = 100,
+                                      what = "lb",
+                                      tol = .02,
+                                      goal = "close_enough"))
+
+})

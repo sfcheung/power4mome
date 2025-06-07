@@ -269,3 +269,24 @@ check_x_from_power_as_input <- function(object,
   }
   return(TRUE)
 }
+
+#' @noRd
+get_x_tried <- function(object,
+                        x) {
+  tmp <- rejection_rates_add_ci(object)
+  out <- switch(x,
+                n = tmp$n,
+                es = tmp$es)
+  out
+}
+
+#' @noRd
+in_x_tried <- function(test_x,
+                       object,
+                       x) {
+  # If yes, return the index
+  # Otherwise, return NA
+  x_tried <- get_x_tried(object = object,
+                         x = x)
+  match(test_x, x_tried)
+}

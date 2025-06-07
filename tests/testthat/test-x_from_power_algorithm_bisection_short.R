@@ -1,8 +1,8 @@
-skip("A long test with parallel processing. Test interactively.")
+skip_on_cran()
 
 library(testthat)
 
-test_that("bisection: n", {
+test_that("bisection", {
 
 mod <-
 "
@@ -34,10 +34,11 @@ by_x_1 <- power4test_by_n(out,
 set.seed(1234)
 a_out <- power_algorithm_bisection(object = out,
                                    x = "n",
-                                   by_x_1 = by_x_1)
+                                   by_x_1 = by_x_1,
+                                   final_nrep = 20,
+                                   x_interval = c(200, 2000))
 rejection_rates(a_out$by_x_1)
-plot(a_out$fit_1)
-abline(h = .80)
+expect_false(.80 %in% range(a_out$ci_out))
 
 # Close enough
 
@@ -47,24 +48,23 @@ a_out <- power_algorithm_bisection(object = out,
                                    by_x_1 = by_x_1,
                                    x_interval = c(600, 700),
                                    goal = "close_enough",
-                                   tol = .05)
-a_out$solution_found
+                                   tol = .04,
+                                   final_nrep = 20)
 rejection_rates(a_out$by_x_1)
-plot(a_out$fit_1)
-abline(h = .80)
+expect_true(abs(a_out$power_out - .80) < .04)
 
 set.seed(1234)
 a_out <- power_algorithm_bisection(object = out,
                                    x = "n",
                                    by_x_1 = by_x_1,
-                                   x_interval = c(600, 700),
+                                   x_interval = c(890, 950),
                                    extendInt = "yes",
                                    goal = "close_enough",
-                                   tol = .05)
+                                   tol = .05,
+                                   max_trials = 3,
+                                   final_nrep = 20)
 rejection_rates(a_out$by_x_1)
-plot(a_out$fit_1)
-abline(h = .80)
-
+expect_true(abs(a_out$power_out - .80) < .05)
 
 # ub
 
@@ -73,10 +73,11 @@ a_out <- power_algorithm_bisection(object = out,
                                    x = "n",
                                    by_x_1 = by_x_1,
                                    what = "ub",
-                                   goal = "close_enough")
+                                   goal = "close_enough",
+                                   final_nrep = 20,
+                                   x_interval = c(100, 1000))
 rejection_rates(a_out$by_x_1)
-plot(a_out$fit_1)
-abline(h = .80)
+expect_true(abs(a_out$ci_out[2] - .80) < .02)
 
 # lb
 
@@ -85,10 +86,14 @@ a_out <- power_algorithm_bisection(object = out,
                                    x = "n",
                                    by_x_1 = by_x_1,
                                    what = "lb",
-                                   goal = "close_enough")
+                                   goal = "close_enough",
+                                   extendInt = "yes",
+                                   final_nrep = 20,
+                                   tol = .2,
+                                   x_interval = c(100, 1000),
+                                   max_trials = 3)
 rejection_rates(a_out$by_x_1)
-plot(a_out$fit_1)
-abline(h = .80)
+expect_true(abs(a_out$ci_out[1] - .80) < .2)
 
 # Solution already in interval
 
@@ -96,20 +101,19 @@ set.seed(1234)
 a_out <- power_algorithm_bisection(object = out,
                                    x = "n",
                                    by_x_1 = by_x_1,
-                                   x_interval = c(775, 800))
+                                   x_interval = c(775, 800),
+                                   final_nrep = 20)
 rejection_rates(a_out$by_x_1)
-plot(a_out$fit_1)
-abline(h = .80)
+expect_false(.80 %in% range(a_out$ci_out))
 
 set.seed(1234)
 a_out <- power_algorithm_bisection(object = out,
                                    x = "n",
                                    by_x_1 = by_x_1,
-                                   x_interval = c(600, 775))
+                                   x_interval = c(600, 775),
+                                   final_nrep = 20)
 rejection_rates(a_out$by_x_1)
-plot(a_out$fit_1)
-abline(h = .80)
-
+expect_false(.80 %in% range(a_out$ci_out))
 
 ####### es
 
@@ -130,10 +134,11 @@ set.seed(1234)
 a_out <- power_algorithm_bisection(object = out,
                                    x = "es",
                                    pop_es_name = "m~x",
-                                   by_x_1 = by_x_1)
+                                   by_x_1 = by_x_1,
+                                   x_interval = c(0, .50),
+                                   final_nrep = 20)
 rejection_rates(a_out$by_x_1)
-plot(a_out$fit_1)
-abline(h = .80)
+expect_false(.80 %in% range(a_out$ci_out))
 
 # Close enough
 
@@ -143,10 +148,11 @@ a_out <- power_algorithm_bisection(object = out,
                                    pop_es_name = "m~x",
                                    by_x_1 = by_x_1,
                                    goal = "close_enough",
-                                   tol = .30)
+                                   tol = .10,
+                                   x_interval = c(0, .50),
+                                   final_nrep = 20)
 rejection_rates(a_out$by_x_1)
-plot(a_out$fit_1)
-abline(h = .80)
+expect_true(abs(a_out$power_out - .80) < .10)
 
 # ub
 
@@ -156,11 +162,12 @@ a_out <- power_algorithm_bisection(object = out,
                                    pop_es_name = "m~x",
                                    by_x_1 = by_x_1,
                                    what = "ub",
-                                   goal = "close_enough")
+                                   goal = "close_enough",
+                                   x_interval = c(0, .50),
+                                   tol = .05,
+                                   final_nrep = 20)
 rejection_rates(a_out$by_x_1)
-plot(a_out$fit_1)
-abline(h = .80)
-
+expect_true(abs(a_out$ci_out[2] - .80) < .02)
 
 # lb
 
@@ -170,11 +177,11 @@ a_out <- power_algorithm_bisection(object = out,
                                    pop_es_name = "m~x",
                                    by_x_1 = by_x_1,
                                    what = "lb",
-                                   goal = "close_enough")
+                                   goal = "close_enough",
+                                   x_interval = c(0, .50),
+                                   tol = .10,
+                                   final_nrep = 20)
 rejection_rates(a_out$by_x_1)
-plot(a_out$fit_1)
-abline(h = .80)
-
-# Solution already in interval
+expect_true(abs(a_out$ci_out[1] - .80) < .10)
 
 })
