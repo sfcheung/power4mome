@@ -513,18 +513,17 @@ gen_objective <- function(object,
   # Create the objective function
   f <- function(x_i,
                 x = x,
-                pop_es_name = pop_es_name,
-                target_power = target_power,
-                ci_level = ci_level,
-                progress = progress,
-                digits = digits,
-                nrep = nrep,
-                R = R,
-                what = what,
-                simulation_progress = simulation_progress,
-                save_sim_all = save_sim_all,
-                store_output = store_output) {
-    what <- match.arg(what)
+                pop_es_name = NULL,
+                target_power = .80,
+                ci_level = .95,
+                progress = TRUE,
+                digits = 3,
+                nrep = 10,
+                R = NULL,
+                what = "point",
+                simulation_progress = TRUE,
+                save_sim_all = FALSE,
+                store_output = TRUE) {
     if (x == "n") {
       x_i <- ceiling(x_i)
     }
@@ -539,7 +538,6 @@ gen_objective <- function(object,
                                  format = "f"))
       cat("\nTrying x =", tmp, "\n\n")
     }
-
     out_i <- switch(x,
                     n = power4test_by_n(object,
                                         n = x_i,
