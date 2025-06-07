@@ -62,6 +62,12 @@ rejection_rates(output_i)$reject_ci_hi
 expect_identical(as.numeric(f_i),
                  rejection_rates(output_i)$reject_ci_hi - .80)
 
+# With power_i or output_i
+
+expect_equal(f0(20, out_i = output_i, what = "ub", progress = FALSE),
+             as.numeric(f_i))
+expect_equal(f0(20, power_i = rejection_rates(output_i)$reject, what = "ub", progress = FALSE),
+             as.numeric(f_i))
 
 
 })

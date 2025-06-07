@@ -580,7 +580,9 @@ gen_objective <- function(object,
                 what = "point",
                 simulation_progress = TRUE,
                 save_sim_all = FALSE,
-                store_output = TRUE) {
+                store_output = TRUE,
+                out_i = NULL,
+                power_i = NULL) {
     if (x == "n") {
       x_i <- ceiling(x_i)
     }
@@ -595,22 +597,40 @@ gen_objective <- function(object,
                                  format = "f"))
       cat("\nTry x =", tmp, "\n")
     }
-    out_i <- switch(x,
-                    n = power4test_by_n(object,
-                                        n = x_i,
-                                        R = R,
-                                        progress = simulation_progress,
-                                        by_nrep = nrep,
-                                        save_sim_all = save_sim_all),
-                    es = power4test_by_es(object,
-                                          pop_es_name = pop_es_name,
-                                          pop_es_values = x_i,
+
+    # If out_i is supplied
+    # it will be used and many arguments will be ignored.
+    # If power_i is supplied, even out_i will be ignored
+    # Convenient for using f() to compute the function value
+    # But be careful of conflicting arguments.
+
+    if (is.null(out_i) && is.null(power_i)) {
+      out_i <- switch(x,
+                      n = power4test_by_n(object,
+                                          n = x_i,
                                           R = R,
                                           progress = simulation_progress,
                                           by_nrep = nrep,
-                                          save_sim_all = save_sim_all))
+                                          save_sim_all = save_sim_all),
+                      es = power4test_by_es(object,
+                                            pop_es_name = pop_es_name,
+                                            pop_es_values = x_i,
+                                            R = R,
+                                            progress = simulation_progress,
+                                            by_nrep = nrep,
+                                            save_sim_all = save_sim_all))
+      power_i <- rejection_rates(out_i)$reject
+    } else {
+      if (is.null(power_i)) {
+        # power_i is supplied. Ignore out_i
+        power_i <- rejection_rates(out_i)$reject
+        out_i <- NULL
+      } else {
+        # out_i is supplied
+        # power_i will be used
+      }
+    }
 
-    power_i <- rejection_rates(out_i)$reject
     a <- abs(stats::qnorm((1 - ci_level) / 2))
     se_i <- sqrt(power_i * (1 - power_i) / nrep)
     ci_i <- power_i + c(-a, a) * se_i
