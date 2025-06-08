@@ -919,7 +919,8 @@ power_algorithm_bisection_pre_i <- function(object,
                                             nls_args,
                                             final_nrep,
                                             nrep_steps,
-                                            final_R) {
+                                            final_R,
+                                            final_xs_per_trial) {
   # TODO:
   # - Make use of by_* object's results.
   # This method only needs an initial interval
