@@ -37,7 +37,7 @@ expect_no_error(tmp <- x_from_power(out,
                     target_power = .80,
                     final_nrep = 60,
                     max_trials = 2,
-                    seed = 1234,
+                    seed = 2345,
                     progress = TRUE,
                     simulation_progress = FALSE,
                     algorithm = "power_curve"))
