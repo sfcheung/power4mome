@@ -426,7 +426,8 @@ which it can be slow. Nevertheless,
 preliminary examination suggests that
 this method is good enough for common
 scenarios. Therefore, this method is
-the default algorithm ().
+the default algorithm when \code{x} is
+\code{n}.
 }
 
 \subsection{Power Curve Method}{
@@ -441,6 +442,16 @@ just the parameters, of the
 model can change across iterations,
 as more and more data points are
 available.
+
+This method is the default method
+for \code{x = "es"} because the relation
+between the power and the population
+value of a parameter varies across
+parameters, unlike the relation
+between power and sample size. Therefore,
+taking into account the working
+power curve may help finding the
+desired value of \code{x}.
 
 The technical internal workflow of
 this method implemented in
