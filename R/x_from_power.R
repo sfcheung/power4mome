@@ -967,7 +967,7 @@ x_from_power <- function(object,
     tmp <- format(Sys.time(), "%Y-%m-%d %X")
     cat("- Start at", tmp, "\n")
 
-    cat("- Rejection Rates:\n")
+    cat("- Rejection Rates:\n\n")
     tmp <- rejection_rates(by_x_1)
     print(tmp)
     cat("\n")
