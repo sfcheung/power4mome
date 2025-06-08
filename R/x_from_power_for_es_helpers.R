@@ -32,7 +32,7 @@ set_es_range <- function(object,
   if (power0 == target_power) {
     # If power0 == target_power,
     # Be conservative and decrease power by a small amount
-    power0 <- target_power * .80
+    power0 <- target_power * .99
   }
 
   b <- power0 / es0_abs
@@ -44,13 +44,12 @@ set_es_range <- function(object,
   es_out <- seq(from = es0_abs,
                 to = es_end,
                 length.out = k)
-  if (es0_sign >=0) {
+  if (es0_sign >= 0) {
     return(es_out)
   } else {
     es_out <- sort(-es_out)
     return(es_out)
   }
-
 }
 
 #' @noRd
@@ -145,12 +144,38 @@ estimate_es_range <- function(power_es_fit,
                               interval = c(0, .70),
                               extendInt = "upX",
                               es_to_exclude = NULL) {
-  power_j <- seq(from = max(target_power - tolerance, power_min),
-                 to = min(target_power + tolerance, power_max),
-                 length.out = k)
-  if (isFALSE(target_power %in% power_j)) {
-    power_j <- sort(c(power_j, target_power))
+  # target power is guaranteed to be in the choice
+  if (((k %% 2) == 0) && (k >= 4)) {
+    # If k is even and k >= 4, be conservative
+    a <- seq(from = max(target_power - tolerance, power_min),
+             to = target_power,
+             length.out = k / 2)
+    b <- seq(from = target_power,
+             to = min(target_power - tolerance, power_max),
+             length.out = k / 2 + 1)[-1]
+    power_j <- c(a, b)
+  } else if (k == 2) {
+    power_j <- c(target_power,
+                 min(target_power - tolerance, power_max))
+  } else if (((k %% 2) == 0) && (k >= 3)) {
+    # k is odd and k >= 3
+    power_j <- seq(from = max(target_power - tolerance, power_min),
+                   to = min(target_power + tolerance, power_max),
+                   length.out = k)
+  } else if (k == 1) {
+    # k = 1
+    power_j <- target_power
+  } else {
+    # Just in case
+    power_j <- seq(from = max(target_power - tolerance, power_min),
+                   to = min(target_power + tolerance, power_max),
+                   length.out = k)
   }
+
+  # # No longer needed
+  # if (isFALSE(target_power %in% power_j)) {
+  #   power_j <- sort(c(power_j, target_power))
+  # }
   out <- sapply(power_j,
                 function(x) {
                   estimate_es(power_es_fit = power_es_fit,

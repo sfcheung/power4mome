@@ -14,7 +14,7 @@ x_from_power(
   ci_level = 0.95,
   power_min = 0.01,
   power_max = 0.9,
-  x_interval = switch(x, n = c(50, 2000), es = c(0, 0.7)),
+  x_interval = switch(x, n = c(50, 2000), es = NULL),
   extendInt = NULL,
   progress = TRUE,
   simulation_progress = TRUE,
@@ -23,13 +23,14 @@ x_from_power(
   final_nrep = 400,
   initial_R = 250,
   final_R = 1000,
+  final_xs_per_trial = 1,
   nrep_steps = 1,
   seed = NULL,
   x_include_interval = FALSE,
   power_curve_args = list(power_model = NULL, start = NULL, lower_bound = NULL,
     upper_bound = NULL, nls_control = list(), nls_args = list()),
   save_sim_all = FALSE,
-  algorithm = c("bisection", "power_curve"),
+  algorithm = switch(x, n = "bisection", es = "power_curve"),
   control = list()
 )
 
@@ -98,7 +99,9 @@ try in each trail. Default is .01.}
 two values, the minimum value
 and the maximum values of \code{x}, in
 the search for the values
-(sample sizes or population values).}
+(sample sizes or population values).
+If \code{NULL}, default when \code{x = "es"},
+it will be determined internally.}
 
 \item{extendInt}{Whether \code{x_interval}
 can be expanded when estimating the
@@ -175,6 +178,15 @@ because the goal is to estimate
 power by replications, not for high
 precision in one single replication.}
 
+\item{final_xs_per_trial}{The final number
+of values (sample sizes or population
+values) to consider in the last
+trial or last few trials. Should be an integer at least
+\enumerate{
+\item Rounded
+up if not an integer.
+}}
+
 \item{nrep_steps}{How many steps
 the number of replications will be
 increased to \code{final_nrep}, if the
@@ -223,7 +235,8 @@ output can be very large in size.}
 
 \item{algorithm}{The algorithm for
 finding \code{x}. Can be \code{"power_curve"}
-or \code{"bisection"}.}
+or \code{"bisection"}. The default algorithm
+depends on \code{x}.}
 
 \item{control}{A named list of
 additional
@@ -413,7 +426,8 @@ which it can be slow. Nevertheless,
 preliminary examination suggests that
 this method is good enough for common
 scenarios. Therefore, this method is
-the default algorithm ().
+the default algorithm when \code{x} is
+\code{n}.
 }
 
 \subsection{Power Curve Method}{
@@ -428,6 +442,16 @@ just the parameters, of the
 model can change across iterations,
 as more and more data points are
 available.
+
+This method is the default method
+for \code{x = "es"} because the relation
+between the power and the population
+value of a parameter varies across
+parameters, unlike the relation
+between power and sample size. Therefore,
+taking into account the working
+power curve may help finding the
+desired value of \code{x}.
 
 The technical internal workflow of
 this method implemented in

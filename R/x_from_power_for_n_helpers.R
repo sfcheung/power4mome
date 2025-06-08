@@ -244,7 +244,8 @@ estimate_n_range <- function(power_n_fit,
 check_n <- function(ns,
                     interval,
                     n_to_exclude,
-                    extendInt) {
+                    extendInt,
+                    hard_min = 5) {
   i <- rep(FALSE, length(ns))
   if (isFALSE(extendInt %in% c("yes", "upX"))) {
     i[ns > interval[2]] <- TRUE
@@ -260,6 +261,10 @@ check_n <- function(ns,
   i[duplicated(ns)] <- TRUE
 
   i[is.na(ns)] <- TRUE
+
+  # n < hard_min
+
+  i[ns < hard_min] <- TRUE
 
   i
 }

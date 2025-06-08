@@ -29,12 +29,15 @@ power_algorithm_search_by_curve <- function(object,
                                             nrep_seq,
                                             final_nrep_seq,
                                             R_seq,
+                                            final_xs_per_trial,
                                             solution_found) {
     i2 <- NULL
+    target_in_range <- FALSE
+
     for (j in seq_len(max_trials)) {
 
       if (progress) {
-        cat("\n\n--- Trial", j, "---\n\n")
+        cat("--- Trial", j, "---\n\n")
         tmp <- format(Sys.time(), "%Y-%m-%d %X")
         cat("- Start at", tmp, "\n")
       }
@@ -57,16 +60,51 @@ power_algorithm_search_by_curve <- function(object,
                         es = sapply(by_x_1,
                                     \(x) {attr(x, "pop_es_value")},
                                     USE.NAMES = FALSE))
-      x_j <- estimate_x_range(power_x_fit = fit_1,
-                              x = x,
-                              target_power = target_power,
-                              k = xs_per_trial_seq[1],
-                              tolerance = power_tolerance_in_interval,
-                              power_min = power_min,
-                              power_max = power_max,
-                              interval = x_interval,
-                              extendInt = extendInt,
-                              x_to_exclude = x_tried)
+
+      if (target_in_range) {
+        # Always include the intersection, if target_in_range
+        x_j <- estimate_x_range(power_x_fit = fit_1,
+                                x = x,
+                                target_power = target_power,
+                                k = max(xs_per_trial_seq[1],
+                                        1),
+                                tolerance = power_tolerance_in_interval,
+                                power_min = power_min,
+                                power_max = power_max,
+                                interval = x_interval,
+                                extendInt = extendInt,
+                                x_to_exclude = x_tried)
+        tmp <- switch(x,
+                      n = ceiling(x_between_i),
+                      es = x_between_i)
+        x_j <- c(x_j, tmp)
+        x_j <- unique(x_j)
+        if (length(x_j) < xs_per_trial_seq[1]) {
+          # estimate_x_range generated x_between_i
+          # Call it again to get all k values
+          x_j <- estimate_x_range(power_x_fit = fit_1,
+                                  x = x,
+                                  target_power = target_power,
+                                  k = xs_per_trial_seq[1],
+                                  tolerance = power_tolerance_in_interval,
+                                  power_min = power_min,
+                                  power_max = power_max,
+                                  interval = x_interval,
+                                  extendInt = extendInt,
+                                  x_to_exclude = x_tried)
+        }
+      } else {
+        x_j <- estimate_x_range(power_x_fit = fit_1,
+                                x = x,
+                                target_power = target_power,
+                                k = xs_per_trial_seq[1],
+                                tolerance = power_tolerance_in_interval,
+                                power_min = power_min,
+                                power_max = power_max,
+                                interval = x_interval,
+                                extendInt = extendInt,
+                                x_to_exclude = x_tried)
+      }
 
       # Adjust the numbers of replication for each value.
       # A value with estimated power closer to the
@@ -83,7 +121,7 @@ power_algorithm_search_by_curve <- function(object,
 
       if (progress) {
         x_j_str <- formatC(x_j,
-                            digits = switch(x, n = 0, es = 4),
+                            digits = switch(x, n = 0, es = 3),
                             format = "f")
         cat("- Value(s) to try:",
             paste0(x_j_str, collapse = ", "),
@@ -115,9 +153,10 @@ power_algorithm_search_by_curve <- function(object,
                   skip_checking_models = TRUE)
 
       if (progress) {
-        cat("- Rejection Rates:\n")
+        cat("\n- Rejection Rates:\n\n")
         tmp <- rejection_rates(by_x_1)
-        print(tmp)
+        print(tmp,
+              annotation = FALSE)
         cat("\n")
       }
       fit_i <- power_curve(by_x_1,
@@ -127,11 +166,12 @@ power_algorithm_search_by_curve <- function(object,
                           upper_bound = upper_bound,
                           nls_control = nls_control,
                           nls_args = nls_args,
-                          verbose = progress)
+                          verbose = progress,
+                          models = c("glm", "lm"))
 
       # Get the rejection rates of all values tried.
-      tmp1 <- rejection_rates(by_x_1,
-                              all_columns = TRUE)
+      tmp1 <- rejection_rates_add_ci(by_x_1,
+                                     level = ci_level)
       # tmp1$reject <- tmp1$sig
       tmp2 <- range(tmp1$reject)
 
@@ -143,8 +183,33 @@ power_algorithm_search_by_curve <- function(object,
       if (target_in_range) {
         # The desired value probably within the range examined
 
+        tmp4 <- tmp1$reject - target_power
         tmp3 <- abs(tmp1$reject - target_power)
+
+        # Closest and above
+        tmp4a <- which(tmp4 > 0)
+        x_above_i <- tmp4a[which.min(tmp3[tmp4a] * tmp1$reject_se[tmp4a]^2)]
+        # Closest and below
+        tmp4b <- which(tmp4 < 0)
+        x_below_i <- tmp4b[which.min(tmp3[tmp4b] * tmp1$reject_se[tmp4b]^2)]
+
+        x_out_above_i <- switch(x,
+                                n = tmp1$n[x_above_i],
+                                es = tmp1$es[x_above_i])
+        x_out_below_i <- switch(x,
+                                n = tmp1$n[x_below_i],
+                                es = tmp1$es[x_below_i])
+        x_reject_above_i <- tmp1$reject[x_above_i]
+        x_reject_below_i <- tmp1$reject[x_below_i]
+
+        x_between_i <- x_from_y(x1 = x_out_below_i,
+                                y1 = x_reject_below_i,
+                                x2 = x_out_above_i,
+                                y2 = x_reject_above_i,
+                                target = target_power)
+
         x_out_i <- which.min(tmp3)
+
         # If ties, the smallest value will be used
 
         # ** x_out, power_out, nrep_out, ci_out, by_x_out **
@@ -244,7 +309,8 @@ power_algorithm_search_by_curve <- function(object,
                             upper_bound = upper_bound,
                             nls_control = nls_control,
                             nls_args = nls_args,
-                            verbose = progress)
+                            verbose = progress,
+                            models = c("glm", "lm"))
 
       }
 
@@ -331,7 +397,7 @@ power_algorithm_search_by_curve <- function(object,
 
             if (progress) {
               cat("- Minimum number of replications changed to",
-                  nrep_seq[1], "\n")
+                  nrep_seq[1], "\n\n")
             }
 
             R_seq <- R_seq[-1]
@@ -391,12 +457,25 @@ power_algorithm_search_by_curve_pre_i <- function(object,
                                                   nls_args,
                                                   final_nrep,
                                                   nrep_steps,
-                                                  final_R) {
+                                                  final_R,
+                                                  final_xs_per_trial,
+                                                  pre_i_xs = 5,
+                                                  pre_i_nrep = 50,
+                                                  pre_i_R = ifelse(is.null(R0),
+                                                                   NULL,
+                                                                   min(200, R0))) {
+
+  if (progress) {
+    cat("\n--- Pre-iteration Crude Search ---\n\n")
+    tmp <- format(Sys.time(), "%Y-%m-%d %X")
+    cat("- Start at", tmp, "\n")
+  }
+
   x_i <- set_x_range(object,
                     x = x,
                     pop_es_name = pop_es_name,
                     target_power = target_power,
-                    k = xs_per_trial,
+                    k = pre_i_xs,
                     x_max = x_max,
                     x_min = x_min)
   # Exclude the value in the input object
@@ -413,10 +492,16 @@ power_algorithm_search_by_curve_pre_i <- function(object,
 
   if (progress) {
     x_i_str <- formatC(x_i,
-                      digits = switch(x, n = 0, es = 4),
+                      digits = switch(x, n = 0, es = 3),
                       format = "f")
     cat("- Value(s) to try: ",
         paste0(x_i_str, collapse = ", "),
+        "\n")
+    cat("- Crude search with",
+        pre_i_nrep,
+        "replications\n")
+    cat("- R =",
+        pre_i_R,
         "\n")
   }
 
@@ -426,15 +511,15 @@ power_algorithm_search_by_curve_pre_i <- function(object,
   by_x_i <- switch(x,
                   n = power4test_by_n(object,
                                       n = x_i,
-                                      nrep = nrep0,
-                                      R = R0,
+                                      nrep = pre_i_nrep,
+                                      R = pre_i_R,
                                       progress = simulation_progress,
                                       save_sim_all = save_sim_all),
                   es = power4test_by_es(object,
                                         pop_es_name = pop_es_name,
                                         pop_es_values = x_i,
-                                        nrep = nrep0,
-                                        R = R0,
+                                        nrep = pre_i_nrep,
+                                        R = pre_i_R,
                                         progress = simulation_progress,
                                         save_sim_all = save_sim_all))
 
@@ -463,9 +548,10 @@ power_algorithm_search_by_curve_pre_i <- function(object,
   }
 
   if (progress) {
-    cat("- Rejection Rates:\n")
+    cat("\n- Rejection Rates:\n\n")
     tmp <- rejection_rates(by_x_i)
-    print(tmp)
+    print(tmp,
+          annotation = FALSE)
     cat("\n")
   }
 
@@ -478,7 +564,8 @@ power_algorithm_search_by_curve_pre_i <- function(object,
                       upper_bound = upper_bound,
                       nls_control = nls_control,
                       nls_args = nls_args,
-                      verbose = progress)
+                      verbose = progress,
+                      models = c("glm", "lm"))
 
   if (progress) {
     cat("- Power Curve:\n")
@@ -531,7 +618,7 @@ power_algorithm_search_by_curve_pre_i <- function(object,
 
   # The sequence of the numbers of values per trial
   xs_per_trial_seq <- ceiling(seq(from = xs_per_trial,
-                                  to = 2,
+                                  to = final_xs_per_trial,
                                   length.out = nrep_steps + 1))
 
   out <- list(x_i = x_i,

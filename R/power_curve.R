@@ -164,6 +164,13 @@
 #' messages will be printed when
 #' trying different models.
 #'
+#' @param models Models to try. Support
+#' `"nls"` (fitted by [nls()]),
+#' `"logistic"` (fitted by [glm()]), and
+#' `"lm"` (fitted by [lm()]). By default,
+#' all three models will be attempted,
+#' in this order.
+#'
 #' @seealso [power4test_by_n()] and [power4test_by_es()]
 #' for the output supported by
 #' [power_curve()], [plot.power_curve()]
@@ -242,7 +249,11 @@ power_curve <- function(object,
                         upper_bound = NULL,
                         nls_args = list(),
                         nls_control = list(),
-                        verbose = FALSE) {
+                        verbose = FALSE,
+                        models = c("nls", "logistic", "lm")) {
+
+  models <- match.arg(models,
+                      several.ok = TRUE)
 
   # reject ~ I((x - c0)^e) / (b + I((x - c0)^e))
   # The formula used depends on the nature of the predictors
@@ -306,7 +317,8 @@ power_curve <- function(object,
 
   fit <- NA
 
-  if (nrow(reject0) >= 4) {
+  if ((nrow(reject0) >= 4) &&
+      ("nls" %in% models)) {
 
     # === nls ===
     nls_args_fixed <- fix_nls_args(formula = formula,
@@ -350,24 +362,20 @@ power_curve <- function(object,
       model_found <- TRUE
     } else {
       if (verbose) {
-        message("- 'nls()' estimation failed. Switch to logistic regression.")
-        # message("The last model tried:")
-        # print(nls_args_fixed$formula[[length(nls_args_fixed$formula)]])
-        # tmp <- fit_i
-        # tmp$data <- "(Omitted)"
-        # print(tmp)
+        cat("- 'nls()' estimation failed. Switch to logistic regression.\n")
       }
     }
 
-  } else {
+  } else if ("nls" %in% models) {
     if (verbose) {
-      message("- 'nls()' estimation skipped when less than 4 values of predictor examined.")
+      cat("- 'nls()' estimation skipped when less than 4 values of predictor examined.\n")
     }
   }
 
   # === Logistic ===
 
-  if (!model_found) {
+  if (!model_found ||
+      ("logistic" %in% models)) {
     # Do logistic
     fit <- do_logistic(reject_df = reject0)
 
@@ -375,15 +383,15 @@ power_curve <- function(object,
       model_found <- TRUE
     } else {
       if (verbose) {
-        message("- Logistic regression failed. Switch to linear regression.")
-        # print(fit)
+        cat("- Logistic regression failed. Switch to linear regression.\n")
       }
     }
   }
 
   # === OLS Regression ===
 
-  if (!model_found) {
+  if (!model_found ||
+      ("ls" %in% models)) {
   # Last resort: OLS regression
     fit <- do_lm(reject_df = reject0,
                 weights = reject0$nrep)
@@ -392,8 +400,7 @@ power_curve <- function(object,
       model_found <- TRUE
     } else {
       if (verbose) {
-        message("- OLS regression failed. No power curve estimated.")
-        # print(fit)
+        cat("- OLS regression failed. No power curve estimated.\n")
       }
     }
   }

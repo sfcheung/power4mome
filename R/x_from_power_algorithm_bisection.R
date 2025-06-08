@@ -63,6 +63,17 @@ power_algorithm_bisection <- function(object,
   lower <- min(x_interval)
   upper <- max(x_interval)
 
+  if (progress) {
+    cat("\n")
+    print_interval(lower = lower,
+                   upper = upper,
+                   digits = digits,
+                   x_type = x_type,
+                   prefix = "Initial interval:")
+    cat("\n")
+  }
+
+
   tmp <- in_x_tried(lower,
                     object = by_x_ci,
                     x = x)
@@ -125,53 +136,77 @@ power_algorithm_bisection <- function(object,
                 skip_checking_models = TRUE)
   }
 
+  if (progress) {
+    cat("\n")
+    print_interval(lower = lower,
+                   upper = upper,
+                   digits = digits,
+                   x_type = x_type,
+                   prefix = "Initial interval:")
+    cat("\n")
+    cat("- Rejection Rates:\n")
+    tmp <- rejection_rates(by_x_1)
+    print(tmp, annotation = FALSE)
+    cat("\n")
+  }
+
   do_search <- TRUE
 
-  # Fix the interval
-  # The original interval is returned if it is OK
-  interval_updated <- extend_interval(f = f,
-                                      x = x,
-                                      pop_es_name = pop_es_name,
-                                      target_power = target_power,
-                                      ci_level = ci_level,
-                                      nrep = final_nrep,
-                                      R = R,
-                                      what = what,
-                                      simulation_progress = simulation_progress,
-                                      save_sim_all = save_sim_all,
-                                      progress = progress,
-                                      x_type = x_type,
-                                      lower = lower,
-                                      upper = upper,
-                                      f.lower = f.lower,
-                                      f.upper = f.upper,
-                                      lower_hard = lower_hard,
-                                      upper_hard = upper_hard,
-                                      extendInt = extendInt,
-                                      extend_maxiter = extend_maxiter,
-                                      trace = as.numeric(progress),
-                                      digits = digits,
-                                      store_output = TRUE)
+  # - Check whether lower or upper is already a solution
+  output_lower <- attr(f.lower, "output")
+  reject_lower <- rejection_rates(output_lower)$reject
+  ok_lower <- bisection_check_solution(f_i = reject_lower,
+                                       target_power = target_power,
+                                       nrep = final_nrep,
+                                       ci_level = ci_level,
+                                       what = what,
+                                       goal = goal,
+                                       tol = tol)
+  output_upper <- attr(f.upper, "output")
+  reject_upper <- rejection_rates(output_upper)$reject
+  ok_upper <- bisection_check_solution(f_i = reject_upper,
+                                       target_power = target_power,
+                                       nrep = final_nrep,
+                                       ci_level = ci_level,
+                                       what = what,
+                                       goal = goal,
+                                       tol = tol)
 
-  if (interval_updated$extend_status == 0) {
-    if (lower != interval_updated$lower) {
-      tmp <- in_x_tried(test_x = lower,
-                        object = by_x_1,
-                        x = x)
-      if (is.na(tmp)) {
-        by_x_1 <- c(by_x_1, attr(interval_updated$f.lower, "output"),
-                    skip_checking_models = TRUE)
-      }
-    }
-    if (upper != interval_updated$upper) {
-      tmp <- in_x_tried(test_x = upper,
-                        object = by_x_1,
-                        x = x)
-      if (is.na(tmp)) {
-        by_x_1 <- c(by_x_1, attr(interval_updated$f.upper, "output"),
-                    skip_checking_models = TRUE)
-      }
-    }
+  if (ok_lower || ok_upper) {
+    # One of them is a solution. No need to check the interval,
+    # even if the interval is below or above the root.
+    do_search <- FALSE
+  } else {
+    # Fix the interval
+    # The original interval is returned if it is OK
+    interval_updated <- extend_interval(f = f,
+                                        x = x,
+                                        pop_es_name = pop_es_name,
+                                        target_power = target_power,
+                                        ci_level = ci_level,
+                                        nrep = final_nrep,
+                                        R = R,
+                                        what = what,
+                                        simulation_progress = simulation_progress,
+                                        save_sim_all = save_sim_all,
+                                        progress = progress,
+                                        x_type = x_type,
+                                        lower = lower,
+                                        upper = upper,
+                                        f.lower = f.lower,
+                                        f.upper = f.upper,
+                                        lower_hard = lower_hard,
+                                        upper_hard = upper_hard,
+                                        extendInt = extendInt,
+                                        extend_maxiter = extend_maxiter,
+                                        trace = as.numeric(progress),
+                                        digits = digits,
+                                        store_output = TRUE,
+                                        overshoot = switch(x,
+                                                           n = .5,
+                                                           es = .05))
+
+    # if (interval_updated$extend_status == 0) {
     lower <- interval_updated$lower
     upper <- interval_updated$upper
     # The outputs of lower and upper always in by_x_1
@@ -196,34 +231,67 @@ power_algorithm_bisection <- function(object,
     if ((start <= lower) || (start >= upper)) {
       start <- mean(c(lower, upper))
     }
-  } else {
-    # Interval not OK.
-    # However, it is possible that
-    # one of the bounds is a solution.
+
+    tmp <- in_x_tried(test_x = lower,
+                      object = by_x_1,
+                      x = x)
+    if (is.na(tmp)) {
+      by_x_1 <- c(by_x_1, attr(interval_updated$f.lower, "output"),
+                  skip_checking_models = TRUE)
+    }
+
+    tmp <- in_x_tried(test_x = upper,
+                      object = by_x_1,
+                      x = x)
+    if (is.na(tmp)) {
+      by_x_1 <- c(by_x_1, attr(interval_updated$f.upper, "output"),
+                  skip_checking_models = TRUE)
+    }
+
+    # } else {
+    #   # Interval not OK.
+    #   # However, it is possible that
+    #   # one of the bounds is a solution.
+    # }
+
+    # - Check whether the updated lower or upper is already a solution
+    output_lower <- attr(f.lower, "output")
+    reject_lower <- rejection_rates(output_lower)$reject
+    ok_lower <- bisection_check_solution(f_i = reject_lower,
+                                        target_power = target_power,
+                                        nrep = final_nrep,
+                                        ci_level = ci_level,
+                                        what = what,
+                                        goal = goal,
+                                        tol = tol)
+    output_upper <- attr(f.upper, "output")
+    reject_upper <- rejection_rates(output_upper)$reject
+    ok_upper <- bisection_check_solution(f_i = reject_upper,
+                                        target_power = target_power,
+                                        nrep = final_nrep,
+                                        ci_level = ci_level,
+                                        what = what,
+                                        goal = goal,
+                                        tol = tol)
+
+    if ((interval_updated$extend_status != 0) &&
+        (!ok_lower && !ok_upper)) {
+      # Interval not OK and no bounds are the solution
+      if (progress) {
+        cat("\n")
+        cat(names(interval_updated$extend_status), ".\n")
+        cat("None of the bounds are solution.\n")
+        cat("Try another interval.\n\n")
+        # Should quit
+        do_search <- FALSE
+      }
+    }
+
   }
 
-  # - Check whether lower or upper is already a solution
-  output_lower <- attr(f.lower, "output")
-  reject_lower <- rejection_rates(output_lower)$reject
-  ok_lower <- bisection_check_solution(f_i = reject_lower,
-                                       target_power = target_power,
-                                       nrep = final_nrep,
-                                       ci_level = ci_level,
-                                       what = what,
-                                       goal = goal,
-                                       tol = tol)
-  output_upper <- attr(f.upper, "output")
-  reject_upper <- rejection_rates(output_upper)$reject
-  ok_upper <- bisection_check_solution(f_i = reject_upper,
-                                       target_power = target_power,
-                                       nrep = final_nrep,
-                                       ci_level = ci_level,
-                                       what = what,
-                                       goal = goal,
-                                       tol = tol)
   if (ok_lower || ok_upper) {
     if (progress) {
-      cat("One of the bounds in the interval is already a solution.\n")
+      cat("One of the bounds in the interval is already a solution.\n\n")
     }
     do_search <- FALSE
     ci_hit <- switch(goal,
@@ -243,17 +311,6 @@ power_algorithm_bisection <- function(object,
     }
     # by_x_1 <- c(by_x_1, output_i)
     # No need. lower and upper always in by_x_1
-  }
-
-  if ((interval_updated$extend_status != 0) &&
-      (!ok_lower && !ok_upper)) {
-    # Interval not OK and no bounds are the solution
-    if (progress) {
-      cat(names(interval_updated$extend_status), "\n")
-      cat("None of the bounds are solution.\n")
-      cat("Try another interval.\n")
-
-    }
   }
 
   if (do_search) {
@@ -289,6 +346,13 @@ power_algorithm_bisection <- function(object,
       by_x_1 <- c(by_x_1, output_i,
                   skip_checking_models = TRUE)
       reject_i <- rejection_rates(output_i)$reject
+
+      if (progress) {
+        cat("- Rejection Rates:\n")
+        tmp <- rejection_rates(by_x_1)
+        print(tmp, annotation = FALSE)
+        cat("\n")
+      }
 
       # TODO:
       # - Check NA, error, etc.
@@ -328,6 +392,7 @@ power_algorithm_bisection <- function(object,
                        upper = upper_i,
                        digits = digits,
                        x_type = x_type)
+        cat("Updated x:", x_i, "\n")
       }
       i <- i + 1
     }
@@ -458,6 +523,9 @@ extend_interval <- function(f,
                             digits = 3,
                             by_x_1 = NULL,
                             overshoot = .5) {
+  if (trace) {
+    cat("\n\n== Enter extending interval ...\n\n")
+  }
   status_msg <- c("Interval OK" = 0,
                   "Interval not OK but extendInd is no" = 1,
                   "Interval above the solution but extendInd is not yes or downX" = 2,
@@ -471,6 +539,9 @@ extend_interval <- function(f,
   x_type <- args$x
   if (sign(f.lower) != sign(f.upper)) {
     # No need to extend
+    if (trace) {
+      cat("\n\n== Exist extending interval ...\n\n")
+    }
     return(list(lower = lower,
                 upper = upper,
                 f.lower = f.lower,
@@ -480,6 +551,9 @@ extend_interval <- function(f,
                 extendInt = extendInt))
   }
   if (extendInt == "no") {
+    if (trace) {
+      cat("\n\n== Exist extending interval ...\n\n")
+    }
     return(list(lower = lower,
                 upper = upper,
                 f.lower = f.lower,
@@ -497,6 +571,9 @@ extend_interval <- function(f,
   extend_down <- ((slope > 0) && (f.upper > 0)) ||
                   ((slope < 0) && (f.upper < 0))
   if (extend_down && (!(extendInt %in% c("yes", "downX")))) {
+    if (trace) {
+      cat("\n\n== Exist extending interval ...\n\n")
+    }
     return(list(lower = lower,
                 upper = upper,
                 f.lower = f.lower,
@@ -506,6 +583,9 @@ extend_interval <- function(f,
                 extendInt = extendInt))
   }
   if (extend_up && (!(extendInt %in% c("yes", "upX")))) {
+    if (trace) {
+      cat("\n\n== Exist extending interval ...\n\n")
+    }
     return(list(lower = lower,
                 upper = upper,
                 f.lower = f.lower,
@@ -544,7 +624,7 @@ extend_interval <- function(f,
         }
         lower <- max(lower, lower_hard)
         if (trace) {
-          cat("Iteration:", i, "\n")
+          cat("\n\n(Extending the interval) Iteration:", i, "\n\n")
           print_interval(lower = lower,
                          upper = upper,
                          digits = digits,
@@ -571,7 +651,7 @@ extend_interval <- function(f,
         interval_ok <- FALSE
         extend_status <- status_msg[status_msg == 5]
         if (trace) {
-          cat(names(extend_status), ".\n", sep = "")
+          cat(names(extend_status), ".\n\n", sep = "")
         }
         break
       } else {
@@ -585,7 +665,7 @@ extend_interval <- function(f,
         }
         upper <- min(upper, upper_hard)
         if (trace) {
-          cat("Iteration:", i, "\n")
+          cat("\n\n(Extending the interval) Iteration:", i, "\n")
           print_interval(lower = lower,
                          upper = upper,
                          digits = digits,
@@ -613,6 +693,19 @@ extend_interval <- function(f,
       cat(names(extend_status), ".\n", sep = "")
     }
   }
+
+  if (trace) {
+    print_interval(lower = lower,
+                   upper = upper,
+                   digits = digits,
+                   x_type = x_type,
+                   prefix = "Final extended interval:")
+  }
+
+  if (trace) {
+    cat("\n\n== Exist extending interval ...\n\n")
+  }
+
   return(list(lower = lower,
               upper = upper,
               f.lower = f.lower,
@@ -826,7 +919,8 @@ power_algorithm_bisection_pre_i <- function(object,
                                             nls_args,
                                             final_nrep,
                                             nrep_steps,
-                                            final_R) {
+                                            final_R,
+                                            final_xs_per_trial) {
   # TODO:
   # - Make use of by_* object's results.
   # This method only needs an initial interval

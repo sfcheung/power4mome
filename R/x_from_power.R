@@ -98,7 +98,8 @@
 #' preliminary examination suggests that
 #' this method is good enough for common
 #' scenarios. Therefore, this method is
-#' the default algorithm ().
+#' the default algorithm when `x` is
+#' `n`.
 #'
 #' ## Power Curve Method
 #'
@@ -112,6 +113,16 @@
 #' model can change across iterations,
 #' as more and more data points are
 #' available.
+#'
+#' This method is the default method
+#' for `x = "es"` because the relation
+#' between the power and the population
+#' value of a parameter varies across
+#' parameters, unlike the relation
+#' between power and sample size. Therefore,
+#' taking into account the working
+#' power curve may help finding the
+#' desired value of `x`.
 #'
 #' The technical internal workflow of
 #' this method implemented in
@@ -248,6 +259,13 @@
 #' 1. Rounded
 #' up if not an integer.
 #'
+#' @param final_xs_per_trial The final number
+#' of values (sample sizes or population
+#' values) to consider in the last
+#' trial or last few trials. Should be an integer at least
+#' 1. Rounded
+#' up if not an integer.
+#'
 #' @param ci_level The level of confidence
 #' of the confidence intervals computed
 #' for the estimated power. Default is
@@ -264,6 +282,8 @@
 #' and the maximum values of `x`, in
 #' the search for the values
 #' (sample sizes or population values).
+#' If `NULL`, default when `x = "es"`,
+#' it will be determined internally.
 #'
 #' @param extendInt Whether `x_interval`
 #' can be expanded when estimating the
@@ -447,7 +467,8 @@
 #'
 #' @param algorithm The algorithm for
 #' finding `x`. Can be `"power_curve"`
-#' or `"bisection"`.
+#' or `"bisection"`. The default algorithm
+#' depends on `x`.
 #'
 #' @param control A named list of
 #' additional
@@ -528,7 +549,7 @@ x_from_power <- function(object,
                          power_max = .90,
                          x_interval = switch(x,
                                              n = c(50, 2000),
-                                             es = c(0, .7)),
+                                             es = NULL),
                          extendInt = NULL,
                          progress = TRUE,
                          simulation_progress = TRUE,
@@ -537,6 +558,7 @@ x_from_power <- function(object,
                          final_nrep = 400,
                          initial_R = 250,
                          final_R = 1000,
+                         final_xs_per_trial = 1,
                          nrep_steps = 1,
                          seed = NULL,
                          x_include_interval = FALSE,
@@ -547,7 +569,9 @@ x_from_power <- function(object,
                                                  nls_control = list(),
                                                  nls_args = list()),
                          save_sim_all = FALSE,
-                         algorithm = c("bisection", "power_curve"),
+                         algorithm = switch(x,
+                                            n = "bisection",
+                                            es = "power_curve"),
                          control = list()
                          ) {
 
@@ -566,7 +590,9 @@ x_from_power <- function(object,
   # - Final power4test object.
   # - Final model by nls.
 
-  algorithm <- match.arg(algorithm)
+  algorithm <- match.arg(algorithm,
+                         c("bisection",
+                           "power_curve"))
 
   x <- match.arg(x,
                  choices = c("n", "es"))
@@ -590,6 +616,13 @@ x_from_power <- function(object,
   }
   xs_per_trial <- ceiling(xs_per_trial)
 
+  if (final_xs_per_trial < 1) {
+    stop("'final_xs_per_trial' (",
+         final_xs_per_trial,
+         ") is less than 1.")
+  }
+  final_xs_per_trial <- ceiling(final_xs_per_trial)
+
   if (power_min <= 0 || power_max >= 1) {
     stop("'power_min' and 'power_max' must be between 0 and 1.")
   }
@@ -608,10 +641,12 @@ x_from_power <- function(object,
     }
   }
 
-  if (length(x_interval) != 2) {
+  if ((length(x_interval) != 2) &&
+      !is.null(x_interval)) {
     stop("'x_interval' must be a vector with exactly two values.")
   }
-  if (x_interval[2] < x_interval[1]) {
+  if ((x_interval[2] < x_interval[1]) &&
+      !is.null(x_interval)) {
     stop("'x_interval' must be of the form c(minimum, maximum).")
   }
 
@@ -622,12 +657,9 @@ x_from_power <- function(object,
     }
     if (x == "es") {
       extendInt <- match.arg(extendInt,
-                             choices = c("no", "yes", "upX", "downX"))
+                             choices = c("yes", "no", "upX", "downX"))
     }
   }
-
-  x_max <- max(x_interval)
-  x_min <- min(x_interval)
 
   max_trials <- ceiling(max_trials)
   if (max_trials < 1) {
@@ -670,6 +702,16 @@ x_from_power <- function(object,
     object_by_org <- NA
   }
 
+  x_interval <- fix_es_interval(object = object,
+                                x = x,
+                                pop_es_name = pop_es_name,
+                                x_interval = x_interval,
+                                progress = progress)
+
+
+  x_max <- max(x_interval)
+  x_min <- min(x_interval)
+
   time_start <- Sys.time()
 
   # Change nrep?
@@ -703,17 +745,29 @@ x_from_power <- function(object,
     R0 <- ceiling(initial_R)
   }
 
+  if (progress) {
+    cat("\n--- Algorithm used ---\n\n")
+    cat(algorithm, "\n")
+
+    if (progress) {
+      cat("\n--- Progress  ---\n\n")
+      catwrap("- Set 'progress = FALSE' to suppress displaying the progress.",
+              exdent = 2)
+      if (simulation_progress) {
+        catwrap(paste0("- Set 'simulation progress = FALSE' ",
+                       "to suppress displaying the progress ",
+                       "in the simulation."),
+                exdent = 2)
+      }
+    }
+  }
+
+
   # === Initial Trial ===
 
   # Set the initial values to try
 
   if (algorithm == "power_curve") {
-
-    if (progress) {
-      cat("\n--- Pre-iteration Search ---\n\n")
-      tmp <- format(Sys.time(), "%Y-%m-%d %X")
-      cat("- Start at", tmp, "\n")
-    }
 
     a_out <- do.call(power_algorithm_search_by_curve_pre_i,
                      c(list(object = object,
@@ -740,7 +794,8 @@ x_from_power <- function(object,
                             nls_args = power_curve_args$nls_args,
                             final_nrep = final_nrep,
                             nrep_steps = nrep_steps,
-                            final_R = final_R),
+                            final_R = final_R,
+                            final_xs_per_trial = final_xs_per_trial),
                       control))
 
     by_x_1 <- a_out$by_x_1
@@ -781,7 +836,8 @@ x_from_power <- function(object,
                             nls_args = power_curve_args$nls_args,
                             final_nrep = final_nrep,
                             nrep_steps = nrep_steps,
-                            final_R = final_R),
+                            final_R = final_R,
+                            final_xs_per_trial = final_xs_per_trial),
                        control))
 
     x_interval_updated <- a_out$x_interval_updated
@@ -845,6 +901,7 @@ x_from_power <- function(object,
                             nrep_seq = nrep_seq,
                             final_nrep_seq = final_nrep_seq,
                             R_seq = R_seq,
+                            final_xs_per_trial = final_xs_per_trial,
                             solution_found = solution_found),
                      control))
 
@@ -933,11 +990,11 @@ x_from_power <- function(object,
     tmp <- format(Sys.time(), "%Y-%m-%d %X")
     cat("- Start at", tmp, "\n")
 
-    cat("- Rejection Rates:\n")
+    cat("- Rejection Rates:\n\n")
     tmp <- rejection_rates(by_x_1)
     print(tmp)
     cat("\n")
-    cat("- Estimated Power Curve:\n")
+    cat("- Estimated Power Curve:\n\n")
     print(fit_1)
     cat("\n")
   }
@@ -996,7 +1053,7 @@ x_from_power <- function(object,
       x_out_str <- formatC(x_out,
                            digits = switch(x, n = 0, es = 4),
                            format = "f")
-      cat("- Final Value:", x_out_str, "\n")
+      cat("- Final Value:", x_out_str, "\n\n")
       cat("- Final Estimated Power:",
           formatC(power_final, digits = 4, format = "f"), "\n")
       cat("- Confidence Interval: [",
@@ -1089,6 +1146,7 @@ print.x_from_power <- function(x,
   my_call <- x$call
   cat("Call:\n")
   print(my_call)
+  cat("\n")
   solution_found <- !is.na(x$x_final)
   predictor <- x$x
   cat("Predictor (x):",
@@ -1102,7 +1160,7 @@ print.x_from_power <- function(x,
         "\n")
   }
 
-  cat("- Target Power:",
+  cat("Target Power:",
       formatC(x$target_power, digits = digits, format = "f"),
       "\n")
   if (solution_found) {
@@ -1111,13 +1169,83 @@ print.x_from_power <- function(x,
                                            n = 0,
                                            es = digits),
                            format = "f")
-    cat("- Final Value:", x_final_str, "\n")
+    cat("\n- Final Value:", x_final_str, "\n\n")
     cat("- Final Estimated Power:",
         formatC(x$power_final, digits = digits, format = "f"),
         "\n")
   } else {
-    cat("- Solution not found.\n")
+    cat("\n- Solution not found.\n")
   }
-  cat("Call `summary()` for detailed results.\n")
+  cat("\nCall `summary()` for detailed results.\n")
   invisible(x)
+}
+
+#' @noRd
+fix_es_interval <- function(object,
+                            x,
+                            pop_es_name,
+                            x_interval,
+                            progress = TRUE) {
+  if ((x == "es") &&
+      is.null(x_interval)) {
+    if (progress) {
+      cat("\n--- Interval for x (es) ---\n\n")
+      cat("Determining the valid interval of values for '",
+          pop_es_name,
+          "' ...\n",
+          sep = "")
+    }
+    es_tmp <- pop_es(object,
+                     pop_es_name = pop_es_name)
+    range_tmp <- tryCatch(check_valid_es_values(object,
+                                                pop_es_name = pop_es_name),
+                    error = function(e) e)
+    if ((inherits(range_tmp, "error")) ||
+        (all(is.na(range_tmp)))) {
+      if (es_tmp < 0) {
+        x_interval <- c(-.95, 0)
+      } else {
+        x_interval <- c(0, .95)
+      }
+      if (progress) {
+        cat("Failed to find the valid range.\n")
+        cat("This range will be used:",
+            paste0(formatC(x_interval[1], digits = 3, format = "f"),
+                  " to ",
+                  formatC(x_interval[2], digits = 3, format = "f")),
+            "\n")
+        cat("Set 'x_interval' manually if necessary.\n")
+      }
+    } else {
+      x_interval <- range_tmp
+      if ((es_tmp < min(x_interval)) ||
+          (es_tmp > max(x_interval))) {
+        # TODO:
+        # - Do we need this check? This should rarely happen.
+      }
+      # If es0 is in the interval, then
+      if (es_tmp <= 0) {
+        x_interval[x_interval >= 0] <- 0
+      } else {
+        x_interval[x_interval <= 0] <- 0
+      }
+      if (progress) {
+        cat("The probable valid range, adjusted for object's value, is:",
+            paste0(formatC(x_interval[1], digits = 3, format = "f"),
+                  " to ",
+                  formatC(x_interval[2], digits = 3, format = "f")),
+            "\n")
+      }
+    }
+  }
+  return(x_interval)
+}
+
+#' @noRd
+x_from_y <- function(x1,
+                     y1,
+                     x2,
+                     y2,
+                     target = 0) {
+  (target - y1) * (x2 - x1) / (y2 - y1) + x1
 }
