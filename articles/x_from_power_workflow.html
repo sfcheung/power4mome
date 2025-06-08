@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Workflow of 'x_from_power()' • power4mome</title>
+<title>Workflow of 'x_from_power()' Using the 'power_curve' Algorithm • power4mome</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="../favicon-96x96.png">
 <link rel="icon" type="”image/svg+xml”" href="../favicon.svg">
 <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
@@ -17,7 +17,7 @@
 <link href="../deps/Oxygen_Mono-0.4.10/font.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Workflow of 'x_from_power()'">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Workflow of 'x_from_power()' Using the 'power_curve' Algorithm">
 <meta name="google-site-verification" content="0VLBmFnW_UJFI-7gXnORPBsWxqZwmzuGpK-TeVRLBjQ">
 </head>
 <body>
@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.61</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.65</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -54,7 +54,7 @@
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>&lt;Technical Appendices&gt;</h6></li>
     <li><a class="dropdown-item" href="../articles/power4test_workflow.html">Workflow of `power4test()`</a></li>
-    <li><a class="dropdown-item" href="../articles/x_from_power_workflow.html">Workflow of `x_from_power()`</a></li>
+    <li><a class="dropdown-item" href="../articles/x_from_power_workflow.html">Workflow of `x_from_power()` with `power_curve` Algorithm</a></li>
     <li><a class="dropdown-item" href="../articles/sim_data_i_workflow.html">Workflow of `sim_data_i()`</a></li>
   </ul>
 </li>
@@ -79,7 +79,7 @@
 <script src="x_from_power_workflow_files/mermaid-0.3.0/dist/mermaid.slim.min.js"></script><link href="x_from_power_workflow_files/DiagrammeR-styles-0.2/styles.css" rel="stylesheet">
 <script src="x_from_power_workflow_files/chromatography-0.1/chromatography.js"></script><script src="x_from_power_workflow_files/DiagrammeR-binding-1.0.11/DiagrammeR.js"></script><div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>Workflow of 'x_from_power()'</h1>
+      <img src="../logo.png" class="logo" alt=""><h1>Workflow of 'x_from_power()' Using the 'power_curve' Algorithm</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/sfcheung/power4mome/blob/main/vignettes/articles/x_from_power_workflow.Rmd" class="external-link"><code>vignettes/articles/x_from_power_workflow.Rmd</code></a></small>
@@ -92,20 +92,22 @@
 <h2 id="goal">Goal<a class="anchor" aria-label="anchor" href="#goal"></a>
 </h2>
 <p>This technical appendix describes the workflow of
-<code><a href="../reference/x_from_power.html">x_from_power()</a></code> in <a href="https://sfcheung.github.io/power4mome/">power4mome</a>.</p>
+<code><a href="../reference/x_from_power.html">x_from_power()</a></code> in <a href="https://sfcheung.github.io/power4mome/">power4mome</a> when using
+the <code>"power_curve"</code> algorithm.</p>
 </div>
 <div class="section level2">
 <h2 id="x_from_power">
 <code>x_from_power()</code><a class="anchor" aria-label="anchor" href="#x_from_power"></a>
 </h2>
-<p>The following is the workflow of <code><a href="../reference/x_from_power.html">x_from_power()</a></code>.
-Simulation is to be done for each value of <code>x</code>, and this can
-be slow when Monte Carlo or bootstrapping confidence intervals are
-involved in the test. It is not feasible, and also not necessary, to
-accurately estimate the levels of power along many values across a range
-of <code>x</code>, if the goal is to find <em>the</em> value of
-<code>x</code> with the target power. Therefore, steps are taken to
-balance speed and precision when finding the solution.</p>
+<p>The following is the workflow of <code><a href="../reference/x_from_power.html">x_from_power()</a></code>, when
+the algorithm <code>"power_curve"</code> is used. Simulation is to be
+done for each value of <code>x</code>, and this can be slow when Monte
+Carlo or bootstrapping confidence intervals are involved in the test. It
+is not feasible, and also not necessary, to accurately estimate the
+levels of power along many values across a range of <code>x</code>, if
+the goal is to find <em>the</em> value of <code>x</code> with the target
+power. Therefore, steps are taken to balance speed and precision when
+finding the solution.</p>
 <div class="figure">
 <div id="htmlwidget-ac96cb3ee4656e2e9ec3" style="width:800px;height:4050px;" class="DiagrammeR html-widget"></div>
 <script type="application/json" data-for="htmlwidget-ac96cb3ee4656e2e9ec3">{"x":{"diagram":"\nflowchart TD\n  %% classDef default fill:#EEEEFF;\n  %% classDef errornode fill:#FFDDDD;\n  %% classDef startend fill:#DDFFDD;\n\n  style initial fill: lightgreen\n  style loop fill: lightblue\n  style solution fill: lightyellow\n  style exit fill: lightyellow\n  style found fill: lightgreen\n\n  ZA([\"Find the x (n or es)\"])\n  AA[[\"Determine the initial values given the initial results: set_x_range()\"]]\n  AB(\"Estimate Power: power4test_by_n() or power4test_by_es()\")\n  AC(\"Merge all results: by_x_1\")\n  AD(\"Fit a power curve: power_curve() -> fit_i\")\n  %% ADA(\"Update fit_1\")\n  %% ADB(\"Update by_x_1\")\n  AE(\"Set the sequences of nreps, Rs, and xs per trial\")\n  %% AF(\"Set the sequence of Rs\")\n  %% AG(\"Set the sequence of # of ns per trial\")\n\n  BA(\"Start a trial\")\n\n  BB{{\"CI conttains target power?\"}}\n\n  BBA(\"Update the interval of power levels to search\")\n\n  BC[[\"Determine xs to try: estimate_x_range() --> x_j\"]]\n  BD[[\"Adjust nrep based on power levels of xs: nrep_from_power() --> nrep_j\"]]\n  BE(\"Estimate power: power4test_by_n() or power4test_by_es() --> by_x_j\")\n  BF(\"Merge all results --> by_x_1\")\n  BG(\"Update the power curve: power_curve() --> fit_1\")\n\n  BH{{\"Is target power inside the range of estimated power levels?\"}}\n\n  BHA(\"Find the candidate solution (x_out) with power closest to the target power\")\n  BHAA(\"Update x_out, power_out, nrep_out, ci_out, and by_x_out\")\n\n  BHB(\"Estimate the candidate x by the power curve\")\n  BHBA(\"Estiamte the power of x: power4test_by_n() or power4test_by_es()\")\n  BHBB(\"Update x_out, power_out, nrep_out, ci_out, and by_x_out\")\n  BHBC(\"Merge all results --> by_x_1\")\n  BHBD(\"Update the power curve: power_curve() --> fit_1\")\n\n  BI{{\"Any CIs include the target power?\"}}\n\n  BIA(\"Set ci_hit to TRUE\")\n  BIB(\"Find the x (a) with CI including the target power and (b) smallest standard error\")\n  BIC(\"Update n_out, power_out, nrep_out, ci_out, and by_x_out\")\n\n  BIZ(\"Set ci_hit to FALSE\")\n\n  BJ{{\"ci_hit TRUE?\"}}\n\n  BJA{{\"nrep_out == final_nrep?\"}}\n\n  BJAA{{\"At least one nrep left?\"}}\n\n  BJAAA(\"Next nrep, R, and xs_per_trial\")\n\n  BJZ(\"Maximum number of trials reached?\")\n\n  BK{{\"(ci_hit) and (nrep_out == final_nrep)?\"}}\n\n  BKA(\"Solution found: Set to the solution: x_final, by_x_final, power_final, ci_final, nrep_final, i_final\")\n\n  BKB(\"Solution not found: Set to NA: x_final, by_x_final, power_final, ci_final, nrep_final, i_final\")\n\n  BL(\"Determine x estimated by the power curve (used if solution not found): power_curve() --> x_estimated\")\n\n  BM(\"Prepare the output (an x_from_power object)\")\n\n  ZZ[/\"Return the output\"/]\n\n  ZA --> AA\n\n  subgraph initial [Pre-Iteration Search]\n\n  AA --> AB\n  AB --> AC\n  AC --> AD\n  AD --> AE\n\n  end\n\n  AE --> BA\n\n  subgraph loop [Trial Loop]\n\n  BA --> BB\n  BB -- Yes --> BBA --> BC\n  BB -- No --> BC\n  BC --> BD\n  BD --> BE\n  BE --> BF\n  BF --> BG\n  BG --> BH\n\n  subgraph solution [Any candidate solution?]\n\n  BH -- Yes --> BHA\n  BH -- No --> BHB\n\n  BHA --> BHAA\n  BHAA --> BI\n\n  BHB --> BHBA\n  BHBA --> BHBB\n  BHBB --> BHBC\n  BHBC --> BHBD\n\n  BHBD --> BI\n\n  BI -- Yes --> BIA\n  BIA --> BIB\n  BIB --> BIC\n\n  BI -- No --> BIZ\n\n  end\n\n  subgraph exit [Exit the Loop?]\n\n  BIC --> BJ\n  BIZ --> BJ\n\n  BJ -- Yes --> BJA\n\n  BJ -- No --> BJZ\n\n  BJA -- No --> BJAA\n  BJAA -- Yes --> BJAAA\n  BJAA -- No --> BJZ\n  BJAAA --> BJZ\n\n  end\n\n  BJZ -- No --> BA\n  BJAA -- No --> BA\n\n  end\n\n  subgraph found [Solution Found?]\n\n  BJA -- Yes --> BK\n\n  BJZ -- Yes --> BK\n\n  BK -- Yes --> BKA\n  BK -- No --> BKB\n\n  BKA --> BL\n  BKB --> BL\n\n  end\n\n  BL --> BM\n\n  BM --> ZZ\n\n"},"evals":[],"jsHooks":[]}</script><p class="caption">

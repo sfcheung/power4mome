@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.61</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.65</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -54,7 +54,7 @@
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>&lt;Technical Appendices&gt;</h6></li>
     <li><a class="dropdown-item" href="../articles/power4test_workflow.html">Workflow of `power4test()`</a></li>
-    <li><a class="dropdown-item" href="../articles/x_from_power_workflow.html">Workflow of `x_from_power()`</a></li>
+    <li><a class="dropdown-item" href="../articles/x_from_power_workflow.html">Workflow of `x_from_power()` with `power_curve` Algorithm</a></li>
     <li><a class="dropdown-item" href="../articles/sim_data_i_workflow.html">Workflow of `sim_data_i()`</a></li>
   </ul>
 </li>
@@ -81,7 +81,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Quick Template: Mediation with Observed Variables</h1>
             
-            <h4 data-toc-skip class="date">2025-06-05</h4>
+            <h4 data-toc-skip class="date">2025-06-08</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/sfcheung/power4mome/blob/main/vignettes/articles/template_mediation_obs.Rmd" class="external-link"><code>vignettes/articles/template_mediation_obs.Rmd</code></a></small>
       <div class="d-none name"><code>template_mediation_obs.Rmd</code></div>
@@ -190,106 +190,108 @@ to the target power is found).</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">out</span>,</span>
 <span>      data_long <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ====================== Model Information ======================</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; == Model on Factors/Variables ==</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; m ~ x</span></span>
 <span><span class="co">#&gt; y ~ m + x</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; == Model on Variables/Indicators ==</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; m ~ x</span></span>
 <span><span class="co">#&gt; y ~ m + x</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ====== Population Values ======</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Regressions:</span></span>
 <span><span class="co">#&gt;                    Population</span></span>
-<span><span class="co">#&gt;   m ~</span></span>
-<span><span class="co">#&gt;     x                 0.100</span></span>
-<span><span class="co">#&gt;   y ~</span></span>
-<span><span class="co">#&gt;     m                 0.500</span></span>
-<span><span class="co">#&gt;     x                 0.300</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt;   m ~                        </span></span>
+<span><span class="co">#&gt;     x                 0.100  </span></span>
+<span><span class="co">#&gt;   y ~                        </span></span>
+<span><span class="co">#&gt;     m                 0.500  </span></span>
+<span><span class="co">#&gt;     x                 0.300  </span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Variances:</span></span>
 <span><span class="co">#&gt;                    Population</span></span>
-<span><span class="co">#&gt;    .m                 0.990</span></span>
-<span><span class="co">#&gt;    .y                 0.630</span></span>
-<span><span class="co">#&gt;     x                 1.000</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt;    .m                 0.990  </span></span>
+<span><span class="co">#&gt;    .y                 0.630  </span></span>
+<span><span class="co">#&gt;     x                 1.000  </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; (Computing indirect effects for 1 paths ...)</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; == Population Indirect Effect(s) ==</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ==  Indirect Effect(s)   ==</span></span>
 <span><span class="co">#&gt;               ind</span></span>
 <span><span class="co">#&gt; x -&gt; m -&gt; y 0.050</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  - The 'ind' column shows the indirect effects.</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt;  </span></span>
 <span><span class="co">#&gt; ======================= Data Information =======================</span></span>
-<span><span class="co">#&gt;</span></span>
-<span><span class="co">#&gt; Number of Replications:  400</span></span>
-<span><span class="co">#&gt; Sample Sizes:  100</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Number of Replications:  400 </span></span>
+<span><span class="co">#&gt; Sample Sizes:  100 </span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ==== Descriptive Statistics ====</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   vars     n  mean sd  skew kurtosis   se</span></span>
 <span><span class="co">#&gt; m    1 40000  0.00  1  0.01    -0.01 0.01</span></span>
 <span><span class="co">#&gt; y    2 40000 -0.01  1 -0.02    -0.03 0.01</span></span>
 <span><span class="co">#&gt; x    3 40000  0.00  1  0.01    -0.02 0.01</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ==== Parameter Estimates Based on All 400 Samples Combined ====</span></span>
-<span><span class="co">#&gt;</span></span>
-<span><span class="co">#&gt; Total Sample Size: 40000</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Total Sample Size: 40000 </span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ==== Standardized Estimates ====</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Variances and error variances omitted.</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Regressions:</span></span>
 <span><span class="co">#&gt;                     est.std</span></span>
-<span><span class="co">#&gt;   m ~</span></span>
+<span><span class="co">#&gt;   m ~                      </span></span>
 <span><span class="co">#&gt;     x                 0.099</span></span>
-<span><span class="co">#&gt;   y ~</span></span>
+<span><span class="co">#&gt;   y ~                      </span></span>
 <span><span class="co">#&gt;     m                 0.499</span></span>
 <span><span class="co">#&gt;     x                 0.305</span></span>
-<span><span class="co">#&gt;</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ==================== Extra Element(s) Found ====================</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - fit</span></span>
 <span><span class="co">#&gt; - mc_out</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; === Element(s) of the First Dataset ===</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ============ &lt;fit&gt; ============</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; lavaan 0.6-19 ended normally after 1 iteration</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Estimator                                         ML</span></span>
 <span><span class="co">#&gt;   Optimization method                           NLMINB</span></span>
 <span><span class="co">#&gt;   Number of model parameters                         5</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Number of observations                           100</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Test User Model:</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt;                                                       </span></span>
 <span><span class="co">#&gt;   Test statistic                                 0.000</span></span>
 <span><span class="co">#&gt;   Degrees of freedom                                 0</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; =========== &lt;mc_out&gt; ===========</span></span>
-<span><span class="co">#&gt;</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; == A 'mc_out' class object ==</span></span>
-<span><span class="co">#&gt;</span></span>
-<span><span class="co">#&gt; Number of Monte Carlo replications: 1000</span></span>
-<span><span class="co">#&gt;</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Number of Monte Carlo replications: 1000 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ====================== Test(s) Conducted ======================</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - test_indirect: x-&gt;m-&gt;y</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call print() and set 'test_long = TRUE' for a detailed report.</span></span>
 <span><span class="fu"><a href="../reference/rejection_rates.html">rejection_rates</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                     test test_label   p.v reject r.cilo r.cihi</span></span>
@@ -402,61 +404,57 @@ too different from the target power.</p>
 <code class="sourceCode R"><span><span class="co">#</span></span>
 <span><span class="co"># ===== Print the Summary =====</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">n_power_80</span><span class="op">)</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ====== x_from_power Results ======</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call:</span></span>
 <span><span class="co">#&gt; x_from_power(object = out, x = "n", seed = 1357)</span></span>
-<span><span class="co">#&gt; Predictor (x): Sample Size</span></span>
-<span><span class="co">#&gt;</span></span>
-<span><span class="co">#&gt; - Target Power: 0.800</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; Predictor (x): Sample Size </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; - Target Power: 0.800 </span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; === Major Results ===</span></span>
-<span><span class="co">#&gt;</span></span>
-<span><span class="co">#&gt; - Final Value: 668</span></span>
-<span><span class="co">#&gt; - Final Estimated Power: 0.762</span></span>
-<span><span class="co">#&gt; - Confidence Interval: [0.721; 0.804]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; - Final Value: 832 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; - Final Estimated Power: 0.828 </span></span>
+<span><span class="co">#&gt; - Confidence Interval: [0.790; 0.865]</span></span>
 <span><span class="co">#&gt; - Level of confidence: 95.0%</span></span>
 <span><span class="co">#&gt; - Based on 400 replications.</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; === Technical Information ===</span></span>
-<span><span class="co">#&gt;</span></span>
-<span><span class="co">#&gt; - The range of values explored: 100 to 1492</span></span>
-<span><span class="co">#&gt; - Time spent in the search: 2.194 mins</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; - The range of values explored: 100 to 972 </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 1.995 mins </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
-<span><span class="co">#&gt;</span></span>
-<span><span class="co">#&gt; Model Type: Nonlinear Regression Model</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Model Type: Nonlinear Regression Model </span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call:</span></span>
-<span><span class="co">#&gt; power_curve(object = by_x_1, formula = power_model, start = stats::coef(fit_1),</span></span>
-<span><span class="co">#&gt;     lower_bound = lower_bound, upper_bound = upper_bound, nls_args = nls_args,</span></span>
+<span><span class="co">#&gt; power_curve(object = by_x_1, formula = power_model, start = power_curve_start, </span></span>
+<span><span class="co">#&gt;     lower_bound = lower_bound, upper_bound = upper_bound, nls_args = nls_args, </span></span>
 <span><span class="co">#&gt;     nls_control = nls_control, verbose = progress)</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Predictor: n (Sample Size)</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model:</span></span>
 <span><span class="co">#&gt; Nonlinear regression model</span></span>
 <span><span class="co">#&gt;   model: reject ~ I((x - c0)^e)/(b + I((x - c0)^e))</span></span>
 <span><span class="co">#&gt;    data: "(Omitted)"</span></span>
-<span><span class="co">#&gt;        b       c0        e</span></span>
-<span><span class="co">#&gt; 2171.282    0.000    1.326</span></span>
-<span><span class="co">#&gt;  weighted residual sum-of-squares: 1.548</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt;       b      c0       e </span></span>
+<span><span class="co">#&gt; 3369.91    0.00    1.41 </span></span>
+<span><span class="co">#&gt;  residual sum-of-squares: 1.97</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Algorithm "port", convergence message: relative convergence (4)</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - Detailed Results:</span></span>
-<span><span class="co">#&gt;</span></span>
-<span><span class="co">#&gt;       n                   test test_label   p.v reject r.cilo r.cihi</span></span>
-<span><span class="co">#&gt; 1   100 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.195  0.156  0.234</span></span>
-<span><span class="co">#&gt; 2   255 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.340  0.247  0.433</span></span>
-<span><span class="co">#&gt; 3   410 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.510  0.412  0.608</span></span>
-<span><span class="co">#&gt; 4   645 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.752  0.668  0.837</span></span>
-<span><span class="co">#&gt; 5   668 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.762  0.721  0.804</span></span>
-<span><span class="co">#&gt; 6   693 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.743  0.689  0.797</span></span>
-<span><span class="co">#&gt; 7   694 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.720  0.632  0.808</span></span>
-<span><span class="co">#&gt; 8   750 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.780  0.699  0.861</span></span>
-<span><span class="co">#&gt; 9   936 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.863  0.829  0.896</span></span>
-<span><span class="co">#&gt; 10 1492 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.963  0.944  0.981</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     n                   test test_label   p.v reject r.cilo r.cihi</span></span>
+<span><span class="co">#&gt; 1 100 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.195  0.156  0.234</span></span>
+<span><span class="co">#&gt; 2 410 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.537  0.489  0.586</span></span>
+<span><span class="co">#&gt; 3 691 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.752  0.710  0.795</span></span>
+<span><span class="co">#&gt; 4 832 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.828  0.790  0.865</span></span>
+<span><span class="co">#&gt; 5 972 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.845  0.810  0.880</span></span>
 <span><span class="co">#&gt; Notes:</span></span>
 <span><span class="co">#&gt; - n: The sample size in a trial.</span></span>
 <span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>
@@ -508,64 +506,58 @@ sample sizes are too different from the target power.</p>
 <code class="sourceCode R"><span><span class="co">#</span></span>
 <span><span class="co"># ===== Print the Summary =====</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">n_power_80_ns</span><span class="op">)</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ====== x_from_power Results ======</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call:</span></span>
 <span><span class="co">#&gt; x_from_power(object = out_ns, x = "n", seed = 1357)</span></span>
-<span><span class="co">#&gt; Predictor (x): Sample Size</span></span>
-<span><span class="co">#&gt;</span></span>
-<span><span class="co">#&gt; - Target Power: 0.800</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; Predictor (x): Sample Size </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; - Target Power: 0.800 </span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; === Major Results ===</span></span>
-<span><span class="co">#&gt;</span></span>
-<span><span class="co">#&gt; - Final Value: 807</span></span>
-<span><span class="co">#&gt; - Final Estimated Power: 0.818</span></span>
-<span><span class="co">#&gt; - Confidence Interval: [0.780; 0.855]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; - Final Value: 788 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; - Final Estimated Power: 0.825 </span></span>
+<span><span class="co">#&gt; - Confidence Interval: [0.788; 0.862]</span></span>
 <span><span class="co">#&gt; - Level of confidence: 95.0%</span></span>
 <span><span class="co">#&gt; - Based on 400 replications.</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; === Technical Information ===</span></span>
-<span><span class="co">#&gt;</span></span>
-<span><span class="co">#&gt; - The range of values explored: 200 to 807</span></span>
-<span><span class="co">#&gt; - Time spent in the search: 2.065 mins</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; - The range of values explored: 300 to 1036 </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 1.387 mins </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
-<span><span class="co">#&gt;</span></span>
-<span><span class="co">#&gt; Model Type: Logistic Regression</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call:</span></span>
-<span><span class="co">#&gt; power_curve(object = by_x_i, formula = power_model, start = start,</span></span>
-<span><span class="co">#&gt;     lower_bound = lower_bound, upper_bound = upper_bound, nls_args = nls_args,</span></span>
+<span><span class="co">#&gt; power_curve(object = by_x_1, formula = power_model, start = power_curve_start, </span></span>
+<span><span class="co">#&gt;     lower_bound = lower_bound, upper_bound = upper_bound, nls_args = nls_args, </span></span>
 <span><span class="co">#&gt;     nls_control = nls_control, verbose = progress)</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Predictor: n (Sample Size)</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model:</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call:  stats::glm(formula = reject ~ x, family = "binomial", data = reject1)</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Coefficients:</span></span>
-<span><span class="co">#&gt; (Intercept)            x</span></span>
-<span><span class="co">#&gt;   -1.608780     0.004152</span></span>
-<span><span class="co">#&gt;</span></span>
-<span><span class="co">#&gt; Degrees of Freedom: 1399 Total (i.e. Null);  1398 Residual</span></span>
-<span><span class="co">#&gt; Null Deviance:       1879</span></span>
-<span><span class="co">#&gt; Residual Deviance: 1830  AIC: 1834</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; (Intercept)            x  </span></span>
+<span><span class="co">#&gt;   -1.139725     0.003261  </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Degrees of Freedom: 1599 Total (i.e. Null);  1598 Residual</span></span>
+<span><span class="co">#&gt; Null Deviance:       1941 </span></span>
+<span><span class="co">#&gt; Residual Deviance: 1716  AIC: 1720</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - Detailed Results:</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;      n                   test test_label   p.v reject r.cilo r.cihi</span></span>
-<span><span class="co">#&gt; 1  200 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.323  0.277  0.368</span></span>
-<span><span class="co">#&gt; 2  250 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.323  0.277  0.368</span></span>
-<span><span class="co">#&gt; 3  300 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.445  0.396  0.494</span></span>
-<span><span class="co">#&gt; 4  420 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.540  0.442  0.638</span></span>
-<span><span class="co">#&gt; 5  539 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.630  0.535  0.725</span></span>
-<span><span class="co">#&gt; 6  651 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.708  0.663  0.752</span></span>
-<span><span class="co">#&gt; 7  666 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.770  0.688  0.852</span></span>
-<span><span class="co">#&gt; 8  721 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.787  0.736  0.838</span></span>
-<span><span class="co">#&gt; 9  722 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.733  0.689  0.776</span></span>
-<span><span class="co">#&gt; 10 785 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.842  0.770  0.913</span></span>
-<span><span class="co">#&gt; 11 807 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.818  0.780  0.855</span></span>
+<span><span class="co">#&gt; 1  300 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.445  0.396  0.494</span></span>
+<span><span class="co">#&gt; 2  539 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.662  0.616  0.709</span></span>
+<span><span class="co">#&gt; 3  788 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.825  0.788  0.862</span></span>
+<span><span class="co">#&gt; 4 1036 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.887  0.857  0.918</span></span>
 <span><span class="co">#&gt; Notes:</span></span>
 <span><span class="co">#&gt; - n: The sample size in a trial.</span></span>
 <span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>
@@ -623,106 +615,108 @@ steps.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">out2</span>,</span>
 <span>      data_long <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ====================== Model Information ======================</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; == Model on Factors/Variables ==</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; m ~ x</span></span>
 <span><span class="co">#&gt; y ~ m + x</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; == Model on Variables/Indicators ==</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; m ~ x</span></span>
 <span><span class="co">#&gt; y ~ m + x</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ====== Population Values ======</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Regressions:</span></span>
 <span><span class="co">#&gt;                    Population</span></span>
-<span><span class="co">#&gt;   m ~</span></span>
-<span><span class="co">#&gt;     x                 0.300</span></span>
-<span><span class="co">#&gt;   y ~</span></span>
-<span><span class="co">#&gt;     m                 0.300</span></span>
-<span><span class="co">#&gt;     x                 0.300</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt;   m ~                        </span></span>
+<span><span class="co">#&gt;     x                 0.300  </span></span>
+<span><span class="co">#&gt;   y ~                        </span></span>
+<span><span class="co">#&gt;     m                 0.300  </span></span>
+<span><span class="co">#&gt;     x                 0.300  </span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Variances:</span></span>
 <span><span class="co">#&gt;                    Population</span></span>
-<span><span class="co">#&gt;    .m                 0.910</span></span>
-<span><span class="co">#&gt;    .y                 0.766</span></span>
-<span><span class="co">#&gt;     x                 1.000</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt;    .m                 0.910  </span></span>
+<span><span class="co">#&gt;    .y                 0.766  </span></span>
+<span><span class="co">#&gt;     x                 1.000  </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; (Computing indirect effects for 1 paths ...)</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; == Population Indirect Effect(s) ==</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ==  Indirect Effect(s)   ==</span></span>
 <span><span class="co">#&gt;               ind</span></span>
 <span><span class="co">#&gt; x -&gt; m -&gt; y 0.090</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  - The 'ind' column shows the indirect effects.</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt;  </span></span>
 <span><span class="co">#&gt; ======================= Data Information =======================</span></span>
-<span><span class="co">#&gt;</span></span>
-<span><span class="co">#&gt; Number of Replications:  400</span></span>
-<span><span class="co">#&gt; Sample Sizes:  100</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Number of Replications:  400 </span></span>
+<span><span class="co">#&gt; Sample Sizes:  100 </span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ==== Descriptive Statistics ====</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   vars     n  mean sd  skew kurtosis   se</span></span>
 <span><span class="co">#&gt; m    1 40000  0.00  1  0.01     0.00 0.01</span></span>
 <span><span class="co">#&gt; y    2 40000 -0.01  1 -0.01    -0.01 0.01</span></span>
 <span><span class="co">#&gt; x    3 40000  0.00  1  0.01    -0.02 0.01</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ==== Parameter Estimates Based on All 400 Samples Combined ====</span></span>
-<span><span class="co">#&gt;</span></span>
-<span><span class="co">#&gt; Total Sample Size: 40000</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Total Sample Size: 40000 </span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ==== Standardized Estimates ====</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Variances and error variances omitted.</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Regressions:</span></span>
 <span><span class="co">#&gt;                     est.std</span></span>
-<span><span class="co">#&gt;   m ~</span></span>
+<span><span class="co">#&gt;   m ~                      </span></span>
 <span><span class="co">#&gt;     x                 0.299</span></span>
-<span><span class="co">#&gt;   y ~</span></span>
+<span><span class="co">#&gt;   y ~                      </span></span>
 <span><span class="co">#&gt;     m                 0.298</span></span>
 <span><span class="co">#&gt;     x                 0.306</span></span>
-<span><span class="co">#&gt;</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ==================== Extra Element(s) Found ====================</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - fit</span></span>
 <span><span class="co">#&gt; - mc_out</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; === Element(s) of the First Dataset ===</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ============ &lt;fit&gt; ============</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; lavaan 0.6-19 ended normally after 1 iteration</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Estimator                                         ML</span></span>
 <span><span class="co">#&gt;   Optimization method                           NLMINB</span></span>
 <span><span class="co">#&gt;   Number of model parameters                         5</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Number of observations                           100</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Test User Model:</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt;                                                       </span></span>
 <span><span class="co">#&gt;   Test statistic                                 0.000</span></span>
 <span><span class="co">#&gt;   Degrees of freedom                                 0</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; =========== &lt;mc_out&gt; ===========</span></span>
-<span><span class="co">#&gt;</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; == A 'mc_out' class object ==</span></span>
-<span><span class="co">#&gt;</span></span>
-<span><span class="co">#&gt; Number of Monte Carlo replications: 1000</span></span>
-<span><span class="co">#&gt;</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Number of Monte Carlo replications: 1000 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ====================== Test(s) Conducted ======================</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - test_indirect: x-&gt;m-&gt;y</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call print() and set 'test_long = TRUE' for a detailed report.</span></span>
 <span><span class="fu"><a href="../reference/rejection_rates.html">rejection_rates</a></span><span class="op">(</span><span class="va">out2</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                     test test_label   p.v reject r.cilo r.cihi</span></span>
@@ -755,62 +749,61 @@ steps.</p>
 <code class="sourceCode R"><span><span class="co">#</span></span>
 <span><span class="co"># ===== Print the Summary =====</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">n2_power_80</span><span class="op">)</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ====== x_from_power Results ======</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call:</span></span>
 <span><span class="co">#&gt; x_from_power(object = out2, x = "n", seed = 1357)</span></span>
-<span><span class="co">#&gt; Predictor (x): Sample Size</span></span>
-<span><span class="co">#&gt;</span></span>
-<span><span class="co">#&gt; - Target Power: 0.800</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; Predictor (x): Sample Size </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; - Target Power: 0.800 </span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; === Major Results ===</span></span>
-<span><span class="co">#&gt;</span></span>
-<span><span class="co">#&gt; - Final Value: 101</span></span>
-<span><span class="co">#&gt; - Final Estimated Power: 0.802</span></span>
-<span><span class="co">#&gt; - Confidence Interval: [0.763; 0.842]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; - Final Value: 113 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; - Final Estimated Power: 0.825 </span></span>
+<span><span class="co">#&gt; - Confidence Interval: [0.788; 0.862]</span></span>
 <span><span class="co">#&gt; - Level of confidence: 95.0%</span></span>
 <span><span class="co">#&gt; - Based on 400 replications.</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; === Technical Information ===</span></span>
-<span><span class="co">#&gt;</span></span>
-<span><span class="co">#&gt; - The range of values explored: 100 to 120</span></span>
-<span><span class="co">#&gt; - Time spent in the search: 2.043 mins</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; - The range of values explored: 100 to 197 </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 2.776 mins </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
-<span><span class="co">#&gt;</span></span>
-<span><span class="co">#&gt; Model Type: Logistic Regression</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call:</span></span>
-<span><span class="co">#&gt; power_curve(object = by_x_i, formula = power_model, start = start,</span></span>
-<span><span class="co">#&gt;     lower_bound = lower_bound, upper_bound = upper_bound, nls_args = nls_args,</span></span>
+<span><span class="co">#&gt; power_curve(object = by_x_1, formula = power_model, start = power_curve_start, </span></span>
+<span><span class="co">#&gt;     lower_bound = lower_bound, upper_bound = upper_bound, nls_args = nls_args, </span></span>
 <span><span class="co">#&gt;     nls_control = nls_control, verbose = progress)</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Predictor: n (Sample Size)</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model:</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call:  stats::glm(formula = reject ~ x, family = "binomial", data = reject1)</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Coefficients:</span></span>
-<span><span class="co">#&gt; (Intercept)            x</span></span>
-<span><span class="co">#&gt;    -2.39667      0.03479</span></span>
-<span><span class="co">#&gt;</span></span>
-<span><span class="co">#&gt; Degrees of Freedom: 599 Total (i.e. Null);  598 Residual</span></span>
-<span><span class="co">#&gt; Null Deviance:       663.6</span></span>
-<span><span class="co">#&gt; Residual Deviance: 662.6     AIC: 666.6</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; (Intercept)            x  </span></span>
+<span><span class="co">#&gt;    -1.86001      0.02963  </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Degrees of Freedom: 2799 Total (i.e. Null);  2798 Residual</span></span>
+<span><span class="co">#&gt; Null Deviance:       2311 </span></span>
+<span><span class="co">#&gt; Residual Deviance: 2158  AIC: 2162</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - Detailed Results:</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     n                   test test_label   p.v reject r.cilo r.cihi</span></span>
 <span><span class="co">#&gt; 1 100 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.745  0.702  0.788</span></span>
-<span><span class="co">#&gt; 2 101 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.802  0.763  0.842</span></span>
-<span><span class="co">#&gt; 3 102 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.770  0.688  0.852</span></span>
-<span><span class="co">#&gt; 4 104 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.790  0.710  0.870</span></span>
-<span><span class="co">#&gt; 5 107 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.780  0.699  0.861</span></span>
-<span><span class="co">#&gt; 6 108 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.787  0.747  0.828</span></span>
-<span><span class="co">#&gt; 7 109 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.755  0.701  0.809</span></span>
-<span><span class="co">#&gt; 8 116 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.888  0.828  0.948</span></span>
-<span><span class="co">#&gt; 9 120 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.840  0.804  0.876</span></span>
+<span><span class="co">#&gt; 2 107 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.757  0.715  0.800</span></span>
+<span><span class="co">#&gt; 3 113 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.825  0.788  0.862</span></span>
+<span><span class="co">#&gt; 4 119 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.858  0.823  0.892</span></span>
+<span><span class="co">#&gt; 5 130 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.895  0.865  0.925</span></span>
+<span><span class="co">#&gt; 6 152 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.938  0.914  0.961</span></span>
+<span><span class="co">#&gt; 7 197 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.973  0.956  0.989</span></span>
 <span><span class="co">#&gt; Notes:</span></span>
 <span><span class="co">#&gt; - n: The sample size in a trial.</span></span>
 <span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>

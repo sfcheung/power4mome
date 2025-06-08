@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.61</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.65</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -54,7 +54,7 @@
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>&lt;Technical Appendices&gt;</h6></li>
     <li><a class="dropdown-item" href="../articles/power4test_workflow.html">Workflow of `power4test()`</a></li>
-    <li><a class="dropdown-item" href="../articles/x_from_power_workflow.html">Workflow of `x_from_power()`</a></li>
+    <li><a class="dropdown-item" href="../articles/x_from_power_workflow.html">Workflow of `x_from_power()` with `power_curve` Algorithm</a></li>
     <li><a class="dropdown-item" href="../articles/sim_data_i_workflow.html">Workflow of `sim_data_i()`</a></li>
   </ul>
 </li>
@@ -80,7 +80,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Sample Size Given Desired Power</h1>
             
-            <h4 data-toc-skip class="date">2025-06-05</h4>
+            <h4 data-toc-skip class="date">2025-06-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/sfcheung/power4mome/blob/main/vignettes/articles/x_from_power_for_n.Rmd" class="external-link"><code>vignettes/articles/x_from_power_for_n.Rmd</code></a></small>
       <div class="d-none name"><code>x_from_power_for_n.Rmd</code></div>
@@ -280,6 +280,8 @@ and &lt;code&gt;&lt;a href="https://rdrr.io/r/base/Random.html" class="external-
 <span><span class="co">#&gt;    .y                 0.870  </span></span>
 <span><span class="co">#&gt;     x                 1.000  </span></span>
 <span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; (Computing indirect effects for 1 paths ...)</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; == Population Indirect Effect(s) ==</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ==  Indirect Effect(s)   ==</span></span>
@@ -380,7 +382,7 @@ the call, based on the previous one:</p>
 <span>                                   m <span class="op">=</span> <span class="st">"m"</span>,</span>
 <span>                                   y <span class="op">=</span> <span class="st">"y"</span>,</span>
 <span>                                   mc_ci <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span>                  iseed <span class="op">=</span> <span class="fl">1234</span>,</span>
+<span>                  iseed <span class="op">=</span> <span class="fl">2345</span>,</span>
 <span>                  parallel <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>If our goal is to find a sample size for a specific level of power,
 with sufficient precision, we do not need a large number of replications
@@ -455,6 +457,8 @@ session.</p>
 <span><span class="co">#&gt;    .y                 0.870  </span></span>
 <span><span class="co">#&gt;     x                 1.000  </span></span>
 <span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; (Computing indirect effects for 1 paths ...)</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; == Population Indirect Effect(s) ==</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ==  Indirect Effect(s)   ==</span></span>
@@ -503,8 +507,8 @@ session.</p>
 <span><span class="co">#&gt; =============== &lt;test_indirect: x-&gt;m-&gt;y&gt; ===============</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Mean(s) across replication:</span></span>
-<span><span class="co">#&gt;    est   cilo  cihi   sig</span></span>
-<span><span class="co">#&gt;  0.139 -0.026 0.337 0.400</span></span>
+<span><span class="co">#&gt;    est  cilo  cihi   sig</span></span>
+<span><span class="co">#&gt;  0.167 0.003 0.367 0.520</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - The value 'sig' is the rejection rate.</span></span>
 <span><span class="co">#&gt; - If the null hypothesis is false, this is the power.</span></span>
@@ -521,11 +525,9 @@ test we set up.</p>
 <p>This is a simplified description of how <code><a href="../reference/x_from_power.html">x_from_power()</a></code>
 works:</p>
 <ul>
-<li><p>It rerun the simulation and test in an output of
+<li><p>It reruns the simulation and test in an output of
 <code><a href="../reference/power4test.html">power4test()</a></code> for different sample sizes, and then estimate
 the power levels for each of them.</p></li>
-<li><p>It will try to estimate the relation between the power and the
-sample size, and select the next sample size(s) to try.</p></li>
 <li><p>It will adopt a sample size as the solution if (a) the confidence
 interval of the estimated power includes the target power (default level
 95%), and (b) the number of replications used in the estimation is the
@@ -537,7 +539,7 @@ level).</p></li>
 <span>                      x <span class="op">=</span> <span class="st">"n"</span>,</span>
 <span>                      target_power <span class="op">=</span> <span class="fl">.80</span>,</span>
 <span>                      final_nrep <span class="op">=</span> <span class="fl">400</span>,</span>
-<span>                      seed <span class="op">=</span> <span class="fl">1234</span><span class="op">)</span></span></code></pre></div>
+<span>                      seed <span class="op">=</span> <span class="fl">4567</span><span class="op">)</span></span></code></pre></div>
 <p>The argument used above:</p>
 <ul>
 <li><p><code>x</code>: What we want to find, <code>"n"</code> stands for
@@ -562,15 +564,15 @@ set this seed to an integer.</p></li>
 <code class="sourceCode R"><span><span class="va">out_n</span></span>
 <span><span class="co">#&gt; Call:</span></span>
 <span><span class="co">#&gt; x_from_power(object = out, x = "n", target_power = 0.8, final_nrep = 400, </span></span>
-<span><span class="co">#&gt;     seed = 1234)</span></span>
+<span><span class="co">#&gt;     seed = 4567)</span></span>
 <span><span class="co">#&gt; Predictor (x): Sample Size </span></span>
 <span><span class="co">#&gt; - Target Power: 0.800 </span></span>
 <span><span class="co">#&gt; - Final Value: 103 </span></span>
-<span><span class="co">#&gt; - Final Estimated Power: 0.782 </span></span>
+<span><span class="co">#&gt; - Final Estimated Power: 0.772 </span></span>
 <span><span class="co">#&gt; Call `summary()` for detailed results.</span></span></code></pre></div>
 <p>The estimated sample size to have a power close to .80 power to
 detect the indirect effect by Monte Carlo interval is 103. The estimated
-power based on simulation is 0.782.</p>
+power based on simulation is 0.772.</p>
 <p>To obtain a more detailed results for the search, we can use the
 <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> method:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
@@ -580,7 +582,7 @@ power based on simulation is 0.782.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call:</span></span>
 <span><span class="co">#&gt; x_from_power(object = out, x = "n", target_power = 0.8, final_nrep = 400, </span></span>
-<span><span class="co">#&gt;     seed = 1234)</span></span>
+<span><span class="co">#&gt;     seed = 4567)</span></span>
 <span><span class="co">#&gt; Predictor (x): Sample Size </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - Target Power: 0.800 </span></span>
@@ -588,21 +590,21 @@ power based on simulation is 0.782.</p>
 <span><span class="co">#&gt; === Major Results ===</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - Final Value: 103 </span></span>
-<span><span class="co">#&gt; - Final Estimated Power: 0.782 </span></span>
-<span><span class="co">#&gt; - Confidence Interval: [0.742; 0.823]</span></span>
+<span><span class="co">#&gt; - Final Estimated Power: 0.772 </span></span>
+<span><span class="co">#&gt; - Confidence Interval: [0.731; 0.814]</span></span>
 <span><span class="co">#&gt; - Level of confidence: 95.0%</span></span>
 <span><span class="co">#&gt; - Based on 400 replications.</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; === Technical Information ===</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; - The range of values explored: 50 to 126 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 1.985 mins </span></span>
+<span><span class="co">#&gt; - The range of values explored: 50 to 111 </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 3.997 mins </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call:</span></span>
-<span><span class="co">#&gt; power_curve(object = by_x_i, formula = power_model, start = start, </span></span>
+<span><span class="co">#&gt; power_curve(object = by_x_1, formula = power_model, start = power_curve_start, </span></span>
 <span><span class="co">#&gt;     lower_bound = lower_bound, upper_bound = upper_bound, nls_args = nls_args, </span></span>
 <span><span class="co">#&gt;     nls_control = nls_control, verbose = progress)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -614,24 +616,20 @@ power based on simulation is 0.782.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Coefficients:</span></span>
 <span><span class="co">#&gt; (Intercept)            x  </span></span>
-<span><span class="co">#&gt;    -1.59991      0.02858  </span></span>
+<span><span class="co">#&gt;    -1.10964      0.02385  </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Degrees of Freedom: 249 Total (i.e. Null);  248 Residual</span></span>
-<span><span class="co">#&gt; Null Deviance:       321.8 </span></span>
-<span><span class="co">#&gt; Residual Deviance: 306.2     AIC: 310.2</span></span>
+<span><span class="co">#&gt; Degrees of Freedom: 1649 Total (i.e. Null);  1648 Residual</span></span>
+<span><span class="co">#&gt; Null Deviance:       1839 </span></span>
+<span><span class="co">#&gt; Residual Deviance: 1799  AIC: 1803</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - Detailed Results:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     n                   test test_label   p.v reject r.cilo r.cihi</span></span>
-<span><span class="co">#&gt; 1  50 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.400  0.264  0.536</span></span>
-<span><span class="co">#&gt; 2  75 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.690  0.599  0.781</span></span>
-<span><span class="co">#&gt; 3  89 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.772  0.731  0.814</span></span>
-<span><span class="co">#&gt; 4  96 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.720  0.632  0.808</span></span>
-<span><span class="co">#&gt; 5 100 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.750  0.665  0.835</span></span>
-<span><span class="co">#&gt; 6 103 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.782  0.742  0.823</span></span>
-<span><span class="co">#&gt; 7 104 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.855  0.810  0.899</span></span>
-<span><span class="co">#&gt; 8 114 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.780  0.699  0.861</span></span>
-<span><span class="co">#&gt; 9 126 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.870  0.837  0.903</span></span>
+<span><span class="co">#&gt; 1  50 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.520  0.382  0.658</span></span>
+<span><span class="co">#&gt; 2  77 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.685  0.639  0.731</span></span>
+<span><span class="co">#&gt; 3  94 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.745  0.702  0.788</span></span>
+<span><span class="co">#&gt; 4 103 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.772  0.731  0.814</span></span>
+<span><span class="co">#&gt; 5 111 test_indirect: x-&gt;m-&gt;y       Test 1.000  0.845  0.810  0.880</span></span>
 <span><span class="co">#&gt; Notes:</span></span>
 <span><span class="co">#&gt; - n: The sample size in a trial.</span></span>
 <span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>
@@ -642,7 +640,7 @@ power based on simulation is 0.782.</p>
 <span><span class="co">#&gt;   on normal approximation.</span></span>
 <span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span></code></pre></div>
 <p>It reports the 95% confidence interval of the estimated power,
-[0.742; 0.823].</p>
+[0.731; 0.814].</p>
 <p>It also reports major technical information regarding the search,
 such as the range of sample sizes tried, the time spent, and the table
 with all the sample sizes examined, along with the estimated power
