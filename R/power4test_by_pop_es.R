@@ -167,9 +167,12 @@ power4test_by_es <- function(object,
   #   for which pop_values can be vectors.
   for (i in seq_along(pop_es_values)) {
     x <- pop_es_values[i]
+    tmp <- ifelse(x < .001,
+                  sprintf("%5.3e", x),
+                  formatC(x, digits = 3, format = "f"))
     p_name <- paste0(pop_es_name,
                      " = ",
-                     as.character(x))
+                     tmp)
     if (progress) {
       cat("\nUpdating the simulation for new value:",
           p_name,

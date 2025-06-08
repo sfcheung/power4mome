@@ -83,7 +83,7 @@ power_algorithm_search_by_curve <- function(object,
 
       if (progress) {
         x_j_str <- formatC(x_j,
-                            digits = switch(x, n = 0, es = 4),
+                            digits = switch(x, n = 0, es = 3),
                             format = "f")
         cat("- Value(s) to try:",
             paste0(x_j_str, collapse = ", "),
@@ -414,7 +414,7 @@ power_algorithm_search_by_curve_pre_i <- function(object,
 
   if (progress) {
     x_i_str <- formatC(x_i,
-                      digits = switch(x, n = 0, es = 4),
+                      digits = switch(x, n = 0, es = 3),
                       format = "f")
     cat("- Value(s) to try: ",
         paste0(x_i_str, collapse = ", "),
