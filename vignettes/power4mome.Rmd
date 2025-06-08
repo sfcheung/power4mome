@@ -1,6 +1,6 @@
 ---
 title: "Power Analysis for Moderation, Mediation, and Moderated-Mediation"
-date: "2025-06-05"
+date: "2025-06-08"
 output:
   rmarkdown::html_vignette:
     options:
@@ -259,6 +259,8 @@ out
 #>    .y                 0.870  
 #>     x                 1.000  
 #> 
+#> (Computing indirect effects for 1 paths ...)
+#> 
 #> == Population Indirect Effect(s) ==
 #> 
 #> ==  Indirect Effect(s)   ==
@@ -349,6 +351,8 @@ print(out,
 #>    .m                 0.750  
 #>    .y                 0.870  
 #>     x                 1.000  
+#> 
+#> (Computing indirect effects for 1 paths ...)
 #> 
 #> == Population Indirect Effect(s) ==
 #> 
@@ -559,6 +563,8 @@ out
 #>    .y                 0.870  
 #>     x                 1.000  
 #> 
+#> (Computing indirect effects for 1 paths ...)
+#> 
 #> == Population Indirect Effect(s) ==
 #> 
 #> ==  Indirect Effect(s)   ==
@@ -624,15 +630,14 @@ The summary of the test:
 
 
 ```
+#>   Degrees of freedom                                 0
+#> 
 #> =========== <mc_out> ===========
 #> 
 #> 
 #> == A 'mc_out' class object ==
 #> 
-#> Number of Monte Carlo replications: 2000 
-#> 
-#> 
-#> =============== <test_indirect: x->m->y> ===============
+#> Number of Monte Carlo replications: 2000
 ```
 
 The mean of the estimates across all the
@@ -814,6 +819,8 @@ print(out2,
 #>     w                 1.000  
 #>     x:w               1.000  
 #>     control           1.000  
+#> 
+#> (Computing indirect effects for 0 paths ...)
 #> 
 #> ======================= Data Information =======================
 #> 
@@ -1072,6 +1079,10 @@ print(out3,
 #>     x                 1.000  
 #>     w                 1.000  
 #>     x:w               1.000  
+#> 
+#> (Computing indirect effects for 2 paths ...)
+#> 
+#> (Computing indirect effects for 2 paths ...)
 #> 
 #> == Population Indirect Effect(s) ==
 #> 
