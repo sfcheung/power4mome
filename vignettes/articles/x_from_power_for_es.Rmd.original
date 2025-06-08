@@ -221,7 +221,7 @@ values:
 ```{r pop_es}
 mod_es <-
 "
-m ~ x: m
+m ~ x: l
 y ~ m: m
 y ~ x: s
 "
