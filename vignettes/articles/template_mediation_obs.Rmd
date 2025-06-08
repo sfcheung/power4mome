@@ -1,6 +1,6 @@
 ---
 title: "Quick Template: Mediation with Observed Variables"
-date: "2025-06-05"
+date: "2025-06-08"
 output:
   html_document:
     fig.align: "center"
@@ -168,106 +168,108 @@ The results:
 ``` r
 print(out,
       data_long = TRUE)
-#>
+#> 
 #> ====================== Model Information ======================
-#>
+#> 
 #> == Model on Factors/Variables ==
-#>
+#> 
 #> m ~ x
 #> y ~ m + x
-#>
+#> 
 #> == Model on Variables/Indicators ==
-#>
+#> 
 #> m ~ x
 #> y ~ m + x
-#>
+#> 
 #> ====== Population Values ======
-#>
+#> 
 #> Regressions:
 #>                    Population
-#>   m ~
-#>     x                 0.100
-#>   y ~
-#>     m                 0.500
-#>     x                 0.300
-#>
+#>   m ~                        
+#>     x                 0.100  
+#>   y ~                        
+#>     m                 0.500  
+#>     x                 0.300  
+#> 
 #> Variances:
 #>                    Population
-#>    .m                 0.990
-#>    .y                 0.630
-#>     x                 1.000
-#>
+#>    .m                 0.990  
+#>    .y                 0.630  
+#>     x                 1.000  
+#> 
+#> (Computing indirect effects for 1 paths ...)
+#> 
 #> == Population Indirect Effect(s) ==
-#>
+#> 
 #> ==  Indirect Effect(s)   ==
 #>               ind
 #> x -> m -> y 0.050
-#>
+#> 
 #>  - The 'ind' column shows the indirect effects.
-#>
+#>  
 #> ======================= Data Information =======================
-#>
-#> Number of Replications:  400
-#> Sample Sizes:  100
-#>
+#> 
+#> Number of Replications:  400 
+#> Sample Sizes:  100 
+#> 
 #> ==== Descriptive Statistics ====
-#>
+#> 
 #>   vars     n  mean sd  skew kurtosis   se
 #> m    1 40000  0.00  1  0.01    -0.01 0.01
 #> y    2 40000 -0.01  1 -0.02    -0.03 0.01
 #> x    3 40000  0.00  1  0.01    -0.02 0.01
-#>
+#> 
 #> ==== Parameter Estimates Based on All 400 Samples Combined ====
-#>
-#> Total Sample Size: 40000
-#>
+#> 
+#> Total Sample Size: 40000 
+#> 
 #> ==== Standardized Estimates ====
-#>
+#> 
 #> Variances and error variances omitted.
-#>
+#> 
 #> Regressions:
 #>                     est.std
-#>   m ~
+#>   m ~                      
 #>     x                 0.099
-#>   y ~
+#>   y ~                      
 #>     m                 0.499
 #>     x                 0.305
-#>
-#>
+#> 
+#> 
 #> ==================== Extra Element(s) Found ====================
-#>
+#> 
 #> - fit
 #> - mc_out
-#>
+#> 
 #> === Element(s) of the First Dataset ===
-#>
+#> 
 #> ============ <fit> ============
-#>
+#> 
 #> lavaan 0.6-19 ended normally after 1 iteration
-#>
+#> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
 #>   Number of model parameters                         5
-#>
+#> 
 #>   Number of observations                           100
-#>
+#> 
 #> Model Test User Model:
-#>
+#>                                                       
 #>   Test statistic                                 0.000
 #>   Degrees of freedom                                 0
-#>
+#> 
 #> =========== <mc_out> ===========
-#>
-#>
+#> 
+#> 
 #> == A 'mc_out' class object ==
-#>
-#> Number of Monte Carlo replications: 1000
-#>
-#>
+#> 
+#> Number of Monte Carlo replications: 1000 
+#> 
+#> 
 #> ====================== Test(s) Conducted ======================
-#>
+#> 
 #> - test_indirect: x->m->y
-#>
+#> 
 #> Call print() and set 'test_long = TRUE' for a detailed report.
 rejection_rates(out)
 #>                     test test_label   p.v reject r.cilo r.cihi
@@ -404,61 +406,57 @@ The results:
 #
 # ===== Print the Summary =====
 summary(n_power_80)
-#>
+#> 
 #> ====== x_from_power Results ======
-#>
+#> 
 #> Call:
 #> x_from_power(object = out, x = "n", seed = 1357)
-#> Predictor (x): Sample Size
-#>
-#> - Target Power: 0.800
-#>
+#> Predictor (x): Sample Size 
+#> 
+#> - Target Power: 0.800 
+#> 
 #> === Major Results ===
-#>
-#> - Final Value: 668
-#> - Final Estimated Power: 0.762
-#> - Confidence Interval: [0.721; 0.804]
+#> 
+#> - Final Value: 832 
+#> 
+#> - Final Estimated Power: 0.828 
+#> - Confidence Interval: [0.790; 0.865]
 #> - Level of confidence: 95.0%
 #> - Based on 400 replications.
-#>
+#> 
 #> === Technical Information ===
-#>
-#> - The range of values explored: 100 to 1492
-#> - Time spent in the search: 2.194 mins
+#> 
+#> - The range of values explored: 100 to 972 
+#> - Time spent in the search: 1.995 mins 
 #> - The final crude model for the power-predictor relation:
-#>
-#> Model Type: Nonlinear Regression Model
-#>
+#> 
+#> Model Type: Nonlinear Regression Model 
+#> 
 #> Call:
-#> power_curve(object = by_x_1, formula = power_model, start = stats::coef(fit_1),
-#>     lower_bound = lower_bound, upper_bound = upper_bound, nls_args = nls_args,
+#> power_curve(object = by_x_1, formula = power_model, start = power_curve_start, 
+#>     lower_bound = lower_bound, upper_bound = upper_bound, nls_args = nls_args, 
 #>     nls_control = nls_control, verbose = progress)
-#>
+#> 
 #> Predictor: n (Sample Size)
-#>
+#> 
 #> Model:
 #> Nonlinear regression model
 #>   model: reject ~ I((x - c0)^e)/(b + I((x - c0)^e))
 #>    data: "(Omitted)"
-#>        b       c0        e
-#> 2171.282    0.000    1.326
-#>  weighted residual sum-of-squares: 1.548
-#>
+#>       b      c0       e 
+#> 3369.91    0.00    1.41 
+#>  residual sum-of-squares: 1.97
+#> 
 #> Algorithm "port", convergence message: relative convergence (4)
-#>
+#> 
 #> - Detailed Results:
-#>
-#>       n                   test test_label   p.v reject r.cilo r.cihi
-#> 1   100 test_indirect: x->m->y       Test 1.000  0.195  0.156  0.234
-#> 2   255 test_indirect: x->m->y       Test 1.000  0.340  0.247  0.433
-#> 3   410 test_indirect: x->m->y       Test 1.000  0.510  0.412  0.608
-#> 4   645 test_indirect: x->m->y       Test 1.000  0.752  0.668  0.837
-#> 5   668 test_indirect: x->m->y       Test 1.000  0.762  0.721  0.804
-#> 6   693 test_indirect: x->m->y       Test 1.000  0.743  0.689  0.797
-#> 7   694 test_indirect: x->m->y       Test 1.000  0.720  0.632  0.808
-#> 8   750 test_indirect: x->m->y       Test 1.000  0.780  0.699  0.861
-#> 9   936 test_indirect: x->m->y       Test 1.000  0.863  0.829  0.896
-#> 10 1492 test_indirect: x->m->y       Test 1.000  0.963  0.944  0.981
+#> 
+#>     n                   test test_label   p.v reject r.cilo r.cihi
+#> 1 100 test_indirect: x->m->y       Test 1.000  0.195  0.156  0.234
+#> 2 410 test_indirect: x->m->y       Test 1.000  0.537  0.489  0.586
+#> 3 691 test_indirect: x->m->y       Test 1.000  0.752  0.710  0.795
+#> 4 832 test_indirect: x->m->y       Test 1.000  0.828  0.790  0.865
+#> 5 972 test_indirect: x->m->y       Test 1.000  0.845  0.810  0.880
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.
@@ -522,64 +520,58 @@ The results:
 #
 # ===== Print the Summary =====
 summary(n_power_80_ns)
-#>
+#> 
 #> ====== x_from_power Results ======
-#>
+#> 
 #> Call:
 #> x_from_power(object = out_ns, x = "n", seed = 1357)
-#> Predictor (x): Sample Size
-#>
-#> - Target Power: 0.800
-#>
+#> Predictor (x): Sample Size 
+#> 
+#> - Target Power: 0.800 
+#> 
 #> === Major Results ===
-#>
-#> - Final Value: 807
-#> - Final Estimated Power: 0.818
-#> - Confidence Interval: [0.780; 0.855]
+#> 
+#> - Final Value: 788 
+#> 
+#> - Final Estimated Power: 0.825 
+#> - Confidence Interval: [0.788; 0.862]
 #> - Level of confidence: 95.0%
 #> - Based on 400 replications.
-#>
+#> 
 #> === Technical Information ===
-#>
-#> - The range of values explored: 200 to 807
-#> - Time spent in the search: 2.065 mins
+#> 
+#> - The range of values explored: 300 to 1036 
+#> - Time spent in the search: 1.387 mins 
 #> - The final crude model for the power-predictor relation:
-#>
-#> Model Type: Logistic Regression
-#>
+#> 
+#> Model Type: Logistic Regression 
+#> 
 #> Call:
-#> power_curve(object = by_x_i, formula = power_model, start = start,
-#>     lower_bound = lower_bound, upper_bound = upper_bound, nls_args = nls_args,
+#> power_curve(object = by_x_1, formula = power_model, start = power_curve_start, 
+#>     lower_bound = lower_bound, upper_bound = upper_bound, nls_args = nls_args, 
 #>     nls_control = nls_control, verbose = progress)
-#>
+#> 
 #> Predictor: n (Sample Size)
-#>
+#> 
 #> Model:
-#>
+#> 
 #> Call:  stats::glm(formula = reject ~ x, family = "binomial", data = reject1)
-#>
+#> 
 #> Coefficients:
-#> (Intercept)            x
-#>   -1.608780     0.004152
-#>
-#> Degrees of Freedom: 1399 Total (i.e. Null);  1398 Residual
-#> Null Deviance:	    1879
-#> Residual Deviance: 1830 	AIC: 1834
-#>
+#> (Intercept)            x  
+#>   -1.139725     0.003261  
+#> 
+#> Degrees of Freedom: 1599 Total (i.e. Null);  1598 Residual
+#> Null Deviance:	    1941 
+#> Residual Deviance: 1716 	AIC: 1720
+#> 
 #> - Detailed Results:
-#>
+#> 
 #>      n                   test test_label   p.v reject r.cilo r.cihi
-#> 1  200 test_indirect: x->m->y       Test 1.000  0.323  0.277  0.368
-#> 2  250 test_indirect: x->m->y       Test 1.000  0.323  0.277  0.368
-#> 3  300 test_indirect: x->m->y       Test 1.000  0.445  0.396  0.494
-#> 4  420 test_indirect: x->m->y       Test 1.000  0.540  0.442  0.638
-#> 5  539 test_indirect: x->m->y       Test 1.000  0.630  0.535  0.725
-#> 6  651 test_indirect: x->m->y       Test 1.000  0.708  0.663  0.752
-#> 7  666 test_indirect: x->m->y       Test 1.000  0.770  0.688  0.852
-#> 8  721 test_indirect: x->m->y       Test 1.000  0.787  0.736  0.838
-#> 9  722 test_indirect: x->m->y       Test 1.000  0.733  0.689  0.776
-#> 10 785 test_indirect: x->m->y       Test 1.000  0.842  0.770  0.913
-#> 11 807 test_indirect: x->m->y       Test 1.000  0.818  0.780  0.855
+#> 1  300 test_indirect: x->m->y       Test 1.000  0.445  0.396  0.494
+#> 2  539 test_indirect: x->m->y       Test 1.000  0.662  0.616  0.709
+#> 3  788 test_indirect: x->m->y       Test 1.000  0.825  0.788  0.862
+#> 4 1036 test_indirect: x->m->y       Test 1.000  0.887  0.857  0.918
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.
@@ -644,106 +636,108 @@ The results:
 ``` r
 print(out2,
       data_long = TRUE)
-#>
+#> 
 #> ====================== Model Information ======================
-#>
+#> 
 #> == Model on Factors/Variables ==
-#>
+#> 
 #> m ~ x
 #> y ~ m + x
-#>
+#> 
 #> == Model on Variables/Indicators ==
-#>
+#> 
 #> m ~ x
 #> y ~ m + x
-#>
+#> 
 #> ====== Population Values ======
-#>
+#> 
 #> Regressions:
 #>                    Population
-#>   m ~
-#>     x                 0.300
-#>   y ~
-#>     m                 0.300
-#>     x                 0.300
-#>
+#>   m ~                        
+#>     x                 0.300  
+#>   y ~                        
+#>     m                 0.300  
+#>     x                 0.300  
+#> 
 #> Variances:
 #>                    Population
-#>    .m                 0.910
-#>    .y                 0.766
-#>     x                 1.000
-#>
+#>    .m                 0.910  
+#>    .y                 0.766  
+#>     x                 1.000  
+#> 
+#> (Computing indirect effects for 1 paths ...)
+#> 
 #> == Population Indirect Effect(s) ==
-#>
+#> 
 #> ==  Indirect Effect(s)   ==
 #>               ind
 #> x -> m -> y 0.090
-#>
+#> 
 #>  - The 'ind' column shows the indirect effects.
-#>
+#>  
 #> ======================= Data Information =======================
-#>
-#> Number of Replications:  400
-#> Sample Sizes:  100
-#>
+#> 
+#> Number of Replications:  400 
+#> Sample Sizes:  100 
+#> 
 #> ==== Descriptive Statistics ====
-#>
+#> 
 #>   vars     n  mean sd  skew kurtosis   se
 #> m    1 40000  0.00  1  0.01     0.00 0.01
 #> y    2 40000 -0.01  1 -0.01    -0.01 0.01
 #> x    3 40000  0.00  1  0.01    -0.02 0.01
-#>
+#> 
 #> ==== Parameter Estimates Based on All 400 Samples Combined ====
-#>
-#> Total Sample Size: 40000
-#>
+#> 
+#> Total Sample Size: 40000 
+#> 
 #> ==== Standardized Estimates ====
-#>
+#> 
 #> Variances and error variances omitted.
-#>
+#> 
 #> Regressions:
 #>                     est.std
-#>   m ~
+#>   m ~                      
 #>     x                 0.299
-#>   y ~
+#>   y ~                      
 #>     m                 0.298
 #>     x                 0.306
-#>
-#>
+#> 
+#> 
 #> ==================== Extra Element(s) Found ====================
-#>
+#> 
 #> - fit
 #> - mc_out
-#>
+#> 
 #> === Element(s) of the First Dataset ===
-#>
+#> 
 #> ============ <fit> ============
-#>
+#> 
 #> lavaan 0.6-19 ended normally after 1 iteration
-#>
+#> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
 #>   Number of model parameters                         5
-#>
+#> 
 #>   Number of observations                           100
-#>
+#> 
 #> Model Test User Model:
-#>
+#>                                                       
 #>   Test statistic                                 0.000
 #>   Degrees of freedom                                 0
-#>
+#> 
 #> =========== <mc_out> ===========
-#>
-#>
+#> 
+#> 
 #> == A 'mc_out' class object ==
-#>
-#> Number of Monte Carlo replications: 1000
-#>
-#>
+#> 
+#> Number of Monte Carlo replications: 1000 
+#> 
+#> 
 #> ====================== Test(s) Conducted ======================
-#>
+#> 
 #> - test_indirect: x->m->y
-#>
+#> 
 #> Call print() and set 'test_long = TRUE' for a detailed report.
 rejection_rates(out2)
 #>                     test test_label   p.v reject r.cilo r.cihi
@@ -785,62 +779,61 @@ The results:
 #
 # ===== Print the Summary =====
 summary(n2_power_80)
-#>
+#> 
 #> ====== x_from_power Results ======
-#>
+#> 
 #> Call:
 #> x_from_power(object = out2, x = "n", seed = 1357)
-#> Predictor (x): Sample Size
-#>
-#> - Target Power: 0.800
-#>
+#> Predictor (x): Sample Size 
+#> 
+#> - Target Power: 0.800 
+#> 
 #> === Major Results ===
-#>
-#> - Final Value: 101
-#> - Final Estimated Power: 0.802
-#> - Confidence Interval: [0.763; 0.842]
+#> 
+#> - Final Value: 113 
+#> 
+#> - Final Estimated Power: 0.825 
+#> - Confidence Interval: [0.788; 0.862]
 #> - Level of confidence: 95.0%
 #> - Based on 400 replications.
-#>
+#> 
 #> === Technical Information ===
-#>
-#> - The range of values explored: 100 to 120
-#> - Time spent in the search: 2.043 mins
+#> 
+#> - The range of values explored: 100 to 197 
+#> - Time spent in the search: 2.776 mins 
 #> - The final crude model for the power-predictor relation:
-#>
-#> Model Type: Logistic Regression
-#>
+#> 
+#> Model Type: Logistic Regression 
+#> 
 #> Call:
-#> power_curve(object = by_x_i, formula = power_model, start = start,
-#>     lower_bound = lower_bound, upper_bound = upper_bound, nls_args = nls_args,
+#> power_curve(object = by_x_1, formula = power_model, start = power_curve_start, 
+#>     lower_bound = lower_bound, upper_bound = upper_bound, nls_args = nls_args, 
 #>     nls_control = nls_control, verbose = progress)
-#>
+#> 
 #> Predictor: n (Sample Size)
-#>
+#> 
 #> Model:
-#>
+#> 
 #> Call:  stats::glm(formula = reject ~ x, family = "binomial", data = reject1)
-#>
+#> 
 #> Coefficients:
-#> (Intercept)            x
-#>    -2.39667      0.03479
-#>
-#> Degrees of Freedom: 599 Total (i.e. Null);  598 Residual
-#> Null Deviance:	    663.6
-#> Residual Deviance: 662.6 	AIC: 666.6
-#>
+#> (Intercept)            x  
+#>    -1.86001      0.02963  
+#> 
+#> Degrees of Freedom: 2799 Total (i.e. Null);  2798 Residual
+#> Null Deviance:	    2311 
+#> Residual Deviance: 2158 	AIC: 2162
+#> 
 #> - Detailed Results:
-#>
+#> 
 #>     n                   test test_label   p.v reject r.cilo r.cihi
 #> 1 100 test_indirect: x->m->y       Test 1.000  0.745  0.702  0.788
-#> 2 101 test_indirect: x->m->y       Test 1.000  0.802  0.763  0.842
-#> 3 102 test_indirect: x->m->y       Test 1.000  0.770  0.688  0.852
-#> 4 104 test_indirect: x->m->y       Test 1.000  0.790  0.710  0.870
-#> 5 107 test_indirect: x->m->y       Test 1.000  0.780  0.699  0.861
-#> 6 108 test_indirect: x->m->y       Test 1.000  0.787  0.747  0.828
-#> 7 109 test_indirect: x->m->y       Test 1.000  0.755  0.701  0.809
-#> 8 116 test_indirect: x->m->y       Test 1.000  0.888  0.828  0.948
-#> 9 120 test_indirect: x->m->y       Test 1.000  0.840  0.804  0.876
+#> 2 107 test_indirect: x->m->y       Test 1.000  0.757  0.715  0.800
+#> 3 113 test_indirect: x->m->y       Test 1.000  0.825  0.788  0.862
+#> 4 119 test_indirect: x->m->y       Test 1.000  0.858  0.823  0.892
+#> 5 130 test_indirect: x->m->y       Test 1.000  0.895  0.865  0.925
+#> 6 152 test_indirect: x->m->y       Test 1.000  0.938  0.914  0.961
+#> 7 197 test_indirect: x->m->y       Test 1.000  0.973  0.956  0.989
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.
