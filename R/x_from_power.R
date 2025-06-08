@@ -98,7 +98,8 @@
 #' preliminary examination suggests that
 #' this method is good enough for common
 #' scenarios. Therefore, this method is
-#' the default algorithm ().
+#' the default algorithm when `x` is
+#' `n`.
 #'
 #' ## Power Curve Method
 #'
@@ -112,6 +113,16 @@
 #' model can change across iterations,
 #' as more and more data points are
 #' available.
+#'
+#' This method is the default method
+#' for `x = "es"` because the relation
+#' between the power and the population
+#' value of a parameter varies across
+#' parameters, unlike the relation
+#' between power and sample size. Therefore,
+#' taking into account the working
+#' power curve may help finding the
+#' desired value of `x`.
 #'
 #' The technical internal workflow of
 #' this method implemented in
