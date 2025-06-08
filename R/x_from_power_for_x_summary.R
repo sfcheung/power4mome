@@ -131,7 +131,7 @@ print.summary.x_from_power <- function(x,
                                            n = 0,
                                            es = digits),
                            format = "f")
-    cat("- Final Value:", x_final_str, "\n")
+    cat("- Final Value:", x_final_str, "\n\n")
     cat("- Final Estimated Power:",
         formatC(x$power_final, digits = digits, format = "f"),
         "\n")

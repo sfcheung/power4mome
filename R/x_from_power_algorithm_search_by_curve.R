@@ -34,7 +34,7 @@ power_algorithm_search_by_curve <- function(object,
     for (j in seq_len(max_trials)) {
 
       if (progress) {
-        cat("\n\n--- Trial", j, "---\n\n")
+        cat("--- Trial", j, "---\n\n")
         tmp <- format(Sys.time(), "%Y-%m-%d %X")
         cat("- Start at", tmp, "\n")
       }
@@ -115,9 +115,10 @@ power_algorithm_search_by_curve <- function(object,
                   skip_checking_models = TRUE)
 
       if (progress) {
-        cat("- Rejection Rates:\n")
+        cat("\n- Rejection Rates:\n\n")
         tmp <- rejection_rates(by_x_1)
-        print(tmp)
+        print(tmp,
+              annotation = FALSE)
         cat("\n")
       }
       fit_i <- power_curve(by_x_1,
@@ -331,7 +332,7 @@ power_algorithm_search_by_curve <- function(object,
 
             if (progress) {
               cat("- Minimum number of replications changed to",
-                  nrep_seq[1], "\n")
+                  nrep_seq[1], "\n\n")
             }
 
             R_seq <- R_seq[-1]
@@ -463,9 +464,10 @@ power_algorithm_search_by_curve_pre_i <- function(object,
   }
 
   if (progress) {
-    cat("- Rejection Rates:\n")
+    cat("\n- Rejection Rates:\n\n")
     tmp <- rejection_rates(by_x_i)
-    print(tmp)
+    print(tmp,
+          annotation = FALSE)
     cat("\n")
   }
 

@@ -447,7 +447,8 @@
 #'
 #' @param algorithm The algorithm for
 #' finding `x`. Can be `"power_curve"`
-#' or `"bisection"`.
+#' or `"bisection"`. The default algorithm
+#' depends on `x`.
 #'
 #' @param control A named list of
 #' additional
@@ -547,7 +548,9 @@ x_from_power <- function(object,
                                                  nls_control = list(),
                                                  nls_args = list()),
                          save_sim_all = FALSE,
-                         algorithm = c("bisection", "power_curve"),
+                         algorithm = switch(x,
+                                            n = "bisection",
+                                            es = "power_curve"),
                          control = list()
                          ) {
 
@@ -566,7 +569,9 @@ x_from_power <- function(object,
   # - Final power4test object.
   # - Final model by nls.
 
-  algorithm <- match.arg(algorithm)
+  algorithm <- match.arg(algorithm,
+                         c("bisection",
+                           "power_curve"))
 
   x <- match.arg(x,
                  choices = c("n", "es"))
@@ -702,6 +707,24 @@ x_from_power <- function(object,
     }
     R0 <- ceiling(initial_R)
   }
+
+  if (progress) {
+    cat("\n--- Algorithm used ---\n\n")
+    cat(algorithm, "\n")
+
+    if (progress) {
+      cat("\n--- Progress  ---\n\n")
+      catwrap("- Set 'progress = FALSE' to suppress displaying the progress.",
+              exdent = 2)
+      if (simulation_progress) {
+        catwrap(paste0("- Set 'simulation progress = FALSE' ",
+                       "to suppress displaying the progress ",
+                       "in the simulation."),
+                exdent = 2)
+      }
+    }
+  }
+
 
   # === Initial Trial ===
 
@@ -937,7 +960,7 @@ x_from_power <- function(object,
     tmp <- rejection_rates(by_x_1)
     print(tmp)
     cat("\n")
-    cat("- Estimated Power Curve:\n")
+    cat("- Estimated Power Curve:\n\n")
     print(fit_1)
     cat("\n")
   }
@@ -996,7 +1019,7 @@ x_from_power <- function(object,
       x_out_str <- formatC(x_out,
                            digits = switch(x, n = 0, es = 4),
                            format = "f")
-      cat("- Final Value:", x_out_str, "\n")
+      cat("- Final Value:", x_out_str, "\n\n")
       cat("- Final Estimated Power:",
           formatC(power_final, digits = 4, format = "f"), "\n")
       cat("- Confidence Interval: [",
@@ -1111,7 +1134,7 @@ print.x_from_power <- function(x,
                                            n = 0,
                                            es = digits),
                            format = "f")
-    cat("- Final Value:", x_final_str, "\n")
+    cat("- Final Value:", x_final_str, "\n\n")
     cat("- Final Estimated Power:",
         formatC(x$power_final, digits = digits, format = "f"),
         "\n")

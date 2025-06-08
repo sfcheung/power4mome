@@ -29,7 +29,7 @@ x_from_power(
   power_curve_args = list(power_model = NULL, start = NULL, lower_bound = NULL,
     upper_bound = NULL, nls_control = list(), nls_args = list()),
   save_sim_all = FALSE,
-  algorithm = c("bisection", "power_curve"),
+  algorithm = switch(x, n = "bisection", es = "power_curve"),
   control = list()
 )
 
@@ -223,7 +223,8 @@ output can be very large in size.}
 
 \item{algorithm}{The algorithm for
 finding \code{x}. Can be \code{"power_curve"}
-or \code{"bisection"}.}
+or \code{"bisection"}. The default algorithm
+depends on \code{x}.}
 
 \item{control}{A named list of
 additional
