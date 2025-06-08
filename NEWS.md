@@ -1,4 +1,4 @@
-# power4mome 0.0.1.64
+# power4mome 0.0.1.65
 
 - Initialized the package. (0.0.0.9000)
 
@@ -451,3 +451,6 @@
 - Updated `x_from_power()` to determine
   the interval for `es` automatically.
   (0.0.1.64)
+
+- Optimized the power curve algorithm.
+  (0.0.1.65)
