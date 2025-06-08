@@ -264,6 +264,8 @@
 #' and the maximum values of `x`, in
 #' the search for the values
 #' (sample sizes or population values).
+#' If `NULL`, default when `x = "es"`,
+#' it will be determined internally.
 #'
 #' @param extendInt Whether `x_interval`
 #' can be expanded when estimating the
@@ -529,7 +531,7 @@ x_from_power <- function(object,
                          power_max = .90,
                          x_interval = switch(x,
                                              n = c(50, 2000),
-                                             es = c(0, .95)),
+                                             es = NULL),
                          extendInt = NULL,
                          progress = TRUE,
                          simulation_progress = TRUE,
@@ -613,10 +615,12 @@ x_from_power <- function(object,
     }
   }
 
-  if (length(x_interval) != 2) {
+  if ((length(x_interval) != 2) &&
+      !is.null(x_interval)) {
     stop("'x_interval' must be a vector with exactly two values.")
   }
-  if (x_interval[2] < x_interval[1]) {
+  if ((x_interval[2] < x_interval[1]) &&
+      !is.null(x_interval)) {
     stop("'x_interval' must be of the form c(minimum, maximum).")
   }
 
@@ -630,9 +634,6 @@ x_from_power <- function(object,
                              choices = c("yes", "no", "upX", "downX"))
     }
   }
-
-  x_max <- max(x_interval)
-  x_min <- min(x_interval)
 
   max_trials <- ceiling(max_trials)
   if (max_trials < 1) {
@@ -674,6 +675,16 @@ x_from_power <- function(object,
   } else {
     object_by_org <- NA
   }
+
+  x_interval <- fix_es_interval(object = object,
+                                x = x,
+                                pop_es_name = pop_es_name,
+                                x_interval = x_interval,
+                                progress = progress)
+
+
+  x_max <- max(x_interval)
+  x_min <- min(x_interval)
 
   time_start <- Sys.time()
 
@@ -1143,4 +1154,65 @@ print.x_from_power <- function(x,
   }
   cat("Call `summary()` for detailed results.\n")
   invisible(x)
+}
+
+#' @noRd
+fix_es_interval <- function(object,
+                            x,
+                            pop_es_name,
+                            x_interval,
+                            progress = TRUE) {
+  if ((x == "es") &&
+      is.null(x_interval)) {
+    if (progress) {
+      cat("\n--- Interval for x (es) ---\n\n")
+      cat("Determining the valid interval of values for '",
+          pop_es_name,
+          "' ...\n",
+          sep = "")
+    }
+    es_tmp <- pop_es(object,
+                     pop_es_name = pop_es_name)
+    range_tmp <- tryCatch(check_valid_es_values(object,
+                                                pop_es_name = pop_es_name),
+                    error = function(e) e)
+    if ((inherits(range_tmp, "error")) ||
+        (all(is.na(range_tmp)))) {
+      if (es_tmp < 0) {
+        x_interval <- c(-.95, 0)
+      } else {
+        x_interval <- c(0, .95)
+      }
+      if (progress) {
+        cat("Failed to find the valid range.\n")
+        cat("This range will be used:",
+            paste0(formatC(x_interval[1], digits = 3, format = "f"),
+                  " to ",
+                  formatC(x_interval[2], digits = 3, format = "f")),
+            "\n")
+        cat("Set 'x_interval' manually if necessary.\n")
+      }
+    } else {
+      x_interval <- range_tmp
+      if ((es_tmp < min(x_interval)) ||
+          (es_tmp > max(x_interval))) {
+        # TODO:
+        # - Do we need this check? This should rarely happen.
+      }
+      # If es0 is in the interval, then
+      if (es_tmp <= 0) {
+        x_interval[x_interval >= 0] <- 0
+      } else {
+        x_interval[x_interval <= 0] <- 0
+      }
+      if (progress) {
+        cat("The probable valid range, adjusted for object's value, is:",
+            paste0(formatC(x_interval[1], digits = 3, format = "f"),
+                  " to ",
+                  formatC(x_interval[2], digits = 3, format = "f")),
+            "\n")
+      }
+    }
+  }
+  return(x_interval)
 }

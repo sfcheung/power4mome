@@ -14,7 +14,7 @@ x_from_power(
   ci_level = 0.95,
   power_min = 0.01,
   power_max = 0.9,
-  x_interval = switch(x, n = c(50, 2000), es = c(0, 0.95)),
+  x_interval = switch(x, n = c(50, 2000), es = NULL),
   extendInt = NULL,
   progress = TRUE,
   simulation_progress = TRUE,
@@ -98,7 +98,9 @@ try in each trail. Default is .01.}
 two values, the minimum value
 and the maximum values of \code{x}, in
 the search for the values
-(sample sizes or population values).}
+(sample sizes or population values).
+If \code{NULL}, default when \code{x = "es"},
+it will be determined internally.}
 
 \item{extendInt}{Whether \code{x_interval}
 can be expanded when estimating the

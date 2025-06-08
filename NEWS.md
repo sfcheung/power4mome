@@ -1,4 +1,4 @@
-# power4mome 0.0.1.63
+# power4mome 0.0.1.64
 
 - Initialized the package. (0.0.0.9000)
 
@@ -447,3 +447,7 @@
 
 - The default algorithm of `x_from_power()`
   now depends on `x`. (0.0.1.63)
+
+- Updated `x_from_power()` to determine
+  the interval for `es` automatically.
+  (0.0.1.64)
