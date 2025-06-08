@@ -1,4 +1,4 @@
-# power4mome 0.0.1.62
+# power4mome 0.0.1.63
 
 - Initialized the package. (0.0.0.9000)
 
@@ -444,3 +444,6 @@
 - Added `check_valid_es_values()` to
   identify the range of valid values
   for a parameter. (0.0.1.62)
+
+- The default algorithm of `x_from_power()`
+  now depends on `x`. (0.0.1.63)
