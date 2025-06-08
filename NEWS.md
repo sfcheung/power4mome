@@ -1,4 +1,4 @@
-# power4mome 0.0.1.61
+# power4mome 0.0.1.62
 
 - Initialized the package. (0.0.0.9000)
 
@@ -440,3 +440,7 @@
 - Added the bisection method to
   `x_from_power()` and set it as the
   default algorithm. (0.0.1.61)
+
+- Added `check_valid_es_values()` to
+  identify the range of valid values
+  for a parameter. (0.0.1.62)
