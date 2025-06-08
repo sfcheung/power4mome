@@ -534,9 +534,9 @@ power4test <- function(object = NULL,
   # It should be used whenever possible,
   # unless we explicitly need the value in this call.
 
-  if (args$progress) {
-    cat("Displaying progress enabled. Set 'progress = FALSE' to hide the progress.\n")
-  }
+  # if (args$progress) {
+  #   cat("Displaying progress enabled. Set 'progress = FALSE' to hide the progress.\n")
+  # }
 
   if (update_power4test && !is.null(pop_es)) {
     # Population effect size changed
