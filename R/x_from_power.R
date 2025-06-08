@@ -248,6 +248,13 @@
 #' 1. Rounded
 #' up if not an integer.
 #'
+#' @param final_xs_per_trial The final number
+#' of values (sample sizes or population
+#' values) to consider in the last
+#' trial or last few trials. Should be an integer at least
+#' 1. Rounded
+#' up if not an integer.
+#'
 #' @param ci_level The level of confidence
 #' of the confidence intervals computed
 #' for the estimated power. Default is
@@ -540,6 +547,7 @@ x_from_power <- function(object,
                          final_nrep = 400,
                          initial_R = 250,
                          final_R = 1000,
+                         final_xs_per_trial = 1,
                          nrep_steps = 1,
                          seed = NULL,
                          x_include_interval = FALSE,
@@ -596,6 +604,13 @@ x_from_power <- function(object,
          ") is less than 1.")
   }
   xs_per_trial <- ceiling(xs_per_trial)
+
+  if (final_xs_per_trial < 1) {
+    stop("'final_xs_per_trial' (",
+         final_xs_per_trial,
+         ") is less than 1.")
+  }
+  final_xs_per_trial <- ceiling(final_xs_per_trial)
 
   if (power_min <= 0 || power_max >= 1) {
     stop("'power_min' and 'power_max' must be between 0 and 1.")
@@ -743,12 +758,6 @@ x_from_power <- function(object,
 
   if (algorithm == "power_curve") {
 
-    if (progress) {
-      cat("\n--- Pre-iteration Search ---\n\n")
-      tmp <- format(Sys.time(), "%Y-%m-%d %X")
-      cat("- Start at", tmp, "\n")
-    }
-
     a_out <- do.call(power_algorithm_search_by_curve_pre_i,
                      c(list(object = object,
                             x = x,
@@ -774,7 +783,8 @@ x_from_power <- function(object,
                             nls_args = power_curve_args$nls_args,
                             final_nrep = final_nrep,
                             nrep_steps = nrep_steps,
-                            final_R = final_R),
+                            final_R = final_R,
+                            final_xs_per_trial = final_xs_per_trial),
                       control))
 
     by_x_1 <- a_out$by_x_1
@@ -815,7 +825,8 @@ x_from_power <- function(object,
                             nls_args = power_curve_args$nls_args,
                             final_nrep = final_nrep,
                             nrep_steps = nrep_steps,
-                            final_R = final_R),
+                            final_R = final_R,
+                            final_xs_per_trial = final_xs_per_trial),
                        control))
 
     x_interval_updated <- a_out$x_interval_updated
@@ -879,6 +890,7 @@ x_from_power <- function(object,
                             nrep_seq = nrep_seq,
                             final_nrep_seq = final_nrep_seq,
                             R_seq = R_seq,
+                            final_xs_per_trial = final_xs_per_trial,
                             solution_found = solution_found),
                      control))
 
@@ -1151,7 +1163,7 @@ print.x_from_power <- function(x,
         formatC(x$power_final, digits = digits, format = "f"),
         "\n")
   } else {
-    cat("- Solution not found.\n")
+    cat("\n- Solution not found.\n")
   }
   cat("\nCall `summary()` for detailed results.\n")
   invisible(x)
@@ -1216,4 +1228,13 @@ fix_es_interval <- function(object,
     }
   }
   return(x_interval)
+}
+
+#' @noRd
+x_from_y <- function(x1,
+                     y1,
+                     x2,
+                     y2,
+                     target = 0) {
+  (target - y1) * (x2 - x1) / (y2 - y1) + x1
 }
