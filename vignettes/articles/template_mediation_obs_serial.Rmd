@@ -467,7 +467,7 @@ summary(n_power_80)
 #> === Technical Information ===
 #> 
 #> - The range of values explored: 50 to 107 
-#> - Time spent in the search: 34.1 secs 
+#> - Time spent in the search: 37.06 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -580,7 +580,7 @@ summary(n_power_80_ns)
 #> === Technical Information ===
 #> 
 #> - The range of values explored: 90 to 174 
-#> - Time spent in the search: 3.128 mins 
+#> - Time spent in the search: 2.103 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -873,7 +873,7 @@ summary(n2_power_80)
 #> === Technical Information ===
 #> 
 #> - The range of values explored: 100 to 174 
-#> - Time spent in the search: 2.994 mins 
+#> - Time spent in the search: 2.125 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
