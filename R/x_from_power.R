@@ -1123,6 +1123,7 @@ print.x_from_power <- function(x,
   my_call <- x$call
   cat("Call:\n")
   print(my_call)
+  cat("\n")
   solution_found <- !is.na(x$x_final)
   predictor <- x$x
   cat("Predictor (x):",
@@ -1136,7 +1137,7 @@ print.x_from_power <- function(x,
         "\n")
   }
 
-  cat("- Target Power:",
+  cat("Target Power:",
       formatC(x$target_power, digits = digits, format = "f"),
       "\n")
   if (solution_found) {
@@ -1145,14 +1146,14 @@ print.x_from_power <- function(x,
                                            n = 0,
                                            es = digits),
                            format = "f")
-    cat("- Final Value:", x_final_str, "\n\n")
+    cat("\n- Final Value:", x_final_str, "\n\n")
     cat("- Final Estimated Power:",
         formatC(x$power_final, digits = digits, format = "f"),
         "\n")
   } else {
     cat("- Solution not found.\n")
   }
-  cat("Call `summary()` for detailed results.\n")
+  cat("\nCall `summary()` for detailed results.\n")
   invisible(x)
 }
 
