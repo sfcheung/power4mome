@@ -13,7 +13,8 @@ power_curve(
   upper_bound = NULL,
   nls_args = list(),
   nls_control = list(),
-  verbose = FALSE
+  verbose = FALSE,
+  models = c("nls", "logistic", "lm")
 )
 
 \method{print}{power_curve}(x, data_used = FALSE, digits = 3, right = FALSE, row.names = FALSE, ...)
@@ -83,6 +84,13 @@ Use this argument with cautions.}
 \item{verbose}{Logical. Whether
 messages will be printed when
 trying different models.}
+
+\item{models}{Models to try. Support
+\code{"nls"} (fitted by \code{\link[=nls]{nls()}}),
+\code{"logistic"} (fitted by \code{\link[=glm]{glm()}}), and
+\code{"lm"} (fitted by \code{\link[=lm]{lm()}}). By default,
+all three models will be attempted,
+in this order.}
 
 \item{x}{A \code{power_curve} object.}
 

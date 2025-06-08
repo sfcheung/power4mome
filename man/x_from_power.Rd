@@ -23,6 +23,7 @@ x_from_power(
   final_nrep = 400,
   initial_R = 250,
   final_R = 1000,
+  final_xs_per_trial = 1,
   nrep_steps = 1,
   seed = NULL,
   x_include_interval = FALSE,
@@ -176,6 +177,15 @@ power. Do not need to be very large
 because the goal is to estimate
 power by replications, not for high
 precision in one single replication.}
+
+\item{final_xs_per_trial}{The final number
+of values (sample sizes or population
+values) to consider in the last
+trial or last few trials. Should be an integer at least
+\enumerate{
+\item Rounded
+up if not an integer.
+}}
 
 \item{nrep_steps}{How many steps
 the number of replications will be
