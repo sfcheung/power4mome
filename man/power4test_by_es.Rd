@@ -3,6 +3,7 @@
 \name{power4test_by_es}
 \alias{power4test_by_es}
 \alias{c.power4test_by_es}
+\alias{as.power4test_by_es}
 \title{Power By Effect Sizes}
 \usage{
 power4test_by_es(
@@ -17,6 +18,8 @@ power4test_by_es(
 )
 
 \method{c}{power4test_by_es}(..., sort = TRUE, skip_checking_models = FALSE)
+
+as.power4test_by_es(original_object, pop_es_name)
 }
 \arguments{
 \item{object}{A \code{power4test} object,
@@ -93,6 +96,10 @@ This argument is used by
 \code{\link[=x_from_power]{x_from_power()}} for efficiency, and
 is rarely used when calling
 the \code{c} method directly.}
+
+\item{original_object}{The object
+to be converted to a \code{power4test_by_es}
+object.}
 }
 \value{
 The function
@@ -105,6 +112,10 @@ The method \code{\link[=c.power4test_by_es]{c.power4test_by_es()}} returns
 a \code{power4test_by_es} object with
 all the elements (tests for different
 values of \code{pop_es_values}) combined.
+
+The function \code{\link[=as.power4test_by_es]{as.power4test_by_es()}} returns
+a \code{power4test_by_es} object converted
+from the input object.
 }
 \description{
 Estimate power for a
@@ -131,6 +142,14 @@ power over a sets of effect sizes
 The method \code{\link[=c.power4test_by_es]{c.power4test_by_es()}}
 is used to combine tests from different
 runs of \code{\link[=power4test_by_es]{power4test_by_es()}}.
+
+The function \code{\link[=as.power4test_by_es]{as.power4test_by_es()}}
+is used to convert a \code{power4test}
+object to a \code{power4test_by_es}
+object, if it is not already one.
+Useful when concatenating
+\code{power4test} objects with
+\code{power4test_by_es} objects.
 }
 \examples{
 

@@ -31,6 +31,15 @@ test_out <- power4test(object = sim_only,
                                         y = "y",
                                         boot_ci = TRUE))
 
+tmp <- as.power4test_by_es(sim_only,
+                           pop_es_name = "y ~ m")
+expect_true(is.list(tmp))
+expect_true(length(tmp) == 1)
+expect_true(inherits(tmp, "power4test_by_es"))
+expect_equal(attr(tmp[[1]], "pop_es_name"), "y ~ m")
+expect_equal(attr(tmp[[1]], "pop_es_value"), 0.5)
+expect_equal(names(tmp), "y ~ m = 0.5")
+
 power_all_test_only_new_es <- power4test(object = test_out,
                                          pop_es = c("y ~ m" = ".10"))
 

@@ -3,6 +3,7 @@
 \name{power4test_by_n}
 \alias{power4test_by_n}
 \alias{c.power4test_by_n}
+\alias{as.power4test_by_n}
 \title{Power By Sample Sizes}
 \usage{
 power4test_by_n(
@@ -16,6 +17,8 @@ power4test_by_n(
 )
 
 \method{c}{power4test_by_n}(..., sort = TRUE, skip_checking_models = FALSE)
+
+as.power4test_by_n(original_object)
 }
 \arguments{
 \item{object}{A \code{power4test} object,
@@ -86,6 +89,10 @@ This argument is used by
 \code{\link[=x_from_power]{x_from_power()}} for efficiency, and
 is rarely used when calling
 the \code{c} method directly.}
+
+\item{original_object}{The object
+to be converted to a \code{power4test_by_n}
+object.}
 }
 \value{
 The function
@@ -98,6 +105,10 @@ The method \code{\link[=c.power4test_by_n]{c.power4test_by_n()}} returns
 a \code{power4test_by_n} object with
 all the elements (tests for different
 sample sizes) combined.
+
+The function \code{\link[=as.power4test_by_n]{as.power4test_by_n()}} returns
+a \code{power4test_by_n} object converted
+from the input object.
 }
 \description{
 Estimate power for a
@@ -121,6 +132,14 @@ power over a set of sample sizes.
 The method \code{\link[=c.power4test_by_n]{c.power4test_by_n()}}
 is used to combine tests from different
 runs of \code{\link[=power4test_by_n]{power4test_by_n()}}.
+
+The function \code{\link[=as.power4test_by_n]{as.power4test_by_n()}}
+is used to convert a \code{power4test}
+object to a \code{power4test_by_n}
+object, if it is not already one.
+Useful when concatenating
+\code{power4test} objects with
+\code{power4test_by_n} objects.
 }
 \examples{
 
