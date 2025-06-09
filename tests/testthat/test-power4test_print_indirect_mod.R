@@ -35,6 +35,24 @@ expect_equal(coef(tmp)["x -> m -> y"],
              .361,
              ignore_attr = TRUE)
 
+
+power_all_sim_only <- power4test(nrep = 10,
+                                 model = mod,
+                                 pop_es = mod_es,
+                                 n = 100,
+                                 fit_model_args = list(fit_function = "lm"),
+                                 do_the_test = FALSE,
+                                 iseed = 1234,
+                                 parallel = FALSE,
+                                 progress = FALSE)
+
+expect_output(print(power_all_sim_only),
+              "w -> m -> y")
+suppressWarnings(tmp <- pop_indirect(power_all_sim_only$sim_all))
+expect_equal(coef(tmp)["x -> m -> y"],
+             .361,
+             ignore_attr = TRUE)
+
 # Case 2
 
 mod <-
@@ -55,6 +73,23 @@ power_all_sim_only <- power4test(nrep = 10,
                                  pop_es = mod_es,
                                  n = 500,
                                  fit_model_args = list(estimator = "ML"),
+                                 do_the_test = FALSE,
+                                 iseed = 1234,
+                                 parallel = FALSE,
+                                 progress = FALSE)
+
+expect_false(any(grepl("Indirect",
+                 capture.output(print(power_all_sim_only)))))
+tmp <- pop_indirect(power_all_sim_only$sim_all)
+expect_true(length(tmp) == 0)
+
+
+
+power_all_sim_only <- power4test(nrep = 10,
+                                 model = mod,
+                                 pop_es = mod_es,
+                                 n = 500,
+                                 fit_model_args = list(fit_function = "lm"),
                                  do_the_test = FALSE,
                                  iseed = 1234,
                                  parallel = FALSE,
