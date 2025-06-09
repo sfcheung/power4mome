@@ -194,6 +194,9 @@ rejection_rates_add_ci <- function(object,
   df1
 }
 
+#' @noRd
+# No longer needed because power_curve object
+# has a predict method
 predict_fit <- function(object,
                         newdata) {
   if (inherits(object, "glm")) {
@@ -208,6 +211,8 @@ predict_fit <- function(object,
 }
 
 #' @noRd
+# Check whether any value of x tried already
+# meet the ci_hit criterion
 find_ci_hit <- function(object,
                         ci_level = .95,
                         target_power = .80,
@@ -254,6 +259,9 @@ find_ci_hit <- function(object,
 }
 
 #' @noRd
+# Check whether the x_from_power object
+# has x and (optionally) pop_es_name identical
+# to those requested.
 check_x_from_power_as_input <- function(object,
                                         x,
                                         pop_es_name) {
@@ -271,6 +279,7 @@ check_x_from_power_as_input <- function(object,
 }
 
 #' @noRd
+# Get the vector of x values already tried
 get_x_tried <- function(object,
                         x) {
   tmp <- rejection_rates_add_ci(object)
@@ -281,6 +290,7 @@ get_x_tried <- function(object,
 }
 
 #' @noRd
+# Check whether a value of x has already been tried
 in_x_tried <- function(test_x,
                        object,
                        x) {
@@ -289,4 +299,78 @@ in_x_tried <- function(test_x,
   x_tried <- get_x_tried(object = object,
                          x = x)
   match(test_x, x_tried)
+}
+
+#' @noRd
+# Determine the probable range of valid values
+# for a parameter
+fix_es_interval <- function(object,
+                            x,
+                            pop_es_name,
+                            x_interval,
+                            progress = TRUE) {
+  if ((x == "es") &&
+      is.null(x_interval)) {
+    if (progress) {
+      cat("\n--- Interval for x (es) ---\n\n")
+      cat("Determining the valid interval of values for '",
+          pop_es_name,
+          "' ...\n",
+          sep = "")
+    }
+    es_tmp <- pop_es(object,
+                     pop_es_name = pop_es_name)
+    range_tmp <- tryCatch(check_valid_es_values(object,
+                                                pop_es_name = pop_es_name),
+                    error = function(e) e)
+    if ((inherits(range_tmp, "error")) ||
+        (all(is.na(range_tmp)))) {
+      if (es_tmp < 0) {
+        x_interval <- c(-.95, 0)
+      } else {
+        x_interval <- c(0, .95)
+      }
+      if (progress) {
+        cat("Failed to find the valid range.\n")
+        cat("This range will be used:",
+            paste0(formatC(x_interval[1], digits = 3, format = "f"),
+                  " to ",
+                  formatC(x_interval[2], digits = 3, format = "f")),
+            "\n")
+        cat("Set 'x_interval' manually if necessary.\n")
+      }
+    } else {
+      x_interval <- range_tmp
+      if ((es_tmp < min(x_interval)) ||
+          (es_tmp > max(x_interval))) {
+        # TODO:
+        # - Do we need this check? This should rarely happen.
+      }
+      # If es0 is in the interval, then
+      if (es_tmp <= 0) {
+        x_interval[x_interval >= 0] <- 0
+      } else {
+        x_interval[x_interval <= 0] <- 0
+      }
+      if (progress) {
+        cat("The probable valid range, adjusted for object's value, is:",
+            paste0(formatC(x_interval[1], digits = 3, format = "f"),
+                  " to ",
+                  formatC(x_interval[2], digits = 3, format = "f")),
+            "\n")
+      }
+    }
+  }
+  return(x_interval)
+}
+
+#' @noRd
+# Find the x-intersection,
+# as in Regula Falsi
+x_from_y <- function(x1,
+                     y1,
+                     x2,
+                     y2,
+                     target = 0) {
+  (target - y1) * (x2 - x1) / (y2 - y1) + x1
 }
