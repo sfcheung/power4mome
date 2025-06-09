@@ -64,6 +64,11 @@
 #' horizontal and vertical axes,
 #' respectively.
 #'
+#' @param ci_level The level of
+#' confidence of the confidence intervals,
+#' if requested. Default is `.95`, denoting
+#' 95%.
+#'
 #' @param pars_ci A named list of
 #' arguments to be passed to [arrows()]
 #' to customize the drawing of the
@@ -177,6 +182,7 @@ plot.x_from_power <- function(x,
                                             ")"),
                               xlab = NULL,
                               ylab = "Estimated Power",
+                              ci_level = .95,
                               pars_ci = list(),
                               pars_power_curve = list(),
                               pars_ci_final_x = list(lwd = 2,
@@ -339,8 +345,10 @@ plot_power_x <- function(object,
                          predictor,
                          type = "l",
                          ylim = c(0, 1),
+                         ci_level = .95,
                          ...) {
-  reject0 <- rejection_rates_add_ci(object)
+  reject0 <- rejection_rates_add_ci(object,
+                                    level = ci_level)
   x <- switch(predictor,
               n = "n",
               es = "es")
@@ -360,8 +368,10 @@ plot_power_x_ci <- function(object,
                             angle = 90,
                             code = 3,
                             col = "grey50",
+                            ci_level = .95,
                             ...) {
-  reject0 <- rejection_rates_add_ci(object)
+  reject0 <- rejection_rates_add_ci(object,
+                                    level = ci_level)
   x <- switch(predictor,
               n = "n",
               es = "es")
@@ -394,9 +404,11 @@ plot_power_curve_x <- function(object,
                                lwd = 2,
                                col = "red",
                                length_of_new_x = 20,
+                               ci_level = .95,
                                ...) {
   # power_x_fit is a power_curve object
-  reject0 <- rejection_rates_add_ci(object)
+  reject0 <- rejection_rates_add_ci(object,
+                                    level = ci_level)
   x <- switch(predictor,
               n = "n",
               es = "es")
