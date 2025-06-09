@@ -709,15 +709,6 @@ x_from_power <- function(object,
     object_by_org <- NA
   }
 
-  x_interval <- fix_es_interval(object = object,
-                                x = x,
-                                pop_es_name = pop_es_name,
-                                x_interval = x_interval,
-                                progress = progress)
-
-  x_max <- max(x_interval)
-  x_min <- min(x_interval)
-
   time_start <- Sys.time()
 
   # Change nrep?
@@ -819,6 +810,21 @@ x_from_power <- function(object,
       }
     }
   }
+
+  if (!solution_found) {
+    x_interval <- fix_es_interval(object = object,
+                                  x = x,
+                                  pop_es_name = pop_es_name,
+                                  x_interval = x_interval,
+                                  progress = progress)
+  } else {
+    x_interval <- range(x_tried)
+  }
+
+  x_max <- max(x_interval)
+  x_min <- min(x_interval)
+
+
 
   # === Initial Trial ===
 
