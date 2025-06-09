@@ -13,6 +13,7 @@
     digits, format = "f"), ")"),
   xlab = NULL,
   ylab = "Estimated Power",
+  ci_level = 0.95,
   pars_ci = list(),
   pars_power_curve = list(),
   pars_ci_final_x = list(lwd = 2, length = 0.2, col = "blue"),
@@ -70,6 +71,11 @@ when adding numbers.}
 \item{xlab, ylab}{The labels for the
 horizontal and vertical axes,
 respectively.}
+
+\item{ci_level}{The level of
+confidence of the confidence intervals,
+if requested. Default is \code{.95}, denoting
+95\%.}
 
 \item{pars_ci}{A named list of
 arguments to be passed to \code{\link[=arrows]{arrows()}}

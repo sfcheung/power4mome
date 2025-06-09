@@ -42,6 +42,29 @@ expect_equal(coef(tmp),
              .50 * .30,
              ignore_attr = TRUE)
 
+model_simple_med <-
+"
+m ~ x
+y ~ m + x
+"
+
+power_all_sim_only <- power4test(nrep = 10,
+                                 model = model_simple_med,
+                                 pop_es = model_simple_med_es,
+                                 n = 100,
+                                 fit_model_args = list(fit_function = "lm"),
+                                 do_the_test = FALSE,
+                                 iseed = 1234,
+                                 parallel = FALSE,
+                                 progress = FALSE)
+
+expect_no_error(print(power_all_sim_only))
+
+tmp <- pop_indirect(power_all_sim_only$sim_all)
+expect_equal(coef(tmp),
+             .50 * .30,
+             ignore_attr = TRUE)
+
 # Case 2
 
 model_simple_med <-
@@ -76,6 +99,26 @@ power_all_sim_only <- power4test(nrep = 10,
                                  number_of_indicators = k,
                                  reliability = rel,
                                  fit_model_args = list(estimator = "ML"),
+                                 do_the_test = FALSE,
+                                 iseed = 1234,
+                                 parallel = FALSE,
+                                 progress = FALSE)
+
+expect_output(print(power_all_sim_only),
+              "x -> m1 -> m2")
+tmp <- pop_indirect(power_all_sim_only$sim_all,
+                    pure_x = FALSE,
+                    pure_y = FALSE)
+expect_equal(coef(tmp)[3],
+             .141,
+             ignore_attr = TRUE)
+
+
+power_all_sim_only <- power4test(nrep = 10,
+                                 model = model_simple_med,
+                                 pop_es = model_simple_med_es,
+                                 n = 500,
+                                 fit_model_args = list(fit_function = "lm"),
                                  do_the_test = FALSE,
                                  iseed = 1234,
                                  parallel = FALSE,

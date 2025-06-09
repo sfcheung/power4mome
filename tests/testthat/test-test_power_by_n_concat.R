@@ -32,6 +32,11 @@ test_out <- power4test(object = sim_only,
                                         boot_ci = TRUE,
                                         mc_ci = FALSE))
 
+tmp <- as.power4test_by_n(sim_only)
+expect_true(is.list(tmp))
+expect_true(length(tmp) == 1)
+expect_true(inherits(tmp, "power4test_by_n"))
+
 out1 <- power4test_by_n(test_out,
                         n = c(100, 110),
                         by_seed = 1234)

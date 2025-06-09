@@ -1,4 +1,4 @@
-# power4mome 0.0.1.65
+# power4mome 0.0.1.67
 
 - Initialized the package. (0.0.0.9000)
 
@@ -454,3 +454,12 @@
 
 - Optimized the power curve algorithm.
   (0.0.1.65)
+
+- Added `as.power4test_by_n()` and
+  `as.power4test_by_es()`.
+  (0.0.1.66)
+
+- Updated `x_from_power()` to quit
+  early if solution is already found
+  in the input.
+  (0.0.1.67)

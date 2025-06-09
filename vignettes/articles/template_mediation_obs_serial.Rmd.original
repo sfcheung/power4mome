@@ -23,7 +23,10 @@ knitr::opts_chunk$set(
 ```{r load_pre, child=c("template_x_preamble.txt")}
 ```
 
-```{r load_pre, child=c("template_x_flowchart.txt")}
+```{r load_flow, echo=FALSE, results="asis"}
+# Adapted from this answer
+cat(readLines("template_x_flowchart.txt"),
+    sep = "\n")
 ```
 
 # Scope

@@ -677,11 +677,18 @@ x_from_power <- function(object,
 
   # Handle the object
 
+  is_x_from_power <- FALSE
   if (inherits(object, "x_from_power")) {
     # Throw an error if imcompatible
     check_x_from_power_as_input(object,
                                 x = x,
                                 pop_es_name = pop_es_name)
+    is_x_from_power <- TRUE
+    if (object$solution_found) {
+      cat("\n--- Solution Already Found ---\n\n")
+      cat("Solution already found in object. It is returned as is.\n")
+      return(object)
+    }
     object <- object$power4test_trials
   }
 
@@ -701,16 +708,6 @@ x_from_power <- function(object,
   } else {
     object_by_org <- NA
   }
-
-  x_interval <- fix_es_interval(object = object,
-                                x = x,
-                                pop_es_name = pop_es_name,
-                                x_interval = x_interval,
-                                progress = progress)
-
-
-  x_max <- max(x_interval)
-  x_min <- min(x_interval)
 
   time_start <- Sys.time()
 
@@ -762,12 +759,78 @@ x_from_power <- function(object,
     }
   }
 
+  ci_hit <- FALSE
+  solution_found <- FALSE
+
+  # === Check Existing Solution ===
+
+  if (is_by_x) {
+    i_org_hit <- find_ci_hit(object_by_org,
+                             ci_level = ci_level,
+                             target_power = target_power,
+                             final_nrep = final_nrep,
+                             closest_ok = FALSE)
+    if (!is.na(i_org_hit) && !is.null(i_org_hit)) {
+      # Solution already in the input.
+      # DO not do the search
+
+      cat("\n--- Solution Already Found ---\n\n")
+      cat("Solution already found in the object. Search will be skipped.")
+
+      ci_hit <- TRUE
+      solution_found <- TRUE
+
+      i2 <- i_org_hit
+
+      if (is_x_from_power) {
+        # This possibility should not happen
+      } else {
+        by_x_1 <- object_by_org
+        tmp1 <- rejection_rates(object_by_org,
+                                level = ci_level,
+                                all_columns = TRUE)
+        fit_1 <- power_curve(by_x_1,
+                             formula = power_curve_args$power_model,
+                             start = power_curve_args$start,
+                             lower_bound = power_curve_args$lower_bound,
+                             upper_bound = power_curve_args$upper_bound,
+                             nls_control = power_curve_args$nls_control,
+                             nls_args = power_curve_args$nls_args,
+                             verbose = progress)
+        ci_hit <- ci_hit
+        x_tried <- get_x_tried(tmp1,
+                               x = x)
+        x_out <- switch(x,
+                        n = tmp1$n[i2],
+                        es = tmp1$es[i2])
+        power_out <- tmp1$reject[i2]
+        nrep_out <- tmp1$nrep[i2]
+        ci_out <- unlist(tmp1[i2, c("reject_ci_lo", "reject_ci_hi")])
+        by_x_out <- by_x_1[[i2]]
+      }
+    }
+  }
+
+  if (!solution_found) {
+    x_interval <- fix_es_interval(object = object,
+                                  x = x,
+                                  pop_es_name = pop_es_name,
+                                  x_interval = x_interval,
+                                  progress = progress)
+  } else {
+    x_interval <- range(x_tried)
+  }
+
+  x_max <- max(x_interval)
+  x_min <- min(x_interval)
+
+
 
   # === Initial Trial ===
 
   # Set the initial values to try
 
-  if (algorithm == "power_curve") {
+  if ((algorithm == "power_curve") && !solution_found) {
 
     a_out <- do.call(power_algorithm_search_by_curve_pre_i,
                      c(list(object = object,
@@ -809,7 +872,7 @@ x_from_power <- function(object,
 
   }
 
-  if (algorithm == "bisection") {
+  if ((algorithm == "bisection") && !solution_found) {
 
     a_out <- do.call(power_algorithm_bisection_pre_i,
                      c(list(object = object,
@@ -864,10 +927,7 @@ x_from_power <- function(object,
   # To be updated whenever by_x_1 is updated.
   # Used after the end of the loop.
 
-  ci_hit <- FALSE
-  solution_found <- FALSE
-
-  if (algorithm == "power_curve") {
+  if ((algorithm == "power_curve") && !solution_found) {
 
     # === Loop Over The Trials ===
 
@@ -921,7 +981,7 @@ x_from_power <- function(object,
 
   }
 
-  if (algorithm == "bisection") {
+  if ((algorithm == "bisection") && !solution_found) {
 
     # === Loop Over The Trials ===
 
@@ -991,7 +1051,8 @@ x_from_power <- function(object,
     cat("- Start at", tmp, "\n")
 
     cat("- Rejection Rates:\n\n")
-    tmp <- rejection_rates(by_x_1)
+    tmp <- rejection_rates(by_x_1,
+                           level = ci_level)
     print(tmp)
     cat("\n")
     cat("- Estimated Power Curve:\n\n")
@@ -1085,7 +1146,8 @@ x_from_power <- function(object,
   args <- utils::modifyList(args,
                             my_call)
   args$object <- NULL
-  reject_1 <- rejection_rates(by_x_1)
+  reject_1 <- rejection_rates(by_x_1,
+                              level = ci_level)
   time_end <- Sys.time()
 
   out <- list(x = x,
@@ -1109,6 +1171,7 @@ x_from_power <- function(object,
               start = time_start,
               end = time_end,
               time_spent = difftime(time_end, time_start),
+              solution_found = solution_found,
               args = args,
               call = match.call())
   class(out) <- c("x_from_power", class(out))
@@ -1180,72 +1243,3 @@ print.x_from_power <- function(x,
   invisible(x)
 }
 
-#' @noRd
-fix_es_interval <- function(object,
-                            x,
-                            pop_es_name,
-                            x_interval,
-                            progress = TRUE) {
-  if ((x == "es") &&
-      is.null(x_interval)) {
-    if (progress) {
-      cat("\n--- Interval for x (es) ---\n\n")
-      cat("Determining the valid interval of values for '",
-          pop_es_name,
-          "' ...\n",
-          sep = "")
-    }
-    es_tmp <- pop_es(object,
-                     pop_es_name = pop_es_name)
-    range_tmp <- tryCatch(check_valid_es_values(object,
-                                                pop_es_name = pop_es_name),
-                    error = function(e) e)
-    if ((inherits(range_tmp, "error")) ||
-        (all(is.na(range_tmp)))) {
-      if (es_tmp < 0) {
-        x_interval <- c(-.95, 0)
-      } else {
-        x_interval <- c(0, .95)
-      }
-      if (progress) {
-        cat("Failed to find the valid range.\n")
-        cat("This range will be used:",
-            paste0(formatC(x_interval[1], digits = 3, format = "f"),
-                  " to ",
-                  formatC(x_interval[2], digits = 3, format = "f")),
-            "\n")
-        cat("Set 'x_interval' manually if necessary.\n")
-      }
-    } else {
-      x_interval <- range_tmp
-      if ((es_tmp < min(x_interval)) ||
-          (es_tmp > max(x_interval))) {
-        # TODO:
-        # - Do we need this check? This should rarely happen.
-      }
-      # If es0 is in the interval, then
-      if (es_tmp <= 0) {
-        x_interval[x_interval >= 0] <- 0
-      } else {
-        x_interval[x_interval <= 0] <- 0
-      }
-      if (progress) {
-        cat("The probable valid range, adjusted for object's value, is:",
-            paste0(formatC(x_interval[1], digits = 3, format = "f"),
-                  " to ",
-                  formatC(x_interval[2], digits = 3, format = "f")),
-            "\n")
-      }
-    }
-  }
-  return(x_interval)
-}
-
-#' @noRd
-x_from_y <- function(x1,
-                     y1,
-                     x2,
-                     y2,
-                     target = 0) {
-  (target - y1) * (x2 - x1) / (y2 - y1) + x1
-}

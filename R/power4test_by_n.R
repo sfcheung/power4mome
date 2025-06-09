@@ -308,3 +308,37 @@ rejection_rates_by_n <- function(object_by_n,
   rownames(out) <- NULL
   out
 }
+
+#' @rdname power4test_by_n
+#'
+#' @param original_object The object
+#' to be converted to a `power4test_by_n`
+#' object.
+#'
+#' @return
+#' The function [as.power4test_by_n()] returns
+#' a `power4test_by_n` object converted
+#' from the input object.
+#'
+#' @details
+#' The function [as.power4test_by_n()]
+#' is used to convert a `power4test`
+#' object to a `power4test_by_n`
+#' object, if it is not already one.
+#' Useful when concatenating
+#' `power4test` objects with
+#' `power4test_by_n` objects.
+#' @export
+as.power4test_by_n <- function(original_object) {
+  if (inherits(original_object, "power4test")) {
+    original_object <- list(original_object)
+    x0 <- attr(original_object, "args")$n
+    class(original_object) <- c("power4test_by_n", class(original_object))
+    names(original_object) <- as.character(x0)
+    return(original_object)
+  }
+  if (inherits(original_object, "power4test_by_n")) {
+    return(original_object)
+  }
+  stop("original_object not of a supported class.")
+}
