@@ -374,3 +374,51 @@ x_from_y <- function(x1,
                      target = 0) {
   (target - y1) * (x2 - x1) / (y2 - y1) + x1
 }
+
+#' @noRd
+# Can be used for most algorithms
+# Input:
+# - f_i: The power to be tested
+# - target: The target power
+# - nrep: The number of replications
+# - ci_level: The level of confidence of the CI
+# - which:
+#    - point: Check against the target power
+#    - ub: Check the upper bound of the CI against the target power
+#    - lb: Check the lower bound of the CI against the target power
+#    Ignored if goal == "ci_hit"
+# - tol:
+#    - The tolerance used in "close_enough"
+# - goal:
+#    - ci_hit: f_i is a solution if its CI include target_power
+#    - close_enough: f_i is as solution if
+#        abs(what - target) < tol
+check_solution <- function(f_i,
+                           target_power,
+                           nrep,
+                           ci_level = .95,
+                           what = c("point", "ub", "lb"),
+                           tol = 1e-2,
+                           goal = c("ci_hit", "close_enough")) {
+  goal <- match.arg(goal)
+  a <- abs(stats::qnorm((1 - ci_level) / 2))
+  se_i <- sqrt(f_i * (1 - f_i) / nrep)
+  cilb <- f_i - a * se_i
+  ciub <- f_i + a * se_i
+
+  if (goal == "ci_hit") {
+    # Ignore what
+    if ((cilb < target_power) && (ciub > target_power)) {
+      return(TRUE)
+    } else {
+      return(FALSE)
+    }
+  }
+  # goal == "close_enough"
+  chk_point <- switch(what,
+                      point = f_i,
+                      ub = ciub,
+                      lb = cilb)
+  out <- abs(chk_point - target_power) < tol
+  out
+}

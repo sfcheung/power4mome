@@ -155,22 +155,26 @@ power_algorithm_bisection <- function(object,
   # - Check whether lower or upper is already a solution
   output_lower <- attr(f.lower, "output")
   reject_lower <- rejection_rates(output_lower)$reject
-  ok_lower <- bisection_check_solution(f_i = reject_lower,
-                                       target_power = target_power,
-                                       nrep = final_nrep,
-                                       ci_level = ci_level,
-                                       what = what,
-                                       goal = goal,
-                                       tol = tol)
+  ok_lower <- check_solution(
+                f_i = reject_lower,
+                target_power = target_power,
+                nrep = final_nrep,
+                ci_level = ci_level,
+                what = what,
+                goal = goal,
+                tol = tol
+              )
   output_upper <- attr(f.upper, "output")
   reject_upper <- rejection_rates(output_upper)$reject
-  ok_upper <- bisection_check_solution(f_i = reject_upper,
-                                       target_power = target_power,
-                                       nrep = final_nrep,
-                                       ci_level = ci_level,
-                                       what = what,
-                                       goal = goal,
-                                       tol = tol)
+  ok_upper <- check_solution(
+                f_i = reject_upper,
+                target_power = target_power,
+                nrep = final_nrep,
+                ci_level = ci_level,
+                what = what,
+                goal = goal,
+                tol = tol
+              )
 
   if (ok_lower || ok_upper) {
     # One of them is a solution. No need to check the interval,
@@ -257,22 +261,26 @@ power_algorithm_bisection <- function(object,
     # - Check whether the updated lower or upper is already a solution
     output_lower <- attr(f.lower, "output")
     reject_lower <- rejection_rates(output_lower)$reject
-    ok_lower <- bisection_check_solution(f_i = reject_lower,
-                                        target_power = target_power,
-                                        nrep = final_nrep,
-                                        ci_level = ci_level,
-                                        what = what,
-                                        goal = goal,
-                                        tol = tol)
+    ok_lower <- check_solution(
+                  f_i = reject_lower,
+                  target_power = target_power,
+                  nrep = final_nrep,
+                  ci_level = ci_level,
+                  what = what,
+                  goal = goal,
+                  tol = tol
+                )
     output_upper <- attr(f.upper, "output")
     reject_upper <- rejection_rates(output_upper)$reject
-    ok_upper <- bisection_check_solution(f_i = reject_upper,
-                                        target_power = target_power,
-                                        nrep = final_nrep,
-                                        ci_level = ci_level,
-                                        what = what,
-                                        goal = goal,
-                                        tol = tol)
+    ok_upper <- check_solution(
+                  f_i = reject_upper,
+                  target_power = target_power,
+                  nrep = final_nrep,
+                  ci_level = ci_level,
+                  what = what,
+                  goal = goal,
+                  tol = tol
+                )
 
     if ((interval_updated$extend_status != 0) &&
         (!ok_lower && !ok_upper)) {
@@ -357,13 +365,15 @@ power_algorithm_bisection <- function(object,
       # TODO:
       # - Check NA, error, etc.
       # Convergence?
-      ok <- bisection_check_solution(f_i = reject_i,
-                                     target_power = target_power,
-                                     nrep = final_nrep,
-                                     ci_level = ci_level,
-                                     what = what,
-                                     goal = goal,
-                                     tol = tol)
+      ok <- check_solution(
+              f_i = reject_i,
+              target_power = target_power,
+              nrep = final_nrep,
+              ci_level = ci_level,
+              what = what,
+              goal = goal,
+              tol = tol
+            )
       if (ok) {
         ci_hit <- switch(goal,
                          ci_hit = TRUE,
