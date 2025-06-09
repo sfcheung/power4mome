@@ -9,7 +9,7 @@ set of sample sizes."><meta property="og:image" content="https://sfcheung.github
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.65</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.67</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -71,7 +71,9 @@ set of sample sizes.</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'power4test_by_n'</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">...</span>, sort <span class="op">=</span> <span class="cn">TRUE</span>, skip_checking_models <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">...</span>, sort <span class="op">=</span> <span class="cn">TRUE</span>, skip_checking_models <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">as.power4test_by_n</span><span class="op">(</span><span class="va">original_object</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -164,6 +166,12 @@ This argument is used by
 is rarely used when calling
 the <code>c</code> method directly.</p></dd>
 
+
+<dt id="arg-original-object">original_object<a class="anchor" aria-label="anchor" href="#arg-original-object"></a></dt>
+<dd><p>The object
+to be converted to a <code>power4test_by_n</code>
+object.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -176,6 +184,9 @@ each sample size.</p>
 a <code>power4test_by_n</code> object with
 all the elements (tests for different
 sample sizes) combined.</p>
+<p>The function <code>as.power4test_by_n()</code> returns
+a <code>power4test_by_n</code> object converted
+from the input object.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -193,6 +204,13 @@ power over a set of sample sizes.</p>
 <p>The method <code>c.power4test_by_n()</code>
 is used to combine tests from different
 runs of <code>power4test_by_n()</code>.</p>
+<p>The function <code>as.power4test_by_n()</code>
+is used to convert a <code>power4test</code>
+object to a <code>power4test_by_n</code>
+object, if it is not already one.
+Useful when concatenating
+<code>power4test</code> objects with
+<code>power4test_by_n</code> objects.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
