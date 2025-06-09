@@ -46,6 +46,34 @@ expect_no_error(print(summary(tmp)))
 expect_true((tmp$power_final > .70) &&
             (tmp$power_final < .90))
 
+tmp2 <- x_from_power(tmp,
+                    x = "es",
+                    pop_es_name = "y ~ m",
+                    target_power = .80,
+                    final_nrep = 60,
+                    max_trials = 2,
+                    seed = 1234,
+                    progress = TRUE,
+                    simulation_progress = FALSE,
+                    algorithm = "power_curve")
+expect_identical(tmp2,
+                 tmp)
+
+tmp3 <- x_from_power(tmp$power4test_trials,
+                    x = "es",
+                    pop_es_name = "y ~ m",
+                    target_power = .80,
+                    final_nrep = 60,
+                    max_trials = 2,
+                    seed = 1234,
+                    progress = TRUE,
+                    simulation_progress = FALSE,
+                    algorithm = "power_curve")
+expect_identical(tmp3$x_tried,
+                 tmp$x_tried)
+expect_identical(tmp3$x_final,
+                 tmp$x_final)
+
 out <- power4test(nrep = 10,
                   model = mod,
                   pop_es = mod_es,
