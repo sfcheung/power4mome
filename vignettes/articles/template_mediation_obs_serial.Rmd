@@ -1,6 +1,6 @@
 ---
 title: "Quick Template: Serial Mediation with Observed Variables"
-date: "2025-06-08"
+date: "2025-06-09"
 output:
   html_document:
     fig.align: "center"
@@ -40,14 +40,12 @@ given desired power using `x_from_power()`,
 as well as the help pages of these
 functions.
 
-
 # Common Flow
 
 The following chart summarizes the steps covered
 below.
 
-
-```{r temp_fig_flowchart, fig.cap="Common Workflow", fig.align="center", message=FALSE, echo=FALSE}
+```{r temp_med_obs_fig_flowchart, fig.cap="Common Workflow", fig.align="center", message=FALSE, echo=FALSE}
 library(DiagrammeR)
 # https://mermaid.live/edit#pako:eNqFk9tu4jAQhl_F8lUrASUHCHEpUrX0st1KVHuxmxUyZHKQHDtynKVZxLvXcQ4NFKl39sz3z-FPfMR7EQImOGLisE-oVOhtHfCAI7RntCjWEKEQIloyhaKUMcLSOFE7VsL9NcYeQLEE4PdNrUJVDJCSFW8AZIgKmO76mc_0KOwaUCMbUM91_ibA-oheRV4yqlLBkQkH-LalnjZfkV9UT1wsd_JutUxXuci3-naXrlrVTw4vWvQmKyQ4IP4JHkC6Cgp1czvAN_APJGWdpGiuiBdfddtdteUXYir3yYuZsT4hjg6pSpCiMtZDG2lX530bSZFtTeysyCMXKgHZTUCb6zeDG6PLXSxpnrRe_wlw697fc5cJIf0nHY9Xja-DYEMDD3vZ0wY9PKyMlZ2laDzppBfdzZ-gm7_Wc_bNjWZZV-n2G-7aZDrvr2WMseeFhvgw2qMdcJE4267vM9xnIL0MmxqDKB7hDGRG01A_tGPNBFgXzCDARB9bTwMc8JNGaanEpuJ7TJQsYYSlKOMEk4iyQt_KPKQK1inVRmZ9NKf8txBZJ4EwVUI-Ny_bPHCDYHLE75jYnjWZu9bCdxZz33Mdd4QrTGbuZGp7tjubu747s1xrfhrh_6bodOI5lufOp5bnO_bCt0c4lvUy7YDaKJA_RMkVJo5vOacPm8xrNw
 mermaid('
@@ -467,7 +465,7 @@ summary(n_power_80)
 #> === Technical Information ===
 #> 
 #> - The range of values explored: 50 to 107 
-#> - Time spent in the search: 37.06 secs 
+#> - Time spent in the search: 34.78 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -580,7 +578,7 @@ summary(n_power_80_ns)
 #> === Technical Information ===
 #> 
 #> - The range of values explored: 90 to 174 
-#> - Time spent in the search: 2.103 mins 
+#> - Time spent in the search: 2.321 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -873,7 +871,7 @@ summary(n2_power_80)
 #> === Technical Information ===
 #> 
 #> - The range of values explored: 100 to 174 
-#> - Time spent in the search: 2.125 mins 
+#> - Time spent in the search: 2.126 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
