@@ -620,6 +620,13 @@ x_from_power <- function(object,
 
   what <- match.arg(what)
   goal <- match.arg(goal)
+  if (goal == "ci_hit") {
+    what <- "point"
+  }
+  if (algorithm == "power_curve") {
+    goal <- "ci_hit"
+    what <- "point"
+  }
   # what: The value to be examined.
   # goal:
   # - ci_hit: Only relevant for what == "point"
@@ -819,7 +826,9 @@ x_from_power <- function(object,
       cat("\n--- Solution Already Found ---\n\n")
       cat("Solution already found in the object. Search will be skipped.")
 
-      ci_hit <- TRUE
+      ci_hit <- ifelse(goal == "ci_hit",
+                       TRUE,
+                       NA)
       solution_found <- TRUE
 
       i2 <- i_org_hit
@@ -1034,8 +1043,6 @@ x_from_power <- function(object,
     #   arguments.
     lower_hard <- min(x_interval)
     upper_hard <- max(x_interval)
-    extend_maxiter <- 3
-    tol <- .02
 
     a_out <- do.call(power_algorithm_bisection,
                      c(list(object = object,
@@ -1065,10 +1072,9 @@ x_from_power <- function(object,
                             digits = 3,
                             lower_hard = lower_hard,
                             upper_hard = upper_hard,
-                            extend_maxiter = extend_maxiter,
-                            what = "point",
-                            goal = "ci_hit",
-                            tol = tol),
+                            what = what,
+                            goal = goal,
+                            tol = tolerance),
                       control))
 
     by_x_1 <- a_out$by_x_1
@@ -1106,6 +1112,8 @@ x_from_power <- function(object,
   # - At least one CI hits the target power
   # - The maximum number of replications reached.
 
+  # TODO:
+  # - Handle what and goal
   if (ci_hit && (nrep_out == final_nrep)) {
     # Created when ci_hit set to TRUE
 
@@ -1133,6 +1141,8 @@ x_from_power <- function(object,
   # The estimated value based on power_curve.
   # Used as a suggestion when no solution was found.
   x_x <- NA
+  # TODO:
+  # - Handle what and goal
   if (ci_hit) {
     x_tried <- switch(x,
                       n = as.numeric(names(by_x_1)),
