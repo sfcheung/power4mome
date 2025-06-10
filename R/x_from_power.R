@@ -636,9 +636,10 @@ x_from_power <- function(object,
                           es = "power_curve")
     }
   }
+
+  changed_to_bisection <- FALSE
   if (goal == "close_enough") {
     # Only bisection is supported
-    changed_to_bisection <- FALSE
     if (isTRUE((algorithm != "bisection")) &&
         (!is.null(algorithm))) {
       # warning("Only bisection is supported when goal is 'close_enough'. ",
