@@ -744,7 +744,7 @@ x_from_power <- function(object,
 
   is_x_from_power <- FALSE
   if (inherits(object, "x_from_power")) {
-    # Throw an error if imcompatible
+    # Throw an error if incompatible
     check_x_from_power_as_input(object,
                                 x = x,
                                 pop_es_name = pop_es_name)
