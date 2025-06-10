@@ -458,7 +458,7 @@ fix_es_interval <- function(object,
         x_interval[x_interval <= 0] <- 0
       }
       if (progress) {
-        cat("The probable valid range, adjusted for object's value, is:",
+        cat("The probable valid range, of the same sign of object's value, is:",
             paste0(formatC(x_interval[1], digits = 3, format = "f"),
                   " to ",
                   formatC(x_interval[2], digits = 3, format = "f")),
