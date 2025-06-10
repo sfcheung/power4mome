@@ -217,7 +217,9 @@ find_ci_hit <- function(object,
                         ci_level = .95,
                         target_power = .80,
                         final_nrep = 400,
-                        closest_ok = FALSE) {
+                        closest_ok = FALSE,
+                        if_ties = c("min", "max")) {
+  if_ties <- match.arg(if_ties)
   # If no hit, return NULL
   # If hit, always return one number
   # If closest_ok, accept a trial with closest power level
@@ -246,7 +248,110 @@ find_ci_hit <- function(object,
     if (all(is.na(i1))) {
       return(NULL)
     }
-    i2 <- which(i1 == min(i1[i0], na.rm = TRUE))[1]
+    i2 <- switch(if_ties,
+                 min = which(i1 == min(i1[i0], na.rm = TRUE))[1],
+                 max = which(i1 == max(i1[i0], na.rm = TRUE))[1])
+  } else {
+    # Still check nrep
+    # To ignore nrep, set nrep to 0.
+    if (by_x_ci$nrep[i0] < final_nrep) {
+      return(NULL)
+    }
+    i2 <- which(i0)
+  }
+  return(i2)
+}
+
+#' @noRd
+# Find the solution
+# based on goal and what
+find_solution <- function(object,
+                          target_power = .80,
+                          ci_level = .95,
+                          what = c("point", "ub", "lb"),
+                          tol = 1e-2,
+                          goal = c("ci_hit", "close_enough"),
+                          final_nrep = 400,
+                          closest_ok = FALSE,
+                          if_ties = c("min", "max")) {
+
+  what <- match.arg(what)
+  goal <- match.arg(goal)
+
+  out <- switch(goal,
+                ci_hit = find_ci_hit(
+                           object = object,
+                           ci_level = ci_level,
+                           target_power = target_power,
+                           final_nrep = final_nrep,
+                           closest_ok = closest_ok,
+                           if_ties = if_ties),
+                close_enough = find_close_enough(
+                           object = object,
+                           ci_level = ci_level,
+                           target_power = target_power,
+                           final_nrep = final_nrep,
+                           tol = tol,
+                           what = what,
+                           closest_ok = closest_ok,
+                           if_ties = if_ties))
+  out
+}
+
+#' @noRd
+# Find the solution
+# based on goal and what
+find_close_enough <- function(
+  object,
+  target_power = .80,
+  ci_level = .95,
+  what = c("point", "ub", "lb"),
+  tol = 1e-2,
+  final_nrep = 400,
+  closest_ok = FALSE,
+  if_ties = c("min", "max")) {
+  # If no solution, return NULL
+  # If solution, always return one number
+  # If closest_ok, accept the closest trial
+
+  what <- match.arg(what)
+  if_ties <- match.arg(if_ties)
+
+  by_x_ci <- rejection_rates_add_ci(object,
+                                    level = ci_level,
+                                    add_se = TRUE)
+  var_all <- by_x_ci$reject_se ^ 2
+  r_all <- switch(what,
+                  point = by_x_ci$reject,
+                  ub = by_x_ci$reject_ci_hi,
+                  lb = by_x_ci$reject_ci_lo)
+  r_all0 <- r_all - target_power
+  r_all1 <- abs(r_all0)
+  i0 <- r_all1 < tol
+
+  if (isFALSE(any(i0))) {
+    if (closest_ok) {
+      tmp <- which.min(r_all1 * var_all)
+      i0 <- rep(FALSE, nrow(by_x_ci))
+      i0[tmp] <- TRUE
+    } else {
+      return(NULL)
+    }
+  }
+  if (sum(i0) > 1) {
+    # Find the value with CI hitting the target power
+    # and has the smallest SE.
+    i1 <- rank(by_x_ci$reject_se)
+    i1[!i0] <- NA
+    # Do not consider those with nrep < final_nrep
+    i1[by_x_ci$nrep < final_nrep] <- NA
+    # If ties, the smallest value will be used
+    if (all(is.na(i1))) {
+      return(NULL)
+    }
+    i2 <- switch(if_ties,
+                 min = which(i1 == min(i1[i0], na.rm = TRUE))[1],
+                 max = which(i1 == max(i1[i0], na.rm = TRUE))[1])
   } else {
     # Still check nrep
     # To ignore nrep, set nrep to 0.
