@@ -730,11 +730,16 @@ x_from_power <- function(object,
     object_by_org <- object
     # TODO:
     # - Should quit if solution is already in object
-    i_org <- find_ci_hit(object_by_org,
-                         ci_level = ci_level,
-                         target_power = target_power,
-                         final_nrep = 1,
-                         closest_ok = TRUE)
+    i_org <- find_solution(
+               object_by_org,
+               target_power = target_power,
+               ci_level = ci_level,
+               what = what,
+               tol = tolerance,
+               goal = goal,
+               final_nrep = 1,
+               closest_ok = TRUE,
+               if_ties = "min")
     object <- object_by_org[[i_org]]
   } else {
     object_by_org <- NA
@@ -796,11 +801,17 @@ x_from_power <- function(object,
   # === Check Existing Solution ===
 
   if (is_by_x) {
-    i_org_hit <- find_ci_hit(object_by_org,
-                             ci_level = ci_level,
-                             target_power = target_power,
-                             final_nrep = final_nrep,
-                             closest_ok = FALSE)
+
+    i_org_hit <- find_solution(
+                   object_by_org,
+                   ci_level = ci_level,
+                   target_power = target_power,
+                   what = what,
+                   tol = tolerance,
+                   goal = goal,
+                   final_nrep = final_nrep,
+                   closest_ok = FALSE,
+                   if_ties = "min")
     if (!is.na(i_org_hit) && !is.null(i_org_hit)) {
       # Solution already in the input.
       # DO not do the search
