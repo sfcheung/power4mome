@@ -638,7 +638,8 @@ x_from_power <- function(object,
   }
   if (goal == "close_enough") {
     # Only bisection is supported
-    if (algorithm != "bisection") {
+    if ((algorithm != "bisection") ||
+        (is.null(algorithm))) {
       warning("Only bisection is supported when goal is 'close_enough'. ",
               "Switched automatically to bisection.")
     }
