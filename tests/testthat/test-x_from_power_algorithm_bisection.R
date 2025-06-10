@@ -76,6 +76,7 @@ a_out <- power_algorithm_bisection(object = out,
                                    goal = "close_enough")
 rejection_rates(a_out$by_x_1)
 plot(a_out$fit_1)
+abline(v = a_out$x_out)
 abline(h = .80)
 
 # lb
