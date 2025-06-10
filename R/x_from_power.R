@@ -1082,11 +1082,6 @@ x_from_power <- function(object,
 
     # === Loop Over The Trials ===
 
-
-    # TODO:
-    # - Add sth like args = list(...) for additional
-    #   arguments and let users change algorithm-specific
-    #   arguments.
     lower_hard <- min(x_interval)
     upper_hard <- max(x_interval)
 
