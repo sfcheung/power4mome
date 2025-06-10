@@ -506,3 +506,37 @@ root_muller_i <- function(
   xp1 <- max(xp1a, xp1b, na.rm = TRUE)
   xp1
 }
+
+#' @noRd
+check_solution_in_by_x <- function(
+  object,
+  target_power,
+  ci_level = .95,
+  what = c("point", "ub", "lb"),
+  tol = 1e-2,
+  goal = c("ci_hit", "close_enough")
+) {
+  what <- match.arg(what)
+  goal <- match.arg(goal)
+  if (inherits(object, "rejection_rates_df")) {
+    reject_df <- object
+  } else {
+    reject_df <- rejection_rates(object,
+                                ci_level = ci_level,
+                                all_columns = TRUE,
+                                se = TRUE)
+  }
+  reject_all <- reject_df$reject
+  nrep_all <- reject_df$nrep
+  chK_all <- mapply(
+               check_solution,
+               f_i = reject_all,
+               nrep = nrep_all,
+               MoreArgs = list(target_power = target_power,
+                               ci_level = ci_level,
+                               what = what,
+                               tol = tol,
+                               goal = goal)
+             )
+  chK_all
+}
