@@ -168,8 +168,11 @@ print.summary.x_from_power <- function(x,
   }
 
   cat("\n=== Technical Information ===\n\n")
+  tmp <- formatC(range(x$x_tried),
+                  digits = digits,
+                  format = "f")
   cat("- The range of values explored:",
-      paste(range(x$x_tried), collapse = " to "), "\n")
+      paste(tmp, collapse = " to "), "\n")
   cat("- Time spent in the search:",
       format(x$time_spent, digits = 4),
       "\n")
