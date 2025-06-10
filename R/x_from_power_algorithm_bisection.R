@@ -38,6 +38,11 @@ power_algorithm_bisection <- function(object,
   what <- match.arg(what)
   goal <- match.arg(goal)
 
+  # what: The value to be examined.
+  # goal:
+  # - ci_hit: Only relevant for what == "point"
+  # - close_enough: Can be used for all what.
+
   x_type <- x
 
   # Create the objective function
@@ -45,6 +50,7 @@ power_algorithm_bisection <- function(object,
   # Tbe output is:
   # - a scalar,
   # - with the attribute "output" storing the full by_* output.
+  # - The scalar depends on 'what'
 
   f <- gen_objective(object = object,
                      x = x,
@@ -256,6 +262,9 @@ power_algorithm_bisection <- function(object,
       class(tmp) <- class(by_x_1)
       attr(f.upper, "output") <- tmp
     }
+
+    # Fix the start value if it is outside the new interval
+
     if ((start <= lower) || (start >= upper)) {
       start <- mean(c(lower, upper))
     }
