@@ -762,8 +762,9 @@ x_from_power <- function(object,
       inherits(object, "power4test_by_es")) {
     is_by_x <- TRUE
     object_by_org <- object
-    # TODO:
-    # - Should quit if solution is already in object
+
+    # Whether a solution exists will be checked later
+
     i_org <- find_solution(
                object_by_org,
                target_power = target_power,
@@ -1152,8 +1153,6 @@ x_from_power <- function(object,
   # Is solution found?
   # - The maximum number of replications reached.
 
-  # TODO:
-  # - Handle what and goal
   if (goal == "ci_hit") {
     if (isTRUE(ci_hit) && (nrep_out == final_nrep)) {
 
