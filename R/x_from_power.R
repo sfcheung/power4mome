@@ -593,9 +593,7 @@ x_from_power <- function(object,
                                                  nls_control = list(),
                                                  nls_args = list()),
                          save_sim_all = FALSE,
-                         algorithm = switch(x,
-                                            n = "bisection",
-                                            es = "power_curve"),
+                         algorithm = NULL,
                          control = list()
                          ) {
 
@@ -614,26 +612,43 @@ x_from_power <- function(object,
   # - Final power4test object.
   # - Final model by nls.
 
-  algorithm <- match.arg(algorithm,
-                         c("bisection",
-                           "power_curve"))
-
   what <- match.arg(what)
   goal <- match.arg(goal)
   if (goal == "ci_hit") {
     what <- "point"
   }
-  if (algorithm == "power_curve") {
-    goal <- "ci_hit"
-    what <- "point"
+
+  x <- match.arg(x,
+                 choices = c("n", "es"))
+
+  if (!is.null(algorithm)) {
+    algorithm <- match.arg(algorithm,
+                          c("bisection",
+                            "power_curve"))
   }
+
+  # what and goal take precedence
+
+  if (goal == "ci_hit") {
+    if (is.null(algorithm)) {
+      algorithm <- switch(x,
+                          n = "bisection",
+                          es = "power_curve")
+    }
+  }
+  if (goal == "close_enough") {
+    # Only bisection is supported
+    if (algorithm != "bisection") {
+      warning("Only bisection is supported when goal is 'close_enough'. ",
+              "Switched automatically to bisection.")
+    }
+    algorithm <- "bisection"
+  }
+
   # what: The value to be examined.
   # goal:
   # - ci_hit: Only relevant for what == "point"
   # - close_enough: Can be used for all what.
-
-  x <- match.arg(x,
-                 choices = c("n", "es"))
 
   a <- abs(stats::qnorm((1 - ci_level) / 2))
   power_tolerance_in_interval <- a * sqrt(target_power * (1 - target_power) / final_nrep)
@@ -691,7 +706,7 @@ x_from_power <- function(object,
   if (is.null(extendInt)) {
     if (x == "n") {
       extendInt <- match.arg(extendInt,
-                             choices = c("upX", "no", "yes", "downX"))
+                             choices = c("yes", "no", "upX", "downX"))
     }
     if (x == "es") {
       extendInt <- match.arg(extendInt,
@@ -1109,41 +1124,68 @@ x_from_power <- function(object,
   }
 
   # Is solution found?
-  # - At least one CI hits the target power
   # - The maximum number of replications reached.
 
   # TODO:
   # - Handle what and goal
-  if (ci_hit && (nrep_out == final_nrep)) {
-    # Created when ci_hit set to TRUE
+  if (goal == "ci_hit") {
+    if (isTRUE(ci_hit) && (nrep_out == final_nrep)) {
 
-    # ** x_final, by_x_final, power_final, ci_final, nrep_final, i_final **
-    # The solution.
-    x_final <- x_out
-    by_x_final <- by_x_out
-    power_final <- power_out
-    ci_final <- ci_out
-    nrep_final <- nrep_out
-    i_final <- i2
-  } else {
-    # No solution found.
-    # Force ci_hit to be FALSE.
-    # Set the NAs to denote this.
-    x_final <- NA
-    by_x_final <- NA
-    power_final <- NA
-    ci_final <- NA
-    nrep_final <- NA
-    i_final <- NA
+      # ** x_final, by_x_final, power_final, ci_final, nrep_final, i_final **
+      # The solution.
+
+      x_final <- x_out
+      by_x_final <- by_x_out
+      power_final <- power_out
+      ci_final <- ci_out
+      nrep_final <- nrep_out
+      i_final <- i2
+    } else {
+
+      # No solution found.
+      # Set the NAs to denote this.
+
+      x_final <- NA
+      by_x_final <- NA
+      power_final <- NA
+      ci_final <- NA
+      nrep_final <- NA
+      i_final <- NA
+    }
+  }
+
+  if (goal == "close_enough") {
+    if (isTRUE(solution_found) && (nrep_out == final_nrep)) {
+
+      # ** x_final, by_x_final, power_final, ci_final, nrep_final, i_final **
+      # The solution.
+
+      x_final <- x_out
+      by_x_final <- by_x_out
+      power_final <- power_out
+      ci_final <- ci_out
+      nrep_final <- nrep_out
+      i_final <- i2
+    } else {
+
+      # No solution found.
+      # Set the NAs to denote this.
+
+      x_final <- NA
+      by_x_final <- NA
+      power_final <- NA
+      ci_final <- NA
+      nrep_final <- NA
+      i_final <- NA
+    }
   }
 
   # ** x_x **
   # The estimated value based on power_curve.
   # Used as a suggestion when no solution was found.
   x_x <- NA
-  # TODO:
-  # - Handle what and goal
-  if (ci_hit) {
+
+  if (solution_found) {
     x_tried <- switch(x,
                       n = as.numeric(names(by_x_1)),
                       es = sapply(by_x_1,
@@ -1160,8 +1202,9 @@ x_from_power <- function(object,
                             extendInt = "yes",
                             x_to_exclude = x_tried)
   }
+
   if (progress) {
-    if (ci_hit && (nrep_out == final_nrep)) {
+    if (solution_found && (nrep_out == final_nrep)) {
       cat("\n")
       x_out_str <- formatC(x_out,
                            digits = switch(x, n = 0, es = 4),
@@ -1177,8 +1220,9 @@ x_from_power <- function(object,
     } else {
       cat("\n")
       cat("- None of the value(s) examined",
-          "in the interval meet the target power.\n")
-      if (!is.na(x_x)) {
+          "in the interval meet the goal.\n")
+      if (!is.na(x_x) &&
+          (goal == "ci_hit")) {
         x_x_str <- formatC(x_x,
                            digits = switch(x, n = 0, es = 4),
                            format = "f")
@@ -1224,6 +1268,8 @@ x_from_power <- function(object,
               end = time_end,
               time_spent = difftime(time_end, time_start),
               solution_found = solution_found,
+              what = what,
+              goal = goal,
               args = args,
               call = match.call())
   class(out) <- c("x_from_power", class(out))
