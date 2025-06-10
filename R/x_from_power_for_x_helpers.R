@@ -422,3 +422,87 @@ check_solution <- function(f_i,
   out <- abs(chk_point - target_power) < tol
   out
 }
+
+#' @noRd
+# Find the root by the Muller's method
+# For reference. Not used directly.
+muller <- function(
+  f,
+  ...,
+  start,
+  maxiter = 100,
+  tol = 1e-5
+) {
+  x_all <- rep(NA, maxiter)
+  y_all <- rep(NA, maxiter)
+  if (length(start) != 3) {
+    stop("'start' must be a vector of three numbers")
+  }
+  i <- 1
+  start <- sort(start)
+  xm2 <- start[1]
+  xm1 <- start[2]
+  x0i <- start[3]
+  while (i <= maxiter) {
+    x_all[i] <- x0i
+    y_all[i] <- f(x0i, ...)
+    xp1 <- root_muller_i(
+      f = f,
+      xm2 = xm2,
+      xm1 = xm1,
+      x0i = x0i,
+      ...
+    )
+    fp1 <- f(xp1, ...)
+    cat("----\n")
+    cat("i =", i, "\n")
+    cat("xp1 =", xp1, "\n")
+    cat("fp1 =", fp1, "\n")
+    if (abs(fp1) < tol) {
+      break
+    }
+    xm2 <- xm1
+    xm1 <- x0i
+    x0i <- xp1
+    i <- i + 1
+  }
+  list(x = x_all[seq_len(i)],
+       y = y_all[seq_len(i)])
+}
+
+#' @noRd
+# Find the next value based on the Muller's method
+root_muller_i <- function(
+  f,
+  xm2,
+  xm1,
+  x0i,
+  ...
+) {
+  ym2 <- f(xm2, ...)
+  ym1 <- f(xm1, ...)
+  y0i <- f(x0i, ...)
+  A <- ((xm1 - x0i) * (ym2 - y0i) - (xm2 - x0i) * (ym1 - y0i)) /
+       ((x0i - xm1) * (xm1 - xm2) * (xm2 - x0i))
+  B <- ((xm2 - x0i)^2 * (ym1 - y0i) - (xm1 - x0i)^2 * (ym2 - y0i)) /
+       ((x0i - xm1) * (xm1 - xm2) * (xm2 - x0i))
+  C <- y0i
+
+  xp1a <- suppressWarnings(
+            x0i + (-2 * C) /
+            (B - sqrt(B^2 - 4 * A * C))
+          )
+  xp1b <- suppressWarnings(
+            x0i + (-2 * C) /
+            (B + sqrt(B^2 - 4 * A * C))
+          )
+  if (is.nan(xp1a)) {
+    xp1a <- NA
+  }
+  if (is.nan(xp1b)) {
+    xp1b <- NA
+  }
+
+  xp1 <- max(xp1a, xp1b, na.rm = TRUE)
+  xp1
+}
