@@ -32,7 +32,8 @@ power_algorithm_bisection <- function(object,
                                       extend_maxiter = 3,
                                       what = c("point", "ub", "lb"),
                                       goal = c("ci_hit", "close_enough"),
-                                      tol = .02) {
+                                      tol = .02,
+                                      variants = list()) {
   extendInt <- match.arg(extendInt)
   what <- match.arg(what)
   goal <- match.arg(goal)
@@ -40,6 +41,11 @@ power_algorithm_bisection <- function(object,
   x_type <- x
 
   # Create the objective function
+
+  # Tbe output is:
+  # - a scalar,
+  # - with the attribute "output" storing the full by_* output.
+
   f <- gen_objective(object = object,
                      x = x,
                      pop_es_name = pop_es_name,
@@ -55,6 +61,7 @@ power_algorithm_bisection <- function(object,
                      store_output = TRUE)
 
   # Find f.lower and f.upper
+
   by_x_ci <- rejection_rates_add_ci(by_x_1,
                                     level = ci_level)
   x_tried <- get_x_tried(by_x_ci,
@@ -73,6 +80,9 @@ power_algorithm_bisection <- function(object,
     cat("\n")
   }
 
+  # Compute f.lower and f.upper if not available
+
+  # f.lower
 
   tmp <- in_x_tried(lower,
                     object = by_x_ci,
@@ -104,6 +114,8 @@ power_algorithm_bisection <- function(object,
     by_x_1 <- c(by_x_1, attr(f.lower, "output"),
                 skip_checking_models = TRUE)
   }
+
+  # f.upper
 
   tmp <- in_x_tried(upper,
                     object = by_x_ci,
@@ -152,7 +164,8 @@ power_algorithm_bisection <- function(object,
 
   do_search <- TRUE
 
-  # - Check whether lower or upper is already a solution
+  # Check whether lower or upper is already a solution
+
   output_lower <- attr(f.lower, "output")
   reject_lower <- rejection_rates(output_lower)$reject
   ok_lower <- check_solution(
@@ -177,12 +190,17 @@ power_algorithm_bisection <- function(object,
               )
 
   if (ok_lower || ok_upper) {
+
     # One of them is a solution. No need to check the interval,
     # even if the interval is below or above the root.
+
     do_search <- FALSE
+
   } else {
+
     # Fix the interval
     # The original interval is returned if it is OK
+
     interval_updated <- extend_interval(f = f,
                                         x = x,
                                         pop_es_name = pop_es_name,
@@ -210,10 +228,13 @@ power_algorithm_bisection <- function(object,
                                                            n = .5,
                                                            es = .05))
 
-    # if (interval_updated$extend_status == 0) {
     lower <- interval_updated$lower
     upper <- interval_updated$upper
-    # The outputs of lower and upper always in by_x_1
+
+    # The outputs of lower and upper are always in by_x_1
+
+    # Store the output back into f.lower, if not yet stored
+
     f.lower <- interval_updated$f.lower
     if (is.null(attr(f.lower, "output"))) {
       tmp <- in_x_tried(test_x = lower,
@@ -223,6 +244,9 @@ power_algorithm_bisection <- function(object,
       class(tmp) <- class(by_x_1)
       attr(f.lower, "output") <- tmp
     }
+
+    # Store the output back into f.upper, if not yet stored
+
     f.upper <- interval_updated$f.upper
     if (is.null(attr(f.upper, "output"))) {
       tmp <- in_x_tried(test_x = upper,
@@ -236,6 +260,8 @@ power_algorithm_bisection <- function(object,
       start <- mean(c(lower, upper))
     }
 
+    # Store the output of f.lower to by_x_1, if not yet stored
+
     tmp <- in_x_tried(test_x = lower,
                       object = by_x_1,
                       x = x)
@@ -243,6 +269,8 @@ power_algorithm_bisection <- function(object,
       by_x_1 <- c(by_x_1, attr(interval_updated$f.lower, "output"),
                   skip_checking_models = TRUE)
     }
+
+    # Store the output of f.upper to by_x_1, if not yet stored
 
     tmp <- in_x_tried(test_x = upper,
                       object = by_x_1,
@@ -252,13 +280,8 @@ power_algorithm_bisection <- function(object,
                   skip_checking_models = TRUE)
     }
 
-    # } else {
-    #   # Interval not OK.
-    #   # However, it is possible that
-    #   # one of the bounds is a solution.
-    # }
+    # Check whether the updated lower or upper is already a solution
 
-    # - Check whether the updated lower or upper is already a solution
     output_lower <- attr(f.lower, "output")
     reject_lower <- rejection_rates(output_lower)$reject
     ok_lower <- check_solution(
@@ -284,28 +307,40 @@ power_algorithm_bisection <- function(object,
 
     if ((interval_updated$extend_status != 0) &&
         (!ok_lower && !ok_upper)) {
+
       # Interval not OK and no bounds are the solution
+
       if (progress) {
         cat("\n")
         cat(names(interval_updated$extend_status), ".\n")
-        cat("None of the bounds are solution.\n")
+        cat("... and none of the bounds are solution.\n")
         cat("Try another interval.\n\n")
+
         # Should quit
+
         do_search <- FALSE
       }
+
     }
 
   }
 
   if (ok_lower || ok_upper) {
+
+    # One of the bound is a solution
+
     if (progress) {
       cat("One of the bounds in the interval is already a solution.\n\n")
     }
+
     do_search <- FALSE
     ci_hit <- switch(goal,
                      ci_hit = TRUE,
                      close_enough = NA)
     solution_found <- TRUE
+
+    # The lower bound take precedence
+
     if (ok_lower) {
       x_i <- lower
       out_i <- f.lower
@@ -322,6 +357,9 @@ power_algorithm_bisection <- function(object,
   }
 
   if (do_search) {
+
+    # Do the bisection search
+
     x_i <- start
     if (x_type == "n") {
       x_i <- ceiling(x_i)
@@ -332,11 +370,17 @@ power_algorithm_bisection <- function(object,
     upper_i <- upper
     status <- 0
 
+    # Start the iteration
+
     i <- 1
     while (i <= max_trials) {
+
       if (progress) {
         cat("\nIteration #", i, "\n")
       }
+
+      # Compute the function value
+
       out_i <- f(x_i = x_i,
                  x = x,
                  pop_es_name = pop_es_name,
@@ -350,6 +394,7 @@ power_algorithm_bisection <- function(object,
                  simulation_progress = simulation_progress,
                  save_sim_all = save_sim_all,
                  store_output = TRUE)
+
       output_i <- attr(out_i, "output")
       by_x_1 <- c(by_x_1, output_i,
                   skip_checking_models = TRUE)
@@ -365,6 +410,7 @@ power_algorithm_bisection <- function(object,
       # TODO:
       # - Check NA, error, etc.
       # Convergence?
+
       ok <- check_solution(
               f_i = reject_i,
               target_power = target_power,
@@ -374,15 +420,22 @@ power_algorithm_bisection <- function(object,
               goal = goal,
               tol = tol
             )
+
       if (ok) {
+
+        # Solution found
+
         ci_hit <- switch(goal,
                          ci_hit = TRUE,
                          close_enough = NA)
         solution_found <- TRUE
+
         break
+
       }
 
-      # Update interval
+      # Update the interval
+
       if (x_type == "n") {
         x_i <- ceiling(x_i)
       }
@@ -397,6 +450,7 @@ power_algorithm_bisection <- function(object,
       if (x_type == "n") {
         x_i <- ceiling(x_i)
       }
+
       if (progress) {
         print_interval(lower = lower_i,
                        upper = upper_i,
@@ -404,10 +458,15 @@ power_algorithm_bisection <- function(object,
                        x_type = x_type)
         cat("Updated x:", x_i, "\n")
       }
+
       i <- i + 1
+
     }
+
   } else {
+
     # No iteration
+
   }
 
   # Prepare the output
@@ -450,15 +509,21 @@ power_algorithm_bisection <- function(object,
 
   if (!do_search &&
       (!ok_lower && !ok_upper)) {
+
+    # No solution for whatever reason
+
     x_out <- NA
     power_out <- NA
     nrep_out <- NA
     ci_out <- NA
     by_x_out <- NA
     i2 <- NA
+
   } else {
+
     # Store the last results,
     # regardless of solution
+
     out_i <- as.numeric(out_i)
     by_ci_i <- rejection_rates_add_ci(output_i,
                                       level = ci_level)
@@ -473,6 +538,7 @@ power_algorithm_bisection <- function(object,
     nrep_out <- unlist(by_ci_i[1, "nrep"])
     ci_out <- ci_i
     by_x_out <- by_ci_i
+
   }
 
   # Available regardless of do_search
@@ -485,11 +551,8 @@ power_algorithm_bisection <- function(object,
                       nls_control = nls_control,
                       nls_args = nls_args,
                       verbose = progress)
-  x_tried <- switch(x,
-                    n = as.numeric(names(by_x_1)),
-                    es = sapply(by_x_1,
-                                \(x) {attr(x, "pop_es_value")},
-                                USE.NAMES = FALSE))
+  x_tried <- get_x_tried(by_x_1,
+                         x = x)
 
   if (progress) {
     if (solution_found) {
@@ -921,8 +984,8 @@ power_algorithm_bisection_pre_i <- function(object,
   # For bisection, only two initial values are needed
 
   if (x_include_interval) {
-    # For bisecition, should exclude them initially,
-    # and lest extend_interval() to do the job
+    # For bisection, should exclude them initially,
+    # and let extend_interval() to do the job
     x_i <- sort(c(x_interval, x_i))
   }
   x_i <- sort(unique(x_i))
@@ -948,41 +1011,6 @@ power_algorithm_bisection_pre_i <- function(object,
     x_i <- range(x_i)
   }
 
-  # if (progress) {
-  #   x_i_str <- formatC(x_i,
-  #                     digits = switch(x, n = 0, es = 4),
-  #                     format = "f")
-  #   cat("- Value(s) to try: ",
-  #       paste0(x_i_str, collapse = ", "),
-  #       "\n")
-  # }
-
-  # Let the algorithm to do the simulation for the bounds
-  # ** by_x_i **
-  # The current (i-th) set of values examined,
-  # along with their results.
-  # by_x_i <- switch(x,
-  #                 n = power4test_by_n(object,
-  #                                     n = x_i,
-  #                                     nrep = nrep0,
-  #                                     R = R0,
-  #                                     progress = simulation_progress,
-  #                                     save_sim_all = save_sim_all),
-  #                 es = power4test_by_es(object,
-  #                                       pop_es_name = pop_es_name,
-  #                                       pop_es_values = x_i,
-  #                                       nrep = nrep0,
-  #                                       R = R0,
-  #                                       progress = simulation_progress,
-  #                                       save_sim_all = save_sim_all))
-
-  # Add the input object to the list
-  # if (is_by_x) {
-  #   # Object is an output of *_by_n() or *_by_es()
-  #   by_x_i <- c(by_x_i,
-  #               object_by_org,
-  #               skip_checking_models = TRUE)
-  # } else {
   by_x_i <- list(object)
   # TODO:
   # - Write an ax.....by_* function.
@@ -998,34 +1026,6 @@ power_algorithm_bisection_pre_i <- function(object,
     attr(by_x_i[[1]], "pop_es_name") <- pop_es_name
     attr(by_x_i[[1]], "pop_es_value") <- x0
   }
-  # by_x_i <- c(by_x_i, by_x_i,
-  #             skip_checking_models = TRUE)
-  # }
-
-  # if (progress) {
-  #   cat("- Rejection Rates:\n")
-  #   tmp <- rejection_rates(by_x_i)
-  #   print(tmp)
-  #   cat("\n")
-  # }
-
-  # ** fit_i **
-  # The current power curve, based on by_x_i
-  # fit_i <- power_curve(by_x_i,
-  #                     formula = power_model,
-  #                     start = start,
-  #                     lower_bound = lower_bound,
-  #                     upper_bound = upper_bound,
-  #                     nls_control = nls_control,
-  #                     nls_args = nls_args,
-  #                     verbose = progress)
-
-  # if (progress) {
-  #   cat("- Power Curve:\n")
-  #   # Can use the print method of power_curve objects
-  #   print(fit_i)
-  #   cat("\n")
-  # }
 
   # ** by_x_1 **
   # The collection of all values tried and their results
@@ -1041,42 +1041,7 @@ power_algorithm_bisection_pre_i <- function(object,
   fit_1 <- NULL
 
   # TODO:
-  # - Adaptive nrep for bisection
-
-  # === Initialize the Sequences ===
-  # The sequence will be updated when nrep_step is initiated,
-  # to successively increase precision and speed by
-  # - increasing the number of replication,
-  # - increasing the number of resampling, and
-  # - decreasing the number of values to try.
-
-  # The sequence of the numbers of replication
-  # new_nrep <- rejection_rates(by_x_1,
-  #                             all_columns = TRUE)$nrep
-
-  # new_nrep <- ceiling(mean(new_nrep))
-  # new_nrep <- nrep0
-  # nrep_seq <- ceiling(seq(from = new_nrep,
-  #                         to = final_nrep,
-  #                         length.out = nrep_steps + 1))
-  # final_nrep_seq <- ceiling(seq(from = ceiling(mean(c(new_nrep, final_nrep))),
-  #                               to = final_nrep,
-  #                               length.out = nrep_steps + 1))
-
-  # The sequence of the Rs (for boot and MC CI)
-  # R0 <- attr(object, "args")$R
-  # if (!is.null(R0)) {
-  #   R_seq <- ceiling(seq(from = R0,
-  #                       to = final_R,
-  #                       length.out = nrep_steps + 1))
-  # } else {
-  #   R_seq <- NULL
-  # }
-
-  # # The sequence of the numbers of values per trial
-  # xs_per_trial_seq <- ceiling(seq(from = xs_per_trial,
-  #                                 to = 2,
-  #                                 length.out = nrep_steps + 1))
+  # - How about adaptive nrep for bisection?
 
   out <- list(x_i = NULL,
               by_x_i = NULL,
