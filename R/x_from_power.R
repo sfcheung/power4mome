@@ -252,6 +252,27 @@
 #' a value greater than 0 and less than
 #' one.
 #'
+#' @param what The value for which is
+#' searched: the estimate power (`"point"`),
+#' the upper bound of the confidence
+#' interval (`"ub"`), or the lower bound
+#' of the confidence interval (`"lb"`).
+#'
+#' @param goal The goal of the search.
+#' If `"ci_hit"`, then the goal is to
+#' find a value of `x` with the
+#' confidence interval of the estimated
+#' power including the target power.
+#' If `"close_enough"`, then the goal
+#' is to find a value of `x` with the
+#' value in `what` "close enough" to
+#' the target power, defined by having
+#' an absolute difference with the
+#' target power less than `tolerance`.
+#'
+#' @param tolerance Used when the goal
+#' is `"close_enough"`.
+#'
 #' @param xs_per_trial The initial number
 #' of values (sample sizes or population
 #' values) to consider in each
@@ -543,8 +564,11 @@ x_from_power <- function(object,
                          x,
                          pop_es_name = NULL,
                          target_power = .80,
+                         what = c("point", "ub", "lb"),
+                         goal = c("ci_hit", "close_enough"),
                          xs_per_trial = 3,
                          ci_level = .95,
+                         tolerance = .02,
                          power_min = .01,
                          power_max = .90,
                          x_interval = switch(x,
@@ -593,6 +617,13 @@ x_from_power <- function(object,
   algorithm <- match.arg(algorithm,
                          c("bisection",
                            "power_curve"))
+
+  what <- match.arg(what)
+  goal <- match.arg(goal)
+  # what: The value to be examined.
+  # goal:
+  # - ci_hit: Only relevant for what == "point"
+  # - close_enough: Can be used for all what.
 
   x <- match.arg(x,
                  choices = c("n", "es"))
