@@ -162,7 +162,9 @@ print.summary.x_from_power <- function(x,
                     "expanding the range of values",
                     "by setting 'x_interval' to one that",
                     "includes the crude estimate, if",
-                    "available."),
+                    "available, increasing 'max_trials',",
+                    "or increasing 'tolerance' if the goal",
+                    "is 'close_enough'."),
                     collapse = " "),
             exdent = 2)
   }

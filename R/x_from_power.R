@@ -565,7 +565,10 @@ x_from_power <- function(object,
                          pop_es_name = NULL,
                          target_power = .80,
                          what = c("point", "ub", "lb"),
-                         goal = c("ci_hit", "close_enough"),
+                         goal = switch(what,
+                                       point = "ci_hit",
+                                       ub = "close_enough",
+                                       lb = "close_enough"),
                          xs_per_trial = 3,
                          ci_level = .95,
                          tolerance = .02,
@@ -613,8 +616,13 @@ x_from_power <- function(object,
   # - Final model by nls.
 
   what <- match.arg(what)
-  goal <- match.arg(goal)
-  if (goal == "ci_hit") {
+  goal <- match.arg(goal,
+                    c("ci_hit", "close_enough"))
+
+  changed_to_point <- FALSE
+  if ((goal == "ci_hit") &&
+      (what != "point")) {
+    changed_to_point <- TRUE
     what <- "point"
   }
 
@@ -805,14 +813,26 @@ x_from_power <- function(object,
   }
 
   if (progress) {
-    cat("\n--- Algorithm used ---\n\n")
+    cat("\n--- Setting ---\n\n")
+
+    cat("Algorithm: ", algorithm, "\n")
+    cat("Goal: ", goal, "\n")
+    tmp <- switch(what,
+                  point = "(Estimated Power)",
+                  ub = "(Upper bound of the confidence interval)",
+                  lb = "(Lower bound of the confidence interval)")
+    cat("What: ", what, " ", tmp, "\n")
 
     if (changed_to_bisection) {
-      catwrap(paste0("Only bisection is supported when goal is 'close_enough'. ",
+      catwrap(paste0("Note: Only bisection is supported when goal is 'close_enough'. ",
                      "Algorithm switched automatically to bisection."),
               exdent = 0)
-    } else {
-      cat(algorithm, "\n")
+    }
+    if (changed_to_point) {
+      cat("\n")
+      catwrap(paste0("Note: The goal 'ci_hit' only supports 'point'; ",
+                     "'what' is changed to 'point'."),
+              exdent = 0)
     }
 
     if (progress) {
@@ -1241,8 +1261,34 @@ x_from_power <- function(object,
             x_x_str,
             ".\n", sep = "")
       }
-      cat("- Try expanding the range of values",
-          "by setting 'x_interval'.\n")
+      cat("\nTry changing the setup, such as:\n")
+      tmp <- switch(x,
+                    n = paste0("[",
+                               paste0(x_interval, collapse = ", "),
+                               "]"),
+                    es = paste0("[",
+                               paste0(formatC(x_interval,
+                                              digits = 3,
+                                              format = "f"),
+                                      collapse = ", "),
+                               "]"))
+      catwrap(paste0("- Changing 'x_interval' to a wider range to examine. ",
+                     "(Current 'x_interval' is ",
+                     tmp, ".)"),
+              exdent = 2)
+      catwrap(paste0("- Increasing the maximum number of trials by ",
+                     "setting 'max_trials' to a larger number. ",
+                     "(Current 'max_trials' is ",
+                     max_trials,
+                     ".)"),
+              exdent = 2)
+      if (goal == "close_enough") {
+        catwrap(paste0("- Increasing the tolerance for the goal 'close_enough'. ",
+                      "(Current 'tolerance' is ",
+                      tolerance,
+                      ".)"),
+                exdent = 2)
+      }
     }
   }
 
