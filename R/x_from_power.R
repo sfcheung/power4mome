@@ -638,10 +638,12 @@ x_from_power <- function(object,
   }
   if (goal == "close_enough") {
     # Only bisection is supported
-    if ((algorithm != "bisection") ||
-        (is.null(algorithm))) {
-      warning("Only bisection is supported when goal is 'close_enough'. ",
-              "Switched automatically to bisection.")
+    changed_to_bisection <- FALSE
+    if (isTRUE((algorithm != "bisection")) &&
+        (!is.null(algorithm))) {
+      # warning("Only bisection is supported when goal is 'close_enough'. ",
+      #         "Switched automatically to bisection.")
+      changed_to_bisection <- TRUE
     }
     algorithm <- "bisection"
   }
@@ -803,7 +805,14 @@ x_from_power <- function(object,
 
   if (progress) {
     cat("\n--- Algorithm used ---\n\n")
-    cat(algorithm, "\n")
+
+    if (changed_to_bisection) {
+      catwrap(paste0("Only bisection is supported when goal is 'close_enough'. ",
+                     "Algorithm switched automatically to bisection."),
+              exdent = 0)
+    } else {
+      cat(algorithm, "\n")
+    }
 
     if (progress) {
       cat("\n--- Progress  ---\n\n")
