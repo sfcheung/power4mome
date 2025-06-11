@@ -745,9 +745,15 @@ x_from_power <- function(object,
   is_x_from_power <- FALSE
   if (inherits(object, "x_from_power")) {
     # Throw an error if incompatible
+    # TODO:
+    # - Will run if goal and/or what changed
     check_x_from_power_as_input(object,
                                 x = x,
                                 pop_es_name = pop_es_name)
+    # Need to check these for compatibility:
+    # - nrep_final
+    # - ci_level
+
     is_x_from_power <- TRUE
     if (object$solution_found) {
       cat("\n--- Solution Already Found ---\n\n")
