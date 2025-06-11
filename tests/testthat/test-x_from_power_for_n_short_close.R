@@ -44,6 +44,8 @@ expect_no_error(tmp <- x_from_power(out,
 expect_no_error(print(summary(tmp)))
 expect_true(abs(tmp$ci_final - .80)[2] < formals(x_from_power)$tolerance)
 
+# Use x_from_power object as input
+
 tmp2 <- x_from_power(tmp,
                     x = "n",
                     target_power = .80,
@@ -55,6 +57,41 @@ tmp2 <- x_from_power(tmp,
                     what = "ub")
 expect_identical(tmp2,
                  tmp)
+
+tmp2b <- x_from_power(tmp,
+                    x = "n",
+                    target_power = .65,
+                    final_nrep = 60,
+                    max_trials = 2,
+                    seed = 2345,
+                    progress = TRUE,
+                    simulation_progress = FALSE,
+                    what = "ub")
+expect_no_error(print(summary(tmp)))
+expect_true(abs(tmp$ci_final - .80)[2] < formals(x_from_power)$tolerance)
+
+# Should not run if final_nrep or ci_level changed
+
+expect_error(x_from_power(tmp,
+                    x = "n",
+                    target_power = .80,
+                    final_nrep = 70,
+                    max_trials = 2,
+                    seed = 2345,
+                    progress = TRUE,
+                    simulation_progress = FALSE,
+                    what = "ub"))
+expect_error(x_from_power(tmp,
+                    x = "n",
+                    target_power = .80,
+                    final_nrep = 60,
+                    ci_level = .90,
+                    max_trials = 2,
+                    seed = 2345,
+                    progress = TRUE,
+                    simulation_progress = FALSE,
+                    what = "ub"))
+
 
 tmp3 <- x_from_power(tmp$power4test_trials,
                     x = "n",

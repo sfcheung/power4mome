@@ -749,13 +749,18 @@ x_from_power <- function(object,
     # - Will run if goal and/or what changed
     check_x_from_power_as_input(object,
                                 x = x,
-                                pop_es_name = pop_es_name)
+                                pop_es_name = pop_es_name,
+                                final_nrep = final_nrep,
+                                ci_level = ci_level)
     # Need to check these for compatibility:
     # - nrep_final
     # - ci_level
 
     is_x_from_power <- TRUE
-    if (object$solution_found) {
+    if (object$solution_found &&
+        (object$nrep_final == final_nrep) &&
+        (object$ci_level == ci_level) &&
+        (object$target_power == target_power)) {
       cat("\n--- Solution Already Found ---\n\n")
       cat("Solution already found in object. It is returned as is.\n")
       return(object)
@@ -883,12 +888,8 @@ x_from_power <- function(object,
                        TRUE,
                        NA)
       solution_found <- TRUE
-
       i2 <- i_org_hit
-
-      if (is_x_from_power) {
-        # This possibility should not happen
-      } else {
+      if (is_x_from_power || is_by_x) {
         by_x_1 <- object_by_org
         tmp1 <- rejection_rates(object_by_org,
                                 level = ci_level,
@@ -966,6 +967,12 @@ x_from_power <- function(object,
                       control))
 
     by_x_1 <- a_out$by_x_1
+    # TODO:
+    # - Need to take care of duplicated objects
+    # if (is_by_x) {
+    #   by_x_1 <- c(by_x_1,
+    #               object_by_org)
+    # }
     fit_1 <- a_out$fit_1
     nrep_seq <- a_out$nrep_seq
     final_nrep_seq <- a_out$final_nrep_seq
@@ -1010,6 +1017,12 @@ x_from_power <- function(object,
     x_interval_updated <- a_out$x_interval_updated
     by_x_1 <- a_out$by_x_1
     fit_1 <- a_out$fit_1
+    # TODO:
+    # - Need to take care of duplicated objects
+    # if (is_by_x) {
+    #   by_x_1 <- c(by_x_1,
+    #               object_by_org)
+    # }
 
     # # Not used by bisection for now
     # nrep_seq <- a_out$nrep_seq
