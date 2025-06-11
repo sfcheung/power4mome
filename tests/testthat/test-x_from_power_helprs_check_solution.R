@@ -13,7 +13,7 @@ p_ci <- function(x,
 }
 
 
-reject_out <- data.frame(nrep = c(50, 60, 70),
+reject_out <- data.frame(nrep = c(60, 60, 50),
                          reject = c(.60, .70, .80))
 reject_out[, c("cilo", "cihi")] <- p_ci(reject_out$reject,
                                         reject_out$nrep,
@@ -23,6 +23,7 @@ class(reject_out) <- "rejection_rates_df"
 chk1 <- check_solution_in_by_x(
   reject_out,
   target_power = .80,
+  final_nrep = 60,
   ci_level = .95,
   what = "point",
   tol = 1e-2,
@@ -30,12 +31,13 @@ chk1 <- check_solution_in_by_x(
 )
 
 expect_equal(chk1,
-             c(FALSE, TRUE, TRUE))
+             c(FALSE, TRUE, FALSE))
 
 chk2 <- check_solution_in_by_x(
   reject_out,
   target_power = .60,
   ci_level = .95,
+  final_nrep = 60,
   what = "point",
   tol = 1e-2,
   goal = "ci_hit"
@@ -47,6 +49,7 @@ expect_equal(chk2,
 chk3 <- check_solution_in_by_x(
   reject_out,
   target_power = .890,
+  final_nrep = 50,
   ci_level = .95,
   what = "ub",
   tol = 1e-2,
@@ -54,12 +57,13 @@ chk3 <- check_solution_in_by_x(
 )
 
 expect_equal(chk3,
-             c(FALSE, FALSE, TRUE))
+             c(FALSE, FALSE, FALSE))
 
 chk4 <- check_solution_in_by_x(
   reject_out,
   target_power = .58,
   ci_level = .95,
+  final_nrep = 60,
   what = "lb",
   tol = 1e-2,
   goal = "close_enough"

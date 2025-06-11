@@ -173,22 +173,35 @@ power_algorithm_bisection <- function(object,
   # Check whether lower or upper is already a solution
 
   output_lower <- attr(f.lower, "output")
-  reject_lower <- rejection_rates(output_lower)$reject
+  tmp <- rejection_rates(
+            output_lower,
+            all_columns = TRUE
+          )
+  reject_lower <- tmp$reject
+  nrep_lower <- tmp$nrep
   ok_lower <- check_solution(
                 f_i = reject_lower,
                 target_power = target_power,
-                nrep = final_nrep,
+                nrep = nrep_lower,
                 ci_level = ci_level,
+                final_nrep = final_nrep,
                 what = what,
                 goal = goal,
                 tol = tol
               )
   output_upper <- attr(f.upper, "output")
+  tmp <- rejection_rates(
+            output_upper,
+            all_columns = TRUE
+          )
+  reject_upper <- tmp$reject
+  nrep_upper <- tmp$nrep
   reject_upper <- rejection_rates(output_upper)$reject
   ok_upper <- check_solution(
                 f_i = reject_upper,
                 target_power = target_power,
-                nrep = final_nrep,
+                nrep = nrep_upper,
+                final_nrep = final_nrep,
                 ci_level = ci_level,
                 what = what,
                 goal = goal,
@@ -292,22 +305,34 @@ power_algorithm_bisection <- function(object,
     # Check whether the updated lower or upper is already a solution
 
     output_lower <- attr(f.lower, "output")
-    reject_lower <- rejection_rates(output_lower)$reject
+    tmp <- rejection_rates(
+             output_lower,
+             all_columns = TRUE
+           )
+    reject_lower <- tmp$reject
+    nrep_lower <- tmp$nrep
     ok_lower <- check_solution(
                   f_i = reject_lower,
                   target_power = target_power,
                   nrep = final_nrep,
+                  final_nrep = final_nrep,
                   ci_level = ci_level,
                   what = what,
                   goal = goal,
                   tol = tol
                 )
     output_upper <- attr(f.upper, "output")
-    reject_upper <- rejection_rates(output_upper)$reject
+    tmp <- rejection_rates(
+             output_upper,
+             all_columns = TRUE
+           )
+    reject_upper <- tmp$reject
+    nrep_upper <- tmp$nrep
     ok_upper <- check_solution(
                   f_i = reject_upper,
                   target_power = target_power,
-                  nrep = final_nrep,
+                  nrep = nrep_upper,
+                  final_nrep = final_nrep,
                   ci_level = ci_level,
                   what = what,
                   goal = goal,
@@ -419,11 +444,14 @@ power_algorithm_bisection <- function(object,
       # TODO:
       # - Check NA, error, etc.
       # Convergence?
+      # final_nrep and nrep are always the same
+      # for now for bisection
 
       ok <- check_solution(
               f_i = reject_i,
               target_power = target_power,
               nrep = final_nrep,
+              final_nrep = final_nrep,
               ci_level = ci_level,
               what = what,
               goal = goal,

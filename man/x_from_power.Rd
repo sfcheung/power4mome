@@ -10,8 +10,11 @@ x_from_power(
   x,
   pop_es_name = NULL,
   target_power = 0.8,
+  what = c("point", "ub", "lb"),
+  goal = switch(what, point = "ci_hit", ub = "close_enough", lb = "close_enough"),
   xs_per_trial = 3,
   ci_level = 0.95,
+  tolerance = 0.02,
   power_min = 0.01,
   power_max = 0.9,
   x_interval = switch(x, n = c(50, 2000), es = NULL),
@@ -30,7 +33,7 @@ x_from_power(
   power_curve_args = list(power_model = NULL, start = NULL, lower_bound = NULL,
     upper_bound = NULL, nls_control = list(), nls_args = list()),
   save_sim_all = FALSE,
-  algorithm = switch(x, n = "bisection", es = "power_curve"),
+  algorithm = NULL,
   control = list()
 )
 
@@ -75,6 +78,24 @@ the argument \code{pop_es}.}
 a value greater than 0 and less than
 one.}
 
+\item{what}{The value for which is
+searched: the estimate power (\code{"point"}),
+the upper bound of the confidence
+interval (\code{"ub"}), or the lower bound
+of the confidence interval (\code{"lb"}).}
+
+\item{goal}{The goal of the search.
+If \code{"ci_hit"}, then the goal is to
+find a value of \code{x} with the
+confidence interval of the estimated
+power including the target power.
+If \code{"close_enough"}, then the goal
+is to find a value of \code{x} with the
+value in \code{what} "close enough" to
+the target power, defined by having
+an absolute difference with the
+target power less than \code{tolerance}.}
+
 \item{xs_per_trial}{The initial number
 of values (sample sizes or population
 values) to consider in each
@@ -88,6 +109,9 @@ up if not an integer.
 of the confidence intervals computed
 for the estimated power. Default is
 .95, denoting 95\%.}
+
+\item{tolerance}{Used when the goal
+is \code{"close_enough"}.}
 
 \item{power_min, power_max}{The minimum
 and maximum values, respectively,

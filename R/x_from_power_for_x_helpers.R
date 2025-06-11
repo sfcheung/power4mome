@@ -429,7 +429,10 @@ fix_es_interval <- function(object,
                             x,
                             pop_es_name,
                             x_interval,
-                            progress = TRUE) {
+                            progress = TRUE,
+                            step = .10,
+                            es_min = -.90,
+                            es_max = .90) {
   if ((x == "es") &&
       is.null(x_interval)) {
     if (progress) {
@@ -442,7 +445,10 @@ fix_es_interval <- function(object,
     es_tmp <- pop_es(object,
                      pop_es_name = pop_es_name)
     range_tmp <- tryCatch(check_valid_es_values(object,
-                                                pop_es_name = pop_es_name),
+                                                pop_es_name = pop_es_name,
+                                                step = step,
+                                                es_min = es_min,
+                                                es_max = es_max),
                     error = function(e) e)
     if ((inherits(range_tmp, "error")) ||
         (all(is.na(range_tmp)))) {
@@ -502,6 +508,7 @@ x_from_y <- function(x1,
 # - f_i: The power to be tested
 # - target: The target power
 # - nrep: The number of replications
+# - final_nrep: The required nrep. Always not a solution if nrep != final_nrep
 # - ci_level: The level of confidence of the CI
 # - which:
 #    - point: Check against the target power
@@ -517,10 +524,14 @@ x_from_y <- function(x1,
 check_solution <- function(f_i,
                            target_power,
                            nrep,
+                           final_nrep,
                            ci_level = .95,
                            what = c("point", "ub", "lb"),
                            tol = 1e-2,
                            goal = c("ci_hit", "close_enough")) {
+  if (nrep != final_nrep) {
+    return(FALSE)
+  }
   goal <- match.arg(goal)
   a <- abs(stats::qnorm((1 - ci_level) / 2))
   se_i <- sqrt(f_i * (1 - f_i) / nrep)
@@ -632,6 +643,7 @@ root_muller_i <- function(
 check_solution_in_by_x <- function(
   object,
   target_power,
+  final_nrep,
   ci_level = .95,
   what = c("point", "ub", "lb"),
   tol = 1e-2,
@@ -654,6 +666,7 @@ check_solution_in_by_x <- function(
                f_i = reject_all,
                nrep = nrep_all,
                MoreArgs = list(target_power = target_power,
+                               final_nrep = final_nrep,
                                ci_level = ci_level,
                                what = what,
                                tol = tol,

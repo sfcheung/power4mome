@@ -35,7 +35,7 @@ out_power
 expect_no_error(tmp <- x_from_power(out,
                     x = "es",
                     pop_es_name = "m ~ x",
-                    target_power = .80,
+                    target_power = .70,
                     final_nrep = 60,
                     max_trials = 2,
                     seed = 2345,
@@ -43,12 +43,12 @@ expect_no_error(tmp <- x_from_power(out,
                     simulation_progress = FALSE,
                     what = "ub"))
 expect_no_error(print(summary(tmp)))
-expect_true(abs(tmp$ci_final - .80)[2] < formals(x_from_power)$tolerance)
+expect_true(abs(tmp$ci_final - tmp$target_power)[2] < formals(x_from_power)$tolerance)
 
 tmp2 <- x_from_power(tmp,
                     x = "es",
                     pop_es_name = "m ~ x",
-                    target_power = .80,
+                    target_power = .70,
                     final_nrep = 60,
                     max_trials = 2,
                     seed = 2345,
@@ -61,7 +61,7 @@ expect_identical(tmp2,
 tmp3 <- x_from_power(tmp$power4test_trials,
                     x = "es",
                     pop_es_name = "m ~ x",
-                    target_power = .80,
+                    target_power = .70,
                     final_nrep = 60,
                     max_trials = 2,
                     seed = 2345,
