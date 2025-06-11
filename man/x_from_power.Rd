@@ -378,12 +378,30 @@ the analysis on either other sample
 sizes, or other values for a
 selected model parameter (the
 effect sizes),
-trying to find a value (a sample
+trying to achieve a goal (\code{goal}) for
+a value of interest (\code{what}).
+}
+
+If the \code{goal} is \code{"ci_hit"}, the
+search will try to find a value (a sample
 size, or a population value of
 the selected model parameter) with
 a power level close enough to the
-target power.
-}
+target power, defined by having its
+confidence interval for the power
+including the target power.
+
+If the \code{goal} is \code{"close_enough"},
+then the search will try to find a
+value of \code{x} with its level of
+power (\code{"point"}), the upper bound
+of the confidence interval for this
+level of power (\code{"ub"}), or the
+lower bound of the confidence interval
+fro this level of power (\code{"lb"})
+"close enough" to the target level of
+power, defined by having an absolute
+difference less than the \code{tolerance}.
 
 If several values of \code{x} (sample
 size or the population value of
@@ -439,10 +457,10 @@ scenario.
 \subsection{Bisection Method}{
 
 This method, \code{algorithm = "bisection"},
-basically start with
-an interval that probably enclose the
-value of \code{x} with the target power,
-and then successively narrow this
+basically starts with
+an interval that probably encloses the
+value of \code{x} that meets the goal,
+and then successively narrows this
 interval. The mid-point of this
 interval is used as the estimate.
 Though simple, there are cases in
@@ -467,8 +485,11 @@ model can change across iterations,
 as more and more data points are
 available.
 
+This method can be used only with
+the goal \code{"ci_hit"}.
 This method is the default method
-for \code{x = "es"} because the relation
+for \code{x = "es"} with \code{goal = "ci_hit"}
+because the relation
 between the power and the population
 value of a parameter varies across
 parameters, unlike the relation

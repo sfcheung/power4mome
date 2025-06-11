@@ -31,11 +31,29 @@
 #'   sizes, or other values for a
 #'   selected model parameter (the
 #'   effect sizes),
-#'   trying to find a value (a sample
-#'   size, or a population value of
-#'   the selected model parameter) with
-#'   a power level close enough to the
-#'   target power.
+#'   trying to achieve a goal (`goal`) for
+#'   a value of interest (`what`).
+#'
+#' If the `goal` is `"ci_hit"`, the
+#' search will try to find a value (a sample
+#' size, or a population value of
+#' the selected model parameter) with
+#' a power level close enough to the
+#' target power, defined by having its
+#' confidence interval for the power
+#' including the target power.
+#'
+#' If the `goal` is `"close_enough"`,
+#' then the search will try to find a
+#' value of `x` with its level of
+#' power (`"point"`), the upper bound
+#' of the confidence interval for this
+#' level of power (`"ub"`), or the
+#' lower bound of the confidence interval
+#' fro this level of power (`"lb"`)
+#' "close enough" to the target level of
+#' power, defined by having an absolute
+#' difference less than the `tolerance`.
 #'
 #' If several values of `x` (sample
 #' size or the population value of
@@ -87,10 +105,10 @@
 #' ## Bisection Method
 #'
 #' This method, `algorithm = "bisection"`,
-#' basically start with
-#' an interval that probably enclose the
-#' value of `x` with the target power,
-#' and then successively narrow this
+#' basically starts with
+#' an interval that probably encloses the
+#' value of `x` that meets the goal,
+#' and then successively narrows this
 #' interval. The mid-point of this
 #' interval is used as the estimate.
 #' Though simple, there are cases in
@@ -114,8 +132,11 @@
 #' as more and more data points are
 #' available.
 #'
+#' This method can be used only with
+#' the goal `"ci_hit"`.
 #' This method is the default method
-#' for `x = "es"` because the relation
+#' for `x = "es"` with `goal = "ci_hit"`
+#' because the relation
 #' between the power and the population
 #' value of a parameter varies across
 #' parameters, unlike the relation
