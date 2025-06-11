@@ -42,7 +42,9 @@ out_es_a <- x_from_power(out,
                          pop_es_name = "m~x",
                          target_power = .80,
                          final_nrep = 400,
-                         seed = 4567)
+                         seed = 4567,
+                         algorithm = "power_curve",
+                         goal = "ci_hit")
 summary(out_es_a)
 plot(out_es_a)
 
@@ -51,7 +53,9 @@ out_es_b <- x_from_power(out,
                          pop_es_name = "y~m",
                          target_power = .80,
                          final_nrep = 400,
-                         seed = 4567)
+                         seed = 4567,
+                         algorithm = "power_curve",
+                         goal = "ci_hit")
 
 summary(out_es_b)
 
@@ -61,7 +65,8 @@ out_es_b <- x_from_power(out,
                          target_power = .80,
                          final_nrep = 400,
                          seed = 4567,
-                         algorithm = "power_curve")
+                         algorithm = "power_curve",
+                         goal = "ci_hit")
 
 summary(out_es_b)
 
@@ -71,6 +76,8 @@ out_es_ab <- x_from_power(out,
                          pop_es_name = ".ind.(x->m->y)",
                          target_power = .80,
                          final_nrep = 400,
+                         algorithm = "power_curve",
+                         goal = "ci_hit",
                          seed = 4567)
 
 summary(out_es_ab)
