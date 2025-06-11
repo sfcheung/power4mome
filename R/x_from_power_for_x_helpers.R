@@ -369,7 +369,9 @@ find_close_enough <- function(
 # to those requested.
 check_x_from_power_as_input <- function(object,
                                         x,
-                                        pop_es_name) {
+                                        pop_es_name,
+                                        final_nrep,
+                                        ci_level) {
   if (!identical(x, object$x)) {
     stop("object's x is ", object$x, " but ",
          "requested x is ", x)
@@ -379,6 +381,20 @@ check_x_from_power_as_input <- function(object,
       stop("object's pop_es_name is ", object$pop_es_name, " but ",
           "requested pop_es_name is ", pop_es_name)
     }
+  }
+  if (object$arg$final_nrep != final_nrep) {
+    stop("object's final_nrep (",
+         object$final_nrep,
+         ") is different from the requested final_nrep (",
+         final_nrep,
+         ").")
+  }
+  if (object$ci_level != ci_level) {
+    stop("object's ci_level (",
+         object$ci_level,
+         ") is different from the requested ci_level (",
+         ci_level,
+         ").")
   }
   return(TRUE)
 }
