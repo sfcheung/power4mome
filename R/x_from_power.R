@@ -294,12 +294,12 @@
 #' @param tolerance Used when the goal
 #' is `"close_enough"`.
 #'
-#' @param xs_per_trial The initial number
-#' of values (sample sizes or population
-#' values) to consider in each
-#' trial. Should be an integer at least
-#' 1. Rounded
-#' up if not an integer.
+# #' @param xs_per_trial The initial number
+# #' of values (sample sizes or population
+# #' values) to consider in each
+# #' trial. Should be an integer at least
+# #' 1. Rounded
+# #' up if not an integer.
 #'
 #' @param final_xs_per_trial The final number
 #' of values (sample sizes or population
@@ -559,7 +559,6 @@
 #'
 #' # In real analysis, to have more stable results:
 #' # - Use a larger final_nrep (e.g., 400).
-#' # - Use the default xs_per_trial of 3, or just remove it.
 #'
 #' # If the default values are OK, this call is sufficient:
 #' # power_vs_n <- x_from_power(test_out,
@@ -570,7 +569,6 @@
 #'                            progress = TRUE,
 #'                            target_power = .80,
 #'                            final_nrep = 5,
-#'                            xs_per_trial = 1,
 #'                            nrep_steps = 1,
 #'                            max_trials = 1,
 #'                            seed = 1234)
@@ -590,7 +588,6 @@ x_from_power <- function(object,
                                        point = "ci_hit",
                                        ub = "close_enough",
                                        lb = "close_enough"),
-                         xs_per_trial = 3,
                          ci_level = .95,
                          tolerance = .02,
                          power_min = .01,
@@ -695,12 +692,12 @@ x_from_power <- function(object,
          ") not between 0 and 1.")
   }
 
-  if (xs_per_trial < 1) {
-    stop("'xs_per_trial' (",
-         xs_per_trial,
-         ") is less than 1.")
-  }
-  xs_per_trial <- ceiling(xs_per_trial)
+  # if (xs_per_trial < 1) {
+  #   stop("'xs_per_trial' (",
+  #        xs_per_trial,
+  #        ") is less than 1.")
+  # }
+  # xs_per_trial <- ceiling(xs_per_trial)
 
   if (final_xs_per_trial < 1) {
     stop("'final_xs_per_trial' (",
@@ -960,7 +957,6 @@ x_from_power <- function(object,
         x = x,
         pop_es_name = pop_es_name,
         target_power = target_power,
-        xs_per_trial = xs_per_trial,
         x_max = x_max,
         x_min = x_min,
         nrep0 = nrep0,
@@ -1017,7 +1013,6 @@ x_from_power <- function(object,
           x = x,
           pop_es_name = pop_es_name,
           target_power = target_power,
-          xs_per_trial = xs_per_trial,
           x_max = x_max,
           x_min = x_min,
           progress = progress,

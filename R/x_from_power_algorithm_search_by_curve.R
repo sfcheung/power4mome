@@ -6,7 +6,7 @@ alg_power_curve <- function(
   pop_es_name,
   ...,
   target_power,
-  xs_per_trial,
+  xs_per_trial = 3,
   x_max,
   x_min,
   nrep0,

@@ -12,7 +12,6 @@ x_from_power(
   target_power = 0.8,
   what = c("point", "ub", "lb"),
   goal = switch(what, point = "ci_hit", ub = "close_enough", lb = "close_enough"),
-  xs_per_trial = 3,
   ci_level = 0.95,
   tolerance = 0.02,
   power_min = 0.01,
@@ -95,15 +94,6 @@ value in \code{what} "close enough" to
 the target power, defined by having
 an absolute difference with the
 target power less than \code{tolerance}.}
-
-\item{xs_per_trial}{The initial number
-of values (sample sizes or population
-values) to consider in each
-trial. Should be an integer at least
-\enumerate{
-\item Rounded
-up if not an integer.
-}}
 
 \item{ci_level}{The level of confidence
 of the confidence intervals computed
@@ -543,7 +533,6 @@ test_out <- power4test(object = sim_only,
 
 # In real analysis, to have more stable results:
 # - Use a larger final_nrep (e.g., 400).
-# - Use the default xs_per_trial of 3, or just remove it.
 
 # If the default values are OK, this call is sufficient:
 # power_vs_n <- x_from_power(test_out,
@@ -554,7 +543,6 @@ power_vs_n <- x_from_power(test_out,
                            progress = TRUE,
                            target_power = .80,
                            final_nrep = 5,
-                           xs_per_trial = 1,
                            nrep_steps = 1,
                            max_trials = 1,
                            seed = 1234)
