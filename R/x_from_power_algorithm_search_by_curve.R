@@ -9,7 +9,7 @@ alg_power_curve <- function(
   xs_per_trial = 3,
   x_max,
   x_min,
-  nrep0,
+  nrep0 = 100,
   R0,
   progress,
   x_include_interval,
@@ -43,6 +43,14 @@ alg_power_curve <- function(
   ci_hit,
   solution_found
 ) {
+
+  nrep_org <- attr(object, "args")$nrep
+  if (nrep0 > final_nrep) {
+    nrep0 <- ceiling(final_nrep / 4)
+    if ((nrep0 < 100) && (nrep_org <= final_nrep)) {
+      nrep0 <- nrep_org
+    }
+  }
 
   a_out <- power_algorithm_search_by_curve_pre_i(
     object = object,

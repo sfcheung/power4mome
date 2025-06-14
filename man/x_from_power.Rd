@@ -21,7 +21,6 @@ x_from_power(
   progress = TRUE,
   simulation_progress = TRUE,
   max_trials = 10,
-  initial_nrep = 100,
   final_nrep = 400,
   initial_R = 250,
   final_R = 1000,
@@ -147,16 +146,6 @@ functions.}
 of trials in searching the value
 with the target power. Rounded
 up if not an integer.}
-
-\item{initial_nrep}{The initial
-number of replications. If set
-to \code{NULL}, the \code{nrep} used in
-\code{object} will be used. If higher
-than \code{final_nrep}, it will be
-converted to one-fourth of \code{final_nrep}.
-If lower than the \code{nrep} in \code{object}
-after the conversion,
-then set to \code{nrep} in the \code{object}.}
 
 \item{final_nrep}{The number of
 replications in the final stage,

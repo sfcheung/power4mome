@@ -358,15 +358,15 @@
 #' with the target power. Rounded
 #' up if not an integer.
 #'
-#' @param initial_nrep The initial
-#' number of replications. If set
-#' to `NULL`, the `nrep` used in
-#' `object` will be used. If higher
-#' than `final_nrep`, it will be
-#' converted to one-fourth of `final_nrep`.
-#' If lower than the `nrep` in `object`
-#' after the conversion,
-#' then set to `nrep` in the `object`.
+# #' @param initial_nrep The initial
+# #' number of replications. If set
+# #' to `NULL`, the `nrep` used in
+# #' `object` will be used. If higher
+# #' than `final_nrep`, it will be
+# #' converted to one-fourth of `final_nrep`.
+# #' If lower than the `nrep` in `object`
+# #' after the conversion,
+# #' then set to `nrep` in the `object`.
 #'
 #' @param final_nrep The number of
 #' replications in the final stage,
@@ -599,7 +599,6 @@ x_from_power <- function(object,
                          progress = TRUE,
                          simulation_progress = TRUE,
                          max_trials = 10,
-                         initial_nrep = 100,
                          final_nrep = 400,
                          initial_R = 250,
                          final_R = 1000,
@@ -815,18 +814,18 @@ x_from_power <- function(object,
 
   nrep_org <- attr(object, "args")$nrep
 
-  if (is.null(initial_nrep)) {
-    nrep0 <- nrep_org
-  } else {
-    # Fix initial_nrep greater than final_nrep
-    if (initial_nrep > final_nrep) {
-      initial_nrep <- ceiling(final_nrep / 4)
-      if ((initial_nrep < 100) && (nrep_org <= final_nrep)) {
-        initial_nrep <- nrep_org
-      }
-    }
-    nrep0 <- ceiling(initial_nrep)
-  }
+  # if (is.null(initial_nrep)) {
+  #   nrep0 <- nrep_org
+  # } else {
+  #   # Fix initial_nrep greater than final_nrep
+  #   if (initial_nrep > final_nrep) {
+  #     initial_nrep <- ceiling(final_nrep / 4)
+  #     if ((initial_nrep < 100) && (nrep_org <= final_nrep)) {
+  #       initial_nrep <- nrep_org
+  #     }
+  #   }
+  #   nrep0 <- ceiling(initial_nrep)
+  # }
 
   R_org <- attr(object, "args")$R
 
@@ -959,7 +958,6 @@ x_from_power <- function(object,
         target_power = target_power,
         x_max = x_max,
         x_min = x_min,
-        nrep0 = nrep0,
         R0 = R0,
         progress = progress,
         x_include_interval = x_include_interval,
