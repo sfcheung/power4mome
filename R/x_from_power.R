@@ -950,55 +950,60 @@ x_from_power <- function(object,
   x_max <- max(x_interval)
   x_min <- min(x_interval)
 
-
-
-  # === Initial Trial ===
-
-  # Set the initial values to try
+  # === The Search ===
 
   if ((algorithm == "power_curve") && !solution_found) {
 
-    a_out <- do.call(power_algorithm_search_by_curve_pre_i,
-                     c(list(object = object,
-                            x = x,
-                            pop_es_name = pop_es_name,
-                            target_power = target_power,
-                            xs_per_trial = xs_per_trial,
-                            x_max = x_max,
-                            x_min = x_min,
-                            nrep0 = nrep0,
-                            R0 = R0,
-                            progress = progress,
-                            x_include_interval = x_include_interval,
-                            x_interval = x_interval,
-                            simulation_progress = simulation_progress,
-                            save_sim_all = save_sim_all,
-                            is_by_x = is_by_x,
-                            object_by_org = object_by_org,
-                            power_model = power_curve_args$power_model,
-                            start = power_curve_args$start,
-                            lower_bound = power_curve_args$lower_bound,
-                            upper_bound = power_curve_args$upper_bound,
-                            nls_control = power_curve_args$nls_control,
-                            nls_args = power_curve_args$nls_args,
-                            final_nrep = final_nrep,
-                            nrep_steps = nrep_steps,
-                            final_R = final_R,
-                            final_xs_per_trial = final_xs_per_trial),
-                      control))
+    a_out <- do.call(alg_power_curve,
+      c(list(
+        object = object,
+        x = x,
+        pop_es_name = pop_es_name,
+        target_power = target_power,
+        xs_per_trial = xs_per_trial,
+        x_max = x_max,
+        x_min = x_min,
+        nrep0 = nrep0,
+        R0 = R0,
+        progress = progress,
+        x_include_interval = x_include_interval,
+        x_interval = x_interval,
+        simulation_progress = simulation_progress,
+        save_sim_all = save_sim_all,
+        is_by_x = is_by_x,
+        object_by_org = object_by_org,
+        power_model = power_curve_args$power_model,
+        start = power_curve_args$start,
+        lower_bound = power_curve_args$lower_bound,
+        upper_bound = power_curve_args$upper_bound,
+        nls_control = power_curve_args$nls_control,
+        nls_args = power_curve_args$nls_args,
+        final_nrep = final_nrep,
+        nrep_steps = nrep_steps,
+        final_R = final_R,
+        final_xs_per_trial = final_xs_per_trial,
+        max_trials = max_trials,
+        ci_level = ci_level,
+        power_min = power_min,
+        power_max = power_max,
+        extendInt = extendInt,
+        power_tolerance_in_interval = power_tolerance_in_interval,
+        power_tolerance_in_final = power_tolerance_in_final,
+        ci_hit = ci_hit,
+        solution_found = solution_found),
+      control))
 
     by_x_1 <- a_out$by_x_1
-    # TODO:
-    # - Need to take care of duplicated objects
-    # if (is_by_x) {
-    #   by_x_1 <- c(by_x_1,
-    #               object_by_org)
-    # }
     fit_1 <- a_out$fit_1
-    nrep_seq <- a_out$nrep_seq
-    final_nrep_seq <- a_out$final_nrep_seq
-    R_seq <- a_out$R_seq
-    xs_per_trial_seq <- a_out$xs_per_trial_seq
+    ci_hit <- a_out$ci_hit
+    x_tried <- a_out$x_tried
+    x_out <- a_out$x_out
+    power_out <- a_out$power_out
+    nrep_out <- a_out$nrep_out
+    ci_out <- a_out$ci_out
+    by_x_out <- a_out$by_x_out
+    i2 <- a_out$i2
+    solution_found <- a_out$solution_found
 
     rm(a_out)
 
@@ -1038,6 +1043,7 @@ x_from_power <- function(object,
     x_interval_updated <- a_out$x_interval_updated
     by_x_1 <- a_out$by_x_1
     fit_1 <- a_out$fit_1
+
     # TODO:
     # - Need to take care of duplicated objects
     # if (is_by_x) {
@@ -1045,81 +1051,7 @@ x_from_power <- function(object,
     #               object_by_org)
     # }
 
-    # # Not used by bisection for now
-    # nrep_seq <- a_out$nrep_seq
-    # final_nrep_seq <- a_out$final_nrep_seq
-    # R_seq <- a_out$R_seq
-    # xs_per_trial_seq <- a_out$xs_per_trial_seq
-
     rm(a_out)
-
-  }
-
-  # ** by_x_1 **
-  # The collection of all values tried and their results
-  # to be updated when new value is tried.
-  # Used after the end of the loop.
-
-  # ** fit_1 **
-  # The latest power curve
-  # To be updated whenever by_x_1 is updated.
-  # Used after the end of the loop.
-
-  if ((algorithm == "power_curve") && !solution_found) {
-
-    # === Loop Over The Trials ===
-
-    a_out <- do.call(power_algorithm_search_by_curve,
-                     c(list(object = object,
-                            x = x,
-                            pop_es_name = pop_es_name,
-                            target_power = target_power,
-                            xs_per_trial_seq = xs_per_trial_seq,
-                            ci_level = ci_level,
-                            power_min = power_min,
-                            power_max = power_max,
-                            x_interval = x_interval,
-                            extendInt = extendInt,
-                            progress = progress,
-                            simulation_progress = simulation_progress,
-                            max_trials = max_trials,
-                            final_nrep = final_nrep,
-                            power_model = power_curve_args$power_model,
-                            start = power_curve_args$start,
-                            lower_bound = power_curve_args$lower_bound,
-                            upper_bound = power_curve_args$upper_bound,
-                            nls_control = power_curve_args$nls_control,
-                            nls_args = power_curve_args$nls_args,
-                            save_sim_all = save_sim_all,
-                            power_tolerance_in_interval = power_tolerance_in_interval,
-                            power_tolerance_in_final = power_tolerance_in_final,
-                            by_x_1 = by_x_1,
-                            fit_1 = fit_1,
-                            ci_hit = ci_hit,
-                            nrep_seq = nrep_seq,
-                            final_nrep_seq = final_nrep_seq,
-                            R_seq = R_seq,
-                            final_xs_per_trial = final_xs_per_trial,
-                            solution_found = solution_found),
-                     control))
-
-    by_x_1 <- a_out$by_x_1
-    fit_1 <- a_out$fit_1
-    ci_hit <- a_out$ci_hit
-    x_tried <- a_out$x_tried
-    x_out <- a_out$x_out
-    power_out <- a_out$power_out
-    nrep_out <- a_out$nrep_out
-    ci_out <- a_out$ci_out
-    by_x_out <- a_out$by_x_out
-    i2 <- a_out$i2
-    solution_found <- a_out$solution_found
-
-    rm(a_out)
-
-  }
-
-  if ((algorithm == "bisection") && !solution_found) {
 
     # === Loop Over The Trials ===
 
@@ -1174,6 +1106,17 @@ x_from_power <- function(object,
     rm(a_out)
 
   }
+
+  # ** by_x_1 **
+  # The collection of all values tried and their results
+  # to be updated when new value is tried.
+  # Used after the end of the loop.
+
+  # ** fit_1 **
+  # The latest power curve
+  # To be updated whenever by_x_1 is updated.
+  # Used after the end of the loop.
+
 
   if (progress) {
     cat("\n\n--- Final Stage ---\n\n")

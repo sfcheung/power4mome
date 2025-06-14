@@ -1,5 +1,135 @@
 #' @noRd
 
+alg_power_curve <- function(
+  object,
+  x,
+  pop_es_name,
+  target_power,
+  xs_per_trial,
+  x_max,
+  x_min,
+  nrep0,
+  R0,
+  progress,
+  x_include_interval,
+  x_interval,
+  simulation_progress,
+  save_sim_all,
+  is_by_x,
+  object_by_org,
+  power_model,
+  start,
+  lower_bound,
+  upper_bound,
+  nls_control,
+  nls_args,
+  final_nrep,
+  nrep_steps,
+  final_R,
+  final_xs_per_trial,
+  pre_i_xs = 5,
+  pre_i_nrep = 50,
+  pre_i_R = ifelse(is.null(R0),
+                   NULL,
+                   min(200, R0)),
+  max_trials,
+  ci_level,
+  power_min,
+  power_max,
+  extendInt,
+  power_tolerance_in_interval,
+  power_tolerance_in_final,
+  ci_hit,
+  solution_found,
+  ...
+) {
+
+  a_out <- power_algorithm_search_by_curve_pre_i(
+    object = object,
+    x = x,
+    pop_es_name = pop_es_name,
+    target_power = target_power,
+    xs_per_trial = xs_per_trial,
+    x_max = x_max,
+    x_min = x_min,
+    nrep0 = nrep0,
+    R0 = R0,
+    progress = progress,
+    x_include_interval = x_include_interval,
+    x_interval = x_interval,
+    simulation_progress = simulation_progress,
+    save_sim_all = save_sim_all,
+    is_by_x = is_by_x,
+    object_by_org = object_by_org,
+    power_model = power_model,
+    start = start,
+    lower_bound = lower_bound,
+    upper_bound = upper_bound,
+    nls_control = nls_control,
+    nls_args = nls_args,
+    final_nrep = final_nrep,
+    nrep_steps = nrep_steps,
+    final_R = final_R,
+    final_xs_per_trial = final_xs_per_trial,
+    pre_i_xs = pre_i_xs,
+    pre_i_nrep = pre_i_nrep,
+    pre_i_R = pre_i_R
+  )
+
+  # TODO:
+  # - Need to take care of duplicated objects
+  # if (is_by_x) {
+  #   by_x_1 <- c(by_x_1,
+  #               object_by_org)
+  # }
+
+  by_x_1 <- a_out$by_x_1
+  fit_1 <- a_out$fit_1
+  nrep_seq <- a_out$nrep_seq
+  final_nrep_seq <- a_out$final_nrep_seq
+  R_seq <- a_out$R_seq
+  xs_per_trial_seq <- a_out$xs_per_trial_seq
+
+  rm(a_out)
+
+  a_out <- power_algorithm_search_by_curve(
+    object = object,
+    x = x,
+    pop_es_name = pop_es_name,
+    target_power = target_power,
+    xs_per_trial_seq = xs_per_trial_seq,
+    ci_level = ci_level,
+    power_min = power_min,
+    power_max = power_max,
+    x_interval = x_interval,
+    extendInt = extendInt,
+    progress = progress,
+    simulation_progress = simulation_progress,
+    max_trials = max_trials,
+    final_nrep = final_nrep,
+    power_model = power_model,
+    start = start,
+    lower_bound = lower_bound,
+    upper_bound = upper_bound,
+    nls_control = nls_control,
+    nls_args = nls_args,
+    save_sim_all = save_sim_all,
+    power_tolerance_in_interval = power_tolerance_in_interval,
+    power_tolerance_in_final = power_tolerance_in_final,
+    by_x_1 = by_x_1,
+    fit_1 = fit_1,
+    ci_hit = ci_hit,
+    nrep_seq = nrep_seq,
+    final_nrep_seq = final_nrep_seq,
+    R_seq = R_seq,
+    final_xs_per_trial = final_xs_per_trial,
+    solution_found = solution_found)
+
+  a_out
+}
+
+#' @noRd
+
 power_algorithm_search_by_curve <- function(object,
                                             x,
                                             pop_es_name,
