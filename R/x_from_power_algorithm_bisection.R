@@ -24,8 +24,6 @@ alg_bisection <- function(
     extendInt = c("no", "yes", "downX", "upX"),
     max_trials = 10,
     R = NULL,
-    ci_hit = NULL,
-    solution_found = FALSE,
     digits = 3,
     lower_hard = switch(x, n = 10, es = 0),
     upper_hard = switch(x, n = 10000, es = .999),
@@ -86,9 +84,7 @@ alg_bisection <- function(
     save_sim_all = save_sim_all,
     by_x_1 = by_x_1,
     fit_1 = fit_1,
-    ci_hit = ci_hit,
     is_by_x = is_by_x,
-    solution_found = solution_found,
     digits = digits,
     lower_hard = lower_hard,
     upper_hard = upper_hard,
@@ -125,9 +121,7 @@ power_algorithm_bisection <- function(object,
                                       start = mean(x_interval),
                                       by_x_1 = by_x_1,
                                       fit_1 = NULL,
-                                      ci_hit = NULL,
                                       is_by_x = FALSE,
-                                      solution_found = FALSE,
                                       digits = 3,
                                       lower_hard = switch(x, n = 10, es = 0),
                                       upper_hard = switch(x, n = 10000, es = .999),
@@ -348,6 +342,9 @@ power_algorithm_bisection <- function(object,
                                         overshoot = switch(x,
                                                            n = .5,
                                                            es = .05))
+
+    ci_hit <- FALSE
+    solution_found <- FALSE
 
     lower <- interval_updated$lower
     upper <- interval_updated$upper
