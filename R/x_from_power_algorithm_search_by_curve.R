@@ -108,6 +108,13 @@
 # #' run, but will try more values.
 # #' Rounded up if not an integer.
 
+# #' @param final_xs_per_trial The final number
+# #' of values (sample sizes or population
+# #' values) to consider in the last
+# #' trial or last few trials. Should be an integer at least
+# #' 1. Rounded
+# #' up if not an integer.
+
 #' @noRd
 
 alg_power_curve <- function(
@@ -137,7 +144,7 @@ alg_power_curve <- function(
   final_nrep,
   nrep_steps = 1,
   final_R,
-  final_xs_per_trial,
+  final_xs_per_trial = 1,
   pre_i_xs = 5,
   pre_i_nrep = 50,
   pre_i_R = ifelse(is.null(R0),
@@ -153,6 +160,13 @@ alg_power_curve <- function(
   ci_hit,
   solution_found
 ) {
+
+  if (final_xs_per_trial < 1) {
+    stop("'final_xs_per_trial' (",
+         final_xs_per_trial,
+         ") is less than 1.")
+  }
+  final_xs_per_trial <- ceiling(final_xs_per_trial)
 
   nrep_steps <- ceiling(nrep_steps)
   if (nrep_steps < 0) {

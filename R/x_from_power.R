@@ -294,13 +294,6 @@
 #' @param tolerance Used when the goal
 #' is `"close_enough"`.
 #'
-#' @param final_xs_per_trial The final number
-#' of values (sample sizes or population
-#' values) to consider in the last
-#' trial or last few trials. Should be an integer at least
-#' 1. Rounded
-#' up if not an integer.
-#'
 #' @param ci_level The level of confidence
 #' of the confidence intervals computed
 #' for the estimated power. Default is
@@ -487,7 +480,6 @@ x_from_power <- function(object,
                          max_trials = 10,
                          final_nrep = 400,
                          final_R = 1000,
-                         final_xs_per_trial = 1,
                          seed = NULL,
                          x_include_interval = FALSE,
                          power_curve_args = list(power_model = NULL,
@@ -574,13 +566,6 @@ x_from_power <- function(object,
          target_power,
          ") not between 0 and 1.")
   }
-
-  if (final_xs_per_trial < 1) {
-    stop("'final_xs_per_trial' (",
-         final_xs_per_trial,
-         ") is less than 1.")
-  }
-  final_xs_per_trial <- ceiling(final_xs_per_trial)
 
   if (x == "n") {
     if (min(x_interval) < 0) {
@@ -808,7 +793,6 @@ x_from_power <- function(object,
         nls_args = power_curve_args$nls_args,
         final_nrep = final_nrep,
         final_R = final_R,
-        final_xs_per_trial = final_xs_per_trial,
         max_trials = max_trials,
         ci_level = ci_level,
         extendInt = extendInt,
@@ -853,7 +837,6 @@ x_from_power <- function(object,
           object_by_org = object_by_org,
           final_nrep = final_nrep,
           final_R = final_R,
-          final_xs_per_trial = final_xs_per_trial,
           extendInt = extendInt,
           max_trials = max_trials,
           R = R_org,

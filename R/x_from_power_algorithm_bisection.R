@@ -20,7 +20,6 @@ alg_bisection <- function(
     object_by_org,
     final_nrep,
     final_R,
-    final_xs_per_trial,
     ci_level = .95,
     extendInt = c("no", "yes", "downX", "upX"),
     max_trials = 10,
@@ -52,8 +51,7 @@ alg_bisection <- function(
     is_by_x = is_by_x,
     object_by_org = object_by_org,
     final_nrep = final_nrep,
-    final_R = final_R,
-    final_xs_per_trial = final_xs_per_trial
+    final_R = final_R
   )
 
   x_interval_updated <- a_out$x_interval_updated
@@ -1098,8 +1096,7 @@ power_algorithm_bisection_pre_i <- function(object,
                                             nls_control,
                                             nls_args,
                                             final_nrep,
-                                            final_R,
-                                            final_xs_per_trial) {
+                                            final_R) {
   # TODO:
   # - Make use of by_* object's results.
   # This method only needs an initial interval

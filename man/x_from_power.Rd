@@ -21,7 +21,6 @@ x_from_power(
   max_trials = 10,
   final_nrep = 400,
   final_R = 1000,
-  final_xs_per_trial = 1,
   seed = NULL,
   x_include_interval = FALSE,
   power_curve_args = list(power_model = NULL, start = NULL, lower_bound = NULL,
@@ -156,15 +155,6 @@ power. Do not need to be very large
 because the goal is to estimate
 power by replications, not for high
 precision in one single replication.}
-
-\item{final_xs_per_trial}{The final number
-of values (sample sizes or population
-values) to consider in the last
-trial or last few trials. Should be an integer at least
-\enumerate{
-\item Rounded
-up if not an integer.
-}}
 
 \item{seed}{If not \code{NULL}, \code{\link[=set.seed]{set.seed()}}
 will be used to make the process
