@@ -365,21 +365,6 @@
 #' power by replications, not for high
 #' precision in one single replication.
 #'
-#' @param nrep_steps How many steps
-#' the number of replications will be
-#' increased to `final_nrep`, if the
-#' initial number of replications
-#' (`nrep` in [power4test()]) is
-#' less than `final_nrep`. The number
-#' of replications will be successively
-#' increased by this number of steps
-#' to increase the precision in estimating
-#' the power. Should be at least 1.
-#' Increasing this number will result
-#' in more trials and take longer to
-#' run, but will try more values.
-#' Rounded up if not an integer.
-#'
 #' @param seed If not `NULL`, [set.seed()]
 #' will be used to make the process
 #' reproducible. This is not always
@@ -473,7 +458,6 @@
 #'                            progress = TRUE,
 #'                            target_power = .80,
 #'                            final_nrep = 5,
-#'                            nrep_steps = 1,
 #'                            max_trials = 1,
 #'                            seed = 1234)
 #' summary(power_vs_n)
@@ -504,7 +488,6 @@ x_from_power <- function(object,
                          final_nrep = 400,
                          final_R = 1000,
                          final_xs_per_trial = 1,
-                         nrep_steps = 1,
                          seed = NULL,
                          x_include_interval = FALSE,
                          power_curve_args = list(power_model = NULL,
@@ -628,11 +611,6 @@ x_from_power <- function(object,
   max_trials <- ceiling(max_trials)
   if (max_trials < 1) {
     stop("'max_trials' must be at least 1 (after rounding, if necessary).")
-  }
-
-  nrep_steps <- ceiling(nrep_steps)
-  if (nrep_steps < 0) {
-    stop("'nrep_steps' must be at least 1 (after rounding, if necessary).")
   }
 
   if (!is.null(seed)) {
@@ -829,7 +807,6 @@ x_from_power <- function(object,
         nls_control = power_curve_args$nls_control,
         nls_args = power_curve_args$nls_args,
         final_nrep = final_nrep,
-        nrep_steps = nrep_steps,
         final_R = final_R,
         final_xs_per_trial = final_xs_per_trial,
         max_trials = max_trials,
@@ -875,7 +852,6 @@ x_from_power <- function(object,
           is_by_x = is_by_x,
           object_by_org = object_by_org,
           final_nrep = final_nrep,
-          nrep_steps = nrep_steps,
           final_R = final_R,
           final_xs_per_trial = final_xs_per_trial,
           extendInt = extendInt,

@@ -93,6 +93,20 @@
 # #' after the conversion,
 # #' then set to `R` in `object``.
 
+# #' @param nrep_steps How many steps
+# #' the number of replications will be
+# #' increased to `final_nrep`, if the
+# #' initial number of replications
+# #' (`nrep` in [power4test()]) is
+# #' less than `final_nrep`. The number
+# #' of replications will be successively
+# #' increased by this number of steps
+# #' to increase the precision in estimating
+# #' the power. Should be at least 1.
+# #' Increasing this number will result
+# #' in more trials and take longer to
+# #' run, but will try more values.
+# #' Rounded up if not an integer.
 
 #' @noRd
 
@@ -121,7 +135,7 @@ alg_power_curve <- function(
   nls_control,
   nls_args,
   final_nrep,
-  nrep_steps,
+  nrep_steps = 1,
   final_R,
   final_xs_per_trial,
   pre_i_xs = 5,
@@ -140,6 +154,10 @@ alg_power_curve <- function(
   solution_found
 ) {
 
+  nrep_steps <- ceiling(nrep_steps)
+  if (nrep_steps < 0) {
+    stop("'nrep_steps' must be at least 1 (after rounding, if necessary).")
+  }
 
   if (xs_per_trial < 1) {
     stop("'xs_per_trial' (",

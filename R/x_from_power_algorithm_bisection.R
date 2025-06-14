@@ -19,7 +19,6 @@ alg_bisection <- function(
     is_by_x,
     object_by_org,
     final_nrep,
-    nrep_steps,
     final_R,
     final_xs_per_trial,
     ci_level = .95,
@@ -53,7 +52,6 @@ alg_bisection <- function(
     is_by_x = is_by_x,
     object_by_org = object_by_org,
     final_nrep = final_nrep,
-    nrep_steps = nrep_steps,
     final_R = final_R,
     final_xs_per_trial = final_xs_per_trial
   )
@@ -1100,7 +1098,6 @@ power_algorithm_bisection_pre_i <- function(object,
                                             nls_control,
                                             nls_args,
                                             final_nrep,
-                                            nrep_steps,
                                             final_R,
                                             final_xs_per_trial) {
   # TODO:

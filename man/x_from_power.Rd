@@ -22,7 +22,6 @@ x_from_power(
   final_nrep = 400,
   final_R = 1000,
   final_xs_per_trial = 1,
-  nrep_steps = 1,
   seed = NULL,
   x_include_interval = FALSE,
   power_curve_args = list(power_model = NULL, start = NULL, lower_bound = NULL,
@@ -166,21 +165,6 @@ trial or last few trials. Should be an integer at least
 \item Rounded
 up if not an integer.
 }}
-
-\item{nrep_steps}{How many steps
-the number of replications will be
-increased to \code{final_nrep}, if the
-initial number of replications
-(\code{nrep} in \code{\link[=power4test]{power4test()}}) is
-less than \code{final_nrep}. The number
-of replications will be successively
-increased by this number of steps
-to increase the precision in estimating
-the power. Should be at least 1.
-Increasing this number will result
-in more trials and take longer to
-run, but will try more values.
-Rounded up if not an integer.}
 
 \item{seed}{If not \code{NULL}, \code{\link[=set.seed]{set.seed()}}
 will be used to make the process
@@ -509,7 +493,6 @@ power_vs_n <- x_from_power(test_out,
                            progress = TRUE,
                            target_power = .80,
                            final_nrep = 5,
-                           nrep_steps = 1,
                            max_trials = 1,
                            seed = 1234)
 summary(power_vs_n)
