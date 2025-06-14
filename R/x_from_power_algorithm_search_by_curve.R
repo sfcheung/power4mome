@@ -156,9 +156,7 @@ alg_power_curve <- function(
   power_max = .90,
   extendInt,
   power_tolerance_in_interval,
-  power_tolerance_in_final,
-  ci_hit,
-  solution_found
+  power_tolerance_in_final
 ) {
 
   if (final_xs_per_trial < 1) {
@@ -284,12 +282,10 @@ alg_power_curve <- function(
     power_tolerance_in_final = power_tolerance_in_final,
     by_x_1 = by_x_1,
     fit_1 = fit_1,
-    ci_hit = ci_hit,
     nrep_seq = nrep_seq,
     final_nrep_seq = final_nrep_seq,
     R_seq = R_seq,
-    final_xs_per_trial = final_xs_per_trial,
-    solution_found = solution_found)
+    final_xs_per_trial = final_xs_per_trial)
 
   a_out
 }
@@ -321,12 +317,14 @@ power_algorithm_search_by_curve <- function(object,
                                             power_tolerance_in_final,
                                             by_x_1,
                                             fit_1,
-                                            ci_hit,
                                             nrep_seq,
                                             final_nrep_seq,
                                             R_seq,
-                                            final_xs_per_trial,
-                                            solution_found) {
+                                            final_xs_per_trial) {
+
+    ci_hit <- FALSE
+    solution_found <- FALSE
+
     i2 <- NULL
     target_in_range <- FALSE
 
@@ -723,7 +721,9 @@ power_algorithm_search_by_curve <- function(object,
               ci_out = ci_out,
               by_x_out = by_x_out,
               i2 = i2,
-              solution_found = solution_found)
+              solution_found = solution_found,
+              what = "point",
+              goal = "ci_hit")
   out
 }
 

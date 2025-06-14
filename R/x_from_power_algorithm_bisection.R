@@ -712,7 +712,10 @@ power_algorithm_bisection <- function(object,
               by_x_out = by_x_out,
               i2 = i2,
               solution_found = solution_found,
-              tol = tol)
+              tol = tol,
+              what = what,
+              goal = goal,
+              ci_level = ci_level)
   out
 
 }
