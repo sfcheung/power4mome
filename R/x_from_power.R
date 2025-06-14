@@ -313,11 +313,11 @@
 #' for the estimated power. Default is
 #' .95, denoting 95%.
 #'
-#' @param power_min,power_max The minimum
-#' and maximum values, respectively,
-#' of power
-#' when determining the values to
-#' try in each trail. Default is .01.
+# #' @param power_min,power_max The minimum
+# #' and maximum values, respectively,
+# #' of power
+# #' when determining the values to
+# #' try in each trail. Default is .01.
 #'
 #' @param x_interval A vector of
 #' two values, the minimum value
@@ -590,8 +590,6 @@ x_from_power <- function(object,
                                        lb = "close_enough"),
                          ci_level = .95,
                          tolerance = .02,
-                         power_min = .01,
-                         power_max = .90,
                          x_interval = switch(x,
                                              n = c(50, 2000),
                                              es = NULL),
@@ -704,18 +702,6 @@ x_from_power <- function(object,
          ") is less than 1.")
   }
   final_xs_per_trial <- ceiling(final_xs_per_trial)
-
-  if (power_min <= 0 || power_max >= 1) {
-    stop("'power_min' and 'power_max' must be between 0 and 1.")
-  }
-
-  if (isTRUE(power_max < power_min)) {
-    stop("'power_max' must be greater than 'power_min'.")
-  }
-
-  if (power_max < target_power || power_min > target_power) {
-    stop("'target_power' must be between 'power_min' and 'power_max'.")
-  }
 
   if (x == "n") {
     if (min(x_interval) < 0) {
@@ -978,8 +964,6 @@ x_from_power <- function(object,
         final_xs_per_trial = final_xs_per_trial,
         max_trials = max_trials,
         ci_level = ci_level,
-        power_min = power_min,
-        power_max = power_max,
         extendInt = extendInt,
         power_tolerance_in_interval = power_tolerance_in_interval,
         power_tolerance_in_final = power_tolerance_in_final,
@@ -1149,8 +1133,8 @@ x_from_power <- function(object,
                             target_power = target_power,
                             k = 1,
                             tolerance = 0,
-                            power_min = power_min,
-                            power_max = power_max,
+                            power_min = .01,
+                            power_max = .99,
                             interval = x_interval,
                             extendInt = "yes",
                             x_to_exclude = x_tried)

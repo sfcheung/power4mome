@@ -35,8 +35,8 @@ alg_power_curve <- function(
                    min(200, R0)),
   max_trials,
   ci_level,
-  power_min,
-  power_max,
+  power_min = .01,
+  power_max = .90,
   extendInt,
   power_tolerance_in_interval,
   power_tolerance_in_final,
@@ -50,6 +50,14 @@ alg_power_curve <- function(
     if ((nrep0 < 100) && (nrep_org <= final_nrep)) {
       nrep0 <- nrep_org
     }
+  }
+
+  if (power_min <= 0 || power_max >= 1) {
+    stop("'power_min' and 'power_max' must be between 0 and 1.")
+  }
+
+  if (power_max < target_power || power_min > target_power) {
+    stop("'target_power' must be between 'power_min' and 'power_max'.")
   }
 
   a_out <- power_algorithm_search_by_curve_pre_i(

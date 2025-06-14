@@ -14,8 +14,6 @@ x_from_power(
   goal = switch(what, point = "ci_hit", ub = "close_enough", lb = "close_enough"),
   ci_level = 0.95,
   tolerance = 0.02,
-  power_min = 0.01,
-  power_max = 0.9,
   x_interval = switch(x, n = c(50, 2000), es = NULL),
   extendInt = NULL,
   progress = TRUE,
@@ -101,12 +99,6 @@ for the estimated power. Default is
 
 \item{tolerance}{Used when the goal
 is \code{"close_enough"}.}
-
-\item{power_min, power_max}{The minimum
-and maximum values, respectively,
-of power
-when determining the values to
-try in each trail. Default is .01.}
 
 \item{x_interval}{A vector of
 two values, the minimum value
