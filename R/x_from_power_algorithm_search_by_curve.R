@@ -4,6 +4,7 @@ alg_power_curve <- function(
   object,
   x,
   pop_es_name,
+  ...,
   target_power,
   xs_per_trial,
   x_max,
@@ -40,8 +41,7 @@ alg_power_curve <- function(
   power_tolerance_in_interval,
   power_tolerance_in_final,
   ci_hit,
-  solution_found,
-  ...
+  solution_found
 ) {
 
   a_out <- power_algorithm_search_by_curve_pre_i(
