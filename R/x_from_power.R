@@ -352,20 +352,6 @@
 #' [power4test_by_n()], or
 #' [power4test_by_es()].
 #'
-#' @param initial_R The initial number of
-#' Monte Carlo simulation or
-#' bootstrapping samples. The `R` in calling
-#' [power4test()], [power4test_by_n()],
-#' or [power4test_by_es()]. If set to `NULL`,
-#' the `R` used in
-#' `object` will be used.
-#' If higher
-#' than `final_R`, it will be
-#' converted to one-fourth of `final_R`.
-#' If lower than the `R` in `object`
-#' after the conversion,
-#' then set to `R` in `object``.
-#'
 #' @param final_R The number of
 #' Monte Carlo simulation or
 #' bootstrapping samples in the final
@@ -516,7 +502,6 @@ x_from_power <- function(object,
                          simulation_progress = TRUE,
                          max_trials = 10,
                          final_nrep = 400,
-                         initial_R = 250,
                          final_R = 1000,
                          final_xs_per_trial = 1,
                          nrep_steps = 1,
@@ -713,18 +698,6 @@ x_from_power <- function(object,
 
   R_org <- attr(object, "args")$R
 
-  if (is.null(initial_R)) {
-    R0 <- R_org
-  } else {
-    if (initial_R > final_R) {
-      initial_R <- ceiling(final_R / 4)
-      if ((initial_R < 100) && (R_org <= final_R)) {
-        initial_R <- R_org
-      }
-    }
-    R0 <- ceiling(initial_R)
-  }
-
   if (progress) {
     cat("\n--- Setting ---\n\n")
 
@@ -842,7 +815,6 @@ x_from_power <- function(object,
         target_power = target_power,
         x_max = x_max,
         x_min = x_min,
-        R0 = R0,
         progress = progress,
         x_include_interval = x_include_interval,
         x_interval = x_interval,

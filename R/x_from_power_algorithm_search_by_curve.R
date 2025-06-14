@@ -79,6 +79,20 @@
 # #' and also override `nls_args`.
 # #' Use this argument with cautions.
 
+# #' @param initial_R The initial number of
+# #' Monte Carlo simulation or
+# #' bootstrapping samples. The `R` in calling
+# #' [power4test()], [power4test_by_n()],
+# #' or [power4test_by_es()]. If set to `NULL`,
+# #' the `R` used in
+# #' `object` will be used.
+# #' If higher
+# #' than `final_R`, it will be
+# #' converted to one-fourth of `final_R`.
+# #' If lower than the `R` in `object`
+# #' after the conversion,
+# #' then set to `R` in `object``.
+
 
 #' @noRd
 
@@ -92,7 +106,7 @@ alg_power_curve <- function(
   x_max,
   x_min,
   nrep0 = 100,
-  R0,
+  R0 = 250,
   progress,
   x_include_interval,
   x_interval,
@@ -134,13 +148,26 @@ alg_power_curve <- function(
   }
   xs_per_trial <- ceiling(xs_per_trial)
 
-
   nrep_org <- attr(object, "args")$nrep
   if (nrep0 > final_nrep) {
     nrep0 <- ceiling(final_nrep / 4)
     if ((nrep0 < 100) && (nrep_org <= final_nrep)) {
       nrep0 <- nrep_org
     }
+  }
+
+  R_org <- attr(object, "args")$R
+
+  if (is.null(R0)) {
+    R0 <- R_org
+  } else {
+    if (R0 > final_R) {
+      R0 <- ceiling(final_R / 4)
+      if ((R0 < 100) && (R_org <= final_R)) {
+        R0 <- R_org
+      }
+    }
+    R0 <- ceiling(R0)
   }
 
   if (power_min <= 0 || power_max >= 1) {

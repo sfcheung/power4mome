@@ -20,7 +20,6 @@ x_from_power(
   simulation_progress = TRUE,
   max_trials = 10,
   final_nrep = 400,
-  initial_R = 250,
   final_R = 1000,
   final_xs_per_trial = 1,
   nrep_steps = 1,
@@ -145,20 +144,6 @@ also the maximum number of replications
 in each call to \code{\link[=power4test]{power4test()}},
 \code{\link[=power4test_by_n]{power4test_by_n()}}, or
 \code{\link[=power4test_by_es]{power4test_by_es()}}.}
-
-\item{initial_R}{The initial number of
-Monte Carlo simulation or
-bootstrapping samples. The \code{R} in calling
-\code{\link[=power4test]{power4test()}}, \code{\link[=power4test_by_n]{power4test_by_n()}},
-or \code{\link[=power4test_by_es]{power4test_by_es()}}. If set to \code{NULL},
-the \code{R} used in
-\code{object} will be used.
-If higher
-than \code{final_R}, it will be
-converted to one-fourth of \code{final_R}.
-If lower than the \code{R} in \code{object}
-after the conversion,
-then set to \code{R} in `object``.}
 
 \item{final_R}{The number of
 Monte Carlo simulation or
