@@ -1,3 +1,85 @@
+# #' @param xs_per_trial The initial number
+# #' of values (sample sizes or population
+# #' values) to consider in each
+# #' trial. Should be an integer at least
+# #' 1. Rounded
+# #' up if not an integer.
+
+# #' @param power_min,power_max The minimum
+# #' and maximum values, respectively,
+# #' of power
+# #' when determining the values to
+# #' try in each trail. Default is .01.
+
+# #' @param initial_nrep The initial
+# #' number of replications. If set
+# #' to `NULL`, the `nrep` used in
+# #' `object` will be used. If higher
+# #' than `final_nrep`, it will be
+# #' converted to one-fourth of `final_nrep`.
+# #' If lower than the `nrep` in `object`
+# #' after the conversion,
+# #' then set to `nrep` in the `object`.
+
+# #' @param power_model The nonlinear
+# #' model to be used when estimating
+# #' the relation between power and
+# #' `x`. Should be a formula
+# #' acceptable by [stats::nls()],
+# #' with `reject` on the left-hand side,
+# #' and `x`
+# #' on the right-hand
+# #' side, with one or more parameters.
+# #' Can also be set to a list of
+# #' models.
+# #' Users rarely need to change the
+# #' default value. If `NULL`, the default,
+# #' then the default model(s) will be
+# #' determined by [power_curve()].
+# #'
+# #' @param start A named numeric vector
+# #' of the starting values for `power_model`
+# #' when fitted by [stats::nls()]. If
+# #' `power_model` is a list, this should
+# #' be a list of the same length.
+# #' Users rarely need to change the
+# #' default values.
+# #'
+# #' @param lower_bound A named numeric vector
+# #' of the lower bounds for parameters
+# #' in `power_model`
+# #' when fitted by [stats::nls()]. If
+# #' `power_model` is a list, this should
+# #' be a list of the same length.
+# #' Users rarely need to change the
+# #' default values.
+# #'
+# #' @param upper_bound A named numeric vector
+# #' of the upper bounds for parameters
+# #' in `power_model`
+# #' when fitted by [stats::nls()]. If
+# #' `power_model` is a list, this should
+# #' be a list of the same length.
+# #' Users rarely need to change the
+# #' default values.
+# #'
+# #' @param nls_args A named list of
+# #' arguments to be used when calling
+# #' [stats::nls()]. Used to override
+# #' internal default, such as the
+# #' algorithm (default is `"port"`).
+# #' Use this argument with cautions.
+# #'
+# #' @param nls_control A named list of
+# #' arguments to be passed the `control`
+# #' argument of [stats::nls()] when
+# #' estimating the relation between
+# #' power and `x`. The values will
+# #' override internal default values,
+# #' and also override `nls_args`.
+# #' Use this argument with cautions.
+
+
 #' @noRd
 
 alg_power_curve <- function(
@@ -43,6 +125,15 @@ alg_power_curve <- function(
   ci_hit,
   solution_found
 ) {
+
+
+  if (xs_per_trial < 1) {
+    stop("'xs_per_trial' (",
+         xs_per_trial,
+         ") is less than 1.")
+  }
+  xs_per_trial <- ceiling(xs_per_trial)
+
 
   nrep_org <- attr(object, "args")$nrep
   if (nrep0 > final_nrep) {
