@@ -23,6 +23,7 @@ x_from_power(
   final_R = 1000,
   seed = NULL,
   x_include_interval = FALSE,
+  check_es_interval = TRUE,
   power_curve_args = list(power_model = NULL, start = NULL, lower_bound = NULL,
     upper_bound = NULL, nls_control = list(), nls_args = list()),
   save_sim_all = FALSE,
@@ -167,6 +168,17 @@ Whether the minimum and maximum
 values in \code{x_interval} are mandatory
 to be included in the values
 to be searched.}
+
+\item{check_es_interval}{If \code{TRUE},
+the default, and \code{x} is \code{"es"},
+a conservative probable
+range of valid values for the selected
+parameter will be determined, and it
+will be used instead of \code{x_interval}.
+If the range spans both positive and
+negative values, only the interval
+of the same sign as the population
+value in \code{object} will be used.}
 
 \item{power_curve_args}{A named
 list of arguments to be passed

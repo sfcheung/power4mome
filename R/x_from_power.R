@@ -400,6 +400,18 @@
 #' algorithm to be used. For advanced
 #' users.
 #'
+#' @param check_es_interval If `TRUE`,
+#' the default, and `x` is `"es"`,
+#' a conservative probable
+#' range of valid values for the selected
+#' parameter will be determined, and it
+#' will be used instead of `x_interval`.
+#' If the range spans both positive and
+#' negative values, only the interval
+#' of the same sign as the population
+#' value in `object` will be used.
+#'
+#'
 #' @seealso [power4test()], [power4test_by_n()],
 #' and [power4test_by_es()].
 #'
@@ -482,6 +494,7 @@ x_from_power <- function(object,
                          final_R = 1000,
                          seed = NULL,
                          x_include_interval = FALSE,
+                         check_es_interval = TRUE,
                          power_curve_args = list(power_model = NULL,
                                                  start = NULL,
                                                  lower_bound = NULL,
@@ -604,19 +617,26 @@ x_from_power <- function(object,
 
   # Handle the object
 
+  # Is it a compatible x_from_power object?
+  # - If yes and solution not found,
+  #   - extract the stored by_x object
+  # - If yes and solution found,
+  #   - The object is returned as is.
+
   is_x_from_power <- FALSE
   if (inherits(object, "x_from_power")) {
     # Throw an error if incompatible
+
     # TODO:
     # - Will run if goal and/or what changed
+
     check_x_from_power_as_input(object,
                                 x = x,
                                 pop_es_name = pop_es_name,
                                 final_nrep = final_nrep,
                                 ci_level = ci_level)
-    # Need to check these for compatibility:
-    # - nrep_final
-    # - ci_level
+
+    # Check these for compatibility:
 
     is_x_from_power <- TRUE
     if (object$solution_found &&
@@ -629,6 +649,14 @@ x_from_power <- function(object,
     }
     object <- object$power4test_trials
   }
+
+  # Is it a by_x object??
+  # - If yes and solution not found,
+  #   - extract the power4test object closest to the solution
+  # - If yes and solution found,
+  #   - This is possible because the by_x object
+  #     may be generated directly by user,
+  #     not extracted from an x_from_power object.
 
   is_by_x <- FALSE
   if (inherits(object, "power4test_by_n") ||
@@ -653,13 +681,9 @@ x_from_power <- function(object,
     object_by_org <- NA
   }
 
+  # The object to be used below is always a power4test object
+
   time_start <- Sys.time()
-
-  # Change nrep?
-
-  nrep_org <- attr(object, "args")$nrep
-
-  R_org <- attr(object, "args")$R
 
   if (progress) {
     cat("\n--- Setting ---\n\n")
@@ -697,10 +721,19 @@ x_from_power <- function(object,
     }
   }
 
+  # Initialize these flags because a solution
+  # may already be present before doing the search
+
   ci_hit <- FALSE
   solution_found <- FALSE
 
   # === Check Existing Solution ===
+
+  # If the input object is a by_x object,
+  # - Check if the solution is already in one of the
+  #   power4test object.
+  #   - If yes, skip the search and create the
+  #     x_from_power object.
 
   if (is_by_x) {
 
@@ -714,12 +747,16 @@ x_from_power <- function(object,
                    final_nrep = final_nrep,
                    closest_ok = FALSE,
                    if_ties = "min")
+
     if (!is.na(i_org_hit) && !is.null(i_org_hit)) {
+
       # Solution already in the input.
       # DO not do the search
 
       cat("\n--- Solution Already Found ---\n\n")
       cat("Solution already found in the object. Search will be skipped.")
+
+      # Prepare the objects as if the search has completed
 
       ci_hit <- ifelse(goal == "ci_hit",
                        TRUE,
@@ -753,14 +790,20 @@ x_from_power <- function(object,
     }
   }
 
-  if (!solution_found) {
-    x_interval <- fix_es_interval(object = object,
-                                  x = x,
-                                  pop_es_name = pop_es_name,
-                                  x_interval = x_interval,
-                                  progress = progress)
-  } else {
+  # x_interval is the actual range of values
+  # to be searched, not necessarily the one
+  # set by users.
+
+  if (solution_found) {
     x_interval <- range(x_tried)
+  } else {
+    if (check_es_interval) {
+      x_interval <- fix_es_interval(object = object,
+                                    x = x,
+                                    pop_es_name = pop_es_name,
+                                    x_interval = x_interval,
+                                    progress = progress)
+    }
   }
 
   x_max <- max(x_interval)
@@ -839,7 +882,7 @@ x_from_power <- function(object,
           final_R = final_R,
           extendInt = extendInt,
           max_trials = max_trials,
-          R = R_org,
+          R = attr(object, "args")$R,
           ci_hit = ci_hit,
           solution_found = solution_found,
           digits = 3,
