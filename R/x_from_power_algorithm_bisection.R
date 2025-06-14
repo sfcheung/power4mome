@@ -1,4 +1,114 @@
 #' @noRd
+
+alg_bisection <- function(
+    object,
+    x,
+    pop_es_name,
+    ...,
+    target_power = .80,
+    xs_per_trial,
+    x_max,
+    x_min,
+    nrep0,
+    progress,
+    x_include_interval,
+    x_interval = switch(
+                  x,
+                  n = c(100, 1000),
+                  es = c(.10, .50)),
+    simulation_progress,
+    save_sim_all,
+    is_by_x,
+    object_by_org,
+    final_nrep,
+    nrep_steps,
+    final_R,
+    final_xs_per_trial,
+    ci_level = .95,
+    extendInt = c("no", "yes", "downX", "upX"),
+    max_trials = 10,
+    R = NULL,
+    ci_hit = NULL,
+    solution_found = FALSE,
+    digits = 3,
+    lower_hard = switch(x, n = 10, es = 0),
+    upper_hard = switch(x, n = 10000, es = .999),
+    extend_maxiter = 3,
+    what = c("point", "ub", "lb"),
+    goal = c("ci_hit", "close_enough"),
+    tol = .02,
+    variants = list()
+) {
+
+  a_out <- power_algorithm_bisection_pre_i(
+    object = object,
+    x = x,
+    pop_es_name = pop_es_name,
+    target_power = target_power,
+    xs_per_trial = xs_per_trial,
+    x_max = x_max,
+    x_min = x_min,
+    nrep0 = nrep0,
+    progress = progress,
+    x_include_interval = x_include_interval,
+    x_interval = x_interval,
+    simulation_progress = simulation_progress,
+    save_sim_all = save_sim_all,
+    is_by_x = is_by_x,
+    object_by_org = object_by_org,
+    final_nrep = final_nrep,
+    nrep_steps = nrep_steps,
+    final_R = final_R,
+    final_xs_per_trial = final_xs_per_trial
+  )
+
+  x_interval_updated <- a_out$x_interval_updated
+  by_x_1 <- a_out$by_x_1
+  fit_1 <- a_out$fit_1
+
+  # TODO:
+  # - Need to take care of duplicated objects
+  # if (is_by_x) {
+  #   by_x_1 <- c(by_x_1,
+  #               object_by_org)
+  # }
+
+  rm(a_out)
+
+  lower_hard <- min(x_interval)
+  upper_hard <- max(x_interval)
+
+  a_out <- power_algorithm_bisection(
+    object = object,
+    x = x,
+    pop_es_name = pop_es_name,
+    target_power = target_power,
+    ci_level = ci_level,
+    x_interval = x_interval_updated,
+    extendInt = extendInt,
+    progress = progress,
+    simulation_progress = simulation_progress,
+    max_trials = max_trials,
+    final_nrep = final_nrep,
+    R = R,
+    save_sim_all = save_sim_all,
+    by_x_1 = by_x_1,
+    fit_1 = fit_1,
+    ci_hit = ci_hit,
+    is_by_x = is_by_x,
+    solution_found = solution_found,
+    digits = digits,
+    lower_hard = lower_hard,
+    upper_hard = upper_hard,
+    what = what,
+    goal = goal,
+    tol = tol
+  )
+
+  a_out
+}
+
+#' @noRd
 power_algorithm_bisection <- function(object,
                                       x,
                                       pop_es_name = NULL,

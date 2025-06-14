@@ -1011,85 +1011,37 @@ x_from_power <- function(object,
 
   if ((algorithm == "bisection") && !solution_found) {
 
-    a_out <- do.call(power_algorithm_bisection_pre_i,
-                     c(list(object = object,
-                            x = x,
-                            pop_es_name = pop_es_name,
-                            target_power = target_power,
-                            xs_per_trial = xs_per_trial,
-                            x_max = x_max,
-                            x_min = x_min,
-                            nrep0 = nrep0,
-                            R0 = R0,
-                            progress = progress,
-                            x_include_interval = x_include_interval,
-                            x_interval = x_interval,
-                            simulation_progress = simulation_progress,
-                            save_sim_all = save_sim_all,
-                            is_by_x = is_by_x,
-                            object_by_org = object_by_org,
-                            power_model = power_curve_args$power_model,
-                            start = power_curve_args$start,
-                            lower_bound = power_curve_args$ower_bound,
-                            upper_bound = power_curve_args$upper_bound,
-                            nls_control = power_curve_args$nls_control,
-                            nls_args = power_curve_args$nls_args,
-                            final_nrep = final_nrep,
-                            nrep_steps = nrep_steps,
-                            final_R = final_R,
-                            final_xs_per_trial = final_xs_per_trial),
-                       control))
-
-    x_interval_updated <- a_out$x_interval_updated
-    by_x_1 <- a_out$by_x_1
-    fit_1 <- a_out$fit_1
-
-    # TODO:
-    # - Need to take care of duplicated objects
-    # if (is_by_x) {
-    #   by_x_1 <- c(by_x_1,
-    #               object_by_org)
-    # }
-
-    rm(a_out)
-
-    # === Loop Over The Trials ===
-
-    lower_hard <- min(x_interval)
-    upper_hard <- max(x_interval)
-
-    a_out <- do.call(power_algorithm_bisection,
-                     c(list(object = object,
-                            x = x,
-                            pop_es_name = pop_es_name,
-                            target_power = target_power,
-                            ci_level = ci_level,
-                            x_interval = x_interval_updated,
-                            extendInt = extendInt,
-                            progress = progress,
-                            simulation_progress = simulation_progress,
-                            max_trials = max_trials,
-                            final_nrep = final_nrep,
-                            R = R_org,
-                            power_model = power_curve_args$power_model,
-                            power_curve_start = power_curve_args$start,
-                            lower_bound = power_curve_args$lower_bound,
-                            upper_bound = power_curve_args$upper_bound,
-                            nls_control = power_curve_args$nls_control,
-                            nls_args = power_curve_args$nls_args,
-                            save_sim_all = save_sim_all,
-                            by_x_1 = by_x_1,
-                            fit_1 = fit_1,
-                            ci_hit = ci_hit,
-                            is_by_x = is_by_x,
-                            solution_found = solution_found,
-                            digits = 3,
-                            lower_hard = lower_hard,
-                            upper_hard = upper_hard,
-                            what = what,
-                            goal = goal,
-                            tol = tolerance),
-                      control))
+    a_out <- do.call(alg_bisection,
+      c(list(
+          object = object,
+          x = x,
+          pop_es_name = pop_es_name,
+          target_power = target_power,
+          xs_per_trial = xs_per_trial,
+          x_max = x_max,
+          x_min = x_min,
+          progress = progress,
+          x_include_interval = x_include_interval,
+          x_interval = x_interval,
+          simulation_progress = simulation_progress,
+          save_sim_all = save_sim_all,
+          is_by_x = is_by_x,
+          object_by_org = object_by_org,
+          final_nrep = final_nrep,
+          nrep_steps = nrep_steps,
+          final_R = final_R,
+          final_xs_per_trial = final_xs_per_trial,
+          extendInt = extendInt,
+          max_trials = max_trials,
+          R = R_org,
+          ci_hit = ci_hit,
+          solution_found = solution_found,
+          digits = 3,
+          what = what,
+          goal = goal,
+          tol = tolerance
+        ),
+      control))
 
     by_x_1 <- a_out$by_x_1
     fit_1 <- a_out$fit_1
