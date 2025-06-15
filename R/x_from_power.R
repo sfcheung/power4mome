@@ -934,7 +934,8 @@ x_from_power <- function(object,
                       reject_history = a_out$reject_history,
                       f_history = a_out$f_history,
                       delta_tol = a_out$delta_tol,
-                      last_k = a_out$last_k)
+                      last_k = a_out$last_k,
+                      tol = a_out$tol)
 
     rm(a_out)
 

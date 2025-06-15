@@ -107,6 +107,7 @@ print.summary.x_from_power <- function(x,
   solution_found <- !is.na(x$x_final)
 
   predictor <- x$x
+  cat("\n")
   cat("Predictor (x):",
       switch(predictor,
              n = "Sample Size",
@@ -118,9 +119,34 @@ print.summary.x_from_power <- function(x,
         "\n")
   }
 
+  target_power_str <- formatC(x$target_power, digits = digits, format = "f")
   cat("\n- Target Power:",
-      formatC(x$target_power, digits = digits, format = "f"),
+      target_power_str,
       "\n")
+
+  if (x$goal == "close_enough") {
+    tmp1 <- switch(x$what,
+                   point = "estimated power",
+                   lb = "lower confidence bound",
+                   ub = "upper confidence bound")
+    tmp2 <- paste0(
+        "- Goal: ",
+        "Find 'x' with estimated ",
+        tmp1,
+        " close enough to the target power.")
+    catwrap(tmp2,
+            exdent = 2)
+  }
+
+  if (x$goal == "ci_hit") {
+    tmp2 <- paste0(
+        "- Goal: ",
+        "Find 'x' with the confidence interval of ",
+        "the estimated power enclosing the ",
+        "target power.")
+    catwrap(tmp2,
+            exdent = 2)
+  }
 
   cat("\n=== Major Results ===\n\n")
   if (solution_found) {
@@ -129,7 +155,10 @@ print.summary.x_from_power <- function(x,
                                            n = 0,
                                            es = digits),
                            format = "f")
-    cat("- Final Value:", x_final_str, "\n\n")
+    tmp <- switch(x$x,
+                  n = "(Sample Size)",
+                  es = paste0("(", x$pop_es_name, ")"))
+    cat("- Final Value ", tmp, ": ", x_final_str, "\n\n", sep = "")
     cat("- Final Estimated Power:",
         formatC(x$power_final, digits = digits, format = "f"),
         "\n")
@@ -168,11 +197,29 @@ print.summary.x_from_power <- function(x,
   }
 
   cat("\n=== Technical Information ===\n\n")
-  tmp <- formatC(range(x$x_tried),
-                  digits = digits,
+  cat("- Algorithm:",
+      x$algorithm,
+      "\n")
+  if (x$goal == "close_enough") {
+    cat("- Tolerance for 'close enough':",
+      "Within",
+      formatC(x$technical$tol,
+              digits + 2,
+              format = "f"),
+      "of",
+      target_power_str,
+      "\n")
+  }
+  tmp0 <- switch(x$x,
+                 n = ceiling(x$x_tried),
+                 es = x$x_tried)
+  tmp <- formatC(tmp0,
+                  digits = switch(x$x,
+                                  n = 0,
+                                  es = digits),
                   format = "f")
   cat("- The range of values explored:",
-      paste(tmp, collapse = " to "), "\n")
+      paste(range(tmp), collapse = " to "), "\n")
   cat("- Time spent in the search:",
       format(x$time_spent, digits = 4),
       "\n")
