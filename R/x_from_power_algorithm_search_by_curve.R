@@ -829,7 +829,9 @@ power_algorithm_search_by_curve <- function(object,
               solution_found = solution_found,
               status = status,
               iteration = j,
-              x_history = x_history,
+              x_history = x_history[!is.na(x_history)],
+              delta_tol = delta_tol,
+              last_k = last_k,
               what = "point",
               goal = "ci_hit")
   out

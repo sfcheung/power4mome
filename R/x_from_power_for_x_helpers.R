@@ -685,8 +685,9 @@ check_changes <- function(
   x <- x_history[!is.na(x_history)]
   p <- length(x)
   if (p < last_k) return(TRUE)
-  x_test <- rev(x_history)
-  x_range <- range(x_test)
+  x_test <- rev(x_history[!is.na(x_history)])
+  x_range <- range(x_test,
+                   na.rm = TRUE)
   if (abs(x_range[2] - x_range[1]) < delta_tol) {
     return(FALSE)
   } else {

@@ -31,7 +31,10 @@ alg_bisection <- function(
     what = c("point", "ub", "lb"),
     goal = c("ci_hit", "close_enough"),
     tol = .02,
-    delta_tol = .01,
+    delta_tol = switch(x,
+                    n = 1,
+                    es = .001),
+    last_k = 3,
     variants = list()
 ) {
 
@@ -98,7 +101,8 @@ alg_bisection <- function(
     what = what,
     goal = goal,
     tol = tol,
-    delta_tol = delta_tol
+    delta_tol = delta_tol,
+    last_k = last_k
   )
 
   # ==== Return the output ====
@@ -139,7 +143,10 @@ power_algorithm_bisection <- function(object,
                                       what = c("point", "ub", "lb"),
                                       goal = c("ci_hit", "close_enough"),
                                       tol = .02,
-                                      delta_tol = .01,
+                                      delta_tol = switch(x,
+                                                      n = 1,
+                                                      es = .001),
+                                      last_k = 3,
                                       variants = list()) {
   extendInt <- match.arg(extendInt)
   what <- match.arg(what)
@@ -641,6 +648,21 @@ power_algorithm_bisection <- function(object,
       x_history[i] <- x_i
       x_interval_history[i, ] <- c(lower_i, upper_i)
 
+      # ==== Check changes ====
+
+      changes_ok <- check_changes(
+              x_history = x_history,
+              delta_tol = delta_tol,
+              last_k = last_k
+            )
+
+      if (!changes_ok) {
+
+        status <- bisection_status_message(2, status)
+        break
+
+      }
+
       # ==== No solution. Update the interval ====
 
       if (x_type == "n") {
@@ -799,10 +821,11 @@ power_algorithm_bisection <- function(object,
               solution_found = solution_found,
               status = status,
               iteration = i,
-              x_history = x_history,
-              x_interval_history = x_interval_history,
+              x_history = x_history[!is.na(x_history)],
+              x_interval_history = x_interval_history[complete.cases(x_interval_history), ],
               tol = tol,
               delta_tol = delta_tol,
+              last_k = last_k,
               what = what,
               goal = goal,
               ci_level = ci_level)
