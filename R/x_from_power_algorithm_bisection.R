@@ -34,6 +34,8 @@ alg_bisection <- function(
     variants = list()
 ) {
 
+  # ==== Pre-search setup ====
+
   a_out <- power_algorithm_bisection_pre_i(
     object = object,
     x = x,
@@ -52,6 +54,8 @@ alg_bisection <- function(
     final_R = final_R
   )
 
+  # ==== Process output ====
+
   x_interval_updated <- a_out$x_interval_updated
   by_x_1 <- a_out$by_x_1
   fit_1 <- a_out$fit_1
@@ -67,6 +71,8 @@ alg_bisection <- function(
 
   lower_hard <- min(x_interval)
   upper_hard <- max(x_interval)
+
+  # ==== Start the search ====
 
   a_out <- power_algorithm_bisection(
     object = object,
@@ -92,6 +98,8 @@ alg_bisection <- function(
     goal = goal,
     tol = tol
   )
+
+  # ==== Return the output ====
 
   a_out
 }
