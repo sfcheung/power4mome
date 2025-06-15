@@ -156,7 +156,8 @@ alg_power_curve <- function(
   power_max = .90,
   extendInt,
   power_tolerance_in_interval,
-  power_tolerance_in_final
+  power_tolerance_in_final,
+  delta_tol = .01
 ) {
 
   if (final_xs_per_trial < 1) {
@@ -285,7 +286,8 @@ alg_power_curve <- function(
     nrep_seq = nrep_seq,
     final_nrep_seq = final_nrep_seq,
     R_seq = R_seq,
-    final_xs_per_trial = final_xs_per_trial)
+    final_xs_per_trial = final_xs_per_trial,
+    delta_tol = delta_tol)
 
   a_out
 }
@@ -320,13 +322,21 @@ power_algorithm_search_by_curve <- function(object,
                                             nrep_seq,
                                             final_nrep_seq,
                                             R_seq,
-                                            final_xs_per_trial) {
+                                            final_xs_per_trial,
+                                            delta_tol = .01) {
 
     ci_hit <- FALSE
     solution_found <- FALSE
 
     i2 <- NULL
     target_in_range <- FALSE
+    status <- NULL
+    changes_ok <- TRUE
+
+    x_history <- vector("numeric", max_trials)
+    x_history[] <- NA
+
+    # ==== Start the Loop ====
 
     for (j in seq_len(max_trials)) {
 
@@ -335,6 +345,8 @@ power_algorithm_search_by_curve <- function(object,
         tmp <- format(Sys.time(), "%Y-%m-%d %X")
         cat("- Start at", tmp, "\n")
       }
+
+      # ==== Determine values to try ====
 
       if (ci_hit) {
         # After the first trial,
@@ -400,6 +412,8 @@ power_algorithm_search_by_curve <- function(object,
                                 x_to_exclude = x_tried)
       }
 
+      # ==== Adjust nrep based on extrapolated power ====
+
       # Adjust the numbers of replication for each value.
       # A value with estimated power closer to the
       # target power will have a higher number of replication
@@ -424,6 +438,8 @@ power_algorithm_search_by_curve <- function(object,
             paste0(nrep_j, collapse = ", "),
             "\n")
       }
+
+      # ==== Do the simulation for each value  ====
 
       # ** by_x_j **
       # The results for this trial (based on n_j)
@@ -453,6 +469,9 @@ power_algorithm_search_by_curve <- function(object,
               annotation = FALSE)
         cat("\n")
       }
+
+      # ==== Update the power curve ====
+
       fit_i <- power_curve(by_x_1,
                           formula = power_model,
                           start = start,
@@ -462,6 +481,8 @@ power_algorithm_search_by_curve <- function(object,
                           nls_args = nls_args,
                           verbose = progress,
                           models = c("glm", "lm"))
+
+      # ==== Is target power in the range of current power levels? ====
 
       # Get the rejection rates of all values tried.
       tmp1 <- rejection_rates_add_ci(by_x_1,
@@ -475,6 +496,9 @@ power_algorithm_search_by_curve <- function(object,
                         (target_power < tmp2[2])
 
       if (target_in_range) {
+
+        # ==== Current solution: x with closest power ====
+
         # The desired value probably within the range examined
 
         tmp4 <- tmp1$reject - target_power
@@ -533,6 +557,9 @@ power_algorithm_search_by_curve <- function(object,
         }
 
       } else {
+
+        # ==== Current solution: By power curve ====
+
         # The desired value may not be within the range examined
         # Use the latest power curve to estimate the desired value.
         # Inaccurate, but help approaching the target value.
@@ -614,6 +641,10 @@ power_algorithm_search_by_curve <- function(object,
         cat("\n")
       }
 
+      x_history[j] <- x_out
+
+      # ==== Any CI hits target power? ====
+
       # Check results accumulated so far
 
       by_x_ci <- rejection_rates_add_ci(by_x_1,
@@ -623,6 +654,9 @@ power_algorithm_search_by_curve <- function(object,
 
       # Is there at least one CI hitting the target power?
       if (any(i0)) {
+
+        # ==== At least one CI hits target power ====
+
         # At least one CI hits the target power
 
         ci_hit <- TRUE
@@ -632,6 +666,9 @@ power_algorithm_search_by_curve <- function(object,
                           target_power = target_power,
                           final_nrep = final_nrep)
         if (!is.na(i2) && !is.null(i2)) {
+
+          # ==== Solution found ====
+
           # ci_hit && final_nrep reached
 
           solution_found <- TRUE
@@ -645,6 +682,12 @@ power_algorithm_search_by_curve <- function(object,
           nrep_out <- by_x_ci$nrep[i2]
           ci_out <- unlist(by_x_ci[i2, c("reject_ci_lo", "reject_ci_hi")])
         } else {
+
+          # ==== CI hits but final_nrep not reached ====
+
+          # No CI with final_nrep hit
+          # Get the closet solution
+
           i2 <- find_ci_hit(by_x_1,
                             ci_level = ci_level,
                             target_power = target_power,
@@ -660,28 +703,44 @@ power_algorithm_search_by_curve <- function(object,
         }
 
       } else {
+
+        # ==== No CI hits target power ====
+
         # No CI hits the target power
 
         ci_hit <- FALSE
       }
+
+      # ==== CI hits? ====
+
       if (ci_hit) {
+
         # Is the nrep of the candidate already equal to
         # target nrep for the final solution?
 
         if (solution_found) {
+
+          # ==== CI hits and solution found. Exit the loop ====
+
           # Desired accuracy (based on nrep) achieved.
           # Exit the loop and finalize the results.
 
           if (progress) {
-            cat("- Estimated power is close enough to target power (",
+            cat("- Estimated power's CI include the target power (",
                 formatC(target_power, digits = 4, format = "f"), "). ",
                 "(CI: [", paste0(formatC(ci_out, digits = 4, format = "f"), collapse = ","), "])",
                 "\n",
                 sep = "")
           }
 
+          status <- power_curve_status_message(0, status)
+
           break
+
         } else {
+
+          # ==== CI hits but no solution. Next set of values in _seq ====
+
           # Move to the next step in the sequences
           # E.g., increase nrep.
 
@@ -699,10 +758,13 @@ power_algorithm_search_by_curve <- function(object,
           }
         }
       } else {
+
+        # ==== No CI hits ====
+
         # No value has CI hitting the target power.
 
         if (progress) {
-          cat("- Estimated power is not close enough to target power (",
+          cat("- Estimated power's CI does not include the target power (",
               formatC(target_power, digits = 4, format = "f"), "). ",
               "(CI: [", paste0(formatC(ci_out, digits = 4, format = "f"), collapse = ","), "])",
               "\n",
@@ -710,7 +772,32 @@ power_algorithm_search_by_curve <- function(object,
         }
       }
 
+      # ==== Check changes ====
+
+      if (j >= 3) {
+        changes_ok <- check_changes(
+                x_history = x_history,
+                delta_tol = delta_tol
+              )
+      }
+
+      if (!changes_ok) {
+
+        status <- power_curve_status_message(2, status)
+        break
+
+      }
+
+    }
+
+    # ==== End the Loop ====
+
+  if (!solution_found) {
+    status <- power_curve_status_message(1, status)
   }
+
+  # ==== Return the output ====
+
   out <- list(by_x_1 = by_x_1,
               fit_1 = fit_1,
               ci_hit = ci_hit,
@@ -722,6 +809,9 @@ power_algorithm_search_by_curve <- function(object,
               by_x_out = by_x_out,
               i2 = i2,
               solution_found = solution_found,
+              status = status,
+              iteration = j,
+              x_history = x_history,
               what = "point",
               goal = "ci_hit")
   out
@@ -928,4 +1018,41 @@ power_algorithm_search_by_curve_pre_i <- function(object,
               xs_per_trial_seq = xs_per_trial_seq)
 
   return(out)
+}
+
+#' @noRd
+
+power_curve_status_message <- function(x,
+                                       status_old) {
+  # Do not override existing status
+  if (!is.null(status_old)) {
+    return(status_old)
+  }
+  status_msgs <- c(
+        "Solution found." = 0,
+        "Maximum iteration (max_trials) reached." = 1,
+        "Changes in the two iterations less than 'delta_tol'." = 2
+      )
+  status_msgs[status_msgs == x]
+}
+
+#' @noRd
+
+check_changes <- function(
+    x_history,
+    delta_tol = .01) {
+  x <- x_history[!is.na(x_history)]
+  p <- length(x)
+  if (p < 3) return(TRUE)
+  x0 <- x[p]
+  x1 <- x[p - 1]
+  x2 <- x[p - 2]
+  x01 <- abs(1 - x0 / x1)
+  x12 <- abs(1 - x1 / x2)
+  if ((x01 < delta_tol) &&
+      (x12 < delta_tol)) {
+    return(FALSE)
+  } else {
+    return(TRUE)
+  }
 }

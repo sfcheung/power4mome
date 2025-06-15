@@ -41,6 +41,7 @@
 # - power_max
 # - power_tolerance_in_interval
 # - power_tolerance_in_final
+# - delta_tol
 
 # === bisection ===
 # - digits
