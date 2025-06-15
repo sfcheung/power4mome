@@ -91,8 +91,6 @@ power_vs_n <- x_from_power(test_out,
                            progress = TRUE,
                            target_power = .80,
                            final_nrep = 5,
-                           xs_per_trial = 1,
-                           nrep_steps = 1,
                            max_trials = 1,
                            seed = 1234)
 summary(power_vs_n)

@@ -13,61 +13,85 @@ ci_from_f <- function(f_i,
 }
 
 ci_from_f(.70, 100)
-expect_false(bisection_check_solution(.70,
-                                      target_power = .80,
-                                      nrep = 100,
-                                      what = "point",
-                                      tol = 1e-2,
-                                      goal = "ci_hit"))
+expect_false(check_solution(
+               .70,
+               target_power = .80,
+               nrep = 100,
+               final_nrep = 100,
+               what = "point",
+               tol = 1e-2,
+               goal = "ci_hit"
+             ))
 
 ci_from_f(.70, 10)
-expect_true(bisection_check_solution(.70,
-                                      target_power = .80,
-                                      nrep = 10,
-                                      what = "point",
-                                      tol = 1e-2,
-                                      goal = "ci_hit"))
+expect_true(check_solution(
+              .70,
+              target_power = .80,
+              nrep = 10,
+              final_nrep = 10,
+              what = "point",
+              tol = 1e-2,
+              goal = "ci_hit"
+            ))
 
-expect_false(bisection_check_solution(.70,
-                                      target_power = .80,
-                                      nrep = 10,
-                                      what = "point",
-                                      tol = 1e-2,
-                                      goal = "close_enough"))
+expect_false(check_solution(
+               .70,
+               target_power = .80,
+               nrep = 10,
+               final_nrep = 10,
+               what = "point",
+               tol = 1e-2,
+               goal = "close_enough"
+             ))
 
-expect_true(bisection_check_solution(.79,
-                                      target_power = .80,
-                                      nrep = 10,
-                                      what = "point",
-                                      tol = .02,
-                                      goal = "close_enough"))
+expect_true(check_solution(
+              .79,
+              target_power = .80,
+              nrep = 10,
+              final_nrep = 10,
+              what = "point",
+              tol = .02,
+              goal = "close_enough"
+            ))
 
 ci_from_f(.60, 25)
-expect_true(bisection_check_solution(.60,
-                                      target_power = .80,
-                                      nrep = 25,
-                                      what = "ub",
-                                      tol = .02,
-                                      goal = "close_enough"))
-expect_false(bisection_check_solution(.60,
-                                      target_power = .80,
-                                      nrep = 10,
-                                      what = "ub",
-                                      tol = .02,
-                                      goal = "close_enough"))
+expect_true(check_solution(
+              .60,
+              target_power = .80,
+              nrep = 25,
+              final_nrep = 25,
+              what = "ub",
+              tol = .02,
+              goal = "close_enough"
+            ))
+expect_false(check_solution(
+               .60,
+               target_power = .80,
+               nrep = 10,
+               final_nrep = 10,
+               what = "ub",
+               tol = .02,
+               goal = "close_enough"
+             ))
 
 ci_from_f(.90, 50)
-expect_true(bisection_check_solution(.90,
-                                      target_power = .80,
-                                      nrep = 50,
-                                      what = "lb",
-                                      tol = .02,
-                                      goal = "close_enough"))
-expect_false(bisection_check_solution(.90,
-                                      target_power = .80,
-                                      nrep = 100,
-                                      what = "lb",
-                                      tol = .02,
-                                      goal = "close_enough"))
+expect_true(check_solution(
+              .90,
+              target_power = .80,
+              nrep = 50,
+              final_nrep = 50,
+              what = "lb",
+              tol = .02,
+              goal = "close_enough"
+            ))
+expect_false(check_solution(
+               .90,
+               target_power = .80,
+               nrep = 100,
+               final_nrep = 100,
+               what = "lb",
+               tol = .02,
+               goal = "close_enough"
+            ))
 
 })

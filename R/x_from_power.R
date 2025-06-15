@@ -31,11 +31,29 @@
 #'   sizes, or other values for a
 #'   selected model parameter (the
 #'   effect sizes),
-#'   trying to find a value (a sample
-#'   size, or a population value of
-#'   the selected model parameter) with
-#'   a power level close enough to the
-#'   target power.
+#'   trying to achieve a goal (`goal`) for
+#'   a value of interest (`what`).
+#'
+#' If the `goal` is `"ci_hit"`, the
+#' search will try to find a value (a sample
+#' size, or a population value of
+#' the selected model parameter) with
+#' a power level close enough to the
+#' target power, defined by having its
+#' confidence interval for the power
+#' including the target power.
+#'
+#' If the `goal` is `"close_enough"`,
+#' then the search will try to find a
+#' value of `x` with its level of
+#' power (`"point"`), the upper bound
+#' of the confidence interval for this
+#' level of power (`"ub"`), or the
+#' lower bound of the confidence interval
+#' fro this level of power (`"lb"`)
+#' "close enough" to the target level of
+#' power, defined by having an absolute
+#' difference less than the `tolerance`.
 #'
 #' If several values of `x` (sample
 #' size or the population value of
@@ -87,10 +105,10 @@
 #' ## Bisection Method
 #'
 #' This method, `algorithm = "bisection"`,
-#' basically start with
-#' an interval that probably enclose the
-#' value of `x` with the target power,
-#' and then successively narrow this
+#' basically starts with
+#' an interval that probably encloses the
+#' value of `x` that meets the goal,
+#' and then successively narrows this
 #' interval. The mid-point of this
 #' interval is used as the estimate.
 #' Though simple, there are cases in
@@ -114,8 +132,11 @@
 #' as more and more data points are
 #' available.
 #'
+#' This method can be used only with
+#' the goal `"ci_hit"`.
 #' This method is the default method
-#' for `x = "es"` because the relation
+#' for `x = "es"` with `goal = "ci_hit"`
+#' because the relation
 #' between the power and the population
 #' value of a parameter varies across
 #' parameters, unlike the relation
@@ -252,30 +273,31 @@
 #' a value greater than 0 and less than
 #' one.
 #'
-#' @param xs_per_trial The initial number
-#' of values (sample sizes or population
-#' values) to consider in each
-#' trial. Should be an integer at least
-#' 1. Rounded
-#' up if not an integer.
+#' @param what The value for which is
+#' searched: the estimate power (`"point"`),
+#' the upper bound of the confidence
+#' interval (`"ub"`), or the lower bound
+#' of the confidence interval (`"lb"`).
 #'
-#' @param final_xs_per_trial The final number
-#' of values (sample sizes or population
-#' values) to consider in the last
-#' trial or last few trials. Should be an integer at least
-#' 1. Rounded
-#' up if not an integer.
+#' @param goal The goal of the search.
+#' If `"ci_hit"`, then the goal is to
+#' find a value of `x` with the
+#' confidence interval of the estimated
+#' power including the target power.
+#' If `"close_enough"`, then the goal
+#' is to find a value of `x` with the
+#' value in `what` "close enough" to
+#' the target power, defined by having
+#' an absolute difference with the
+#' target power less than `tolerance`.
+#'
+#' @param tolerance Used when the goal
+#' is `"close_enough"`.
 #'
 #' @param ci_level The level of confidence
 #' of the confidence intervals computed
 #' for the estimated power. Default is
 #' .95, denoting 95%.
-#'
-#' @param power_min,power_max The minimum
-#' and maximum values, respectively,
-#' of power
-#' when determining the values to
-#' try in each trail. Default is .01.
 #'
 #' @param x_interval A vector of
 #' two values, the minimum value
@@ -316,36 +338,12 @@
 #' with the target power. Rounded
 #' up if not an integer.
 #'
-#' @param initial_nrep The initial
-#' number of replications. If set
-#' to `NULL`, the `nrep` used in
-#' `object` will be used. If higher
-#' than `final_nrep`, it will be
-#' converted to one-fourth of `final_nrep`.
-#' If lower than the `nrep` in `object`
-#' after the conversion,
-#' then set to `nrep` in the `object`.
-#'
 #' @param final_nrep The number of
 #' replications in the final stage,
 #' also the maximum number of replications
 #' in each call to [power4test()],
 #' [power4test_by_n()], or
 #' [power4test_by_es()].
-#'
-#' @param initial_R The initial number of
-#' Monte Carlo simulation or
-#' bootstrapping samples. The `R` in calling
-#' [power4test()], [power4test_by_n()],
-#' or [power4test_by_es()]. If set to `NULL`,
-#' the `R` used in
-#' `object` will be used.
-#' If higher
-#' than `final_R`, it will be
-#' converted to one-fourth of `final_R`.
-#' If lower than the `R` in `object`
-#' after the conversion,
-#' then set to `R` in `object``.
 #'
 #' @param final_R The number of
 #' Monte Carlo simulation or
@@ -359,21 +357,6 @@
 #' because the goal is to estimate
 #' power by replications, not for high
 #' precision in one single replication.
-#'
-#' @param nrep_steps How many steps
-#' the number of replications will be
-#' increased to `final_nrep`, if the
-#' initial number of replications
-#' (`nrep` in [power4test()]) is
-#' less than `final_nrep`. The number
-#' of replications will be successively
-#' increased by this number of steps
-#' to increase the precision in estimating
-#' the power. Should be at least 1.
-#' Increasing this number will result
-#' in more trials and take longer to
-#' run, but will try more values.
-#' Rounded up if not an integer.
 #'
 #' @param seed If not `NULL`, [set.seed()]
 #' will be used to make the process
@@ -398,65 +381,6 @@
 #' the `formula` argument of
 #' [power_curve()].
 #'
-# #'
-# #' @param power_model The nonlinear
-# #' model to be used when estimating
-# #' the relation between power and
-# #' `x`. Should be a formula
-# #' acceptable by [stats::nls()],
-# #' with `reject` on the left-hand side,
-# #' and `x`
-# #' on the right-hand
-# #' side, with one or more parameters.
-# #' Can also be set to a list of
-# #' models.
-# #' Users rarely need to change the
-# #' default value. If `NULL`, the default,
-# #' then the default model(s) will be
-# #' determined by [power_curve()].
-# #'
-# #' @param start A named numeric vector
-# #' of the starting values for `power_model`
-# #' when fitted by [stats::nls()]. If
-# #' `power_model` is a list, this should
-# #' be a list of the same length.
-# #' Users rarely need to change the
-# #' default values.
-# #'
-# #' @param lower_bound A named numeric vector
-# #' of the lower bounds for parameters
-# #' in `power_model`
-# #' when fitted by [stats::nls()]. If
-# #' `power_model` is a list, this should
-# #' be a list of the same length.
-# #' Users rarely need to change the
-# #' default values.
-# #'
-# #' @param upper_bound A named numeric vector
-# #' of the upper bounds for parameters
-# #' in `power_model`
-# #' when fitted by [stats::nls()]. If
-# #' `power_model` is a list, this should
-# #' be a list of the same length.
-# #' Users rarely need to change the
-# #' default values.
-# #'
-# #' @param nls_args A named list of
-# #' arguments to be used when calling
-# #' [stats::nls()]. Used to override
-# #' internal default, such as the
-# #' algorithm (default is `"port"`).
-# #' Use this argument with cautions.
-# #'
-# #' @param nls_control A named list of
-# #' arguments to be passed the `control`
-# #' argument of [stats::nls()] when
-# #' estimating the relation between
-# #' power and `x`. The values will
-# #' override internal default values,
-# #' and also override `nls_args`.
-# #' Use this argument with cautions.
-# #'
 #' @param save_sim_all If `FALSE`,
 #' the default, the data in each
 #' `power4test` object for each
@@ -475,6 +399,18 @@
 #' arguments to be passed to the
 #' algorithm to be used. For advanced
 #' users.
+#'
+#' @param check_es_interval If `TRUE`,
+#' the default, and `x` is `"es"`,
+#' a conservative probable
+#' range of valid values for the selected
+#' parameter will be determined, and it
+#' will be used instead of `x_interval`.
+#' If the range spans both positive and
+#' negative values, only the interval
+#' of the same sign as the population
+#' value in `object` will be used.
+#'
 #'
 #' @seealso [power4test()], [power4test_by_n()],
 #' and [power4test_by_es()].
@@ -517,7 +453,6 @@
 #'
 #' # In real analysis, to have more stable results:
 #' # - Use a larger final_nrep (e.g., 400).
-#' # - Use the default xs_per_trial of 3, or just remove it.
 #'
 #' # If the default values are OK, this call is sufficient:
 #' # power_vs_n <- x_from_power(test_out,
@@ -528,8 +463,6 @@
 #'                            progress = TRUE,
 #'                            target_power = .80,
 #'                            final_nrep = 5,
-#'                            xs_per_trial = 1,
-#'                            nrep_steps = 1,
 #'                            max_trials = 1,
 #'                            seed = 1234)
 #' summary(power_vs_n)
@@ -543,10 +476,13 @@ x_from_power <- function(object,
                          x,
                          pop_es_name = NULL,
                          target_power = .80,
-                         xs_per_trial = 3,
+                         what = c("point", "ub", "lb"),
+                         goal = switch(what,
+                                       point = "ci_hit",
+                                       ub = "close_enough",
+                                       lb = "close_enough"),
                          ci_level = .95,
-                         power_min = .01,
-                         power_max = .90,
+                         tolerance = .02,
                          x_interval = switch(x,
                                              n = c(50, 2000),
                                              es = NULL),
@@ -554,14 +490,11 @@ x_from_power <- function(object,
                          progress = TRUE,
                          simulation_progress = TRUE,
                          max_trials = 10,
-                         initial_nrep = 100,
                          final_nrep = 400,
-                         initial_R = 250,
                          final_R = 1000,
-                         final_xs_per_trial = 1,
-                         nrep_steps = 1,
                          seed = NULL,
                          x_include_interval = FALSE,
+                         check_es_interval = TRUE,
                          power_curve_args = list(power_model = NULL,
                                                  start = NULL,
                                                  lower_bound = NULL,
@@ -569,9 +502,7 @@ x_from_power <- function(object,
                                                  nls_control = list(),
                                                  nls_args = list()),
                          save_sim_all = FALSE,
-                         algorithm = switch(x,
-                                            n = "bisection",
-                                            es = "power_curve"),
+                         algorithm = NULL,
                          control = list()
                          ) {
 
@@ -590,49 +521,65 @@ x_from_power <- function(object,
   # - Final power4test object.
   # - Final model by nls.
 
-  algorithm <- match.arg(algorithm,
-                         c("bisection",
-                           "power_curve"))
+  what <- match.arg(what)
+  goal <- match.arg(goal,
+                    c("ci_hit", "close_enough"))
+
+  changed_to_point <- FALSE
+  if ((goal == "ci_hit") &&
+      (what != "point")) {
+    changed_to_point <- TRUE
+    what <- "point"
+  }
 
   x <- match.arg(x,
                  choices = c("n", "es"))
+
+  if (!is.null(algorithm)) {
+    algorithm <- match.arg(algorithm,
+                          c("bisection",
+                            "power_curve"))
+  }
+
+  # ==== Set default algorithm ====
+
+  # what and goal take precedence
+
+  if (goal == "ci_hit") {
+    if (is.null(algorithm)) {
+      algorithm <- switch(x,
+                          n = "bisection",
+                          es = "power_curve")
+    }
+  }
+
+  changed_to_bisection <- FALSE
+  if (goal == "close_enough") {
+    # Only bisection is supported
+    if (isTRUE((algorithm != "bisection")) &&
+        (!is.null(algorithm))) {
+      # warning("Only bisection is supported when goal is 'close_enough'. ",
+      #         "Switched automatically to bisection.")
+      changed_to_bisection <- TRUE
+    }
+    algorithm <- "bisection"
+  }
+
+  # what: The value to be examined.
+  # goal:
+  # - ci_hit: Only relevant for what == "point"
+  # - close_enough: Can be used for all what.
 
   a <- abs(stats::qnorm((1 - ci_level) / 2))
   power_tolerance_in_interval <- a * sqrt(target_power * (1 - target_power) / final_nrep)
   power_tolerance_in_final <- a * sqrt(target_power * (1 - target_power) / final_nrep)
 
-  # === Sanity Checks ===
+  # ==== Sanity checks ====
 
   if (target_power <= 0 || target_power >= 1) {
     stop("'target power' (",
          target_power,
          ") not between 0 and 1.")
-  }
-
-  if (xs_per_trial < 1) {
-    stop("'xs_per_trial' (",
-         xs_per_trial,
-         ") is less than 1.")
-  }
-  xs_per_trial <- ceiling(xs_per_trial)
-
-  if (final_xs_per_trial < 1) {
-    stop("'final_xs_per_trial' (",
-         final_xs_per_trial,
-         ") is less than 1.")
-  }
-  final_xs_per_trial <- ceiling(final_xs_per_trial)
-
-  if (power_min <= 0 || power_max >= 1) {
-    stop("'power_min' and 'power_max' must be between 0 and 1.")
-  }
-
-  if (isTRUE(power_max < power_min)) {
-    stop("'power_max' must be greater than 'power_min'.")
-  }
-
-  if (power_max < target_power || power_min > target_power) {
-    stop("'target_power' must be between 'power_min' and 'power_max'.")
   }
 
   if (x == "n") {
@@ -653,7 +600,7 @@ x_from_power <- function(object,
   if (is.null(extendInt)) {
     if (x == "n") {
       extendInt <- match.arg(extendInt,
-                             choices = c("upX", "no", "yes", "downX"))
+                             choices = c("yes", "no", "upX", "downX"))
     }
     if (x == "es") {
       extendInt <- match.arg(extendInt,
@@ -666,25 +613,41 @@ x_from_power <- function(object,
     stop("'max_trials' must be at least 1 (after rounding, if necessary).")
   }
 
-  nrep_steps <- ceiling(nrep_steps)
-  if (nrep_steps < 0) {
-    stop("'nrep_steps' must be at least 1 (after rounding, if necessary).")
-  }
-
   if (!is.null(seed)) {
     set.seed(seed)
   }
 
-  # Handle the object
+  # ==== Process the object ====
+
+  # Is it a compatible x_from_power object?
+  # - If yes and solution not found,
+  #   - extract the stored by_x object
+  # - If yes and solution found,
+  #   - The object is returned as is.
 
   is_x_from_power <- FALSE
   if (inherits(object, "x_from_power")) {
-    # Throw an error if imcompatible
+
+    # ==== x_from_power object ====
+
+    # Throw an error if incompatible
+
+    # TODO:
+    # - Will run if goal and/or what changed
+
     check_x_from_power_as_input(object,
                                 x = x,
-                                pop_es_name = pop_es_name)
+                                pop_es_name = pop_es_name,
+                                final_nrep = final_nrep,
+                                ci_level = ci_level)
+
+    # Check these for compatibility:
+
     is_x_from_power <- TRUE
-    if (object$solution_found) {
+    if (object$solution_found &&
+        (object$nrep_final == final_nrep) &&
+        (object$ci_level == ci_level) &&
+        (object$target_power == target_power)) {
       cat("\n--- Solution Already Found ---\n\n")
       cat("Solution already found in object. It is returned as is.\n")
       return(object)
@@ -692,59 +655,66 @@ x_from_power <- function(object,
     object <- object$power4test_trials
   }
 
+  # Is it a by_x object??
+  # - If yes and solution not found,
+  #   - extract the power4test object closest to the solution
+  # - If yes and solution found,
+  #   - This is possible because the by_x object
+  #     may be generated directly by user,
+  #     not extracted from an x_from_power object.
+
   is_by_x <- FALSE
   if (inherits(object, "power4test_by_n") ||
       inherits(object, "power4test_by_es")) {
+
+    # ==== by_x object ====
+
     is_by_x <- TRUE
     object_by_org <- object
-    # TODO:
-    # - Should quit if solution is already in object
-    i_org <- find_ci_hit(object_by_org,
-                         ci_level = ci_level,
-                         target_power = target_power,
-                         final_nrep = 1,
-                         closest_ok = TRUE)
+
+    # Whether a solution exists will be checked later
+
+    i_org <- find_solution(
+               object_by_org,
+               target_power = target_power,
+               ci_level = ci_level,
+               what = what,
+               tol = tolerance,
+               goal = goal,
+               final_nrep = 1,
+               closest_ok = TRUE,
+               if_ties = "min")
     object <- object_by_org[[i_org]]
   } else {
     object_by_org <- NA
   }
 
+  # The object to be used below is always a power4test object
+
   time_start <- Sys.time()
 
-  # Change nrep?
-
-  nrep_org <- attr(object, "args")$nrep
-
-  if (is.null(initial_nrep)) {
-    nrep0 <- nrep_org
-  } else {
-    # Fix initial_nrep greater than final_nrep
-    if (initial_nrep > final_nrep) {
-      initial_nrep <- ceiling(final_nrep / 4)
-      if ((initial_nrep < 100) && (nrep_org <= final_nrep)) {
-        initial_nrep <- nrep_org
-      }
-    }
-    nrep0 <- ceiling(initial_nrep)
-  }
-
-  R_org <- attr(object, "args")$R
-
-  if (is.null(initial_R)) {
-    R0 <- R_org
-  } else {
-    if (initial_R > final_R) {
-      initial_R <- ceiling(final_R / 4)
-      if ((initial_R < 100) && (R_org <= final_R)) {
-        initial_R <- R_org
-      }
-    }
-    R0 <- ceiling(initial_R)
-  }
-
   if (progress) {
-    cat("\n--- Algorithm used ---\n\n")
-    cat(algorithm, "\n")
+    cat("\n--- Setting ---\n\n")
+
+    cat("Algorithm: ", algorithm, "\n")
+    cat("Goal: ", goal, "\n")
+    tmp <- switch(what,
+                  point = "(Estimated Power)",
+                  ub = "(Upper bound of the confidence interval)",
+                  lb = "(Lower bound of the confidence interval)")
+    cat("What: ", what, " ", tmp, "\n")
+
+    if (changed_to_bisection) {
+      catwrap(paste0("Note: Only bisection is supported when goal is 'close_enough'. ",
+                     "Algorithm switched automatically to bisection."),
+              exdent = 0)
+    }
+    if (changed_to_point) {
+      cat("\n")
+      catwrap(paste0("Note: The goal 'ci_hit' only supports 'point'; ",
+                     "'what' is changed to 'point'."),
+              exdent = 0)
+    }
 
     if (progress) {
       cat("\n--- Progress  ---\n\n")
@@ -759,32 +729,57 @@ x_from_power <- function(object,
     }
   }
 
+  # Initialize these flags because a solution
+  # may already be present before doing the search
+
   ci_hit <- FALSE
   solution_found <- FALSE
+  status <- NULL
+  technical <- NULL
 
   # === Check Existing Solution ===
 
+  # If the input object is a by_x object,
+  # - Check if the solution is already in one of the
+  #   power4test object.
+  #   - If yes, skip the search and create the
+  #     x_from_power object.
+
+  # ==== Solution already in by_x? ====
+
   if (is_by_x) {
-    i_org_hit <- find_ci_hit(object_by_org,
-                             ci_level = ci_level,
-                             target_power = target_power,
-                             final_nrep = final_nrep,
-                             closest_ok = FALSE)
+
+    i_org_hit <- find_solution(
+                   object_by_org,
+                   ci_level = ci_level,
+                   target_power = target_power,
+                   what = what,
+                   tol = tolerance,
+                   goal = goal,
+                   final_nrep = final_nrep,
+                   closest_ok = FALSE,
+                   if_ties = "min")
+
     if (!is.na(i_org_hit) && !is.null(i_org_hit)) {
+
+      # ==== Solution in by_x. Skip the search ====
+
       # Solution already in the input.
       # DO not do the search
 
       cat("\n--- Solution Already Found ---\n\n")
       cat("Solution already found in the object. Search will be skipped.")
 
-      ci_hit <- TRUE
+      # ==== Create the output ====
+
+      # Prepare the objects as if the search has completed
+
+      ci_hit <- ifelse(goal == "ci_hit",
+                       TRUE,
+                       NA)
       solution_found <- TRUE
-
       i2 <- i_org_hit
-
-      if (is_x_from_power) {
-        # This possibility should not happen
-      } else {
+      if (is_x_from_power || is_by_x) {
         by_x_1 <- object_by_org
         tmp1 <- rejection_rates(object_by_org,
                                 level = ci_level,
@@ -811,62 +806,81 @@ x_from_power <- function(object,
     }
   }
 
-  if (!solution_found) {
-    x_interval <- fix_es_interval(object = object,
-                                  x = x,
-                                  pop_es_name = pop_es_name,
-                                  x_interval = x_interval,
-                                  progress = progress)
-  } else {
+  # x_interval is the actual range of values
+  # to be searched, not necessarily the one
+  # set by users.
+
+  # ==== Fix x_interval ====
+
+  if (solution_found) {
     x_interval <- range(x_tried)
+  } else {
+    if (check_es_interval) {
+
+      # ==== Find probable es interval ====
+
+      x_interval <- fix_es_interval(object = object,
+                                    x = x,
+                                    pop_es_name = pop_es_name,
+                                    x_interval = x_interval,
+                                    progress = progress)
+    }
   }
 
   x_max <- max(x_interval)
   x_min <- min(x_interval)
 
-
-
-  # === Initial Trial ===
-
-  # Set the initial values to try
+  # ==== Call the algorithm ====
 
   if ((algorithm == "power_curve") && !solution_found) {
 
-    a_out <- do.call(power_algorithm_search_by_curve_pre_i,
-                     c(list(object = object,
-                            x = x,
-                            pop_es_name = pop_es_name,
-                            target_power = target_power,
-                            xs_per_trial = xs_per_trial,
-                            x_max = x_max,
-                            x_min = x_min,
-                            nrep0 = nrep0,
-                            R0 = R0,
-                            progress = progress,
-                            x_include_interval = x_include_interval,
-                            x_interval = x_interval,
-                            simulation_progress = simulation_progress,
-                            save_sim_all = save_sim_all,
-                            is_by_x = is_by_x,
-                            object_by_org = object_by_org,
-                            power_model = power_curve_args$power_model,
-                            start = power_curve_args$start,
-                            lower_bound = power_curve_args$lower_bound,
-                            upper_bound = power_curve_args$upper_bound,
-                            nls_control = power_curve_args$nls_control,
-                            nls_args = power_curve_args$nls_args,
-                            final_nrep = final_nrep,
-                            nrep_steps = nrep_steps,
-                            final_R = final_R,
-                            final_xs_per_trial = final_xs_per_trial),
-                      control))
+    a_out <- do.call(alg_power_curve,
+      c(list(
+        object = object,
+        x = x,
+        pop_es_name = pop_es_name,
+        target_power = target_power,
+        x_max = x_max,
+        x_min = x_min,
+        progress = progress,
+        x_include_interval = x_include_interval,
+        x_interval = x_interval,
+        simulation_progress = simulation_progress,
+        save_sim_all = save_sim_all,
+        is_by_x = is_by_x,
+        object_by_org = object_by_org,
+        power_model = power_curve_args$power_model,
+        start = power_curve_args$start,
+        lower_bound = power_curve_args$lower_bound,
+        upper_bound = power_curve_args$upper_bound,
+        nls_control = power_curve_args$nls_control,
+        nls_args = power_curve_args$nls_args,
+        final_nrep = final_nrep,
+        final_R = final_R,
+        max_trials = max_trials,
+        ci_level = ci_level,
+        extendInt = extendInt,
+        power_tolerance_in_interval = power_tolerance_in_interval,
+        power_tolerance_in_final = power_tolerance_in_final),
+      control))
 
     by_x_1 <- a_out$by_x_1
     fit_1 <- a_out$fit_1
-    nrep_seq <- a_out$nrep_seq
-    final_nrep_seq <- a_out$final_nrep_seq
-    R_seq <- a_out$R_seq
-    xs_per_trial_seq <- a_out$xs_per_trial_seq
+    ci_hit <- a_out$ci_hit
+    x_tried <- a_out$x_tried
+    x_out <- a_out$x_out
+    power_out <- a_out$power_out
+    nrep_out <- a_out$nrep_out
+    ci_out <- a_out$ci_out
+    by_x_out <- a_out$by_x_out
+    i2 <- a_out$i2
+    solution_found <- a_out$solution_found
+    status <- a_out$status
+    technical <- list(iteration = a_out$iteration,
+                      x_history = a_out$x_history,
+                      reject_history = a_out$reject_history,
+                      delta_tol = a_out$delta_tol,
+                      last_k = a_out$last_k)
 
     rm(a_out)
 
@@ -874,44 +888,54 @@ x_from_power <- function(object,
 
   if ((algorithm == "bisection") && !solution_found) {
 
-    a_out <- do.call(power_algorithm_bisection_pre_i,
-                     c(list(object = object,
-                            x = x,
-                            pop_es_name = pop_es_name,
-                            target_power = target_power,
-                            xs_per_trial = xs_per_trial,
-                            x_max = x_max,
-                            x_min = x_min,
-                            nrep0 = nrep0,
-                            R0 = R0,
-                            progress = progress,
-                            x_include_interval = x_include_interval,
-                            x_interval = x_interval,
-                            simulation_progress = simulation_progress,
-                            save_sim_all = save_sim_all,
-                            is_by_x = is_by_x,
-                            object_by_org = object_by_org,
-                            power_model = power_curve_args$power_model,
-                            start = power_curve_args$start,
-                            lower_bound = power_curve_args$ower_bound,
-                            upper_bound = power_curve_args$upper_bound,
-                            nls_control = power_curve_args$nls_control,
-                            nls_args = power_curve_args$nls_args,
-                            final_nrep = final_nrep,
-                            nrep_steps = nrep_steps,
-                            final_R = final_R,
-                            final_xs_per_trial = final_xs_per_trial),
-                       control))
+    a_out <- do.call(alg_bisection,
+      c(list(
+          object = object,
+          x = x,
+          pop_es_name = pop_es_name,
+          target_power = target_power,
+          x_max = x_max,
+          x_min = x_min,
+          progress = progress,
+          x_include_interval = x_include_interval,
+          x_interval = x_interval,
+          simulation_progress = simulation_progress,
+          save_sim_all = save_sim_all,
+          is_by_x = is_by_x,
+          object_by_org = object_by_org,
+          final_nrep = final_nrep,
+          final_R = final_R,
+          extendInt = extendInt,
+          max_trials = max_trials,
+          R = attr(object, "args")$R,
+          digits = 3,
+          what = what,
+          goal = goal,
+          tol = tolerance
+        ),
+      control))
 
-    x_interval_updated <- a_out$x_interval_updated
     by_x_1 <- a_out$by_x_1
     fit_1 <- a_out$fit_1
-
-    # # Not used by bisection for now
-    # nrep_seq <- a_out$nrep_seq
-    # final_nrep_seq <- a_out$final_nrep_seq
-    # R_seq <- a_out$R_seq
-    # xs_per_trial_seq <- a_out$xs_per_trial_seq
+    ci_hit <- a_out$ci_hit
+    x_tried <- a_out$x_tried
+    x_out <- a_out$x_out
+    power_out <- a_out$power_out
+    nrep_out <- a_out$nrep_out
+    ci_out <- a_out$ci_out
+    by_x_out <- a_out$by_x_out
+    i2 <- a_out$i2
+    solution_found <- a_out$solution_found
+    status <- a_out$status
+    technical <- list(iteration = a_out$iteration,
+                      x_history = a_out$x_history,
+                      x_interval_history = a_out$x_interval_history,
+                      f_interval_history = a_out$f_interval_history,
+                      reject_history = a_out$reject_history,
+                      f_history = a_out$f_history,
+                      delta_tol = a_out$delta_tol,
+                      last_k = a_out$last_k,
+                      tol = a_out$tol)
 
     rm(a_out)
 
@@ -927,123 +951,6 @@ x_from_power <- function(object,
   # To be updated whenever by_x_1 is updated.
   # Used after the end of the loop.
 
-  if ((algorithm == "power_curve") && !solution_found) {
-
-    # === Loop Over The Trials ===
-
-    a_out <- do.call(power_algorithm_search_by_curve,
-                     c(list(object = object,
-                            x = x,
-                            pop_es_name = pop_es_name,
-                            target_power = target_power,
-                            xs_per_trial_seq = xs_per_trial_seq,
-                            ci_level = ci_level,
-                            power_min = power_min,
-                            power_max = power_max,
-                            x_interval = x_interval,
-                            extendInt = extendInt,
-                            progress = progress,
-                            simulation_progress = simulation_progress,
-                            max_trials = max_trials,
-                            final_nrep = final_nrep,
-                            power_model = power_curve_args$power_model,
-                            start = power_curve_args$start,
-                            lower_bound = power_curve_args$lower_bound,
-                            upper_bound = power_curve_args$upper_bound,
-                            nls_control = power_curve_args$nls_control,
-                            nls_args = power_curve_args$nls_args,
-                            save_sim_all = save_sim_all,
-                            power_tolerance_in_interval = power_tolerance_in_interval,
-                            power_tolerance_in_final = power_tolerance_in_final,
-                            by_x_1 = by_x_1,
-                            fit_1 = fit_1,
-                            ci_hit = ci_hit,
-                            nrep_seq = nrep_seq,
-                            final_nrep_seq = final_nrep_seq,
-                            R_seq = R_seq,
-                            final_xs_per_trial = final_xs_per_trial,
-                            solution_found = solution_found),
-                     control))
-
-    by_x_1 <- a_out$by_x_1
-    fit_1 <- a_out$fit_1
-    ci_hit <- a_out$ci_hit
-    x_tried <- a_out$x_tried
-    x_out <- a_out$x_out
-    power_out <- a_out$power_out
-    nrep_out <- a_out$nrep_out
-    ci_out <- a_out$ci_out
-    by_x_out <- a_out$by_x_out
-    i2 <- a_out$i2
-    solution_found <- a_out$solution_found
-
-    rm(a_out)
-
-  }
-
-  if ((algorithm == "bisection") && !solution_found) {
-
-    # === Loop Over The Trials ===
-
-
-    # TODO:
-    # - Add sth like args = list(...) for additional
-    #   arguments and let users change algorithm-specific
-    #   arguments.
-    lower_hard <- min(x_interval)
-    upper_hard <- max(x_interval)
-    extend_maxiter <- 3
-    tol <- .02
-
-    a_out <- do.call(power_algorithm_bisection,
-                     c(list(object = object,
-                            x = x,
-                            pop_es_name = pop_es_name,
-                            target_power = target_power,
-                            ci_level = ci_level,
-                            x_interval = x_interval_updated,
-                            extendInt = extendInt,
-                            progress = progress,
-                            simulation_progress = simulation_progress,
-                            max_trials = max_trials,
-                            final_nrep = final_nrep,
-                            R = R_org,
-                            power_model = power_curve_args$power_model,
-                            power_curve_start = power_curve_args$start,
-                            lower_bound = power_curve_args$lower_bound,
-                            upper_bound = power_curve_args$upper_bound,
-                            nls_control = power_curve_args$nls_control,
-                            nls_args = power_curve_args$nls_args,
-                            save_sim_all = save_sim_all,
-                            by_x_1 = by_x_1,
-                            fit_1 = fit_1,
-                            ci_hit = ci_hit,
-                            is_by_x = is_by_x,
-                            solution_found = solution_found,
-                            digits = 3,
-                            lower_hard = lower_hard,
-                            upper_hard = upper_hard,
-                            extend_maxiter = extend_maxiter,
-                            what = "point",
-                            goal = "ci_hit",
-                            tol = tol),
-                      control))
-
-    by_x_1 <- a_out$by_x_1
-    fit_1 <- a_out$fit_1
-    ci_hit <- a_out$ci_hit
-    x_tried <- a_out$x_tried
-    x_out <- a_out$x_out
-    power_out <- a_out$power_out
-    nrep_out <- a_out$nrep_out
-    ci_out <- a_out$ci_out
-    by_x_out <- a_out$by_x_out
-    i2 <- a_out$i2
-    solution_found <- a_out$solution_found
-
-    rm(a_out)
-
-  }
 
   if (progress) {
     cat("\n\n--- Final Stage ---\n\n")
@@ -1060,38 +967,96 @@ x_from_power <- function(object,
     cat("\n")
   }
 
+  # ==== Is solution found ====
+
   # Is solution found?
-  # - At least one CI hits the target power
   # - The maximum number of replications reached.
 
-  if (ci_hit && (nrep_out == final_nrep)) {
-    # Created when ci_hit set to TRUE
+  if (goal == "ci_hit") {
 
-    # ** x_final, by_x_final, power_final, ci_final, nrep_final, i_final **
-    # The solution.
-    x_final <- x_out
-    by_x_final <- by_x_out
-    power_final <- power_out
-    ci_final <- ci_out
-    nrep_final <- nrep_out
-    i_final <- i2
-  } else {
-    # No solution found.
-    # Force ci_hit to be FALSE.
-    # Set the NAs to denote this.
-    x_final <- NA
-    by_x_final <- NA
-    power_final <- NA
-    ci_final <- NA
-    nrep_final <- NA
-    i_final <- NA
+    # ==== Goal: ci_hit ====
+
+    if (isTRUE(ci_hit) && (nrep_out == final_nrep)) {
+
+      # ==== Solution found ====
+
+      # ** x_final, by_x_final, power_final, ci_final, nrep_final, i_final **
+      # The solution.
+
+      # ==== Create _final objects ====
+
+      x_final <- x_out
+      by_x_final <- by_x_out
+      power_final <- power_out
+      ci_final <- ci_out
+      nrep_final <- nrep_out
+      i_final <- i2
+    } else {
+
+      # ==== Solution not found ====
+
+      # No solution found.
+      # Set the NAs to denote this.
+
+      # ==== Set _final objects to NA====
+
+      x_final <- NA
+      by_x_final <- NA
+      power_final <- NA
+      ci_final <- NA
+      nrep_final <- NA
+      i_final <- NA
+    }
   }
+
+  if (goal == "close_enough") {
+
+    # ==== Goal: close_enough ====
+
+    if (isTRUE(solution_found) && (nrep_out == final_nrep)) {
+
+      # ==== Solution found ====
+
+      # ** x_final, by_x_final, power_final, ci_final, nrep_final, i_final **
+      # The solution.
+
+      # ==== Create _final objects ====
+
+      x_final <- x_out
+      by_x_final <- by_x_out
+      power_final <- power_out
+      ci_final <- ci_out
+      nrep_final <- nrep_out
+      i_final <- i2
+    } else {
+
+      # ==== Solution not found ====
+
+      # No solution found.
+      # Set the NAs to denote this.
+
+      # ==== Set _final objects to NA====
+
+      x_final <- NA
+      by_x_final <- NA
+      power_final <- NA
+      ci_final <- NA
+      nrep_final <- NA
+      i_final <- NA
+    }
+  }
+
+  # ==== Compute extrapolated x? ====
 
   # ** x_x **
   # The estimated value based on power_curve.
   # Used as a suggestion when no solution was found.
   x_x <- NA
-  if (ci_hit) {
+
+  if (solution_found) {
+
+    # ==== Yes only if solution_found ====
+
     x_tried <- switch(x,
                       n = as.numeric(names(by_x_1)),
                       es = sapply(by_x_1,
@@ -1102,14 +1067,15 @@ x_from_power <- function(object,
                             target_power = target_power,
                             k = 1,
                             tolerance = 0,
-                            power_min = power_min,
-                            power_max = power_max,
+                            power_min = .01,
+                            power_max = .99,
                             interval = x_interval,
                             extendInt = "yes",
                             x_to_exclude = x_tried)
   }
+
   if (progress) {
-    if (ci_hit && (nrep_out == final_nrep)) {
+    if (solution_found && (nrep_out == final_nrep)) {
       cat("\n")
       x_out_str <- formatC(x_out,
                            digits = switch(x, n = 0, es = 4),
@@ -1125,8 +1091,9 @@ x_from_power <- function(object,
     } else {
       cat("\n")
       cat("- None of the value(s) examined",
-          "in the interval meet the target power.\n")
-      if (!is.na(x_x)) {
+          "in the interval meet the goal.\n")
+      if (!is.na(x_x) &&
+          (goal == "ci_hit")) {
         x_x_str <- formatC(x_x,
                            digits = switch(x, n = 0, es = 4),
                            format = "f")
@@ -1134,12 +1101,38 @@ x_from_power <- function(object,
             x_x_str,
             ".\n", sep = "")
       }
-      cat("- Try expanding the range of values",
-          "by setting 'x_interval'.\n")
+      cat("\nTry changing the setup, such as:\n")
+      tmp <- switch(x,
+                    n = paste0("[",
+                               paste0(x_interval, collapse = ", "),
+                               "]"),
+                    es = paste0("[",
+                               paste0(formatC(x_interval,
+                                              digits = 3,
+                                              format = "f"),
+                                      collapse = ", "),
+                               "]"))
+      catwrap(paste0("- Changing 'x_interval' to a wider range to examine. ",
+                     "(Current 'x_interval' is ",
+                     tmp, ".)"),
+              exdent = 2)
+      catwrap(paste0("- Increasing the maximum number of trials by ",
+                     "setting 'max_trials' to a larger number. ",
+                     "(Current 'max_trials' is ",
+                     max_trials,
+                     ".)"),
+              exdent = 2)
+      if (goal == "close_enough") {
+        catwrap(paste0("- Increasing the tolerance for the goal 'close_enough'. ",
+                      "(Current 'tolerance' is ",
+                      tolerance,
+                      ".)"),
+                exdent = 2)
+      }
     }
   }
 
-  # === Finalize the Output ===
+  # ==== Finalize the Output ====
 
   my_call <- as.list(match.call())[-1]
   args <- formals()
@@ -1172,7 +1165,12 @@ x_from_power <- function(object,
               end = time_end,
               time_spent = difftime(time_end, time_start),
               solution_found = solution_found,
+              what = what,
+              goal = goal,
               args = args,
+              status = status,
+              technical = technical,
+              algorithm = algorithm,
               call = match.call())
   class(out) <- c("x_from_power", class(out))
   return(out)
@@ -1205,37 +1203,101 @@ x_from_power <- function(object,
 print.x_from_power <- function(x,
                                digits = 3,
                                ...) {
-
   my_call <- x$call
   cat("Call:\n")
   print(my_call)
   cat("\n")
   solution_found <- !is.na(x$x_final)
   predictor <- x$x
-  cat("Predictor (x):",
-      switch(predictor,
-             n = "Sample Size",
-             es = "Effect Size"),
-      "\n")
-  if (predictor == "es") {
-    cat("Parameter Name (pop_es_name):",
-        x$pop_es_name,
-        "\n")
-  }
+  # cat("Predictor (x):",
+  #     switch(predictor,
+  #            n = "Sample Size",
+  #            es = "Effect Size"),
+  #     "\n")
+  # if (predictor == "es") {
+  #   cat("Parameter Name (pop_es_name):",
+  #       x$pop_es_name,
+  #       "\n")
+  # }
 
-  cat("Target Power:",
-      formatC(x$target_power, digits = digits, format = "f"),
-      "\n")
+  goal <- x$goal
+  what <- x$what
+  algorithm <- x$algorithm
+  ci_level_str <- paste0(formatC(
+                          x$ci_level * 100,
+                          digits = 2,
+                          format = "f"),
+                        "%")
+
+  tmp1 <- c("Predictor(x):" =
+            switch(predictor,
+             n = "Sample Size",
+             es = "Effect Size"))
+  tmp1b <- c("Parameter:" =
+            switch(predictor,
+             n = "N/A",
+             es = x$pop_es_name))
+  tmp2 <- c("goal:" = goal)
+  tmp3 <- c("what:" = what)
+  tmp4 <- c("algorithm:" = algorithm)
+  tmp5 <- c("Level of confidence:" = ci_level_str)
+  tmp6 <- c("Target Power:" =
+              formatC(x$target_power, digits = digits, format = "f"))
+
+  tmp <- data.frame("Setting" = c(
+      tmp1,
+      tmp1b,
+      tmp2,
+      tmp3,
+      tmp4,
+      tmp5,
+      tmp6
+    ))
+
+  print(tmp)
+
+  # cat("goal:", goal, "\n")
+  # cat("what:", what, "\n")
+  # cat("algorithm:", algorithm, "\n")
+
+  # cat("Level of Confidence (ci_level):",
+  #     ci_level_str,
+  #     "\n")
+  # cat("Target Power:",
+  #     formatC(x$target_power, digits = digits, format = "f"),
+  #     "\n")
+
   if (solution_found) {
     x_final_str <- formatC(x$x_final,
                            digits = switch(predictor,
                                            n = 0,
                                            es = digits),
                            format = "f")
-    cat("\n- Final Value:", x_final_str, "\n\n")
-    cat("- Final Estimated Power:",
+    cat("\n- Final Value of",
+        switch(x$x,
+               n = " Sample Size (n): ",
+               es = paste0("'", x$pop_es_name, "': ")),
+        x_final_str,
+        "\n\n",
+        sep = "")
+    ci_str <- paste0(
+        "[",
+        formatC(x$ci_final[1], digits = digits, format = "f"),
+        ", ",
+        formatC(x$ci_final[2], digits = digits, format = "f"),
+        "]")
+    cat("- Final Estimated Power (CI): ",
         formatC(x$power_final, digits = digits, format = "f"),
-        "\n")
+        " ",
+        ci_str,
+        "\n",
+        sep = "")
+    # cat("- Confidence Interval of Power: [",
+    #     formatC(x$ci_final[1], digits = digits, format = "f"),
+    #     ", ",
+    #     formatC(x$ci_final[2], digits = digits, format = "f"),
+    #     "]\n",
+    #     sep = "")
   } else {
     cat("\n- Solution not found.\n")
   }
