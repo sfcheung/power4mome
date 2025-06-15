@@ -1,4 +1,4 @@
-# power4mome 0.0.1.67
+# power4mome 0.0.1.68
 
 - Initialized the package. (0.0.0.9000)
 
@@ -463,3 +463,7 @@
   early if solution is already found
   in the input.
   (0.0.1.67)
+
+- Updated `x_from_power()` and related
+  functions to store more information.
+  (0.0.1.68)
