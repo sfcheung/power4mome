@@ -354,6 +354,8 @@ power_algorithm_search_by_curve <- function(object,
 
     x_history <- vector("numeric", max_trials)
     x_history[] <- NA
+    reject_history <- vector("numeric", max_trials)
+    reject_history[] <- NA
 
     # ==== Start the Loop ====
 
@@ -661,6 +663,7 @@ power_algorithm_search_by_curve <- function(object,
       }
 
       x_history[j] <- x_out
+      reject_history[j] <- power_out
 
       # ==== Any CI hits target power? ====
 
@@ -830,6 +833,7 @@ power_algorithm_search_by_curve <- function(object,
               status = status,
               iteration = j,
               x_history = x_history[!is.na(x_history)],
+              reject_history = reject_history[!is.na(reject_history)],
               delta_tol = delta_tol,
               last_k = last_k,
               what = "point",

@@ -878,6 +878,7 @@ x_from_power <- function(object,
     status <- a_out$status
     technical <- list(iteration = a_out$iteration,
                       x_history = a_out$x_history,
+                      reject_history = a_out$reject_history,
                       delta_tol = a_out$delta_tol,
                       last_k = a_out$last_k)
 
