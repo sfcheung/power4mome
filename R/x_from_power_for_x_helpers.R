@@ -609,11 +609,20 @@ root_muller_i <- function(
   xm2,
   xm1,
   x0i,
+  ym2 = NULL,
+  ym1 = NULL,
+  y0i = NULL,
   ...
 ) {
-  ym2 <- f(xm2, ...)
-  ym1 <- f(xm1, ...)
-  y0i <- f(x0i, ...)
+  if (is.null(ym2)) {
+    ym2 <- f(xm2, ...)
+  }
+  if (is.null(ym1)) {
+    ym1 <- f(xm1, ...)
+  }
+  if (is.null(y0i)) {
+    y0i <- f(x0i, ...)
+  }
   A <- ((xm1 - x0i) * (ym2 - y0i) - (xm2 - x0i) * (ym1 - y0i)) /
        ((x0i - xm1) * (xm1 - xm2) * (xm2 - x0i))
   B <- ((xm2 - x0i)^2 * (ym1 - y0i) - (xm1 - x0i)^2 * (ym2 - y0i)) /
