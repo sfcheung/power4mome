@@ -144,6 +144,15 @@ power_algorithm_bisection <- function(object,
   extendInt <- match.arg(extendInt)
   what <- match.arg(what)
   goal <- match.arg(goal)
+  status <- NULL
+  changes_ok <- TRUE
+  x_history <- vector("numeric", max_trials)
+  x_history[] <- NA
+  x_interval_history <- matrix(NA,
+                               nrow = max_trials,
+                               ncol = 2)
+  colnames(x_interval_history) <- c("lower", "upper")
+  i <- NA
 
   # what: The value to be examined.
   # goal:
@@ -521,6 +530,8 @@ power_algorithm_bisection <- function(object,
                      close_enough = NA)
     solution_found <- TRUE
 
+    status <- bisection_status_message(0, status)
+
     # The lower bound take precedence
 
     if (ok_lower) {
@@ -621,9 +632,14 @@ power_algorithm_bisection <- function(object,
                          close_enough = NA)
         solution_found <- TRUE
 
+        status <- bisection_status_message(0, status)
+
         break
 
       }
+
+      x_history[i] <- x_i
+      x_interval_history[i, ] <- c(lower_i, upper_i)
 
       # ==== No solution. Update the interval ====
 
@@ -707,6 +723,8 @@ power_algorithm_bisection <- function(object,
 
     # ==== No solution. Set _out to NA ====
 
+    status <- bisection_status_message(1, status)
+
     # No solution for whatever reason
 
     x_out <- NA
@@ -779,7 +797,12 @@ power_algorithm_bisection <- function(object,
               by_x_out = by_x_out,
               i2 = i2,
               solution_found = solution_found,
+              status = status,
+              iteration = i,
+              x_history = x_history,
+              x_interval_history = x_interval_history,
               tol = tol,
+              delta_tol = delta_tol,
               what = what,
               goal = goal,
               ci_level = ci_level)
@@ -1304,4 +1327,20 @@ power_algorithm_bisection_pre_i <- function(object,
               x_interval_updated = x_i)
 
   return(out)
+}
+
+#' @noRd
+
+bisection_status_message <- function(x,
+                                       status_old) {
+  # Do not override existing status
+  if (!is.null(status_old)) {
+    return(status_old)
+  }
+  status_msgs <- c(
+        "Solution found." = 0,
+        "Maximum iteration (max_trials) reached." = 1,
+        "Changes in the two iterations less than 'delta_tol'." = 2
+      )
+  status_msgs[status_msgs == x]
 }
