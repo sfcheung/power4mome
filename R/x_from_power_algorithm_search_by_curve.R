@@ -181,6 +181,16 @@ alg_power_curve <- function(
   }
   xs_per_trial <- ceiling(xs_per_trial)
 
+  if (power_min <= 0 || power_max >= 1) {
+    stop("'power_min' and 'power_max' must be between 0 and 1.")
+  }
+
+  if (power_max < target_power || power_min > target_power) {
+    stop("'target_power' must be between 'power_min' and 'power_max'.")
+  }
+
+  # ==== Get nrep and R ====
+
   nrep_org <- attr(object, "args")$nrep
   if (nrep0 > final_nrep) {
     nrep0 <- ceiling(final_nrep / 4)
@@ -203,13 +213,7 @@ alg_power_curve <- function(
     R0 <- ceiling(R0)
   }
 
-  if (power_min <= 0 || power_max >= 1) {
-    stop("'power_min' and 'power_max' must be between 0 and 1.")
-  }
-
-  if (power_max < target_power || power_min > target_power) {
-    stop("'target_power' must be between 'power_min' and 'power_max'.")
-  }
+  # ==== Pre-search setup ====
 
   a_out <- power_algorithm_search_by_curve_pre_i(
     object = object,
@@ -250,6 +254,8 @@ alg_power_curve <- function(
   #               object_by_org)
   # }
 
+  # ==== Process output ====
+
   by_x_1 <- a_out$by_x_1
   fit_1 <- a_out$fit_1
   nrep_seq <- a_out$nrep_seq
@@ -258,6 +264,8 @@ alg_power_curve <- function(
   xs_per_trial_seq <- a_out$xs_per_trial_seq
 
   rm(a_out)
+
+  # ==== Start the search ====
 
   a_out <- power_algorithm_search_by_curve(
     object = object,
@@ -290,6 +298,8 @@ alg_power_curve <- function(
     R_seq = R_seq,
     final_xs_per_trial = final_xs_per_trial,
     delta_tol = delta_tol)
+
+  # ==== Return the output ====
 
   a_out
 }
