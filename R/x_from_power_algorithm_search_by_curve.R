@@ -157,7 +157,10 @@ alg_power_curve <- function(
   extendInt,
   power_tolerance_in_interval,
   power_tolerance_in_final,
-  delta_tol = .01
+  delta_tol = switch(x,
+                   n = 1,
+                   es = .001),
+  last_k = 3
 ) {
 
   # ==== Sanity check ====
@@ -297,7 +300,8 @@ alg_power_curve <- function(
     final_nrep_seq = final_nrep_seq,
     R_seq = R_seq,
     final_xs_per_trial = final_xs_per_trial,
-    delta_tol = delta_tol)
+    delta_tol = delta_tol,
+    last_k = last_k)
 
   # ==== Return the output ====
 
@@ -335,7 +339,10 @@ power_algorithm_search_by_curve <- function(object,
                                             final_nrep_seq,
                                             R_seq,
                                             final_xs_per_trial,
-                                            delta_tol = .01) {
+                                            delta_tol = switch(x,
+                                                               n = 1,
+                                                               es = .001),
+                                            last_k = 3) {
 
     ci_hit <- FALSE
     solution_found <- FALSE
@@ -786,12 +793,11 @@ power_algorithm_search_by_curve <- function(object,
 
       # ==== Check changes ====
 
-      if (j >= 3) {
-        changes_ok <- check_changes(
-                x_history = x_history,
-                delta_tol = delta_tol
-              )
-      }
+      changes_ok <- check_changes(
+              x_history = x_history,
+              delta_tol = delta_tol,
+              last_k = last_k
+            )
 
       if (!changes_ok) {
 
@@ -1070,25 +1076,4 @@ power_curve_status_message <- function(x,
         "Changes in the two iterations less than 'delta_tol'." = 2
       )
   status_msgs[status_msgs == x]
-}
-
-#' @noRd
-
-check_changes <- function(
-    x_history,
-    delta_tol = .01) {
-  x <- x_history[!is.na(x_history)]
-  p <- length(x)
-  if (p < 3) return(TRUE)
-  x0 <- x[p]
-  x1 <- x[p - 1]
-  x2 <- x[p - 2]
-  x01 <- abs(1 - x0 / x1)
-  x12 <- abs(1 - x1 / x2)
-  if ((x01 < delta_tol) &&
-      (x12 < delta_tol)) {
-    return(FALSE)
-  } else {
-    return(TRUE)
-  }
 }

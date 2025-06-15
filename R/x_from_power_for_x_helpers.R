@@ -674,3 +674,22 @@ check_solution_in_by_x <- function(
              )
   chK_all
 }
+
+
+#' @noRd
+
+check_changes <- function(
+    x_history,
+    delta_tol = .01,
+    last_k = 3) {
+  x <- x_history[!is.na(x_history)]
+  p <- length(x)
+  if (p < last_k) return(TRUE)
+  x_test <- rev(x_history)
+  x_range <- range(x_test)
+  if (abs(x_range[2] - x_range[1]) < delta_tol) {
+    return(FALSE)
+  } else {
+    return(TRUE)
+  }
+}
