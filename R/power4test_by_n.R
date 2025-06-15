@@ -331,8 +331,8 @@ rejection_rates_by_n <- function(object_by_n,
 #' @export
 as.power4test_by_n <- function(original_object) {
   if (inherits(original_object, "power4test")) {
-    original_object <- list(original_object)
     x0 <- attr(original_object, "args")$n
+    original_object <- list(original_object)
     class(original_object) <- c("power4test_by_n", class(original_object))
     names(original_object) <- as.character(x0)
     return(original_object)
