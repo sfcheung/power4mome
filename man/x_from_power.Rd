@@ -10,27 +10,24 @@ x_from_power(
   x,
   pop_es_name = NULL,
   target_power = 0.8,
-  xs_per_trial = 3,
+  what = c("point", "ub", "lb"),
+  goal = switch(what, point = "ci_hit", ub = "close_enough", lb = "close_enough"),
   ci_level = 0.95,
-  power_min = 0.01,
-  power_max = 0.9,
+  tolerance = 0.02,
   x_interval = switch(x, n = c(50, 2000), es = NULL),
   extendInt = NULL,
   progress = TRUE,
   simulation_progress = TRUE,
   max_trials = 10,
-  initial_nrep = 100,
   final_nrep = 400,
-  initial_R = 250,
   final_R = 1000,
-  final_xs_per_trial = 1,
-  nrep_steps = 1,
   seed = NULL,
   x_include_interval = FALSE,
+  check_es_interval = TRUE,
   power_curve_args = list(power_model = NULL, start = NULL, lower_bound = NULL,
     upper_bound = NULL, nls_control = list(), nls_args = list()),
   save_sim_all = FALSE,
-  algorithm = switch(x, n = "bisection", es = "power_curve"),
+  algorithm = NULL,
   control = list()
 )
 
@@ -75,25 +72,31 @@ the argument \code{pop_es}.}
 a value greater than 0 and less than
 one.}
 
-\item{xs_per_trial}{The initial number
-of values (sample sizes or population
-values) to consider in each
-trial. Should be an integer at least
-\enumerate{
-\item Rounded
-up if not an integer.
-}}
+\item{what}{The value for which is
+searched: the estimate power (\code{"point"}),
+the upper bound of the confidence
+interval (\code{"ub"}), or the lower bound
+of the confidence interval (\code{"lb"}).}
+
+\item{goal}{The goal of the search.
+If \code{"ci_hit"}, then the goal is to
+find a value of \code{x} with the
+confidence interval of the estimated
+power including the target power.
+If \code{"close_enough"}, then the goal
+is to find a value of \code{x} with the
+value in \code{what} "close enough" to
+the target power, defined by having
+an absolute difference with the
+target power less than \code{tolerance}.}
 
 \item{ci_level}{The level of confidence
 of the confidence intervals computed
 for the estimated power. Default is
 .95, denoting 95\%.}
 
-\item{power_min, power_max}{The minimum
-and maximum values, respectively,
-of power
-when determining the values to
-try in each trail. Default is .01.}
+\item{tolerance}{Used when the goal
+is \code{"close_enough"}.}
 
 \item{x_interval}{A vector of
 two values, the minimum value
@@ -134,36 +137,12 @@ of trials in searching the value
 with the target power. Rounded
 up if not an integer.}
 
-\item{initial_nrep}{The initial
-number of replications. If set
-to \code{NULL}, the \code{nrep} used in
-\code{object} will be used. If higher
-than \code{final_nrep}, it will be
-converted to one-fourth of \code{final_nrep}.
-If lower than the \code{nrep} in \code{object}
-after the conversion,
-then set to \code{nrep} in the \code{object}.}
-
 \item{final_nrep}{The number of
 replications in the final stage,
 also the maximum number of replications
 in each call to \code{\link[=power4test]{power4test()}},
 \code{\link[=power4test_by_n]{power4test_by_n()}}, or
 \code{\link[=power4test_by_es]{power4test_by_es()}}.}
-
-\item{initial_R}{The initial number of
-Monte Carlo simulation or
-bootstrapping samples. The \code{R} in calling
-\code{\link[=power4test]{power4test()}}, \code{\link[=power4test_by_n]{power4test_by_n()}},
-or \code{\link[=power4test_by_es]{power4test_by_es()}}. If set to \code{NULL},
-the \code{R} used in
-\code{object} will be used.
-If higher
-than \code{final_R}, it will be
-converted to one-fourth of \code{final_R}.
-If lower than the \code{R} in \code{object}
-after the conversion,
-then set to \code{R} in `object``.}
 
 \item{final_R}{The number of
 Monte Carlo simulation or
@@ -178,30 +157,6 @@ because the goal is to estimate
 power by replications, not for high
 precision in one single replication.}
 
-\item{final_xs_per_trial}{The final number
-of values (sample sizes or population
-values) to consider in the last
-trial or last few trials. Should be an integer at least
-\enumerate{
-\item Rounded
-up if not an integer.
-}}
-
-\item{nrep_steps}{How many steps
-the number of replications will be
-increased to \code{final_nrep}, if the
-initial number of replications
-(\code{nrep} in \code{\link[=power4test]{power4test()}}) is
-less than \code{final_nrep}. The number
-of replications will be successively
-increased by this number of steps
-to increase the precision in estimating
-the power. Should be at least 1.
-Increasing this number will result
-in more trials and take longer to
-run, but will try more values.
-Rounded up if not an integer.}
-
 \item{seed}{If not \code{NULL}, \code{\link[=set.seed]{set.seed()}}
 will be used to make the process
 reproducible. This is not always
@@ -213,6 +168,17 @@ Whether the minimum and maximum
 values in \code{x_interval} are mandatory
 to be included in the values
 to be searched.}
+
+\item{check_es_interval}{If \code{TRUE},
+the default, and \code{x} is \code{"es"},
+a conservative probable
+range of valid values for the selected
+parameter will be determined, and it
+will be used instead of \code{x_interval}.
+If the range spans both positive and
+negative values, only the interval
+of the same sign as the population
+value in \code{object} will be used.}
 
 \item{power_curve_args}{A named
 list of arguments to be passed
@@ -354,12 +320,30 @@ the analysis on either other sample
 sizes, or other values for a
 selected model parameter (the
 effect sizes),
-trying to find a value (a sample
+trying to achieve a goal (\code{goal}) for
+a value of interest (\code{what}).
+}
+
+If the \code{goal} is \code{"ci_hit"}, the
+search will try to find a value (a sample
 size, or a population value of
 the selected model parameter) with
 a power level close enough to the
-target power.
-}
+target power, defined by having its
+confidence interval for the power
+including the target power.
+
+If the \code{goal} is \code{"close_enough"},
+then the search will try to find a
+value of \code{x} with its level of
+power (\code{"point"}), the upper bound
+of the confidence interval for this
+level of power (\code{"ub"}), or the
+lower bound of the confidence interval
+fro this level of power (\code{"lb"})
+"close enough" to the target level of
+power, defined by having an absolute
+difference less than the \code{tolerance}.
 
 If several values of \code{x} (sample
 size or the population value of
@@ -415,10 +399,10 @@ scenario.
 \subsection{Bisection Method}{
 
 This method, \code{algorithm = "bisection"},
-basically start with
-an interval that probably enclose the
-value of \code{x} with the target power,
-and then successively narrow this
+basically starts with
+an interval that probably encloses the
+value of \code{x} that meets the goal,
+and then successively narrows this
 interval. The mid-point of this
 interval is used as the estimate.
 Though simple, there are cases in
@@ -443,8 +427,11 @@ model can change across iterations,
 as more and more data points are
 available.
 
+This method can be used only with
+the goal \code{"ci_hit"}.
 This method is the default method
-for \code{x = "es"} because the relation
+for \code{x = "es"} with \code{goal = "ci_hit"}
+because the relation
 between the power and the population
 value of a parameter varies across
 parameters, unlike the relation
@@ -498,7 +485,6 @@ test_out <- power4test(object = sim_only,
 
 # In real analysis, to have more stable results:
 # - Use a larger final_nrep (e.g., 400).
-# - Use the default xs_per_trial of 3, or just remove it.
 
 # If the default values are OK, this call is sufficient:
 # power_vs_n <- x_from_power(test_out,
@@ -509,8 +495,6 @@ power_vs_n <- x_from_power(test_out,
                            progress = TRUE,
                            target_power = .80,
                            final_nrep = 5,
-                           xs_per_trial = 1,
-                           nrep_steps = 1,
                            max_trials = 1,
                            seed = 1234)
 summary(power_vs_n)

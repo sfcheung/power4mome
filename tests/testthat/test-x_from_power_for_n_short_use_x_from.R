@@ -42,7 +42,7 @@ expect_no_error(tmp <- x_from_power(out,
                     simulation_progress = FALSE,
                     algorithm = "power_curve"))
 
-expect_no_error(tmp2 <- x_from_power(tmp,
+expect_error(tmp2 <- x_from_power(tmp,
                     x = "n",
                     target_power = .80,
                     final_nrep = 60,
@@ -51,7 +51,7 @@ expect_no_error(tmp2 <- x_from_power(tmp,
                     progress = TRUE,
                     simulation_progress = FALSE,
                     algorithm = "power_curve"))
-expect_true(all(tmp$x_tried %in% tmp2$x_tried))
+# expect_true(all(tmp$x_tried %in% tmp2$x_tried))
 
 expect_error(tmp2 <- x_from_power(tmp,
                     x = "es",
