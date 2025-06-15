@@ -11,7 +11,7 @@ estimated power against sample size."><meta property="og:image" content="https:/
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.67</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.69</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -66,8 +66,8 @@ estimated power against sample size.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for class 'x_from_power'</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
 <span>  <span class="va">x</span>,</span>
-<span>  what <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ci"</span>, <span class="st">"power_curve"</span>, <span class="st">"final_x"</span>, <span class="st">"final_power"</span>, <span class="st">"target_power"</span><span class="op">)</span>,</span>
-<span>  text_what <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"final_x"</span>, <span class="st">"final_power"</span><span class="op">)</span>,</span>
+<span>  what <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ci"</span>, <span class="st">"power_curve"</span>, <span class="st">"final_x"</span>, <span class="st">"final_power"</span>, <span class="st">"target_power"</span>, <span class="st">"sig_area"</span><span class="op">)</span>,</span>
+<span>  text_what <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"final_x"</span>, <span class="st">"final_power"</span>, <span class="st">"sig_area"</span><span class="op">)</span>,</span>
 <span>  digits <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>  main <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Power Curve "</span>, <span class="st">"(Target Power: "</span>, <span class="fu"><a href="https://rdrr.io/r/base/formatc.html" class="external-link">formatC</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">target_power</span>, digits <span class="op">=</span></span>
 <span>    <span class="va">digits</span>, format <span class="op">=</span> <span class="st">"f"</span><span class="op">)</span>, <span class="st">")"</span><span class="op">)</span>,</span>
@@ -77,11 +77,13 @@ estimated power against sample size.</p>
 <span>  pars_ci <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  pars_power_curve <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  pars_ci_final_x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>lwd <span class="op">=</span> <span class="fl">2</span>, length <span class="op">=</span> <span class="fl">0.2</span>, col <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span>,</span>
-<span>  pars_target_power <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>lty <span class="op">=</span> <span class="st">"dotted"</span><span class="op">)</span>,</span>
+<span>  pars_target_power <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>lty <span class="op">=</span> <span class="st">"dashed"</span>, lwd <span class="op">=</span> <span class="fl">2</span>, col <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span>,</span>
 <span>  pars_final_x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>lty <span class="op">=</span> <span class="st">"dotted"</span><span class="op">)</span>,</span>
 <span>  pars_final_power <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>lty <span class="op">=</span> <span class="st">"dotted"</span>, col <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span>,</span>
 <span>  pars_text_final_x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fl">0</span>, pos <span class="op">=</span> <span class="fl">3</span>, cex <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
 <span>  pars_text_final_power <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pos <span class="op">=</span> <span class="fl">3</span>, cex <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
+<span>  pars_sig_area <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/adjustcolor.html" class="external-link">adjustcolor</a></span><span class="op">(</span><span class="st">"lightblue"</span>, alpha.f <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  pars_text_sig_area <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>cex <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -110,9 +112,13 @@ power close enough to the target
 power by confidence interval),
 <code>"final_power"</code> (a horizontal line
 for the estimated power of the
-final value of the predictor), and
+final value of the predictor),
 <code>"target_power"</code> (a horizontal
-line for the target power).
+line for the target power),
+and <code>"sig_area"</code> (the area significantly
+higher or lower than the target
+power, if <code>goal</code> is <code>"close_enough"</code>
+and <code>what</code> is <code>"lb"</code> or <code>"ub"</code>).
 By default, all these elements will
 be plotted.</p></dd>
 
@@ -125,9 +131,13 @@ labels. Possible values are
 predictor with
 estimated power close enough to
 the target power by confidence interval)
-and <code>"final_power"</code> (the estimated
+<code>"final_power"</code> (the estimated
 power of the final value of the
-predictor).
+predictor), and
+<code>"sig_area"</code> (labeling the area significantly
+higher or lower than the target
+power, if <code>goal</code> is <code>"close_enough"</code>
+and <code>what</code> is <code>"lb"</code> or <code>"ub"</code>).
 By default, all these labels will
 be added.</p></dd>
 
@@ -217,6 +227,22 @@ label for the estimated power
 of final value of the predictor.</p></dd>
 
 
+<dt id="arg-pars-sig-area">pars_sig_area<a class="anchor" aria-label="anchor" href="#arg-pars-sig-area"></a></dt>
+<dd><p>A named list
+of arguments to be passed to
+<code><a href="https://rdrr.io/r/graphics/rect.html" class="external-link">rect()</a></code> when shading the area
+significantly higher or lower than
+the target power.</p></dd>
+
+
+<dt id="arg-pars-text-sig-area">pars_text_sig_area<a class="anchor" aria-label="anchor" href="#arg-pars-text-sig-area"></a></dt>
+<dd><p>A named list
+of arguments to be passed to
+<code><a href="https://rdrr.io/r/graphics/text.html" class="external-link">text()</a></code> when labelling the area
+significantly higher or lower than
+the target power.</p></dd>
+
+
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>Optional arguments.
 Passed to <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> when drawing
@@ -290,14 +316,14 @@ individually.</p>
 <span class="r-in"><span>                           progress <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>                           target_power <span class="op">=</span> <span class="fl">.80</span>,</span></span>
 <span class="r-in"><span>                           final_nrep <span class="op">=</span> <span class="fl">10</span>,</span></span>
-<span class="r-in"><span>                           xs_per_trial <span class="op">=</span> <span class="fl">1</span>,</span></span>
-<span class="r-in"><span>                           nrep_steps <span class="op">=</span> <span class="fl">1</span>,</span></span>
 <span class="r-in"><span>                           max_trials <span class="op">=</span> <span class="fl">1</span>,</span></span>
 <span class="r-in"><span>                           seed <span class="op">=</span> <span class="fl">2345</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> --- Algorithm used ---</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> --- Setting ---</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> bisection </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Algorithm:  bisection </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Goal:  ci_hit </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> What:  point   (Estimated Power) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --- Progress  ---</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -335,7 +361,7 @@ individually.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --- Final Stage ---</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-06-09 14:44:38 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-06-15 15:25:45 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Rejection Rates:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     n                             test test_label   p.v reject r.cilo r.cihi</span>

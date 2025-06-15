@@ -9,7 +9,7 @@ the output of x_from_power()."><meta property="og:image" content="https://sfcheu
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.67</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.69</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -166,14 +166,14 @@ to be printed in details.</p>
 <span class="r-in"><span>                           progress <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>                           target_power <span class="op">=</span> <span class="fl">.80</span>,</span></span>
 <span class="r-in"><span>                           final_nrep <span class="op">=</span> <span class="fl">5</span>,</span></span>
-<span class="r-in"><span>                           xs_per_trial <span class="op">=</span> <span class="fl">1</span>,</span></span>
-<span class="r-in"><span>                           nrep_steps <span class="op">=</span> <span class="fl">1</span>,</span></span>
 <span class="r-in"><span>                           max_trials <span class="op">=</span> <span class="fl">1</span>,</span></span>
 <span class="r-in"><span>                           seed <span class="op">=</span> <span class="fl">1234</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> --- Algorithm used ---</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> --- Setting ---</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> bisection </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Algorithm:  bisection </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Goal:  ci_hit </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> What:  point   (Estimated Power) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --- Progress  ---</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -211,7 +211,7 @@ to be printed in details.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --- Final Stage ---</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-06-09 14:45:08 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-06-15 15:26:14 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Rejection Rates:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     n                             test test_label   p.v reject r.cilo r.cihi</span>
@@ -260,15 +260,17 @@ to be printed in details.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> x_from_power(object = test_out, x = "n", target_power = 0.8, </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     xs_per_trial = 1, progress = TRUE, max_trials = 1, final_nrep = 5, </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     nrep_steps = 1, seed = 1234)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     progress = TRUE, max_trials = 1, final_nrep = 5, seed = 1234)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Predictor (x): Sample Size </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Target Power: 0.800 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Goal: Find 'x' with the confidence interval of the estimated power</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   enclosing the target power.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> === Major Results ===</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Final Value: 100 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Final Value (Sample Size): 100</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Final Estimated Power: 0.800 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Confidence Interval: [0.449; 1.151]</span>
@@ -277,8 +279,9 @@ to be printed in details.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> === Technical Information ===</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Algorithm: bisection </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - The range of values explored: 100 to 125 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Time spent in the search: 0.4211 secs </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Time spent in the search: 0.3782 secs </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - The final crude model for the power-predictor relation:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Model Type: Logistic Regression </span>
