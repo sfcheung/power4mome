@@ -160,6 +160,8 @@ alg_power_curve <- function(
   delta_tol = .01
 ) {
 
+  # ==== Sanity check ====
+
   if (final_xs_per_trial < 1) {
     stop("'final_xs_per_trial' (",
          final_xs_per_trial,
@@ -857,6 +859,8 @@ power_algorithm_search_by_curve_pre_i <- function(object,
     cat("- Start at", tmp, "\n")
   }
 
+  # ==== Initial values ====
+
   x_i <- set_x_range(object,
                     x = x,
                     pop_es_name = pop_es_name,
@@ -864,17 +868,22 @@ power_algorithm_search_by_curve_pre_i <- function(object,
                     k = pre_i_xs,
                     x_max = x_max,
                     x_min = x_min)
-  # Exclude the value in the input object
-  x0 <- switch(x,
-              n = attr(object, "args")$n,
-              es = pop_es(object,
-                          pop_es_name = pop_es_name))
-  x_i <- setdiff(x_i, x0)
+
+  # ==== Add x_interval (if x_include_interval) ====
+
   if (x_include_interval) {
     # Include the lowest and highest values in interval
     x_i <- sort(c(x_interval, x_i))
   }
   x_i <- sort(unique(x_i))
+
+  # ==== Exclude existing values ====
+
+  x0 <- switch(x,
+              n = attr(object, "args")$n,
+              es = pop_es(object,
+                          pop_es_name = pop_es_name))
+  x_i <- setdiff(x_i, x0)
 
   if (progress) {
     x_i_str <- formatC(x_i,
@@ -890,6 +899,8 @@ power_algorithm_search_by_curve_pre_i <- function(object,
         pre_i_R,
         "\n")
   }
+
+  # ==== Estimate power ====
 
   # ** by_x_i **
   # The current (i-th) set of values examined,
@@ -909,6 +920,8 @@ power_algorithm_search_by_curve_pre_i <- function(object,
                                         progress = simulation_progress,
                                         save_sim_all = save_sim_all))
 
+  # ==== Update by_x (by_x_i) ====
+
   # Add the input object to the list
   if (is_by_x) {
     # Object is an output of *_by_n() or *_by_es()
@@ -916,19 +929,26 @@ power_algorithm_search_by_curve_pre_i <- function(object,
                 object_by_org,
                 skip_checking_models = TRUE)
   } else {
-    tmp <- list(object)
-    if (x == "n") {
-      class(tmp) <- c("power4test_by_n", class(tmp))
-      names(tmp) <- as.character(x0)
-    }
-    if (x == "es") {
-      class(tmp) <- c("power4test_by_es", class(tmp))
-      names(tmp) <- paste0(pop_es_name,
-                          " = ",
-                            as.character(x0))
-      attr(tmp[[1]], "pop_es_name") <- pop_es_name
-      attr(tmp[[1]], "pop_es_value") <- x0
-    }
+
+    # tmp <- list(object)
+    # if (x == "n") {
+    #   class(tmp) <- c("power4test_by_n", class(tmp))
+    #   names(tmp) <- as.character(x0)
+    # }
+    # if (x == "es") {
+    #   class(tmp) <- c("power4test_by_es", class(tmp))
+    #   names(tmp) <- paste0(pop_es_name,
+    #                       " = ",
+    #                         as.character(x0))
+    #   attr(tmp[[1]], "pop_es_name") <- pop_es_name
+    #   attr(tmp[[1]], "pop_es_value") <- x0
+    # }
+
+    tmp <- switch(x,
+            n = as.power4test_by_n(object),
+            es = as.power4test_by_es(object,
+                                     pop_es_name = pop_es_name)
+          )
     by_x_i <- c(by_x_i, tmp,
                 skip_checking_models = TRUE)
   }
@@ -940,6 +960,8 @@ power_algorithm_search_by_curve_pre_i <- function(object,
           annotation = FALSE)
     cat("\n")
   }
+
+  # ==== Update power curve (fit_i) ====
 
   # ** fit_i **
   # The current power curve, based on by_x_i
@@ -983,6 +1005,8 @@ power_algorithm_search_by_curve_pre_i <- function(object,
   # new_nrep <- rejection_rates(by_x_1,
   #                             all_columns = TRUE)$nrep
 
+  # ==== Generate sequences of values ====
+
   # new_nrep <- ceiling(mean(new_nrep))
   new_nrep <- nrep0
   nrep_seq <- ceiling(seq(from = new_nrep,
@@ -1006,6 +1030,8 @@ power_algorithm_search_by_curve_pre_i <- function(object,
   xs_per_trial_seq <- ceiling(seq(from = xs_per_trial,
                                   to = final_xs_per_trial,
                                   length.out = nrep_steps + 1))
+
+  # ==== Return the output ====
 
   out <- list(x_i = x_i,
               by_x_i = by_x_i,
