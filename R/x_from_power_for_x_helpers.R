@@ -714,7 +714,7 @@ check_rate <- function(
   p <- length(x)
   if (p < last_k) return(TRUE)
   x <- rev(rev(x)[1:last_k])
-  trend <- lm.fit(
+  trend <- stats::lm.fit(
           y = matrix(abs(x), ncol = 1),
           x = cbind(1, matrix(1:last_k, ncol = 1)))$coefficients["x2"]
   if (trend > delta_slope_tol) {
