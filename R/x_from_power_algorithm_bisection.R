@@ -680,13 +680,13 @@ power_algorithm_bisection <- function(object,
       # TODO:
       # - Handle nonnegative rate
 
-      # # ==== Check rate ====
+      # == Check rate ==
 
       # rate_ok <- check_rate(f_history,
       #                       delta_slope_tol = -.1,
       #                       last_k = last_k)
 
-      # # ==== Rate OK. Update as usual ====
+      # == Rate OK. Update as usual ==
 
       if (x_type == "n") {
         x_i <- ceiling(x_i)
