@@ -694,3 +694,23 @@ check_changes <- function(
     return(TRUE)
   }
 }
+
+#' @noRd
+
+check_rate <- function(
+    x_history,
+    delta_slope_tol = -.1,
+    last_k = 3) {
+  x <- x_history[!is.na(x_history)]
+  p <- length(x)
+  if (p < last_k) return(TRUE)
+  x <- rev(rev(x)[1:last_k])
+  trend <- lm.fit(
+          y = matrix(abs(x), ncol = 1),
+          x = cbind(1, matrix(1:last_k, ncol = 1)))$coefficients["x2"]
+  if (trend > delta_slope_tol) {
+    return(FALSE)
+  } else {
+    return(TRUE)
+  }
+}
