@@ -1169,6 +1169,7 @@ x_from_power <- function(object,
               args = args,
               status = status,
               technical = technical,
+              algorithm = algorithm,
               call = match.call())
   class(out) <- c("x_from_power", class(out))
   return(out)
@@ -1201,37 +1202,101 @@ x_from_power <- function(object,
 print.x_from_power <- function(x,
                                digits = 3,
                                ...) {
-
   my_call <- x$call
   cat("Call:\n")
   print(my_call)
   cat("\n")
   solution_found <- !is.na(x$x_final)
   predictor <- x$x
-  cat("Predictor (x):",
-      switch(predictor,
-             n = "Sample Size",
-             es = "Effect Size"),
-      "\n")
-  if (predictor == "es") {
-    cat("Parameter Name (pop_es_name):",
-        x$pop_es_name,
-        "\n")
-  }
+  # cat("Predictor (x):",
+  #     switch(predictor,
+  #            n = "Sample Size",
+  #            es = "Effect Size"),
+  #     "\n")
+  # if (predictor == "es") {
+  #   cat("Parameter Name (pop_es_name):",
+  #       x$pop_es_name,
+  #       "\n")
+  # }
 
-  cat("Target Power:",
-      formatC(x$target_power, digits = digits, format = "f"),
-      "\n")
+  goal <- x$goal
+  what <- x$what
+  algorithm <- x$algorithm
+  ci_level_str <- paste0(formatC(
+                          x$ci_level * 100,
+                          digits = 2,
+                          format = "f"),
+                        "%")
+
+  tmp1 <- c("Predictor(x):" =
+            switch(predictor,
+             n = "Sample Size",
+             es = "Effect Size"))
+  tmp1b <- c("Parameter:" =
+            switch(predictor,
+             n = "N/A",
+             es = x$pop_es_name))
+  tmp2 <- c("goal:" = goal)
+  tmp3 <- c("what:" = what)
+  tmp4 <- c("algorithm:" = algorithm)
+  tmp5 <- c("Level of confidence:" = ci_level_str)
+  tmp6 <- c("Target Power:" =
+              formatC(x$target_power, digits = digits, format = "f"))
+
+  tmp <- data.frame("Setting" = c(
+      tmp1,
+      tmp1b,
+      tmp2,
+      tmp3,
+      tmp4,
+      tmp5,
+      tmp6
+    ))
+
+  print(tmp)
+
+  # cat("goal:", goal, "\n")
+  # cat("what:", what, "\n")
+  # cat("algorithm:", algorithm, "\n")
+
+  # cat("Level of Confidence (ci_level):",
+  #     ci_level_str,
+  #     "\n")
+  # cat("Target Power:",
+  #     formatC(x$target_power, digits = digits, format = "f"),
+  #     "\n")
+
   if (solution_found) {
     x_final_str <- formatC(x$x_final,
                            digits = switch(predictor,
                                            n = 0,
                                            es = digits),
                            format = "f")
-    cat("\n- Final Value:", x_final_str, "\n\n")
-    cat("- Final Estimated Power:",
+    cat("\n- Final Value of",
+        switch(x$x,
+               n = " Sample Size (n): ",
+               es = paste0("'", x$pop_es_name, "': ")),
+        x_final_str,
+        "\n\n",
+        sep = "")
+    ci_str <- paste0(
+        "[",
+        formatC(x$ci_final[1], digits = digits, format = "f"),
+        ", ",
+        formatC(x$ci_final[2], digits = digits, format = "f"),
+        "]")
+    cat("- Final Estimated Power (CI): ",
         formatC(x$power_final, digits = digits, format = "f"),
-        "\n")
+        " ",
+        ci_str,
+        "\n",
+        sep = "")
+    # cat("- Confidence Interval of Power: [",
+    #     formatC(x$ci_final[1], digits = digits, format = "f"),
+    #     ", ",
+    #     formatC(x$ci_final[2], digits = digits, format = "f"),
+    #     "]\n",
+    #     sep = "")
   } else {
     cat("\n- Solution not found.\n")
   }
