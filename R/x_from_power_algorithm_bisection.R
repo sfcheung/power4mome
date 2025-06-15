@@ -757,7 +757,13 @@ extend_interval <- function(f,
   args <- list(...)
   # x is always supplied
   x_type <- args$x
+
+  # ==== Interval already valid? ====
+
   if (sign(f.lower) != sign(f.upper)) {
+
+    # ==== Yes. Exist ====
+
     # No need to extend
     if (trace) {
       cat("\n\n== Exist extending interval ...\n\n")
@@ -770,7 +776,13 @@ extend_interval <- function(f,
                 extend_status = status_msg[status_msg == 0],
                 extendInt = extendInt))
   }
+
+  # ==== Interval invalid ====
+
   if (extendInt == "no") {
+
+    # ==== "No". Exist ====
+
     if (trace) {
       cat("\n\n== Exist extending interval ...\n\n")
     }
@@ -782,6 +794,9 @@ extend_interval <- function(f,
                 extend_status = status_msg[status_msg == 1],
                 extendInt = extendInt))
   }
+
+  # ==== How should the interval be extended? ====
+
   slope <- (f.upper - f.lower) / (upper - lower)
   intercept <- -slope * lower +  f.lower
   # TODO:
@@ -791,6 +806,9 @@ extend_interval <- function(f,
   extend_down <- ((slope > 0) && (f.upper > 0)) ||
                   ((slope < 0) && (f.upper < 0))
   if (extend_down && (!(extendInt %in% c("yes", "downX")))) {
+
+    # ==== Should extend down but not requested. Exist ====
+
     if (trace) {
       cat("\n\n== Exist extending interval ...\n\n")
     }
@@ -803,6 +821,9 @@ extend_interval <- function(f,
                 extendInt = extendInt))
   }
   if (extend_up && (!(extendInt %in% c("yes", "upX")))) {
+
+    # ==== Should extend up but not requested. Exist ====
+
     if (trace) {
       cat("\n\n== Exist extending interval ...\n\n")
     }
@@ -817,11 +838,17 @@ extend_interval <- function(f,
   # TODO:
   # - Need to optimize the code to reduce duplications
   interval_ok <- FALSE
+
+  # ==== Extend down ====
+
   if ((extendInt %in% c("yes", "downX")) && extend_down) {
     # Extend lower by simple linear extrapolation
     if (trace) {
       cat("Interval above the solution. Extend the lower bound ...\n")
     }
+
+    # ==== Loop for extension ====
+
     i <- 1
     while ((i <= extend_maxiter) &&
             (sign(f.lower) == sign(f.upper))) {
@@ -857,12 +884,18 @@ extend_interval <- function(f,
       }
     }
   }
+
+  # ==== Extend up ====
+
   # Should have exhausted all possibilities
   if ((extendInt %in% c("yes", "upX")) && extend_up) {
     # Extend upper by simple linear extrapolation
     if (trace) {
       cat("Interval below the solution. Extend the upper bound ...\n")
     }
+
+    # ==== Loop for extension ====
+
     i <- 1
     while ((i <= extend_maxiter) &&
             (sign(f.lower) == sign(f.upper))) {
@@ -898,6 +931,9 @@ extend_interval <- function(f,
       }
     }
   }
+
+  # ==== Check the extended interval ====
+
   interval_ok <- sign(f.lower) != sign(f.upper)
   if (!interval_ok) {
     if (is.na(extend_status)) {
@@ -925,6 +961,8 @@ extend_interval <- function(f,
   if (trace) {
     cat("\n\n== Exist extending interval ...\n\n")
   }
+
+  # ==== Return the extended interval ====
 
   return(list(lower = lower,
               upper = upper,
@@ -1105,6 +1143,9 @@ power_algorithm_bisection_pre_i <- function(object,
                                             nls_args,
                                             final_nrep,
                                             final_R) {
+
+  # ==== Initial values ====
+
   # TODO:
   # - Make use of by_* object's results.
   # This method only needs an initial interval
@@ -1115,15 +1156,13 @@ power_algorithm_bisection_pre_i <- function(object,
                     k = 2,
                     x_max = x_max,
                     x_min = x_min)
+
   # For bisection, no need to exclude the value in the input objects
   # Exclude the value in the input object
-  x0 <- switch(x,
-              n = attr(object, "args")$n,
-              es = pop_es(object,
-                          pop_es_name = pop_es_name))
-  # x_i <- setdiff(x_i, x0)
 
   # For bisection, only two initial values are needed
+
+  # ==== Set x_interval ====
 
   if (x_include_interval) {
     # For bisection, should exclude them initially,
@@ -1153,21 +1192,13 @@ power_algorithm_bisection_pre_i <- function(object,
     x_i <- range(x_i)
   }
 
-  by_x_i <- list(object)
-  # TODO:
-  # - Write an ax.....by_* function.
-  if (x == "n") {
-    class(by_x_i) <- c("power4test_by_n", class(by_x_i))
-    names(by_x_i) <- as.character(x0)
-  }
-  if (x == "es") {
-    class(by_x_i) <- c("power4test_by_es", class(by_x_i))
-    names(by_x_i) <- paste0(pop_es_name,
-                        " = ",
-                          as.character(x0))
-    attr(by_x_i[[1]], "pop_es_name") <- pop_es_name
-    attr(by_x_i[[1]], "pop_es_value") <- x0
-  }
+  # ==== Update by_x (by_x_i) ====
+
+  by_x_i <- switch(x,
+          n = as.power4test_by_n(object),
+          es = as.power4test_by_es(object,
+                                    pop_es_name = pop_es_name)
+        )
 
   # ** by_x_1 **
   # The collection of all values tried and their results
@@ -1184,6 +1215,8 @@ power_algorithm_bisection_pre_i <- function(object,
 
   # TODO:
   # - How about adaptive nrep for bisection?
+
+  # ==== Return the output ====
 
   out <- list(x_i = NULL,
               by_x_i = NULL,
