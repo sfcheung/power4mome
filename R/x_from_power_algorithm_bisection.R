@@ -153,12 +153,18 @@ power_algorithm_bisection <- function(object,
   goal <- match.arg(goal)
   status <- NULL
   changes_ok <- TRUE
+  f_history <- vector("numeric", max_trials)
+  f_history[] <- NA
   x_history <- vector("numeric", max_trials)
   x_history[] <- NA
   x_interval_history <- matrix(NA,
                                nrow = max_trials,
                                ncol = 2)
   colnames(x_interval_history) <- c("lower", "upper")
+  f_interval_history <- matrix(NA,
+                               nrow = max_trials,
+                               ncol = 2)
+  colnames(f_interval_history) <- c("lower", "upper")
   reject_history <- vector("numeric", max_trials)
   reject_history[] <- NA
 
@@ -648,9 +654,11 @@ power_algorithm_bisection <- function(object,
 
       }
 
+      f_history[i] <- as.numeric(out_i)
       x_history[i] <- x_i
       x_interval_history[i, ] <- c(lower_i, upper_i)
-      reject_i[i] <- reject_i
+      f_interval_history[i, ] <- c(f.lower_i, f.upper_i)
+      reject_history[i] <- reject_i
 
       # ==== Check changes ====
 
@@ -668,6 +676,17 @@ power_algorithm_bisection <- function(object,
       }
 
       # ==== No solution. Update the interval ====
+
+      # TODO:
+      # - Handle nonnegative rate
+
+      # # ==== Check rate ====
+
+      # rate_ok <- check_rate(f_history,
+      #                       delta_slope_tol = -.1,
+      #                       last_k = last_k)
+
+      # # ==== Rate OK. Update as usual ====
 
       if (x_type == "n") {
         x_i <- ceiling(x_i)
@@ -827,7 +846,9 @@ power_algorithm_bisection <- function(object,
               iteration = i,
               x_history = x_history[!is.na(x_history)],
               x_interval_history = x_interval_history[stats::complete.cases(x_interval_history), ],
+              f_interval_history = f_interval_history[stats::complete.cases(f_interval_history), ],
               reject_history = reject_history[!is.na(reject_history)],
+              f_history = f_history[!is.na(f_history)],
               tol = tol,
               delta_tol = delta_tol,
               last_k = last_k,
@@ -1371,4 +1392,24 @@ bisection_status_message <- function(x,
         "Changes in the two iterations less than 'delta_tol'." = 2
       )
   status_msgs[status_msgs == x]
+}
+
+#' @noRd
+
+random_interval <- function(interval_i) {
+  interval_i <- stats::na.omit(interval_i)
+  interval_i0 <- interval_i[nrow(interval_i), ]
+  tmp <- expand.grid(lower = interval_i[, "lower"],
+                     upper = interval_i[, "upper"])
+  tmp <- split(tmp,
+               seq_len(nrow(tmp)))
+  tmp2 <- sapply(tmp,
+            function(xx) {
+              all(xx == interval_i0)
+            })
+  if (all(tmp2)) return(NULL)
+  tmp <- tmp[!tmp2]
+  tmp_i <- sample.int(length(tmp),
+                      size = 1)
+  return(tmp[[tmp_i]])
 }
