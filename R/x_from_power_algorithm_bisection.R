@@ -159,6 +159,9 @@ power_algorithm_bisection <- function(object,
                                nrow = max_trials,
                                ncol = 2)
   colnames(x_interval_history) <- c("lower", "upper")
+  reject_history <- vector("numeric", max_trials)
+  reject_history[] <- NA
+
   i <- NA
 
   # what: The value to be examined.
@@ -647,6 +650,7 @@ power_algorithm_bisection <- function(object,
 
       x_history[i] <- x_i
       x_interval_history[i, ] <- c(lower_i, upper_i)
+      reject_i[i] <- reject_i
 
       # ==== Check changes ====
 
@@ -823,6 +827,7 @@ power_algorithm_bisection <- function(object,
               iteration = i,
               x_history = x_history[!is.na(x_history)],
               x_interval_history = x_interval_history[stats::complete.cases(x_interval_history), ],
+              reject_history = reject_history[!is.na(reject_history)],
               tol = tol,
               delta_tol = delta_tol,
               last_k = last_k,
