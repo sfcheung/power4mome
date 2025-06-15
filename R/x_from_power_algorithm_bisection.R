@@ -102,7 +102,8 @@ alg_bisection <- function(
     goal = goal,
     tol = tol,
     delta_tol = delta_tol,
-    last_k = last_k
+    last_k = last_k,
+    variants = variants
   )
 
   # ==== Return the output ====
@@ -698,7 +699,40 @@ power_algorithm_bisection <- function(object,
         upper_i <- x_i
         f.upper_i <- out_i
       }
-      x_i <- mean(c(lower_i, upper_i))
+
+      if (isTRUE(variants$muller) &&
+          (i >= 3)) {
+
+        # ==== Use Muller's Method ====
+
+        # NOTE: Usable but do not use.
+        # This method was found to fail to converge
+        # even in some simple cases.
+
+        tmp1 <- x_history[(i - 3 + 1):i]
+        tmp2 <- f_history[(i - 3 + 1):i]
+        x_muller <- tryCatch(
+            root_muller_i(f = f,
+                          xm2 = tmp1[1],
+                          xm1 = tmp1[2],
+                          x0i = tmp1[3],
+                          ym2 = tmp2[1],
+                          ym1 = tmp2[2],
+                          y0i = tmp2[3]
+                        ),
+                      error = function(e) e)
+        if (!inherits(x_muller, "error")) {
+          x_i <- x_muller
+        } else {
+          x_i <- mean(c(lower_i, upper_i))
+        }
+      } else {
+
+        # ==== Mean as the next start ====
+
+        x_i <- mean(c(lower_i, upper_i))
+      }
+
       if (x_type == "n") {
         x_i <- ceiling(x_i)
       }
