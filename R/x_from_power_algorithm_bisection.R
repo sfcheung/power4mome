@@ -1041,7 +1041,12 @@ gen_objective <- function(object,
     # Convenient for using f() to compute the function value
     # But be careful of conflicting arguments.
 
+    # ==== How to get power ====
+
     if (is.null(out_i) && is.null(power_i)) {
+
+      # ==== Estimate Power (No out_i and no powre_i) ====
+
       out_i <- switch(x,
                       n = power4test_by_n(object,
                                           n = x_i,
@@ -1059,14 +1064,22 @@ gen_objective <- function(object,
       power_i <- rejection_rates(out_i)$reject
     } else {
       if (is.null(power_i)) {
+
+        # ==== Get Power (out_i supplied) ====
+
         # power_i is supplied. Ignore out_i
         power_i <- rejection_rates(out_i)$reject
         out_i <- NULL
       } else {
+
+        # ==== power_i supplied ====
+
         # out_i is supplied
         # power_i will be used
       }
     }
+
+    # ==== Compute CI ====
 
     a <- abs(stats::qnorm((1 - ci_level) / 2))
     se_i <- sqrt(power_i * (1 - power_i) / nrep)
@@ -1088,6 +1101,8 @@ gen_objective <- function(object,
           sep = "")
     }
 
+    # ==== Return function value ====
+
     out2_i <- switch(what,
                      point = power_i - target_power,
                      ub = ci_i[2] - target_power,
@@ -1098,7 +1113,8 @@ gen_objective <- function(object,
     out2_i
   }
 
-  # Set default values
+  # ==== Set default values for the objective function ====
+
   # TODO:
   # - There should be a better way to do this
   formals(f)$x <- x
