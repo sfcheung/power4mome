@@ -541,6 +541,8 @@ x_from_power <- function(object,
                             "power_curve"))
   }
 
+  # ==== Set default algorithm ====
+
   # what and goal take precedence
 
   if (goal == "ci_hit") {
@@ -572,7 +574,7 @@ x_from_power <- function(object,
   power_tolerance_in_interval <- a * sqrt(target_power * (1 - target_power) / final_nrep)
   power_tolerance_in_final <- a * sqrt(target_power * (1 - target_power) / final_nrep)
 
-  # === Sanity Checks ===
+  # ==== Sanity checks ====
 
   if (target_power <= 0 || target_power >= 1) {
     stop("'target power' (",
@@ -615,7 +617,7 @@ x_from_power <- function(object,
     set.seed(seed)
   }
 
-  # Handle the object
+  # ==== Process the object ====
 
   # Is it a compatible x_from_power object?
   # - If yes and solution not found,
@@ -625,6 +627,9 @@ x_from_power <- function(object,
 
   is_x_from_power <- FALSE
   if (inherits(object, "x_from_power")) {
+
+    # ==== x_from_power object ====
+
     # Throw an error if incompatible
 
     # TODO:
@@ -661,6 +666,9 @@ x_from_power <- function(object,
   is_by_x <- FALSE
   if (inherits(object, "power4test_by_n") ||
       inherits(object, "power4test_by_es")) {
+
+    # ==== by_x object ====
+
     is_by_x <- TRUE
     object_by_org <- object
 
@@ -726,6 +734,8 @@ x_from_power <- function(object,
 
   ci_hit <- FALSE
   solution_found <- FALSE
+  status <- NULL
+  technical <- NULL
 
   # === Check Existing Solution ===
 
@@ -734,6 +744,8 @@ x_from_power <- function(object,
   #   power4test object.
   #   - If yes, skip the search and create the
   #     x_from_power object.
+
+  # ==== Solution already in by_x? ====
 
   if (is_by_x) {
 
@@ -750,11 +762,15 @@ x_from_power <- function(object,
 
     if (!is.na(i_org_hit) && !is.null(i_org_hit)) {
 
+      # ==== Solution in by_x. Skip the search ====
+
       # Solution already in the input.
       # DO not do the search
 
       cat("\n--- Solution Already Found ---\n\n")
       cat("Solution already found in the object. Search will be skipped.")
+
+      # ==== Create the output ====
 
       # Prepare the objects as if the search has completed
 
@@ -794,10 +810,15 @@ x_from_power <- function(object,
   # to be searched, not necessarily the one
   # set by users.
 
+  # ==== Fix x_interval ====
+
   if (solution_found) {
     x_interval <- range(x_tried)
   } else {
     if (check_es_interval) {
+
+      # ==== Find probable es interval ====
+
       x_interval <- fix_es_interval(object = object,
                                     x = x,
                                     pop_es_name = pop_es_name,
@@ -809,7 +830,7 @@ x_from_power <- function(object,
   x_max <- max(x_interval)
   x_min <- min(x_interval)
 
-  # === The Search ===
+  # ==== Call the algorithm ====
 
   if ((algorithm == "power_curve") && !solution_found) {
 
@@ -854,6 +875,11 @@ x_from_power <- function(object,
     by_x_out <- a_out$by_x_out
     i2 <- a_out$i2
     solution_found <- a_out$solution_found
+    status <- a_out$status
+    technical <- list(iteration = a_out$iteration,
+                      x_history = a_out$x_history,
+                      delta_tol = a_out$delta_tol,
+                      last_k = a_out$last_k)
 
     rm(a_out)
 
@@ -899,6 +925,12 @@ x_from_power <- function(object,
     by_x_out <- a_out$by_x_out
     i2 <- a_out$i2
     solution_found <- a_out$solution_found
+    status <- a_out$status
+    technical <- list(iteration = a_out$iteration,
+                      x_history = a_out$x_history,
+                      x_interval_history = a_out$x_interval_history,
+                      delta_tol = a_out$delta_tol,
+                      last_k = a_out$last_k)
 
     rm(a_out)
 
@@ -930,14 +962,23 @@ x_from_power <- function(object,
     cat("\n")
   }
 
+  # ==== Is solution found ====
+
   # Is solution found?
   # - The maximum number of replications reached.
 
   if (goal == "ci_hit") {
+
+    # ==== Goal: ci_hit ====
+
     if (isTRUE(ci_hit) && (nrep_out == final_nrep)) {
+
+      # ==== Solution found ====
 
       # ** x_final, by_x_final, power_final, ci_final, nrep_final, i_final **
       # The solution.
+
+      # ==== Create _final objects ====
 
       x_final <- x_out
       by_x_final <- by_x_out
@@ -947,8 +988,12 @@ x_from_power <- function(object,
       i_final <- i2
     } else {
 
+      # ==== Solution not found ====
+
       # No solution found.
       # Set the NAs to denote this.
+
+      # ==== Set _final objects to NA====
 
       x_final <- NA
       by_x_final <- NA
@@ -960,10 +1005,17 @@ x_from_power <- function(object,
   }
 
   if (goal == "close_enough") {
+
+    # ==== Goal: close_enough ====
+
     if (isTRUE(solution_found) && (nrep_out == final_nrep)) {
+
+      # ==== Solution found ====
 
       # ** x_final, by_x_final, power_final, ci_final, nrep_final, i_final **
       # The solution.
+
+      # ==== Create _final objects ====
 
       x_final <- x_out
       by_x_final <- by_x_out
@@ -973,8 +1025,12 @@ x_from_power <- function(object,
       i_final <- i2
     } else {
 
+      # ==== Solution not found ====
+
       # No solution found.
       # Set the NAs to denote this.
+
+      # ==== Set _final objects to NA====
 
       x_final <- NA
       by_x_final <- NA
@@ -985,12 +1041,17 @@ x_from_power <- function(object,
     }
   }
 
+  # ==== Compute extrapolated x? ====
+
   # ** x_x **
   # The estimated value based on power_curve.
   # Used as a suggestion when no solution was found.
   x_x <- NA
 
   if (solution_found) {
+
+    # ==== Yes only if solution_found ====
+
     x_tried <- switch(x,
                       n = as.numeric(names(by_x_1)),
                       es = sapply(by_x_1,
@@ -1066,7 +1127,7 @@ x_from_power <- function(object,
     }
   }
 
-  # === Finalize the Output ===
+  # ==== Finalize the Output ====
 
   my_call <- as.list(match.call())[-1]
   args <- formals()
@@ -1102,6 +1163,8 @@ x_from_power <- function(object,
               what = what,
               goal = goal,
               args = args,
+              status = status,
+              technical = technical,
               call = match.call())
   class(out) <- c("x_from_power", class(out))
   return(out)
