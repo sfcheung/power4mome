@@ -35,9 +35,13 @@
 #' power by confidence interval),
 #' `"final_power"` (a horizontal line
 #' for the estimated power of the
-#' final value of the predictor), and
+#' final value of the predictor),
 #' `"target_power"` (a horizontal
-#' line for the target power).
+#' line for the target power),
+#' and `"sig_area"` (the area significantly
+#' higher or lower than the target
+#' power, if `goal` is `"close_enough"`
+#' and `what` is `"lb"` or `"ub"`).
 #' By default, all these elements will
 #' be plotted.
 #'
@@ -48,9 +52,13 @@
 #' predictor with
 #' estimated power close enough to
 #' the target power by confidence interval)
-#' and `"final_power"` (the estimated
+#' `"final_power"` (the estimated
 #' power of the final value of the
-#' predictor).
+#' predictor), and
+#' `"sig_area"` (labeling the area significantly
+#' higher or lower than the target
+#' power, if `goal` is `"close_enough"`
+#' and `what` is `"lb"` or `"ub"`).
 #' By default, all these labels will
 #' be added.
 #'
@@ -115,6 +123,18 @@
 #' label for the estimated power
 #' of final value of the predictor.
 #'
+#' @param pars_sig_area A named list
+#' of arguments to be passed to
+#' [rect()] when shading the area
+#' significantly higher or lower than
+#' the target power.
+#'
+#' @param pars_text_sig_area A named list
+#' of arguments to be passed to
+#' [text()] when labelling the area
+#' significantly higher or lower than
+#' the target power.
+#'
 #' @param ... Optional arguments.
 #' Passed to [plot()] when drawing
 #' the estimated power against the
@@ -167,12 +187,14 @@
 #'                            seed = 2345)
 #' plot(power_vs_n)
 #'
-#' @importFrom graphics abline arrows par points text title
+#' @importFrom graphics abline arrows par points text title rect
+#' @importFrom grDevices adjustcolor
+
 #'
 #' @export
 plot.x_from_power <- function(x,
-                              what = c("ci", "power_curve", "final_x", "final_power", "target_power"),
-                              text_what = c("final_x", "final_power"),
+                              what = c("ci", "power_curve", "final_x", "final_power", "target_power", "sig_area"),
+                              text_what = c("final_x", "final_power", "sig_area"),
                               digits = 3,
                               main = paste0("Power Curve ",
                                             "(Target Power: ",
@@ -186,11 +208,16 @@ plot.x_from_power <- function(x,
                               pars_ci_final_x = list(lwd = 2,
                                                                length = .2,
                                                                col = "blue"),
-                              pars_target_power = list(lty = "dotted"),
+                              pars_target_power = list(lty = "dashed",
+                                                       lwd = 2,
+                                                       col = "black"),
                               pars_final_x = list(lty = "dotted"),
                               pars_final_power = list(lty = "dotted", col = "blue"),
                               pars_text_final_x = list(y = 0, pos = 3, cex = 1),
                               pars_text_final_power = list(pos = 3, cex = 1),
+                              pars_sig_area = list(col = adjustcolor("lightblue",
+                                                   alpha.f = .1)),
+                              pars_text_sig_area = list(cex = 1),
                               ...) {
 
   what <- match.arg(what, several.ok = TRUE)
@@ -313,6 +340,66 @@ plot.x_from_power <- function(x,
                                          labels = x_final_str))
       do.call(text,
               tmp_args)
+    }
+
+    if (("sig_area" %in% what) &&
+        (x$goal == "close_enough")) {
+      if (x$what == "lb") {
+        tmp_args <- utils::modifyList(pars_sig_area,
+                                      list(
+                                        xleft = x$x_final,
+                                        xright = par("usr")[2],
+                                        ybottom = par("usr")[3],
+                                        ytop = par("usr")[4],
+                                        border = NULL)
+                                      )
+        do.call(rect,
+                tmp_args)
+      }
+      if (x$what == "ub") {
+        tmp_args <- utils::modifyList(pars_sig_area,
+                                      list(
+                                        xleft = par("usr")[1],
+                                        xright = x$x_final,
+                                        ybottom = par("usr")[3],
+                                        ytop = par("usr")[4],
+                                        border = NULL)
+                                      )
+        do.call(rect,
+                tmp_args)
+      }
+    }
+
+    if (("sig_area" %in% text_what) &&
+        (x$goal == "close_enough")) {
+      if (x$what == "lb") {
+        tmp_str <- paste0("Power sig. >\n",
+                           formatC(x$target_power,
+                                   digits,
+                                   format = "f"))
+        tmp_args <- utils::modifyList(pars_text_sig_area,
+                                      list(x = mean(c(x$x_final,
+                                                      par("usr")[2])),
+                                           y = mean(c(x$target_power,
+                                                      par("usr")[3])),
+                                           labels = tmp_str))
+        do.call(text,
+                tmp_args)
+      }
+      if (x$what == "ub") {
+        tmp_str <- paste0("Power sig. <\n",
+                           formatC(x$target_power,
+                                   digits,
+                                   format = "f"))
+        tmp_args <- utils::modifyList(pars_text_sig_area,
+                                      list(x = mean(c(x$x_final,
+                                                      par("usr")[1])),
+                                           y = mean(c(x$target_power,
+                                                      par("usr")[3])),
+                                           labels = tmp_str))
+        do.call(text,
+                tmp_args)
+      }
     }
 
     # === Add a label for the final power?

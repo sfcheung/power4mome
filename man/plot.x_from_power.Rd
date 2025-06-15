@@ -6,8 +6,8 @@
 \usage{
 \method{plot}{x_from_power}(
   x,
-  what = c("ci", "power_curve", "final_x", "final_power", "target_power"),
-  text_what = c("final_x", "final_power"),
+  what = c("ci", "power_curve", "final_x", "final_power", "target_power", "sig_area"),
+  text_what = c("final_x", "final_power", "sig_area"),
   digits = 3,
   main = paste0("Power Curve ", "(Target Power: ", formatC(x$target_power, digits =
     digits, format = "f"), ")"),
@@ -17,11 +17,13 @@
   pars_ci = list(),
   pars_power_curve = list(),
   pars_ci_final_x = list(lwd = 2, length = 0.2, col = "blue"),
-  pars_target_power = list(lty = "dotted"),
+  pars_target_power = list(lty = "dashed", lwd = 2, col = "black"),
   pars_final_x = list(lty = "dotted"),
   pars_final_power = list(lty = "dotted", col = "blue"),
   pars_text_final_x = list(y = 0, pos = 3, cex = 1),
   pars_text_final_power = list(pos = 3, cex = 1),
+  pars_sig_area = list(col = adjustcolor("lightblue", alpha.f = 0.1)),
+  pars_text_sig_area = list(cex = 1),
   ...
 )
 }
@@ -43,9 +45,13 @@ power close enough to the target
 power by confidence interval),
 \code{"final_power"} (a horizontal line
 for the estimated power of the
-final value of the predictor), and
+final value of the predictor),
 \code{"target_power"} (a horizontal
-line for the target power).
+line for the target power),
+and \code{"sig_area"} (the area significantly
+higher or lower than the target
+power, if \code{goal} is \code{"close_enough"}
+and \code{what} is \code{"lb"} or \code{"ub"}).
 By default, all these elements will
 be plotted.}
 
@@ -56,9 +62,13 @@ labels. Possible values are
 predictor with
 estimated power close enough to
 the target power by confidence interval)
-and \code{"final_power"} (the estimated
+\code{"final_power"} (the estimated
 power of the final value of the
-predictor).
+predictor), and
+\code{"sig_area"} (labeling the area significantly
+higher or lower than the target
+power, if \code{goal} is \code{"close_enough"}
+and \code{what} is \code{"lb"} or \code{"ub"}).
 By default, all these labels will
 be added.}
 
@@ -122,6 +132,18 @@ named list of arguments to be passed
 to \code{\link[=text]{text()}} when adding the
 label for the estimated power
 of final value of the predictor.}
+
+\item{pars_sig_area}{A named list
+of arguments to be passed to
+\code{\link[=rect]{rect()}} when shading the area
+significantly higher or lower than
+the target power.}
+
+\item{pars_text_sig_area}{A named list
+of arguments to be passed to
+\code{\link[=text]{text()}} when labelling the area
+significantly higher or lower than
+the target power.}
 
 \item{...}{Optional arguments.
 Passed to \code{\link[=plot]{plot()}} when drawing
