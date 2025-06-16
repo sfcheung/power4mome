@@ -106,7 +106,27 @@ Let's consider a simple mediation
 model. We would like to estimate the
 sample size required to detect
 a mediation effect
-by Monte Carlo confidence interval.
+by Monte Carlo confidence interval,
+with 95% level of significance.
+
+Because sampling (simulation) error
+is involved when there is no analytic
+solution to find the sample size, instead
+of estimating the unknown sample size,
+we can also estimate, approximately,
+the region of
+sample sizes with their levels of power
+
+1) significantly lower than the target power, or
+
+2) significantly higher than the target power.
+
+That is, we find the sample size that has
+its confidence interval, 95% by default,
+just below (Case 1) or
+just above (Case 2) the target power, approximately.
+
+We will consider the Case 1 first.
 
 ## Specify the Population Model
 
@@ -179,7 +199,7 @@ Each line starts with a *tag*, which
 is the parameter presented in `lavaan`
 syntax. The tag ends with a colon, `:`.
 
-After the colon is population value, which
+After the colon is a population value, which
 can be:
 
 - A word denoting the value. By default:
@@ -393,28 +413,42 @@ do the search.
 ## Call `x_from_power()` to Estimate the Sample Size
 
 This is a simplified description of
-how `x_from_power()` works:
+how `x_from_power()` works when our goal
+is to find a sample size with the 95% confidence
+interval of its power just below the
+target power. That is, the sample size with the upper bound
+of the 95% confidence interval of its power
+just below the
+target power.
 
-- It reruns the simulation and test
-  in an output of `power4test()`
-  for different sample sizes, and then
-  estimate the power levels for each
-  of them.
+In practice, we rarely need a precise estimate
+because the goal is for sample size _planning_.
+Therefore, having a sample size with the
+upper bound of the 95% confidence interval of
+its power "close enough" to the target
+power is sufficient.
 
-- It will adopt a sample size as the
-  solution if (a) the confidence interval
-  of the estimated power includes the
-  target power (default level 95%), and (b)
-  the number of replications used
-  in the estimation is the target one
-  (to ensure the standard error is of
-  the desired level).
+For now, the bisection method will be used.
+This method is slow. However, in our experience,
+if the goal is to have an approximation,
+a "close enough" solution, this method
+is usually sufficient.
+
+Last, the bisection method *may* fail to
+find the solution when we do not know the
+form of the function and simulation is
+used. However, this simple method is usually
+good enough for finding an approximation.
+
+This is the function call:
 
 ```{r x_out, results=FALSE, message=FALSE}
 out_n <- x_from_power(out,
                       x = "n",
                       target_power = .80,
                       final_nrep = 400,
+                      goal = "close_enough",
+                      what = "ub",
                       seed = 4567)
 ```
 
@@ -427,7 +461,7 @@ The argument used above:
   Default is .80.
 
 - `final_nrep`: The number of replications
-  desired in the solution. When using
+  desired in the solution, when using
   the normal approximation to form the
   95% confidence interval for a sample
   proportion (power in this case). For
@@ -435,7 +469,21 @@ The argument used above:
   for a power of .80 are about .04 below
   and above .80. This should be precise
   enough for estimating the sample size
-  required.
+  required. If a higher precision is desired
+  and computation power is available,
+  this number can be increased to, say,
+  500 or 1000.
+
+- `goal`: To get the "close enough" solution,
+  set `goal` to `"close_enough"`. By default,
+  close enough is defined as "within .02
+  of the target power". (This can be controlled
+  by the argument `tolerance`).
+
+- `what`: If our goal is to find the sample
+  size with the upper bound of the confidence
+  interval of its power close enough to
+  the target power, set `what` to `"ub"`.
 
 - `seed`: To make the search reproducible,
   if possible, set this seed to an
@@ -443,18 +491,29 @@ The argument used above:
 
 ## Examine the Output
 
+The example above needs a few attempts
+to arrive at the approximation.
+
 This is the basic output:
 
 ```{r x_out_print}
 out_n
 ```
 
-The estimated sample size to have a power
-close to .80 power to detect the indirect effect
-by Monte Carlo interval is
+The estimated sample size is
 `r out_n$x_final`. The estimated power
 based on simulation is
-`r sprintf("%4.3f", out_n$power_final)`.
+`r sprintf("%4.3f", out_n$power_final)`,
+with its confidence interval equal to
+`r sprintf("[%1$4.3f, %2$4.3f]", out_n$ci_final[1], out_n$ci_final[2])`.
+The upper bound, `r sprintf("%4.3f", out_n$ci_final[2])`,
+is .02 within the target power (.80).
+
+In other words, with 400 replications,
+it is estimated that sample sizes
+less than `r out_n$x_final` have power
+significantly less than .80 and should not
+be used if the target power is .80.
 
 To obtain a more detailed results for
 the search, we can use the `summary()`
@@ -463,10 +522,6 @@ method:
 ```{r x_out_summary}
 summary(out_n)
 ```
-
-It reports the 95% confidence interval
-of the estimated power,
-`r sprintf("[%4.3f; %4.3f]", out_n$ci_final[1], out_n$ci_final[2])`.
 
 It also reports major technical
 information regarding
@@ -481,7 +536,9 @@ used to estimate
 the relation between the power and the
 sample size. Note that this is only
 a crude model intended only for the
-values of sample size examined. It is
+values of sample size examined
+(`r length(out_n$x_tried)` in the this example).
+It is
 not intended to estimate power for
 sample sizes outside the range studied.
 
@@ -498,20 +555,116 @@ The black line is the plot of the
 sample sizes studied, along with the
 estimated power levels and the 95%
 confidence intervals. The intervals
-vary in width because of different number
-of replications.
+may vary in width if the numbers of replications
+are not the same for the sample sizes examined.
 
 The red line is the plot based on the
 model (a logistic model in this case),
 along the range of sample sizes examined.
 
+The area to the left of the solution is
+the region for which the power is estimated
+to be significantly less than the target power.
+
+## Case 2
+
+Let's consider Case 2, finding the sample
+size with the 95% confidence interval of
+its power approximately above the target
+power. That is, the *lower* *bound* of
+the confidence interval is close enough
+to the target power.
+
+This is the function call:
+
+```{r x_out_lb, results=FALSE, message=FALSE}
+out_n_lb <- x_from_power(out,
+                         x = "n",
+                         target_power = .80,
+                         final_nrep = 400,
+                         goal = "close_enough",
+                         what = "lb",
+                         seed = 2345)
+```
+
+The only change is `what`, which is set
+to `"lb"` (lower bound).
+
+The example above only needs a few attempts
+to arrive at the approximation.
+
+This is the output:
+
+```{r x_out_lb_print}
+out_n_lb
+```
+
+The estimated sample size is
+`r out_n_lb$x_final`. The estimated power
+based on simulation is
+`r sprintf("%4.3f", out_n_lb$power_final)`,
+with its confidence interval equal to
+`r sprintf("[%1$4.3f, %2$4.3f]", out_n_lb$ci_final[1], out_n$ci_final[2])`.
+The upper bound, `r sprintf("%4.3f", out_n_lb$ci_final[1])`,
+is .02 within the target power (.80).
+
+With 400 replications,
+it is estimated that sample sizes
+greater than `r out_n_lb$x_final` have power
+significantly greater than .80 and can
+be used if the target power is .80.
+
+This a summary of the results:
+
+```{r x_out_lb_summary}
+summary(out_n_lb)
+```
+
+This is a plot of the search:
+
+```{r x_from_power_for_n_lb_plot, fig.cap="The Power Curve", fig.align="center"}
+plot(out_n_lb)
+```
+
+# Case 1, Case 2, or Both?
+
+Similar to the Johnson-Neyman method in
+moderation, the two sample sizes found above
+can be used together to estimate the range
+of sample sizes with power not significantly
+different form the target power.
+
+That is, from the results above,
+we can conclude that, with 400 replications,
+sample sizes from
+`r out_n$x_final` to `r out_n_lb$x_final`
+have power levels
+not significantly different from .80.
+
+However, we believe researchers rarely need
+to find "the" sample with exactly "the"
+target power and doing sample size planning.
+
+Therefore, if resource is a concern and so
+it is more important not to have a sample size
+with power too low, then Case 1 is sufficient
+for know the range of sample sizes that
+should definitely not used.
+
+If having sufficient power is more important
+and the associated resource is available,
+the Case 2 is appropriate because it can
+find the minimum sample size that will
+have power significantly higher than
+the target power.
+
 # Advanced Features
 
-This brief illustration only cover
+This brief illustration only covers
 basic features of `x_from_power()`.
 There are other ways to customize the
 search, such as the range of sample
-sizes to examine (the default is 50 to 2000),
+sizes to examine,
 the level of confidence for the
 confidence interval, and the number of
 trials (10 by default). Please refer
