@@ -1,4 +1,4 @@
-# power4mome 0.0.1.69
+# power4mome 0.0.1.70
 
 - Initialized the package. (0.0.0.9000)
 
@@ -471,3 +471,6 @@
 - Updated methods of `x_from_power()`
   for `goal` and `what`.
   (0.0.1.69)
+
+- Disabled `sig_area` if `x = "es"`.
+  (0.0.1.70)
