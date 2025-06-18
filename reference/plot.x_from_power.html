@@ -11,7 +11,7 @@ estimated power against sample size."><meta property="og:image" content="https:/
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.69</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.70</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -66,8 +66,9 @@ estimated power against sample size.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for class 'x_from_power'</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
 <span>  <span class="va">x</span>,</span>
-<span>  what <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ci"</span>, <span class="st">"power_curve"</span>, <span class="st">"final_x"</span>, <span class="st">"final_power"</span>, <span class="st">"target_power"</span>, <span class="st">"sig_area"</span><span class="op">)</span>,</span>
-<span>  text_what <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"final_x"</span>, <span class="st">"final_power"</span>, <span class="st">"sig_area"</span><span class="op">)</span>,</span>
+<span>  what <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ci"</span>, <span class="st">"power_curve"</span>, <span class="st">"final_x"</span>, <span class="st">"final_power"</span>, <span class="st">"target_power"</span>, <span class="kw"><a href="https://rdrr.io/r/base/switch.html" class="external-link">switch</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">x</span>, n <span class="op">=</span></span>
+<span>    <span class="st">"sig_area"</span>, es <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  text_what <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"final_x"</span>, <span class="st">"final_power"</span>, <span class="kw"><a href="https://rdrr.io/r/base/switch.html" class="external-link">switch</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">x</span>, n <span class="op">=</span> <span class="st">"sig_area"</span>, es <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  digits <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>  main <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Power Curve "</span>, <span class="st">"(Target Power: "</span>, <span class="fu"><a href="https://rdrr.io/r/base/formatc.html" class="external-link">formatC</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">target_power</span>, digits <span class="op">=</span></span>
 <span>    <span class="va">digits</span>, format <span class="op">=</span> <span class="st">"f"</span><span class="op">)</span>, <span class="st">")"</span><span class="op">)</span>,</span>
@@ -361,7 +362,7 @@ individually.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --- Final Stage ---</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-06-16 14:31:44 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-06-18 14:13:36 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Rejection Rates:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     n                             test test_label   p.v reject r.cilo r.cihi</span>

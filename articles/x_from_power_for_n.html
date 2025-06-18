@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.69</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.70</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -80,7 +80,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Sample Size Given Desired Power</h1>
             
-            <h4 data-toc-skip class="date">2025-06-16</h4>
+            <h4 data-toc-skip class="date">2025-06-18</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/sfcheung/power4mome/blob/main/vignettes/articles/x_from_power_for_n.Rmd" class="external-link"><code>vignettes/articles/x_from_power_for_n.Rmd</code></a></small>
       <div class="d-none name"><code>x_from_power_for_n.Rmd</code></div>
@@ -94,7 +94,7 @@
 <p>This article is a brief illustration of how to use
 <code><a href="../reference/x_from_power.html">x_from_power()</a></code> and <code><a href="../reference/power4test.html">power4test()</a></code> from the
 package <a href="https://sfcheung.github.io/power4mome/">power4mome</a>
-to do find by simulation the sample size with power close to a desired
+to find by simulation the sample size with power close to a desired
 level to detect an effect, given the level of population effect
 size.</p>
 <p>The illustration will use an indirect effect tested by Monte Carlo
@@ -556,7 +556,6 @@ approximation.</p>
 <span>                      x <span class="op">=</span> <span class="st">"n"</span>,</span>
 <span>                      target_power <span class="op">=</span> <span class="fl">.80</span>,</span>
 <span>                      final_nrep <span class="op">=</span> <span class="fl">400</span>,</span>
-<span>                      goal <span class="op">=</span> <span class="st">"close_enough"</span>,</span>
 <span>                      what <span class="op">=</span> <span class="st">"ub"</span>,</span>
 <span>                      seed <span class="op">=</span> <span class="fl">4567</span><span class="op">)</span></span></code></pre></div>
 <p>The argument used above:</p>
@@ -573,16 +572,21 @@ are about .04 below and above .80. This should be precise enough for
 estimating the sample size required. If a higher precision is desired
 and computation power is available, this number can be increased to,
 say, 500 or 1000.</p></li>
-<li><p><code>goal</code>: To get the “close enough” solution, set
-<code>goal</code> to <code>"close_enough"</code>. By default, close
-enough is defined as “within .02 of the target power”. (This can be
-controlled by the argument <code>tolerance</code>).</p></li>
 <li><p><code>what</code>: If our goal is to find the sample size with
 the upper bound of the confidence interval of its power close enough to
 the target power, set <code>what</code> to <code>"ub"</code>.</p></li>
 <li><p><code>seed</code>: To make the search reproducible, if possible,
 set this seed to an integer.</p></li>
+<li><p><code>goal</code>: To get the “close enough” solution, set
+<code>goal</code> to <code>"close_enough"</code>
+(<code>goal = "close_enough"</code>). However, because the only goal for
+lower and upper bounds (<code>what = "ub"</code> and
+<code>what = "lb"</code>) is <code>"close_enough"</code>, this argument
+can be omitted.</p></li>
 </ul>
+<p>By default, being “close enough” is defined as “within .02 of the
+target power”. (This can be controlled by the argument
+<code>tolerance</code>).</p>
 </div>
 <div class="section level3">
 <h3 id="examine-the-output">Examine the Output<a class="anchor" aria-label="anchor" href="#examine-the-output"></a>
@@ -594,7 +598,7 @@ approximation.</p>
 <code class="sourceCode R"><span><span class="va">out_n</span></span>
 <span><span class="co">#&gt; Call:</span></span>
 <span><span class="co">#&gt; x_from_power(object = out, x = "n", target_power = 0.8, what = "ub", </span></span>
-<span><span class="co">#&gt;     goal = "close_enough", final_nrep = 400, seed = 4567)</span></span>
+<span><span class="co">#&gt;     final_nrep = 400, seed = 4567)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;                           Setting</span></span>
 <span><span class="co">#&gt; Predictor(x):         Sample Size</span></span>
@@ -626,7 +630,7 @@ be used if the target power is .80.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call:</span></span>
 <span><span class="co">#&gt; x_from_power(object = out, x = "n", target_power = 0.8, what = "ub", </span></span>
-<span><span class="co">#&gt;     goal = "close_enough", final_nrep = 400, seed = 4567)</span></span>
+<span><span class="co">#&gt;     final_nrep = 400, seed = 4567)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Predictor (x): Sample Size </span></span>
 <span><span class="co">#&gt; </span></span>
@@ -648,7 +652,7 @@ be used if the target power is .80.</p>
 <span><span class="co">#&gt; - Algorithm: bisection </span></span>
 <span><span class="co">#&gt; - Tolerance for 'close enough': Within 0.02000 of 0.800 </span></span>
 <span><span class="co">#&gt; - The range of values explored: 105 to 91 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 1.729 mins </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 1.505 mins </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
@@ -730,7 +734,6 @@ close enough to the target power.</p>
 <span>                         x <span class="op">=</span> <span class="st">"n"</span>,</span>
 <span>                         target_power <span class="op">=</span> <span class="fl">.80</span>,</span>
 <span>                         final_nrep <span class="op">=</span> <span class="fl">400</span>,</span>
-<span>                         goal <span class="op">=</span> <span class="st">"close_enough"</span>,</span>
 <span>                         what <span class="op">=</span> <span class="st">"lb"</span>,</span>
 <span>                         seed <span class="op">=</span> <span class="fl">2345</span><span class="op">)</span></span></code></pre></div>
 <p>The only change is <code>what</code>, which is set to
@@ -742,7 +745,7 @@ approximation.</p>
 <code class="sourceCode R"><span><span class="va">out_n_lb</span></span>
 <span><span class="co">#&gt; Call:</span></span>
 <span><span class="co">#&gt; x_from_power(object = out, x = "n", target_power = 0.8, what = "lb", </span></span>
-<span><span class="co">#&gt;     goal = "close_enough", final_nrep = 400, seed = 2345)</span></span>
+<span><span class="co">#&gt;     final_nrep = 400, seed = 2345)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;                           Setting</span></span>
 <span><span class="co">#&gt; Predictor(x):         Sample Size</span></span>
@@ -773,7 +776,7 @@ target power is .80.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call:</span></span>
 <span><span class="co">#&gt; x_from_power(object = out, x = "n", target_power = 0.8, what = "lb", </span></span>
-<span><span class="co">#&gt;     goal = "close_enough", final_nrep = 400, seed = 2345)</span></span>
+<span><span class="co">#&gt;     final_nrep = 400, seed = 2345)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Predictor (x): Sample Size </span></span>
 <span><span class="co">#&gt; </span></span>
@@ -795,7 +798,7 @@ target power is .80.</p>
 <span><span class="co">#&gt; - Algorithm: bisection </span></span>
 <span><span class="co">#&gt; - Tolerance for 'close enough': Within 0.02000 of 0.800 </span></span>
 <span><span class="co">#&gt; - The range of values explored: 109 to 98 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 2.456 mins </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 2.294 mins </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
