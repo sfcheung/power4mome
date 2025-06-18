@@ -1,5 +1,5 @@
 ---
-title: "Sample Size Given Desired Power"
+title: "Effect Size Given Desired Power"
 date: "`r Sys.Date()`"
 output:
   rmarkdown::html_vignette:
@@ -8,7 +8,7 @@ output:
         depth: 2
       number_sections: true
 vignette: >
-  %\VignetteIndexEntry{Sample Size Given Desired Power}
+  %\VignetteIndexEntry{Effect Size Given Desired Power}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 bibliography: references.bib
@@ -21,6 +21,7 @@ knitr::opts_chunk$set(
   comment = "#>",
   fig.path = ""
 )
+option_old <- options(width = 100)
 ```
 
 # Introduction
@@ -29,10 +30,11 @@ This article is a brief illustration of how
 to use `x_from_power()` and `power4test()`
 from the package
 [power4mome](https://sfcheung.github.io/power4mome/)
-to find by simulation the sample
-size with power close to a desired level
-to detect an effect, given the level of
-population effect size.
+to do find by simulation, given the
+sample size and other factors, given a
+desired power, what is the minimum effect
+size to be detected with this level of
+power (see the note below on "minimum").
 
 The illustration will use an indirect
 effect tested by Monte Carlo confidence
@@ -75,12 +77,13 @@ Three functions, along with some methods,
 are sufficient for estimating the sample
 size, given the desired power, along with
 other factors such as the test,
-the model, and population
-values. This is the basic workflow:
+the model, and sample size. This is the
+basic workflow:
 
 1.  Specify the model syntax for the
     population model, in `lavaan`
-    style, and set the population values of
+    style, and set the initial
+    population values of
     the model parameters.
 
 3.  Call `power4test()` to examine the setup
@@ -89,44 +92,72 @@ values. This is the basic workflow:
     specified correctly.
 
 4.  Call `power4test()` again, with the
-    test to do specified, using an initial
-    sample size.
+    test to do specified, using the
+    sample size to be examined.
 
 5.  Call `rejection_rates()` to
     compute the power and verify that
     the test is setup correctly.
 
 6.  Call `x_from_power()` to estimated
-    the sample size required for the
-    desired power.
+    the minimum effect size that can be
+    detected, given other factors,
+    including the sample size to be
+    examined and the target power.
 
 # Mediation
 
 Let's consider a simple mediation
-model. We would like to estimate the
-sample size required to detect
-a mediation effect
-by Monte Carlo confidence interval,
-with 95% level of significance.
+model, and the effect of concern is
+an indirect effect tested
+by Monte Carlo confidence interval.
 
-Because sampling (simulation) error
-is involved when there is no analytic
-solution to find the sample size, instead
-of estimating the unknown sample size,
-we can also estimate, approximately,
-the region of
-sample sizes with their levels of power
+There is a special consideration regarding
+an indirect effect: This effect is
+a function of two or more model parameters.
+For example, for a simple mediation with
+the *a*-path from the predictor to the
+mediator, and the *b*-path from the
+mediator to the outcome variable, the
+indirect effect is *ab*. It has been
+found that the power to detect a
+particular value of *ab*, say 0.25,
+is not the same for all combinations
+of *a* and *b*. For example, @kenny_power_2014
+found that the required sample size to
+have a power of .80 to detect an *ab* of
+.0225 can vary from about 450 to as large
+as more than 5000, depending on the values
+of *both* *a* and *b*.
 
-1) significantly lower than the target power, or
+Therefore, even if we would like to
+find the minimum *ab* that can be detected
+with a power of .80 given a sample size,
+we should still manipulate one parameter
+(e.g., *a* or *b*) one at a time.
 
-2) significantly higher than the target power.
+Two additional notes on the notion
+"minimum". First, for simplicity, only
+positive population values are considered.
+However, there may be cases in which
+the population values under consideration
+are negative. In these cases, "minimum"
+refers to minimum in *magnitude*.
 
-That is, we find the sample size that has
-its confidence interval, 95% by default,
-just below (Case 1) or
-just above (Case 2) the target power, approximately.
+Second, there may be cases in which,
+even keeping the values considered
+positive, the relation between power
+and the parameter being varied is
+U-shaped. In these cases, two or more
+values of the selected parameters may
+have the same target power.
+The plot of the relation (described lated)
+should be examined to see whether the
+solution is likely the minimum value
+in the range examined.
 
-We will consider the Case 1 first.
+
+This will be illustrated in this vignette.
 
 ## Specify the Population Model
 
@@ -141,7 +172,8 @@ y ~ m + x
 ```
 
 Note that, even if we are going to
-test mediation.
+test mediation, we do not need to add
+any labels or defined any user-parameters.
 This will be taken care of by the
 test functions, through the use of
 the package
@@ -199,7 +231,7 @@ Each line starts with a *tag*, which
 is the parameter presented in `lavaan`
 syntax. The tag ends with a colon, `:`.
 
-After the colon is a population value, which
+After the colon is population value, which
 can be:
 
 - A word denoting the value. By default:
@@ -298,17 +330,23 @@ the next stage
 ## Call `power4test()` to Do the Target Test {#med_power}
 
 We can now do the simulation to estimate
-power for an initial sample size, to
-verify the test we wan to do.
+power for an initial values of *a* (`m ~ x`)
+and *b* (`y ~ m`), given a target sample
+size to
+verify the test we want to do.
 A large number of datasets (e.g., 500)
-of the target sample size are to be generated,
+of the target sample size and initial
+population values of the model are to be generated,
 and then the target test will be conducted
 in each of these datasets.
 
-Suppose we would like to estimate the
+Suppose we start with *a* and hold *b*
+to *medium* (.30) and direct effect (`y ~ x`)
+to *small* (.10), with a sample size
+of 100, and would like to estimate the
 power of using Monte Carlo confidence interval
 to test the indirect effect from `x` to
-`y` through `m`, when sample size is 50.
+`y` through `m`, when *a* is also *medium*.
 This is the call, based on the previous
 one:
 
@@ -316,7 +354,7 @@ one:
 out <- power4test(nrep = 50,
                   model = mod,
                   pop_es = mod_es,
-                  n = 50,
+                  n = 100,
                   R = 2000,
                   ci_type = "mc",
                   test_fun = test_indirect_effect,
@@ -324,12 +362,14 @@ out <- power4test(nrep = 50,
                                    m = "m",
                                    y = "y",
                                    mc_ci = TRUE),
-                  iseed = 2345,
+                  iseed = 1234,
                   parallel = TRUE)
 ```
 
-If our goal is to find a sample size for
-a specific level of power, with sufficient
+If our goal is to find a value of a
+parameter, *a* in this case, for
+a specific level of power and sample size,
+with sufficient
 precision, we do not need a large number
 of replications (`nrep`) in this stage.
 We can use as few as 50. We can set the
@@ -410,57 +450,58 @@ As shown above, the setup is correct.
 We can now call `x_from_power()` to
 do the search.
 
-## Call `x_from_power()` to Estimate the Sample Size
+## Call `x_from_power()` to Estimate the Minimum Value of *a*
 
 This is a simplified description of
-how `x_from_power()` works when our goal
-is to find a sample size with the 95% confidence
-interval of its power just below the
-target power. That is, the sample size with the upper bound
-of the 95% confidence interval of its power
-just below the
-target power.
+how `x_from_power()` works:
 
-In practice, we rarely need a precise estimate
-because the goal is for sample size _planning_.
-Therefore, having a sample size with the
-upper bound of the 95% confidence interval of
-its power "close enough" to the target
-power is sufficient.
+- It rerun the simulation and test
+  in an output of `power4test()`
+  for different values of the selected
+  parameter, and then
+  estimate the power levels for each
+  of them.
 
-For now, the bisection method will be used.
-This method is slow. However, in our experience,
-if the goal is to have an approximation,
-a "close enough" solution, this method
-is usually sufficient.
+- It will try to estimate the relation
+  between the power and the value of the
+  selected parameter,
+  and select the next value(s) to
+  try.
 
-Last, the bisection method *may* fail to
-find the solution when we do not know the
-form of the function and simulation is
-used. However, this simple method is usually
-good enough for finding an approximation.
-
-This is the function call:
+- It will adopt a value as the
+  solution if (a) the confidence interval
+  of the estimated power includes the
+  target power (default level 95%), and (b)
+  the number of replications used
+  in the estimation is the target one
+  (to ensure the standard error is of
+  the desired level).
 
 ```{r x_out, results=FALSE, message=FALSE}
-out_n <- x_from_power(out,
-                      x = "n",
-                      target_power = .80,
-                      final_nrep = 400,
-                      what = "ub",
-                      seed = 4567)
+out_es_a <- x_from_power(out,
+                         x = "es",
+                         pop_es_name = "m~x",
+                         target_power = .80,
+                         final_nrep = 400,
+                         seed = 4567)
 ```
 
 The argument used above:
 
-- `x`: What we want to find, `"n"`
-  stands for sample size.
+- `x`: What we want to find, `"es"`
+  stands for effect sizes.
+
+- `pop_es_name`: The name of the parameter
+  with its value varied. The name should be
+  the one used by `lavaan` when using
+  `coef()`. See `power4test_by_es()`
+  for setting the name.
 
 - `target_power`: The target power.
   Default is .80.
 
 - `final_nrep`: The number of replications
-  desired in the solution, when using
+  desired in the solution. When using
   the normal approximation to form the
   95% confidence interval for a sample
   proportion (power in this case). For
@@ -468,213 +509,156 @@ The argument used above:
   for a power of .80 are about .04 below
   and above .80. This should be precise
   enough for estimating the sample size
-  required. If a higher precision is desired
-  and computation power is available,
-  this number can be increased to, say,
-  500 or 1000.
-
-- `what`: If our goal is to find the sample
-  size with the upper bound of the confidence
-  interval of its power close enough to
-  the target power, set `what` to `"ub"`.
+  required.
 
 - `seed`: To make the search reproducible,
   if possible, set this seed to an
   integer.
 
-- `goal`: To get the "close enough" solution,
-  set `goal` to `"close_enough"`
-  (`goal = "close_enough"`). However,
-  because the only goal for lower and upper
-  bounds (`what = "ub"` and `what = "lb"`)
-  is `"close_enough"`, this argument can be
-  omitted.
-
-
-By default,
-being "close enough" is defined as "within .02
-of the target power". (This can be controlled
-by the argument `tolerance`).
-
 ## Examine the Output
-
-The example above needs a few attempts
-to arrive at the approximation.
 
 This is the basic output:
 
 ```{r x_out_print}
-out_n
+out_es_a
 ```
 
-The estimated sample size is
-`r out_n$x_final`. The estimated power
+The estimated value of *a* to have a power
+close to .80 power to detect the indirect effect
+(*ab*, with *b* equal to .30 in the population)
+by Monte Carlo interval is
+`r sprintf("%4.3f", out_es_a$x_final)`. The estimated power
 based on simulation is
-`r sprintf("%4.3f", out_n$power_final)`,
-with its confidence interval equal to
-`r sprintf("[%1$4.3f, %2$4.3f]", out_n$ci_final[1], out_n$ci_final[2])`.
-The upper bound, `r sprintf("%4.3f", out_n$ci_final[2])`,
-is .02 within the target power (.80).
+`r sprintf("%4.3f", out_es_a$power_final)`.
 
-In other words, with 400 replications,
-it is estimated that sample sizes
-less than `r out_n$x_final` have power
-significantly less than .80 and should not
-be used if the target power is .80.
+That is, given the model and a sample
+size of 100, if the population value
+of *b* is medium (.30), the test has an
+approximate power of .80 when the population
+value of *a* is about
+`r sprintf("%4.3f", out_es_a$x_final)`.
+The corresponding indirect effect is
+about
+`r sprintf("%4.3f", out_es_a$x_final * .30)`
 
 To obtain a more detailed results for
 the search, we can use the `summary()`
 method:
 
 ```{r x_out_summary}
-summary(out_n)
+summary(out_es_a)
 ```
+
+It reports the 95% confidence interval
+of the estimated power,
+`r sprintf("[%4.3f; %4.3f]", out_es_a$ci_final[1], out_es_a$ci_final[2])`.
 
 It also reports major technical
 information regarding
 the search, such as the range of
-sample sizes tried, the time spent,
-and the table with all the sample sizes
+values tried, the time spent,
+and the table with all the values
 examined, along with the estimated
 power levels and confidence intervals.
 
 It also prints the model, the "power curve",
 used to estimate
 the relation between the power and the
-sample size. Note that this is only
+value of the selected parameter. Note that this is only
 a crude model intended only for the
-values of sample size examined
-(`r length(out_n$x_tried)` in the this example).
-It is
+values examined. It is
 not intended to estimate power for
-sample sizes outside the range studied.
+values outside the range studied.
 
 Even though the model is a crude one,
 it can still give a rough idea about
 the relation. A simple plot can be
 requested by `plot()`:
 
-```{r x_from_power_for_n_plot, fig.cap="The Power Curve", fig.align="center"}
-plot(out_n)
+```{r x_from_power_for_es_plot, fig.cap="The Power Curve", fig.align="center"}
+plot(out_es_a)
 ```
 
 The black line is the plot of the
 sample sizes studied, along with the
 estimated power levels and the 95%
 confidence intervals. The intervals
-may vary in width if the numbers of replications
-are not the same for the sample sizes examined.
+vary in width because of different number
+of replications.
 
 The red line is the plot based on the
 model (a logistic model in this case),
 along the range of sample sizes examined.
 
-The area to the left of the solution is
-the region for which the power is estimated
-to be significantly less than the target power.
+## Finding the Minimum Value of *b* When Holding *a* to .30
 
-## Case 2
+We can also find the minimum value of
+*b* when holding *a* to medium (.30).
+Just call `x_from_power()` again,
+setting `pop_es_name` to `"y~m"`.
 
-Let's consider Case 2, finding the sample
-size with the 95% confidence interval of
-its power approximately above the target
-power. That is, the *lower* *bound* of
-the confidence interval is close enough
-to the target power.
-
-This is the function call:
-
-```{r x_out_lb, results=FALSE, message=FALSE}
-out_n_lb <- x_from_power(out,
-                         x = "n",
+```{r x_out2, results=FALSE, message=FALSE}
+out_es_b <- x_from_power(out,
+                         x = "es",
+                         pop_es_name = "y~m",
                          target_power = .80,
                          final_nrep = 400,
-                         what = "lb",
-                         seed = 2345)
+                         seed = 4567)
 ```
 
-The only change is `what`, which is set
-to `"lb"` (lower bound).
-
-The example above only needs a few attempts
-to arrive at the approximation.
-
-This is the output:
-
-```{r x_out_lb_print}
-out_n_lb
-```
-
-The estimated sample size is
-`r out_n_lb$x_final`. The estimated power
+The estimated value of *b* to have a power
+close to .80 power to detect the indirect effect
+(*ab*, with *a* equal to .30 in the population)
+by Monte Carlo interval is
+`r sprintf("%4.3f", out_es_b$x_final)`. The estimated power
 based on simulation is
-`r sprintf("%4.3f", out_n_lb$power_final)`,
-with its confidence interval equal to
-`r sprintf("[%1$4.3f, %2$4.3f]", out_n_lb$ci_final[1], out_n$ci_final[2])`.
-The upper bound, `r sprintf("%4.3f", out_n_lb$ci_final[1])`,
-is .02 within the target power (.80).
+`r sprintf("%4.3f", out_es_b$power_final)`.
 
-With 400 replications,
-it is estimated that sample sizes
-greater than `r out_n_lb$x_final` have power
-significantly greater than .80 and can
-be used if the target power is .80.
+That is, given the model and a sample
+size of 100, if the population value
+of *a* is medium (.30), the test has an
+approximate power of .80 when the population
+value of *b* is about
+`r sprintf("%4.3f", out_es_b$x_final)`.
+The corresponding indirect effect is
+about
+`r sprintf("%4.3f", out_es_b$x_final * .30)`,
+slightly lower than the indirect effect
+when *b* is hold to .30.
 
-This a summary of the results:
+These are the detailed results for
+the search when *b* is varied:
 
-```{r x_out_lb_summary}
-summary(out_n_lb)
+```{r x_out2_summary}
+summary(out_es_b)
 ```
 
-This is a plot of the search:
+It reports the 95% confidence interval
+of the estimated power,
+`r sprintf("[%4.3f; %4.3f]", out_es_b$ci_final[1], out_es_b$ci_final[2])`.
 
-```{r x_from_power_for_n_lb_plot, fig.cap="The Power Curve", fig.align="center"}
-plot(out_n_lb)
+
+```{r x_from_power_for_es_plot2, fig.cap="The Power Curve (b varied)", fig.align="center"}
+plot(out_es_b)
 ```
-
-# Case 1, Case 2, or Both?
-
-Similar to the Johnson-Neyman method in
-moderation, the two sample sizes found above
-can be used together to estimate the range
-of sample sizes with power not significantly
-different form the target power.
-
-That is, from the results above,
-we can conclude that, with 400 replications,
-sample sizes from
-`r out_n$x_final` to `r out_n_lb$x_final`
-have power levels
-not significantly different from .80.
-
-However, we believe researchers rarely need
-to find "the" sample with exactly "the"
-target power and doing sample size planning.
-
-Therefore, if resource is a concern and so
-it is more important not to have a sample size
-with power too low, then Case 1 is sufficient
-for know the range of sample sizes that
-should definitely not used.
-
-If having sufficient power is more important
-and the associated resource is available,
-the Case 2 is appropriate because it can
-find the minimum sample size that will
-have power significantly higher than
-the target power.
 
 # Advanced Features
 
 This brief illustration only covers
 basic features of `x_from_power()`.
 There are other ways to customize the
-search, such as the range of sample
-sizes to examine,
+search, such as the range of values
+of the parameter to examine (the default is 0 to 0.7),
 the level of confidence for the
 confidence interval, and the number of
 trials (10 by default). Please refer
 to the help page of `x_from_power()`
 for these and other options.
 
+```{r reset_environment, include = FALSE}
+# Revert the option
+options(option_old)
+```
+
 # References
+

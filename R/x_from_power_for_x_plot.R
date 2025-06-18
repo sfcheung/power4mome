@@ -193,8 +193,10 @@
 #'
 #' @export
 plot.x_from_power <- function(x,
-                              what = c("ci", "power_curve", "final_x", "final_power", "target_power", "sig_area"),
-                              text_what = c("final_x", "final_power", "sig_area"),
+                              what = c("ci", "power_curve", "final_x", "final_power", "target_power",
+                                       switch(x$x, n = "sig_area", es = NULL)),
+                              text_what = c("final_x", "final_power",
+                                            switch(x$x, n = "sig_area", es = NULL)),
                               digits = 3,
                               main = paste0("Power Curve ",
                                             "(Target Power: ",
