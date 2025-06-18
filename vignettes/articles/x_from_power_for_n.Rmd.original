@@ -29,7 +29,7 @@ This article is a brief illustration of how
 to use `x_from_power()` and `power4test()`
 from the package
 [power4mome](https://sfcheung.github.io/power4mome/)
-to do find by simulation the sample
+to find by simulation the sample
 size with power close to a desired level
 to detect an effect, given the level of
 population effect size.
@@ -447,7 +447,6 @@ out_n <- x_from_power(out,
                       x = "n",
                       target_power = .80,
                       final_nrep = 400,
-                      goal = "close_enough",
                       what = "ub",
                       seed = 4567)
 ```
@@ -474,12 +473,6 @@ The argument used above:
   this number can be increased to, say,
   500 or 1000.
 
-- `goal`: To get the "close enough" solution,
-  set `goal` to `"close_enough"`. By default,
-  close enough is defined as "within .02
-  of the target power". (This can be controlled
-  by the argument `tolerance`).
-
 - `what`: If our goal is to find the sample
   size with the upper bound of the confidence
   interval of its power close enough to
@@ -488,6 +481,20 @@ The argument used above:
 - `seed`: To make the search reproducible,
   if possible, set this seed to an
   integer.
+
+- `goal`: To get the "close enough" solution,
+  set `goal` to `"close_enough"`
+  (`goal = "close_enough"`). However,
+  because the only goal for lower and upper
+  bounds (`what = "ub"` and `what = "lb"`)
+  is `"close_enough"`, this argument can be
+  omitted.
+
+
+By default,
+being "close enough" is defined as "within .02
+of the target power". (This can be controlled
+by the argument `tolerance`).
 
 ## Examine the Output
 
@@ -582,7 +589,6 @@ out_n_lb <- x_from_power(out,
                          x = "n",
                          target_power = .80,
                          final_nrep = 400,
-                         goal = "close_enough",
                          what = "lb",
                          seed = 2345)
 ```
