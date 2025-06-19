@@ -181,19 +181,40 @@ power4test_by_es <- function(object,
     tmp <- as.character(x)
     names(tmp) <- pop_es_name
     if (is.null(new_nrep)) {
-      tmp_out <- power4test(object = object,
-                                  pop_es = tmp,
-                                  progress = progress,
-                                  iseed = seeds[i],
-                                  ...)
+      tmp_out <- tryCatch(power4test(
+                            object = object,
+                            pop_es = tmp,
+                            progress = progress,
+                            iseed = seeds[i],
+                            ...,
+                          ),
+                          error = function(e) e)
     } else {
-      tmp_out <- power4test(object = object,
-                                  pop_es = tmp,
-                                  nrep = new_nrep[i],
-                                  progress = progress,
-                                  iseed = seeds[i],
-                                  ...)
+      tmp_out <- tryCatch(power4test(
+                            object = object,
+                            pop_es = tmp,
+                            nrep = new_nrep[i],
+                            progress = progress,
+                            iseed = seeds[i],
+                            ...
+                          ),
+                          error = function(e) e)
     }
+
+    if (inherits(tmp_out, "error")) {
+
+      if (progress) {
+        msg <- "Error in estimating power for this value:"
+        msg <- c(msg, paste0("- ", names(tmp), ": ", tmp))
+        msg <- c(msg, "The error message:")
+        msg <- c(msg, paste0("- ", tmp_out$message))
+        msg <- c(msg, "This value is skipped.")
+        cat(c("", msg, ""), sep = "\n")
+      }
+
+      next
+    }
+
     if (!save_sim_all) {
       # Keep the first element
       tmp_out$sim_all <- tmp_out$sim_all[1]

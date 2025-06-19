@@ -174,27 +174,46 @@ power4test_by_n <- function(object,
           "\n")
     }
     if (is.null(new_nrep)) {
-      tmp_out <- power4test(object = object,
-                             n = x,
-                             progress = progress,
-                             iseed = seeds[i],
-                             ...)
+      tmp_out <- tryCatch(power4test(
+                              object = object,
+                              n = x,
+                              progress = progress,
+                              iseed = seeds[i],
+                              ...
+                            ),
+                            error = function(e) e)
     } else {
-      tmp_out <- power4test(object = object,
-                             n = x,
-                             nrep = new_nrep[i],
-                             progress = progress,
-                             iseed = seeds[i],
-                             ...)
+      tmp_out <- tryCatch(power4test(
+                              object = object,
+                              n = x,
+                              nrep = new_nrep[i],
+                              progress = progress,
+                              iseed = seeds[i],
+                              ...
+                            ),
+                            error = function(e) e)
     }
+
+    if (inherits(tmp_out, "error")) {
+
+      if (progress) {
+        msg <- "Error in estimating power for this sample size:"
+        msg <- c(msg, paste0("- ", x))
+        msg <- c(msg, "The error message:")
+        msg <- c(msg, paste0("- ", tmp_out$message))
+        msg <- c(msg, "This sample sizes is skipped.")
+        cat(c("", msg, ""), sep = "\n")
+      }
+
+      next
+    }
+
     if (!save_sim_all) {
       # Keep the first element
       tmp_out$sim_all <- tmp_out$sim_all[1]
     }
-    out[[i]] <- tmp_out
+    out[[as.character(x)]] <- tmp_out
   }
-  # names(out) <- c(n_org, n)
-  names(out) <- c(n)
   class(out) <- c("power4test_by_n", class(out))
   out
 }
