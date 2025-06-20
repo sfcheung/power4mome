@@ -200,10 +200,10 @@ test_cond_indirect <- function(fit = fit,
   }
   if (inherits(out, "error") ||
       identical(out, NA)) {
-    out2 <- c(est = NA,
-              cilo = NA,
-              cihi = NA,
-              sig = NA)
+    out2 <- c(est = as.numeric(NA),
+              cilo = as.numeric(NA),
+              cihi = as.numeric(NA),
+              sig = as.numeric(NA))
     return(out2)
   }
   ci0 <- stats::confint(out)

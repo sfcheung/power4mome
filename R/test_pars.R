@@ -237,7 +237,6 @@ test_parameters <- function(fit = fit,
   } else {
     fit_ok <- TRUE
   }
-
   if (standardized) {
     if (fit_type != "lavaan") {
       stop('Standardized solution supported only for `lavaan` output.')
@@ -246,11 +245,11 @@ test_parameters <- function(fit = fit,
                                         pvalue = TRUE,
                                         ci = TRUE)
     if (!fit_ok) {
-      est$est.std <- NA
-      est$ci.lower <- NA
-      est$ci.upper <- NA
-      est$pvalue <- NA
-      est$se <- NA
+      est$est.std <- as.numeric(NA)
+      est$ci.lower <- as.numeric(NA)
+      est$ci.upper <- as.numeric(NA)
+      est$pvalue <- as.numeric(NA)
+      est$se <- as.numeric(NA)
     }
   } else {
     if (fit_type == "lm_list") {
@@ -273,11 +272,11 @@ test_parameters <- function(fit = fit,
                                         remove.nonfree = remove.nonfree,
                                         ...)
       if (!fit_ok) {
-        est$est.std <- NA
-        est$ci.lower <- NA
-        est$ci.upper <- NA
-        est$pvalue <- NA
-        est$se <- NA
+        est$est.std <- as.numeric(NA)
+        est$ci.lower <- as.numeric(NA)
+        est$ci.upper <- as.numeric(NA)
+        est$pvalue <- as.numeric(NA)
+        est$se <- as.numeric(NA)
       }
     }
   }
@@ -297,8 +296,9 @@ test_parameters <- function(fit = fit,
                    fixed = TRUE)
   }
   colnames(est) <- enames
+
   if (!fit_ok) {
-    est$sig <- NA
+    est$sig <- as.numeric(NA)
   } else {
     est$sig <- ifelse((est$cilo > 0) | (est$cihi < 0),
                       yes = 1,
