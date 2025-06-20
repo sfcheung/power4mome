@@ -77,6 +77,14 @@
 #' not set this argument and should let
 #' [power4test()] to set it automatically.
 #'
+#' @param check_post_check Logical. If
+#' `TRUE`, the default, and the model
+#' is fitted by `lavaan`, the test
+#' will be conducted only if the model
+#' passes the `post.check` conducted
+#' by [lavaan::lavInspect()] (with
+#' `what = "post.check"`).
+#'
 #' @param ... Additional arguments to
 #' be passed to [manymome::indirect_effect()].
 #'
@@ -151,6 +159,7 @@ test_indirect_effect <- function(fit = fit,
                                  mc_out = NULL,
                                  boot_ci = FALSE,
                                  boot_out = NULL,
+                                 check_post_check = TRUE,
                                  ...,
                                  fit_name = "fit",
                                  get_map_names = FALSE,
@@ -186,7 +195,9 @@ test_indirect_effect <- function(fit = fit,
   }
   if (boot_ci) mc_ci <- FALSE
   if (inherits(fit, "lavaan")) {
-    fit_ok <- lavaan::lavInspect(fit, "converged")
+    fit_ok <- lavaan::lavInspect(fit, "converged") &&
+              (suppressWarnings(lavaan::lavInspect(fit, "post.check") ||
+               !check_post_check))
   } else {
     fit_ok <- TRUE
   }

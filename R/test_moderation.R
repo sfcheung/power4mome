@@ -92,6 +92,7 @@
 #' @export
 test_moderation <- function(fit = fit,
                             standardized = FALSE,
+                            check_post_check = TRUE,
                             ...,
                             fit_name = "fit",
                             get_map_names = FALSE,

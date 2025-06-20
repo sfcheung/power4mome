@@ -7,6 +7,7 @@
 test_moderation(
   fit = fit,
   standardized = FALSE,
+  check_post_check = TRUE,
   ...,
   fit_name = "fit",
   get_map_names = FALSE,
@@ -23,6 +24,14 @@ or \code{\link[lmhelprs:lm_list_to_partable]{lmhelprs::lm_list_to_partable()}}.}
 \code{\link[lavaan:standardizedSolution]{lavaan::standardizedSolution()}} will
 be used. Can be used only with models
 fitted by \code{lavaan}.}
+
+\item{check_post_check}{Logical. If
+\code{TRUE}, the default, and the model
+is fitted by \code{lavaan}, the test
+will be conducted only if the model
+passes the \code{post.check} conducted
+by \code{\link[lavaan:lavInspect]{lavaan::lavInspect()}} (with
+\code{what = "post.check"}).}
 
 \item{...}{Additional arguments to
 be passed to \code{\link[lavaan:parameterEstimates]{lavaan::parameterEstimates()}},

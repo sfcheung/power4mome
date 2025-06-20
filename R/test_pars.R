@@ -175,6 +175,7 @@ test_parameters <- function(fit = fit,
                             pars = NULL,
                             op = NULL,
                             remove.nonfree = TRUE,
+                            check_post_check = TRUE,
                             ...,
                             fit_name = "fit",
                             get_map_names = FALSE,
@@ -229,6 +230,14 @@ test_parameters <- function(fit = fit,
     }
   }
 
+  if (inherits(fit, "lavaan")) {
+    fit_ok <- lavaan::lavInspect(fit, "converged") &&
+              (suppressWarnings(lavaan::lavInspect(fit, "post.check") ||
+               !check_post_check))
+  } else {
+    fit_ok <- TRUE
+  }
+
   if (standardized) {
     if (fit_type != "lavaan") {
       stop('Standardized solution supported only for `lavaan` output.')
@@ -236,6 +245,13 @@ test_parameters <- function(fit = fit,
     est <- lavaan::standardizedSolution(object = fit,
                                         pvalue = TRUE,
                                         ci = TRUE)
+    if (!fit_ok) {
+      est$est.std <- NA
+      est$ci.lower <- NA
+      est$ci.upper <- NA
+      est$pvalue <- NA
+      est$se <- NA
+    }
   } else {
     if (fit_type == "lm_list") {
       # TODO:
@@ -256,6 +272,13 @@ test_parameters <- function(fit = fit,
                                         ci = TRUE,
                                         remove.nonfree = remove.nonfree,
                                         ...)
+      if (!fit_ok) {
+        est$est.std <- NA
+        est$ci.lower <- NA
+        est$ci.upper <- NA
+        est$pvalue <- NA
+        est$se <- NA
+      }
     }
   }
   enames <- colnames(est)
@@ -274,9 +297,13 @@ test_parameters <- function(fit = fit,
                    fixed = TRUE)
   }
   colnames(est) <- enames
-  est$sig <- ifelse((est$cilo > 0) | (est$cihi < 0),
-                    yes = 1,
-                    no = 0)
+  if (!fit_ok) {
+    est$sig <- NA
+  } else {
+    est$sig <- ifelse((est$cilo > 0) | (est$cihi < 0),
+                      yes = 1,
+                      no = 0)
+  }
   test_label <- lavaan::lav_partable_labels(est)
   out <- cbind(test_label = test_label,
                est)

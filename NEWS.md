@@ -1,4 +1,4 @@
-# power4mome 0.0.1.72
+# power4mome 0.0.1.73
 
 - Initialized the package. (0.0.0.9000)
 
@@ -482,3 +482,7 @@
 
 - Added error catching to some test
   functions. (0.0.1.72)
+
+- Some test functions will now check
+  whether a model fit passed the
+  `post.check` test by `lavaan`. (0.0.1.73)
