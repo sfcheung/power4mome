@@ -185,7 +185,14 @@ test_indirect_effect <- function(fit = fit,
     return(paste0("test_indirect: ", tmp, collapse = ""))
   }
   if (boot_ci) mc_ci <- FALSE
-  out <- manymome::indirect_effect(x = x,
+  if (inherits(fit, "lavaan")) {
+    fit_ok <- lavaan::lavInspect(fit, "converged")
+  } else {
+    fit_ok <- TRUE
+  }
+  if (fit_ok) {
+    out <- tryCatch(manymome::indirect_effect(
+                                   x = x,
                                    y = y,
                                    m = m,
                                    fit = fit,
@@ -194,7 +201,19 @@ test_indirect_effect <- function(fit = fit,
                                    boot_ci = boot_ci,
                                    boot_out = boot_out,
                                    progress = FALSE,
-                                   ...)
+                                   ...),
+                  error = function(e) e)
+  } else {
+    out <- NA
+  }
+  if (inherits(out, "error") ||
+      identical(out, NA)) {
+    out2 <- c(est = NA,
+              cilo = NA,
+              cihi = NA,
+              sig = NA)
+    return(out2)
+  }
   ci0 <- stats::confint(out)
   out1 <- ifelse((ci0[1, 1] > 0) || (ci0[1, 2] < 0),
                   yes = 1,

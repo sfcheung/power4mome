@@ -1,4 +1,4 @@
-# power4mome 0.0.1.70
+# power4mome 0.0.1.72
 
 - Initialized the package. (0.0.0.9000)
 
@@ -474,3 +474,11 @@
 
 - Disabled `sig_area` if `x = "es"`.
   (0.0.1.70)
+
+- Updated `power4test_by_n()` and
+  `power4test_by_es()` to catch error
+  in `power4test()` and skip a value.
+  (0.0.1.71)
+
+- Added error catching to some test
+  functions. (0.0.1.72)
