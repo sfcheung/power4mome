@@ -11,7 +11,7 @@ for a power4test object."><meta property="og:image" content="https://sfcheung.gi
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.72</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.73</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -69,6 +69,7 @@ for a <code>power4test</code> object.</p>
 <span>  pars <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  op <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  remove.nonfree <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  check_post_check <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span>,</span>
 <span>  fit_name <span class="op">=</span> <span class="st">"fit"</span>,</span>
 <span>  get_map_names <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -121,6 +122,16 @@ parameters will be returned. Ignored
 if <code>standardized</code> is <code>TRUE</code> or
 if the model is not fitted by
 <code>lavaan</code>.</p></dd>
+
+
+<dt id="arg-check-post-check">check_post_check<a class="anchor" aria-label="anchor" href="#arg-check-post-check"></a></dt>
+<dd><p>Logical. If
+<code>TRUE</code>, the default, and the model
+is fitted by <code>lavaan</code>, the test
+will be conducted only if the model
+passes the <code>post.check</code> conducted
+by <code><a href="https://rdrr.io/pkg/lavaan/man/lavInspect.html" class="external-link">lavaan::lavInspect()</a></code> (with
+<code>what = "post.check"</code>).</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
