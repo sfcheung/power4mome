@@ -134,6 +134,7 @@ test_cond_indirect <- function(fit = fit,
                                mc_out = NULL,
                                boot_ci = FALSE,
                                boot_out = NULL,
+                               check_post_check = TRUE,
                                ...,
                                fit_name = "fit",
                                get_map_names = FALSE,
@@ -174,7 +175,9 @@ test_cond_indirect <- function(fit = fit,
   }
   if (boot_ci) mc_ci <- FALSE
   if (inherits(fit, "lavaan")) {
-    fit_ok <- lavaan::lavInspect(fit, "converged")
+    fit_ok <- lavaan::lavInspect(fit, "converged") &&
+              (suppressWarnings(lavaan::lavInspect(fit, "post.check") ||
+               !check_post_check))
   } else {
     fit_ok <- TRUE
   }

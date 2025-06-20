@@ -11,6 +11,7 @@ test_parameters(
   pars = NULL,
   op = NULL,
   remove.nonfree = TRUE,
+  check_post_check = TRUE,
   ...,
   fit_name = "fit",
   get_map_names = FALSE,
@@ -50,6 +51,14 @@ parameters will be returned. Ignored
 if \code{standardized} is \code{TRUE} or
 if the model is not fitted by
 \code{lavaan}.}
+
+\item{check_post_check}{Logical. If
+\code{TRUE}, the default, and the model
+is fitted by \code{lavaan}, the test
+will be conducted only if the model
+passes the \code{post.check} conducted
+by \code{\link[lavaan:lavInspect]{lavaan::lavInspect()}} (with
+\code{what = "post.check"}).}
 
 \item{...}{Additional arguments to
 be passed to \code{\link[lavaan:parameterEstimates]{lavaan::parameterEstimates()}},
