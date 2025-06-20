@@ -195,7 +195,14 @@ test_cond_indirect_effects <- function(fit = fit,
     return(paste0("test_cond_indirect_effects: ", tmp, collapse = ""))
   }
   if (boot_ci) mc_ci <- FALSE
-  out <- manymome::cond_indirect_effects(x = x,
+  if (inherits(fit, "lavaan")) {
+    fit_ok <- lavaan::lavInspect(fit, "converged")
+  } else {
+    fit_ok <- TRUE
+  }
+  if (fit_ok) {
+    out <- tryCatch(manymome::cond_indirect_effects(
+                                         x = x,
                                          y = y,
                                          m = m,
                                          wlevels = wlevels,
@@ -205,7 +212,21 @@ test_cond_indirect_effects <- function(fit = fit,
                                          boot_ci = boot_ci,
                                          boot_out = boot_out,
                                          progress = FALSE,
-                                         ...)
+                                         ...),
+                   error = function(e) e)
+  } else {
+    out <- NA
+  }
+  if (inherits(out, "error") ||
+      identical(out, NA)) {
+    out2 <- data.frame(
+              est = NA,
+              cilo = NA,
+              cihi = NA,
+              sig = NA
+            )
+    return(out2)
+  }
   tmp <- rownames(attr(out, "wlevels"))
   tmp2 <- paste0(c(x, m, y),
                  collapse = "->")
@@ -232,14 +253,4 @@ test_cond_indirect_effects <- function(fit = fit,
   rownames(out2) <- NULL
   attr(out2, "test_label") <- "test_label"
   return(out2)
-}
-
-#' @noRd
-
-cond_name <- function(wvalues) {
-  w1 <- names(wvalues)
-  out <- paste0(w1, " = ", wvalues)
-  out <- paste(out,
-               collapse = "; ")
-  return(out)
 }

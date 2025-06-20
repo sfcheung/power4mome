@@ -364,11 +364,35 @@ do_test_i <- function(out_i,
                      USE.NAMES = FALSE)
   args1 <- c(args_map,
              test_args)
-  out0 <- do.call(test_fun,
-                  args1)
+  # # Disable error catching
+  # # Error *should* be raised
+  # out0 <- tryCatch(
+  #           do.call(
+  #             test_fun,
+  #             args1
+  #           ),
+  #           error = function(e) e)
+  # if (inherits(out0, "error")) {
+  #   return(list(test = NULL,
+  #               test_results = NULL))
+  # }
+  out0 <- do.call(
+            test_fun,
+            args1
+          )
   if (is.function(results_fun)) {
-    out1 <- do.call(results_fun,
-                    c(list(out0), results_args))
+    # # Disable error catching
+    # # Error *should* be raised
+    # out1 <- tryCatch(
+    #           do.call(
+    #             results_fun,
+    #             c(list(out0), results_args)
+    #           ),
+    #           error = function(e) NULL)
+    out1 <- do.call(
+                results_fun,
+                c(list(out0), results_args)
+              )
   } else {
     out1 <- out0
   }
