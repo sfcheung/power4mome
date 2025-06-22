@@ -213,7 +213,7 @@ print.summary.x_from_power <- function(x,
   tmp0 <- switch(x$x,
                  n = ceiling(x$x_tried),
                  es = x$x_tried)
-  tmp <- formatC(tmp0,
+  tmp <- formatC(sort(tmp0),
                   digits = switch(x$x,
                                   n = 0,
                                   es = digits),
