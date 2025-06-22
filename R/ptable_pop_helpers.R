@@ -78,23 +78,39 @@ set_pop <- function(par_es,
                                "mi",
                                "li")) {
 
-  num_comp <- max_num_comp(par_es)
-  es1 <- expand_ind_labels(es1,
-                           es_ind = es_ind,
-                           num_comp = num_comp)
+  # num_comp <- max_num_comp(par_es)
+  # # No longer necessary
+  # # because eval() is used.
+  # es1 <- expand_ind_labels(es1,
+  #                          es_ind = es_ind,
+  #                          num_comp = num_comp)
   es10 <- es_long(es1)
   es20 <- es_long(es2)
+  es10_env <- list2env(as.list(es10))
+  es20_env <- list2env(as.list(es20))
   to_set <- lavaan::lavParseModelString(names(par_es),
                                         as.data.frame. = TRUE)
   to_set$pop <- NA
   for (x in seq_along(par_es)) {
-    y <- match(par_es[x], names(es10))
-    if (is.na(y)) {
-      es_num <- suppressWarnings(as.numeric(par_es[x]))
-      if (!is.na(es_num)) {
-        # Effect size specified numerically
-        to_set[x, "pop"] <- es_num
+    is_inter <- isTRUE(grepl(":", to_set$rhs[x], fixed = TRUE))
+    if (is_inter) {
+      y <- try(eval(parse(text = par_es[x]),
+                     envir = es20_env),
+               silent = TRUE)
+      if (inherits(y, "try-error") ||
+          !is.numeric(y)) {
+        to_set[x, "pop"] <- NA
       } else {
+        to_set[x, "pop"] <- y
+      }
+    } else {
+      y <- try(eval(parse(text = par_es[x]),
+                    envir = es10_env),
+              silent = TRUE)
+      if (inherits(y, "try-error") ||
+          !is.numeric(y)) {
+        # Not needed.
+        # Kept for backward compatibility
         # Check if it is a component
         x_i <- strsplit(par_es[x],
                         "_",
@@ -105,15 +121,37 @@ set_pop <- function(par_es,
           es_num <- x_i_num[1] ^ (1 / x_i_num[2])
           to_set[x, "pop"] <- es_num
         }
+      } else {
+        to_set[x, "pop"] <- y
       }
-    } else {
-      # Effect size label found
-      is_inter <- isTRUE(grepl(":", to_set$rhs[x], fixed = TRUE))
-      to_set[x, "pop"] <- ifelse(is_inter,
-                                es20[y],
-                                es10[y])
     }
   }
+  #   y <- match(par_es[x], names(es10))
+  #   if (is.na(y)) {
+  #     es_num <- suppressWarnings(as.numeric(par_es[x]))
+  #     if (!is.na(es_num)) {
+  #       # Effect size specified numerically
+  #       to_set[x, "pop"] <- es_num
+  #     } else {
+  #       # Check if it is a component
+  #       x_i <- strsplit(par_es[x],
+  #                       "_",
+  #                       fixed = TRUE)[[1]]
+  #       x_i_num <- suppressWarnings(as.numeric(x_i))
+  #       if (is.numeric(x_i_num) &&
+  #           all(!is.na(x_i_num))) {
+  #         es_num <- x_i_num[1] ^ (1 / x_i_num[2])
+  #         to_set[x, "pop"] <- es_num
+  #       }
+  #     }
+  #   } else {
+  #     # Effect size label found
+  #     is_inter <- isTRUE(grepl(":", to_set$rhs[x], fixed = TRUE))
+  #     to_set[x, "pop"] <- ifelse(is_inter,
+  #                               es20[y],
+  #                               es10[y])
+  #   }
+  # }
   to_set$es <- par_es
   to_set[, c("lhs", "op", "rhs", "pop", "es")]
 }
@@ -202,7 +240,7 @@ fix_par_es <- function(par_es,
         k <- length(y)
         out <- rep(x, k)
         # k indicates the number of component paths
-        out <- paste0(out, "_", k)
+        out <- paste0("(", out, ")^(1 / ", k, ")")
         names(out) <- y
         out
       }
