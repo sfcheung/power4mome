@@ -2,6 +2,8 @@
 % Please edit documentation in R/power_curve_plot.R
 \name{plot.power_curve}
 \alias{plot.power_curve}
+\alias{plot.power4test_by_n}
+\alias{plot.power4test_by_es}
 \title{Plot a Power Curve}
 \usage{
 \method{plot}{power_curve}(
@@ -17,10 +19,51 @@
   ci_level = 0.95,
   ...
 )
+
+\method{plot}{power4test_by_n}(
+  x,
+  main = "Estimated Power vs. Sample Size",
+  xlab = "Sample Size",
+  ylab = "Estimated Power",
+  pars_ci = list(),
+  type = "l",
+  ylim = c(0, 1),
+  ci_level = 0.95,
+  ...
+)
+
+\method{plot}{power4test_by_n}(
+  x,
+  main = "Estimated Power vs. Sample Size",
+  xlab = "Sample Size",
+  ylab = "Estimated Power",
+  pars_ci = list(),
+  type = "l",
+  ylim = c(0, 1),
+  ci_level = 0.95,
+  ...
+)
+
+\method{plot}{power4test_by_es}(
+  x,
+  main = paste0("Estimated Power vs. Effect Size / Parameter (", attr(x[[1]],
+    "pop_es_name"), ")"),
+  xlab = paste0("Effect Size / Parameter (", attr(x[[1]], "pop_es_name"), ")"),
+  ylab = "Estiamted Power",
+  pars_ci = list(),
+  type = "l",
+  ylim = c(0, 1),
+  ci_level = 0.95,
+  ...
+)
 }
 \arguments{
-\item{x}{A \code{power_curve} object,
-the output of \code{\link[=power_curve]{power_curve()}}.}
+\item{x}{The object to be plotted.
+It can be a \code{power_curve} object,
+the output of \code{\link[=power_curve]{power_curve()}}. It
+can also be the output of
+\code{\link[=power4test_by_n]{power4test_by_n()}} or
+\code{\link[=power4test_by_es]{power4test_by_es()}}.}
 
 \item{what}{A character vector of
 what to include in the
@@ -29,8 +72,8 @@ plot. Possible values are
 for the estimated sample size) and
 \code{"power_curve"} (the crude power
 curve, if available).
-By default, all these elements will
-be plotted.}
+The default values depend on the
+type of \code{x}.}
 
 \item{main}{The title of the plot.}
 
@@ -62,16 +105,16 @@ Passed to \code{\link[=plot]{plot()}} when drawing
 the base plot.}
 }
 \value{
-The \code{plot}-method of \code{power_curve}
-objects, which are the output of
-\code{\link[=power_curve]{power_curve()}}, returns \code{x}
-invisibly. It
-is called for its side effect.
+The \code{plot}-methods return \code{x}
+invisibly. They
+are called for their side effects.
 }
 \description{
-It plots the results
+Plotting the results
 in a 'power_curve' object, such as the
-estimated power against sample size.
+estimated power against sample size,
+or the results of \code{\link[=power4test_by_n]{power4test_by_n()}}
+or \code{\link[=power4test_by_es]{power4test_by_es()}}.
 }
 \details{
 It currently plots the relation
@@ -144,5 +187,7 @@ plot(pout2)
 
 }
 \seealso{
-\code{\link[=power_curve]{power_curve()}}
+\code{\link[=power_curve]{power_curve()}},
+\code{\link[=power4test_by_n]{power4test_by_n()}}, and
+\code{\link[=power4test_by_es]{power4test_by_es()}}.
 }

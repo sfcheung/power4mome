@@ -1,8 +1,10 @@
 #' @title Plot a Power Curve
 #'
-#' @description It plots the results
+#' @description Plotting the results
 #' in a 'power_curve' object, such as the
-#' estimated power against sample size.
+#' estimated power against sample size,
+#' or the results of [power4test_by_n()]
+#' or [power4test_by_es()].
 #'
 #' @details
 #' It currently plots the relation
@@ -13,14 +15,16 @@
 #' individually.
 #'
 #' @return
-#' The `plot`-method of `power_curve`
-#' objects, which are the output of
-#' [power_curve()], returns `x`
-#' invisibly. It
-#' is called for its side effect.
+#' The `plot`-methods return `x`
+#' invisibly. They
+#' are called for their side effects.
 #'
-#' @param x A `power_curve` object,
-#' the output of [power_curve()].
+#' @param x The object to be plotted.
+#' It can be a `power_curve` object,
+#' the output of [power_curve()]. It
+#' can also be the output of
+#' [power4test_by_n()] or
+#' [power4test_by_es()].
 #'
 #' @param what A character vector of
 #' what to include in the
@@ -29,8 +33,8 @@
 #' for the estimated sample size) and
 #' `"power_curve"` (the crude power
 #' curve, if available).
-#' By default, all these elements will
-#' be plotted.
+#' The default values depend on the
+#' type of `x`.
 #'
 #' @param main The title of the plot.
 #'
@@ -61,7 +65,9 @@
 #' Passed to [plot()] when drawing
 #' the base plot.
 #'
-#' @seealso [power_curve()]
+#' @seealso [power_curve()],
+#' [power4test_by_n()], and
+#' [power4test_by_es()].
 #'
 #' @examples
 #'
@@ -228,4 +234,101 @@ plot_power_curve_curve <- function(x,
            col = col,
            ...)
   }
+}
+
+#' @rdname plot.power_curve
+#' @export
+plot.power4test_by_n <- function(
+                             x,
+                             what = "ci",
+                             main = "Estimated Power vs. Sample Size",
+                             xlab = "Sample Size",
+                             ylab = "Estimated Power",
+                             pars_ci = list(),
+                             type = "l",
+                             ylim = c(0, 1),
+                             ci_level = .95,
+                             ...) {
+  reject_df <- rejection_rates(x,
+                               ci_level = ci_level,
+                               all_columns = TRUE)
+  reject_df$x <- reject_df$n
+  x0 <- list(predictor = "n",
+             reject_df = reject_df)
+
+  plot.power_curve(x = x0,
+                   what = what,
+                   main = main,
+                   xlab = xlab,
+                   ylab = ylab,
+                   pars_ci = pars_ci,
+                   type = type,
+                   ylim = ylim,
+                   ci_level = ci_level,
+                   ...)
+  invisible(x)
+}
+
+#' @rdname plot.power_curve
+#' @export
+plot.power4test_by_n <- function(
+                             x,
+                             main = "Estimated Power vs. Sample Size",
+                             xlab = "Sample Size",
+                             ylab = "Estimated Power",
+                             pars_ci = list(),
+                             type = "l",
+                             ylim = c(0, 1),
+                             ci_level = .95,
+                             ...) {
+  reject_df <- rejection_rates(x,
+                               ci_level = ci_level,
+                               all_columns = TRUE)
+  reject_df$x <- reject_df$n
+  x0 <- list(predictor = "n",
+             reject_df = reject_df)
+
+  plot.power_curve(x = x0,
+                   main = main,
+                   xlab = xlab,
+                   ylab = ylab,
+                   pars_ci = pars_ci,
+                   type = type,
+                   ylim = ylim,
+                   ci_level = ci_level,
+                   ...)
+  invisible(x)
+}
+
+#' @rdname plot.power_curve
+#' @export
+plot.power4test_by_es <- function(
+                             x,
+                             main = paste0("Estimated Power vs. Effect Size / Parameter (",
+                                           attr(x[[1]], "pop_es_name"), ")"),
+                             xlab = paste0("Effect Size / Parameter (",
+                                           attr(x[[1]], "pop_es_name"), ")"),
+                             ylab = "Estiamted Power",
+                             pars_ci = list(),
+                             type = "l",
+                             ylim = c(0, 1),
+                             ci_level = .95,
+                             ...) {
+  reject_df <- rejection_rates(x,
+                               ci_level = ci_level,
+                               all_columns = TRUE)
+  reject_df$x <- reject_df$es
+  x0 <- list(predictor = "es",
+             reject_df = reject_df)
+
+  plot.power_curve(x = x0,
+                   main = main,
+                   xlab = xlab,
+                   ylab = ylab,
+                   pars_ci = pars_ci,
+                   type = type,
+                   ylim = ylim,
+                   ci_level = ci_level,
+                   ...)
+  invisible(x)
 }
