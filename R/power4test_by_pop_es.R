@@ -52,6 +52,11 @@
 #' to [power4test()]. For [c.power4test_by_es()],
 #' they are [power4test_by_es()] outputs
 #' to be combined together.
+#' For the `print` method of the output
+#' of [power4test_by_es()], they are
+#' arguments to be passed to the
+#' `print` method of the output of
+#' [power4test()] ([print.power4test()]).
 #'
 # @param by_seed <- Inherited
 #'
@@ -383,4 +388,100 @@ as.power4test_by_es <- function(original_object,
     return(original_object)
   }
   stop("original_object not of a supported class.")
+}
+
+
+#' @rdname power4test_by_es
+#'
+#' @param x The object
+#' to be printed.
+#'
+#' @param digits The numbers of digits
+#' displayed after the decimal.
+#'
+#' @param print_all If `TRUE`, all
+#' elements in `x`, that is, the results
+#' of all sample sizes examined, will
+#' be printed. If `FALSE`, then only
+#' those of the first value of the
+#' parameter
+#' will be printed.
+#'
+#' @return
+#' The `print`-method of `power4test_by_es`
+#' objects returns the object invisibly.
+#' It is called for its side-effect.
+#'
+#' @export
+print.power4test_by_es <- function(
+    x,
+    print_all = FALSE,
+    digits = 3,
+    ...
+  ) {
+  pop_es_name <- attr(x[[1]], "pop_es_name")
+  x_tried <- sapply(
+                x,
+                function(xx) {attr(xx, "pop_es_value")}
+              )
+  x_tried_str <- formatC(
+                      x_tried,
+                      digits = digits,
+                      format = "f"
+                    )
+  x_tried_all_str <- paste0(
+                        x_tried_str,
+                        collapse = ", "
+                      )
+  catwrap(
+      c(paste("The parameter examined:", pop_es_name),
+        paste("The value(s) examined:", x_tried_all_str))
+      )
+
+  if (print_all) {
+    cat("\nThe output for each `power4test` analysis:\n")
+    ii <- seq_along(x)
+  } else {
+    cat("\nThe output of the first element:\n")
+    ii <- 1
+  }
+
+  for (i in ii) {
+    x_i <- attr(x[[i]], "pop_es_value")
+    x_i_str <- formatC(
+                  x_i,
+                  digits = digits,
+                  format = "f"
+                )
+    xx <- x[[i]]
+    class(xx) <- "power4test"
+    cat(header_str("",
+                  hw = .84,
+                  sym = "-",
+                  prefix = "\n",
+                  suffix = "\n",
+                  sep_i = ""))
+    cat(header_str(paste0("Parameter: ", pop_es_name),
+                  hw = .8,
+                  sym = "-",
+                  suffix = "\n"))
+    cat(header_str(paste0("Value: ", x_i_str),
+                  hw = .8,
+                  sym = "-",
+                  suffix = "\n"))
+    cat(header_str("",
+                  hw = .84,
+                  sym = "-",
+                  suffix = "\n",
+                  sep_i = ""))
+    print(xx,
+          digits = digits,
+          ...)
+  }
+  if (!print_all) {
+    cat("\n")
+    catwrap(
+        "Print with 'print_all = TRUE' to print all elements."
+        )
+  }
 }
