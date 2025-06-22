@@ -1,4 +1,4 @@
-# power4mome 0.0.1.73
+# power4mome 0.0.1.74
 
 - Initialized the package. (0.0.0.9000)
 
@@ -486,3 +486,8 @@
 - Some test functions will now check
   whether a model fit passed the
   `post.check` test by `lavaan`. (0.0.1.73)
+
+- Updated to allow using expressions
+  (e.g., `"s * 2"`, `"sqrt(.30)"`)
+  to specify the population value of
+  a parameter. (0.0.1.74)

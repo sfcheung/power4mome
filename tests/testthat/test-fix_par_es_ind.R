@@ -35,19 +35,20 @@ model_es <- c("m1 ~ x1" = "-m",
 
 tmp1 <- fix_par_es(model_es,
                    model)
-tmp1_chk <- c(`m1 ~ x1` = "mi_3", `m2 ~ m1` = "mi_3", `y ~ m2` = "mi_3",
-`y ~ m3` = "li_2", `m3 ~ x2` = "li_2", `y ~ x1` = "m", `y2 ~ m3` = "m",
+tmp1_chk <- c(`m1 ~ x1` = "(mi)^(1 / 3)", `m2 ~ m1` = "(mi)^(1 / 3)", `y ~ m2` = "(mi)^(1 / 3)",
+`y ~ m3` = "(li)^(1 / 2)", `m3 ~ x2` = "(li)^(1 / 2)", `y ~ x1` = "m", `y2 ~ m3` = "m",
 `y2 ~ x2` = "m", `x1 ~~ x2` = "-s")
 
 expect_equal(sort(tmp1),
              sort(tmp1_chk))
 
-# Get maximum numbers of components
+# max_num_comp() is no longer needed
+# # Get maximum numbers of components
 
-expect_equal(max_num_comp(tmp1),
-             3)
-expect_equal(max_num_comp(tmp1[6:9]),
-             2)
+# expect_equal(max_num_comp(tmp1),
+#              3)
+# expect_equal(max_num_comp(tmp1[6:9]),
+#              2)
 
 # Set the values
 
