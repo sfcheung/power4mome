@@ -484,4 +484,5 @@ print.power4test_by_es <- function(
         "Print with 'print_all = TRUE' to print all elements."
         )
   }
+  invisible(x)
 }
