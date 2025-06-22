@@ -4,6 +4,7 @@
 \alias{power4test_by_n}
 \alias{c.power4test_by_n}
 \alias{as.power4test_by_n}
+\alias{print.power4test_by_n}
 \title{Power By Sample Sizes}
 \usage{
 power4test_by_n(
@@ -19,6 +20,8 @@ power4test_by_n(
 \method{c}{power4test_by_n}(..., sort = TRUE, skip_checking_models = FALSE)
 
 as.power4test_by_n(original_object)
+
+\method{print}{power4test_by_n}(x, print_all = FALSE, ...)
 }
 \arguments{
 \item{object}{A \code{power4test} object,
@@ -40,7 +43,12 @@ displayed.}
 they are arguments to be passed
 to \code{\link[=power4test]{power4test()}}. For \code{\link[=c.power4test_by_n]{c.power4test_by_n()}},
 they are \code{\link[=power4test_by_n]{power4test_by_n()}} outputs
-to be combined together.}
+to be combined together.
+For the \code{print} method of the output
+of \code{\link[=power4test_by_n]{power4test_by_n()}}, they are
+arguments to be passed to the
+\code{print} method of the output of
+\code{\link[=power4test]{power4test()}} (\code{\link[=print.power4test]{print.power4test()}}).}
 
 \item{by_seed}{If set to a number,
 it will be used to generate the
@@ -93,6 +101,16 @@ the \code{c} method directly.}
 \item{original_object}{The object
 to be converted to a \code{power4test_by_n}
 object.}
+
+\item{x}{The object
+to be printed.}
+
+\item{print_all}{If \code{TRUE}, all
+elements in \code{x}, that is, the results
+of all sample sizes examined, will
+be printed. If \code{FALSE}, then only
+those of the first sample size
+will be printed.}
 }
 \value{
 The function
@@ -109,6 +127,10 @@ sample sizes) combined.
 The function \code{\link[=as.power4test_by_n]{as.power4test_by_n()}} returns
 a \code{power4test_by_n} object converted
 from the input object.
+
+The \code{print}-method of \code{power4test_by_n}
+objects returns the object invisibly.
+It is called for its side-effect.
 }
 \description{
 Estimate power for a

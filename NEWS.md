@@ -1,4 +1,4 @@
-# power4mome 0.0.1.75
+# power4mome 0.0.1.76
 
 - Initialized the package. (0.0.0.9000)
 
@@ -495,3 +495,6 @@
 - The `print` method of `rejection_rates()`
   output now always print the column of
   estimates. (0.0.1.75)
+
+- Added a `print` method for the output
+  of `power4test_by_n()`. (0.0.1.76)

@@ -43,6 +43,11 @@
 #' to [power4test()]. For [c.power4test_by_n()],
 #' they are [power4test_by_n()] outputs
 #' to be combined together.
+#' For the `print` method of the output
+#' of [power4test_by_n()], they are
+#' arguments to be passed to the
+#' `print` method of the output of
+#' [power4test()] ([print.power4test()]).
 #'
 #' @param by_seed If set to a number,
 #' it will be used to generate the
@@ -360,4 +365,72 @@ as.power4test_by_n <- function(original_object) {
     return(original_object)
   }
   stop("original_object not of a supported class.")
+}
+
+#' @rdname power4test_by_n
+#'
+#' @param x The object
+#' to be printed.
+#'
+#' @param print_all If `TRUE`, all
+#' elements in `x`, that is, the results
+#' of all sample sizes examined, will
+#' be printed. If `FALSE`, then only
+#' those of the first sample size
+#' will be printed.
+#'
+#' @return
+#' The `print`-method of `power4test_by_n`
+#' objects returns the object invisibly.
+#' It is called for its side-effect.
+#'
+#' @export
+print.power4test_by_n <- function(
+    x,
+    print_all = FALSE,
+    ...
+  ) {
+  n_tried <- names(x)
+  catwrap(
+      c(paste("The sample(s) examined:",
+              paste0(sort(n_tried),
+                     collapse = ", ")))
+      )
+
+  if (print_all) {
+    cat("\nThe output for each `power4test` analysis:\n")
+    ii <- seq_along(x)
+  } else {
+    cat("\nThe output of the first element:\n")
+    ii <- 1
+  }
+
+  for (i in ii) {
+    n_i <- attr(x[[i]], "args")$n
+    xx <- x[[i]]
+    class(xx) <- "power4test"
+    cat(header_str("",
+                  hw = .84,
+                  sym = "-",
+                  prefix = "\n",
+                  suffix = "\n",
+                  sep_i = ""))
+    cat(header_str(paste0("Sample Size: ", n_i),
+                  hw = .8,
+                  sym = "-",
+                  suffix = "\n"))
+    cat(header_str("",
+                  hw = .84,
+                  sym = "-",
+                  suffix = "\n",
+                  sep_i = ""))
+    print(xx,
+          ...)
+  }
+  if (!print_all) {
+    cat("\n")
+    catwrap(
+        "Print with 'print_all = TRUE' to print all elements."
+        )
+  }
 }
