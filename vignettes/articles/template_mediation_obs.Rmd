@@ -1,6 +1,6 @@
 ---
 title: "Quick Template: Mediation with Observed Variables"
-date: "2025-06-09"
+date: "2025-06-22"
 output:
   html_document:
     fig.align: "center"
@@ -270,12 +270,15 @@ print(out,
 #> 
 #> Call print() and set 'test_long = TRUE' for a detailed report.
 rejection_rates(out)
-#>                     test test_label   p.v reject r.cilo r.cihi
-#> 1 test_indirect: x->m->y       Test 1.000  0.195  0.156  0.234
+#> [test]: test_indirect: x->m->y 
+#> [test_label]: Test 
+#>     est   p.v reject r.cilo r.cihi
+#> 1 0.049 1.000  0.195  0.156  0.234
 #> Notes:
 #> - p.v: The proportion of valid replications.
+#> - est: The mean of the estimates in a test across replications.
 #> - reject: The proportion of 'significant' replications, that is, the
-#>   rejection rate.If the null hypothesis is true, this is the Type I
+#>   rejection rate. If the null hypothesis is true, this is the Type I
 #>   error rate. If the null hypothesis is false, this is the power.
 #> - r.cilo,r.cihi: The confidence interval of the rejection rate, based
 #>   on normal approximation.
@@ -307,12 +310,15 @@ The results:
 
 ``` r
 rejection_rates(out_new_n)
-#>                     test test_label   p.v reject r.cilo r.cihi
-#> 1 test_indirect: x->m->y       Test 1.000  0.290  0.246  0.334
+#> [test]: test_indirect: x->m->y 
+#> [test_label]: Test 
+#>     est   p.v reject r.cilo r.cihi
+#> 1 0.053 1.000  0.290  0.246  0.334
 #> Notes:
 #> - p.v: The proportion of valid replications.
+#> - est: The mean of the estimates in a test across replications.
 #> - reject: The proportion of 'significant' replications, that is, the
-#>   rejection rate.If the null hypothesis is true, this is the Type I
+#>   rejection rate. If the null hypothesis is true, this is the Type I
 #>   error rate. If the null hypothesis is false, this is the power.
 #> - r.cilo,r.cihi: The confidence interval of the rejection rate, based
 #>   on normal approximation.
@@ -345,15 +351,18 @@ The results:
 
 ``` r
 rejection_rates(out_ns)
-#>     n                   test test_label   p.v reject r.cilo r.cihi
-#> 1 200 test_indirect: x->m->y       Test 1.000  0.323  0.277  0.368
-#> 2 250 test_indirect: x->m->y       Test 1.000  0.323  0.277  0.368
-#> 3 300 test_indirect: x->m->y       Test 1.000  0.445  0.396  0.494
+#> [test]: test_indirect: x->m->y 
+#> [test_label]: Test 
+#>     n   est   p.v reject r.cilo r.cihi
+#> 1 200 0.053 1.000  0.323  0.277  0.368
+#> 2 250 0.047 1.000  0.323  0.277  0.368
+#> 3 300 0.052 1.000  0.445  0.396  0.494
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.
+#> - est: The mean of the estimates in a test across replications.
 #> - reject: The proportion of 'significant' replications, that is, the
-#>   rejection rate.If the null hypothesis is true, this is the Type I
+#>   rejection rate. If the null hypothesis is true, this is the Type I
 #>   error rate. If the null hypothesis is false, this is the power.
 #> - r.cilo,r.cihi: The confidence interval of the rejection rate, based
 #>   on normal approximation.
@@ -409,13 +418,16 @@ summary(n_power_80)
 #> 
 #> Call:
 #> x_from_power(object = out, x = "n", seed = 1357)
+#> 
 #> Predictor (x): Sample Size 
 #> 
 #> - Target Power: 0.800 
+#> - Goal: Find 'x' with the confidence interval of the estimated power
+#>   enclosing the target power.
 #> 
 #> === Major Results ===
 #> 
-#> - Final Value: 832 
+#> - Final Value (Sample Size): 832
 #> 
 #> - Final Estimated Power: 0.828 
 #> - Confidence Interval: [0.790; 0.865]
@@ -424,8 +436,9 @@ summary(n_power_80)
 #> 
 #> === Technical Information ===
 #> 
+#> - Algorithm: bisection 
 #> - The range of values explored: 100 to 972 
-#> - Time spent in the search: 1.94 mins 
+#> - Time spent in the search: 1.17 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -451,17 +464,20 @@ summary(n_power_80)
 #> 
 #> - Detailed Results:
 #> 
-#>     n                   test test_label   p.v reject r.cilo r.cihi
-#> 1 100 test_indirect: x->m->y       Test 1.000  0.195  0.156  0.234
-#> 2 410 test_indirect: x->m->y       Test 1.000  0.537  0.489  0.586
-#> 3 691 test_indirect: x->m->y       Test 1.000  0.752  0.710  0.795
-#> 4 832 test_indirect: x->m->y       Test 1.000  0.828  0.790  0.865
-#> 5 972 test_indirect: x->m->y       Test 1.000  0.845  0.810  0.880
+#> [test]: test_indirect: x->m->y 
+#> [test_label]: Test 
+#>     n   est   p.v reject r.cilo r.cihi
+#> 1 100 0.049 1.000  0.195  0.156  0.234
+#> 2 410 0.049 1.000  0.537  0.489  0.586
+#> 3 691 0.050 1.000  0.752  0.710  0.795
+#> 4 832 0.051 1.000  0.828  0.790  0.865
+#> 5 972 0.048 1.000  0.845  0.810  0.880
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.
+#> - est: The mean of the estimates in a test across replications.
 #> - reject: The proportion of 'significant' replications, that is, the
-#>   rejection rate.If the null hypothesis is true, this is the Type I
+#>   rejection rate. If the null hypothesis is true, this is the Type I
 #>   error rate. If the null hypothesis is false, this is the power.
 #> - r.cilo,r.cihi: The confidence interval of the rejection rate, based
 #>   on normal approximation.
@@ -525,13 +541,16 @@ summary(n_power_80_ns)
 #> 
 #> Call:
 #> x_from_power(object = out_ns, x = "n", seed = 1357)
+#> 
 #> Predictor (x): Sample Size 
 #> 
 #> - Target Power: 0.800 
+#> - Goal: Find 'x' with the confidence interval of the estimated power
+#>   enclosing the target power.
 #> 
 #> === Major Results ===
 #> 
-#> - Final Value: 788 
+#> - Final Value (Sample Size): 788
 #> 
 #> - Final Estimated Power: 0.825 
 #> - Confidence Interval: [0.788; 0.862]
@@ -540,8 +559,9 @@ summary(n_power_80_ns)
 #> 
 #> === Technical Information ===
 #> 
-#> - The range of values explored: 300 to 1036 
-#> - Time spent in the search: 1.421 mins 
+#> - Algorithm: bisection 
+#> - The range of values explored: 1036 to 788 
+#> - Time spent in the search: 52.2 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -567,16 +587,19 @@ summary(n_power_80_ns)
 #> 
 #> - Detailed Results:
 #> 
-#>      n                   test test_label   p.v reject r.cilo r.cihi
-#> 1  300 test_indirect: x->m->y       Test 1.000  0.445  0.396  0.494
-#> 2  539 test_indirect: x->m->y       Test 1.000  0.662  0.616  0.709
-#> 3  788 test_indirect: x->m->y       Test 1.000  0.825  0.788  0.862
-#> 4 1036 test_indirect: x->m->y       Test 1.000  0.887  0.857  0.918
+#> [test]: test_indirect: x->m->y 
+#> [test_label]: Test 
+#>      n   est   p.v reject r.cilo r.cihi
+#> 1  300 0.052 1.000  0.445  0.396  0.494
+#> 2  539 0.051 1.000  0.662  0.616  0.709
+#> 3  788 0.051 1.000  0.825  0.788  0.862
+#> 4 1036 0.050 1.000  0.887  0.857  0.918
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.
+#> - est: The mean of the estimates in a test across replications.
 #> - reject: The proportion of 'significant' replications, that is, the
-#>   rejection rate.If the null hypothesis is true, this is the Type I
+#>   rejection rate. If the null hypothesis is true, this is the Type I
 #>   error rate. If the null hypothesis is false, this is the power.
 #> - r.cilo,r.cihi: The confidence interval of the rejection rate, based
 #>   on normal approximation.
@@ -740,12 +763,15 @@ print(out2,
 #> 
 #> Call print() and set 'test_long = TRUE' for a detailed report.
 rejection_rates(out2)
-#>                     test test_label   p.v reject r.cilo r.cihi
-#> 1 test_indirect: x->m->y       Test 1.000  0.745  0.702  0.788
+#> [test]: test_indirect: x->m->y 
+#> [test_label]: Test 
+#>     est   p.v reject r.cilo r.cihi
+#> 1 0.089 1.000  0.745  0.702  0.788
 #> Notes:
 #> - p.v: The proportion of valid replications.
+#> - est: The mean of the estimates in a test across replications.
 #> - reject: The proportion of 'significant' replications, that is, the
-#>   rejection rate.If the null hypothesis is true, this is the Type I
+#>   rejection rate. If the null hypothesis is true, this is the Type I
 #>   error rate. If the null hypothesis is false, this is the power.
 #> - r.cilo,r.cihi: The confidence interval of the rejection rate, based
 #>   on normal approximation.
@@ -784,13 +810,16 @@ summary(n2_power_80)
 #> 
 #> Call:
 #> x_from_power(object = out2, x = "n", seed = 1357)
+#> 
 #> Predictor (x): Sample Size 
 #> 
 #> - Target Power: 0.800 
+#> - Goal: Find 'x' with the confidence interval of the estimated power
+#>   enclosing the target power.
 #> 
 #> === Major Results ===
 #> 
-#> - Final Value: 113 
+#> - Final Value (Sample Size): 113
 #> 
 #> - Final Estimated Power: 0.825 
 #> - Confidence Interval: [0.788; 0.862]
@@ -799,8 +828,9 @@ summary(n2_power_80)
 #> 
 #> === Technical Information ===
 #> 
+#> - Algorithm: bisection 
 #> - The range of values explored: 100 to 197 
-#> - Time spent in the search: 2.731 mins 
+#> - Time spent in the search: 1.649 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -826,19 +856,22 @@ summary(n2_power_80)
 #> 
 #> - Detailed Results:
 #> 
-#>     n                   test test_label   p.v reject r.cilo r.cihi
-#> 1 100 test_indirect: x->m->y       Test 1.000  0.745  0.702  0.788
-#> 2 107 test_indirect: x->m->y       Test 1.000  0.757  0.715  0.800
-#> 3 113 test_indirect: x->m->y       Test 1.000  0.825  0.788  0.862
-#> 4 119 test_indirect: x->m->y       Test 1.000  0.858  0.823  0.892
-#> 5 130 test_indirect: x->m->y       Test 1.000  0.895  0.865  0.925
-#> 6 152 test_indirect: x->m->y       Test 1.000  0.938  0.914  0.961
-#> 7 197 test_indirect: x->m->y       Test 1.000  0.973  0.956  0.989
+#> [test]: test_indirect: x->m->y 
+#> [test_label]: Test 
+#>     n   est   p.v reject r.cilo r.cihi
+#> 1 100 0.089 1.000  0.745  0.702  0.788
+#> 2 107 0.088 1.000  0.757  0.715  0.800
+#> 3 113 0.089 1.000  0.825  0.788  0.862
+#> 4 119 0.089 1.000  0.858  0.823  0.892
+#> 5 130 0.091 1.000  0.895  0.865  0.925
+#> 6 152 0.091 1.000  0.938  0.914  0.961
+#> 7 197 0.090 1.000  0.973  0.956  0.989
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.
+#> - est: The mean of the estimates in a test across replications.
 #> - reject: The proportion of 'significant' replications, that is, the
-#>   rejection rate.If the null hypothesis is true, this is the Type I
+#>   rejection rate. If the null hypothesis is true, this is the Type I
 #>   error rate. If the null hypothesis is false, this is the power.
 #> - r.cilo,r.cihi: The confidence interval of the rejection rate, based
 #>   on normal approximation.
