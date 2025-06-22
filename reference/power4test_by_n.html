@@ -9,7 +9,7 @@ set of sample sizes."><meta property="og:image" content="https://sfcheung.github
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.75</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.77</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -73,7 +73,10 @@ set of sample sizes.</p>
 <span><span class="co"># S3 method for class 'power4test_by_n'</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">...</span>, sort <span class="op">=</span> <span class="cn">TRUE</span>, skip_checking_models <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">as.power4test_by_n</span><span class="op">(</span><span class="va">original_object</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">as.power4test_by_n</span><span class="op">(</span><span class="va">original_object</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for class 'power4test_by_n'</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, print_all <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -106,7 +109,12 @@ displayed.</p></dd>
 they are arguments to be passed
 to <code><a href="power4test.html">power4test()</a></code>. For <code>c.power4test_by_n()</code>,
 they are <code>power4test_by_n()</code> outputs
-to be combined together.</p></dd>
+to be combined together.
+For the <code>print</code> method of the output
+of <code>power4test_by_n()</code>, they are
+arguments to be passed to the
+<code>print</code> method of the output of
+<code><a href="power4test.html">power4test()</a></code> (<code><a href="power4test.html">print.power4test()</a></code>).</p></dd>
 
 
 <dt id="arg-by-seed">by_seed<a class="anchor" aria-label="anchor" href="#arg-by-seed"></a></dt>
@@ -172,6 +180,20 @@ the <code>c</code> method directly.</p></dd>
 to be converted to a <code>power4test_by_n</code>
 object.</p></dd>
 
+
+<dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
+<dd><p>The object
+to be printed.</p></dd>
+
+
+<dt id="arg-print-all">print_all<a class="anchor" aria-label="anchor" href="#arg-print-all"></a></dt>
+<dd><p>If <code>TRUE</code>, all
+elements in <code>x</code>, that is, the results
+of all sample sizes examined, will
+be printed. If <code>FALSE</code>, then only
+those of the first sample size
+will be printed.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -187,6 +209,9 @@ sample sizes) combined.</p>
 <p>The function <code>as.power4test_by_n()</code> returns
 a <code>power4test_by_n</code> object converted
 from the input object.</p>
+<p>The <code>print</code>-method of <code>power4test_by_n</code>
+objects returns the object invisibly.
+It is called for its side-effect.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
