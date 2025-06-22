@@ -230,6 +230,7 @@ rejection_rates_i_vector <- function(object_i,
   } else {
     out_i <- data.frame(test = test_name,
                         test_label = "Test",
+                        est = object_i$mean["est"],
                         pvalid = object_i$nvalid["sig"] / object_i$nrep,
                         nvalid = object_i$nvalid["sig"],
                         reject = object_i$mean["sig"],
@@ -279,6 +280,7 @@ rejection_rates_i_data_frame <- function(object_i,
   } else {
     out_i <- data.frame(test = test_name,
                         test_label = out_i0$test_label,
+                        est = object_i$mean[, "est", drop = TRUE],
                         pvalid = pvalid,
                         nvalid = object_i$nvalid[, "sig", drop = TRUE],
                         reject = object_i$mean[, "sig", drop = TRUE],
@@ -477,6 +479,15 @@ print.rejection_rates_df <- function(x,
     x0$n <- as.character(x0$n)
   }
 
+  test_i <- unique(x0$test)
+  if (length(test_i) == 1) {
+    x0$test <- NULL
+  }
+  test_label_i <- unique(x0$test_label)
+  if (length(test_label_i) == 1) {
+    x0$test_label <- NULL
+  }
+
   abbr_names <- c(pvalid = "p.v",
                   nvalid = "n.v",
                   reject_se = "r.se",
@@ -497,6 +508,14 @@ print.rejection_rates_df <- function(x,
 
   x1 <- format_num_cols(x0,
                         digits = digits)
+
+  if (length(test_i) == 1) {
+    cat("[test]:", test_i, "\n")
+  }
+  if (length(test_label_i) == 1) {
+    cat("[test_label]:", test_label_i, "\n")
+  }
+
   print(x1,
         ...)
 
@@ -558,7 +577,7 @@ print.rejection_rates_df <- function(x,
     }
     if ("reject" %in% colnames(x1)) {
       catwrap(paste0("- reject: The proportion of 'significant' replications, ",
-                     "that is, the rejection rate.",
+                     "that is, the rejection rate. ",
                      "If the null hypothesis is true, this is the Type I error rate. ",
                      "If the null hypothesis is false, this is the power."),
               exdent = 2)

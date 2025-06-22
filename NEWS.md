@@ -1,4 +1,4 @@
-# power4mome 0.0.1.74
+# power4mome 0.0.1.75
 
 - Initialized the package. (0.0.0.9000)
 
@@ -491,3 +491,7 @@
   (e.g., `"s * 2"`, `"sqrt(.30)"`)
   to specify the population value of
   a parameter. (0.0.1.74)
+
+- The `print` method of `rejection_rates()`
+  output now always print the column of
+  estimates. (0.0.1.75)
