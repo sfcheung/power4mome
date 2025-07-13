@@ -57,6 +57,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-quick-templates" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Quick Templates</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-quick-templates">
 <li><a class="dropdown-item" href="../articles/template_n_from_power_mediation_obs.html">Simple mediation</a></li>
+    <li><a class="dropdown-item" href="../articles/template_n_from_power_mediation_obs_serial.html">Serial mediation</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
@@ -387,20 +388,20 @@ than the target level.</li>
 <span><span class="co"># To set desired precision:</span></span>
 <span><span class="co"># - Set final number of R: final_R = 1000 (Default, can be omitted)</span></span>
 <span><span class="co"># - Set final number of replications: final_nrep = 400 (Default, can be omitted)</span></span>
-<span><span class="va">n_power_80_ub</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/x_from_power.html">n_from_power</a></span><span class="op">(</span><span class="va">out</span>,</span>
+<span><span class="va">n_power_ub</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/x_from_power.html">n_from_power</a></span><span class="op">(</span><span class="va">out</span>,</span>
 <span>                              what <span class="op">=</span> <span class="st">"ub"</span>,</span>
 <span>                              seed <span class="op">=</span> <span class="fl">1357</span><span class="op">)</span></span>
 <span><span class="co">#</span></span>
 <span><span class="co"># ===== Print the Summary =====</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">n_power_80_ub</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">n_power_ub</span><span class="op">)</span></span>
 <span><span class="co">#</span></span>
 <span><span class="co"># ===== Plot the (Crude) Power Curve =====</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">n_power_80_ub</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">n_power_ub</span><span class="op">)</span></span></code></pre></div>
 <p>The results:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#</span></span>
 <span><span class="co"># ===== Print the Summary =====</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">n_power_80_ub</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">n_power_ub</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ====== x_from_power Results ======</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -428,7 +429,7 @@ than the target level.</li>
 <span><span class="co">#&gt; - Algorithm: bisection </span></span>
 <span><span class="co">#&gt; - Tolerance for 'close enough': Within 0.02000 of 0.800 </span></span>
 <span><span class="co">#&gt; - The range of values explored: 100 to 897 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 53.67 secs </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 47.71 secs </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
@@ -473,7 +474,7 @@ than the target level.</li>
 <span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span>
 <span><span class="co">#</span></span>
 <span><span class="co"># ===== Plot the (Crude) Power Curve =====</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">n_power_80_ub</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">n_power_ub</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="temp_n_med_obs_med_simple_n_from_out-1.png" alt="Power Curve"><p class="caption">
 Power Curve
@@ -498,20 +499,20 @@ than the target level.</li>
 <span><span class="co"># To set desired precision:</span></span>
 <span><span class="co"># - Set final number of R: final_R = 1000 (Default, can be omitted)</span></span>
 <span><span class="co"># - Set final number of replications: final_nrep = 400 (Default, can be omitted)</span></span>
-<span><span class="va">n_power_80_lb</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/x_from_power.html">n_from_power</a></span><span class="op">(</span><span class="va">out</span>,</span>
+<span><span class="va">n_power_lb</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/x_from_power.html">n_from_power</a></span><span class="op">(</span><span class="va">out</span>,</span>
 <span>                              what <span class="op">=</span> <span class="st">"lb"</span>,</span>
 <span>                              seed <span class="op">=</span> <span class="fl">1357</span><span class="op">)</span></span>
 <span><span class="co">#</span></span>
 <span><span class="co"># ===== Print the Summary =====</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">n_power_80_lb</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">n_power_lb</span><span class="op">)</span></span>
 <span><span class="co">#</span></span>
 <span><span class="co"># ===== Plot the (Crude) Power Curve =====</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">n_power_80_lb</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">n_power_lb</span><span class="op">)</span></span></code></pre></div>
 <p>The results:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#</span></span>
 <span><span class="co"># ===== Print the Summary =====</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">n_power_80_lb</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">n_power_lb</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ====== x_from_power Results ======</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -539,7 +540,7 @@ than the target level.</li>
 <span><span class="co">#&gt; - Algorithm: bisection </span></span>
 <span><span class="co">#&gt; - Tolerance for 'close enough': Within 0.02000 of 0.800 </span></span>
 <span><span class="co">#&gt; - The range of values explored: 100 to 891 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 1.093 mins </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 1.072 mins </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
@@ -585,7 +586,7 @@ than the target level.</li>
 <span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span>
 <span><span class="co">#</span></span>
 <span><span class="co"># ===== Plot the (Crude) Power Curve =====</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">n_power_80_lb</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">n_power_lb</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="temp_n_med_obs_med_simple_n_from_out_lb-1.png" alt="Power Curve"><p class="caption">
 Power Curve
@@ -756,20 +757,20 @@ steps.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#</span></span>
 <span><span class="co"># ===== Reuse the output of power4test() =====</span></span>
-<span><span class="va">n2_power_80_ub</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/x_from_power.html">n_from_power</a></span><span class="op">(</span><span class="va">out2</span>,</span>
+<span><span class="va">n2_power_ub</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/x_from_power.html">n_from_power</a></span><span class="op">(</span><span class="va">out2</span>,</span>
 <span>                               what <span class="op">=</span> <span class="st">"ub"</span>,</span>
 <span>                               seed <span class="op">=</span> <span class="fl">1357</span><span class="op">)</span></span>
 <span><span class="co">#</span></span>
 <span><span class="co"># ===== Print the Summary =====</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">n2_power_80_ub</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">n2_power_ub</span><span class="op">)</span></span>
 <span><span class="co">#</span></span>
 <span><span class="co"># ===== Plot the (Crude) Power Curve =====</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">n2_power_80_ub</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">n2_power_ub</span><span class="op">)</span></span></code></pre></div>
 <p>The results:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#</span></span>
 <span><span class="co"># ===== Print the Summary =====</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">n2_power_80_ub</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">n2_power_ub</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ====== x_from_power Results ======</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -797,7 +798,7 @@ steps.</p>
 <span><span class="co">#&gt; - Algorithm: bisection </span></span>
 <span><span class="co">#&gt; - Tolerance for 'close enough': Within 0.02000 of 0.800 </span></span>
 <span><span class="co">#&gt; - The range of values explored: 100 to 939 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 48.19 secs </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 47.46 secs </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
@@ -842,7 +843,7 @@ steps.</p>
 <span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span>
 <span><span class="co">#</span></span>
 <span><span class="co"># ===== Plot the (Crude) Power Curve =====</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">n2_power_80_ub</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">n2_power_ub</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="temp_n_med_obs_med_simple2_n_from_out-1.png" alt="Power Curve"><p class="caption">
 Power Curve
@@ -857,20 +858,20 @@ Power Curve
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#</span></span>
 <span><span class="co"># ===== Reuse the output of power4test() =====</span></span>
-<span><span class="va">n2_power_80_lb</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/x_from_power.html">n_from_power</a></span><span class="op">(</span><span class="va">out2</span>,</span>
+<span><span class="va">n2_power_lb</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/x_from_power.html">n_from_power</a></span><span class="op">(</span><span class="va">out2</span>,</span>
 <span>                               what <span class="op">=</span> <span class="st">"lb"</span>,</span>
 <span>                               seed <span class="op">=</span> <span class="fl">1357</span><span class="op">)</span></span>
 <span><span class="co">#</span></span>
 <span><span class="co"># ===== Print the Summary =====</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">n2_power_80_lb</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">n2_power_lb</span><span class="op">)</span></span>
 <span><span class="co">#</span></span>
 <span><span class="co"># ===== Plot the (Crude) Power Curve =====</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">n2_power_80_lb</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">n2_power_lb</span><span class="op">)</span></span></code></pre></div>
 <p>The results:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#</span></span>
 <span><span class="co"># ===== Print the Summary =====</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">n2_power_80_lb</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">n2_power_lb</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ====== x_from_power Results ======</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -898,7 +899,7 @@ Power Curve
 <span><span class="co">#&gt; - Algorithm: bisection </span></span>
 <span><span class="co">#&gt; - Tolerance for 'close enough': Within 0.02000 of 0.800 </span></span>
 <span><span class="co">#&gt; - The range of values explored: 100 to 937 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 1.312 mins </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 1.373 mins </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
@@ -945,7 +946,7 @@ Power Curve
 <span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span>
 <span><span class="co">#</span></span>
 <span><span class="co"># ===== Plot the (Crude) Power Curve =====</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">n2_power_80_lb</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">n2_power_lb</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="temp_n_med_obs_med_simple2_n_from_out_lb-1.png" alt="Power Curve"><p class="caption">
 Power Curve
