@@ -19,7 +19,7 @@ value."><meta property="og:image" content="https://sfcheung.github.io/power4mome
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.78</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.81</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,16 +35,15 @@ value."><meta property="og:image" content="https://sfcheung.github.io/power4mome
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>&lt;Given Power, Find x&gt;</h6></li>
     <li><a class="dropdown-item" href="../articles/x_from_power_for_n.html">Determine the sample size with the target power</a></li>
-    <li><a class="dropdown-item" href="../articles/x_from_power_for_es.html">Determine the effect size with the target power</a></li>
-    <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>&lt;Quick Templates&gt;</h6></li>
-    <li><a class="dropdown-item" href="../articles/template_mediation_obs.html">Simple mediation</a></li>
-    <li><a class="dropdown-item" href="../articles/template_mediation_obs_serial.html">Serial mediation</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>&lt;Technical Appendices&gt;</h6></li>
     <li><a class="dropdown-item" href="../articles/power4test_workflow.html">Workflow of `power4test()`</a></li>
     <li><a class="dropdown-item" href="../articles/x_from_power_workflow.html">Workflow of `x_from_power()` with `power_curve` Algorithm</a></li>
     <li><a class="dropdown-item" href="../articles/sim_data_i_workflow.html">Workflow of `sim_data_i()`</a></li>
+  </ul></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-quick-templates" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Quick Templates</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-quick-templates"><li><a class="dropdown-item" href="../articles/template_n_from_power_mediation_obs.html">Simple mediation</a></li>
   </ul></li>
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -85,6 +84,31 @@ value.</p>
 <span>  ci_level <span class="op">=</span> <span class="fl">0.95</span>,</span>
 <span>  tolerance <span class="op">=</span> <span class="fl">0.02</span>,</span>
 <span>  x_interval <span class="op">=</span> <span class="kw"><a href="https://rdrr.io/r/base/switch.html" class="external-link">switch</a></span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">50</span>, <span class="fl">2000</span><span class="op">)</span>, es <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>,</span>
+<span>  extendInt <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  progress <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  simulation_progress <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  max_trials <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  final_nrep <span class="op">=</span> <span class="fl">400</span>,</span>
+<span>  final_R <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>  seed <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  x_include_interval <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  check_es_interval <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  power_curve_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>power_model <span class="op">=</span> <span class="cn">NULL</span>, start <span class="op">=</span> <span class="cn">NULL</span>, lower_bound <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>    upper_bound <span class="op">=</span> <span class="cn">NULL</span>, nls_control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>, nls_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  save_sim_all <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  algorithm <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">n_from_power</span><span class="op">(</span></span>
+<span>  <span class="va">object</span>,</span>
+<span>  pop_es_name <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  target_power <span class="op">=</span> <span class="fl">0.8</span>,</span>
+<span>  what <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"point"</span>, <span class="st">"ub"</span>, <span class="st">"lb"</span><span class="op">)</span>,</span>
+<span>  goal <span class="op">=</span> <span class="kw"><a href="https://rdrr.io/r/base/switch.html" class="external-link">switch</a></span><span class="op">(</span><span class="va">what</span>, point <span class="op">=</span> <span class="st">"ci_hit"</span>, ub <span class="op">=</span> <span class="st">"close_enough"</span>, lb <span class="op">=</span> <span class="st">"close_enough"</span><span class="op">)</span>,</span>
+<span>  ci_level <span class="op">=</span> <span class="fl">0.95</span>,</span>
+<span>  tolerance <span class="op">=</span> <span class="fl">0.02</span>,</span>
+<span>  x_interval <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">50</span>, <span class="fl">2000</span><span class="op">)</span>,</span>
 <span>  extendInt <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  progress <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  simulation_progress <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -466,10 +490,13 @@ a <code>plot</code> method (<code><a href="plot.x_from_power.html">plot.x_from_p
 plot the relation between power and
 values (of <code>x</code>) examined.</p>
 <p>A detailed illustration on how to
-use this function can be found
-from these pages:</p><ul><li><p>For example sizes: <a href="https://sfcheung.github.io/power4mome/articles/x_from_power_for_n.html">https://sfcheung.github.io/power4mome/articles/x_from_power_for_n.html</a></p></li>
-<li><p>For effect sizes: <a href="https://sfcheung.github.io/power4mome/articles/x_from_power_for_es.html">https://sfcheung.github.io/power4mome/articles/x_from_power_for_es.html</a></p></li>
-</ul><p>The <code>print</code> method only print
+use this function for sample size can be found
+from this page:</p>
+<p><a href="https://sfcheung.github.io/power4mome/articles/x_from_power_for_n.html">https://sfcheung.github.io/power4mome/articles/x_from_power_for_n.html</a></p>
+<p>The function <code>n_from_power()</code> is just
+a wrapper of <code>x_from_power()</code>, with
+<code>x</code> set to <code>"n"</code>.</p>
+<p>The <code>print</code> method only print
 basic information. Call the
 <code>summary</code> method of <code>x_from_power</code> objects
 (<code><a href="summary.x_from_power.html">summary.x_from_power()</a></code>) and its
@@ -652,7 +679,7 @@ and <code><a href="power4test_by_es.html">power4test_by_es()</a></code>.</p></di
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --- Final Stage ---</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-06-22 12:02:48 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-07-13 10:41:00 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Rejection Rates:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [test]: test_parameters: CIs (pars: m~x) </span>
@@ -725,7 +752,7 @@ and <code><a href="power4test_by_es.html">power4test_by_es()</a></code>.</p></di
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Algorithm: bisection </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - The range of values explored: 100 to 125 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Time spent in the search: 0.4002 secs </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Time spent in the search: 0.3976 secs </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - The final crude model for the power-predictor relation:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Model Type: Logistic Regression </span>

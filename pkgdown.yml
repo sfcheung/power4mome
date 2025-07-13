@@ -8,10 +8,11 @@ articles:
   articles/sim_data_i_workflow: sim_data_i_workflow.html
   articles/template_mediation_obs_serial: template_mediation_obs_serial.html
   articles/template_mediation_obs: template_mediation_obs.html
+  articles/template_n_from_power_mediation_obs: template_n_from_power_mediation_obs.html
   articles/x_from_power_for_es: x_from_power_for_es.html
   articles/x_from_power_for_n: x_from_power_for_n.html
   articles/x_from_power_workflow: x_from_power_workflow.html
-last_built: 2025-06-22T12:01Z
+last_built: 2025-07-13T10:40Z
 urls:
   reference: https://sfcheung.github.io/power4mome/reference
   article: https://sfcheung.github.io/power4mome/articles

@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.78</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.81</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -23,16 +23,15 @@
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>&lt;Given Power, Find x&gt;</h6></li>
     <li><a class="dropdown-item" href="../articles/x_from_power_for_n.html">Determine the sample size with the target power</a></li>
-    <li><a class="dropdown-item" href="../articles/x_from_power_for_es.html">Determine the effect size with the target power</a></li>
-    <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>&lt;Quick Templates&gt;</h6></li>
-    <li><a class="dropdown-item" href="../articles/template_mediation_obs.html">Simple mediation</a></li>
-    <li><a class="dropdown-item" href="../articles/template_mediation_obs_serial.html">Serial mediation</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>&lt;Technical Appendices&gt;</h6></li>
     <li><a class="dropdown-item" href="../articles/power4test_workflow.html">Workflow of `power4test()`</a></li>
     <li><a class="dropdown-item" href="../articles/x_from_power_workflow.html">Workflow of `x_from_power()` with `power_curve` Algorithm</a></li>
     <li><a class="dropdown-item" href="../articles/sim_data_i_workflow.html">Workflow of `sim_data_i()`</a></li>
+  </ul></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-quick-templates" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Quick Templates</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-quick-templates"><li><a class="dropdown-item" href="../articles/template_n_from_power_mediation_obs.html">Simple mediation</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="active nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -51,7 +50,7 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.0.1.78" id="power4mome-00178">power4mome 0.0.1.78<a class="anchor" aria-label="anchor" href="#power4mome-00178"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.0.1.81" id="power4mome-00181">power4mome 0.0.1.81<a class="anchor" aria-label="anchor" href="#power4mome-00181"></a></h2>
 <ul><li><p>Initialized the package. (0.0.0.9000)</p></li>
 <li><p>Major functions drafted and the main workflows are finalized. Ready for documenting the changes. (0.0.0.9001)</p></li>
 <li><p>Documented how to set <code>pop_es</code>. (0.0.0.9002)</p></li>
@@ -109,17 +108,17 @@
 <li><p>Updated <code>power4test_by_pop_es()</code> and <code><a href="../reference/power4test_by_n.html">power4test_by_n()</a></code> to accept the output of these two functions. (0.0.1.14)</p></li>
 <li><p>Added <code>by_nrep</code> to <code><a href="../reference/power4test_by_n.html">power4test_by_n()</a></code>. (0.0.1.15)</p></li>
 <li><p>Added more columns to the results of functions returning rejection rates. (0.0.1.16)</p></li>
-<li><p>Added <code>n_from_power()</code> to search the sample size with the target power. (0.0.1.17)</p></li>
+<li><p>Added <code><a href="../reference/x_from_power.html">n_from_power()</a></code> to search the sample size with the target power. (0.0.1.17)</p></li>
 <li><p>Updated <code>psi_std()</code> to skip checking the variances of product terms. (0.0.1.18)</p></li>
 <li><p>Improved <code>rejection_rates_add_ci()</code> to be usable by other functions. (0.0.1.19)</p></li>
 <li><p>Updated <code>get_rejection_rates()</code> to report confidence intervals and standard errors of rejection rates. (0.0.1.20)</p></li>
 <li><p>Revised <code>get_rejection_rates()</code> and related functions. The column of rejection rates is now always named <code>"reject"</code>. (0.0.1.21)</p></li>
 <li><p>Added more <code><a href="../reference/ptable_pop.html">ptable_pop()</a></code> arguments to <code><a href="../reference/power4test.html">power4test()</a></code>. (0.0.1.22)</p></li>
-<li><p>Added <code><a href="../reference/power_curve.html">power_curve()</a></code> to estimate the relation between rejection rates and a predictor. Updated <code>n_from_power()</code> to use <code><a href="../reference/power_curve.html">power_curve()</a></code> internally. (0.0.1.23)</p></li>
+<li><p>Added <code><a href="../reference/power_curve.html">power_curve()</a></code> to estimate the relation between rejection rates and a predictor. Updated <code><a href="../reference/x_from_power.html">n_from_power()</a></code> to use <code><a href="../reference/power_curve.html">power_curve()</a></code> internally. (0.0.1.23)</p></li>
 <li><p>The <code>print</code> method of <code>sim_out</code> objects can print the standardized and/or unstandardized estimates when fitting a model to the merged data. (0.0.1.24)</p></li>
 <li><p>Renamed <code>power4test_by_pop_es()</code> to <code><a href="../reference/power4test_by_es.html">power4test_by_es()</a></code>, because <code>"n"</code> and <code>"es"</code> (not <code>"pop_es"</code>) are used in other functions to distinguish the predictor used. (0.0.1.25)</p></li>
 <li><p>Renamed <code>get_rejection_rates_by_pop_es()</code> to <code>get_rejection_rates_by_es()</code>, to be consistent with the name <code><a href="../reference/power4test_by_es.html">power4test_by_es()</a></code>. (0.0.1.26)</p></li>
-<li><p>Replaced <code>n_from_power()</code> by the more general version <code><a href="../reference/x_from_power.html">x_from_power()</a></code>, and updated related functions. (0.0.1.27)</p></li>
+<li><p>Replaced <code><a href="../reference/x_from_power.html">n_from_power()</a></code> by the more general version <code><a href="../reference/x_from_power.html">x_from_power()</a></code>, and updated related functions. (0.0.1.27)</p></li>
 <li><p>Updated <code><a href="../reference/x_from_power.html">x_from_power()</a></code> to fully support <code>x = "es"</code>. (0.0.1.28)</p></li>
 <li><p>Minor changes to the printout of progress for <code><a href="../reference/power4test_by_n.html">power4test_by_n()</a></code> and <code><a href="../reference/power4test_by_es.html">power4test_by_es()</a></code>. (0.0.1.29)</p></li>
 <li><p>Fixed a minor bug in the internal function <code>fix_nls_args()</code>. (0.0.1.30)</p></li>
@@ -174,6 +173,7 @@
 <li><p>Added a <code>print</code> method for the output of <code><a href="../reference/power4test_by_n.html">power4test_by_n()</a></code>. (0.0.1.76)</p></li>
 <li><p>Added a <code>print</code> method for the output of <code><a href="../reference/power4test_by_es.html">power4test_by_es()</a></code>. (0.0.1.77)</p></li>
 <li><p>Added <code>plot</code> methods for the output of <code><a href="../reference/power4test_by_n.html">power4test_by_n()</a></code> and <code><a href="../reference/power4test_by_es.html">power4test_by_es()</a></code>. (0.0.1.78)</p></li>
+<li><p>Added (back) <code><a href="../reference/x_from_power.html">n_from_power()</a></code>, a wrapper of <code><a href="../reference/x_from_power.html">x_from_power()</a></code> with <code>x</code> set to <code>"n"</code>. (0.0.1.79, 0.0.1.80)</p></li>
 </ul></div>
   </main></div>
 

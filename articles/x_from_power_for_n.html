@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.78</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.81</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -46,16 +46,17 @@
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>&lt;Given Power, Find x&gt;</h6></li>
     <li><a class="dropdown-item" href="../articles/x_from_power_for_n.html">Determine the sample size with the target power</a></li>
-    <li><a class="dropdown-item" href="../articles/x_from_power_for_es.html">Determine the effect size with the target power</a></li>
-    <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>&lt;Quick Templates&gt;</h6></li>
-    <li><a class="dropdown-item" href="../articles/template_mediation_obs.html">Simple mediation</a></li>
-    <li><a class="dropdown-item" href="../articles/template_mediation_obs_serial.html">Serial mediation</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>&lt;Technical Appendices&gt;</h6></li>
     <li><a class="dropdown-item" href="../articles/power4test_workflow.html">Workflow of `power4test()`</a></li>
     <li><a class="dropdown-item" href="../articles/x_from_power_workflow.html">Workflow of `x_from_power()` with `power_curve` Algorithm</a></li>
     <li><a class="dropdown-item" href="../articles/sim_data_i_workflow.html">Workflow of `sim_data_i()`</a></li>
+  </ul>
+</li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-quick-templates" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Quick Templates</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-quick-templates">
+<li><a class="dropdown-item" href="../articles/template_n_from_power_mediation_obs.html">Simple mediation</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
@@ -80,7 +81,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Sample Size Given Desired Power</h1>
             
-            <h4 data-toc-skip class="date">2025-06-22</h4>
+            <h4 data-toc-skip class="date">2025-07-13</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/sfcheung/power4mome/blob/main/vignettes/articles/x_from_power_for_n.Rmd" class="external-link"><code>vignettes/articles/x_from_power_for_n.Rmd</code></a></small>
       <div class="d-none name"><code>x_from_power_for_n.Rmd</code></div>
@@ -92,7 +93,7 @@
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
 <p>This article is a brief illustration of how to use
-<code><a href="../reference/x_from_power.html">x_from_power()</a></code> and <code><a href="../reference/power4test.html">power4test()</a></code> from the
+<code><a href="../reference/x_from_power.html">n_from_power()</a></code> and <code><a href="../reference/power4test.html">power4test()</a></code> from the
 package <a href="https://sfcheung.github.io/power4mome/">power4mome</a>
 to find by simulation the sample size with power close to a desired
 level to detect an effect, given the level of population effect
@@ -113,9 +114,9 @@ required. Readers are also expected to know how to use
 </h2>
 <p>This is a brief illustration. More complicated scenarios and other
 features of <code><a href="../reference/x_from_power.html">x_from_power()</a></code> will be described in other
-vignettes.</p>
-<p>Some sections are repeated from other vignettes to make this vignette
-self-contained.</p>
+vignettes and articles.</p>
+<p>Some sections are repeated from other vignettes and articles to make
+this vignette self-contained.</p>
 </div>
 <div class="section level2">
 <h2 id="package">Package<a class="anchor" aria-label="anchor" href="#package"></a>
@@ -142,7 +143,7 @@ correctly.</p></li>
 specified, using an initial sample size.</p></li>
 <li><p>Call <code><a href="../reference/rejection_rates.html">rejection_rates()</a></code> to compute the power and
 verify that the test is setup correctly.</p></li>
-<li><p>Call <code><a href="../reference/x_from_power.html">x_from_power()</a></code> to estimated the sample size
+<li><p>Call <code><a href="../reference/x_from_power.html">n_from_power()</a></code> to estimate the sample size
 required for the desired power.</p></li>
 </ol>
 </div>
@@ -160,9 +161,9 @@ sample sizes with their levels of power</p>
 <li><p>significantly lower than the target power, or</p></li>
 <li><p>significantly higher than the target power.</p></li>
 </ol>
-<p>That is, we find the sample size that has its confidence interval,
-95% by default, just below (Case 1) or just above (Case 2) the target
-power, approximately.</p>
+<p>That is, we find the sample size that has its <em>confidence
+interval</em>, 95% by default, just below (Case 1) or just above (Case
+2) the target power, approximately.</p>
 <p>We will consider the Case 1 first.</p>
 <div class="section level3">
 <h3 id="specify-the-population-model">Specify the Population Model<a class="anchor" aria-label="anchor" href="#specify-the-population-model"></a>
@@ -174,8 +175,10 @@ power, approximately.</p>
 <span><span class="st">m ~ x</span></span>
 <span><span class="st">y ~ m + x</span></span>
 <span><span class="st">"</span></span></code></pre></div>
-<p>Note that, even if we are going to test mediation. This will be taken
-care of by the test functions, through the use of the package <a href="https://sfcheung.github.io/manymome/" class="external-link"><code>manymome</code></a>
+<p>Note that, even if we are going to test mediation, we do not need to
+label the parameters and define the indirect effect as usuall in
+<code>lavaan</code>. This will be taken care of by the test functions,
+through the use of the package <a href="https://sfcheung.github.io/manymome/" class="external-link"><code>manymome</code></a>
 <span class="citation">(Cheung &amp; Cheung, 2024)</span>.</p>
 </div>
 <div class="section level3">
@@ -296,11 +299,12 @@ and &lt;code&gt;&lt;a href="https://rdrr.io/r/base/Random.html" class="external-
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; == Population Indirect Effect(s) ==</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ==  Indirect Effect(s)   ==</span></span>
+<span><span class="co">#&gt; == Indirect Effect(s) ==</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;               ind</span></span>
 <span><span class="co">#&gt; x -&gt; m -&gt; y 0.150</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  - The 'ind' column shows the indirect effects.</span></span>
+<span><span class="co">#&gt;  - The 'ind' column shows the indirect effect(s).</span></span>
 <span><span class="co">#&gt;  </span></span>
 <span><span class="co">#&gt; ======================= Data Information =======================</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -400,9 +404,8 @@ the call, based on the previous one:</p>
 with sufficient precision, we do not need a large number of replications
 (<code>nrep</code>) in this stage. We can use as few as 50. We can set
 the target number of replications when calling the function
-<code><a href="../reference/x_from_power.html">x_from_power()</a></code>. It will successively increase
-<code>nrep</code> in the search, and accepts a solution based on the
-target number of replications.</p>
+<code><a href="../reference/x_from_power.html">n_from_power()</a></code>, which is a wrapper to the general function
+<code><a href="../reference/x_from_power.html">x_from_power()</a></code>.</p>
 <p>These are the new arguments used:</p>
 <ul>
 <li><p><code>R</code>: The number of replications used to generate the
@@ -433,9 +436,8 @@ confidence interval, it is advised to enable parallel processing by
 setting <code>parallel</code> to <code>TRUE</code>.<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content="&lt;p&gt;The number of cores is determined automatically but can
 be set directly by the &lt;code&gt;ncores&lt;/code&gt; argument.&lt;/p&gt;"><sup>5</sup></a></p></li>
 </ul>
-<p>Note that the simulation can take some time to run (3 to 4 minutes
-using 20 cores). Progress will be printed when run in an interactive
-session.</p>
+<p>Note that the simulation can take some time to run. Progress will be
+printed when run in an interactive session.</p>
 <p>This is the default printout:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">out</span>,</span>
@@ -473,11 +475,12 @@ session.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; == Population Indirect Effect(s) ==</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ==  Indirect Effect(s)   ==</span></span>
+<span><span class="co">#&gt; == Indirect Effect(s) ==</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;               ind</span></span>
 <span><span class="co">#&gt; x -&gt; m -&gt; y 0.150</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  - The 'ind' column shows the indirect effects.</span></span>
+<span><span class="co">#&gt;  - The 'ind' column shows the indirect effect(s).</span></span>
 <span><span class="co">#&gt;  </span></span>
 <span><span class="co">#&gt; ======================= Data Information =======================</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -529,12 +532,12 @@ session.</p>
 <p>The argument <code>test_long = TRUE</code> is added to verify the
 test we set up.</p>
 <p>As shown above, the setup is correct. We can now call
-<code><a href="../reference/x_from_power.html">x_from_power()</a></code> to do the search.</p>
+<code><a href="../reference/x_from_power.html">n_from_power()</a></code> to do the search.</p>
 </div>
 <div class="section level3">
-<h3 id="call-x_from_power-to-estimate-the-sample-size">Call <code>x_from_power()</code> to Estimate the Sample Size<a class="anchor" aria-label="anchor" href="#call-x_from_power-to-estimate-the-sample-size"></a>
+<h3 id="call-n_from_power-to-estimate-the-sample-size">Call <code>n_from_power()</code> to Estimate the Sample Size<a class="anchor" aria-label="anchor" href="#call-n_from_power-to-estimate-the-sample-size"></a>
 </h3>
-<p>This is a simplified description of how <code><a href="../reference/x_from_power.html">x_from_power()</a></code>
+<p>This is a simplified description of how <code><a href="../reference/x_from_power.html">n_from_power()</a></code>
 works when our goal is to find a sample size with the 95% confidence
 interval of its power just below the target power. That is, the sample
 size with the upper bound of the 95% confidence interval of its power
@@ -552,16 +555,13 @@ However, this simple method is usually good enough for finding an
 approximation.</p>
 <p>This is the function call:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">out_n</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/x_from_power.html">x_from_power</a></span><span class="op">(</span><span class="va">out</span>,</span>
-<span>                      x <span class="op">=</span> <span class="st">"n"</span>,</span>
+<code class="sourceCode R"><span><span class="va">out_n</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/x_from_power.html">n_from_power</a></span><span class="op">(</span><span class="va">out</span>,</span>
 <span>                      target_power <span class="op">=</span> <span class="fl">.80</span>,</span>
 <span>                      final_nrep <span class="op">=</span> <span class="fl">400</span>,</span>
 <span>                      what <span class="op">=</span> <span class="st">"ub"</span>,</span>
 <span>                      seed <span class="op">=</span> <span class="fl">4567</span><span class="op">)</span></span></code></pre></div>
 <p>The argument used above:</p>
 <ul>
-<li><p><code>x</code>: What we want to find, <code>"n"</code> stands for
-sample size.</p></li>
 <li><p><code>target_power</code>: The target power. Default is
 .80.</p></li>
 <li><p><code>final_nrep</code>: The number of replications desired in
@@ -597,8 +597,8 @@ approximation.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">out_n</span></span>
 <span><span class="co">#&gt; Call:</span></span>
-<span><span class="co">#&gt; x_from_power(object = out, x = "n", target_power = 0.8, what = "ub", </span></span>
-<span><span class="co">#&gt;     final_nrep = 400, seed = 4567)</span></span>
+<span><span class="co">#&gt; power4mome::x_from_power(object = out, x = "n", target_power = 0.8, </span></span>
+<span><span class="co">#&gt;     what = "ub", goal = "close_enough", final_nrep = 400, seed = 4567)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;                           Setting</span></span>
 <span><span class="co">#&gt; Predictor(x):         Sample Size</span></span>
@@ -629,8 +629,8 @@ be used if the target power is .80.</p>
 <span><span class="co">#&gt; ====== x_from_power Results ======</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call:</span></span>
-<span><span class="co">#&gt; x_from_power(object = out, x = "n", target_power = 0.8, what = "ub", </span></span>
-<span><span class="co">#&gt;     final_nrep = 400, seed = 4567)</span></span>
+<span><span class="co">#&gt; power4mome::x_from_power(object = out, x = "n", target_power = 0.8, </span></span>
+<span><span class="co">#&gt;     what = "ub", goal = "close_enough", final_nrep = 400, seed = 4567)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Predictor (x): Sample Size </span></span>
 <span><span class="co">#&gt; </span></span>
@@ -652,7 +652,7 @@ be used if the target power is .80.</p>
 <span><span class="co">#&gt; - Algorithm: bisection </span></span>
 <span><span class="co">#&gt; - Tolerance for 'close enough': Within 0.02000 of 0.800 </span></span>
 <span><span class="co">#&gt; - The range of values explored: 105 to 91 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 1.717 mins </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 1.548 mins </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
@@ -733,8 +733,7 @@ That is, the <em>lower</em> <em>bound</em> of the confidence interval is
 close enough to the target power.</p>
 <p>This is the function call:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">out_n_lb</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/x_from_power.html">x_from_power</a></span><span class="op">(</span><span class="va">out</span>,</span>
-<span>                         x <span class="op">=</span> <span class="st">"n"</span>,</span>
+<code class="sourceCode R"><span><span class="va">out_n_lb</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/x_from_power.html">n_from_power</a></span><span class="op">(</span><span class="va">out</span>,</span>
 <span>                         target_power <span class="op">=</span> <span class="fl">.80</span>,</span>
 <span>                         final_nrep <span class="op">=</span> <span class="fl">400</span>,</span>
 <span>                         what <span class="op">=</span> <span class="st">"lb"</span>,</span>
@@ -747,8 +746,8 @@ approximation.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">out_n_lb</span></span>
 <span><span class="co">#&gt; Call:</span></span>
-<span><span class="co">#&gt; x_from_power(object = out, x = "n", target_power = 0.8, what = "lb", </span></span>
-<span><span class="co">#&gt;     final_nrep = 400, seed = 2345)</span></span>
+<span><span class="co">#&gt; power4mome::x_from_power(object = out, x = "n", target_power = 0.8, </span></span>
+<span><span class="co">#&gt;     what = "lb", goal = "close_enough", final_nrep = 400, seed = 2345)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;                           Setting</span></span>
 <span><span class="co">#&gt; Predictor(x):         Sample Size</span></span>
@@ -778,8 +777,8 @@ target power is .80.</p>
 <span><span class="co">#&gt; ====== x_from_power Results ======</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call:</span></span>
-<span><span class="co">#&gt; x_from_power(object = out, x = "n", target_power = 0.8, what = "lb", </span></span>
-<span><span class="co">#&gt;     final_nrep = 400, seed = 2345)</span></span>
+<span><span class="co">#&gt; power4mome::x_from_power(object = out, x = "n", target_power = 0.8, </span></span>
+<span><span class="co">#&gt;     what = "lb", goal = "close_enough", final_nrep = 400, seed = 2345)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Predictor (x): Sample Size </span></span>
 <span><span class="co">#&gt; </span></span>
@@ -801,7 +800,7 @@ target power is .80.</p>
 <span><span class="co">#&gt; - Algorithm: bisection </span></span>
 <span><span class="co">#&gt; - Tolerance for 'close enough': Within 0.02000 of 0.800 </span></span>
 <span><span class="co">#&gt; - The range of values explored: 109 to 98 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 2.282 mins </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 2.289 mins </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
@@ -880,11 +879,12 @@ target power.</p>
 <h2 id="advanced-features">Advanced Features<a class="anchor" aria-label="anchor" href="#advanced-features"></a>
 </h2>
 <p>This brief illustration only covers basic features of
-<code><a href="../reference/x_from_power.html">x_from_power()</a></code>. There are other ways to customize the
+<code><a href="../reference/x_from_power.html">n_from_power()</a></code>. There are other ways to customize the
 search, such as the range of sample sizes to examine, the level of
 confidence for the confidence interval, and the number of trials (10 by
-default). Please refer to the help page of <code><a href="../reference/x_from_power.html">x_from_power()</a></code>
-for these and other options.</p>
+default). Please refer to the help page of <code><a href="../reference/x_from_power.html">x_from_power()</a></code>,
+which <code><a href="../reference/x_from_power.html">n_from_power()</a></code> calls, for these and other
+options.</p>
 </div>
 <div class="section level2">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
