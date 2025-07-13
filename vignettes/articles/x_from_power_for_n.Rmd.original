@@ -26,7 +26,7 @@ knitr::opts_chunk$set(
 # Introduction
 
 This article is a brief illustration of how
-to use `x_from_power()` and `power4test()`
+to use `n_from_power()` and `power4test()`
 from the package
 [power4mome](https://sfcheung.github.io/power4mome/)
 to find by simulation the sample
@@ -54,10 +54,10 @@ for an introduction).
 This is a brief illustration. More
 complicated scenarios and other features
 of `x_from_power()` will be described in
-other vignettes.
+other vignettes and articles.
 
 Some sections are repeated from other
-vignettes to make this vignette
+vignettes and articles to make this vignette
 self-contained.
 
 # Package
@@ -96,7 +96,7 @@ values. This is the basic workflow:
     compute the power and verify that
     the test is setup correctly.
 
-6.  Call `x_from_power()` to estimated
+6.  Call `n_from_power()` to estimate
     the sample size required for the
     desired power.
 
@@ -122,7 +122,7 @@ sample sizes with their levels of power
 2) significantly higher than the target power.
 
 That is, we find the sample size that has
-its confidence interval, 95% by default,
+its *confidence interval*, 95% by default,
 just below (Case 1) or
 just above (Case 2) the target power, approximately.
 
@@ -141,7 +141,9 @@ y ~ m + x
 ```
 
 Note that, even if we are going to
-test mediation.
+test mediation, we do not need to label
+the parameters and define the indirect
+effect as usuall in `lavaan`.
 This will be taken care of by the
 test functions, through the use of
 the package
@@ -335,10 +337,8 @@ of replications (`nrep`) in this stage.
 We can use as few as 50. We can set the
 target number of replications when
 calling the function
-`x_from_power()`. It will successively
-increase `nrep` in the search, and
-accepts a solution based on the target
-number of replications.
+`n_from_power()`, which is a wrapper to
+the general function `x_from_power()`.
 
 These are the new arguments used:
 
@@ -392,7 +392,7 @@ These are the new arguments used:
   by the `ncores` argument.]
 
 Note that the simulation can take some
-time to run (3 to 4 minutes using 20 cores).
+time to run.
 Progress will be printed when run in an
 interactive session.
 
@@ -407,13 +407,13 @@ The argument `test_long = TRUE` is added
 to verify the test we set up.
 
 As shown above, the setup is correct.
-We can now call `x_from_power()` to
+We can now call `n_from_power()` to
 do the search.
 
-## Call `x_from_power()` to Estimate the Sample Size
+## Call `n_from_power()` to Estimate the Sample Size
 
 This is a simplified description of
-how `x_from_power()` works when our goal
+how `n_from_power()` works when our goal
 is to find a sample size with the 95% confidence
 interval of its power just below the
 target power. That is, the sample size with the upper bound
@@ -443,8 +443,7 @@ good enough for finding an approximation.
 This is the function call:
 
 ```{r x_out, results=FALSE, message=FALSE}
-out_n <- x_from_power(out,
-                      x = "n",
+out_n <- n_from_power(out,
                       target_power = .80,
                       final_nrep = 400,
                       what = "ub",
@@ -452,9 +451,6 @@ out_n <- x_from_power(out,
 ```
 
 The argument used above:
-
-- `x`: What we want to find, `"n"`
-  stands for sample size.
 
 - `target_power`: The target power.
   Default is .80.
@@ -489,7 +485,6 @@ The argument used above:
   bounds (`what = "ub"` and `what = "lb"`)
   is `"close_enough"`, this argument can be
   omitted.
-
 
 By default,
 being "close enough" is defined as "within .02
@@ -585,8 +580,7 @@ to the target power.
 This is the function call:
 
 ```{r x_out_lb, results=FALSE, message=FALSE}
-out_n_lb <- x_from_power(out,
-                         x = "n",
+out_n_lb <- n_from_power(out,
                          target_power = .80,
                          final_nrep = 400,
                          what = "lb",
@@ -667,14 +661,15 @@ the target power.
 # Advanced Features
 
 This brief illustration only covers
-basic features of `x_from_power()`.
+basic features of `n_from_power()`.
 There are other ways to customize the
 search, such as the range of sample
 sizes to examine,
 the level of confidence for the
 confidence interval, and the number of
 trials (10 by default). Please refer
-to the help page of `x_from_power()`
+to the help page of `x_from_power()`,
+which `n_from_power()` calls,
 for these and other options.
 
 # References
