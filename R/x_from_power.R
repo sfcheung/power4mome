@@ -73,12 +73,10 @@
 #' values (of `x`) examined.
 #'
 #' A detailed illustration on how to
-#' use this function can be found
-#' from these pages:
+#' use this function for sample size can be found
+#' from this page:
 #'
-#' - For example sizes: <https://sfcheung.github.io/power4mome/articles/x_from_power_for_n.html>
-#'
-#' - For effect sizes: <https://sfcheung.github.io/power4mome/articles/x_from_power_for_es.html>
+#' <https://sfcheung.github.io/power4mome/articles/x_from_power_for_n.html>
 #'
 #' # Algorithms
 #'
@@ -1174,6 +1172,78 @@ x_from_power <- function(object,
               call = match.call())
   class(out) <- c("x_from_power", class(out))
   return(out)
+}
+
+#' @rdname x_from_power
+#'
+#' @details
+#'
+#' The function [n_from_power()] is just
+#' a wrapper of [x_from_power()], with
+#' `x` set to `"n"`.
+#'
+#' @export
+n_from_power <- function(object,
+                         pop_es_name = NULL,
+                         target_power = .80,
+                         what = c("point", "ub", "lb"),
+                         goal = switch(what,
+                                       point = "ci_hit",
+                                       ub = "close_enough",
+                                       lb = "close_enough"),
+                         ci_level = .95,
+                         tolerance = .02,
+                         x_interval = c(50, 2000),
+                         extendInt = NULL,
+                         progress = TRUE,
+                         simulation_progress = TRUE,
+                         max_trials = 10,
+                         final_nrep = 400,
+                         final_R = 1000,
+                         seed = NULL,
+                         x_include_interval = FALSE,
+                         check_es_interval = TRUE,
+                         power_curve_args = list(power_model = NULL,
+                                                 start = NULL,
+                                                 lower_bound = NULL,
+                                                 upper_bound = NULL,
+                                                 nls_control = list(),
+                                                 nls_args = list()),
+                         save_sim_all = FALSE,
+                         algorithm = NULL,
+                         control = list()
+                         ) {
+  what <- match.arg(what)
+  goal <- match.arg(goal,
+                    c("ci_hit", "close_enough"))
+  if ((goal == "ci_hit") &&
+      (what != "point")) {
+    what <- "point"
+  }
+  x_from_power(
+    object = object,
+    x = "n",
+    pop_es_name = NULL,
+    target_power = target_power,
+    what = what,
+    goal = goal,
+    ci_level = ci_level,
+    tolerance = tolerance,
+    x_interval = x_interval,
+    extendInt = extendInt,
+    progress = progress,
+    simulation_progress = simulation_progress,
+    max_trials = max_trials,
+    final_nrep = final_nrep,
+    final_R = final_R,
+    seed = seed,
+    x_include_interval = x_include_interval,
+    check_es_interval = check_es_interval,
+    power_curve_args = power_curve_args,
+    save_sim_all = save_sim_all,
+    algorithm = algorithm,
+    control = control
+  )
 }
 
 #' @rdname x_from_power

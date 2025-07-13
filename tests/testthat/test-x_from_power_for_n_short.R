@@ -45,6 +45,17 @@ expect_no_error(print(summary(tmp)))
 expect_true((tmp$power_final > .70) &&
             (tmp$power_final < .90))
 
+expect_no_error(tmp2 <- n_from_power(out,
+                    target_power = .80,
+                    final_nrep = 60,
+                    max_trials = 2,
+                    seed = 2345,
+                    progress = TRUE,
+                    simulation_progress = FALSE,
+                    algorithm = "power_curve"))
+expect_equal(tmp2$power_final,
+             tmp$power_final)
+
 tmp2 <- x_from_power(tmp,
                     x = "n",
                     target_power = .80,

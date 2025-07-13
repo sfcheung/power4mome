@@ -1,4 +1,4 @@
-# power4mome 0.0.1.78
+# power4mome 0.0.1.79
 
 - Initialized the package. (0.0.0.9000)
 
@@ -505,3 +505,7 @@
 - Added `plot` methods for the output
   of `power4test_by_n()` and
   `power4test_by_es()`. (0.0.1.78)
+
+- Added (back) `n_from_power()`, a
+  wrapper of `x_from_power()` with
+  `x` set to `"n"`. (0.0.1.79)
