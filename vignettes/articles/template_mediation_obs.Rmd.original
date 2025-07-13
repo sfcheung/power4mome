@@ -155,8 +155,27 @@ rejection_rates(out_ns)
 # Search N With Target Power
 
 Search, by simulation, the sample size
-with estimated power close to a target
-level (e.g., .80).
+with estimated either:
+
+- Case 1: Sample size with the 95%
+  confidence interval of its estimated
+  power just below the target
+  level (e.g., .80). That is,
+  its upper bound (`ub`) close to the
+  target level. Sample sizes lower
+  than this sample size has their power
+  levels significantly lower than the
+  target level.
+
+- Case 2: Sample size with the 95%
+  confidence interval of its estimated
+  power just above the target
+  level (e.g., .80).  That is,
+  its lower bound (`lb`) close to the
+  target level. Sample sizes higher
+  than this sample size has their power
+  levels significantly higher than the
+  target level.
 
 ## Use the Output of `power4test()`
 
@@ -167,25 +186,28 @@ It can take some time to run if estimated power
 of the sample size is too different from
 the target power.
 
+We consider Case 1 first: Sample sizes with power significantly
+lower than the target level.
+
 The code:
 
 ```{r med_simple_n_from, eval=TRUE, results="hide", message=FALSE, fig.keep="none"}
 #
 # ===== Reuse the output of power4test() =====
-# Call x_from_power()
+# Call n_from_power()
 # - Set target power: target_power = .80 (Default, can be omitted)
 # To set desired precision:
 # - Set final number of R: final_R = 1000 (Default, can be omitted)
 # - Set final number of replications: final_nrep = 400 (Default, can be omitted)
-n_power_80 <- x_from_power(out,
-                           x = "n",
-                           seed = 1357)
+n_power_80_ub <- n_from_power(out,
+                              what = "ub",
+                              seed = 1357)
 #
 # ===== Print the Summary =====
-summary(n_power_80)
+summary(n_power_80_ub)
 #
 # ===== Plot the (Crude) Power Curve =====
-plot(n_power_80)
+plot(n_power_80_ub)
 ```
 
 The results:
@@ -193,11 +215,47 @@ The results:
 ```{r temp_med_obs_med_simple_n_from_out, fig.cap = "Power Curve"}
 #
 # ===== Print the Summary =====
-summary(n_power_80)
+summary(n_power_80_ub)
 #
 # ===== Plot the (Crude) Power Curve =====
-plot(n_power_80)
+plot(n_power_80_ub)
 ```
+
+Case 2: Sample sizes with power significantly
+higher than the target level.
+
+The code:
+
+```{r med_simple_n_from_lb, eval=TRUE, results="hide", message=FALSE, fig.keep="none"}
+#
+# ===== Reuse the output of power4test() =====
+# Call n_from_power()
+# - Set target power: target_power = .80 (Default, can be omitted)
+# To set desired precision:
+# - Set final number of R: final_R = 1000 (Default, can be omitted)
+# - Set final number of replications: final_nrep = 400 (Default, can be omitted)
+n_power_80_lb <- n_from_power(out,
+                              what = "lb",
+                              seed = 1357)
+#
+# ===== Print the Summary =====
+summary(n_power_80_lb)
+#
+# ===== Plot the (Crude) Power Curve =====
+plot(n_power_80_lb)
+```
+
+The results:
+
+```{r temp_med_obs_med_simple_n_from_out_lb, fig.cap = "Power Curve"}
+#
+# ===== Print the Summary =====
+summary(n_power_80_lb)
+#
+# ===== Plot the (Crude) Power Curve =====
+plot(n_power_80_lb)
+```
+
 
 ## Use the Output of `power4test_by_n()`
 
@@ -206,7 +264,7 @@ on a sample size.
 
 Continue the search using the output
 on several sample sizes
-by calling `x_from_power()` on the
+by calling `n_from_power()` on the
 output of `power4test_by_n()`.
 
 It can take some time to run if estimated levels
@@ -214,25 +272,26 @@ of power
 of the sample sizes are too different from
 the target power.
 
-The code:
+The code for Case 1: Sample sizes with power significantly
+lower than the target level.
 
 ```{r med_simple_n_from_by, eval=TRUE, results="hide", message=FALSE, fig.keep="none"}
 #
 # ===== Reuse the output of power4test_by_n() =====
-# Call x_from_power()
+# Call n_from_power()
 # - Set target power: target_power = .80 (Default, can be omitted)
 # To set desired precision:
 # - Set final number of R: final_R = 1000 (Default, can be omitted)
 # - Set final number of replications: final_nrep = 400 (Default, can be omitted)
-n_power_80_ns <- x_from_power(out_ns,
-                              x = "n",
-                              seed = 1357)
+n_power_80_ns_ub <- n_from_power(out_ns,
+                                 what = "ub",
+                                 seed = 1357)
 #
 # ===== Print the Summary =====
-summary(n_power_80_ns)
+summary(n_power_80_ns_ub)
 #
 # ===== Plot the (Crude) Power Curve =====
-plot(n_power_80_ns)
+plot(n_power_80_ns_ub)
 ```
 
 The results:
@@ -240,10 +299,42 @@ The results:
 ```{r temp_med_obs_med_simple_n_from_by_out, fig.cap = "Power Curve"}
 #
 # ===== Print the Summary =====
-summary(n_power_80_ns)
+summary(n_power_80_ns_ub)
 #
 # ===== Plot the (Crude) Power Curve =====
-plot(n_power_80_ns)
+plot(n_power_80_ns_ub)
+```
+The code for Case 2: Sample sizes with power significantly
+higher than the target level.
+
+```{r med_simple_n_from_by_lb, eval=TRUE, results="hide", message=FALSE, fig.keep="none"}
+#
+# ===== Reuse the output of power4test_by_n() =====
+# Call n_from_power()
+# - Set target power: target_power = .80 (Default, can be omitted)
+# To set desired precision:
+# - Set final number of R: final_R = 1000 (Default, can be omitted)
+# - Set final number of replications: final_nrep = 400 (Default, can be omitted)
+n_power_80_ns_lb <- n_from_power(out_ns,
+                                 what = "lb",
+                                 seed = 1357)
+#
+# ===== Print the Summary =====
+summary(n_power_80_ns_lb)
+#
+# ===== Plot the (Crude) Power Curve =====
+plot(n_power_80_ns_lb)
+```
+
+The results:
+
+```{r temp_med_obs_med_simple_n_from_by_out_lb, fig.cap = "Power Curve"}
+#
+# ===== Print the Summary =====
+summary(n_power_80_ns_lb)
+#
+# ===== Plot the (Crude) Power Curve =====
+plot(n_power_80_ns_lb)
 ```
 
 # Change Population Values and Repeat
@@ -293,22 +384,23 @@ rejection_rates(out2)
 ```
 
 For illustration, go directly to
-searching by `x_from_power()`:
+searching by `n_from_power()`:
 
-The code:
+The code for Case 1: Sample sizes with power significantly
+lower than the target level.
 
 ```{r med_simple2_n_from, eval=TRUE, results="hide", message=FALSE, fig.keep="none"}
 #
 # ===== Reuse the output of power4test() =====
-n2_power_80 <- x_from_power(out2,
-                            x = "n",
+n2_power_80_ub <- n_from_power(out2,
+                            what = "ub",
                             seed = 1357)
 #
 # ===== Print the Summary =====
-summary(n2_power_80)
+summary(n2_power_80_ub)
 #
 # ===== Plot the (Crude) Power Curve =====
-plot(n2_power_80)
+plot(n2_power_80_ub)
 ```
 
 The results:
@@ -316,8 +408,36 @@ The results:
 ```{r temp_med_obs_med_simple2_n_from_out, fig.cap = "Power Curve"}
 #
 # ===== Print the Summary =====
-summary(n2_power_80)
+summary(n2_power_80_ub)
 #
 # ===== Plot the (Crude) Power Curve =====
-plot(n2_power_80)
+plot(n2_power_80_ub)
+```
+
+The code for Case 2: Sample sizes with power significantly
+higher than the target level.
+
+```{r med_simple2_n_from_lb, eval=TRUE, results="hide", message=FALSE, fig.keep="none"}
+#
+# ===== Reuse the output of power4test() =====
+n2_power_80_lb <- n_from_power(out2,
+                            what = "lb",
+                            seed = 1357)
+#
+# ===== Print the Summary =====
+summary(n2_power_80_lb)
+#
+# ===== Plot the (Crude) Power Curve =====
+plot(n2_power_80_lb)
+```
+
+The results:
+
+```{r temp_med_obs_med_simple2_n_from_out_lb, fig.cap = "Power Curve"}
+#
+# ===== Print the Summary =====
+summary(n2_power_80_lb)
+#
+# ===== Plot the (Crude) Power Curve =====
+plot(n2_power_80_lb)
 ```
