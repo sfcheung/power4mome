@@ -1,0 +1,438 @@
+---
+title: "Quick Template: Mediation with Observed Variables"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    fig.align: "center"
+    toc: true
+    toc_depth: 2
+    number_sections: false
+bibliography: references.bib
+csl: apa.csl
+---
+
+```{r knitr_setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "",
+  fig.align = "center"
+)
+```
+
+```{r load_pre, child=c("template_n_preamble.txt")}
+```
+
+```{r load_flow, echo=FALSE, results="asis"}
+# Adapted from this answer
+cat(readLines("template_n_flowchart.txt"),
+    sep = "\n")
+```
+
+# Scope
+
+This file is for simple mediation models.
+
+# Try One N
+
+Estimate the power for a sample size.
+
+The code:
+
+```{r med_simple, eval=TRUE, results="hide", message=FALSE}
+library(power4mome)
+#
+# ====== Model: Form ======
+model <-
+"
+m ~ x
+y ~ m + x
+"
+#
+# ====== Model: Population Values ======
+# l: large (.50 by default)
+# m: medium (.30 by default)
+# s: small (.10 by default)
+model_es <-
+"
+m ~ x: s
+y ~ m: l
+y ~ x: m
+"
+#
+# ====== Test the Model Specification ======
+out <- power4test(nrep = 2,
+                  model = model,
+                  pop_es = model_es,
+                  n = 50000,
+                  iseed = 1234)
+#
+# ====== Check the Data Generated ======
+print(out,
+      data_long = TRUE)
+#
+# ====== Estimate the Power ======
+# For n = 100,
+# when testing the indirect effect by
+# Monte Carlo confidence interval
+out <- power4test(nrep = 400,
+                  model = model,
+                  pop_es = model_es,
+                  n = 100,
+                  R = 1000,
+                  ci_type = "mc",
+                  test_fun = test_indirect_effect,
+                  test_args = list(x = "x",
+                                   m = "m",
+                                   y = "y",
+                                   mc_ci = TRUE),
+                  iseed = 1234,
+                  parallel = TRUE)
+#
+# ====== Compute the Rejection Rate ======
+rejection_rates(out)
+```
+
+The results:
+
+```{r med_simple_out}
+print(out,
+      data_long = TRUE)
+rejection_rates(out)
+```
+
+## Try Another N
+
+We can rerun the simulation to estimate
+power for another sample size before going
+to the next step. This can be useful if
+the estimated power of the initial attempt
+is too different from the target power.
+
+However, this step is optional because
+the next step, though may take longer,
+should still be able to find the
+desired region.
+
+The code:
+
+```{r med_simple_new_n, eval=TRUE, results="hide", message=FALSE}
+#
+# ===== Reuse the output of power4test() =====
+# Estimate power for n = 150
+# Set n to 150
+out_new_n <- power4test(out,
+                        n = 150)
+#
+# ===== Compute Rejection Rate (Power) =====
+rejection_rates(out_new_n)
+```
+
+The results:
+
+```{r med_simple_new_n_out}
+rejection_rates(out_new_n)
+```
+
+# Find the Regions of *N* Based on the Target Power
+
+Search, by simulation, the sample size
+with estimated either:
+
+- **Case 1**: Sample size with the 95%
+  confidence interval of its estimated
+  power just below the target
+  level (e.g., .80). That is,
+  its *upper bound* (`ub`) close to the
+  target level. Sample sizes lower
+  than this sample size has their power
+  levels significantly lower than the
+  target level.
+
+- **Case 2**: Sample size with the 95%
+  confidence interval of its estimated
+  power just above the target
+  level (e.g., .80).  That is,
+  its *lower bound* (`lb`) close to the
+  target level. Sample sizes higher
+  than this sample size has their power
+  levels significantly higher than the
+  target level.
+
+Do this step after calling `power4test()`
+on a sample size.
+
+It can take some time to run if estimated power
+of the sample size is too different from
+the target power.
+
+## Case 1: Significantly Lower Than The Target
+
+We consider **Case 1** first. The goal is
+to find
+
+- the region of sample sizes with power significantly
+*lower* than the target level.
+
+The code:
+
+```{r med_n_simple_n_from, eval=TRUE, results="hide", message=FALSE, fig.keep="none"}
+#
+# ===== Reuse the output of power4test() =====
+# Call n_from_power()
+# - Set target power: target_power = .80 (Default, can be omitted)
+# - Set the seed for the simulation: Integer. Should always be set.
+# To set desired precision:
+# - Set final number of R: final_R = 1000 (Default, can be omitted)
+# - Set final number of replications: final_nrep = 400 (Default, can be omitted)
+n_power_80_ub <- n_from_power(out,
+                              what = "ub",
+                              seed = 1357)
+#
+# ===== Print the Summary =====
+summary(n_power_80_ub)
+#
+# ===== Plot the (Crude) Power Curve =====
+plot(n_power_80_ub)
+```
+
+The results:
+
+```{r temp_n_med_obs_med_simple_n_from_out, fig.cap = "Power Curve"}
+#
+# ===== Print the Summary =====
+summary(n_power_80_ub)
+#
+# ===== Plot the (Crude) Power Curve =====
+plot(n_power_80_ub)
+```
+
+## Case 2: Significantly Higher Than The Target
+
+The goal in **Case 2** is to find
+
+- the region of sample sizes with power significantly
+*higher* than the target level.
+
+The code:
+
+```{r med_n_simple_n_from_lb, eval=TRUE, results="hide", message=FALSE, fig.keep="none"}
+#
+# ===== Reuse the output of power4test() =====
+# Call n_from_power()
+# - Set target power: target_power = .80 (Default, can be omitted)
+# - Set the seed for the simulation: Integer. Should always be set.
+# To set desired precision:
+# - Set final number of R: final_R = 1000 (Default, can be omitted)
+# - Set final number of replications: final_nrep = 400 (Default, can be omitted)
+n_power_80_lb <- n_from_power(out,
+                              what = "lb",
+                              seed = 1357)
+#
+# ===== Print the Summary =====
+summary(n_power_80_lb)
+#
+# ===== Plot the (Crude) Power Curve =====
+plot(n_power_80_lb)
+```
+
+The results:
+
+```{r temp_n_med_obs_med_simple_n_from_out_lb, fig.cap = "Power Curve"}
+#
+# ===== Print the Summary =====
+summary(n_power_80_lb)
+#
+# ===== Plot the (Crude) Power Curve =====
+plot(n_power_80_lb)
+```
+
+# Change Population Values and Repeat
+
+If necessary, change the population value(s)
+and repeat the steps.
+
+For example, set the
+`y ~ m` path to medium (.30)
+(population indirect effect
+increased to .03).
+
+The code:
+
+```{r med_simple2, eval=TRUE, results="hide", message=FALSE}
+model_es2 <-
+"
+m ~ x: s
+y ~ m: m
+y ~ x: m
+"
+#
+# ====== Estimate the Power ======
+out2 <- power4test(nrep = 400,
+                   model = model,
+                   pop_es = model_es2,
+                   n = 100,
+                   R = 1000,
+                   ci_type = "mc",
+                   test_fun = test_indirect_effect,
+                   test_args = list(x = "x",
+                                    m = "m",
+                                    y = "y",
+                                    mc_ci = TRUE),
+                   iseed = 1234,
+                   parallel = TRUE)
+#
+# ====== Compute the Rejection Rate ======
+rejection_rates(out2)
+```
+
+The results:
+
+```{r med_simple2_out}
+print(out2,
+      data_long = TRUE)
+rejection_rates(out2)
+```
+
+## Case 1: Significantly Lower Than The Target
+
+Fine the region of sample sizes with power significantly
+*lower* than the target level.
+
+```{r med_n_simple2_n_from, eval=TRUE, results="hide", message=FALSE, fig.keep="none"}
+#
+# ===== Reuse the output of power4test() =====
+n2_power_80_ub <- n_from_power(out2,
+                               what = "ub",
+                               seed = 1357)
+#
+# ===== Print the Summary =====
+summary(n2_power_80_ub)
+#
+# ===== Plot the (Crude) Power Curve =====
+plot(n2_power_80_ub)
+```
+
+The results:
+
+```{r temp_n_med_obs_med_simple2_n_from_out, fig.cap = "Power Curve"}
+#
+# ===== Print the Summary =====
+summary(n2_power_80_ub)
+#
+# ===== Plot the (Crude) Power Curve =====
+plot(n2_power_80_ub)
+```
+
+## Case 2: Significantly Higher Than The Target
+
+Fine the region of sample sizes with power significantly
+*higher* than the target level.
+
+```{r med_n_simple2_n_from_lb, eval=TRUE, results="hide", message=FALSE, fig.keep="none"}
+#
+# ===== Reuse the output of power4test() =====
+n2_power_80_lb <- n_from_power(out2,
+                               what = "lb",
+                               seed = 1357)
+#
+# ===== Print the Summary =====
+summary(n2_power_80_lb)
+#
+# ===== Plot the (Crude) Power Curve =====
+plot(n2_power_80_lb)
+```
+
+The results:
+
+```{r temp_n_med_obs_med_simple2_n_from_out_lb, fig.cap = "Power Curve"}
+#
+# ===== Print the Summary =====
+summary(n2_power_80_lb)
+#
+# ===== Plot the (Crude) Power Curve =====
+plot(n2_power_80_lb)
+```
+
+# Code Template {#code_template}
+
+This is the code used above:
+
+```{r code_example, eval = FALSE}
+library(power4mome)
+
+# ====== Model and Effect Size (Population Values) ======
+
+model <-
+"
+m ~ x
+y ~ m + x
+"
+model_es <-
+"
+m ~ x: s
+y ~ m: l
+y ~ x: m
+"
+
+# Test the Model Specification
+
+out <- power4test(nrep = 2,
+                  model = model,
+                  pop_es = model_es,
+                  n = 50000,
+                  iseed = 1234)
+
+# Check the Data Generated
+
+print(out,
+      data_long = TRUE)
+
+# ====== Try One N and Estimate the Power ======
+
+# For n = 100,
+# when testing the indirect effect by
+# Monte Carlo confidence interval
+
+out <- power4test(nrep = 400,
+                  model = model,
+                  pop_es = model_es,
+                  n = 100,
+                  R = 1000,
+                  ci_type = "mc",
+                  test_fun = test_indirect_effect,
+                  test_args = list(x = "x",
+                                   m = "m",
+                                   y = "y",
+                                   mc_ci = TRUE),
+                  iseed = 1234,
+                  parallel = TRUE)
+rejection_rates(out)
+
+# ====== Case 1: Regions of Ns Significantly Lower Than the Target ======
+
+# Call n_from_power()
+# - Set target power: target_power = .80 (Default, can be omitted)
+# - Set the seed for the simulation: Integer. Should always be set.
+# To set desired precision:
+# - Set final number of R: final_R = 1000 (Default, can be omitted)
+# - Set final number of replications: final_nrep = 400 (Default, can be omitted)
+
+n_power_ub <- n_from_power(out,
+                           what = "ub",
+                           seed = 1357)
+summary(n_power_ub)
+plot(n_power_ub)
+
+# ====== Case 2: Regions of Ns Significantly Higher Than the Target ======
+
+n_power_lb <- n_from_power(out,
+                           what = "lb",
+                           seed = 1357)
+summary(n_power_lb)
+plot(n_power_lb)
+```
+
+```{r load_final, child=c("template_n_final_remarks.txt")}
+```
+

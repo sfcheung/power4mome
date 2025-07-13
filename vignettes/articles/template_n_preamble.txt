@@ -1,0 +1,28 @@
+# Introduction
+
+This and other "Quick Template" articles
+are examples of R code to determine
+sample size for a target level of power in
+typical models using
+[power4mome](https://sfcheung.github.io/power4mome/).
+Users can quickly adapt
+them for their scenarios. A summary
+of the code examples can be found
+in the section [Code Template](#code_template)
+at the end of this document.
+
+# Prerequisite
+
+Basic knowledge about fitting models
+by `lavaan` and `power4mome` is required.
+
+This file is not intended to be an introduction
+on how to use functions in `power4mome`.
+For details on how to use `power4test()`,
+and `n_from_power()`,
+refer to the [Get-Started article](https://sfcheung.github.io/power4mome/articles/power4mome.html),
+and this [article](https://sfcheung.github.io/power4mome/articles/x_from_power_for_n.html)
+on finding the sample size
+given desired power using `n_from_power()`,
+as well as the help pages of these
+functions.

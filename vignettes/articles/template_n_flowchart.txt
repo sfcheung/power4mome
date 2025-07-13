@@ -1,0 +1,58 @@
+# Common Flow
+
+The following chart summarizes the steps covered
+below.
+
+```{r temp_n_med_obs_fig_flowchart, fig.cap="Common Workflow", fig.align="center", message=FALSE, echo=FALSE}
+library(DiagrammeR)
+# https://mermaid.live/edit#pako:eNqFVGtr2zAU_StCUEggSRM_8nDTwFj2sV2Zyz5sHkGxrx8gS0aW17lp_vtk-THHTdk36d5zjo7OFTphnweAHRxS_uLHREj0vPeYxxDyKcnzPYQogJAUVKIwodShSRTLIy3g7hrG6IEiAcDuaq1clhSQFCWrAUgjSqDq1H_9VFmh1wAVxAX5UPVHHt6DnwRKLgb0xLOCEplwhnQXjbbJTutsb5Pd2MPjhvvF_ZD4najr5JqZ8ewAeZ_6lcGjYj6LEnEGiG2P4nankS8gLAm5HI0rfAO_uVGH_QZBaMvK6y1i-Xvq4Vge2AXfBSL8uOLWK-1VQFT55GFPhB1CwdOD1ho6-MS4oonWAam3__Gux1AcI0GyuJnEz5qvIkCPHv51OQfHcbqhT6e7OuNesctdd6sYaz6woF4oo1UVTWcte2BCP5fKg4rgWxeBS9JMvRU3eYW8M1ULaR2dXy_Kqvymr6FDeDf3t_7Zraft_f2ui3GQat1sp_xBs3NxoTgg9Rt9Qgsb9IbpdWf2E7wUuNJpQukaeIJTEClJAvULnCqYh5VsCh521LIZp4c9dlZQUkjulszHjhQFTLDgRRRjJyQ0V7siC4iEfULUANOumhH2g_O0pUCQSC4e6m9H_z4agp0T_oOdhWHMlubCtNdra2MvTXM5wWVV3sw21mK-tA3LMu3lxjxP8KtWnc9UzV6tLdtYLObGZm5PcCSq6zQWVWYgPvOCSezYq9X5L5kXl5M
+mermaid('
+flowchart TD
+
+  classDef default fill:lightblue;
+  classDef default2 fill:lightgreen;
+
+  style tryn fill: lightyellow
+  style model fill: lightyellow
+
+  SetModel("Decide the Population Model (<i>model</i>)")
+  SetES("Decide the Population Values (<i>pop_es</i>)")
+  OneN("Try one n<br/><i>power4test()</i>")
+  %% SeveralN("Try several ns<br/><i>power4test_by_n()</i>")
+  SearchN("Search the region of ns<br/><i>n_from_power()</i>")
+  %% AnotherN("Try another n<br/><i>power4test()</i>")
+
+  subgraph model ["Try One N"]
+
+  SetModel:::default2 --> SetES:::default2
+  SetES --> OneN
+
+  end
+
+  %% OneN -.-> SetES
+
+  subgraph tryn ["The Region of Sample Sizes"]
+
+  OneN --> SearchN
+  SearchN -->|Try Other Population Values| SetES
+
+  %% OneN <==> AnotherN
+  %% AnotherN <==> SeveralN
+  %% AnotherN <==> SearchN
+  %% OneN <==> SeveralN
+  %% OneN <==> SearchN
+  %% SeveralN <==> SearchN
+
+  end
+
+  %% AnotherN -.-> SetES
+  %% SeveralN -.-> SetES
+  %% SearchN -.-> SetES
+', height = 550, width = 500)
+```
+
+In practice, steps can be repeated,
+and population values changed, until
+the desired goal is achieved (e.g.,
+a sample size with power close to
+the target power is found).
