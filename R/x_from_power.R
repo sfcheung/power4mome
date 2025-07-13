@@ -1220,6 +1220,7 @@ n_from_power <- function(object,
       (what != "point")) {
     what <- "point"
   }
+  my_call <- match.call()
   my_call$x <- "n"
   my_call$what <- what
   my_call$goal <- goal
