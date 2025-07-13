@@ -393,15 +393,15 @@ The code:
 # To set desired precision:
 # - Set final number of R: final_R = 1000 (Default, can be omitted)
 # - Set final number of replications: final_nrep = 400 (Default, can be omitted)
-n_power_80_ub <- n_from_power(out,
+n_power_ub <- n_from_power(out,
                               what = "ub",
                               seed = 1357)
 #
 # ===== Print the Summary =====
-summary(n_power_80_ub)
+summary(n_power_ub)
 #
 # ===== Plot the (Crude) Power Curve =====
-plot(n_power_80_ub)
+plot(n_power_ub)
 ```
 
 The results:
@@ -410,7 +410,7 @@ The results:
 ``` r
 #
 # ===== Print the Summary =====
-summary(n_power_80_ub)
+summary(n_power_ub)
 #> 
 #> ====== x_from_power Results ======
 #> 
@@ -438,7 +438,7 @@ summary(n_power_80_ub)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 100 to 897 
-#> - Time spent in the search: 53.67 secs 
+#> - Time spent in the search: 47.71 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -483,7 +483,7 @@ summary(n_power_80_ub)
 #> - Refer to the tests for the meanings of other columns.
 #
 # ===== Plot the (Crude) Power Curve =====
-plot(n_power_80_ub)
+plot(n_power_ub)
 ```
 
 <div class="figure" style="text-align: center">
@@ -510,15 +510,15 @@ The code:
 # To set desired precision:
 # - Set final number of R: final_R = 1000 (Default, can be omitted)
 # - Set final number of replications: final_nrep = 400 (Default, can be omitted)
-n_power_80_lb <- n_from_power(out,
+n_power_lb <- n_from_power(out,
                               what = "lb",
                               seed = 1357)
 #
 # ===== Print the Summary =====
-summary(n_power_80_lb)
+summary(n_power_lb)
 #
 # ===== Plot the (Crude) Power Curve =====
-plot(n_power_80_lb)
+plot(n_power_lb)
 ```
 
 The results:
@@ -527,7 +527,7 @@ The results:
 ``` r
 #
 # ===== Print the Summary =====
-summary(n_power_80_lb)
+summary(n_power_lb)
 #> 
 #> ====== x_from_power Results ======
 #> 
@@ -555,7 +555,7 @@ summary(n_power_80_lb)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 100 to 891 
-#> - Time spent in the search: 1.093 mins 
+#> - Time spent in the search: 1.072 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -601,7 +601,7 @@ summary(n_power_80_lb)
 #> - Refer to the tests for the meanings of other columns.
 #
 # ===== Plot the (Crude) Power Curve =====
-plot(n_power_80_lb)
+plot(n_power_lb)
 ```
 
 <div class="figure" style="text-align: center">
@@ -784,15 +784,15 @@ Fine the region of sample sizes with power significantly
 ``` r
 #
 # ===== Reuse the output of power4test() =====
-n2_power_80_ub <- n_from_power(out2,
+n2_power_ub <- n_from_power(out2,
                                what = "ub",
                                seed = 1357)
 #
 # ===== Print the Summary =====
-summary(n2_power_80_ub)
+summary(n2_power_ub)
 #
 # ===== Plot the (Crude) Power Curve =====
-plot(n2_power_80_ub)
+plot(n2_power_ub)
 ```
 
 The results:
@@ -801,7 +801,7 @@ The results:
 ``` r
 #
 # ===== Print the Summary =====
-summary(n2_power_80_ub)
+summary(n2_power_ub)
 #> 
 #> ====== x_from_power Results ======
 #> 
@@ -829,7 +829,7 @@ summary(n2_power_80_ub)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 100 to 939 
-#> - Time spent in the search: 48.19 secs 
+#> - Time spent in the search: 47.46 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -874,7 +874,7 @@ summary(n2_power_80_ub)
 #> - Refer to the tests for the meanings of other columns.
 #
 # ===== Plot the (Crude) Power Curve =====
-plot(n2_power_80_ub)
+plot(n2_power_ub)
 ```
 
 <div class="figure" style="text-align: center">
@@ -891,15 +891,15 @@ Fine the region of sample sizes with power significantly
 ``` r
 #
 # ===== Reuse the output of power4test() =====
-n2_power_80_lb <- n_from_power(out2,
+n2_power_lb <- n_from_power(out2,
                                what = "lb",
                                seed = 1357)
 #
 # ===== Print the Summary =====
-summary(n2_power_80_lb)
+summary(n2_power_lb)
 #
 # ===== Plot the (Crude) Power Curve =====
-plot(n2_power_80_lb)
+plot(n2_power_lb)
 ```
 
 The results:
@@ -908,7 +908,7 @@ The results:
 ``` r
 #
 # ===== Print the Summary =====
-summary(n2_power_80_lb)
+summary(n2_power_lb)
 #> 
 #> ====== x_from_power Results ======
 #> 
@@ -936,7 +936,7 @@ summary(n2_power_80_lb)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 100 to 937 
-#> - Time spent in the search: 1.312 mins 
+#> - Time spent in the search: 1.373 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -983,7 +983,7 @@ summary(n2_power_80_lb)
 #> - Refer to the tests for the meanings of other columns.
 #
 # ===== Plot the (Crude) Power Curve =====
-plot(n2_power_80_lb)
+plot(n2_power_lb)
 ```
 
 <div class="figure" style="text-align: center">

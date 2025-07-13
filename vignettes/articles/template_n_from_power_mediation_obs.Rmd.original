@@ -185,15 +185,15 @@ The code:
 # To set desired precision:
 # - Set final number of R: final_R = 1000 (Default, can be omitted)
 # - Set final number of replications: final_nrep = 400 (Default, can be omitted)
-n_power_80_ub <- n_from_power(out,
+n_power_ub <- n_from_power(out,
                               what = "ub",
                               seed = 1357)
 #
 # ===== Print the Summary =====
-summary(n_power_80_ub)
+summary(n_power_ub)
 #
 # ===== Plot the (Crude) Power Curve =====
-plot(n_power_80_ub)
+plot(n_power_ub)
 ```
 
 The results:
@@ -201,10 +201,10 @@ The results:
 ```{r temp_n_med_obs_med_simple_n_from_out, fig.cap = "Power Curve"}
 #
 # ===== Print the Summary =====
-summary(n_power_80_ub)
+summary(n_power_ub)
 #
 # ===== Plot the (Crude) Power Curve =====
-plot(n_power_80_ub)
+plot(n_power_ub)
 ```
 
 ## Case 2: Significantly Higher Than The Target
@@ -225,15 +225,15 @@ The code:
 # To set desired precision:
 # - Set final number of R: final_R = 1000 (Default, can be omitted)
 # - Set final number of replications: final_nrep = 400 (Default, can be omitted)
-n_power_80_lb <- n_from_power(out,
+n_power_lb <- n_from_power(out,
                               what = "lb",
                               seed = 1357)
 #
 # ===== Print the Summary =====
-summary(n_power_80_lb)
+summary(n_power_lb)
 #
 # ===== Plot the (Crude) Power Curve =====
-plot(n_power_80_lb)
+plot(n_power_lb)
 ```
 
 The results:
@@ -241,10 +241,10 @@ The results:
 ```{r temp_n_med_obs_med_simple_n_from_out_lb, fig.cap = "Power Curve"}
 #
 # ===== Print the Summary =====
-summary(n_power_80_lb)
+summary(n_power_lb)
 #
 # ===== Plot the (Crude) Power Curve =====
-plot(n_power_80_lb)
+plot(n_power_lb)
 ```
 
 # Change Population Values and Repeat
@@ -302,15 +302,15 @@ Fine the region of sample sizes with power significantly
 ```{r med_n_simple2_n_from, eval=TRUE, results="hide", message=FALSE, fig.keep="none"}
 #
 # ===== Reuse the output of power4test() =====
-n2_power_80_ub <- n_from_power(out2,
+n2_power_ub <- n_from_power(out2,
                                what = "ub",
                                seed = 1357)
 #
 # ===== Print the Summary =====
-summary(n2_power_80_ub)
+summary(n2_power_ub)
 #
 # ===== Plot the (Crude) Power Curve =====
-plot(n2_power_80_ub)
+plot(n2_power_ub)
 ```
 
 The results:
@@ -318,10 +318,10 @@ The results:
 ```{r temp_n_med_obs_med_simple2_n_from_out, fig.cap = "Power Curve"}
 #
 # ===== Print the Summary =====
-summary(n2_power_80_ub)
+summary(n2_power_ub)
 #
 # ===== Plot the (Crude) Power Curve =====
-plot(n2_power_80_ub)
+plot(n2_power_ub)
 ```
 
 ## Case 2: Significantly Higher Than The Target
@@ -332,15 +332,15 @@ Fine the region of sample sizes with power significantly
 ```{r med_n_simple2_n_from_lb, eval=TRUE, results="hide", message=FALSE, fig.keep="none"}
 #
 # ===== Reuse the output of power4test() =====
-n2_power_80_lb <- n_from_power(out2,
+n2_power_lb <- n_from_power(out2,
                                what = "lb",
                                seed = 1357)
 #
 # ===== Print the Summary =====
-summary(n2_power_80_lb)
+summary(n2_power_lb)
 #
 # ===== Plot the (Crude) Power Curve =====
-plot(n2_power_80_lb)
+plot(n2_power_lb)
 ```
 
 The results:
@@ -348,10 +348,10 @@ The results:
 ```{r temp_n_med_obs_med_simple2_n_from_out_lb, fig.cap = "Power Curve"}
 #
 # ===== Print the Summary =====
-summary(n2_power_80_lb)
+summary(n2_power_lb)
 #
 # ===== Plot the (Crude) Power Curve =====
-plot(n2_power_80_lb)
+plot(n2_power_lb)
 ```
 
 # Code Template {#code_template}
