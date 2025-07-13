@@ -1220,30 +1220,13 @@ n_from_power <- function(object,
       (what != "point")) {
     what <- "point"
   }
-  x_from_power(
-    object = object,
-    x = "n",
-    pop_es_name = NULL,
-    target_power = target_power,
-    what = what,
-    goal = goal,
-    ci_level = ci_level,
-    tolerance = tolerance,
-    x_interval = x_interval,
-    extendInt = extendInt,
-    progress = progress,
-    simulation_progress = simulation_progress,
-    max_trials = max_trials,
-    final_nrep = final_nrep,
-    final_R = final_R,
-    seed = seed,
-    x_include_interval = x_include_interval,
-    check_es_interval = check_es_interval,
-    power_curve_args = power_curve_args,
-    save_sim_all = save_sim_all,
-    algorithm = algorithm,
-    control = control
-  )
+  my_call$x <- "n"
+  my_call$what <- what
+  my_call$goal <- goal
+  my_call[[1]] <- quote(power4mome::x_from_power)
+  out <- eval(my_call,
+              envir = parent.frame())
+  out
 }
 
 #' @rdname x_from_power

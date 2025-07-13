@@ -1,4 +1,4 @@
-# power4mome 0.0.1.79
+# power4mome 0.0.1.80
 
 - Initialized the package. (0.0.0.9000)
 
@@ -508,4 +508,4 @@
 
 - Added (back) `n_from_power()`, a
   wrapper of `x_from_power()` with
-  `x` set to `"n"`. (0.0.1.79)
+  `x` set to `"n"`. (0.0.1.79, 0.0.1.80)
