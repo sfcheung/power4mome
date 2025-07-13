@@ -2,6 +2,7 @@
 % Please edit documentation in R/x_from_power.R
 \name{x_from_power}
 \alias{x_from_power}
+\alias{n_from_power}
 \alias{print.x_from_power}
 \title{Sample Size and Effect Size Determination}
 \usage{
@@ -15,6 +16,31 @@ x_from_power(
   ci_level = 0.95,
   tolerance = 0.02,
   x_interval = switch(x, n = c(50, 2000), es = NULL),
+  extendInt = NULL,
+  progress = TRUE,
+  simulation_progress = TRUE,
+  max_trials = 10,
+  final_nrep = 400,
+  final_R = 1000,
+  seed = NULL,
+  x_include_interval = FALSE,
+  check_es_interval = TRUE,
+  power_curve_args = list(power_model = NULL, start = NULL, lower_bound = NULL,
+    upper_bound = NULL, nls_control = list(), nls_args = list()),
+  save_sim_all = FALSE,
+  algorithm = NULL,
+  control = list()
+)
+
+n_from_power(
+  object,
+  pop_es_name = NULL,
+  target_power = 0.8,
+  what = c("point", "ub", "lb"),
+  goal = switch(what, point = "ci_hit", ub = "close_enough", lb = "close_enough"),
+  ci_level = 0.95,
+  tolerance = 0.02,
+  x_interval = c(50, 2000),
   extendInt = NULL,
   progress = TRUE,
   simulation_progress = TRUE,
@@ -363,12 +389,14 @@ plot the relation between power and
 values (of \code{x}) examined.
 
 A detailed illustration on how to
-use this function can be found
-from these pages:
-\itemize{
-\item For example sizes: \url{https://sfcheung.github.io/power4mome/articles/x_from_power_for_n.html}
-\item For effect sizes: \url{https://sfcheung.github.io/power4mome/articles/x_from_power_for_es.html}
-}
+use this function for sample size can be found
+from this page:
+
+\url{https://sfcheung.github.io/power4mome/articles/x_from_power_for_n.html}
+
+The function \code{\link[=n_from_power]{n_from_power()}} is just
+a wrapper of \code{\link[=x_from_power]{x_from_power()}}, with
+\code{x} set to \code{"n"}.
 
 The \code{print} method only print
 basic information. Call the

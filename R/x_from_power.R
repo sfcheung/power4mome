@@ -73,12 +73,10 @@
 #' values (of `x`) examined.
 #'
 #' A detailed illustration on how to
-#' use this function can be found
-#' from these pages:
+#' use this function for sample size can be found
+#' from this page:
 #'
-#' - For example sizes: <https://sfcheung.github.io/power4mome/articles/x_from_power_for_n.html>
-#'
-#' - For effect sizes: <https://sfcheung.github.io/power4mome/articles/x_from_power_for_es.html>
+#' <https://sfcheung.github.io/power4mome/articles/x_from_power_for_n.html>
 #'
 #' # Algorithms
 #'
@@ -1174,6 +1172,62 @@ x_from_power <- function(object,
               call = match.call())
   class(out) <- c("x_from_power", class(out))
   return(out)
+}
+
+#' @rdname x_from_power
+#'
+#' @details
+#'
+#' The function [n_from_power()] is just
+#' a wrapper of [x_from_power()], with
+#' `x` set to `"n"`.
+#'
+#' @export
+n_from_power <- function(object,
+                         pop_es_name = NULL,
+                         target_power = .80,
+                         what = c("point", "ub", "lb"),
+                         goal = switch(what,
+                                       point = "ci_hit",
+                                       ub = "close_enough",
+                                       lb = "close_enough"),
+                         ci_level = .95,
+                         tolerance = .02,
+                         x_interval = c(50, 2000),
+                         extendInt = NULL,
+                         progress = TRUE,
+                         simulation_progress = TRUE,
+                         max_trials = 10,
+                         final_nrep = 400,
+                         final_R = 1000,
+                         seed = NULL,
+                         x_include_interval = FALSE,
+                         check_es_interval = TRUE,
+                         power_curve_args = list(power_model = NULL,
+                                                 start = NULL,
+                                                 lower_bound = NULL,
+                                                 upper_bound = NULL,
+                                                 nls_control = list(),
+                                                 nls_args = list()),
+                         save_sim_all = FALSE,
+                         algorithm = NULL,
+                         control = list()
+                         ) {
+  what <- match.arg(what)
+  goal <- match.arg(goal,
+                    c("ci_hit", "close_enough"))
+  if ((goal == "ci_hit") &&
+      (what != "point")) {
+    what <- "point"
+  }
+  my_call <- match.call()
+  my_call$x <- "n"
+  my_call$what <- what
+  my_call$goal <- goal
+  my_call[[1]] <- quote(power4mome::x_from_power)
+  out <- eval(my_call,
+              envir = parent.frame())
+  out
 }
 
 #' @rdname x_from_power
