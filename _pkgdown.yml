@@ -38,18 +38,6 @@ navbar:
       - text: "<Given Power, Find x>"
       - text: Determine the sample size with the target power
         href: articles/x_from_power_for_n.html
-      # - text: Determine the effect size with the target power
-      #   href: articles/x_from_power_for_es.html
-      # - text: -------
-      # - text: "<Quick Templates (Simple)>"
-      # - text: Simple mediation
-      #   href: articles/template_n_from_power_mediation_obs.html
-      # - text: -------
-      # - text: "<Quick Templates (Advanced)>"
-      # - text: Simple mediation
-      #   href: articles/template_mediation_obs.html
-      # - text: Serial mediation
-      #   href: articles/template_mediation_obs_serial.html
       - text: -------
       - text: "<Technical Appendices>"
       - text: Workflow of `power4test()`
@@ -64,6 +52,8 @@ navbar:
       # - text: "<Simple>"
       - text: Simple mediation
         href: articles/template_n_from_power_mediation_obs.html
+      - text: Serial mediation
+        href: articles/template_n_from_power_mediation_obs_serial.html
       # - text: -------
       # - text: "<Advanced>"
       # - text: Simple mediation

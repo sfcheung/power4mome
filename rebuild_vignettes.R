@@ -19,6 +19,7 @@ knitr::knit("x_from_power_for_es.Rmd.original", output = "x_from_power_for_es.Rm
 knitr::knit("template_mediation_obs.Rmd.original", output = "template_mediation_obs.Rmd")
 knitr::knit("template_mediation_obs_serial.Rmd.original", output = "template_mediation_obs_serial.Rmd")
 knitr::knit("template_n_from_power_mediation_obs.Rmd.original", output = "template_n_from_power_mediation_obs.Rmd")
+knitr::knit("template_n_from_power_mediation_obs_serial.Rmd.original", output = "template_n_from_power_mediation_obs_serial.Rmd")
 # knitr::knit("template_mediation_obs_ind.Rmd.original", output = "template_mediation_obs_ind.Rmd")
 pkgdown::build_articles("../..")
 
