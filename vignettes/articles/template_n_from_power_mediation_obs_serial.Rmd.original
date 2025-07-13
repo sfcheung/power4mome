@@ -1,5 +1,5 @@
 ---
-title: "Quick Template: Mediation with Observed Variables"
+title: "Quick Template: Serial Mediation with Observed Variables"
 date: "`r Sys.Date()`"
 output:
   html_document:
@@ -31,7 +31,7 @@ cat(readLines("template_n_flowchart.txt"),
 
 # Scope
 
-This file is for simple mediation models.
+This file is for serial mediation models.
 
 # Try One N
 
@@ -39,25 +39,34 @@ Estimate the power for a sample size.
 
 The code:
 
-```{r med_simple, eval=TRUE, results="hide", message=FALSE}
+```{r med, eval=TRUE, results="hide", message=FALSE}
+library(power4mome)
 library(power4mome)
 #
 # ====== Model: Form ======
+# Omit any paths hypothesized to be zero
 model <-
 "
-m ~ x
-y ~ m + x
+m1 ~ x
+m2 ~ m1 + x
+m3 ~ m2 + m1 + x
+y ~ m3 + m2 + m1 + x
 "
 #
 # ====== Model: Population Values ======
 # l: large (.50 by default)
 # m: medium (.30 by default)
 # s: small (.10 by default)
+# -l, -m, and -s denote negative values
+# Can also set to a number directly
+# Set each path to the hypothesized magnitude
 model_es <-
 "
-m ~ x: s
-y ~ m: l
-y ~ x: m
+m1 ~ x: l
+m2 ~ m1: l
+m3 ~ m2: l
+y ~ m3: m
+y ~ x: s
 "
 #
 # ====== Test the Model Specification ======
@@ -78,12 +87,12 @@ print(out,
 out <- power4test(nrep = 400,
                   model = model,
                   pop_es = model_es,
-                  n = 100,
+                  n = 50,
                   R = 1000,
                   ci_type = "mc",
                   test_fun = test_indirect_effect,
                   test_args = list(x = "x",
-                                   m = "m",
+                                   m = c("m1", "m2", "m3"),
                                    y = "y",
                                    mc_ci = TRUE),
                   iseed = 1234,
@@ -95,7 +104,7 @@ rejection_rates(out)
 
 The results:
 
-```{r med_simple_out}
+```{r med_out}
 print(out,
       data_long = TRUE)
 rejection_rates(out)
@@ -116,7 +125,7 @@ desired region.
 
 The code:
 
-```{r med_simple_new_n, eval=TRUE, results="hide", message=FALSE}
+```{r med_new_n, eval=TRUE, results="hide", message=FALSE}
 #
 # ===== Reuse the output of power4test() =====
 # Estimate power for n = 150
@@ -130,7 +139,7 @@ rejection_rates(out_new_n)
 
 The results:
 
-```{r med_simple_new_n_out}
+```{r med_new_n_out}
 rejection_rates(out_new_n)
 ```
 
@@ -176,7 +185,7 @@ to find
 
 The code:
 
-```{r med_n_simple_n_from, eval=TRUE, results="hide", message=FALSE, fig.keep="none"}
+```{r med_n_from, eval=TRUE, results="hide", message=FALSE, fig.keep="none"}
 #
 # ===== Reuse the output of power4test() =====
 # Call n_from_power()
@@ -186,8 +195,8 @@ The code:
 # - Set final number of R: final_R = 1000 (Default, can be omitted)
 # - Set final number of replications: final_nrep = 400 (Default, can be omitted)
 n_power_ub <- n_from_power(out,
-                              what = "ub",
-                              seed = 1357)
+                           what = "ub",
+                           seed = 1357)
 #
 # ===== Print the Summary =====
 summary(n_power_ub)
@@ -198,7 +207,7 @@ plot(n_power_ub)
 
 The results:
 
-```{r temp_n_med_obs_med_simple_n_from_out, fig.cap = "Power Curve"}
+```{r temp_n_med_obs_med_serial_n_from_out, fig.cap = "Power Curve"}
 #
 # ===== Print the Summary =====
 summary(n_power_ub)
@@ -216,7 +225,7 @@ The goal in **Case 2** is to find
 
 The code:
 
-```{r med_n_simple_n_from_lb, eval=TRUE, results="hide", message=FALSE, fig.keep="none"}
+```{r med_n_serial_n_from_lb, eval=TRUE, results="hide", message=FALSE, fig.keep="none"}
 #
 # ===== Reuse the output of power4test() =====
 # Call n_from_power()
@@ -226,8 +235,8 @@ The code:
 # - Set final number of R: final_R = 1000 (Default, can be omitted)
 # - Set final number of replications: final_nrep = 400 (Default, can be omitted)
 n_power_lb <- n_from_power(out,
-                              what = "lb",
-                              seed = 1357)
+                           what = "lb",
+                           seed = 1357)
 #
 # ===== Print the Summary =====
 summary(n_power_lb)
@@ -238,7 +247,7 @@ plot(n_power_lb)
 
 The results:
 
-```{r temp_n_med_obs_med_simple_n_from_out_lb, fig.cap = "Power Curve"}
+```{r temp_n_med_obs_med_serial_n_from_out_lb, fig.cap = "Power Curve"}
 #
 # ===== Print the Summary =====
 summary(n_power_lb)
@@ -252,19 +261,19 @@ plot(n_power_lb)
 If necessary, change the population value(s)
 and repeat the steps.
 
-For example, set the
-`y ~ m` path to medium (.30)
-(population indirect effect
-increased to .03).
+For example, set all the paths along
+the indirect effect to medium (.30).
 
 The code:
 
-```{r med_simple2, eval=TRUE, results="hide", message=FALSE}
+```{r med_serial2, eval=TRUE, results="hide", message=FALSE}
 model_es2 <-
 "
-m ~ x: s
-y ~ m: m
-y ~ x: m
+m1 ~ x: m
+m2 ~ m1: m
+m3 ~ m2: m
+y ~ m3: m
+y ~ x: s
 "
 #
 # ====== Estimate the Power ======
@@ -276,7 +285,7 @@ out2 <- power4test(nrep = 400,
                    ci_type = "mc",
                    test_fun = test_indirect_effect,
                    test_args = list(x = "x",
-                                    m = "m",
+                                    m = c("m1", "m2", "m3"),
                                     y = "y",
                                     mc_ci = TRUE),
                    iseed = 1234,
@@ -288,7 +297,7 @@ rejection_rates(out2)
 
 The results:
 
-```{r med_simple2_out}
+```{r med_serial2_out}
 print(out2,
       data_long = TRUE)
 rejection_rates(out2)
@@ -303,8 +312,8 @@ Fine the region of sample sizes with power significantly
 #
 # ===== Reuse the output of power4test() =====
 n2_power_ub <- n_from_power(out2,
-                               what = "ub",
-                               seed = 1357)
+                            what = "ub",
+                            seed = 1357)
 #
 # ===== Print the Summary =====
 summary(n2_power_ub)
@@ -315,7 +324,7 @@ plot(n2_power_ub)
 
 The results:
 
-```{r temp_n_med_obs_med_simple2_n_from_out, fig.cap = "Power Curve"}
+```{r temp_n_med_obs_med_serial2_n_from_out, fig.cap = "Power Curve"}
 #
 # ===== Print the Summary =====
 summary(n2_power_ub)
@@ -329,12 +338,12 @@ plot(n2_power_ub)
 Fine the region of sample sizes with power significantly
 *higher* than the target level.
 
-```{r med_n_simple2_n_from_lb, eval=TRUE, results="hide", message=FALSE, fig.keep="none"}
+```{r med_n_serial2_n_from_lb, eval=TRUE, results="hide", message=FALSE, fig.keep="none"}
 #
 # ===== Reuse the output of power4test() =====
 n2_power_lb <- n_from_power(out2,
-                               what = "lb",
-                               seed = 1357)
+                            what = "lb",
+                            seed = 1357)
 #
 # ===== Print the Summary =====
 summary(n2_power_lb)
@@ -345,7 +354,7 @@ plot(n2_power_lb)
 
 The results:
 
-```{r temp_n_med_obs_med_simple2_n_from_out_lb, fig.cap = "Power Curve"}
+```{r temp_n_med_obs_med_serial2_n_from_out_lb, fig.cap = "Power Curve"}
 #
 # ===== Print the Summary =====
 summary(n2_power_lb)
@@ -365,14 +374,19 @@ library(power4mome)
 
 model <-
 "
-m ~ x
-y ~ m + x
+m1 ~ x
+m2 ~ m1 + x
+m3 ~ m2 + m1 + x
+y ~ m3 + m2 + m1 + x
 "
+
 model_es <-
 "
-m ~ x: s
-y ~ m: l
-y ~ x: m
+m1 ~ x: l
+m2 ~ m1: l
+m3 ~ m2: l
+y ~ m3: m
+y ~ x: s
 "
 
 # Test the Model Specification
@@ -402,7 +416,7 @@ out <- power4test(nrep = 400,
                   ci_type = "mc",
                   test_fun = test_indirect_effect,
                   test_args = list(x = "x",
-                                   m = "m",
+                                   m = c("m1", "m2", "m3"),
                                    y = "y",
                                    mc_ci = TRUE),
                   iseed = 1234,
