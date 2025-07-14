@@ -25,41 +25,38 @@ figures:
 navbar:
   bg: primary
   structure:
-    left:  [intro, articles, templates, reference, tutorials, news]
+    left:  [intro, articles, reference, tutorials, news]
     right: [search, github]
-  components:
-    articles:
-      text: Articles
-      menu:
-      - text: "<Scenarios>"
-      - text: Latent factor mediation
-        href: articles/power4test_latent_mediation.html
-      - text: -------
-      - text: "<Given Power, Find x>"
-      - text: Determine the sample size with the target power
-        href: articles/x_from_power_for_n.html
-      - text: -------
-      - text: "<Technical Appendices>"
-      - text: Workflow of `power4test()`
-        href: articles/power4test_workflow.html
-      - text: Workflow of `x_from_power()` with `power_curve` Algorithm
-        href: articles/x_from_power_workflow.html
-      - text: Workflow of `sim_data_i()`
-        href: articles/sim_data_i_workflow.html
-    templates:
-      text: Quick Templates
-      menu:
-      # - text: "<Simple>"
-      - text: Simple mediation
-        href: articles/template_n_from_power_mediation_obs.html
-      - text: Serial mediation
-        href: articles/template_n_from_power_mediation_obs_serial.html
-      # - text: -------
-      # - text: "<Advanced>"
-      # - text: Simple mediation
-      #   href: articles/template_mediation_obs.html
-      # - text: Serial mediation
-      #   href: articles/template_mediation_obs_serial.html
+
+articles:
+
+- title: Scenarios
+  navbar: Scenarios
+  contents:
+  - power4test_latent_mediation
+
+- title: Given Power, Find x
+  navbar: Given Power, Find x
+  contents:
+  - articles/x_from_power_for_n
+
+- title: Templates (Code Examples)
+  navbar: Templates (Code Examples)
+  contents:
+  - articles/template_n_from_power_mediation_obs
+  - articles/template_n_from_power_mediation_obs_serial
+
+- title: Technical Appendices
+  contents:
+  - articles/power4test_workflow
+  - articles/x_from_power_workflow
+  - articles/sim_data_i_workflow
+
+- title: internal
+  contents:
+  - articles/template_mediation_obs
+  - articles/template_mediation_obs_serial
+  - articles/x_from_power_for_es
 
 reference:
 - title: Main Functions
