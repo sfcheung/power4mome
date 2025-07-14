@@ -1,5 +1,5 @@
 ---
-title: "Quick Template: Serial Mediation with Observed Variables"
+title: "Quick Template: Parallel Mediation with Observed Variables"
 date: "2025-07-14"
 output:
   html_document:
@@ -104,7 +104,7 @@ the target power is found).
 
 # Scope
 
-This file is for serial mediation models.
+This file is for parallel mediation models.
 
 # Try One N
 
@@ -121,9 +121,9 @@ library(power4mome)
 model <-
 "
 m1 ~ x
-m2 ~ m1 + x
-m3 ~ m2 + m1 + x
-y ~ m3 + m2 + m1 + x
+m2 ~ x
+m3 ~ x
+y ~ m1 + m2 + m3 + x
 "
 #
 # ====== Model: Population Values ======
@@ -135,10 +135,12 @@ y ~ m3 + m2 + m1 + x
 # Set each path to the hypothesized magnitude
 model_es <-
 "
-m1 ~ x: l
-m2 ~ m1: l
-m3 ~ m2: l
-y ~ m3: m
+m1 ~ x: s
+m2 ~ x: m
+m3 ~ x: l
+y ~ m1: l
+y ~ m2: m
+y ~ m3: s
 y ~ x: s
 "
 #
@@ -155,7 +157,7 @@ print(out,
 #
 # ====== Estimate the Power ======
 # For n = 50,
-# when testing the indirect effect by
+# when testing one indirect effect by
 # Monte Carlo confidence interval
 out <- power4test(nrep = 400,
                   model = model,
@@ -165,7 +167,7 @@ out <- power4test(nrep = 400,
                   ci_type = "mc",
                   test_fun = test_indirect_effect,
                   test_args = list(x = "x",
-                                   m = c("m1", "m2", "m3"),
+                                   m = "m2",
                                    y = "y",
                                    mc_ci = TRUE),
                   iseed = 1234,
@@ -187,58 +189,51 @@ print(out,
 #> == Model on Factors/Variables ==
 #> 
 #> m1 ~ x
-#> m2 ~ m1 + x
-#> m3 ~ m2 + m1 + x
-#> y ~ m3 + m2 + m1 + x
+#> m2 ~ x
+#> m3 ~ x
+#> y ~ m1 + m2 + m3 + x
 #> 
 #> == Model on Variables/Indicators ==
 #> 
 #> m1 ~ x
-#> m2 ~ m1 + x
-#> m3 ~ m2 + m1 + x
-#> y ~ m3 + m2 + m1 + x
+#> m2 ~ x
+#> m3 ~ x
+#> y ~ m1 + m2 + m3 + x
 #> 
 #> ====== Population Values ======
 #> 
 #> Regressions:
 #>                    Population
 #>   m1 ~                       
-#>     x                 0.500  
+#>     x                 0.100  
 #>   m2 ~                       
-#>     m1                0.500  
-#>     x                 0.000  
+#>     x                 0.300  
 #>   m3 ~                       
-#>     m2                0.500  
-#>     m1                0.000  
-#>     x                 0.000  
+#>     x                 0.500  
 #>   y ~                        
-#>     m3                0.300  
-#>     m2                0.000  
-#>     m1                0.000  
+#>     m1                0.500  
+#>     m2                0.300  
+#>     m3                0.100  
 #>     x                 0.100  
 #> 
 #> Variances:
 #>                    Population
-#>    .m1                0.750  
-#>    .m2                0.750  
+#>    .m1                0.990  
+#>    .m2                0.910  
 #>    .m3                0.750  
-#>    .y                 0.893  
+#>    .y                 0.579  
 #>     x                 1.000  
 #> 
-#> (Computing indirect effects for 7 paths ...)
+#> (Computing indirect effects for 3 paths ...)
 #> 
 #> == Population Indirect Effect(s) ==
 #> 
 #> == Indirect Effect(s) ==
 #> 
-#>                            ind
-#> x -> m1 -> m2 -> m3 -> y 0.037
-#> x -> m1 -> m2 -> y       0.000
-#> x -> m1 -> m3 -> y       0.000
-#> x -> m1 -> y             0.000
-#> x -> m2 -> m3 -> y       0.000
-#> x -> m2 -> y             0.000
-#> x -> m3 -> y             0.000
+#>                ind
+#> x -> m1 -> y 0.050
+#> x -> m2 -> y 0.090
+#> x -> m3 -> y 0.050
 #> 
 #>  - The 'ind' column shows the indirect effect(s).
 #>  
@@ -250,10 +245,10 @@ print(out,
 #> ==== Descriptive Statistics ====
 #> 
 #>    vars     n  mean   sd skew kurtosis   se
-#> m1    1 20000 -0.01 1.00 0.03    -0.04 0.01
-#> m2    2 20000  0.00 1.00 0.01     0.06 0.01
-#> m3    3 20000 -0.01 1.00 0.01    -0.05 0.01
-#> y     4 20000 -0.01 1.00 0.01    -0.03 0.01
+#> m1    1 20000 -0.01 1.01 0.04    -0.01 0.01
+#> m2    2 20000  0.00 1.00 0.02     0.05 0.01
+#> m3    3 20000 -0.01 1.00 0.00    -0.05 0.01
+#> y     4 20000 -0.01 1.00 0.01    -0.02 0.01
 #> x     5 20000  0.00 1.01 0.00    -0.02 0.01
 #> 
 #> ==== Parameter Estimates Based on All 400 Samples Combined ====
@@ -267,19 +262,16 @@ print(out,
 #> Regressions:
 #>                     est.std
 #>   m1 ~                     
-#>     x                 0.493
+#>     x                 0.090
 #>   m2 ~                     
-#>     m1                0.498
-#>     x                 0.010
+#>     x                 0.310
 #>   m3 ~                     
-#>     m2                0.499
-#>     m1               -0.001
-#>     x                 0.011
+#>     x                 0.511
 #>   y ~                      
-#>     m3                0.296
-#>     m2               -0.002
-#>     m1                0.014
-#>     x                 0.086
+#>     m1                0.510
+#>     m2                0.296
+#>     m3                0.098
+#>     x                 0.095
 #> 
 #> 
 #> ==================== Extra Element(s) Found ====================
@@ -295,14 +287,15 @@ print(out,
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
-#>   Number of model parameters                        14
+#>   Number of model parameters                        11
 #> 
 #>   Number of observations                            50
 #> 
 #> Model Test User Model:
 #>                                                       
-#>   Test statistic                                 0.000
-#>   Degrees of freedom                                 0
+#>   Test statistic                                 2.329
+#>   Degrees of freedom                                 3
+#>   P-value (Chi-square)                           0.507
 #> 
 #> =========== <mc_out> ===========
 #> 
@@ -314,14 +307,14 @@ print(out,
 #> 
 #> ====================== Test(s) Conducted ======================
 #> 
-#> - test_indirect: x->m1->m2->m3->y
+#> - test_indirect: x->m2->y
 #> 
 #> Call print() and set 'test_long = TRUE' for a detailed report.
 rejection_rates(out)
-#> [test]: test_indirect: x->m1->m2->m3->y 
+#> [test]: test_indirect: x->m2->y 
 #> [test_label]: Test 
 #>     est   p.v reject r.cilo r.cihi
-#> 1 0.036 1.000  0.372  0.325  0.420
+#> 1 0.090 1.000  0.432  0.384  0.481
 #> Notes:
 #> - p.v: The proportion of valid replications.
 #> - est: The mean of the estimates in a test across replications.
@@ -366,10 +359,10 @@ The results:
 
 ``` r
 rejection_rates(out_new_n)
-#> [test]: test_indirect: x->m1->m2->m3->y 
+#> [test]: test_indirect: x->m2->y 
 #> [test_label]: Test 
 #>     est   p.v reject r.cilo r.cihi
-#> 1 0.038 1.000  0.927  0.902  0.953
+#> 1 0.092 1.000  0.953  0.932  0.973
 #> Notes:
 #> - p.v: The proportion of valid replications.
 #> - est: The mean of the estimates in a test across replications.
@@ -466,10 +459,10 @@ summary(n_power_ub)
 #> 
 #> === Major Results ===
 #> 
-#> - Final Value (Sample Size): 107
+#> - Final Value (Sample Size): 87
 #> 
-#> - Final Estimated Power: 0.767 
-#> - Confidence Interval: [0.726; 0.809]
+#> - Final Estimated Power: 0.762 
+#> - Confidence Interval: [0.721; 0.804]
 #> - Level of confidence: 95.0%
 #> - Based on 400 replications.
 #> 
@@ -477,8 +470,8 @@ summary(n_power_ub)
 #> 
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
-#> - The range of values explored: 107 to 50 
-#> - Time spent in the search: 24 secs 
+#> - The range of values explored: 50 to 92 
+#> - Time spent in the search: 1.232 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -496,19 +489,22 @@ summary(n_power_ub)
 #> 
 #> Coefficients:
 #> (Intercept)            x  
-#>     -2.0266       0.0301  
+#>    -2.17003      0.03749  
 #> 
-#> Degrees of Freedom: 799 Total (i.e. Null);  798 Residual
-#> Null Deviance:	    1093 
-#> Residual Deviance: 962 	AIC: 966
+#> Degrees of Freedom: 1999 Total (i.e. Null);  1998 Residual
+#> Null Deviance:	    2569 
+#> Residual Deviance: 2428 	AIC: 2432
 #> 
 #> - Detailed Results:
 #> 
-#> [test]: test_indirect: x->m1->m2->m3->y 
+#> [test]: test_indirect: x->m2->y 
 #> [test_label]: Test 
-#>     n   est   p.v reject r.cilo r.cihi
-#> 1  50 0.036 1.000  0.372  0.325  0.420
-#> 2 107 0.036 1.000  0.767  0.726  0.809
+#>    n   est   p.v reject r.cilo r.cihi
+#> 1 50 0.090 1.000  0.432  0.384  0.481
+#> 2 71 0.090 1.000  0.610  0.562  0.658
+#> 3 82 0.088 1.000  0.703  0.658  0.747
+#> 4 87 0.087 1.000  0.762  0.721  0.804
+#> 5 92 0.089 1.000  0.782  0.742  0.823
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.
@@ -525,7 +521,7 @@ plot(n_power_ub)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="temp_n_med_obs_med_serial_n_from_out-1.png" alt="Power Curve"  />
+<img src="temp_n_med_obs_med_parallel_n_from_out-1.png" alt="Power Curve"  />
 <p class="caption">Power Curve</p>
 </div>
 
@@ -581,10 +577,10 @@ summary(n_power_lb)
 #> 
 #> === Major Results ===
 #> 
-#> - Final Value (Sample Size): 125
+#> - Final Value (Sample Size): 100
 #> 
-#> - Final Estimated Power: 0.850 
-#> - Confidence Interval: [0.815; 0.885]
+#> - Final Estimated Power: 0.838 
+#> - Confidence Interval: [0.801; 0.874]
 #> - Level of confidence: 95.0%
 #> - Based on 400 replications.
 #> 
@@ -592,8 +588,8 @@ summary(n_power_lb)
 #> 
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
-#> - The range of values explored: 107 to 50 
-#> - Time spent in the search: 1.568 mins 
+#> - The range of values explored: 100 to 92 
+#> - Time spent in the search: 1.464 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -611,22 +607,23 @@ summary(n_power_lb)
 #> 
 #> Coefficients:
 #> (Intercept)            x  
-#>    -1.78062      0.02668  
+#>    -1.95994      0.03488  
 #> 
-#> Degrees of Freedom: 1999 Total (i.e. Null);  1998 Residual
-#> Null Deviance:	    2211 
-#> Residual Deviance: 1809 	AIC: 1813
+#> Degrees of Freedom: 2399 Total (i.e. Null);  2398 Residual
+#> Null Deviance:	    2438 
+#> Residual Deviance: 2060 	AIC: 2064
 #> 
 #> - Detailed Results:
 #> 
-#> [test]: test_indirect: x->m1->m2->m3->y 
+#> [test]: test_indirect: x->m2->y 
 #> [test_label]: Test 
 #>     n   est   p.v reject r.cilo r.cihi
-#> 1  50 0.036 1.000  0.372  0.325  0.420
-#> 2 107 0.036 1.000  0.767  0.726  0.809
-#> 3 125 0.037 1.000  0.850  0.815  0.885
-#> 4 142 0.036 1.000  0.865  0.832  0.898
-#> 5 177 0.037 1.000  0.938  0.914  0.961
+#> 1  50 0.090 1.000  0.432  0.384  0.481
+#> 2  92 0.089 1.000  0.782  0.742  0.823
+#> 3 100 0.089 1.000  0.838  0.801  0.874
+#> 4 107 0.090 1.000  0.880  0.848  0.912
+#> 5 121 0.087 1.000  0.877  0.845  0.910
+#> 6 149 0.089 1.000  0.958  0.938  0.977
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.
@@ -643,7 +640,7 @@ plot(n_power_lb)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="temp_n_med_obs_med_serial_n_from_out_lb-1.png" alt="Power Curve"  />
+<img src="temp_n_med_obs_med_parallel_n_from_out_lb-1.png" alt="Power Curve"  />
 <p class="caption">Power Curve</p>
 </div>
 
@@ -652,8 +649,8 @@ plot(n_power_lb)
 If necessary, change the population value(s)
 and repeat the steps.
 
-For example, set all the paths along
-the indirect effect to medium (.30).
+For example, reduce the path from
+`m2` to `y` to small:
 
 The code:
 
@@ -661,10 +658,12 @@ The code:
 ``` r
 model_es2 <-
 "
-m1 ~ x: m
-m2 ~ m1: m
-m3 ~ m2: m
-y ~ m3: m
+m1 ~ x: s
+m2 ~ x: m
+m3 ~ x: l
+y ~ m1: l
+y ~ m2: s
+y ~ m3: s
 y ~ x: s
 "
 #
@@ -677,7 +676,7 @@ out2 <- power4test(nrep = 400,
                    ci_type = "mc",
                    test_fun = test_indirect_effect,
                    test_args = list(x = "x",
-                                    m = c("m1", "m2", "m3"),
+                                    m = "m2",
                                     y = "y",
                                     mc_ci = TRUE),
                    iseed = 1234,
@@ -699,58 +698,51 @@ print(out2,
 #> == Model on Factors/Variables ==
 #> 
 #> m1 ~ x
-#> m2 ~ m1 + x
-#> m3 ~ m2 + m1 + x
-#> y ~ m3 + m2 + m1 + x
+#> m2 ~ x
+#> m3 ~ x
+#> y ~ m1 + m2 + m3 + x
 #> 
 #> == Model on Variables/Indicators ==
 #> 
 #> m1 ~ x
-#> m2 ~ m1 + x
-#> m3 ~ m2 + m1 + x
-#> y ~ m3 + m2 + m1 + x
+#> m2 ~ x
+#> m3 ~ x
+#> y ~ m1 + m2 + m3 + x
 #> 
 #> ====== Population Values ======
 #> 
 #> Regressions:
 #>                    Population
 #>   m1 ~                       
-#>     x                 0.300  
+#>     x                 0.100  
 #>   m2 ~                       
-#>     m1                0.300  
-#>     x                 0.000  
+#>     x                 0.300  
 #>   m3 ~                       
-#>     m2                0.300  
-#>     m1                0.000  
-#>     x                 0.000  
+#>     x                 0.500  
 #>   y ~                        
-#>     m3                0.300  
-#>     m2                0.000  
-#>     m1                0.000  
+#>     m1                0.500  
+#>     m2                0.100  
+#>     m3                0.100  
 #>     x                 0.100  
 #> 
 #> Variances:
 #>                    Population
-#>    .m1                0.910  
+#>    .m1                0.990  
 #>    .m2                0.910  
-#>    .m3                0.910  
-#>    .y                 0.898  
+#>    .m3                0.750  
+#>    .y                 0.683  
 #>     x                 1.000  
 #> 
-#> (Computing indirect effects for 7 paths ...)
+#> (Computing indirect effects for 3 paths ...)
 #> 
 #> == Population Indirect Effect(s) ==
 #> 
 #> == Indirect Effect(s) ==
 #> 
-#>                            ind
-#> x -> m1 -> m2 -> m3 -> y 0.008
-#> x -> m1 -> m2 -> y       0.000
-#> x -> m1 -> m3 -> y       0.000
-#> x -> m1 -> y             0.000
-#> x -> m2 -> m3 -> y       0.000
-#> x -> m2 -> y             0.000
-#> x -> m3 -> y             0.000
+#>                ind
+#> x -> m1 -> y 0.050
+#> x -> m2 -> y 0.030
+#> x -> m3 -> y 0.050
 #> 
 #>  - The 'ind' column shows the indirect effect(s).
 #>  
@@ -761,12 +753,12 @@ print(out2,
 #> 
 #> ==== Descriptive Statistics ====
 #> 
-#>    vars     n  mean   sd  skew kurtosis   se
-#> m1    1 40000 -0.01 1.00  0.00     0.01 0.01
-#> m2    2 40000  0.00 1.01 -0.01    -0.01 0.01
-#> m3    3 40000  0.00 1.01  0.02     0.03 0.01
-#> y     4 40000  0.00 1.00 -0.01    -0.01 0.00
-#> x     5 40000 -0.01 1.00  0.00    -0.03 0.01
+#>    vars     n  mean sd  skew kurtosis   se
+#> m1    1 40000  0.00  1  0.00     0.01 0.00
+#> m2    2 40000  0.00  1 -0.01     0.01 0.01
+#> m3    3 40000  0.00  1  0.02     0.01 0.01
+#> y     4 40000 -0.01  1  0.00     0.02 0.01
+#> x     5 40000 -0.01  1  0.00    -0.03 0.01
 #> 
 #> ==== Parameter Estimates Based on All 400 Samples Combined ====
 #> 
@@ -779,19 +771,16 @@ print(out2,
 #> Regressions:
 #>                     est.std
 #>   m1 ~                     
-#>     x                 0.306
+#>     x                 0.106
 #>   m2 ~                     
-#>     m1                0.303
-#>     x                -0.001
+#>     x                 0.300
 #>   m3 ~                     
-#>     m2                0.305
-#>     m1                0.001
-#>     x                -0.005
+#>     x                 0.496
 #>   y ~                      
-#>     m3                0.300
-#>     m2               -0.005
-#>     m1                0.006
-#>     x                 0.105
+#>     m1                0.502
+#>     m2                0.095
+#>     m3                0.098
+#>     x                 0.107
 #> 
 #> 
 #> ==================== Extra Element(s) Found ====================
@@ -803,18 +792,19 @@ print(out2,
 #> 
 #> ============ <fit> ============
 #> 
-#> lavaan 0.6-19 ended normally after 1 iteration
+#> lavaan 0.6-19 ended normally after 2 iterations
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
-#>   Number of model parameters                        14
+#>   Number of model parameters                        11
 #> 
 #>   Number of observations                           100
 #> 
 #> Model Test User Model:
 #>                                                       
-#>   Test statistic                                 0.000
-#>   Degrees of freedom                                 0
+#>   Test statistic                                 4.950
+#>   Degrees of freedom                                 3
+#>   P-value (Chi-square)                           0.175
 #> 
 #> =========== <mc_out> ===========
 #> 
@@ -826,14 +816,14 @@ print(out2,
 #> 
 #> ====================== Test(s) Conducted ======================
 #> 
-#> - test_indirect: x->m1->m2->m3->y
+#> - test_indirect: x->m2->y
 #> 
 #> Call print() and set 'test_long = TRUE' for a detailed report.
 rejection_rates(out2)
-#> [test]: test_indirect: x->m1->m2->m3->y 
+#> [test]: test_indirect: x->m2->y 
 #> [test_label]: Test 
 #>     est   p.v reject r.cilo r.cihi
-#> 1 0.009 1.000  0.460  0.411  0.509
+#> 1 0.029 1.000  0.182  0.145  0.220
 #> Notes:
 #> - p.v: The proportion of valid replications.
 #> - est: The mean of the estimates in a test across replications.
@@ -887,7 +877,7 @@ summary(n2_power_ub)
 #> 
 #> === Major Results ===
 #> 
-#> - Final Value (Sample Size): 137
+#> - Final Value (Sample Size): 523
 #> 
 #> - Final Estimated Power: 0.745 
 #> - Confidence Interval: [0.702; 0.788]
@@ -898,8 +888,8 @@ summary(n2_power_ub)
 #> 
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
-#> - The range of values explored: 100 to 174 
-#> - Time spent in the search: 48.97 secs 
+#> - The range of values explored: 100 to 777 
+#> - Time spent in the search: 1.188 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -917,20 +907,22 @@ summary(n2_power_ub)
 #> 
 #> Coefficients:
 #> (Intercept)            x  
-#>    -3.64706      0.03472  
+#>   -2.015766     0.005793  
 #> 
-#> Degrees of Freedom: 1199 Total (i.e. Null);  1198 Residual
-#> Null Deviance:	    1449 
-#> Residual Deviance: 1229 	AIC: 1233
+#> Degrees of Freedom: 1999 Total (i.e. Null);  1998 Residual
+#> Null Deviance:	    2567 
+#> Residual Deviance: 1979 	AIC: 1983
 #> 
 #> - Detailed Results:
 #> 
-#> [test]: test_indirect: x->m1->m2->m3->y 
+#> [test]: test_indirect: x->m2->y 
 #> [test_label]: Test 
 #>     n   est   p.v reject r.cilo r.cihi
-#> 1 100 0.009 1.000  0.460  0.411  0.509
-#> 2 137 0.008 1.000  0.745  0.702  0.788
-#> 3 174 0.008 1.000  0.920  0.893  0.947
+#> 1 100 0.029 1.000  0.182  0.145  0.220
+#> 2 438 0.030 1.000  0.642  0.596  0.689
+#> 3 523 0.030 1.000  0.745  0.702  0.788
+#> 4 608 0.029 1.000  0.810  0.772  0.848
+#> 5 777 0.031 1.000  0.915  0.888  0.942
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.
@@ -947,7 +939,7 @@ plot(n2_power_ub)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="temp_n_med_obs_med_serial2_n_from_out-1.png" alt="Power Curve"  />
+<img src="temp_n_med_obs_med_parallel2_n_from_out-1.png" alt="Power Curve"  />
 <p class="caption">Power Curve</p>
 </div>
 
@@ -993,10 +985,10 @@ summary(n2_power_lb)
 #> 
 #> === Major Results ===
 #> 
-#> - Final Value (Sample Size): 156
+#> - Final Value (Sample Size): 607
 #> 
-#> - Final Estimated Power: 0.850 
-#> - Confidence Interval: [0.815; 0.885]
+#> - Final Estimated Power: 0.853 
+#> - Confidence Interval: [0.818; 0.887]
 #> - Level of confidence: 95.0%
 #> - Based on 400 replications.
 #> 
@@ -1004,8 +996,8 @@ summary(n2_power_lb)
 #> 
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
-#> - The range of values explored: 100 to 174 
-#> - Time spent in the search: 1.126 mins 
+#> - The range of values explored: 100 to 887 
+#> - Time spent in the search: 1.54 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -1023,21 +1015,23 @@ summary(n2_power_lb)
 #> 
 #> Coefficients:
 #> (Intercept)            x  
-#>    -3.62266      0.03448  
+#>   -2.057320     0.005981  
 #> 
-#> Degrees of Freedom: 1599 Total (i.e. Null);  1598 Residual
-#> Null Deviance:	    1821 
-#> Residual Deviance: 1568 	AIC: 1572
+#> Degrees of Freedom: 2399 Total (i.e. Null);  2398 Residual
+#> Null Deviance:	    2889 
+#> Residual Deviance: 2140 	AIC: 2144
 #> 
 #> - Detailed Results:
 #> 
-#> [test]: test_indirect: x->m1->m2->m3->y 
+#> [test]: test_indirect: x->m2->y 
 #> [test_label]: Test 
 #>     n   est   p.v reject r.cilo r.cihi
-#> 1 100 0.009 1.000  0.460  0.411  0.509
-#> 2 137 0.008 1.000  0.745  0.702  0.788
-#> 3 156 0.008 1.000  0.850  0.815  0.885
-#> 4 174 0.008 1.000  0.920  0.893  0.947
+#> 1 100 0.029 1.000  0.182  0.145  0.220
+#> 2 438 0.030 1.000  0.642  0.596  0.689
+#> 3 551 0.029 1.000  0.767  0.726  0.809
+#> 4 607 0.030 1.000  0.853  0.818  0.887
+#> 5 663 0.030 1.000  0.863  0.829  0.896
+#> 6 887 0.030 1.000  0.955  0.935  0.975
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.
@@ -1054,7 +1048,7 @@ plot(n2_power_lb)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="temp_n_med_obs_med_serial2_n_from_out_lb-1.png" alt="Power Curve"  />
+<img src="temp_n_med_obs_med_parallel2_n_from_out_lb-1.png" alt="Power Curve"  />
 <p class="caption">Power Curve</p>
 </div>
 
@@ -1071,17 +1065,19 @@ library(power4mome)
 model <-
 "
 m1 ~ x
-m2 ~ m1 + x
-m3 ~ m2 + m1 + x
-y ~ m3 + m2 + m1 + x
+m2 ~ x
+m3 ~ x
+y ~ m1 + m2 + m3 + x
 "
 
 model_es <-
 "
-m1 ~ x: l
-m2 ~ m1: l
-m3 ~ m2: l
-y ~ m3: m
+m1 ~ x: s
+m2 ~ x: m
+m3 ~ x: l
+y ~ m1: l
+y ~ m2: m
+y ~ m3: s
 y ~ x: s
 "
 
@@ -1100,19 +1096,19 @@ print(out,
 
 # ====== Try One N and Estimate the Power ======
 
-# For n = 100,
+# For n = 50,
 # when testing the indirect effect by
 # Monte Carlo confidence interval
 
 out <- power4test(nrep = 400,
                   model = model,
                   pop_es = model_es,
-                  n = 100,
+                  n = 50,
                   R = 1000,
                   ci_type = "mc",
                   test_fun = test_indirect_effect,
                   test_args = list(x = "x",
-                                   m = c("m1", "m2", "m3"),
+                                   m = "m2",
                                    y = "y",
                                    mc_ci = TRUE),
                   iseed = 1234,
