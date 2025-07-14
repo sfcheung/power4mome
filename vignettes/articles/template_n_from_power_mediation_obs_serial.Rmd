@@ -1,6 +1,6 @@
 ---
 title: "Quick Template: Serial Mediation with Observed Variables"
-date: "2025-07-13"
+date: "2025-07-14"
 output:
   html_document:
     fig.align: "center"
@@ -115,7 +115,6 @@ The code:
 
 ``` r
 library(power4mome)
-library(power4mome)
 #
 # ====== Model: Form ======
 # Omit any paths hypothesized to be zero
@@ -155,7 +154,7 @@ print(out,
       data_long = TRUE)
 #
 # ====== Estimate the Power ======
-# For n = 100,
+# For n = 50,
 # when testing the indirect effect by
 # Monte Carlo confidence interval
 out <- power4test(nrep = 400,
@@ -479,7 +478,7 @@ summary(n_power_ub)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 107 to 50 
-#> - Time spent in the search: 22.93 secs 
+#> - Time spent in the search: 24 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -594,7 +593,7 @@ summary(n_power_lb)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 107 to 50 
-#> - Time spent in the search: 1.415 mins 
+#> - Time spent in the search: 1.568 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -900,7 +899,7 @@ summary(n2_power_ub)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 100 to 174 
-#> - Time spent in the search: 40.27 secs 
+#> - Time spent in the search: 48.97 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -1006,7 +1005,7 @@ summary(n2_power_lb)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 100 to 174 
-#> - Time spent in the search: 1.028 mins 
+#> - Time spent in the search: 1.126 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 

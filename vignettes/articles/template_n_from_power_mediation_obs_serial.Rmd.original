@@ -41,7 +41,6 @@ The code:
 
 ```{r med, eval=TRUE, results="hide", message=FALSE}
 library(power4mome)
-library(power4mome)
 #
 # ====== Model: Form ======
 # Omit any paths hypothesized to be zero
@@ -81,7 +80,7 @@ print(out,
       data_long = TRUE)
 #
 # ====== Estimate the Power ======
-# For n = 100,
+# For n = 50,
 # when testing the indirect effect by
 # Monte Carlo confidence interval
 out <- power4test(nrep = 400,
