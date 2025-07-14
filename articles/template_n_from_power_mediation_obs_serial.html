@@ -51,6 +51,7 @@
     <li><h6 class="dropdown-header" data-toc-skip>Templates (Code Examples)</h6></li>
     <li><a class="dropdown-item" href="../articles/template_n_from_power_mediation_obs.html">Quick Template: Mediation with Observed Variables</a></li>
     <li><a class="dropdown-item" href="../articles/template_n_from_power_mediation_obs_serial.html">Quick Template: Serial Mediation with Observed Variables</a></li>
+    <li><a class="dropdown-item" href="../articles/template_n_from_power_mediation_obs_parallel.html">Quick Template: Parallel Mediation with Observed Variables</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="dropdown-item" href="../articles/index.html">More articles...</a></li>
   </ul>
@@ -78,7 +79,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Quick Template: Serial Mediation with Observed Variables</h1>
             
-            <h4 data-toc-skip class="date">2025-07-13</h4>
+            <h4 data-toc-skip class="date">2025-07-14</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/sfcheung/power4mome/blob/main/vignettes/articles/template_n_from_power_mediation_obs_serial.Rmd" class="external-link"><code>vignettes/articles/template_n_from_power_mediation_obs_serial.Rmd</code></a></small>
       <div class="d-none name"><code>template_n_from_power_mediation_obs_serial.Rmd</code></div>
@@ -136,7 +137,6 @@ to the target power is found).</p>
 <p>The code:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://sfcheung.github.io/power4mome/">power4mome</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://sfcheung.github.io/power4mome/">power4mome</a></span><span class="op">)</span></span>
 <span><span class="co">#</span></span>
 <span><span class="co"># ====== Model: Form ======</span></span>
 <span><span class="co"># Omit any paths hypothesized to be zero</span></span>
@@ -176,7 +176,7 @@ to the target power is found).</p>
 <span>      data_long <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#</span></span>
 <span><span class="co"># ====== Estimate the Power ======</span></span>
-<span><span class="co"># For n = 100,</span></span>
+<span><span class="co"># For n = 50,</span></span>
 <span><span class="co"># when testing the indirect effect by</span></span>
 <span><span class="co"># Monte Carlo confidence interval</span></span>
 <span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/power4test.html">power4test</a></span><span class="op">(</span>nrep <span class="op">=</span> <span class="fl">400</span>,</span>
@@ -465,7 +465,7 @@ than the target level.</li>
 <span><span class="co">#&gt; - Algorithm: bisection </span></span>
 <span><span class="co">#&gt; - Tolerance for 'close enough': Within 0.02000 of 0.800 </span></span>
 <span><span class="co">#&gt; - The range of values explored: 107 to 50 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 22.93 secs </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 24 secs </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
@@ -574,7 +574,7 @@ than the target level.</li>
 <span><span class="co">#&gt; - Algorithm: bisection </span></span>
 <span><span class="co">#&gt; - Tolerance for 'close enough': Within 0.02000 of 0.800 </span></span>
 <span><span class="co">#&gt; - The range of values explored: 107 to 50 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 1.415 mins </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 1.568 mins </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
@@ -866,7 +866,7 @@ steps.</p>
 <span><span class="co">#&gt; - Algorithm: bisection </span></span>
 <span><span class="co">#&gt; - Tolerance for 'close enough': Within 0.02000 of 0.800 </span></span>
 <span><span class="co">#&gt; - The range of values explored: 100 to 174 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 40.27 secs </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 48.97 secs </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
@@ -966,7 +966,7 @@ Power Curve
 <span><span class="co">#&gt; - Algorithm: bisection </span></span>
 <span><span class="co">#&gt; - Tolerance for 'close enough': Within 0.02000 of 0.800 </span></span>
 <span><span class="co">#&gt; - The range of values explored: 100 to 174 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 1.028 mins </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 1.126 mins </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
