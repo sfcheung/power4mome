@@ -37,6 +37,14 @@ This file is for parallel mediation models.
 
 Estimate the power for a sample size.
 
+A parallel mediation model has several
+parallel paths (three in the following
+example). The test function
+`test_indirect_effects()` can be used
+to estimate the power for having indirect
+paths significant if `omnibus` is set to
+`"all_sig"`.
+
 The code:
 
 ```{r med, eval=TRUE, results="hide", message=FALSE}
@@ -61,12 +69,12 @@ y ~ m1 + m2 + m3 + x
 # Set each path to the hypothesized magnitude
 model_es <-
 "
-m1 ~ x: s
+m1 ~ x: m
 m2 ~ x: m
-m3 ~ x: l
-y ~ m1: l
+m3 ~ x: m
+y ~ m1: s
 y ~ m2: m
-y ~ m3: s
+y ~ m3: l
 y ~ x: s
 "
 #
@@ -82,20 +90,20 @@ print(out,
       data_long = TRUE)
 #
 # ====== Estimate the Power ======
-# For n = 50,
-# when testing one indirect effect by
-# Monte Carlo confidence interval
+# For n = 100,
+# when testing all indirect effects by
+# Monte Carlo confidence intervals
 out <- power4test(nrep = 400,
                   model = model,
                   pop_es = model_es,
-                  n = 50,
+                  n = 100,
                   R = 1000,
                   ci_type = "mc",
-                  test_fun = test_indirect_effect,
+                  test_fun = test_indirect_effects,
                   test_args = list(x = "x",
-                                   m = "m2",
                                    y = "y",
-                                   mc_ci = TRUE),
+                                   mc_ci = TRUE,
+                                   omnibus = "all_sig"),
                   iseed = 1234,
                   parallel = TRUE)
 #
@@ -110,6 +118,10 @@ print(out,
       data_long = TRUE)
 rejection_rates(out)
 ```
+
+(`est` is `NaN` because the test is for
+all three paths and so there is no single
+point estimate for the test.)
 
 ## Try Another N
 
@@ -262,20 +274,21 @@ plot(n_power_lb)
 If necessary, change the population value(s)
 and repeat the steps.
 
-For example, reduce the path from
-`m2` to `y` to small:
+For example, change all the paths from
+the mediators (`m1`, `m2`, and `m3`) to
+medium (`m`).
 
 The code:
 
 ```{r med_parallel2, eval=TRUE, results="hide", message=FALSE}
 model_es2 <-
 "
-m1 ~ x: s
+m1 ~ x: m
 m2 ~ x: m
-m3 ~ x: l
-y ~ m1: l
-y ~ m2: s
-y ~ m3: s
+m3 ~ x: m
+y ~ m1: m
+y ~ m2: m
+y ~ m3: m
 y ~ x: s
 "
 #
@@ -286,11 +299,11 @@ out2 <- power4test(nrep = 400,
                    n = 100,
                    R = 1000,
                    ci_type = "mc",
-                   test_fun = test_indirect_effect,
+                   test_fun = test_indirect_effects,
                    test_args = list(x = "x",
-                                    m = "m2",
                                     y = "y",
-                                    mc_ci = TRUE),
+                                    mc_ci = TRUE,
+                                    omnibus = "all_sig"),
                    iseed = 1234,
                    parallel = TRUE)
 #
@@ -385,12 +398,12 @@ y ~ m1 + m2 + m3 + x
 
 model_es <-
 "
-m1 ~ x: s
+m1 ~ x: m
 m2 ~ x: m
-m3 ~ x: l
-y ~ m1: l
+m3 ~ x: m
+y ~ m1: s
 y ~ m2: m
-y ~ m3: s
+y ~ m3: l
 y ~ x: s
 "
 
@@ -409,21 +422,21 @@ print(out,
 
 # ====== Try One N and Estimate the Power ======
 
-# For n = 50,
-# when testing the indirect effect by
-# Monte Carlo confidence interval
+# For n = 100,
+# when testing all indirect effects by
+# Monte Carlo confidence intervals
 
 out <- power4test(nrep = 400,
                   model = model,
                   pop_es = model_es,
-                  n = 50,
+                  n = 100,
                   R = 1000,
                   ci_type = "mc",
-                  test_fun = test_indirect_effect,
+                  test_fun = test_indirect_effects,
                   test_args = list(x = "x",
-                                   m = "m2",
                                    y = "y",
-                                   mc_ci = TRUE),
+                                   mc_ci = TRUE,
+                                   omnibus = "all_sig"),
                   iseed = 1234,
                   parallel = TRUE)
 rejection_rates(out)
