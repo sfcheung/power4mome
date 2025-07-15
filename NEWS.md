@@ -1,4 +1,4 @@
-# power4mome 0.0.1.81
+# power4mome 0.0.1.83
 
 - Initialized the package. (0.0.0.9000)
 
@@ -509,3 +509,11 @@
 - Added (back) `n_from_power()`, a
   wrapper of `x_from_power()` with
   `x` set to `"n"`. (0.0.1.79, 0.0.1.80)
+
+- Updated `sim_data()` and `fit_model()`
+  to try finding all indirect paths and
+  store them in the output of `fit_model_i()`.
+  (0.0.1.82)
+
+- Added `test_indirect_effects()` to
+  test two or more paths. (0.0.1.83)
