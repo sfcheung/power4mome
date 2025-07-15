@@ -274,5 +274,11 @@ fit_model_i <- function(data_i,
   fit <- tryCatch(suppressWarnings(do.call(fit_function,
                                            fit_args)),
                   error = function(e) e)
+  if (inherits(fit, "lavaan")) {
+    fit@external$fit_external <- data_i$fit_external
+  } else {
+    try({attr(fit, "fit_external") <- data_i$fit_external},
+        silent = TRUE)
+  }
   return(fit)
 }

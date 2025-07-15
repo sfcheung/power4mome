@@ -22,7 +22,18 @@ fit_all <- fit_model(data_all)
 sim_all <- sim_out(data_all = data_all,
                    fit = fit_all)
 
-expect_equal(unname(unlist(manymome::all_paths_to_df((sim_all[[3]]$fit_external$all_paths)))),
+# Check fit_external
+
+tmp <- sim_all[[3]]$fit_external$all_paths
+expect_equal(unname(unlist(manymome::all_paths_to_df(tmp))),
+             c("x", "y", "m"))
+tmp <- fit_all[[3]]@external$fit_external$all_paths
+expect_equal(unname(unlist(manymome::all_paths_to_df(tmp))),
+             c("x", "y", "m"))
+
+fit_all_lm <- fit_model(data_all, fit_function = "lm")
+tmp <- attr(fit_all_lm[[3]], "fit_external")$all_paths
+expect_equal(unname(unlist(manymome::all_paths_to_df(tmp))),
              c("x", "y", "m"))
 
 est_test <- function(fit,
