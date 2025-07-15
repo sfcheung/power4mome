@@ -126,6 +126,20 @@
 #' print(test_ind,
 #'       test_long = TRUE)
 #'
+#' # Set omnibus = "all_sig" to declare
+#' # significant only if all paths are
+#' # significant
+#'
+#' test_ind_all_sig <- power4test(
+#'                        object = sim_only,
+#'                        test_fun = test_indirect_effects,
+#'                        test_args = list(x = "x",
+#'                                         y = "y",
+#'                                         mc_ci = TRUE,
+#'                                         omnibus = "all_sig"))
+#' print(test_ind_all_sig,
+#'       test_long = TRUE)
+#'
 #' @export
 
 test_indirect_effects <- function(
