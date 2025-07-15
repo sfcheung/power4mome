@@ -470,6 +470,19 @@ sim_data <- function(nrep = 10,
   mm_lm_out <- mm_lm(mm_out,
                      drop_list_single_group = FALSE)
 
+  fit_tmp <- try(lavaan::sem(
+                    ptable,
+                    do.fit = FALSE
+                  ),
+                silent = TRUE)
+  if (inherits(fit_tmp, "try-error")) {
+    all_paths <- list()
+  } else {
+    all_paths <- manymome::all_indirect_paths(
+                      fit_tmp
+                    )
+  }
+
   out <- do_FUN(X = seq_len(nrep),
                 FUN = sim_data_i,
                 ptable = ptable,
@@ -482,6 +495,7 @@ sim_data <- function(nrep = 10,
                 x_fun = x_fun,
                 e_fun = e_fun,
                 process_data = process_data,
+                fit_external = list(all_paths = all_paths),
                 iseed = iseed,
                 parallel = parallel,
                 progress = progress,
@@ -892,6 +906,7 @@ sim_data_i <- function(repid = 1,
                        x_fun = list(),
                        e_fun = list(),
                        process_data = NULL,
+                       fit_external = NULL,
                        seed = NULL,
                        drop_list_single_group = TRUE,
                        merge_groups = TRUE) {
@@ -997,7 +1012,8 @@ sim_data_i <- function(repid = 1,
               group_name = group_name,
               group_labels = group_labels,
               number_of_indicators = number_of_indicators,
-              reliability = reliability)
+              reliability = reliability,
+              fit_external = fit_external)
   class(out) <- c("sim_data_i", class(out))
   out
 }
