@@ -119,7 +119,7 @@
 #' # Do the test in each replication
 #'
 #' test_ind <- power4test(object = sim_only,
-#'                        test_fun = test_indirect_effects,
+#'                        test_fun = test_k_indirect_effects,
 #'                        test_args = list(x = "x",
 #'                                         y = "y",
 #'                                         mc_ci = TRUE))
@@ -132,7 +132,7 @@
 #'
 #' test_ind_all_sig <- power4test(
 #'                        object = sim_only,
-#'                        test_fun = test_indirect_effects,
+#'                        test_fun = test_k_indirect_effects,
 #'                        test_args = list(x = "x",
 #'                                         y = "y",
 #'                                         mc_ci = TRUE,
@@ -142,7 +142,7 @@
 #'
 #' @export
 
-test_indirect_effects <- function(
+test_k_indirect_effects <- function(
                             fit = fit,
                             x = NULL,
                             m = NULL,

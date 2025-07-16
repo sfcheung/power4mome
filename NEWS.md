@@ -1,4 +1,4 @@
-# power4mome 0.0.1.85
+# power4mome 0.0.1.86
 
 - Initialized the package. (0.0.0.9000)
 
@@ -515,8 +515,8 @@
   store them in the output of `fit_model_i()`.
   (0.0.1.82)
 
-- Added `test_indirect_effects()` to
-  test two or more paths. (0.0.1.83, 0.0.1.84)
+- Added `test_k_indirect_effects()` to
+  test two or more paths. (0.0.1.83, 0.0.1.84, 0.0.1.86)
 
 - Added `n_region_from_power()` and
   methods for its output.
