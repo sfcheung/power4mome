@@ -8,7 +8,9 @@
 #' to be printed in details.
 #'
 #' @return
-#' It returns an object of the class
+#' The `summary` method for
+#' `x_from_power` objects returns an
+#' object of the class
 #' `summary.x_from_power`, which is
 #' simply the output of [x_from_power()],
 #' with a `print` method dedicated for
@@ -17,12 +19,16 @@
 #'
 #' @param object An `x_from_power`-class
 #' object, such as the output of
-#' [x_from_power()].
+#' [x_from_power()], or an object of the
+#' class `n_region_from_power`, such as
+#' the output of
+#' [n_region_from_power()].
 #'
 #' @param ... Additional arguments.
 #' Not used for now.
 #'
-#' @seealso [x_from_power()]
+#' @seealso [x_from_power()],
+#' [n_region_from_power()]
 #'
 #' @examples
 #'
@@ -77,13 +83,26 @@ summary.x_from_power <- function(object,
 }
 
 #' @rdname summary.x_from_power
+#' @export
+summary.n_region_from_power <- function(
+                                object,
+                                ...) {
+  class(object) <- "summary.n_region_from_power"
+  return(object)
+}
+
+#' @rdname summary.x_from_power
 #'
 #' @param x The output of
 #' [summary.x_from_power()], the
 #' `summary` method of
 #' an `x_from_power` object,
 #' which is the output of
-#' [x_from_power()].
+#' [x_from_power()], or the output
+#' of [summary.n_region_from_power()],
+#' the `summary` method of an
+#' `n_region_from_power` object (the
+#' output of [n_region_from_power()]).
 #'
 #' @param digits The number of digits
 #' after the decimal when printing
@@ -243,5 +262,29 @@ print.summary.x_from_power <- function(x,
         digits = 3)
   cat("\n")
 
+  invisible(x)
+}
+
+#' @rdname summary.x_from_power
+#'
+#' @return
+#' The `print`-method of `summary.n_region_from_power`
+#' objects returns the object `x`
+#' invisibly.
+#' It is called for its side effect.
+#'
+#' @export
+print.summary.n_region_from_power <- function(
+                                      x,
+                                      digits = 3,
+                                      ...) {
+  cat("\n======<< Summary for the Lower Region >>======\n\n")
+  print(summary(x$below),
+        digits = digits,
+        ...)
+  cat("\n\n======<< Summary for the Upper Region >>======\n\n")
+  print(summary(x$above),
+        digits = digits,
+        ...)
   invisible(x)
 }

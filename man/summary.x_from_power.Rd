@@ -2,17 +2,26 @@
 % Please edit documentation in R/x_from_power_for_x_summary.R
 \name{summary.x_from_power}
 \alias{summary.x_from_power}
+\alias{summary.n_region_from_power}
 \alias{print.summary.x_from_power}
+\alias{print.summary.n_region_from_power}
 \title{Summarize 'x_from_power' Results}
 \usage{
 \method{summary}{x_from_power}(object, ...)
 
+\method{summary}{n_region_from_power}(object, ...)
+
 \method{print}{summary.x_from_power}(x, digits = 3, ...)
+
+\method{print}{summary.n_region_from_power}(x, digits = 3, ...)
 }
 \arguments{
 \item{object}{An \code{x_from_power}-class
 object, such as the output of
-\code{\link[=x_from_power]{x_from_power()}}.}
+\code{\link[=x_from_power]{x_from_power()}}, or an object of the
+class \code{n_region_from_power}, such as
+the output of
+\code{\link[=n_region_from_power]{n_region_from_power()}}.}
 
 \item{...}{Additional arguments.
 Not used for now.}
@@ -22,14 +31,20 @@ Not used for now.}
 \code{summary} method of
 an \code{x_from_power} object,
 which is the output of
-\code{\link[=x_from_power]{x_from_power()}}.}
+\code{\link[=x_from_power]{x_from_power()}}, or the output
+of \code{\link[=summary.n_region_from_power]{summary.n_region_from_power()}},
+the \code{summary} method of an
+\code{n_region_from_power} object (the
+output of \code{\link[=n_region_from_power]{n_region_from_power()}}).}
 
 \item{digits}{The number of digits
 after the decimal when printing
 the results.}
 }
 \value{
-It returns an object of the class
+The \code{summary} method for
+\code{x_from_power} objects returns an
+object of the class
 \code{summary.x_from_power}, which is
 simply the output of \code{\link[=x_from_power]{x_from_power()}},
 with a \code{print} method dedicated for
@@ -37,6 +52,11 @@ detailed summary. Please refer
 to \code{\link[=x_from_power]{x_from_power()}} for the contents.
 
 The \code{print}-method of \code{summary.x_from_power}
+objects returns the object \code{x}
+invisibly.
+It is called for its side effect.
+
+The \code{print}-method of \code{summary.n_region_from_power}
 objects returns the object \code{x}
 invisibly.
 It is called for its side effect.
@@ -97,5 +117,6 @@ summary(power_vs_n)
 
 }
 \seealso{
-\code{\link[=x_from_power]{x_from_power()}}
+\code{\link[=x_from_power]{x_from_power()}},
+\code{\link[=n_region_from_power]{n_region_from_power()}}
 }
