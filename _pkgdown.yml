@@ -87,7 +87,7 @@ reference:
     model parameters.
 - contents:
   - test_indirect_effect
-  - test_indirect_effects
+  - test_k_indirect_effects
   - test_cond_indirect
   - test_cond_indirect_effects
   - test_moderation

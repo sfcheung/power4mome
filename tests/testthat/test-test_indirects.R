@@ -37,7 +37,7 @@ sim_only <- power4test(nrep = 5,
                        iseed = 1234)
 
 test_ind <- power4test(object = sim_only,
-                       test_fun = test_indirect_effects,
+                       test_fun = test_k_indirect_effects,
                        test_args = list(x = "x",
                                         y = "y",
                                         mc_ci = TRUE))
@@ -46,7 +46,7 @@ test_ind <- power4test(object = sim_only,
 expect_true(length(chk) == 1)
 
 test_ind <- power4test(object = sim_only,
-                       test_fun = test_indirect_effects,
+                       test_fun = test_k_indirect_effects,
                        test_args = list(x = "x",
                                         y = "y",
                                         omnibus = "all_sig",
@@ -56,7 +56,7 @@ test_ind$test_all[[1]][[1]][[1]]
 expect_true(length(chk) == 1)
 
 test_ind <- power4test(object = sim_only,
-                       test_fun = test_indirect_effects,
+                       test_fun = test_k_indirect_effects,
                        test_args = list(x = "x",
                                         y = "y",
                                         omnibus = "at_least_one_sig",
@@ -67,7 +67,7 @@ expect_true(length(chk) == 1)
 
 
 test_ind2 <- power4test(object = test_ind,
-                       test_fun = test_indirect_effects,
+                       test_fun = test_k_indirect_effects,
                        test_args = list(x = "x",
                                         m = "m2",
                                         y = "y",
@@ -77,7 +77,7 @@ test_ind2 <- power4test(object = test_ind,
 expect_true(length(chk) == 1)
 
 expect_error(power4test(object = test_ind2,
-                       test_fun = test_indirect_effects,
+                       test_fun = test_k_indirect_effects,
                        test_args = list(x = "m",
                                         y = "y",
                                         mc_ci = TRUE),
@@ -112,7 +112,7 @@ sim_only <- power4test(nrep = 5,
                        iseed = 1234)
 
 test_ind <- power4test(object = sim_only,
-                       test_fun = test_indirect_effects,
+                       test_fun = test_k_indirect_effects,
                        test_args = list(x = "x",
                                         y = "y",
                                         boot_ci = TRUE))
@@ -121,7 +121,7 @@ test_ind <- power4test(object = sim_only,
 expect_true(length(chk) == 1)
 
 test_ind2 <- power4test(object = test_ind,
-                       test_fun = test_indirect_effects,
+                       test_fun = test_k_indirect_effects,
                        test_args = list(x = "x",
                                         m = "m2",
                                         y = "y",
@@ -131,7 +131,7 @@ test_ind2 <- power4test(object = test_ind,
 expect_true(length(chk) == 1)
 
 expect_error(power4test(object = test_ind2,
-                       test_fun = test_indirect_effects,
+                       test_fun = test_k_indirect_effects,
                        test_args = list(x = "m",
                                         y = "y",
                                         boot_ci = TRUE),

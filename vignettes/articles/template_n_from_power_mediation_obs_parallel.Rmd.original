@@ -40,7 +40,7 @@ Estimate the power for a sample size.
 A parallel mediation model has several
 parallel paths (three in the following
 example). The test function
-`test_indirect_effects()` can be used
+`test_k_indirect_effects()` can be used
 to estimate the power for having indirect
 paths significant if `omnibus` is set to
 `"all_sig"`.
@@ -99,7 +99,7 @@ out <- power4test(nrep = 400,
                   n = 100,
                   R = 1000,
                   ci_type = "mc",
-                  test_fun = test_indirect_effects,
+                  test_fun = test_k_indirect_effects,
                   test_args = list(x = "x",
                                    y = "y",
                                    mc_ci = TRUE,
@@ -299,7 +299,7 @@ out2 <- power4test(nrep = 400,
                    n = 100,
                    R = 1000,
                    ci_type = "mc",
-                   test_fun = test_indirect_effects,
+                   test_fun = test_k_indirect_effects,
                    test_args = list(x = "x",
                                     y = "y",
                                     mc_ci = TRUE,
@@ -432,7 +432,7 @@ out <- power4test(nrep = 400,
                   n = 100,
                   R = 1000,
                   ci_type = "mc",
-                  test_fun = test_indirect_effects,
+                  test_fun = test_k_indirect_effects,
                   test_args = list(x = "x",
                                    y = "y",
                                    mc_ci = TRUE,
