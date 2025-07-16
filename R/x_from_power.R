@@ -646,8 +646,10 @@ x_from_power <- function(object,
         (object$nrep_final == final_nrep) &&
         (object$ci_level == ci_level) &&
         (object$target_power == target_power)) {
-      cat("\n--- Solution Already Found ---\n\n")
-      cat("Solution already found in object. It is returned as is.\n")
+      if (progress) {
+        cat("\n--- Solution Already Found ---\n\n")
+        cat("Solution already found in object. It is returned as is.\n")
+      }
       return(object)
     }
     object <- object$power4test_trials
@@ -765,8 +767,10 @@ x_from_power <- function(object,
       # Solution already in the input.
       # DO not do the search
 
-      cat("\n--- Solution Already Found ---\n\n")
-      cat("Solution already found in the object. Search will be skipped.")
+      if (progress) {
+        cat("\n--- Solution Already Found ---\n\n")
+        cat("Solution already found in the object. Search will be skipped.\n")
+      }
 
       # ==== Create the output ====
 
@@ -1312,10 +1316,12 @@ n_region_from_power <- function(
   tmp$solution_found <- FALSE
   tmp$call$what <- "lb"
   tmp$call$goal <- "close_enough"
-  my_call$object <- tmp
+  my_call2 <- my_call
+  my_call2$object <- tmp
   out_lb <- eval(
-              my_call,
+              my_call2,
               envir = parent.frame())
+  out_lb$call <- my_call
   out <- list(
           below = out_ub,
           above = out_lb
@@ -1469,92 +1475,129 @@ print.n_region_from_power <- function(
                               x,
                               digits = 3,
                               ...) {
-  browser()
-  my_call <- x$call
+  my_call <- attr(x, "call")
   cat("Call:\n")
   print(my_call)
   cat("\n")
-  solution_found <- !is.na(x$x_final)
-  predictor <- x$x
+  x_below <- x$below
+  x_above <- x$above
+  solution_found_below <- !is.na(x_below$x_final)
+  solution_found_above <- !is.na(x_above$x_final)
+  predictor <- x_below$x
 
-  goal <- x$goal
-  what <- x$what
-  algorithm <- x$algorithm
+  goal <- x_below$goal
+  what <- x_below$what
+  algorithm <- x_below$algorithm
   ci_level_str <- paste0(formatC(
-                          x$ci_level * 100,
+                          x_below$ci_level * 100,
                           digits = 2,
                           format = "f"),
                         "%")
 
-  tmp1 <- c("Predictor(x):" =
-            switch(predictor,
-             n = "Sample Size",
-             es = "Effect Size"))
-  tmp1b <- c("Parameter:" =
-            switch(predictor,
-             n = "N/A",
-             es = x$pop_es_name))
-  tmp2 <- c("goal:" = goal)
-  tmp3 <- c("what:" = what)
+  tmp1 <- c("Predictor(x)" = "Sample Size")
+  tmp2 <- c("Goal:" = "Power significantly below or above the target")
   tmp4 <- c("algorithm:" = algorithm)
   tmp5 <- c("Level of confidence:" = ci_level_str)
-  tmp6 <- c("Target Power:" =
-              formatC(x$target_power, digits = digits, format = "f"))
+  target_power_str <- formatC(x_below$target_power, digits = digits, format = "f")
+  tmp6 <- c("Target Power:" = target_power_str)
 
   tmp <- data.frame("Setting" = c(
       tmp1,
-      tmp1b,
       tmp2,
-      tmp3,
       tmp4,
       tmp5,
       tmp6
     ))
 
-  print(tmp)
+  print(tmp, right = FALSE)
 
-  # cat("goal:", goal, "\n")
-  # cat("what:", what, "\n")
-  # cat("algorithm:", algorithm, "\n")
+  if (solution_found_below) {
 
-  # cat("Level of Confidence (ci_level):",
-  #     ci_level_str,
-  #     "\n")
-  # cat("Target Power:",
-  #     formatC(x$target_power, digits = digits, format = "f"),
-  #     "\n")
-
-  if (solution_found) {
-    x_final_str <- formatC(x$x_final,
+    x_final_below_str <- formatC(x_below$x_final,
                            digits = switch(predictor,
                                            n = 0,
                                            es = digits),
                            format = "f")
-    cat("\n- Final Value of",
-        switch(x$x,
-               n = " Sample Size (n): ",
-               es = paste0("'", x$pop_es_name, "': ")),
-        x_final_str,
-        "\n\n",
-        sep = "")
-    ci_str <- paste0(
+    ci_below_str <- paste0(
         "[",
-        formatC(x$ci_final[1], digits = digits, format = "f"),
+        formatC(x_below$ci_final[1], digits = digits, format = "f"),
         ", ",
-        formatC(x$ci_final[2], digits = digits, format = "f"),
+        formatC(x_below$ci_final[2], digits = digits, format = "f"),
         "]")
-    cat("- Final Estimated Power (CI): ",
-        formatC(x$power_final, digits = digits, format = "f"),
-        " ",
-        ci_str,
-        "\n",
-        sep = "")
-    # cat("- Confidence Interval of Power: [",
-    #     formatC(x$ci_final[1], digits = digits, format = "f"),
-    #     ", ",
-    #     formatC(x$ci_final[2], digits = digits, format = "f"),
-    #     "]\n",
-    #     sep = "")
+
+  }
+
+  if (solution_found_above) {
+
+    x_final_above_str <- formatC(x_above$x_final,
+                           digits = switch(predictor,
+                                           n = 0,
+                                           es = digits),
+                           format = "f")
+    ci_above_str <- paste0(
+        "[",
+        formatC(x_above$ci_final[1], digits = digits, format = "f"),
+        ", ",
+        formatC(x_above$ci_final[2], digits = digits, format = "f"),
+        "]")
+
+  }
+
+  solution_found <- solution_found_below &&
+                    solution_found_above
+
+  if (solution_found_below ||
+      solution_found_above) {
+
+    cat("\nSolution: \n")
+
+    cat("\nApproximate region of sample sizes with power:\n")
+    if (solution_found) {
+      tmp <- paste0("- not significantly different from ",
+                    target_power_str,
+                    ": ",
+                    x_final_below_str,
+                    " to ",
+                    x_final_above_str)
+      cat(strwrap(tmp, exdent = 2), sep = "\n")
+    }
+    if (solution_found_below) {
+      tmp <- paste0("- significantly lower than ",
+                    target_power_str,
+                    ": ",
+                    x_final_below_str)
+      cat(strwrap(tmp, exdent = 2), sep = "\n")
+    }
+    if (solution_found_above) {
+      tmp <- paste0("- significantly higher than ",
+                    target_power_str,
+                    ": ",
+                    x_final_above_str)
+      cat(strwrap(tmp, exdent = 2), sep = "\n")
+    }
+
+    cat("\nConfidence intervals of the estimated power:\n")
+    if (solution_found_below) {
+      tmp <- paste0("- for the lower bound (",
+                    x_final_below_str,
+                    "): ",
+                    ci_below_str)
+      cat(strwrap(tmp, exdent = 2), sep = "\n")
+    }
+    if (solution_found_above) {
+      tmp <- paste0("- for the upper bound (",
+                    x_final_above_str,
+                    "): ",
+                    ci_above_str)
+      cat(strwrap(tmp, exdent = 2), sep = "\n")
+    }
+
+    if (!solution_found_below) {
+      cat("Solution not found for the lower region.")
+    }
+    if (!solution_found_above) {
+      cat("Solution not found for the upper region.")
+    }
   } else {
     cat("\n- Solution not found.\n")
   }
