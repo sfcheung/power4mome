@@ -1,4 +1,4 @@
-# power4mome 0.0.1.84
+# power4mome 0.0.1.85
 
 - Initialized the package. (0.0.0.9000)
 
@@ -517,3 +517,7 @@
 
 - Added `test_indirect_effects()` to
   test two or more paths. (0.0.1.83, 0.0.1.84)
+
+- Added `n_region_from_power()` and
+  methods for its output.
+  (0.0.1.85)
