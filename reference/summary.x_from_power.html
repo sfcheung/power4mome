@@ -9,7 +9,7 @@ the output of x_from_power()."><meta property="og:image" content="https://sfcheu
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.84</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.85</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -61,7 +61,13 @@ the output of <code><a href="x_from_power.html">x_from_power()</a></code>.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for class 'x_from_power'</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
+<span><span class="co"># S3 method for class 'n_region_from_power'</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># S3 method for class 'summary.x_from_power'</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, digits <span class="op">=</span> <span class="fl">3</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for class 'summary.n_region_from_power'</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, digits <span class="op">=</span> <span class="fl">3</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -72,7 +78,10 @@ the output of <code><a href="x_from_power.html">x_from_power()</a></code>.</p>
 <dl><dt id="arg-object">object<a class="anchor" aria-label="anchor" href="#arg-object"></a></dt>
 <dd><p>An <code>x_from_power</code>-class
 object, such as the output of
-<code><a href="x_from_power.html">x_from_power()</a></code>.</p></dd>
+<code><a href="x_from_power.html">x_from_power()</a></code>, or an object of the
+class <code>n_region_from_power</code>, such as
+the output of
+<code><a href="x_from_power.html">n_region_from_power()</a></code>.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
@@ -86,7 +95,11 @@ Not used for now.</p></dd>
 <code>summary</code> method of
 an <code>x_from_power</code> object,
 which is the output of
-<code><a href="x_from_power.html">x_from_power()</a></code>.</p></dd>
+<code><a href="x_from_power.html">x_from_power()</a></code>, or the output
+of <code>summary.n_region_from_power()</code>,
+the <code>summary</code> method of an
+<code>n_region_from_power</code> object (the
+output of <code><a href="x_from_power.html">n_region_from_power()</a></code>).</p></dd>
 
 
 <dt id="arg-digits">digits<a class="anchor" aria-label="anchor" href="#arg-digits"></a></dt>
@@ -97,13 +110,19 @@ the results.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>It returns an object of the class
+    <p>The <code>summary</code> method for
+<code>x_from_power</code> objects returns an
+object of the class
 <code>summary.x_from_power</code>, which is
 simply the output of <code><a href="x_from_power.html">x_from_power()</a></code>,
 with a <code>print</code> method dedicated for
 detailed summary. Please refer
 to <code><a href="x_from_power.html">x_from_power()</a></code> for the contents.</p>
 <p>The <code>print</code>-method of <code>summary.x_from_power</code>
+objects returns the object <code>x</code>
+invisibly.
+It is called for its side effect.</p>
+<p>The <code>print</code>-method of <code>summary.n_region_from_power</code>
 objects returns the object <code>x</code>
 invisibly.
 It is called for its side effect.</p>
@@ -116,7 +135,8 @@ to be printed in details.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="x_from_power.html">x_from_power()</a></code></p></div>
+    <div class="dont-index"><p><code><a href="x_from_power.html">x_from_power()</a></code>,
+<code><a href="x_from_power.html">n_region_from_power()</a></code></p></div>
     </div>
 
     <div class="section level2">
@@ -211,7 +231,7 @@ to be printed in details.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --- Final Stage ---</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-07-15 13:35:38 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-07-16 13:32:01 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Rejection Rates:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [test]: test_parameters: CIs (pars: m~x) </span>
@@ -284,7 +304,7 @@ to be printed in details.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Algorithm: bisection </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - The range of values explored: 100 to 125 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Time spent in the search: 0.4043 secs </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Time spent in the search: 0.4181 secs </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - The final crude model for the power-predictor relation:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Model Type: Logistic Regression </span>

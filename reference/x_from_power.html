@@ -19,7 +19,7 @@ value."><meta property="og:image" content="https://sfcheung.github.io/power4mome
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.84</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.85</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -124,7 +124,33 @@ value.</p>
 <span>  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
+<span><span class="fu">n_region_from_power</span><span class="op">(</span></span>
+<span>  <span class="va">object</span>,</span>
+<span>  pop_es_name <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  target_power <span class="op">=</span> <span class="fl">0.8</span>,</span>
+<span>  ci_level <span class="op">=</span> <span class="fl">0.95</span>,</span>
+<span>  tolerance <span class="op">=</span> <span class="fl">0.02</span>,</span>
+<span>  x_interval <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">50</span>, <span class="fl">2000</span><span class="op">)</span>,</span>
+<span>  extendInt <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  progress <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  simulation_progress <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  max_trials <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  final_nrep <span class="op">=</span> <span class="fl">400</span>,</span>
+<span>  final_R <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>  seed <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  x_include_interval <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  check_es_interval <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  power_curve_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>power_model <span class="op">=</span> <span class="cn">NULL</span>, start <span class="op">=</span> <span class="cn">NULL</span>, lower_bound <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>    upper_bound <span class="op">=</span> <span class="cn">NULL</span>, nls_control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>, nls_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  save_sim_all <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  algorithm <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># S3 method for class 'x_from_power'</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, digits <span class="op">=</span> <span class="fl">3</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for class 'n_region_from_power'</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, digits <span class="op">=</span> <span class="fl">3</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -428,7 +454,18 @@ doing the search.</p></li>
 of <code>x_from_power()</code> used in the search.</p></li>
 <li><p><code>call</code>: The call when this function
 is called.</p></li>
-</ul><p>The <code>print</code>-method of <code>x_from_power</code>
+</ul><p>The function <code>n_region_from_power()</code>
+returns a named list of two output of
+<code>n_from_power()</code>, of the class
+<code>n_region_from_power</code>. The output
+with <code>what = "ub"</code> is named <code>"below"</code>,
+and the output with <code>what = "lb"</code> is
+namd <code>"above"</code>.</p>
+<p>The <code>print</code>-method of <code>x_from_power</code>
+objects returns the object <code>x</code>
+invisibly.
+It is called for its side effect.</p>
+<p>The <code>print</code>-method of <code>x_from_power_region</code>
 objects returns the object <code>x</code>
 invisibly.
 It is called for its side effect.</p>
@@ -495,6 +532,11 @@ from this page:</p>
 <p>The function <code>n_from_power()</code> is just
 a wrapper of <code>x_from_power()</code>, with
 <code>x</code> set to <code>"n"</code>.</p>
+<p>The function <code>n_region_from_power()</code> is just
+a wrapper of <code>x_from_power()</code>, with
+<code>x</code> set to <code>"n"</code>, with two passes, one
+with <code>what = "ub"</code> and one with
+<code>what = "lb"</code>.</p>
 <p>The <code>print</code> method only print
 basic information. Call the
 <code>summary</code> method of <code>x_from_power</code> objects
@@ -678,7 +720,7 @@ and <code><a href="power4test_by_es.html">power4test_by_es()</a></code>.</p></di
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --- Final Stage ---</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-07-15 13:35:51 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-07-16 13:32:15 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Rejection Rates:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [test]: test_parameters: CIs (pars: m~x) </span>
@@ -751,7 +793,7 @@ and <code><a href="power4test_by_es.html">power4test_by_es()</a></code>.</p></di
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Algorithm: bisection </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - The range of values explored: 100 to 125 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Time spent in the search: 0.5028 secs </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Time spent in the search: 0.4824 secs </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - The final crude model for the power-predictor relation:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Model Type: Logistic Regression </span>
