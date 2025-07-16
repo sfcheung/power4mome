@@ -2,6 +2,7 @@
 
 S3method(c,power4test_by_es)
 S3method(c,power4test_by_n)
+S3method(plot,n_region_from_power)
 S3method(plot,power4test_by_es)
 S3method(plot,power4test_by_n)
 S3method(plot,power_curve)
