@@ -2,6 +2,7 @@
 % Please edit documentation in R/x_from_power_for_x_plot.R
 \name{plot.x_from_power}
 \alias{plot.x_from_power}
+\alias{plot.n_region_from_power}
 \title{Plot The Results of 'x_from_power'}
 \usage{
 \method{plot}{x_from_power}(
@@ -11,6 +12,29 @@
   text_what = c("final_x", "final_power", switch(x$x, n = "sig_area", es = NULL)),
   digits = 3,
   main = paste0("Power Curve ", "(Target Power: ", formatC(x$target_power, digits =
+    digits, format = "f"), ")"),
+  xlab = NULL,
+  ylab = "Estimated Power",
+  ci_level = 0.95,
+  pars_ci = list(),
+  pars_power_curve = list(),
+  pars_ci_final_x = list(lwd = 2, length = 0.2, col = "blue"),
+  pars_target_power = list(lty = "dashed", lwd = 2, col = "black"),
+  pars_final_x = list(lty = "dotted"),
+  pars_final_power = list(lty = "dotted", col = "blue"),
+  pars_text_final_x = list(y = 0, pos = 3, cex = 1),
+  pars_text_final_power = list(pos = 3, cex = 1),
+  pars_sig_area = list(col = adjustcolor("lightblue", alpha.f = 0.1)),
+  pars_text_sig_area = list(cex = 1),
+  ...
+)
+
+\method{plot}{n_region_from_power}(
+  x,
+  what = c("ci", "power_curve", "final_x", "final_power", "target_power", "sig_area"),
+  text_what = c("final_x", "final_power", "sig_area"),
+  digits = 3,
+  main = paste0("Power Curve ", "(Target Power: ", formatC(x$below$target_power, digits =
     digits, format = "f"), ")"),
   xlab = NULL,
   ylab = "Estimated Power",
@@ -155,6 +179,10 @@ predictor.}
 The \code{plot}-method of \code{x_from_power}
 returns \code{x} invisibly.
 It is called for its side effect.
+
+The \code{plot}-method of \code{n_region_from_power}
+returns \code{x} invisibly.
+It is called for its side effect.
 }
 \description{
 It plots the results
@@ -169,6 +197,14 @@ Other elements
 can be requested (see the argument
 \code{what}), and they can be customized
 individually.
+
+The \code{plot}-method for
+\code{n_region_from_power} objects is
+a modified version of the \code{plot}-method
+for \code{x_from_power}. It plots the
+results of two runs of \code{\link[=n_from_power]{n_from_power()}}
+in one plot. It is otherwise similar
+to the \code{plot}-method for \code{x_from_power}.
 }
 \examples{
 

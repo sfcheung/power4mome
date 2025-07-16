@@ -3,7 +3,9 @@
 \name{x_from_power}
 \alias{x_from_power}
 \alias{n_from_power}
+\alias{n_region_from_power}
 \alias{print.x_from_power}
+\alias{print.n_region_from_power}
 \title{Sample Size and Effect Size Determination}
 \usage{
 x_from_power(
@@ -57,7 +59,32 @@ n_from_power(
   control = list()
 )
 
+n_region_from_power(
+  object,
+  pop_es_name = NULL,
+  target_power = 0.8,
+  ci_level = 0.95,
+  tolerance = 0.02,
+  x_interval = c(50, 2000),
+  extendInt = NULL,
+  progress = TRUE,
+  simulation_progress = TRUE,
+  max_trials = 10,
+  final_nrep = 400,
+  final_R = 1000,
+  seed = NULL,
+  x_include_interval = FALSE,
+  check_es_interval = TRUE,
+  power_curve_args = list(power_model = NULL, start = NULL, lower_bound = NULL,
+    upper_bound = NULL, nls_control = list(), nls_args = list()),
+  save_sim_all = FALSE,
+  algorithm = NULL,
+  control = list()
+)
+
 \method{print}{x_from_power}(x, digits = 3, ...)
+
+\method{print}{n_region_from_power}(x, digits = 3, ...)
 }
 \arguments{
 \item{object}{A \code{power4test} object,
@@ -311,7 +338,20 @@ of \code{\link[=x_from_power]{x_from_power()}} used in the search.
 is called.
 }
 
+The function \code{\link[=n_region_from_power]{n_region_from_power()}}
+returns a named list of two output of
+\code{\link[=n_from_power]{n_from_power()}}, of the class
+\code{n_region_from_power}. The output
+with \code{what = "ub"} is named \code{"below"},
+and the output with \code{what = "lb"} is
+namd \code{"above"}.
+
 The \code{print}-method of \code{x_from_power}
+objects returns the object \code{x}
+invisibly.
+It is called for its side effect.
+
+The \code{print}-method of \code{x_from_power_region}
 objects returns the object \code{x}
 invisibly.
 It is called for its side effect.
@@ -397,6 +437,12 @@ from this page:
 The function \code{\link[=n_from_power]{n_from_power()}} is just
 a wrapper of \code{\link[=x_from_power]{x_from_power()}}, with
 \code{x} set to \code{"n"}.
+
+The function \code{\link[=n_region_from_power]{n_region_from_power()}} is just
+a wrapper of \code{\link[=x_from_power]{x_from_power()}}, with
+\code{x} set to \code{"n"}, with two passes, one
+with \code{what = "ub"} and one with
+\code{what = "lb"}.
 
 The \code{print} method only print
 basic information. Call the
