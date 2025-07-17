@@ -46,7 +46,7 @@
   pars_final_x = list(lty = "dotted"),
   pars_final_power = list(lty = "dotted", col = "blue"),
   pars_text_final_x = list(y = 0, pos = 3, cex = 1),
-  pars_text_final_power = list(pos = 3, cex = 1),
+  pars_text_final_power = list(cex = 1),
   pars_sig_area = list(col = adjustcolor("lightblue", alpha.f = 0.1)),
   pars_text_sig_area = list(cex = 1),
   ...
