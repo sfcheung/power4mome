@@ -79,7 +79,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Quick Template: Serial Mediation with Observed Variables</h1>
             
-            <h4 data-toc-skip class="date">2025-07-17</h4>
+            <h4 data-toc-skip class="date">2025-07-18</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/sfcheung/power4mome/blob/main/vignettes/articles/template_n_from_power_mediation_obs_serial.Rmd" class="external-link"><code>vignettes/articles/template_n_from_power_mediation_obs_serial.Rmd</code></a></small>
       <div class="d-none name"><code>template_n_from_power_mediation_obs_serial.Rmd</code></div>
@@ -104,12 +104,12 @@ Template</a> at the end of this document.</p>
 <code>power4mome</code> is required.</p>
 <p>This file is not intended to be an introduction on how to use
 functions in <code>power4mome</code>. For details on how to use
-<code><a href="../reference/power4test.html">power4test()</a></code>, and <code><a href="../reference/x_from_power.html">n_from_power()</a></code>, refer to the
-<a href="https://sfcheung.github.io/power4mome/articles/power4mome.html">Get-Started
-article</a>, and this <a href="https://sfcheung.github.io/power4mome/articles/x_from_power_for_n.html">article</a>
-on finding the sample size given desired power using
-<code><a href="../reference/x_from_power.html">n_from_power()</a></code>, as well as the help pages of these
-functions.</p>
+<code><a href="../reference/power4test.html">power4test()</a></code>, refer to the <a href="https://sfcheung.github.io/power4mome/articles/power4mome.html">Get-Started
+article</a>. Please also refer to the help page of
+<code><a href="../reference/x_from_power.html">n_region_from_power()</a></code>, and the <a href="https://sfcheung.github.io/power4mome/articles/x_from_power_for_n.html">article</a>
+on <code><a href="../reference/x_from_power.html">n_from_power()</a></code>, which is called twice by
+<code><a href="../reference/x_from_power.html">n_region_from_power()</a></code> to find the regions described
+below.</p>
 </div>
 <div class="section level2">
 <h2 id="common-flow">Common Flow<a class="anchor" aria-label="anchor" href="#common-flow"></a>
@@ -117,7 +117,7 @@ functions.</p>
 <p>The following chart summarizes the steps covered below.</p>
 <div class="figure" style="text-align: center">
 <div id="htmlwidget-ac96cb3ee4656e2e9ec3" style="width:500px;height:550px;" class="DiagrammeR html-widget"></div>
-<script type="application/json" data-for="htmlwidget-ac96cb3ee4656e2e9ec3">{"x":{"diagram":"\nflowchart TD\n\n  classDef default fill:lightblue;\n  classDef default2 fill:lightgreen;\n\n  style tryn fill: lightyellow\n  style model fill: lightyellow\n\n  SetModel(\"Decide the Population Model (<i>model<\/i>)\")\n  SetES(\"Decide the Population Values (<i>pop_es<\/i>)\")\n  OneN(\"Try one n<br/><i>power4test()<\/i>\")\n  %% SeveralN(\"Try several ns<br/><i>power4test_by_n()<\/i>\")\n  SearchN(\"Search the region of ns<br/><i>n_from_power()<\/i>\")\n  %% AnotherN(\"Try another n<br/><i>power4test()<\/i>\")\n\n  subgraph model [\"Try One N\"]\n\n  SetModel:::default2 --> SetES:::default2\n  SetES --> OneN\n\n  end\n\n  %% OneN -.-> SetES\n\n  subgraph tryn [\"The Region of Sample Sizes\"]\n\n  OneN --> SearchN\n  SearchN -->|Try Other Population Values| SetES\n\n  %% OneN <==> AnotherN\n  %% AnotherN <==> SeveralN\n  %% AnotherN <==> SearchN\n  %% OneN <==> SeveralN\n  %% OneN <==> SearchN\n  %% SeveralN <==> SearchN\n\n  end\n\n  %% AnotherN -.-> SetES\n  %% SeveralN -.-> SetES\n  %% SearchN -.-> SetES\n"},"evals":[],"jsHooks":[]}</script><p class="caption">
+<script type="application/json" data-for="htmlwidget-ac96cb3ee4656e2e9ec3">{"x":{"diagram":"\nflowchart TD\n\n  classDef default fill:lightblue;\n  classDef default2 fill:lightgreen;\n\n  style tryn fill: lightyellow\n  style model fill: lightyellow\n\n  SetModel(\"Decide the Population Model (<i>model<\/i>)\")\n  SetES(\"Decide the Population Values (<i>pop_es<\/i>)\")\n  OneN(\"Try one n<br/><i>power4test()<\/i>\")\n  %% SeveralN(\"Try several ns<br/><i>power4test_by_n()<\/i>\")\n  SearchN(\"Search the regions of ns<br/><i>n_region_from_power()<\/i>\")\n  %% AnotherN(\"Try another n<br/><i>power4test()<\/i>\")\n\n  subgraph model [\"Try One N\"]\n\n  SetModel:::default2 --> SetES:::default2\n  SetES --> OneN\n\n  end\n\n  %% OneN -.-> SetES\n\n  subgraph tryn [\"The Region of Sample Sizes\"]\n\n  OneN --> SearchN\n  SearchN -->|Try Other Population Values| SetES\n\n  %% OneN <==> AnotherN\n  %% AnotherN <==> SeveralN\n  %% AnotherN <==> SearchN\n  %% OneN <==> SeveralN\n  %% OneN <==> SearchN\n  %% SeveralN <==> SearchN\n\n  end\n\n  %% AnotherN -.-> SetES\n  %% SeveralN -.-> SetES\n  %% SearchN -.-> SetES\n"},"evals":[],"jsHooks":[]}</script><p class="caption">
 Common Workflow
 </p>
 </div>
@@ -349,42 +349,6 @@ to the target power is found).</p>
 <span><span class="co">#&gt; - r.cilo,r.cihi: The confidence interval of the rejection rate, based</span></span>
 <span><span class="co">#&gt;   on normal approximation.</span></span>
 <span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span></code></pre></div>
-<div class="section level3">
-<h3 id="try-another-n">Try Another N<a class="anchor" aria-label="anchor" href="#try-another-n"></a>
-</h3>
-<p>We can rerun the simulation to estimate power for another sample size
-before going to the next step. This can be useful if the estimated power
-of the initial attempt is too different from the target power.</p>
-<p>However, this step is optional because the next step, though may take
-longer, should still be able to find the desired region.</p>
-<p>The code:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#</span></span>
-<span><span class="co"># ===== Reuse the output of power4test() =====</span></span>
-<span><span class="co"># Estimate power for n = 150</span></span>
-<span><span class="co"># Set n to 150</span></span>
-<span><span class="va">out_new_n</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/power4test.html">power4test</a></span><span class="op">(</span><span class="va">out</span>,</span>
-<span>                        n <span class="op">=</span> <span class="fl">150</span><span class="op">)</span></span>
-<span><span class="co">#</span></span>
-<span><span class="co"># ===== Compute Rejection Rate (Power) =====</span></span>
-<span><span class="fu"><a href="../reference/rejection_rates.html">rejection_rates</a></span><span class="op">(</span><span class="va">out_new_n</span><span class="op">)</span></span></code></pre></div>
-<p>The results:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/rejection_rates.html">rejection_rates</a></span><span class="op">(</span><span class="va">out_new_n</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [test]: test_indirect: x-&gt;m1-&gt;m2-&gt;m3-&gt;y </span></span>
-<span><span class="co">#&gt; [test_label]: Test </span></span>
-<span><span class="co">#&gt;     est   p.v reject r.cilo r.cihi</span></span>
-<span><span class="co">#&gt; 1 0.038 1.000  0.927  0.902  0.953</span></span>
-<span><span class="co">#&gt; Notes:</span></span>
-<span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>
-<span><span class="co">#&gt; - est: The mean of the estimates in a test across replications.</span></span>
-<span><span class="co">#&gt; - reject: The proportion of 'significant' replications, that is, the</span></span>
-<span><span class="co">#&gt;   rejection rate. If the null hypothesis is true, this is the Type I</span></span>
-<span><span class="co">#&gt;   error rate. If the null hypothesis is false, this is the power.</span></span>
-<span><span class="co">#&gt; - r.cilo,r.cihi: The confidence interval of the rejection rate, based</span></span>
-<span><span class="co">#&gt;   on normal approximation.</span></span>
-<span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span></code></pre></div>
-</div>
 </div>
 <div class="section level2">
 <h2 id="find-the-regions-of-n-based-on-the-target-power">Find the Regions of <em>N</em> Based on the Target Power<a class="anchor" aria-label="anchor" href="#find-the-regions-of-n-based-on-the-target-power"></a>
@@ -392,15 +356,13 @@ longer, should still be able to find the desired region.</p>
 <p>Search, by simulation, the following two regions of sample sizes:</p>
 <ul>
 <li><p>Sample sizes with estimated levels of power significantly below
-the target level (e.g., .80). That is, we find the largest sample size
-with the <em>upper bound</em> (<code>ub</code>) of the confidence
-interval of its power touches to the target level.</p></li>
+the target level (e.g., .80), tested by the confidence interval (95% by
+default).</p></li>
 <li><p>Sample sizes with estimated levels of power significantly above
-the target level (e.g., .80). That is, we find the smallest sample size
-with the <em>lower bound</em> (<code>ub</code>) of the confidence
-interval of its power touches to the target level.</p></li>
+the target level (e.g., .80), tested by the confidence interval (95% by
+default).</p></li>
 </ul>
-<p>In practice, we nearly need high precision for these regions for
+<p>In practice, we rarely need high precision for these regions for
 sample size planning. Therefore, we only need to find the two sample
 sizes with the corresponding confidence bounds <em>close</em>
 <em>enough</em> to the target power, defined by a tolerance value. In
@@ -417,7 +379,7 @@ too different from the target power.</p>
 twice, we can find them by calling
 <code><a href="../reference/x_from_power.html">n_region_from_power()</a></code>.</p>
 <p>The code:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#</span></span>
 <span><span class="co"># ===== Reuse the output of power4test() =====</span></span>
 <span><span class="co"># Call n_from_power()</span></span>
@@ -435,7 +397,7 @@ twice, we can find them by calling
 <span><span class="co"># ===== Plot the (Crude) Power Curve and the Regions =====</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">n_power_region</span><span class="op">)</span></span></code></pre></div>
 <p>The results:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#</span></span>
 <span><span class="co"># ===== Basic Results =====</span></span>
 <span><span class="va">n_power_region</span></span>
@@ -465,7 +427,7 @@ twice, we can find them by calling
 <span><span class="co"># ===== Plot the (Crude) Power Curve and the Regions =====</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">n_power_region</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="temp_n_med_obs_med_serial_n_from_out-1.png" alt="Power Curve"><p class="caption">
+<img src="template_n_from_power_mediation_obs_serial_plot1-1.png" alt="Power Curve"><p class="caption">
 Power Curve
 </p>
 </div>
@@ -480,7 +442,7 @@ Power Curve
 significantly different from .80.</p>
 <p>If necessary, detailed results can be printed by
 <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code>:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># ===== Detailed Results =====</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">n_power_region</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -513,7 +475,7 @@ significantly different from .80.</p>
 <span><span class="co">#&gt; - Algorithm: bisection </span></span>
 <span><span class="co">#&gt; - Tolerance for 'close enough': Within 0.02000 of 0.800 </span></span>
 <span><span class="co">#&gt; - The range of values explored: 107 to 50 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 21.14 secs </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 19.76 secs </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
@@ -586,7 +548,7 @@ significantly different from .80.</p>
 <span><span class="co">#&gt; - Algorithm: bisection </span></span>
 <span><span class="co">#&gt; - Tolerance for 'close enough': Within 0.02000 of 0.800 </span></span>
 <span><span class="co">#&gt; - The range of values explored: 107 to 180 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 1.751 mins </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 1.717 mins </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
@@ -634,413 +596,10 @@ significantly different from .80.</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="change-population-values-and-repeat">Change Population Values and Repeat<a class="anchor" aria-label="anchor" href="#change-population-values-and-repeat"></a>
-</h2>
-<p>If necessary, change the population value(s) and repeat the
-steps.</p>
-<p>For example, set all the paths along the indirect effect to medium
-(.30).</p>
-<p>The code:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">model_es2</span> <span class="op">&lt;-</span></span>
-<span><span class="st">"</span></span>
-<span><span class="st">m1 ~ x: m</span></span>
-<span><span class="st">m2 ~ m1: m</span></span>
-<span><span class="st">m3 ~ m2: m</span></span>
-<span><span class="st">y ~ m3: m</span></span>
-<span><span class="st">y ~ x: s</span></span>
-<span><span class="st">"</span></span>
-<span><span class="co">#</span></span>
-<span><span class="co"># ====== Estimate the Power ======</span></span>
-<span><span class="va">out2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/power4test.html">power4test</a></span><span class="op">(</span>nrep <span class="op">=</span> <span class="fl">400</span>,</span>
-<span>                   model <span class="op">=</span> <span class="va">model</span>,</span>
-<span>                   pop_es <span class="op">=</span> <span class="va">model_es2</span>,</span>
-<span>                   n <span class="op">=</span> <span class="fl">100</span>,</span>
-<span>                   R <span class="op">=</span> <span class="fl">1000</span>,</span>
-<span>                   ci_type <span class="op">=</span> <span class="st">"mc"</span>,</span>
-<span>                   test_fun <span class="op">=</span> <span class="va">test_indirect_effect</span>,</span>
-<span>                   test_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"x"</span>,</span>
-<span>                                    m <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"m1"</span>, <span class="st">"m2"</span>, <span class="st">"m3"</span><span class="op">)</span>,</span>
-<span>                                    y <span class="op">=</span> <span class="st">"y"</span>,</span>
-<span>                                    mc_ci <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span>                   iseed <span class="op">=</span> <span class="fl">1234</span>,</span>
-<span>                   parallel <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#</span></span>
-<span><span class="co"># ====== Compute the Rejection Rate ======</span></span>
-<span><span class="fu"><a href="../reference/rejection_rates.html">rejection_rates</a></span><span class="op">(</span><span class="va">out2</span><span class="op">)</span></span></code></pre></div>
-<p>The results:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">out2</span>,</span>
-<span>      data_long <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ====================== Model Information ======================</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; == Model on Factors/Variables ==</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; m1 ~ x</span></span>
-<span><span class="co">#&gt; m2 ~ m1 + x</span></span>
-<span><span class="co">#&gt; m3 ~ m2 + m1 + x</span></span>
-<span><span class="co">#&gt; y ~ m3 + m2 + m1 + x</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; == Model on Variables/Indicators ==</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; m1 ~ x</span></span>
-<span><span class="co">#&gt; m2 ~ m1 + x</span></span>
-<span><span class="co">#&gt; m3 ~ m2 + m1 + x</span></span>
-<span><span class="co">#&gt; y ~ m3 + m2 + m1 + x</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ====== Population Values ======</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Regressions:</span></span>
-<span><span class="co">#&gt;                    Population</span></span>
-<span><span class="co">#&gt;   m1 ~                       </span></span>
-<span><span class="co">#&gt;     x                 0.300  </span></span>
-<span><span class="co">#&gt;   m2 ~                       </span></span>
-<span><span class="co">#&gt;     m1                0.300  </span></span>
-<span><span class="co">#&gt;     x                 0.000  </span></span>
-<span><span class="co">#&gt;   m3 ~                       </span></span>
-<span><span class="co">#&gt;     m2                0.300  </span></span>
-<span><span class="co">#&gt;     m1                0.000  </span></span>
-<span><span class="co">#&gt;     x                 0.000  </span></span>
-<span><span class="co">#&gt;   y ~                        </span></span>
-<span><span class="co">#&gt;     m3                0.300  </span></span>
-<span><span class="co">#&gt;     m2                0.000  </span></span>
-<span><span class="co">#&gt;     m1                0.000  </span></span>
-<span><span class="co">#&gt;     x                 0.100  </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Variances:</span></span>
-<span><span class="co">#&gt;                    Population</span></span>
-<span><span class="co">#&gt;    .m1                0.910  </span></span>
-<span><span class="co">#&gt;    .m2                0.910  </span></span>
-<span><span class="co">#&gt;    .m3                0.910  </span></span>
-<span><span class="co">#&gt;    .y                 0.898  </span></span>
-<span><span class="co">#&gt;     x                 1.000  </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; (Computing indirect effects for 7 paths ...)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; == Population Indirect Effect(s) ==</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; == Indirect Effect(s) ==</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;                            ind</span></span>
-<span><span class="co">#&gt; x -&gt; m1 -&gt; m2 -&gt; m3 -&gt; y 0.008</span></span>
-<span><span class="co">#&gt; x -&gt; m1 -&gt; m2 -&gt; y       0.000</span></span>
-<span><span class="co">#&gt; x -&gt; m1 -&gt; m3 -&gt; y       0.000</span></span>
-<span><span class="co">#&gt; x -&gt; m1 -&gt; y             0.000</span></span>
-<span><span class="co">#&gt; x -&gt; m2 -&gt; m3 -&gt; y       0.000</span></span>
-<span><span class="co">#&gt; x -&gt; m2 -&gt; y             0.000</span></span>
-<span><span class="co">#&gt; x -&gt; m3 -&gt; y             0.000</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  - The 'ind' column shows the indirect effect(s).</span></span>
-<span><span class="co">#&gt;  </span></span>
-<span><span class="co">#&gt; ======================= Data Information =======================</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Number of Replications:  400 </span></span>
-<span><span class="co">#&gt; Sample Sizes:  100 </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ==== Descriptive Statistics ====</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;    vars     n  mean   sd  skew kurtosis   se</span></span>
-<span><span class="co">#&gt; m1    1 40000 -0.01 1.00  0.00     0.01 0.01</span></span>
-<span><span class="co">#&gt; m2    2 40000  0.00 1.01 -0.01    -0.01 0.01</span></span>
-<span><span class="co">#&gt; m3    3 40000  0.00 1.01  0.02     0.03 0.01</span></span>
-<span><span class="co">#&gt; y     4 40000  0.00 1.00 -0.01    -0.01 0.00</span></span>
-<span><span class="co">#&gt; x     5 40000 -0.01 1.00  0.00    -0.03 0.01</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ==== Parameter Estimates Based on All 400 Samples Combined ====</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Total Sample Size: 40000 </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ==== Standardized Estimates ====</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Variances and error variances omitted.</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Regressions:</span></span>
-<span><span class="co">#&gt;                     est.std</span></span>
-<span><span class="co">#&gt;   m1 ~                     </span></span>
-<span><span class="co">#&gt;     x                 0.306</span></span>
-<span><span class="co">#&gt;   m2 ~                     </span></span>
-<span><span class="co">#&gt;     m1                0.303</span></span>
-<span><span class="co">#&gt;     x                -0.001</span></span>
-<span><span class="co">#&gt;   m3 ~                     </span></span>
-<span><span class="co">#&gt;     m2                0.305</span></span>
-<span><span class="co">#&gt;     m1                0.001</span></span>
-<span><span class="co">#&gt;     x                -0.005</span></span>
-<span><span class="co">#&gt;   y ~                      </span></span>
-<span><span class="co">#&gt;     m3                0.300</span></span>
-<span><span class="co">#&gt;     m2               -0.005</span></span>
-<span><span class="co">#&gt;     m1                0.006</span></span>
-<span><span class="co">#&gt;     x                 0.105</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ==================== Extra Element(s) Found ====================</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; - fit</span></span>
-<span><span class="co">#&gt; - mc_out</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; === Element(s) of the First Dataset ===</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ============ &lt;fit&gt; ============</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; lavaan 0.6-19 ended normally after 1 iteration</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Estimator                                         ML</span></span>
-<span><span class="co">#&gt;   Optimization method                           NLMINB</span></span>
-<span><span class="co">#&gt;   Number of model parameters                        14</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Number of observations                           100</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Model Test User Model:</span></span>
-<span><span class="co">#&gt;                                                       </span></span>
-<span><span class="co">#&gt;   Test statistic                                 0.000</span></span>
-<span><span class="co">#&gt;   Degrees of freedom                                 0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; =========== &lt;mc_out&gt; ===========</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; == A 'mc_out' class object ==</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Number of Monte Carlo replications: 1000 </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ====================== Test(s) Conducted ======================</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; - test_indirect: x-&gt;m1-&gt;m2-&gt;m3-&gt;y</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Call print() and set 'test_long = TRUE' for a detailed report.</span></span>
-<span><span class="fu"><a href="../reference/rejection_rates.html">rejection_rates</a></span><span class="op">(</span><span class="va">out2</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [test]: test_indirect: x-&gt;m1-&gt;m2-&gt;m3-&gt;y </span></span>
-<span><span class="co">#&gt; [test_label]: Test </span></span>
-<span><span class="co">#&gt;     est   p.v reject r.cilo r.cihi</span></span>
-<span><span class="co">#&gt; 1 0.009 1.000  0.460  0.411  0.509</span></span>
-<span><span class="co">#&gt; Notes:</span></span>
-<span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>
-<span><span class="co">#&gt; - est: The mean of the estimates in a test across replications.</span></span>
-<span><span class="co">#&gt; - reject: The proportion of 'significant' replications, that is, the</span></span>
-<span><span class="co">#&gt;   rejection rate. If the null hypothesis is true, this is the Type I</span></span>
-<span><span class="co">#&gt;   error rate. If the null hypothesis is false, this is the power.</span></span>
-<span><span class="co">#&gt; - r.cilo,r.cihi: The confidence interval of the rejection rate, based</span></span>
-<span><span class="co">#&gt;   on normal approximation.</span></span>
-<span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span></code></pre></div>
-<div class="section level3">
-<h3 id="find-the-two-regions-using-n_region_from_power">Find the Two Regions Using <code>n_region_from_power()</code><a class="anchor" aria-label="anchor" href="#find-the-two-regions-using-n_region_from_power"></a>
-</h3>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#</span></span>
-<span><span class="co"># ===== Reuse the output of power4test() =====</span></span>
-<span><span class="va">n_power_region2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/x_from_power.html">n_region_from_power</a></span><span class="op">(</span><span class="va">out2</span>,</span>
-<span>                                       seed <span class="op">=</span> <span class="fl">1357</span><span class="op">)</span></span>
-<span><span class="co">#</span></span>
-<span><span class="co"># ===== Basic Results =====</span></span>
-<span><span class="va">n_power_region2</span></span>
-<span><span class="co">#</span></span>
-<span><span class="co"># ===== Plot the (Crude) Power Curve and the Regions =====</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">n_power_region2</span><span class="op">)</span></span></code></pre></div>
-<p>The results:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#</span></span>
-<span><span class="co"># ===== Basic Results =====</span></span>
-<span><span class="va">n_power_region2</span></span>
-<span><span class="co">#&gt; Call:</span></span>
-<span><span class="co">#&gt; n_region_from_power(object = out2, seed = 1357)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;                      Setting                                      </span></span>
-<span><span class="co">#&gt; Predictor(x)         Sample Size                                  </span></span>
-<span><span class="co">#&gt; Goal:                Power significantly below or above the target</span></span>
-<span><span class="co">#&gt; algorithm:           bisection                                    </span></span>
-<span><span class="co">#&gt; Level of confidence: 95.00%                                       </span></span>
-<span><span class="co">#&gt; Target Power:        0.800                                        </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Solution: </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Approximate region of sample sizes with power:</span></span>
-<span><span class="co">#&gt; - not significantly different from 0.800: 137 to 157</span></span>
-<span><span class="co">#&gt; - significantly lower than 0.800: 137</span></span>
-<span><span class="co">#&gt; - significantly higher than 0.800: 157</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Confidence intervals of the estimated power:</span></span>
-<span><span class="co">#&gt; - for the lower bound (137): [0.702, 0.788]</span></span>
-<span><span class="co">#&gt; - for the upper bound (157): [0.793, 0.867]</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Call `summary()` for detailed results.</span></span>
-<span><span class="co">#</span></span>
-<span><span class="co"># ===== Plot the (Crude) Power Curve and the Regions =====</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">n_power_region2</span><span class="op">)</span></span></code></pre></div>
-<div class="figure" style="text-align: center">
-<img src="temp_n_med_obs_med_serial_n_from_out2-1.png" alt="Power Curve"><p class="caption">
-Power Curve
-</p>
-</div>
-<p>As shown above, with the indirect effect decreased,
-approximately:</p>
-<ul>
-<li><p>sample sizes lower than 137 have power significantly lower than
-.80, and</p></li>
-<li><p>sample sizes higher than 157 have power significantly higher than
-.80.</p></li>
-</ul>
-<p>In other words, sample sizes between 137 and 157 have power not
-significantly different from .80. The required sample sizes are larger
-than the original case.</p>
-<p>If necessary, detailed results can be printed by
-<code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code>:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># ===== Detailed Results =====</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">n_power_region2</span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ======&lt;&lt; Summary for the Lower Region &gt;&gt;======</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ====== x_from_power Results ======</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Call:</span></span>
-<span><span class="co">#&gt; power4mome::x_from_power(object = out2, x = "n", what = "ub", </span></span>
-<span><span class="co">#&gt;     goal = "close_enough", seed = 1357)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Predictor (x): Sample Size </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; - Target Power: 0.800 </span></span>
-<span><span class="co">#&gt; - Goal: Find 'x' with estimated upper confidence bound close enough to</span></span>
-<span><span class="co">#&gt;   the target power.</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; === Major Results ===</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; - Final Value (Sample Size): 137</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; - Final Estimated Power: 0.745 </span></span>
-<span><span class="co">#&gt; - Confidence Interval: [0.702; 0.788]</span></span>
-<span><span class="co">#&gt; - Level of confidence: 95.0%</span></span>
-<span><span class="co">#&gt; - Based on 400 replications.</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; === Technical Information ===</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; - Algorithm: bisection </span></span>
-<span><span class="co">#&gt; - Tolerance for 'close enough': Within 0.02000 of 0.800 </span></span>
-<span><span class="co">#&gt; - The range of values explored: 100 to 174 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 41.43 secs </span></span>
-<span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Call:</span></span>
-<span><span class="co">#&gt; power_curve(object = by_x_1, formula = power_model, start = power_curve_start, </span></span>
-<span><span class="co">#&gt;     lower_bound = lower_bound, upper_bound = upper_bound, nls_args = nls_args, </span></span>
-<span><span class="co">#&gt;     nls_control = nls_control, verbose = progress)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Predictor: n (Sample Size)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Model:</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Call:  stats::glm(formula = reject ~ x, family = "binomial", data = reject1)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Coefficients:</span></span>
-<span><span class="co">#&gt; (Intercept)            x  </span></span>
-<span><span class="co">#&gt;    -3.64706      0.03472  </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Degrees of Freedom: 1199 Total (i.e. Null);  1198 Residual</span></span>
-<span><span class="co">#&gt; Null Deviance:       1449 </span></span>
-<span><span class="co">#&gt; Residual Deviance: 1229  AIC: 1233</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; - Detailed Results:</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; [test]: test_indirect: x-&gt;m1-&gt;m2-&gt;m3-&gt;y </span></span>
-<span><span class="co">#&gt; [test_label]: Test </span></span>
-<span><span class="co">#&gt;     n   est   p.v reject r.cilo r.cihi</span></span>
-<span><span class="co">#&gt; 1 100 0.009 1.000  0.460  0.411  0.509</span></span>
-<span><span class="co">#&gt; 2 137 0.008 1.000  0.745  0.702  0.788</span></span>
-<span><span class="co">#&gt; 3 174 0.008 1.000  0.920  0.893  0.947</span></span>
-<span><span class="co">#&gt; Notes:</span></span>
-<span><span class="co">#&gt; - n: The sample size in a trial.</span></span>
-<span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>
-<span><span class="co">#&gt; - est: The mean of the estimates in a test across replications.</span></span>
-<span><span class="co">#&gt; - reject: The proportion of 'significant' replications, that is, the</span></span>
-<span><span class="co">#&gt;   rejection rate. If the null hypothesis is true, this is the Type I</span></span>
-<span><span class="co">#&gt;   error rate. If the null hypothesis is false, this is the power.</span></span>
-<span><span class="co">#&gt; - r.cilo,r.cihi: The confidence interval of the rejection rate, based</span></span>
-<span><span class="co">#&gt;   on normal approximation.</span></span>
-<span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ======&lt;&lt; Summary for the Upper Region &gt;&gt;======</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ====== x_from_power Results ======</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Call:</span></span>
-<span><span class="co">#&gt; power4mome::x_from_power(object = out2, seed = 1357, x = "n", </span></span>
-<span><span class="co">#&gt;     what = "lb", goal = "close_enough")</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Predictor (x): Sample Size </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; - Target Power: 0.800 </span></span>
-<span><span class="co">#&gt; - Goal: Find 'x' with estimated lower confidence bound close enough to</span></span>
-<span><span class="co">#&gt;   the target power.</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; === Major Results ===</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; - Final Value (Sample Size): 157</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; - Final Estimated Power: 0.830 </span></span>
-<span><span class="co">#&gt; - Confidence Interval: [0.793; 0.867]</span></span>
-<span><span class="co">#&gt; - Level of confidence: 95.0%</span></span>
-<span><span class="co">#&gt; - Based on 400 replications.</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; === Technical Information ===</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; - Algorithm: bisection </span></span>
-<span><span class="co">#&gt; - Tolerance for 'close enough': Within 0.02000 of 0.800 </span></span>
-<span><span class="co">#&gt; - The range of values explored: 151 to 174 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 1.039 mins </span></span>
-<span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Call:</span></span>
-<span><span class="co">#&gt; power_curve(object = by_x_1, formula = power_model, start = power_curve_start, </span></span>
-<span><span class="co">#&gt;     lower_bound = lower_bound, upper_bound = upper_bound, nls_args = nls_args, </span></span>
-<span><span class="co">#&gt;     nls_control = nls_control, verbose = progress)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Predictor: n (Sample Size)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Model:</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Call:  stats::glm(formula = reject ~ x, family = "binomial", data = reject1)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Coefficients:</span></span>
-<span><span class="co">#&gt; (Intercept)            x  </span></span>
-<span><span class="co">#&gt;    -5.93723      0.04809  </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Degrees of Freedom: 1599 Total (i.e. Null);  1598 Residual</span></span>
-<span><span class="co">#&gt; Null Deviance:       1335 </span></span>
-<span><span class="co">#&gt; Residual Deviance: 1305  AIC: 1309</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; - Detailed Results:</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; [test]: test_indirect: x-&gt;m1-&gt;m2-&gt;m3-&gt;y </span></span>
-<span><span class="co">#&gt; [test_label]: Test </span></span>
-<span><span class="co">#&gt;     n   est   p.v reject r.cilo r.cihi</span></span>
-<span><span class="co">#&gt; 1 151 0.008 1.000  0.792  0.753  0.832</span></span>
-<span><span class="co">#&gt; 2 157 0.008 1.000  0.830  0.793  0.867</span></span>
-<span><span class="co">#&gt; 3 163 0.008 1.000  0.870  0.837  0.903</span></span>
-<span><span class="co">#&gt; 4 174 0.008 1.000  0.920  0.893  0.947</span></span>
-<span><span class="co">#&gt; Notes:</span></span>
-<span><span class="co">#&gt; - n: The sample size in a trial.</span></span>
-<span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>
-<span><span class="co">#&gt; - est: The mean of the estimates in a test across replications.</span></span>
-<span><span class="co">#&gt; - reject: The proportion of 'significant' replications, that is, the</span></span>
-<span><span class="co">#&gt;   rejection rate. If the null hypothesis is true, this is the Type I</span></span>
-<span><span class="co">#&gt;   error rate. If the null hypothesis is false, this is the power.</span></span>
-<span><span class="co">#&gt; - r.cilo,r.cihi: The confidence interval of the rejection rate, based</span></span>
-<span><span class="co">#&gt;   on normal approximation.</span></span>
-<span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span></code></pre></div>
-</div>
-</div>
-<div class="section level2">
 <h2 id="code_template">Code Template<a class="anchor" aria-label="anchor" href="#code_template"></a>
 </h2>
 <p>This is the code used above:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://sfcheung.github.io/power4mome/">power4mome</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># ====== Model and Effect Size (Population Values) ======</span></span>
@@ -1115,10 +674,11 @@ than the original case.</p>
 <h2 id="final-remarks">Final Remarks<a class="anchor" aria-label="anchor" href="#final-remarks"></a>
 </h2>
 <p>For other options of <code><a href="../reference/power4test.html">power4test()</a></code> and
-<code><a href="../reference/x_from_power.html">n_from_power()</a></code>, please refer to their help pages, as well
-as <a href="https://sfcheung.github.io/power4mome/articles/power4mome.html">Get-Started
+<code><a href="../reference/x_from_power.html">n_region_from_power()</a></code>, please refer to their help pages, as
+well as <a href="https://sfcheung.github.io/power4mome/articles/power4mome.html">Get-Started
 article</a> and this <a href="https://sfcheung.github.io/power4mome/articles/x_from_power_for_n.html">article</a>
-for <code><a href="../reference/x_from_power.html">n_from_power()</a></code>.</p>
+for <code><a href="../reference/x_from_power.html">n_from_power()</a></code>, which is the function to find one of
+the regions, called twice by <code><a href="../reference/x_from_power.html">n_region_from_power()</a></code>.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
