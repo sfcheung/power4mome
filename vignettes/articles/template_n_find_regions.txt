@@ -1,0 +1,58 @@
+
+# Find the Regions of *N* Based on the Target Power
+
+Search, by simulation, the following
+two regions of sample sizes:
+
+- Sample sizes with estimated levels of
+  power significantly below the target
+  level (e.g., .80), tested by the
+  confidence interval (95% by default).
+
+- Sample sizes with estimated levels of
+  power significantly above the target
+  level (e.g., .80), tested by the
+  confidence interval (95% by default).
+
+In practice, we rarely need high precision
+for these regions for sample size planning.
+Therefore, we only need to find the two
+sample sizes with the corresponding
+confidence bounds *close* *enough* to
+the target power, defined by a tolerance value.
+In the function below, this value is .02
+by default.
+
+Do this step after calling `power4test()`
+on a sample size.
+
+It can take some time to run if estimated power
+of the sample size is too different from
+the target power.
+
+## Finding the Two Regions Using `n_region_from_power()`
+
+Instead of doing the search by calling
+`n_from_power()` twice, we can find them
+by calling `n_region_from_power()`.
+
+The code:
+
+```{r med_n_simple_n_from, eval=TRUE, results="hide", message=FALSE, fig.keep="none"}
+#
+# ===== Reuse the output of power4test() =====
+# Call n_from_power()
+# - Set target power: target_power = .80 (Default, can be omitted)
+# - Set the seed for the simulation: Integer. Should always be set.
+# To set desired precision:
+# - Set final number of R: final_R = 1000 (Default, can be omitted)
+# - Set final number of replications: final_nrep = 400 (Default, can be omitted)
+n_power_region <- n_region_from_power(out,
+                                      seed = 1357)
+#
+# ===== Basic Results =====
+n_power_region
+#
+# ===== Plot the (Crude) Power Curve and the Regions =====
+plot(n_power_region)
+```
