@@ -19,10 +19,10 @@ by `lavaan` and `power4mome` is required.
 This file is not intended to be an introduction
 on how to use functions in `power4mome`.
 For details on how to use `power4test()`,
-and `n_from_power()`,
-refer to the [Get-Started article](https://sfcheung.github.io/power4mome/articles/power4mome.html),
-and this [article](https://sfcheung.github.io/power4mome/articles/x_from_power_for_n.html)
-on finding the sample size
-given desired power using `n_from_power()`,
-as well as the help pages of these
-functions.
+refer to the [Get-Started article](https://sfcheung.github.io/power4mome/articles/power4mome.html).
+Please also refer to the help page
+of `n_region_from_power()`, and the
+[article](https://sfcheung.github.io/power4mome/articles/x_from_power_for_n.html)
+on `n_from_power()`, which is called
+twice by `n_region_from_power()` to
+find the regions described below.

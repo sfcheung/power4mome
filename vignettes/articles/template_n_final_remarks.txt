@@ -1,9 +1,10 @@
 # Final Remarks
 
 For other options of `power4test()`
-and `n_from_power()`, please refer to
+and `n_region_from_power()`, please refer to
 their help pages, as well as
 [Get-Started article](https://sfcheung.github.io/power4mome/articles/power4mome.html)
 and this [article](https://sfcheung.github.io/power4mome/articles/x_from_power_for_n.html)
-for `n_from_power()`.
-
+for `n_from_power()`, which is the
+function to find one of the regions,
+called twice by `n_region_from_power()`.

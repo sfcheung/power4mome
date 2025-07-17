@@ -1,0 +1,24 @@
+
+As shown above, approximately:
+
+- sample sizes lower than
+  `r n_power_region$below$x_final` have
+  power significantly lower than .80, and
+
+- sample sizes higher than
+  `r n_power_region$above$x_final` have
+  power significantly higher than .80.
+
+In other words, sample sizes between
+`r n_power_region$below$x_final` and
+`r n_power_region$above$x_final` have
+power not significantly different from
+.80.
+
+If necessary, detailed results can be
+printed by `summary()`:
+
+```{r summary}
+# ===== Detailed Results =====
+summary(n_power_region)
+```
