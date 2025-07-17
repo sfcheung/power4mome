@@ -1,6 +1,6 @@
 ---
 title: "Quick Template: Serial Mediation with Observed Variables"
-date: "2025-07-14"
+date: "2025-07-17"
 output:
   html_document:
     fig.align: "center"
@@ -383,28 +383,35 @@ rejection_rates(out_new_n)
 
 # Find the Regions of *N* Based on the Target Power
 
-Search, by simulation, the sample size
-with estimated either:
+Search, by simulation, the following
+two regions of sample sizes:
 
-- **Case 1**: Sample size with the 95%
-  confidence interval of its estimated
-  power just below the target
-  level (e.g., .80). That is,
-  its *upper bound* (`ub`) close to the
-  target level. Sample sizes lower
-  than this sample size has their power
-  levels significantly lower than the
+- Sample sizes with estimated levels of
+  power significantly below the target
+  level (e.g., .80). That is, we find
+  the largest sample size with
+  the *upper bound* (`ub`) of the
+  confidence interval of its power
+  touches to the
   target level.
 
-- **Case 2**: Sample size with the 95%
-  confidence interval of its estimated
-  power just above the target
-  level (e.g., .80).  That is,
-  its *lower bound* (`lb`) close to the
-  target level. Sample sizes higher
-  than this sample size has their power
-  levels significantly higher than the
+- Sample sizes with estimated levels of
+  power significantly above the target
+  level (e.g., .80). That is, we find
+  the smallest sample size with
+  the *lower bound* (`ub`) of the
+  confidence interval of its power
+  touches to the
   target level.
+
+In practice, we nearly need high precision
+for these regions for sample size planning.
+Therefore, we only need to find the two
+sample sizes with the corresponding
+confidence bounds *close* *enough* to
+the target power, defined by a tolerance value.
+In the function below, this value is .02
+by default.
 
 Do this step after calling `power4test()`
 on a sample size.
@@ -413,13 +420,11 @@ It can take some time to run if estimated power
 of the sample size is too different from
 the target power.
 
-## Case 1: Significantly Lower Than The Target
+## Finding the Two Regions Using `n_region_from_power()`
 
-We consider **Case 1** first. The goal is
-to find
-
-- the region of sample sizes with power significantly
-*lower* than the target level.
+Instead of doing the search by calling
+`n_from_power()` twice, we can find them
+by calling `n_region_from_power()`.
 
 The code:
 
@@ -433,15 +438,14 @@ The code:
 # To set desired precision:
 # - Set final number of R: final_R = 1000 (Default, can be omitted)
 # - Set final number of replications: final_nrep = 400 (Default, can be omitted)
-n_power_ub <- n_from_power(out,
-                           what = "ub",
-                           seed = 1357)
+n_power_region <- n_region_from_power(out,
+                                      seed = 1357)
 #
-# ===== Print the Summary =====
-summary(n_power_ub)
+# ===== Basic Results =====
+n_power_region
 #
-# ===== Plot the (Crude) Power Curve =====
-plot(n_power_ub)
+# ===== Plot the (Crude) Power Curve and the Regions =====
+plot(n_power_region)
 ```
 
 The results:
@@ -449,8 +453,66 @@ The results:
 
 ``` r
 #
-# ===== Print the Summary =====
-summary(n_power_ub)
+# ===== Basic Results =====
+n_power_region
+#> Call:
+#> n_region_from_power(object = out, seed = 1357)
+#> 
+#>                      Setting                                      
+#> Predictor(x)         Sample Size                                  
+#> Goal:                Power significantly below or above the target
+#> algorithm:           bisection                                    
+#> Level of confidence: 95.00%                                       
+#> Target Power:        0.800                                        
+#> 
+#> Solution: 
+#> 
+#> Approximate region of sample sizes with power:
+#> - not significantly different from 0.800: 107 to 121
+#> - significantly lower than 0.800: 107
+#> - significantly higher than 0.800: 121
+#> 
+#> Confidence intervals of the estimated power:
+#> - for the lower bound (107): [0.726, 0.809]
+#> - for the upper bound (121): [0.815, 0.885]
+#> 
+#> Call `summary()` for detailed results.
+#
+# ===== Plot the (Crude) Power Curve and the Regions =====
+plot(n_power_region)
+```
+
+<div class="figure" style="text-align: center">
+<img src="temp_n_med_obs_med_serial_n_from_out-1.png" alt="Power Curve"  />
+<p class="caption">Power Curve</p>
+</div>
+
+As shown above, approximately:
+
+- sample sizes lower than
+  107 have
+  power significantly lower than .80, and
+
+- sample sizes higher than
+  121 have
+  power significantly higher than .80.
+
+In other words, sample sizes between
+107 and
+121 have
+power not significantly different from
+.80.
+
+If necessary, detailed results can be
+printed by `summary()`:
+
+
+``` r
+# ===== Detailed Results =====
+summary(n_power_region)
+#> 
+#> ======<< Summary for the Lower Region >>======
+#> 
 #> 
 #> ====== x_from_power Results ======
 #> 
@@ -478,7 +540,7 @@ summary(n_power_ub)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 107 to 50 
-#> - Time spent in the search: 24 secs 
+#> - Time spent in the search: 21.14 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -519,59 +581,17 @@ summary(n_power_ub)
 #> - r.cilo,r.cihi: The confidence interval of the rejection rate, based
 #>   on normal approximation.
 #> - Refer to the tests for the meanings of other columns.
-#
-# ===== Plot the (Crude) Power Curve =====
-plot(n_power_ub)
-```
-
-<div class="figure" style="text-align: center">
-<img src="temp_n_med_obs_med_serial_n_from_out-1.png" alt="Power Curve"  />
-<p class="caption">Power Curve</p>
-</div>
-
-## Case 2: Significantly Higher Than The Target
-
-The goal in **Case 2** is to find
-
-- the region of sample sizes with power significantly
-*higher* than the target level.
-
-The code:
-
-
-``` r
-#
-# ===== Reuse the output of power4test() =====
-# Call n_from_power()
-# - Set target power: target_power = .80 (Default, can be omitted)
-# - Set the seed for the simulation: Integer. Should always be set.
-# To set desired precision:
-# - Set final number of R: final_R = 1000 (Default, can be omitted)
-# - Set final number of replications: final_nrep = 400 (Default, can be omitted)
-n_power_lb <- n_from_power(out,
-                           what = "lb",
-                           seed = 1357)
-#
-# ===== Print the Summary =====
-summary(n_power_lb)
-#
-# ===== Plot the (Crude) Power Curve =====
-plot(n_power_lb)
-```
-
-The results:
-
-
-``` r
-#
-# ===== Print the Summary =====
-summary(n_power_lb)
+#> 
+#> 
+#> 
+#> ======<< Summary for the Upper Region >>======
+#> 
 #> 
 #> ====== x_from_power Results ======
 #> 
 #> Call:
-#> power4mome::x_from_power(object = out, x = "n", what = "lb", 
-#>     goal = "close_enough", seed = 1357)
+#> power4mome::x_from_power(object = out, seed = 1357, x = "n", 
+#>     what = "lb", goal = "close_enough")
 #> 
 #> Predictor (x): Sample Size 
 #> 
@@ -581,7 +601,7 @@ summary(n_power_lb)
 #> 
 #> === Major Results ===
 #> 
-#> - Final Value (Sample Size): 125
+#> - Final Value (Sample Size): 121
 #> 
 #> - Final Estimated Power: 0.850 
 #> - Confidence Interval: [0.815; 0.885]
@@ -592,8 +612,8 @@ summary(n_power_lb)
 #> 
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
-#> - The range of values explored: 107 to 50 
-#> - Time spent in the search: 1.568 mins 
+#> - The range of values explored: 107 to 180 
+#> - Time spent in the search: 1.751 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -611,22 +631,23 @@ summary(n_power_lb)
 #> 
 #> Coefficients:
 #> (Intercept)            x  
-#>    -1.78062      0.02668  
+#>    -1.37603      0.02473  
 #> 
-#> Degrees of Freedom: 1999 Total (i.e. Null);  1998 Residual
-#> Null Deviance:	    2211 
-#> Residual Deviance: 1809 	AIC: 1813
+#> Degrees of Freedom: 2399 Total (i.e. Null);  2398 Residual
+#> Null Deviance:	    1980 
+#> Residual Deviance: 1902 	AIC: 1906
 #> 
 #> - Detailed Results:
 #> 
 #> [test]: test_indirect: x->m1->m2->m3->y 
 #> [test_label]: Test 
 #>     n   est   p.v reject r.cilo r.cihi
-#> 1  50 0.036 1.000  0.372  0.325  0.420
-#> 2 107 0.036 1.000  0.767  0.726  0.809
-#> 3 125 0.037 1.000  0.850  0.815  0.885
-#> 4 142 0.036 1.000  0.865  0.832  0.898
-#> 5 177 0.037 1.000  0.938  0.914  0.961
+#> 1 107 0.036 1.000  0.767  0.726  0.809
+#> 2 112 0.038 1.000  0.795  0.755  0.835
+#> 3 121 0.037 1.000  0.850  0.815  0.885
+#> 4 129 0.038 1.000  0.868  0.834  0.901
+#> 5 146 0.037 1.000  0.905  0.876  0.934
+#> 6 180 0.038 1.000  0.950  0.929  0.971
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.
@@ -637,15 +658,7 @@ summary(n_power_lb)
 #> - r.cilo,r.cihi: The confidence interval of the rejection rate, based
 #>   on normal approximation.
 #> - Refer to the tests for the meanings of other columns.
-#
-# ===== Plot the (Crude) Power Curve =====
-plot(n_power_lb)
 ```
-
-<div class="figure" style="text-align: center">
-<img src="temp_n_med_obs_med_serial_n_from_out_lb-1.png" alt="Power Curve"  />
-<p class="caption">Power Curve</p>
-</div>
 
 # Change Population Values and Repeat
 
@@ -845,24 +858,20 @@ rejection_rates(out2)
 #> - Refer to the tests for the meanings of other columns.
 ```
 
-## Case 1: Significantly Lower Than The Target
-
-Fine the region of sample sizes with power significantly
-*lower* than the target level.
+## Find the Two Regions Using `n_region_from_power()`
 
 
 ``` r
 #
 # ===== Reuse the output of power4test() =====
-n2_power_ub <- n_from_power(out2,
-                            what = "ub",
-                            seed = 1357)
+n_power_region2 <- n_region_from_power(out2,
+                                       seed = 1357)
 #
-# ===== Print the Summary =====
-summary(n2_power_ub)
+# ===== Basic Results =====
+n_power_region2
 #
-# ===== Plot the (Crude) Power Curve =====
-plot(n2_power_ub)
+# ===== Plot the (Crude) Power Curve and the Regions =====
+plot(n_power_region2)
 ```
 
 The results:
@@ -870,8 +879,68 @@ The results:
 
 ``` r
 #
-# ===== Print the Summary =====
-summary(n2_power_ub)
+# ===== Basic Results =====
+n_power_region2
+#> Call:
+#> n_region_from_power(object = out2, seed = 1357)
+#> 
+#>                      Setting                                      
+#> Predictor(x)         Sample Size                                  
+#> Goal:                Power significantly below or above the target
+#> algorithm:           bisection                                    
+#> Level of confidence: 95.00%                                       
+#> Target Power:        0.800                                        
+#> 
+#> Solution: 
+#> 
+#> Approximate region of sample sizes with power:
+#> - not significantly different from 0.800: 137 to 157
+#> - significantly lower than 0.800: 137
+#> - significantly higher than 0.800: 157
+#> 
+#> Confidence intervals of the estimated power:
+#> - for the lower bound (137): [0.702, 0.788]
+#> - for the upper bound (157): [0.793, 0.867]
+#> 
+#> Call `summary()` for detailed results.
+#
+# ===== Plot the (Crude) Power Curve and the Regions =====
+plot(n_power_region2)
+```
+
+<div class="figure" style="text-align: center">
+<img src="temp_n_med_obs_med_serial_n_from_out2-1.png" alt="Power Curve"  />
+<p class="caption">Power Curve</p>
+</div>
+
+As shown above, with the indirect effect
+decreased, approximately:
+
+- sample sizes lower than
+  137 have
+  power significantly lower than .80, and
+
+- sample sizes higher than
+  157 have
+  power significantly higher than .80.
+
+In other words, sample sizes between
+137 and
+157 have
+power not significantly different from
+.80. The required sample sizes are
+larger than the original case.
+
+If necessary, detailed results can be
+printed by `summary()`:
+
+
+``` r
+# ===== Detailed Results =====
+summary(n_power_region2)
+#> 
+#> ======<< Summary for the Lower Region >>======
+#> 
 #> 
 #> ====== x_from_power Results ======
 #> 
@@ -899,7 +968,7 @@ summary(n2_power_ub)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 100 to 174 
-#> - Time spent in the search: 48.97 secs 
+#> - Time spent in the search: 41.43 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -941,49 +1010,17 @@ summary(n2_power_ub)
 #> - r.cilo,r.cihi: The confidence interval of the rejection rate, based
 #>   on normal approximation.
 #> - Refer to the tests for the meanings of other columns.
-#
-# ===== Plot the (Crude) Power Curve =====
-plot(n2_power_ub)
-```
-
-<div class="figure" style="text-align: center">
-<img src="temp_n_med_obs_med_serial2_n_from_out-1.png" alt="Power Curve"  />
-<p class="caption">Power Curve</p>
-</div>
-
-## Case 2: Significantly Higher Than The Target
-
-Fine the region of sample sizes with power significantly
-*higher* than the target level.
-
-
-``` r
-#
-# ===== Reuse the output of power4test() =====
-n2_power_lb <- n_from_power(out2,
-                            what = "lb",
-                            seed = 1357)
-#
-# ===== Print the Summary =====
-summary(n2_power_lb)
-#
-# ===== Plot the (Crude) Power Curve =====
-plot(n2_power_lb)
-```
-
-The results:
-
-
-``` r
-#
-# ===== Print the Summary =====
-summary(n2_power_lb)
+#> 
+#> 
+#> 
+#> ======<< Summary for the Upper Region >>======
+#> 
 #> 
 #> ====== x_from_power Results ======
 #> 
 #> Call:
-#> power4mome::x_from_power(object = out2, x = "n", what = "lb", 
-#>     goal = "close_enough", seed = 1357)
+#> power4mome::x_from_power(object = out2, seed = 1357, x = "n", 
+#>     what = "lb", goal = "close_enough")
 #> 
 #> Predictor (x): Sample Size 
 #> 
@@ -993,10 +1030,10 @@ summary(n2_power_lb)
 #> 
 #> === Major Results ===
 #> 
-#> - Final Value (Sample Size): 156
+#> - Final Value (Sample Size): 157
 #> 
-#> - Final Estimated Power: 0.850 
-#> - Confidence Interval: [0.815; 0.885]
+#> - Final Estimated Power: 0.830 
+#> - Confidence Interval: [0.793; 0.867]
 #> - Level of confidence: 95.0%
 #> - Based on 400 replications.
 #> 
@@ -1004,8 +1041,8 @@ summary(n2_power_lb)
 #> 
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
-#> - The range of values explored: 100 to 174 
-#> - Time spent in the search: 1.126 mins 
+#> - The range of values explored: 151 to 174 
+#> - Time spent in the search: 1.039 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -1023,20 +1060,20 @@ summary(n2_power_lb)
 #> 
 #> Coefficients:
 #> (Intercept)            x  
-#>    -3.62266      0.03448  
+#>    -5.93723      0.04809  
 #> 
 #> Degrees of Freedom: 1599 Total (i.e. Null);  1598 Residual
-#> Null Deviance:	    1821 
-#> Residual Deviance: 1568 	AIC: 1572
+#> Null Deviance:	    1335 
+#> Residual Deviance: 1305 	AIC: 1309
 #> 
 #> - Detailed Results:
 #> 
 #> [test]: test_indirect: x->m1->m2->m3->y 
 #> [test_label]: Test 
 #>     n   est   p.v reject r.cilo r.cihi
-#> 1 100 0.009 1.000  0.460  0.411  0.509
-#> 2 137 0.008 1.000  0.745  0.702  0.788
-#> 3 156 0.008 1.000  0.850  0.815  0.885
+#> 1 151 0.008 1.000  0.792  0.753  0.832
+#> 2 157 0.008 1.000  0.830  0.793  0.867
+#> 3 163 0.008 1.000  0.870  0.837  0.903
 #> 4 174 0.008 1.000  0.920  0.893  0.947
 #> Notes:
 #> - n: The sample size in a trial.
@@ -1048,15 +1085,7 @@ summary(n2_power_lb)
 #> - r.cilo,r.cihi: The confidence interval of the rejection rate, based
 #>   on normal approximation.
 #> - Refer to the tests for the meanings of other columns.
-#
-# ===== Plot the (Crude) Power Curve =====
-plot(n2_power_lb)
 ```
-
-<div class="figure" style="text-align: center">
-<img src="temp_n_med_obs_med_serial2_n_from_out_lb-1.png" alt="Power Curve"  />
-<p class="caption">Power Curve</p>
-</div>
 
 # Code Template {#code_template}
 
@@ -1119,7 +1148,7 @@ out <- power4test(nrep = 400,
                   parallel = TRUE)
 rejection_rates(out)
 
-# ====== Case 1: Regions of Ns Significantly Lower Than the Target ======
+# ====== Regions of Ns ======
 
 # Call n_from_power()
 # - Set target power: target_power = .80 (Default, can be omitted)
@@ -1128,19 +1157,11 @@ rejection_rates(out)
 # - Set final number of R: final_R = 1000 (Default, can be omitted)
 # - Set final number of replications: final_nrep = 400 (Default, can be omitted)
 
-n_power_ub <- n_from_power(out,
-                           what = "ub",
-                           seed = 1357)
-summary(n_power_ub)
-plot(n_power_ub)
-
-# ====== Case 2: Regions of Ns Significantly Higher Than the Target ======
-
-n_power_lb <- n_from_power(out,
-                           what = "lb",
-                           seed = 1357)
-summary(n_power_lb)
-plot(n_power_lb)
+n_power_region <- n_region_from_power(out,
+                                      seed = 1357)
+n_power_region
+plot(n_power_region)
+summary(n_power_region)
 ```
 
 
