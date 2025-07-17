@@ -163,7 +163,7 @@ Therefore, we only need to find the two
 sample sizes with the corresponding
 confidence bounds *close* *enough* to
 the target power, defined by a tolerance value.
-In the function belolw, this value is .02
+In the function below, this value is .02
 by default.
 
 Do this step after calling `power4test()`

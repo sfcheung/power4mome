@@ -144,28 +144,35 @@ rejection_rates(out_new_n)
 
 # Find the Regions of *N* Based on the Target Power
 
-Search, by simulation, the sample size
-with estimated either:
+Search, by simulation, the following
+two regions of sample sizes:
 
-- **Case 1**: Sample size with the 95%
-  confidence interval of its estimated
-  power just below the target
-  level (e.g., .80). That is,
-  its *upper bound* (`ub`) close to the
-  target level. Sample sizes lower
-  than this sample size has their power
-  levels significantly lower than the
+- Sample sizes with estimated levels of
+  power significantly below the target
+  level (e.g., .80). That is, we find
+  the largest sample size with
+  the *upper bound* (`ub`) of the
+  confidence interval of its power
+  touches to the
   target level.
 
-- **Case 2**: Sample size with the 95%
-  confidence interval of its estimated
-  power just above the target
-  level (e.g., .80).  That is,
-  its *lower bound* (`lb`) close to the
-  target level. Sample sizes higher
-  than this sample size has their power
-  levels significantly higher than the
+- Sample sizes with estimated levels of
+  power significantly above the target
+  level (e.g., .80). That is, we find
+  the smallest sample size with
+  the *lower bound* (`ub`) of the
+  confidence interval of its power
+  touches to the
   target level.
+
+In practice, we nearly need high precision
+for these regions for sample size planning.
+Therefore, we only need to find the two
+sample sizes with the corresponding
+confidence bounds *close* *enough* to
+the target power, defined by a tolerance value.
+In the function below, this value is .02
+by default.
 
 Do this step after calling `power4test()`
 on a sample size.
@@ -174,17 +181,15 @@ It can take some time to run if estimated power
 of the sample size is too different from
 the target power.
 
-## Case 1: Significantly Lower Than The Target
+## Finding the Two Regions Using `n_region_from_power()`
 
-We consider **Case 1** first. The goal is
-to find
-
-- the region of sample sizes with power significantly
-*lower* than the target level.
+Instead of doing the search by calling
+`n_from_power()` twice, we can find them
+by calling `n_region_from_power()`.
 
 The code:
 
-```{r med_n_from, eval=TRUE, results="hide", message=FALSE, fig.keep="none"}
+```{r med_n_serial_n_from, eval=TRUE, results="hide", message=FALSE, fig.keep="none"}
 #
 # ===== Reuse the output of power4test() =====
 # Call n_from_power()
@@ -193,66 +198,49 @@ The code:
 # To set desired precision:
 # - Set final number of R: final_R = 1000 (Default, can be omitted)
 # - Set final number of replications: final_nrep = 400 (Default, can be omitted)
-n_power_ub <- n_from_power(out,
-                           what = "ub",
-                           seed = 1357)
+n_power_region <- n_region_from_power(out,
+                                      seed = 1357)
 #
-# ===== Print the Summary =====
-summary(n_power_ub)
+# ===== Basic Results =====
+n_power_region
 #
-# ===== Plot the (Crude) Power Curve =====
-plot(n_power_ub)
+# ===== Plot the (Crude) Power Curve and the Regions =====
+plot(n_power_region)
 ```
 
 The results:
 
 ```{r temp_n_med_obs_med_serial_n_from_out, fig.cap = "Power Curve"}
 #
-# ===== Print the Summary =====
-summary(n_power_ub)
+# ===== Basic Results =====
+n_power_region
 #
-# ===== Plot the (Crude) Power Curve =====
-plot(n_power_ub)
+# ===== Plot the (Crude) Power Curve and the Regions =====
+plot(n_power_region)
 ```
 
-## Case 2: Significantly Higher Than The Target
+As shown above, approximately:
 
-The goal in **Case 2** is to find
+- sample sizes lower than
+  `r n_power_region$below$x_final` have
+  power significantly lower than .80, and
 
-- the region of sample sizes with power significantly
-*higher* than the target level.
+- sample sizes higher than
+  `r n_power_region$above$x_final` have
+  power significantly higher than .80.
 
-The code:
+In other words, sample sizes between
+`r n_power_region$below$x_final` and
+`r n_power_region$above$x_final` have
+power not significantly different from
+.80.
 
-```{r med_n_serial_n_from_lb, eval=TRUE, results="hide", message=FALSE, fig.keep="none"}
-#
-# ===== Reuse the output of power4test() =====
-# Call n_from_power()
-# - Set target power: target_power = .80 (Default, can be omitted)
-# - Set the seed for the simulation: Integer. Should always be set.
-# To set desired precision:
-# - Set final number of R: final_R = 1000 (Default, can be omitted)
-# - Set final number of replications: final_nrep = 400 (Default, can be omitted)
-n_power_lb <- n_from_power(out,
-                           what = "lb",
-                           seed = 1357)
-#
-# ===== Print the Summary =====
-summary(n_power_lb)
-#
-# ===== Plot the (Crude) Power Curve =====
-plot(n_power_lb)
-```
+If necessary, detailed results can be
+printed by `summary()`:
 
-The results:
-
-```{r temp_n_med_obs_med_serial_n_from_out_lb, fig.cap = "Power Curve"}
-#
-# ===== Print the Summary =====
-summary(n_power_lb)
-#
-# ===== Plot the (Crude) Power Curve =====
-plot(n_power_lb)
+```{r summary}
+# ===== Detailed Results =====
+summary(n_power_region)
 ```
 
 # Change Population Values and Repeat
@@ -302,64 +290,56 @@ print(out2,
 rejection_rates(out2)
 ```
 
-## Case 1: Significantly Lower Than The Target
+## Find the Two Regions Using `n_region_from_power()`
 
-Fine the region of sample sizes with power significantly
-*lower* than the target level.
-
-```{r med_n_simple2_n_from, eval=TRUE, results="hide", message=FALSE, fig.keep="none"}
+```{r med_n_serial_n_from2, eval=TRUE, results="hide", message=FALSE, fig.keep="none"}
 #
 # ===== Reuse the output of power4test() =====
-n2_power_ub <- n_from_power(out2,
-                            what = "ub",
-                            seed = 1357)
+n_power_region2 <- n_region_from_power(out2,
+                                       seed = 1357)
 #
-# ===== Print the Summary =====
-summary(n2_power_ub)
+# ===== Basic Results =====
+n_power_region2
 #
-# ===== Plot the (Crude) Power Curve =====
-plot(n2_power_ub)
+# ===== Plot the (Crude) Power Curve and the Regions =====
+plot(n_power_region2)
 ```
 
 The results:
 
-```{r temp_n_med_obs_med_serial2_n_from_out, fig.cap = "Power Curve"}
+```{r temp_n_med_obs_med_serial_n_from_out2, fig.cap = "Power Curve"}
 #
-# ===== Print the Summary =====
-summary(n2_power_ub)
+# ===== Basic Results =====
+n_power_region2
 #
-# ===== Plot the (Crude) Power Curve =====
-plot(n2_power_ub)
+# ===== Plot the (Crude) Power Curve and the Regions =====
+plot(n_power_region2)
 ```
 
-## Case 2: Significantly Higher Than The Target
+As shown above, with the indirect effect
+decreased, approximately:
 
-Fine the region of sample sizes with power significantly
-*higher* than the target level.
+- sample sizes lower than
+  `r n_power_region2$below$x_final` have
+  power significantly lower than .80, and
 
-```{r med_n_serial2_n_from_lb, eval=TRUE, results="hide", message=FALSE, fig.keep="none"}
-#
-# ===== Reuse the output of power4test() =====
-n2_power_lb <- n_from_power(out2,
-                            what = "lb",
-                            seed = 1357)
-#
-# ===== Print the Summary =====
-summary(n2_power_lb)
-#
-# ===== Plot the (Crude) Power Curve =====
-plot(n2_power_lb)
-```
+- sample sizes higher than
+  `r n_power_region2$above$x_final` have
+  power significantly higher than .80.
 
-The results:
+In other words, sample sizes between
+`r n_power_region2$below$x_final` and
+`r n_power_region2$above$x_final` have
+power not significantly different from
+.80. The required sample sizes are
+larger than the original case.
 
-```{r temp_n_med_obs_med_serial2_n_from_out_lb, fig.cap = "Power Curve"}
-#
-# ===== Print the Summary =====
-summary(n2_power_lb)
-#
-# ===== Plot the (Crude) Power Curve =====
-plot(n2_power_lb)
+If necessary, detailed results can be
+printed by `summary()`:
+
+```{r summary2}
+# ===== Detailed Results =====
+summary(n_power_region2)
 ```
 
 # Code Template {#code_template}
@@ -422,7 +402,7 @@ out <- power4test(nrep = 400,
                   parallel = TRUE)
 rejection_rates(out)
 
-# ====== Case 1: Regions of Ns Significantly Lower Than the Target ======
+# ====== Regions of Ns ======
 
 # Call n_from_power()
 # - Set target power: target_power = .80 (Default, can be omitted)
@@ -431,19 +411,11 @@ rejection_rates(out)
 # - Set final number of R: final_R = 1000 (Default, can be omitted)
 # - Set final number of replications: final_nrep = 400 (Default, can be omitted)
 
-n_power_ub <- n_from_power(out,
-                           what = "ub",
-                           seed = 1357)
-summary(n_power_ub)
-plot(n_power_ub)
-
-# ====== Case 2: Regions of Ns Significantly Higher Than the Target ======
-
-n_power_lb <- n_from_power(out,
-                           what = "lb",
-                           seed = 1357)
-summary(n_power_lb)
-plot(n_power_lb)
+n_power_region <- n_region_from_power(out,
+                                      seed = 1357)
+n_power_region
+plot(n_power_region)
+summary(n_power_region)
 ```
 
 ```{r load_final, child=c("template_n_final_remarks.txt")}
