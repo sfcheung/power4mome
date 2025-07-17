@@ -79,7 +79,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Quick Template: Mediation with Observed Variables</h1>
             
-            <h4 data-toc-skip class="date">2025-07-13</h4>
+            <h4 data-toc-skip class="date">2025-07-17</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/sfcheung/power4mome/blob/main/vignettes/articles/template_n_from_power_mediation_obs.Rmd" class="external-link"><code>vignettes/articles/template_n_from_power_mediation_obs.Rmd</code></a></small>
       <div class="d-none name"><code>template_n_from_power_mediation_obs.Rmd</code></div>
@@ -349,31 +349,33 @@ longer, should still be able to find the desired region.</p>
 <div class="section level2">
 <h2 id="find-the-regions-of-n-based-on-the-target-power">Find the Regions of <em>N</em> Based on the Target Power<a class="anchor" aria-label="anchor" href="#find-the-regions-of-n-based-on-the-target-power"></a>
 </h2>
-<p>Search, by simulation, the sample size with estimated either:</p>
+<p>Search, by simulation, the following two regions of sample sizes:</p>
 <ul>
-<li><p><strong>Case 1</strong>: Sample size with the 95% confidence
-interval of its estimated power just below the target level (e.g., .80).
-That is, its <em>upper bound</em> (<code>ub</code>) close to the target
-level. Sample sizes lower than this sample size has their power levels
-significantly lower than the target level.</p></li>
-<li><p><strong>Case 2</strong>: Sample size with the 95% confidence
-interval of its estimated power just above the target level (e.g., .80).
-That is, its <em>lower bound</em> (<code>lb</code>) close to the target
-level. Sample sizes higher than this sample size has their power levels
-significantly higher than the target level.</p></li>
+<li><p>Sample sizes with estimated levels of power significantly below
+the target level (e.g., .80). That is, we find the largest sample size
+with the <em>upper bound</em> (<code>ub</code>) of the confidence
+interval of its power touches to the target level.</p></li>
+<li><p>Sample sizes with estimated levels of power significantly above
+the target level (e.g., .80). That is, we find the smallest sample size
+with the <em>lower bound</em> (<code>ub</code>) of the confidence
+interval of its power touches to the target level.</p></li>
 </ul>
+<p>In practice, we nearly need high precision for these regions for
+sample size planning. Therefore, we only need to find the two sample
+sizes with the corresponding confidence bounds <em>close</em>
+<em>enough</em> to the target power, defined by a tolerance value. In
+the function below, this value is .02 by default.</p>
 <p>Do this step after calling <code><a href="../reference/power4test.html">power4test()</a></code> on a sample
 size.</p>
 <p>It can take some time to run if estimated power of the sample size is
 too different from the target power.</p>
 <div class="section level3">
-<h3 id="case-1-significantly-lower-than-the-target">Case 1: Significantly Lower Than The Target<a class="anchor" aria-label="anchor" href="#case-1-significantly-lower-than-the-target"></a>
+<h3 id="finding-the-two-regions-using-n_region_from_power">Finding the Two Regions Using
+<code>n_region_from_power()</code><a class="anchor" aria-label="anchor" href="#finding-the-two-regions-using-n_region_from_power"></a>
 </h3>
-<p>We consider <strong>Case 1</strong> first. The goal is to find</p>
-<ul>
-<li>the region of sample sizes with power significantly <em>lower</em>
-than the target level.</li>
-</ul>
+<p>Instead of doing the search by calling <code><a href="../reference/x_from_power.html">n_from_power()</a></code>
+twice, we can find them by calling
+<code><a href="../reference/x_from_power.html">n_region_from_power()</a></code>.</p>
 <p>The code:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#</span></span>
@@ -384,20 +386,66 @@ than the target level.</li>
 <span><span class="co"># To set desired precision:</span></span>
 <span><span class="co"># - Set final number of R: final_R = 1000 (Default, can be omitted)</span></span>
 <span><span class="co"># - Set final number of replications: final_nrep = 400 (Default, can be omitted)</span></span>
-<span><span class="va">n_power_ub</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/x_from_power.html">n_from_power</a></span><span class="op">(</span><span class="va">out</span>,</span>
-<span>                              what <span class="op">=</span> <span class="st">"ub"</span>,</span>
-<span>                              seed <span class="op">=</span> <span class="fl">1357</span><span class="op">)</span></span>
+<span><span class="va">n_power_region</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/x_from_power.html">n_region_from_power</a></span><span class="op">(</span><span class="va">out</span>,</span>
+<span>                                      seed <span class="op">=</span> <span class="fl">1357</span><span class="op">)</span></span>
 <span><span class="co">#</span></span>
-<span><span class="co"># ===== Print the Summary =====</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">n_power_ub</span><span class="op">)</span></span>
+<span><span class="co"># ===== Basic Results =====</span></span>
+<span><span class="va">n_power_region</span></span>
 <span><span class="co">#</span></span>
-<span><span class="co"># ===== Plot the (Crude) Power Curve =====</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">n_power_ub</span><span class="op">)</span></span></code></pre></div>
+<span><span class="co"># ===== Plot the (Crude) Power Curve and the Regions =====</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">n_power_region</span><span class="op">)</span></span></code></pre></div>
 <p>The results:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#</span></span>
-<span><span class="co"># ===== Print the Summary =====</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">n_power_ub</span><span class="op">)</span></span>
+<span><span class="co"># ===== Basic Results =====</span></span>
+<span><span class="va">n_power_region</span></span>
+<span><span class="co">#&gt; Call:</span></span>
+<span><span class="co">#&gt; n_region_from_power(object = out, seed = 1357)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;                      Setting                                      </span></span>
+<span><span class="co">#&gt; Predictor(x)         Sample Size                                  </span></span>
+<span><span class="co">#&gt; Goal:                Power significantly below or above the target</span></span>
+<span><span class="co">#&gt; algorithm:           bisection                                    </span></span>
+<span><span class="co">#&gt; Level of confidence: 95.00%                                       </span></span>
+<span><span class="co">#&gt; Target Power:        0.800                                        </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Solution: </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Approximate region of sample sizes with power:</span></span>
+<span><span class="co">#&gt; - not significantly different from 0.800: 654 to 897</span></span>
+<span><span class="co">#&gt; - significantly lower than 0.800: 654</span></span>
+<span><span class="co">#&gt; - significantly higher than 0.800: 897</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Confidence intervals of the estimated power:</span></span>
+<span><span class="co">#&gt; - for the lower bound (654): [0.694, 0.781]</span></span>
+<span><span class="co">#&gt; - for the upper bound (897): [0.812, 0.883]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Call `summary()` for detailed results.</span></span>
+<span><span class="co">#</span></span>
+<span><span class="co"># ===== Plot the (Crude) Power Curve and the Regions =====</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">n_power_region</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="temp_n_med_obs_med_simple_n_from_out-1.png" alt="Power Curve"><p class="caption">
+Power Curve
+</p>
+</div>
+<p>As shown above, approximately:</p>
+<ul>
+<li><p>sample sizes lower than 654 have power significantly lower than
+.80, and</p></li>
+<li><p>sample sizes higher than 897 have power significantly higher than
+.80.</p></li>
+</ul>
+<p>In other words, sample sizes between 654 and 897 have power not
+significantly different from .80.</p>
+<p>If necessary, detailed results can be printed by
+<code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code>:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># ===== Detailed Results =====</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">n_power_region</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ======&lt;&lt; Summary for the Lower Region &gt;&gt;======</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ====== x_from_power Results ======</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -425,7 +473,7 @@ than the target level.</li>
 <span><span class="co">#&gt; - Algorithm: bisection </span></span>
 <span><span class="co">#&gt; - Tolerance for 'close enough': Within 0.02000 of 0.800 </span></span>
 <span><span class="co">#&gt; - The range of values explored: 100 to 897 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 47.71 secs </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 48.97 secs </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
@@ -468,53 +516,17 @@ than the target level.</li>
 <span><span class="co">#&gt; - r.cilo,r.cihi: The confidence interval of the rejection rate, based</span></span>
 <span><span class="co">#&gt;   on normal approximation.</span></span>
 <span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span>
-<span><span class="co">#</span></span>
-<span><span class="co"># ===== Plot the (Crude) Power Curve =====</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">n_power_ub</span><span class="op">)</span></span></code></pre></div>
-<div class="figure" style="text-align: center">
-<img src="temp_n_med_obs_med_simple_n_from_out-1.png" alt="Power Curve"><p class="caption">
-Power Curve
-</p>
-</div>
-</div>
-<div class="section level3">
-<h3 id="case-2-significantly-higher-than-the-target">Case 2: Significantly Higher Than The Target<a class="anchor" aria-label="anchor" href="#case-2-significantly-higher-than-the-target"></a>
-</h3>
-<p>The goal in <strong>Case 2</strong> is to find</p>
-<ul>
-<li>the region of sample sizes with power significantly <em>higher</em>
-than the target level.</li>
-</ul>
-<p>The code:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#</span></span>
-<span><span class="co"># ===== Reuse the output of power4test() =====</span></span>
-<span><span class="co"># Call n_from_power()</span></span>
-<span><span class="co"># - Set target power: target_power = .80 (Default, can be omitted)</span></span>
-<span><span class="co"># - Set the seed for the simulation: Integer. Should always be set.</span></span>
-<span><span class="co"># To set desired precision:</span></span>
-<span><span class="co"># - Set final number of R: final_R = 1000 (Default, can be omitted)</span></span>
-<span><span class="co"># - Set final number of replications: final_nrep = 400 (Default, can be omitted)</span></span>
-<span><span class="va">n_power_lb</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/x_from_power.html">n_from_power</a></span><span class="op">(</span><span class="va">out</span>,</span>
-<span>                              what <span class="op">=</span> <span class="st">"lb"</span>,</span>
-<span>                              seed <span class="op">=</span> <span class="fl">1357</span><span class="op">)</span></span>
-<span><span class="co">#</span></span>
-<span><span class="co"># ===== Print the Summary =====</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">n_power_lb</span><span class="op">)</span></span>
-<span><span class="co">#</span></span>
-<span><span class="co"># ===== Plot the (Crude) Power Curve =====</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">n_power_lb</span><span class="op">)</span></span></code></pre></div>
-<p>The results:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#</span></span>
-<span><span class="co"># ===== Print the Summary =====</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">n_power_lb</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ======&lt;&lt; Summary for the Upper Region &gt;&gt;======</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ====== x_from_power Results ======</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call:</span></span>
-<span><span class="co">#&gt; power4mome::x_from_power(object = out, x = "n", what = "lb", </span></span>
-<span><span class="co">#&gt;     goal = "close_enough", seed = 1357)</span></span>
+<span><span class="co">#&gt; power4mome::x_from_power(object = out, seed = 1357, x = "n", </span></span>
+<span><span class="co">#&gt;     what = "lb", goal = "close_enough")</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Predictor (x): Sample Size </span></span>
 <span><span class="co">#&gt; </span></span>
@@ -524,27 +536,28 @@ than the target level.</li>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; === Major Results ===</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; - Final Value (Sample Size): 891</span></span>
+<span><span class="co">#&gt; - Final Value (Sample Size): 897</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; - Final Estimated Power: 0.840 </span></span>
-<span><span class="co">#&gt; - Confidence Interval: [0.804; 0.876]</span></span>
+<span><span class="co">#&gt; - Final Estimated Power: 0.848 </span></span>
+<span><span class="co">#&gt; - Confidence Interval: [0.812; 0.883]</span></span>
 <span><span class="co">#&gt; - Level of confidence: 95.0%</span></span>
 <span><span class="co">#&gt; - Based on 400 replications.</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; === Technical Information ===</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - Algorithm: bisection </span></span>
-<span><span class="co">#&gt; - Tolerance for 'close enough': Within 0.02000 of 0.800 </span></span>
-<span><span class="co">#&gt; - The range of values explored: 100 to 891 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 1.072 mins </span></span>
+<span><span class="co">#&gt; - Tolerance for 'close enough': Within  of 0.800 </span></span>
+<span><span class="co">#&gt; - The range of values explored: 100 to 897 </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 0.05667 secs </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call:</span></span>
-<span><span class="co">#&gt; power_curve(object = by_x_1, formula = power_model, start = power_curve_start, </span></span>
-<span><span class="co">#&gt;     lower_bound = lower_bound, upper_bound = upper_bound, nls_args = nls_args, </span></span>
-<span><span class="co">#&gt;     nls_control = nls_control, verbose = progress)</span></span>
+<span><span class="co">#&gt; power_curve(object = by_x_1, formula = power_curve_args$power_model, </span></span>
+<span><span class="co">#&gt;     start = power_curve_args$start, lower_bound = power_curve_args$lower_bound, </span></span>
+<span><span class="co">#&gt;     upper_bound = power_curve_args$upper_bound, nls_args = power_curve_args$nls_args, </span></span>
+<span><span class="co">#&gt;     nls_control = power_curve_args$nls_control, verbose = progress)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Predictor: n (Sample Size)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -554,22 +567,21 @@ than the target level.</li>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Coefficients:</span></span>
 <span><span class="co">#&gt; (Intercept)            x  </span></span>
-<span><span class="co">#&gt;   -1.599650     0.003733  </span></span>
+<span><span class="co">#&gt;   -1.641485     0.003979  </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Degrees of Freedom: 1999 Total (i.e. Null);  1998 Residual</span></span>
-<span><span class="co">#&gt; Null Deviance:       2602 </span></span>
-<span><span class="co">#&gt; Residual Deviance: 2007  AIC: 2011</span></span>
+<span><span class="co">#&gt; Degrees of Freedom: 1599 Total (i.e. Null);  1598 Residual</span></span>
+<span><span class="co">#&gt; Null Deviance:       2178 </span></span>
+<span><span class="co">#&gt; Residual Deviance: 1756  AIC: 1760</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - Detailed Results:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [test]: test_indirect: x-&gt;m-&gt;y </span></span>
 <span><span class="co">#&gt; [test_label]: Test </span></span>
-<span><span class="co">#&gt;      n   est   p.v reject r.cilo r.cihi</span></span>
-<span><span class="co">#&gt; 1  100 0.049 1.000  0.195  0.156  0.234</span></span>
-<span><span class="co">#&gt; 2  410 0.049 1.000  0.537  0.489  0.586</span></span>
-<span><span class="co">#&gt; 3  731 0.049 1.000  0.745  0.702  0.788</span></span>
-<span><span class="co">#&gt; 4  891 0.049 1.000  0.840  0.804  0.876</span></span>
-<span><span class="co">#&gt; 5 1051 0.050 1.000  0.907  0.879  0.936</span></span>
+<span><span class="co">#&gt;     n   est   p.v reject r.cilo r.cihi</span></span>
+<span><span class="co">#&gt; 1 100 0.049 1.000  0.195  0.156  0.234</span></span>
+<span><span class="co">#&gt; 2 410 0.049 1.000  0.537  0.489  0.586</span></span>
+<span><span class="co">#&gt; 3 654 0.050 1.000  0.738  0.694  0.781</span></span>
+<span><span class="co">#&gt; 4 897 0.049 1.000  0.848  0.812  0.883</span></span>
 <span><span class="co">#&gt; Notes:</span></span>
 <span><span class="co">#&gt; - n: The sample size in a trial.</span></span>
 <span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>
@@ -579,15 +591,7 @@ than the target level.</li>
 <span><span class="co">#&gt;   error rate. If the null hypothesis is false, this is the power.</span></span>
 <span><span class="co">#&gt; - r.cilo,r.cihi: The confidence interval of the rejection rate, based</span></span>
 <span><span class="co">#&gt;   on normal approximation.</span></span>
-<span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span>
-<span><span class="co">#</span></span>
-<span><span class="co"># ===== Plot the (Crude) Power Curve =====</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">n_power_lb</span><span class="op">)</span></span></code></pre></div>
-<div class="figure" style="text-align: center">
-<img src="temp_n_med_obs_med_simple_n_from_out_lb-1.png" alt="Power Curve"><p class="caption">
-Power Curve
-</p>
-</div>
+<span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -595,14 +599,14 @@ Power Curve
 </h2>
 <p>If necessary, change the population value(s) and repeat the
 steps.</p>
-<p>For example, set the <code>y ~ m</code> path to medium (.30)
-(population indirect effect increased to .03).</p>
+<p>For example, set the <code>y ~ m</code> path to small (.10)
+(population indirect effect decreased to .01).</p>
 <p>The code:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model_es2</span> <span class="op">&lt;-</span></span>
 <span><span class="st">"</span></span>
 <span><span class="st">m ~ x: s</span></span>
-<span><span class="st">y ~ m: m</span></span>
+<span><span class="st">y ~ m: s</span></span>
 <span><span class="st">y ~ x: m</span></span>
 <span><span class="st">"</span></span>
 <span><span class="co">#</span></span>
@@ -624,7 +628,7 @@ steps.</p>
 <span><span class="co"># ====== Compute the Rejection Rate ======</span></span>
 <span><span class="fu"><a href="../reference/rejection_rates.html">rejection_rates</a></span><span class="op">(</span><span class="va">out2</span><span class="op">)</span></span></code></pre></div>
 <p>The results:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">out2</span>,</span>
 <span>      data_long <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -647,13 +651,13 @@ steps.</p>
 <span><span class="co">#&gt;   m ~                        </span></span>
 <span><span class="co">#&gt;     x                 0.100  </span></span>
 <span><span class="co">#&gt;   y ~                        </span></span>
-<span><span class="co">#&gt;     m                 0.300  </span></span>
+<span><span class="co">#&gt;     m                 0.100  </span></span>
 <span><span class="co">#&gt;     x                 0.300  </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Variances:</span></span>
 <span><span class="co">#&gt;                    Population</span></span>
 <span><span class="co">#&gt;    .m                 0.990  </span></span>
-<span><span class="co">#&gt;    .y                 0.802  </span></span>
+<span><span class="co">#&gt;    .y                 0.894  </span></span>
 <span><span class="co">#&gt;     x                 1.000  </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; (Computing indirect effects for 1 paths ...)</span></span>
@@ -663,7 +667,7 @@ steps.</p>
 <span><span class="co">#&gt; == Indirect Effect(s) ==</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;               ind</span></span>
-<span><span class="co">#&gt; x -&gt; m -&gt; y 0.030</span></span>
+<span><span class="co">#&gt; x -&gt; m -&gt; y 0.010</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  - The 'ind' column shows the indirect effect(s).</span></span>
 <span><span class="co">#&gt;  </span></span>
@@ -674,10 +678,10 @@ steps.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ==== Descriptive Statistics ====</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   vars     n  mean sd  skew kurtosis   se</span></span>
-<span><span class="co">#&gt; m    1 40000  0.00  1  0.01    -0.01 0.01</span></span>
-<span><span class="co">#&gt; y    2 40000 -0.01  1 -0.01    -0.01 0.01</span></span>
-<span><span class="co">#&gt; x    3 40000  0.00  1  0.01    -0.02 0.01</span></span>
+<span><span class="co">#&gt;   vars     n  mean sd skew kurtosis   se</span></span>
+<span><span class="co">#&gt; m    1 40000  0.00  1 0.01    -0.01 0.01</span></span>
+<span><span class="co">#&gt; y    2 40000 -0.01  1 0.00     0.00 0.01</span></span>
+<span><span class="co">#&gt; x    3 40000  0.00  1 0.01    -0.02 0.01</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ==== Parameter Estimates Based on All 400 Samples Combined ====</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -692,7 +696,7 @@ steps.</p>
 <span><span class="co">#&gt;   m ~                      </span></span>
 <span><span class="co">#&gt;     x                 0.099</span></span>
 <span><span class="co">#&gt;   y ~                      </span></span>
-<span><span class="co">#&gt;     m                 0.298</span></span>
+<span><span class="co">#&gt;     m                 0.098</span></span>
 <span><span class="co">#&gt;     x                 0.306</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
@@ -735,7 +739,7 @@ steps.</p>
 <span><span class="co">#&gt; [test]: test_indirect: x-&gt;m-&gt;y </span></span>
 <span><span class="co">#&gt; [test_label]: Test </span></span>
 <span><span class="co">#&gt;     est   p.v reject r.cilo r.cihi</span></span>
-<span><span class="co">#&gt; 1 0.029 1.000  0.160  0.124  0.196</span></span>
+<span><span class="co">#&gt; 1 0.009 1.000  0.020  0.006  0.034</span></span>
 <span><span class="co">#&gt; Notes:</span></span>
 <span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>
 <span><span class="co">#&gt; - est: The mean of the estimates in a test across replications.</span></span>
@@ -746,27 +750,73 @@ steps.</p>
 <span><span class="co">#&gt;   on normal approximation.</span></span>
 <span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span></code></pre></div>
 <div class="section level3">
-<h3 id="case-1-significantly-lower-than-the-target-1">Case 1: Significantly Lower Than The Target<a class="anchor" aria-label="anchor" href="#case-1-significantly-lower-than-the-target-1"></a>
+<h3 id="find-the-two-regions-using-n_region_from_power">Find the Two Regions Using <code>n_region_from_power()</code><a class="anchor" aria-label="anchor" href="#find-the-two-regions-using-n_region_from_power"></a>
 </h3>
-<p>Fine the region of sample sizes with power significantly
-<em>lower</em> than the target level.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#</span></span>
 <span><span class="co"># ===== Reuse the output of power4test() =====</span></span>
-<span><span class="va">n2_power_ub</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/x_from_power.html">n_from_power</a></span><span class="op">(</span><span class="va">out2</span>,</span>
-<span>                               what <span class="op">=</span> <span class="st">"ub"</span>,</span>
-<span>                               seed <span class="op">=</span> <span class="fl">1357</span><span class="op">)</span></span>
+<span><span class="va">n_power_region2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/x_from_power.html">n_region_from_power</a></span><span class="op">(</span><span class="va">out2</span>,</span>
+<span>                                       seed <span class="op">=</span> <span class="fl">1357</span><span class="op">)</span></span>
 <span><span class="co">#</span></span>
-<span><span class="co"># ===== Print the Summary =====</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">n2_power_ub</span><span class="op">)</span></span>
+<span><span class="co"># ===== Basic Results =====</span></span>
+<span><span class="va">n_power_region2</span></span>
 <span><span class="co">#</span></span>
-<span><span class="co"># ===== Plot the (Crude) Power Curve =====</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">n2_power_ub</span><span class="op">)</span></span></code></pre></div>
+<span><span class="co"># ===== Plot the (Crude) Power Curve and the Regions =====</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">n_power_region2</span><span class="op">)</span></span></code></pre></div>
 <p>The results:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#</span></span>
-<span><span class="co"># ===== Print the Summary =====</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">n2_power_ub</span><span class="op">)</span></span>
+<span><span class="co"># ===== Basic Results =====</span></span>
+<span><span class="va">n_power_region2</span></span>
+<span><span class="co">#&gt; Call:</span></span>
+<span><span class="co">#&gt; n_region_from_power(object = out2, seed = 1357)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;                      Setting                                      </span></span>
+<span><span class="co">#&gt; Predictor(x)         Sample Size                                  </span></span>
+<span><span class="co">#&gt; Goal:                Power significantly below or above the target</span></span>
+<span><span class="co">#&gt; algorithm:           bisection                                    </span></span>
+<span><span class="co">#&gt; Level of confidence: 95.00%                                       </span></span>
+<span><span class="co">#&gt; Target Power:        0.800                                        </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Solution: </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Approximate region of sample sizes with power:</span></span>
+<span><span class="co">#&gt; - not significantly different from 0.800: 932 to 1050</span></span>
+<span><span class="co">#&gt; - significantly lower than 0.800: 932</span></span>
+<span><span class="co">#&gt; - significantly higher than 0.800: 1050</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Confidence intervals of the estimated power:</span></span>
+<span><span class="co">#&gt; - for the lower bound (932): [0.737, 0.818]</span></span>
+<span><span class="co">#&gt; - for the upper bound (1050): [0.793, 0.867]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Call `summary()` for detailed results.</span></span>
+<span><span class="co">#</span></span>
+<span><span class="co"># ===== Plot the (Crude) Power Curve and the Regions =====</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">n_power_region2</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="temp_n_med_obs_med_simple_n_from_out2-1.png" alt="Power Curve"><p class="caption">
+Power Curve
+</p>
+</div>
+<p>As shown above, with the indirect effect decreased,
+approximately:</p>
+<ul>
+<li><p>sample sizes lower than 932 have power significantly lower than
+.80, and</p></li>
+<li><p>sample sizes higher than 1050 have power significantly higher
+than .80.</p></li>
+</ul>
+<p>In other words, sample sizes between 932 and 1050 have power not
+significantly different from .80. The required sample sizes are much
+larger than the original case.</p>
+<p>If necessary, detailed results can be printed by
+<code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code>:</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># ===== Detailed Results =====</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">n_power_region2</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ======&lt;&lt; Summary for the Lower Region &gt;&gt;======</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ====== x_from_power Results ======</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -782,7 +832,7 @@ steps.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; === Major Results ===</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; - Final Value (Sample Size): 720</span></span>
+<span><span class="co">#&gt; - Final Value (Sample Size): 932</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - Final Estimated Power: 0.777 </span></span>
 <span><span class="co">#&gt; - Confidence Interval: [0.737; 0.818]</span></span>
@@ -793,8 +843,8 @@ steps.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - Algorithm: bisection </span></span>
 <span><span class="co">#&gt; - Tolerance for 'close enough': Within 0.02000 of 0.800 </span></span>
-<span><span class="co">#&gt; - The range of values explored: 100 to 939 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 47.46 secs </span></span>
+<span><span class="co">#&gt; - The range of values explored: 100 to 932 </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 1.33 mins </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
@@ -812,21 +862,23 @@ steps.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Coefficients:</span></span>
 <span><span class="co">#&gt; (Intercept)            x  </span></span>
-<span><span class="co">#&gt;   -1.952254     0.004445  </span></span>
+<span><span class="co">#&gt;   -3.165911     0.004726  </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Degrees of Freedom: 1599 Total (i.e. Null);  1598 Residual</span></span>
-<span><span class="co">#&gt; Null Deviance:       2144 </span></span>
-<span><span class="co">#&gt; Residual Deviance: 1607  AIC: 1611</span></span>
+<span><span class="co">#&gt; Degrees of Freedom: 2399 Total (i.e. Null);  2398 Residual</span></span>
+<span><span class="co">#&gt; Null Deviance:       3177 </span></span>
+<span><span class="co">#&gt; Residual Deviance: 1999  AIC: 2003</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - Detailed Results:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [test]: test_indirect: x-&gt;m-&gt;y </span></span>
 <span><span class="co">#&gt; [test_label]: Test </span></span>
-<span><span class="co">#&gt;     n   est   p.v reject r.cilo r.cihi</span></span>
-<span><span class="co">#&gt; 1 100 0.029 1.000  0.160  0.124  0.196</span></span>
-<span><span class="co">#&gt; 2 500 0.030 1.000  0.608  0.560  0.655</span></span>
-<span><span class="co">#&gt; 3 720 0.030 1.000  0.777  0.737  0.818</span></span>
-<span><span class="co">#&gt; 4 939 0.030 1.000  0.882  0.851  0.914</span></span>
+<span><span class="co">#&gt;      n   est   p.v reject r.cilo r.cihi</span></span>
+<span><span class="co">#&gt; 1  100 0.009 1.000  0.020  0.006  0.034</span></span>
+<span><span class="co">#&gt; 2  575 0.010 1.000  0.453  0.404  0.501</span></span>
+<span><span class="co">#&gt; 3  813 0.010 1.000  0.677  0.632  0.723</span></span>
+<span><span class="co">#&gt; 4  932 0.010 1.000  0.777  0.737  0.818</span></span>
+<span><span class="co">#&gt; 5 1050 0.010 1.000  0.830  0.793  0.867</span></span>
+<span><span class="co">#&gt; 6 2000 0.010 1.000  0.990  0.980  1.000</span></span>
 <span><span class="co">#&gt; Notes:</span></span>
 <span><span class="co">#&gt; - n: The sample size in a trial.</span></span>
 <span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>
@@ -837,43 +889,17 @@ steps.</p>
 <span><span class="co">#&gt; - r.cilo,r.cihi: The confidence interval of the rejection rate, based</span></span>
 <span><span class="co">#&gt;   on normal approximation.</span></span>
 <span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span>
-<span><span class="co">#</span></span>
-<span><span class="co"># ===== Plot the (Crude) Power Curve =====</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">n2_power_ub</span><span class="op">)</span></span></code></pre></div>
-<div class="figure" style="text-align: center">
-<img src="temp_n_med_obs_med_simple2_n_from_out-1.png" alt="Power Curve"><p class="caption">
-Power Curve
-</p>
-</div>
-</div>
-<div class="section level3">
-<h3 id="case-2-significantly-higher-than-the-target-1">Case 2: Significantly Higher Than The Target<a class="anchor" aria-label="anchor" href="#case-2-significantly-higher-than-the-target-1"></a>
-</h3>
-<p>Fine the region of sample sizes with power significantly
-<em>higher</em> than the target level.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#</span></span>
-<span><span class="co"># ===== Reuse the output of power4test() =====</span></span>
-<span><span class="va">n2_power_lb</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/x_from_power.html">n_from_power</a></span><span class="op">(</span><span class="va">out2</span>,</span>
-<span>                               what <span class="op">=</span> <span class="st">"lb"</span>,</span>
-<span>                               seed <span class="op">=</span> <span class="fl">1357</span><span class="op">)</span></span>
-<span><span class="co">#</span></span>
-<span><span class="co"># ===== Print the Summary =====</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">n2_power_lb</span><span class="op">)</span></span>
-<span><span class="co">#</span></span>
-<span><span class="co"># ===== Plot the (Crude) Power Curve =====</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">n2_power_lb</span><span class="op">)</span></span></code></pre></div>
-<p>The results:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#</span></span>
-<span><span class="co"># ===== Print the Summary =====</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">n2_power_lb</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ======&lt;&lt; Summary for the Upper Region &gt;&gt;======</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ====== x_from_power Results ======</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call:</span></span>
-<span><span class="co">#&gt; power4mome::x_from_power(object = out2, x = "n", what = "lb", </span></span>
-<span><span class="co">#&gt;     goal = "close_enough", seed = 1357)</span></span>
+<span><span class="co">#&gt; power4mome::x_from_power(object = out2, seed = 1357, x = "n", </span></span>
+<span><span class="co">#&gt;     what = "lb", goal = "close_enough")</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Predictor (x): Sample Size </span></span>
 <span><span class="co">#&gt; </span></span>
@@ -883,27 +909,28 @@ Power Curve
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; === Major Results ===</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; - Final Value (Sample Size): 864</span></span>
+<span><span class="co">#&gt; - Final Value (Sample Size): 1050</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; - Final Estimated Power: 0.853 </span></span>
-<span><span class="co">#&gt; - Confidence Interval: [0.818; 0.887]</span></span>
+<span><span class="co">#&gt; - Final Estimated Power: 0.830 </span></span>
+<span><span class="co">#&gt; - Confidence Interval: [0.793; 0.867]</span></span>
 <span><span class="co">#&gt; - Level of confidence: 95.0%</span></span>
 <span><span class="co">#&gt; - Based on 400 replications.</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; === Technical Information ===</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - Algorithm: bisection </span></span>
-<span><span class="co">#&gt; - Tolerance for 'close enough': Within 0.02000 of 0.800 </span></span>
-<span><span class="co">#&gt; - The range of values explored: 100 to 937 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 1.373 mins </span></span>
+<span><span class="co">#&gt; - Tolerance for 'close enough': Within  of 0.800 </span></span>
+<span><span class="co">#&gt; - The range of values explored: 100 to 932 </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 0.07482 secs </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call:</span></span>
-<span><span class="co">#&gt; power_curve(object = by_x_1, formula = power_model, start = power_curve_start, </span></span>
-<span><span class="co">#&gt;     lower_bound = lower_bound, upper_bound = upper_bound, nls_args = nls_args, </span></span>
-<span><span class="co">#&gt;     nls_control = nls_control, verbose = progress)</span></span>
+<span><span class="co">#&gt; power_curve(object = by_x_1, formula = power_curve_args$power_model, </span></span>
+<span><span class="co">#&gt;     start = power_curve_args$start, lower_bound = power_curve_args$lower_bound, </span></span>
+<span><span class="co">#&gt;     upper_bound = power_curve_args$upper_bound, nls_args = power_curve_args$nls_args, </span></span>
+<span><span class="co">#&gt;     nls_control = power_curve_args$nls_control, verbose = progress)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Predictor: n (Sample Size)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -913,23 +940,23 @@ Power Curve
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Coefficients:</span></span>
 <span><span class="co">#&gt; (Intercept)            x  </span></span>
-<span><span class="co">#&gt;   -1.879973     0.004162  </span></span>
+<span><span class="co">#&gt;   -3.165911     0.004726  </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Degrees of Freedom: 2399 Total (i.e. Null);  2398 Residual</span></span>
-<span><span class="co">#&gt; Null Deviance:       2929 </span></span>
-<span><span class="co">#&gt; Residual Deviance: 2161  AIC: 2165</span></span>
+<span><span class="co">#&gt; Null Deviance:       3177 </span></span>
+<span><span class="co">#&gt; Residual Deviance: 1999  AIC: 2003</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - Detailed Results:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [test]: test_indirect: x-&gt;m-&gt;y </span></span>
 <span><span class="co">#&gt; [test_label]: Test </span></span>
 <span><span class="co">#&gt;      n   est   p.v reject r.cilo r.cihi</span></span>
-<span><span class="co">#&gt; 1  100 0.029 1.000  0.160  0.124  0.196</span></span>
-<span><span class="co">#&gt; 2  500 0.030 1.000  0.608  0.560  0.655</span></span>
-<span><span class="co">#&gt; 3  791 0.030 1.000  0.785  0.745  0.825</span></span>
-<span><span class="co">#&gt; 4  864 0.030 1.000  0.853  0.818  0.887</span></span>
-<span><span class="co">#&gt; 5  937 0.030 1.000  0.873  0.840  0.905</span></span>
-<span><span class="co">#&gt; 6 1082 0.030 1.000  0.927  0.902  0.953</span></span>
+<span><span class="co">#&gt; 1  100 0.009 1.000  0.020  0.006  0.034</span></span>
+<span><span class="co">#&gt; 2  575 0.010 1.000  0.453  0.404  0.501</span></span>
+<span><span class="co">#&gt; 3  813 0.010 1.000  0.677  0.632  0.723</span></span>
+<span><span class="co">#&gt; 4  932 0.010 1.000  0.777  0.737  0.818</span></span>
+<span><span class="co">#&gt; 5 1050 0.010 1.000  0.830  0.793  0.867</span></span>
+<span><span class="co">#&gt; 6 2000 0.010 1.000  0.990  0.980  1.000</span></span>
 <span><span class="co">#&gt; Notes:</span></span>
 <span><span class="co">#&gt; - n: The sample size in a trial.</span></span>
 <span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>
@@ -939,22 +966,14 @@ Power Curve
 <span><span class="co">#&gt;   error rate. If the null hypothesis is false, this is the power.</span></span>
 <span><span class="co">#&gt; - r.cilo,r.cihi: The confidence interval of the rejection rate, based</span></span>
 <span><span class="co">#&gt;   on normal approximation.</span></span>
-<span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span>
-<span><span class="co">#</span></span>
-<span><span class="co"># ===== Plot the (Crude) Power Curve =====</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">n2_power_lb</span><span class="op">)</span></span></code></pre></div>
-<div class="figure" style="text-align: center">
-<img src="temp_n_med_obs_med_simple2_n_from_out_lb-1.png" alt="Power Curve"><p class="caption">
-Power Curve
-</p>
-</div>
+<span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
 <h2 id="code_template">Code Template<a class="anchor" aria-label="anchor" href="#code_template"></a>
 </h2>
 <p>This is the code used above:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://sfcheung.github.io/power4mome/">power4mome</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># ====== Model and Effect Size (Population Values) ======</span></span>
@@ -1005,7 +1024,7 @@ Power Curve
 <span>                  parallel <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/rejection_rates.html">rejection_rates</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># ====== Case 1: Regions of Ns Significantly Lower Than the Target ======</span></span>
+<span><span class="co"># ====== Regions of Ns ======</span></span>
 <span></span>
 <span><span class="co"># Call n_from_power()</span></span>
 <span><span class="co"># - Set target power: target_power = .80 (Default, can be omitted)</span></span>
@@ -1014,19 +1033,11 @@ Power Curve
 <span><span class="co"># - Set final number of R: final_R = 1000 (Default, can be omitted)</span></span>
 <span><span class="co"># - Set final number of replications: final_nrep = 400 (Default, can be omitted)</span></span>
 <span></span>
-<span><span class="va">n_power_ub</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/x_from_power.html">n_from_power</a></span><span class="op">(</span><span class="va">out</span>,</span>
-<span>                           what <span class="op">=</span> <span class="st">"ub"</span>,</span>
-<span>                           seed <span class="op">=</span> <span class="fl">1357</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">n_power_ub</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">n_power_ub</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># ====== Case 2: Regions of Ns Significantly Higher Than the Target ======</span></span>
-<span></span>
-<span><span class="va">n_power_lb</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/x_from_power.html">n_from_power</a></span><span class="op">(</span><span class="va">out</span>,</span>
-<span>                           what <span class="op">=</span> <span class="st">"lb"</span>,</span>
-<span>                           seed <span class="op">=</span> <span class="fl">1357</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">n_power_lb</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">n_power_lb</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">n_power_region</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/x_from_power.html">n_region_from_power</a></span><span class="op">(</span><span class="va">out</span>,</span>
+<span>                                      seed <span class="op">=</span> <span class="fl">1357</span><span class="op">)</span></span>
+<span><span class="va">n_power_region</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">n_power_region</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">n_power_region</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="final-remarks">Final Remarks<a class="anchor" aria-label="anchor" href="#final-remarks"></a>
