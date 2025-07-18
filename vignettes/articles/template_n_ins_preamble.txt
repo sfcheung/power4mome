@@ -1,8 +1,8 @@
 # Introduction
 
 This and other "Quick Template" articles
-are examples of R code to determine
-sample size for a target level of power in
+are examples of R code to determine the
+range of sample sizes for a target level of power in
 typical models using
 [power4mome](https://sfcheung.github.io/power4mome/).
 Users can quickly adapt

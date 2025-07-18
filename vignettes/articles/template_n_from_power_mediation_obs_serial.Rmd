@@ -17,8 +17,8 @@ csl: apa.csl
 # Introduction
 
 This and other "Quick Template" articles
-are examples of R code to determine
-sample size for a target level of power in
+are examples of R code to determine the
+range of sample sizes for a target level of power in
 typical models using
 [power4mome](https://sfcheung.github.io/power4mome/).
 Users can quickly adapt
@@ -43,6 +43,32 @@ on `n_from_power()`, which is called
 twice by `n_region_from_power()` to
 find the regions described below.
 
+# Scope
+
+This file is for serial mediation models.
+
+
+# Functions Used in This Template
+
+- `power4test()`
+
+    - Set up the model and
+      the population values, generate the
+      data, and generate the Monte Carlo
+      simulated estimates for Monte Carlo
+      confidence interval.
+
+- `n_region_from_power()`
+
+    - Find the regions of sample sizes
+      based on the target power.
+
+- `test_indirect_effect()`
+
+    - Test the indirect effect using
+      Monte Carlo or bootstrap confidence
+      intervals. Used by `power4test()`.
+
 # Common Flow
 
 The following chart summarizes the steps covered
@@ -50,7 +76,7 @@ below.
 
 ```{r temp_n_med_obs_fig_flowchart, fig.cap="Common Workflow", fig.align="center", message=FALSE, echo=FALSE}
 library(DiagrammeR)
-# https://mermaid.live/edit#pako:eNqFVF1v2jAU_SuWpUogAQUSIKQUaRp7bFeNag9bpsgkNx-SY0eOsy6l_Pc5NslCSrU32_ec43PPtXzEAQ8Buzii_CVIiJDoeecxjyEUUFIUO4hQCBEpqURRSqlL0ziRB1rC3TXMvAOKBQC7M1qFrCggKSpmAEgjKqDq1n_1TFmh1wA1ZA_yoa4PPLyDIA2VXALoieclJTLlDOkqGmzSrdbZ3KbboYeHZ-6X_YfE70S1U2hmznMfii71K4NHxXwWFeIMENscxO1WI19A2BIKORjW-DP85kZd9hsEoQ2rMFvEivdU_1D57IK_ByKCpOaalfYqIFY-C8SjjgrzzbEfCZ75WrPv5BPjii4aJ8Rs_9ODHkd5iAXJk_NEfhq-igI9evjX5Txc122HPx5vTdadwzZ_Xa3jNHxgoVkoo_UpGk8ads-Efja1BxXFN91zncSeZLl6M_v0FYrWlBHSOjrHTqT18ZtuQ4fwbv5v3bsbT5v7-20bYy9VU2ym_UGxdXGh2CN1C11CA-vV-um1d3YTvBS4UjmH0hbwCGcgMpKG6jc41jAPK9kMPOyq5XmcHvbYSUFJKfm-YgF2pShhhAUv4wS7EaGF2pV5SCTsUqIGmLWnOWE_OM8aCoSp5OLBfD_6F9IQ7B7xH-zO5qvJdLm0ZgtnvVw71mqEK-wu7MlqvbKmq7nj2LOVY51G-FVrTieONbOnC3s5dSx7MbXmIxyLupmzQZUYiM-8ZFKJW6e_bFKaVg
+# https://mermaid.live/edit#pako:eNp9VF1vmzAU_SuWpUqJlKb5gBRoGmlq9th2GtkeNqbICZeAZmxkzDqa5r_PNh8jNNubfc8518fnWj7iPQ8Bezii_GUfEyHRZh2wgCG0pyTP1xChECJSUImihFKPJodY7mgBd5c4sw7pIADYXdUrlyUFJEXJKgIyjBKoOvUvnior9BJBU3yQjxofBFgt0ZcMyRjQJ54VlMiEM2RQNFgmK9NneZOshgEe1tqPfi3sqb4SdZfcyDKebSHv6p4ZPCnZQwz7n0aoGhTZciduVob_AsKSkMvBUKtq0dWVov0CQajWbkSJ8mqLWP5eut2VW3am94GIffxk7OqVOVjAQbnNEY86Xdi2Km8jwdOt6dl38oFxJReNE1JtEfvvHcxEit1BkCyuh_L9LPUqasJCtFHKAP84H5Hnee17uL5eVfF3iu1IDKpDrvTAwmqhjOsquh436p4p85KUp40y89lkoJPxSZqpZ-Qnr5C3pqpGpo_JtROxLr_pWJ51KCaSdy_jrXt-42t5f79qo-0lXYHNC_gH2Do569gTdYGuoKH1sH6C7ZndFM8bXEDqYFoAj3AKIiVJqD6Jo6YFWLVNIcCeWtYjDXDATopKCsn9ku2xJ0UBIyx4cYixFxGaq12RhUTCOiFqiGlbzQj7xnnaSCBMJBeP1a9kPidDwd4R_8bedDofO7a9cF371pkuFjNrhEtdtsfOfDqZOXN36jqudRrhV9N0Mnas2a01txcKdyf21Bnhg9C3qR2qyEA88IJJ7FkL6_QHa0Si0g
 mermaid('
 flowchart TD
 
@@ -60,14 +86,14 @@ flowchart TD
   style tryn fill: lightyellow
   style model fill: lightyellow
 
-  SetModel("Decide the Population Model (<i>model</i>)")
-  SetES("Decide the Population Values (<i>pop_es</i>)")
-  OneN("Try one n<br/><i>power4test()</i>")
+  SetModel("Set Up the Population Model (<i>model</i>)")
+  SetES("Set the Population Values (<i>pop_es</i>)")
+  OneN("Check the Setup<br/><i>power4test()</i>")
   %% SeveralN("Try several ns<br/><i>power4test_by_n()</i>")
   SearchN("Search the regions of ns<br/><i>n_region_from_power()</i>")
   %% AnotherN("Try another n<br/><i>power4test()</i>")
 
-  subgraph model ["Try One N"]
+  subgraph model ["Set Up the Model and Test"]
 
   SetModel:::default2 --> SetES:::default2
   SetES --> OneN
@@ -79,7 +105,7 @@ flowchart TD
   subgraph tryn ["The Region of Sample Sizes"]
 
   OneN --> SearchN
-  SearchN -->|Try Other Population Values| SetES
+  SearchN -->|Try Other<br/>Population Values| SetES
 
   %% OneN <==> AnotherN
   %% AnotherN <==> SeveralN
@@ -99,25 +125,28 @@ flowchart TD
 In practice, steps can be repeated,
 and population values changed, until
 the desired goal is achieved (e.g.,
-a sample size with power close to
+the region of sample sizes with power close to
 the target power is found).
 
-# Scope
+# Set Up The Model and Test
 
-This file is for serial mediation models.
-
-# Try One N
-
-Estimate the power for a sample size.
-
-The code:
+Load the package first:
 
 
 ``` r
 library(power4mome)
-#
+```
+
+Estimate the power for a sample size.
+
+The code for the model:
+
+
+``` r
 # ====== Model: Form ======
+
 # Omit any paths hypothesized to be zero
+
 model <-
 "
 m1 ~ x
@@ -125,14 +154,17 @@ m2 ~ m1 + x
 m3 ~ m2 + m1 + x
 y ~ m3 + m2 + m1 + x
 "
-#
+
 # ====== Model: Population Values ======
 # l: large (.50 by default)
 # m: medium (.30 by default)
 # s: small (.10 by default)
+# n: nil (.00 by default)
 # -l, -m, and -s denote negative values
+# Omitted paths are zero by default
 # Can also set to a number directly
 # Set each path to the hypothesized magnitude
+
 model_es <-
 "
 m1 ~ x: l
@@ -141,22 +173,36 @@ m3 ~ m2: l
 y ~ m3: m
 y ~ x: s
 "
-#
+```
+
+
+<div class="figure" style="text-align: center">
+<img src="template_n_from_power_mediation_obs_serial_model-1.png" alt="The Model"  />
+<p class="caption">The Model</p>
+</div>
+
+
+
+``` r
+
 # ====== Test the Model Specification ======
 out <- power4test(nrep = 2,
                   model = model,
                   pop_es = model_es,
                   n = 50000,
                   iseed = 1234)
-#
+
 # ====== Check the Data Generated ======
+
 print(out,
       data_long = TRUE)
-#
+
 # ====== Estimate the Power ======
+
 # For n = 50,
 # when testing the indirect effect by
 # Monte Carlo confidence interval
+
 out <- power4test(nrep = 400,
                   model = model,
                   pop_es = model_es,
@@ -170,8 +216,9 @@ out <- power4test(nrep = 400,
                                    mc_ci = TRUE),
                   iseed = 1234,
                   parallel = TRUE)
-#
+
 # ====== Compute the Rejection Rate ======
+
 rejection_rates(out)
 ```
 
@@ -359,18 +406,11 @@ the target power, defined by a tolerance value.
 In the function below, this value is .02
 by default.
 
-Do this step after calling `power4test()`
-on a sample size.
-
-It can take some time to run if estimated power
+It can take some time to run if the estimated power
 of the sample size is too different from
 the target power.
 
-## Finding the Two Regions Using `n_region_from_power()`
-
-Instead of doing the search by calling
-`n_from_power()` twice, we can find them
-by calling `n_region_from_power()`.
+We can find the two regions by `n_region_from_power()`.
 
 The code:
 
@@ -378,19 +418,23 @@ The code:
 ``` r
 #
 # ===== Reuse the output of power4test() =====
-# Call n_from_power()
+#
+# Call n_region_from_power()
 # - Set target power: target_power = .80 (Default, can be omitted)
 # - Set the seed for the simulation: Integer. Should always be set.
 # To set desired precision:
 # - Set final number of R: final_R = 1000 (Default, can be omitted)
 # - Set final number of replications: final_nrep = 400 (Default, can be omitted)
+
 n_power_region <- n_region_from_power(out,
                                       seed = 1357)
-#
+
 # ===== Basic Results =====
+
 n_power_region
-#
+
 # ===== Plot the (Crude) Power Curve and the Regions =====
+
 plot(n_power_region)
 ```
 
@@ -398,8 +442,8 @@ The results:
 
 
 ``` r
-#
 # ===== Basic Results =====
+
 n_power_region
 #> Call:
 #> n_region_from_power(object = out, seed = 1357)
@@ -423,13 +467,14 @@ n_power_region
 #> - for the upper bound (121): [0.815, 0.885]
 #> 
 #> Call `summary()` for detailed results.
-#
+
 # ===== Plot the (Crude) Power Curve and the Regions =====
+
 plot(n_power_region)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="template_n_from_power_mediation_obs_serial_plot1-1.png" alt="Power Curve"  />
+<img src="template_n_from_power_mediation_obs_serial_plot-1.png" alt="Power Curve"  />
 <p class="caption">Power Curve</p>
 </div>
 
@@ -488,7 +533,7 @@ summary(n_power_region)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 107 to 50 
-#> - Time spent in the search: 19.76 secs 
+#> - Time spent in the search: 24.54 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -561,7 +606,7 @@ summary(n_power_region)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 107 to 180 
-#> - Time spent in the search: 1.717 mins 
+#> - Time spent in the search: 1.896 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -651,14 +696,14 @@ print(out,
 
 # ====== Try One N and Estimate the Power ======
 
-# For n = 100,
+# For n = 50,
 # when testing the indirect effect by
 # Monte Carlo confidence interval
 
 out <- power4test(nrep = 400,
                   model = model,
                   pop_es = model_es,
-                  n = 100,
+                  n = 50,
                   R = 1000,
                   ci_type = "mc",
                   test_fun = test_indirect_effect,
@@ -668,11 +713,12 @@ out <- power4test(nrep = 400,
                                    mc_ci = TRUE),
                   iseed = 1234,
                   parallel = TRUE)
+
 rejection_rates(out)
 
 # ====== Regions of Ns ======
 
-# Call n_from_power()
+# Call n_region_from_power()
 # - Set target power: target_power = .80 (Default, can be omitted)
 # - Set the seed for the simulation: Integer. Should always be set.
 # To set desired precision:

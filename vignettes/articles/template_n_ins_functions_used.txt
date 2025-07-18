@@ -1,0 +1,14 @@
+# Functions Used in This Template
+
+- `power4test()`
+
+    - Set up the model and
+      the population values, generate the
+      data, and generate the Monte Carlo
+      simulated estimates for Monte Carlo
+      confidence interval.
+
+- `n_region_from_power()`
+
+    - Find the regions of sample sizes
+      based on the target power.
