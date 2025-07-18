@@ -43,7 +43,7 @@ articles:
 - title: Templates (Code Examples)
   navbar: Templates (Code Examples)
   contents:
-  - articles/template_n_from_power_mediation_obs
+  - articles/template_n_from_power_mediation_obs_simple
   - articles/template_n_from_power_mediation_obs_serial
   - articles/template_n_from_power_mediation_obs_parallel
 

@@ -20,20 +20,35 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r load_pre, child=c("template_n_preamble.txt")}
-```
-
-```{r load_flow, echo=FALSE, results="asis"}
-# Adapted from this answer
-cat(readLines("template_n_flowchart.txt"),
-    sep = "\n")
+```{r load_pre, child=c("template_n_ins_preamble.txt")}
 ```
 
 # Scope
 
 This file is for parallel mediation models.
 
-# Try One N
+```{r load_pre, child=c("template_n_ins_functions_used.txt")}
+```
+
+- `test_k_indirect_effects()`
+
+    - Test several indirect effects as one test, using
+      Monte Carlo or bootstrap confidence
+      intervals. Used by `power4test()`.
+
+```{r load_flow, echo=FALSE, results="asis"}
+# Adapted from this answer
+cat(readLines("template_n_ins_flowchart.txt"),
+    sep = "\n")
+```
+
+# Set Up The Model and Test
+
+Load the package first:
+
+```{r}
+library(power4mome)
+```
 
 Estimate the power for a sample size.
 
@@ -41,17 +56,15 @@ A parallel mediation model has several
 parallel paths (three in the following
 example). The test function
 `test_k_indirect_effects()` can be used
-to estimate the power for having indirect
+to estimate the power for having all selected indirect
 paths significant if `omnibus` is set to
 `"all_sig"`.
 
 The code:
 
 ```{r med, eval=TRUE, results="hide", message=FALSE}
-library(power4mome)
-#
 # ====== Model: Form ======
-# Omit any paths hypothesized to be zero
+
 model <-
 "
 m1 ~ x
@@ -59,14 +72,17 @@ m2 ~ x
 m3 ~ x
 y ~ m1 + m2 + m3 + x
 "
-#
+
 # ====== Model: Population Values ======
 # l: large (.50 by default)
 # m: medium (.30 by default)
 # s: small (.10 by default)
+# n: nil (.00 by default)
 # -l, -m, and -s denote negative values
+# Omitted paths are zero by default
 # Can also set to a number directly
 # Set each path to the hypothesized magnitude
+
 model_es <-
 "
 m1 ~ x: m
@@ -77,22 +93,76 @@ y ~ m2: m
 y ~ m3: l
 y ~ x: s
 "
-#
+```
+
+
+```{r template_n_from_power_mediation_obs_parallel_model, echo = FALSE, fig.cap = "The Model", fig.width = 7, fig.height = 4}
+library(semPlot)
+suppressMessages(library(lavaan))
+mod <-
+"
+m1 ~ m*x
+m2 ~ m*x
+m3 ~ m*x
+y ~ s*m1 + m*m2 + l*m3 + s*x
+"
+fit0 <- sem(mod, do.fit = FALSE, fixed.x = FALSE)
+set.seed(1234)
+dat <- data.frame(MASS::mvrnorm(100, rep(0, 5), diag(5)))
+colnames(dat) <- lavNames(fit0)
+fit0 <- sem(mod, dat, do.fit = FALSE, fixed.x = FALSE)
+layout_m <- matrix(c(NA, "m1", NA,
+                     NA, "m2", NA,
+                     NA, "m3", NA,
+                     "x", NA,  "y"), 4, 3, byrow = TRUE)
+p <- semPaths(fit0,
+              whatLabels = "label",
+              layout = layout_m,
+              nCharNodes = 0,
+              exoCov = FALSE,
+              edge.label.cex = 1.25,
+              label.cex = 1.5,
+              residuals = FALSE,
+              sizeMan = 8,
+              asize = 5,
+              DoNotPlot = TRUE)
+p$graphAttributes$Edges$labels <-
+  c("m\n(medium: .30)",
+    "m\n(medium: .30)",
+    "m\n(medium: .30)",
+    "s\n(small: .10)",
+    "m\n(medium: .30)",
+    "l\n(large: .50)",
+    "s\n(small: .10)")
+
+plot(p)
+text(label = "Parallel Mediation Model",
+     x = 0, y = -1.4,
+     cex = 1.25)
+```
+
+
+```{r med2, eval=TRUE, results="hide", message=FALSE}
+
 # ====== Test the Model Specification ======
+
 out <- power4test(nrep = 2,
                   model = model,
                   pop_es = model_es,
                   n = 50000,
                   iseed = 1234)
-#
+
 # ====== Check the Data Generated ======
+
 print(out,
       data_long = TRUE)
-#
+
 # ====== Estimate the Power ======
+
 # For n = 100,
 # when testing all indirect effects by
 # Monte Carlo confidence intervals
+
 out <- power4test(nrep = 400,
                   model = model,
                   pop_es = model_es,
@@ -106,8 +176,9 @@ out <- power4test(nrep = 400,
                                    omnibus = "all_sig"),
                   iseed = 1234,
                   parallel = TRUE)
-#
+
 # ====== Compute the Rejection Rate ======
+
 rejection_rates(out)
 ```
 
@@ -123,23 +194,23 @@ rejection_rates(out)
 all three paths and so there is no single
 point estimate for the test.)
 
-```{r load_pre, child=c("template_n_find_regions.txt")}
+```{r load_pre, child=c("template_n_ins_find_regions.txt")}
 ```
 
 The results:
 
-```{r template_n_from_power_mediation_obs_parallel_plot1, fig.cap = "Power Curve"}
-#
+```{r template_n_from_power_mediation_obs_parallel_plot, fig.cap = "Power Curve"}
 # ===== Basic Results =====
+
 n_power_region
-#
+
 # ===== Plot the (Crude) Power Curve and the Regions =====
+
 plot(n_power_region)
 ```
 
-```{r load_pre, child=c("template_n_find_regions_results.txt")}
+```{r load_pre, child=c("template_n_ins_find_regions_results.txt")}
 ```
-
 
 # Code Template {#code_template}
 
@@ -201,32 +272,25 @@ out <- power4test(nrep = 400,
                                    omnibus = "all_sig"),
                   iseed = 1234,
                   parallel = TRUE)
+
 rejection_rates(out)
 
-# ====== Case 1: Regions of Ns Significantly Lower Than the Target ======
+# ====== Regions of Ns ======
 
-# Call n_from_power()
+# Call n_region_from_power()
 # - Set target power: target_power = .80 (Default, can be omitted)
 # - Set the seed for the simulation: Integer. Should always be set.
 # To set desired precision:
 # - Set final number of R: final_R = 1000 (Default, can be omitted)
 # - Set final number of replications: final_nrep = 400 (Default, can be omitted)
 
-n_power_ub <- n_from_power(out,
-                           what = "ub",
-                           seed = 1357)
-summary(n_power_ub)
-plot(n_power_ub)
-
-# ====== Case 2: Regions of Ns Significantly Higher Than the Target ======
-
-n_power_lb <- n_from_power(out,
-                           what = "lb",
-                           seed = 1357)
-summary(n_power_lb)
-plot(n_power_lb)
+n_power_region <- n_region_from_power(out,
+                                      seed = 1357)
+n_power_region
+plot(n_power_region)
+summary(n_power_region)
 ```
 
-```{r load_final, child=c("template_n_final_remarks.txt")}
+```{r load_final, child=c("template_n_ins_final_remarks.txt")}
 ```
 
