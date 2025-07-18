@@ -49,7 +49,7 @@
     <li><a class="dropdown-item" href="../articles/x_from_power_for_n.html">Sample Size Given Desired Power</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Templates (Code Examples)</h6></li>
-    <li><a class="dropdown-item" href="../articles/template_n_from_power_mediation_obs.html">Quick Template: Mediation with Observed Variables</a></li>
+    <li><a class="dropdown-item" href="../articles/template_n_from_power_mediation_obs_simple.html">Quick Template: Mediation with Observed Variables</a></li>
     <li><a class="dropdown-item" href="../articles/template_n_from_power_mediation_obs_serial.html">Quick Template: Serial Mediation with Observed Variables</a></li>
     <li><a class="dropdown-item" href="../articles/template_n_from_power_mediation_obs_parallel.html">Quick Template: Parallel Mediation with Observed Variables</a></li>
     <li><hr class="dropdown-divider"></li>
@@ -91,11 +91,11 @@
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
 <p>This and other “Quick Template” articles are examples of R code to
-determine sample size for a target level of power in typical models
-using <a href="https://sfcheung.github.io/power4mome/">power4mome</a>.
-Users can quickly adapt them for their scenarios. A summary of the code
-examples can be found in the section <a href="#code_template">Code
-Template</a> at the end of this document.</p>
+determine the range of sample sizes for a target level of power in
+typical models using <a href="https://sfcheung.github.io/power4mome/">power4mome</a>. Users can
+quickly adapt them for their scenarios. A summary of the code examples
+can be found in the section <a href="#code_template">Code Template</a>
+at the end of this document.</p>
 </div>
 <div class="section level2">
 <h2 id="prerequisite">Prerequisite<a class="anchor" aria-label="anchor" href="#prerequisite"></a>
@@ -112,34 +112,64 @@ on <code><a href="../reference/x_from_power.html">n_from_power()</a></code>, whi
 below.</p>
 </div>
 <div class="section level2">
-<h2 id="common-flow">Common Flow<a class="anchor" aria-label="anchor" href="#common-flow"></a>
-</h2>
-<p>The following chart summarizes the steps covered below.</p>
-<div class="figure" style="text-align: center">
-<div id="htmlwidget-ac96cb3ee4656e2e9ec3" style="width:500px;height:550px;" class="DiagrammeR html-widget"></div>
-<script type="application/json" data-for="htmlwidget-ac96cb3ee4656e2e9ec3">{"x":{"diagram":"\nflowchart TD\n\n  classDef default fill:lightblue;\n  classDef default2 fill:lightgreen;\n\n  style tryn fill: lightyellow\n  style model fill: lightyellow\n\n  SetModel(\"Decide the Population Model (<i>model<\/i>)\")\n  SetES(\"Decide the Population Values (<i>pop_es<\/i>)\")\n  OneN(\"Try one n<br/><i>power4test()<\/i>\")\n  %% SeveralN(\"Try several ns<br/><i>power4test_by_n()<\/i>\")\n  SearchN(\"Search the regions of ns<br/><i>n_region_from_power()<\/i>\")\n  %% AnotherN(\"Try another n<br/><i>power4test()<\/i>\")\n\n  subgraph model [\"Try One N\"]\n\n  SetModel:::default2 --> SetES:::default2\n  SetES --> OneN\n\n  end\n\n  %% OneN -.-> SetES\n\n  subgraph tryn [\"The Region of Sample Sizes\"]\n\n  OneN --> SearchN\n  SearchN -->|Try Other Population Values| SetES\n\n  %% OneN <==> AnotherN\n  %% AnotherN <==> SeveralN\n  %% AnotherN <==> SearchN\n  %% OneN <==> SeveralN\n  %% OneN <==> SearchN\n  %% SeveralN <==> SearchN\n\n  end\n\n  %% AnotherN -.-> SetES\n  %% SeveralN -.-> SetES\n  %% SearchN -.-> SetES\n"},"evals":[],"jsHooks":[]}</script><p class="caption">
-Common Workflow
-</p>
-</div>
-<p>In practice, steps can be repeated, and population values changed,
-until the desired goal is achieved (e.g., a sample size with power close
-to the target power is found).</p>
-</div>
-<div class="section level2">
 <h2 id="scope">Scope<a class="anchor" aria-label="anchor" href="#scope"></a>
 </h2>
 <p>This file is for serial mediation models.</p>
 </div>
 <div class="section level2">
-<h2 id="try-one-n">Try One N<a class="anchor" aria-label="anchor" href="#try-one-n"></a>
+<h2 id="functions-used-in-this-template">Functions Used in This Template<a class="anchor" aria-label="anchor" href="#functions-used-in-this-template"></a>
 </h2>
-<p>Estimate the power for a sample size.</p>
-<p>The code:</p>
+<ul>
+<li>
+<p><code><a href="../reference/power4test.html">power4test()</a></code></p>
+<ul>
+<li>Set up the model and the population values, generate the data, and
+generate the Monte Carlo simulated estimates for Monte Carlo confidence
+interval.</li>
+</ul>
+</li>
+<li>
+<p><code><a href="../reference/x_from_power.html">n_region_from_power()</a></code></p>
+<ul>
+<li>Find the regions of sample sizes based on the target power.</li>
+</ul>
+</li>
+<li>
+<p><code><a href="../reference/test_indirect_effect.html">test_indirect_effect()</a></code></p>
+<ul>
+<li>Test the indirect effect using Monte Carlo or bootstrap confidence
+intervals. Used by <code><a href="../reference/power4test.html">power4test()</a></code>.</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section level2">
+<h2 id="common-flow">Common Flow<a class="anchor" aria-label="anchor" href="#common-flow"></a>
+</h2>
+<p>The following chart summarizes the steps covered below.</p>
+<div class="figure" style="text-align: center">
+<div id="htmlwidget-ac96cb3ee4656e2e9ec3" style="width:500px;height:550px;" class="DiagrammeR html-widget"></div>
+<script type="application/json" data-for="htmlwidget-ac96cb3ee4656e2e9ec3">{"x":{"diagram":"\nflowchart TD\n\n  classDef default fill:lightblue;\n  classDef default2 fill:lightgreen;\n\n  style tryn fill: lightyellow\n  style model fill: lightyellow\n\n  SetModel(\"Set Up the Population Model (<i>model<\/i>)\")\n  SetES(\"Set the Population Values (<i>pop_es<\/i>)\")\n  OneN(\"Check the Setup<br/><i>power4test()<\/i>\")\n  %% SeveralN(\"Try several ns<br/><i>power4test_by_n()<\/i>\")\n  SearchN(\"Search the regions of ns<br/><i>n_region_from_power()<\/i>\")\n  %% AnotherN(\"Try another n<br/><i>power4test()<\/i>\")\n\n  subgraph model [\"Set Up the Model and Test\"]\n\n  SetModel:::default2 --> SetES:::default2\n  SetES --> OneN\n\n  end\n\n  %% OneN -.-> SetES\n\n  subgraph tryn [\"The Region of Sample Sizes\"]\n\n  OneN --> SearchN\n  SearchN -->|Try Other<br/>Population Values| SetES\n\n  %% OneN <==> AnotherN\n  %% AnotherN <==> SeveralN\n  %% AnotherN <==> SearchN\n  %% OneN <==> SeveralN\n  %% OneN <==> SearchN\n  %% SeveralN <==> SearchN\n\n  end\n\n  %% AnotherN -.-> SetES\n  %% SeveralN -.-> SetES\n  %% SearchN -.-> SetES\n"},"evals":[],"jsHooks":[]}</script><p class="caption">
+Common Workflow
+</p>
+</div>
+<p>In practice, steps can be repeated, and population values changed,
+until the desired goal is achieved (e.g., the region of sample sizes
+with power close to the target power is found).</p>
+</div>
+<div class="section level2">
+<h2 id="set-up-the-model-and-test">Set Up The Model and Test<a class="anchor" aria-label="anchor" href="#set-up-the-model-and-test"></a>
+</h2>
+<p>Load the package first:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://sfcheung.github.io/power4mome/">power4mome</a></span><span class="op">)</span></span>
-<span><span class="co">#</span></span>
-<span><span class="co"># ====== Model: Form ======</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://sfcheung.github.io/power4mome/">power4mome</a></span><span class="op">)</span></span></code></pre></div>
+<p>Estimate the power for a sample size.</p>
+<p>The code for the model:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># ====== Model: Form ======</span></span>
+<span></span>
 <span><span class="co"># Omit any paths hypothesized to be zero</span></span>
+<span></span>
 <span><span class="va">model</span> <span class="op">&lt;-</span></span>
 <span><span class="st">"</span></span>
 <span><span class="st">m1 ~ x</span></span>
@@ -147,14 +177,17 @@ to the target power is found).</p>
 <span><span class="st">m3 ~ m2 + m1 + x</span></span>
 <span><span class="st">y ~ m3 + m2 + m1 + x</span></span>
 <span><span class="st">"</span></span>
-<span><span class="co">#</span></span>
+<span></span>
 <span><span class="co"># ====== Model: Population Values ======</span></span>
 <span><span class="co"># l: large (.50 by default)</span></span>
 <span><span class="co"># m: medium (.30 by default)</span></span>
 <span><span class="co"># s: small (.10 by default)</span></span>
+<span><span class="co"># n: nil (.00 by default)</span></span>
 <span><span class="co"># -l, -m, and -s denote negative values</span></span>
+<span><span class="co"># Omitted paths are zero by default</span></span>
 <span><span class="co"># Can also set to a number directly</span></span>
 <span><span class="co"># Set each path to the hypothesized magnitude</span></span>
+<span></span>
 <span><span class="va">model_es</span> <span class="op">&lt;-</span></span>
 <span><span class="st">"</span></span>
 <span><span class="st">m1 ~ x: l</span></span>
@@ -162,23 +195,32 @@ to the target power is found).</p>
 <span><span class="st">m3 ~ m2: l</span></span>
 <span><span class="st">y ~ m3: m</span></span>
 <span><span class="st">y ~ x: s</span></span>
-<span><span class="st">"</span></span>
-<span><span class="co">#</span></span>
+<span><span class="st">"</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="template_n_from_power_mediation_obs_serial_model-1.png" alt="The Model"><p class="caption">
+The Model
+</p>
+</div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span><span class="co"># ====== Test the Model Specification ======</span></span>
 <span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/power4test.html">power4test</a></span><span class="op">(</span>nrep <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>                  model <span class="op">=</span> <span class="va">model</span>,</span>
 <span>                  pop_es <span class="op">=</span> <span class="va">model_es</span>,</span>
 <span>                  n <span class="op">=</span> <span class="fl">50000</span>,</span>
 <span>                  iseed <span class="op">=</span> <span class="fl">1234</span><span class="op">)</span></span>
-<span><span class="co">#</span></span>
+<span></span>
 <span><span class="co"># ====== Check the Data Generated ======</span></span>
+<span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">out</span>,</span>
 <span>      data_long <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#</span></span>
+<span></span>
 <span><span class="co"># ====== Estimate the Power ======</span></span>
+<span></span>
 <span><span class="co"># For n = 50,</span></span>
 <span><span class="co"># when testing the indirect effect by</span></span>
 <span><span class="co"># Monte Carlo confidence interval</span></span>
+<span></span>
 <span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/power4test.html">power4test</a></span><span class="op">(</span>nrep <span class="op">=</span> <span class="fl">400</span>,</span>
 <span>                  model <span class="op">=</span> <span class="va">model</span>,</span>
 <span>                  pop_es <span class="op">=</span> <span class="va">model_es</span>,</span>
@@ -192,11 +234,12 @@ to the target power is found).</p>
 <span>                                   mc_ci <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
 <span>                  iseed <span class="op">=</span> <span class="fl">1234</span>,</span>
 <span>                  parallel <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#</span></span>
+<span></span>
 <span><span class="co"># ====== Compute the Rejection Rate ======</span></span>
+<span></span>
 <span><span class="fu"><a href="../reference/rejection_rates.html">rejection_rates</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span></span></code></pre></div>
 <p>The results:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">out</span>,</span>
 <span>      data_long <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -367,39 +410,36 @@ sample size planning. Therefore, we only need to find the two sample
 sizes with the corresponding confidence bounds <em>close</em>
 <em>enough</em> to the target power, defined by a tolerance value. In
 the function below, this value is .02 by default.</p>
-<p>Do this step after calling <code><a href="../reference/power4test.html">power4test()</a></code> on a sample
-size.</p>
-<p>It can take some time to run if estimated power of the sample size is
-too different from the target power.</p>
-<div class="section level3">
-<h3 id="finding-the-two-regions-using-n_region_from_power">Finding the Two Regions Using
-<code>n_region_from_power()</code><a class="anchor" aria-label="anchor" href="#finding-the-two-regions-using-n_region_from_power"></a>
-</h3>
-<p>Instead of doing the search by calling <code><a href="../reference/x_from_power.html">n_from_power()</a></code>
-twice, we can find them by calling
+<p>It can take some time to run if the estimated power of the sample
+size is too different from the target power.</p>
+<p>We can find the two regions by
 <code><a href="../reference/x_from_power.html">n_region_from_power()</a></code>.</p>
 <p>The code:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#</span></span>
 <span><span class="co"># ===== Reuse the output of power4test() =====</span></span>
-<span><span class="co"># Call n_from_power()</span></span>
+<span><span class="co">#</span></span>
+<span><span class="co"># Call n_region_from_power()</span></span>
 <span><span class="co"># - Set target power: target_power = .80 (Default, can be omitted)</span></span>
 <span><span class="co"># - Set the seed for the simulation: Integer. Should always be set.</span></span>
 <span><span class="co"># To set desired precision:</span></span>
 <span><span class="co"># - Set final number of R: final_R = 1000 (Default, can be omitted)</span></span>
 <span><span class="co"># - Set final number of replications: final_nrep = 400 (Default, can be omitted)</span></span>
+<span></span>
 <span><span class="va">n_power_region</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/x_from_power.html">n_region_from_power</a></span><span class="op">(</span><span class="va">out</span>,</span>
 <span>                                      seed <span class="op">=</span> <span class="fl">1357</span><span class="op">)</span></span>
-<span><span class="co">#</span></span>
+<span></span>
 <span><span class="co"># ===== Basic Results =====</span></span>
+<span></span>
 <span><span class="va">n_power_region</span></span>
-<span><span class="co">#</span></span>
+<span></span>
 <span><span class="co"># ===== Plot the (Crude) Power Curve and the Regions =====</span></span>
+<span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">n_power_region</span><span class="op">)</span></span></code></pre></div>
 <p>The results:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#</span></span>
-<span><span class="co"># ===== Basic Results =====</span></span>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># ===== Basic Results =====</span></span>
+<span></span>
 <span><span class="va">n_power_region</span></span>
 <span><span class="co">#&gt; Call:</span></span>
 <span><span class="co">#&gt; n_region_from_power(object = out, seed = 1357)</span></span>
@@ -423,11 +463,12 @@ twice, we can find them by calling
 <span><span class="co">#&gt; - for the upper bound (121): [0.815, 0.885]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call `summary()` for detailed results.</span></span>
-<span><span class="co">#</span></span>
+<span></span>
 <span><span class="co"># ===== Plot the (Crude) Power Curve and the Regions =====</span></span>
+<span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">n_power_region</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="template_n_from_power_mediation_obs_serial_plot1-1.png" alt="Power Curve"><p class="caption">
+<img src="template_n_from_power_mediation_obs_serial_plot-1.png" alt="Power Curve"><p class="caption">
 Power Curve
 </p>
 </div>
@@ -442,7 +483,7 @@ Power Curve
 significantly different from .80.</p>
 <p>If necessary, detailed results can be printed by
 <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code>:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># ===== Detailed Results =====</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">n_power_region</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -475,7 +516,7 @@ significantly different from .80.</p>
 <span><span class="co">#&gt; - Algorithm: bisection </span></span>
 <span><span class="co">#&gt; - Tolerance for 'close enough': Within 0.02000 of 0.800 </span></span>
 <span><span class="co">#&gt; - The range of values explored: 107 to 50 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 19.76 secs </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 24.54 secs </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
@@ -548,7 +589,7 @@ significantly different from .80.</p>
 <span><span class="co">#&gt; - Algorithm: bisection </span></span>
 <span><span class="co">#&gt; - Tolerance for 'close enough': Within 0.02000 of 0.800 </span></span>
 <span><span class="co">#&gt; - The range of values explored: 107 to 180 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 1.717 mins </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 1.896 mins </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
@@ -594,12 +635,11 @@ significantly different from .80.</p>
 <span><span class="co">#&gt;   on normal approximation.</span></span>
 <span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span></code></pre></div>
 </div>
-</div>
 <div class="section level2">
 <h2 id="code_template">Code Template<a class="anchor" aria-label="anchor" href="#code_template"></a>
 </h2>
 <p>This is the code used above:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://sfcheung.github.io/power4mome/">power4mome</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># ====== Model and Effect Size (Population Values) ======</span></span>
@@ -636,14 +676,14 @@ significantly different from .80.</p>
 <span></span>
 <span><span class="co"># ====== Try One N and Estimate the Power ======</span></span>
 <span></span>
-<span><span class="co"># For n = 100,</span></span>
+<span><span class="co"># For n = 50,</span></span>
 <span><span class="co"># when testing the indirect effect by</span></span>
 <span><span class="co"># Monte Carlo confidence interval</span></span>
 <span></span>
 <span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/power4test.html">power4test</a></span><span class="op">(</span>nrep <span class="op">=</span> <span class="fl">400</span>,</span>
 <span>                  model <span class="op">=</span> <span class="va">model</span>,</span>
 <span>                  pop_es <span class="op">=</span> <span class="va">model_es</span>,</span>
-<span>                  n <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>                  n <span class="op">=</span> <span class="fl">50</span>,</span>
 <span>                  R <span class="op">=</span> <span class="fl">1000</span>,</span>
 <span>                  ci_type <span class="op">=</span> <span class="st">"mc"</span>,</span>
 <span>                  test_fun <span class="op">=</span> <span class="va">test_indirect_effect</span>,</span>
@@ -653,11 +693,12 @@ significantly different from .80.</p>
 <span>                                   mc_ci <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
 <span>                  iseed <span class="op">=</span> <span class="fl">1234</span>,</span>
 <span>                  parallel <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
 <span><span class="fu"><a href="../reference/rejection_rates.html">rejection_rates</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># ====== Regions of Ns ======</span></span>
 <span></span>
-<span><span class="co"># Call n_from_power()</span></span>
+<span><span class="co"># Call n_region_from_power()</span></span>
 <span><span class="co"># - Set target power: target_power = .80 (Default, can be omitted)</span></span>
 <span><span class="co"># - Set the seed for the simulation: Integer. Should always be set.</span></span>
 <span><span class="co"># To set desired precision:</span></span>
