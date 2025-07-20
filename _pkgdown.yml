@@ -46,6 +46,7 @@ articles:
   - articles/template_n_from_power_mediation_obs_simple
   - articles/template_n_from_power_mediation_obs_serial
   - articles/template_n_from_power_mediation_obs_parallel
+  - articles/template_n_from_power_mediation_lav_simple
 
 - title: Technical Appendices
   contents:
