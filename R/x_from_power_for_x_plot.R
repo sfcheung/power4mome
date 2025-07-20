@@ -701,7 +701,8 @@ plot.n_region_from_power <- function(x,
     tmp2 <- x$above$power4test_trials
     i <- setdiff(names(tmp2), names(tmp1))
     if (length(i) > 0) {
-      tmp_trials <- c(tmp1, tmp2[i])
+      # No need to check because the models must be the same
+      tmp_trials <- c(tmp1, tmp2[i], skip_checking_models = TRUE)
     } else {
       tmp_trials <- tmp1
     }
