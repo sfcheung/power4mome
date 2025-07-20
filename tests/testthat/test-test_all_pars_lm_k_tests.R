@@ -27,9 +27,18 @@ test_out <- power4test(object = sim_only,
 
 summarize_tests(test_out)
 
-test_out$test_all[[1]][[2]]
+summarize_tests(test_out, collapse = "all_sig")
+summarize_tests(test_out, collapse = "at_least_one_sig")
+summarize_tests(test_out, collapse = "at_least_k_sig", at_least_k = 2)
+
+rejection_rates(test_out)
+rejection_rates(test_out, collapse = "all_sig")
+rejection_rates(test_out, collapse = "at_least_one_sig")
+rejection_rates(test_out, collapse = "at_least_k_sig", at_least_k = 2)
 
 # TO PROCESS
+
+test_out$test_all[[1]][[2]]
 
 (chk <- test_summary(test_out))
 names(chk)

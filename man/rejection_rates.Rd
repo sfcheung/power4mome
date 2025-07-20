@@ -19,6 +19,8 @@ rejection_rates(object, ...)
   ci = TRUE,
   level = 0.95,
   se = FALSE,
+  collapse = c("none", "all_sig", "at_least_one_sig", "at_least_k_sig"),
+  at_least_k = 1,
   ...
 )
 
@@ -80,6 +82,28 @@ for the rejection rates
 be computed. Normal approximation
 is used to compute the standard
 errors.}
+
+\item{collapse}{Whether a single
+decision (significant vs. not significant)
+is made across all tests for a test
+that consists of several tests
+(e.g., the tests of several parameters).
+If \code{"none"}, tests will be summarized
+individually. If \code{"all_sig"}, then
+the set of tests is considered significant
+if all individual tests are significant.
+If \code{"at_least_one_sig"}, then the set of
+tests is considered significant if
+at least one of the tests is significant.
+If \code{"at_least_k_sig"}, then the set of
+tests is considered significant if
+at least \code{k} tests are significant,
+\code{k} set by the argument \code{at_least_k}.}
+
+\item{at_least_k}{Used by \code{collapse},
+the number of tests required to be
+significant for the set of tests to
+be considered significant.}
 
 \item{x}{The \code{rejection_rates_df}
 object to be printed.}
