@@ -14,10 +14,11 @@ articles:
   articles/template_n_from_power_mediation_obs_parallel: template_n_from_power_mediation_obs_parallel.html
   articles/template_n_from_power_mediation_obs_serial: template_n_from_power_mediation_obs_serial.html
   articles/template_n_from_power_mediation_obs_simple: template_n_from_power_mediation_obs_simple.html
+  articles/template_n_from_power_moderation_obs_simple: template_n_from_power_moderation_obs_simple.html
   articles/x_from_power_for_es: x_from_power_for_es.html
   articles/x_from_power_for_n: x_from_power_for_n.html
   articles/x_from_power_workflow: x_from_power_workflow.html
-last_built: 2025-07-20T08:56Z
+last_built: 2025-07-20T14:02Z
 urls:
   reference: https://sfcheung.github.io/power4mome/reference
   article: https://sfcheung.github.io/power4mome/articles
