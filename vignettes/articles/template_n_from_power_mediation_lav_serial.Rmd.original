@@ -183,14 +183,14 @@ print(out,
 
 # ====== Estimate the Power ======
 
-# For n = 200,
+# For n = 150,
 # when testing the indirect effect by
 # Monte Carlo confidence interval
 
 out <- power4test(nrep = 400,
                   model = model,
                   pop_es = model_es,
-                  n = 200,
+                  n = 150,
                   R = 1000,
                   number_of_indicators = c(x = 3,
                                            m1 = 4,
@@ -224,7 +224,59 @@ print(out,
 rejection_rates(out)
 ```
 
-```{r load_find, child=c("template_n_ins_find_regions.txt")}
+# Find the Regions of *N* Based on the Target Power
+
+Search, by simulation, the following
+two regions of sample sizes:
+
+- Sample sizes with estimated levels of
+  power significantly below the target
+  level (e.g., .80), tested by the
+  confidence interval (95% by default).
+
+- Sample sizes with estimated levels of
+  power significantly above the target
+  level (e.g., .80), tested by the
+  confidence interval (95% by default).
+
+In practice, we rarely need high precision
+for these regions for sample size planning.
+Therefore, we only need to find the two
+sample sizes with the corresponding
+confidence bounds *close* *enough* to
+the target power, defined by a tolerance value.
+In the function below, this value is .02
+by default.
+
+It can take some time to run if the estimated power
+of the sample size is too different from
+the target power.
+
+We can find the two regions by `n_region_from_power()`.
+
+The code:
+
+```{r med_n_simple_n_from, eval=TRUE, results="hide", message=FALSE, fig.keep="none"}
+#
+# ===== Reuse the output of power4test() =====
+#
+# Call n_region_from_power()
+# - Set target power: target_power = .80 (Default, can be omitted)
+# - Set the seed for the simulation: Integer. Should always be set.
+# To set desired precision:
+# - Set final number of R: final_R = 1000 (Default, can be omitted)
+# - Set final number of replications: final_nrep = 400 (Default, can be omitted)
+
+n_power_region <- n_region_from_power(out,
+                                      seed = 1357)
+
+# ===== Basic Results =====
+
+n_power_region
+
+# ===== Plot the (Crude) Power Curve and the Regions =====
+
+plot(n_power_region)
 ```
 
 The results:
@@ -294,14 +346,14 @@ print(out,
 
 # ====== Try One N and Estimate the Power ======
 
-# For n = 200,
+# For n = 150,
 # when testing the indirect effect by
 # Monte Carlo confidence interval
 
 out <- power4test(nrep = 400,
                   model = model,
                   pop_es = model_es,
-                  n = 200,
+                  n = 150,
                   R = 1000,
                   number_of_indicators = c(x = 3,
                                            m1 = 4,
