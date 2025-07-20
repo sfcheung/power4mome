@@ -4,8 +4,8 @@ base_dir <- getwd()
 
 setwd(paste0(base_dir, "/vignettes/"))
 
-knitr::knit("power4mome.Rmd.original", output = "power4mome.Rmd")
-knitr::knit("power4test_latent_mediation.Rmd.original", output = "power4test_latent_mediation.Rmd")
+knitr::knit("power4mome.Rmd.original", output = "power4mome.Rmd", envir = new.env())
+knitr::knit("power4test_latent_mediation.Rmd.original", output = "power4test_latent_mediation.Rmd", envir = new.env())
 pkgdown::build_articles("..")
 
 setwd(base_dir)
@@ -14,16 +14,16 @@ setwd(base_dir)
 
 setwd(paste0(base_dir, "/vignettes/articles/"))
 
-knitr::knit("x_from_power_for_n.Rmd.original", output = "x_from_power_for_n.Rmd")
-knitr::knit("x_from_power_for_es.Rmd.original", output = "x_from_power_for_es.Rmd")
+knitr::knit("x_from_power_for_n.Rmd.original", output = "x_from_power_for_n.Rmd", envir = new.env())
+knitr::knit("x_from_power_for_es.Rmd.original", output = "x_from_power_for_es.Rmd", envir = new.env())
 
-knitr::knit("template_n_from_power_mediation_obs_simple.Rmd.original", output = "template_n_from_power_mediation_obs_simple.Rmd")
-knitr::knit("template_n_from_power_mediation_obs_serial.Rmd.original", output = "template_n_from_power_mediation_obs_serial.Rmd")
-knitr::knit("template_n_from_power_mediation_obs_parallel.Rmd.original", output = "template_n_from_power_mediation_obs_parallel.Rmd")
+knitr::knit("template_n_from_power_mediation_obs_simple.Rmd.original", output = "template_n_from_power_mediation_obs_simple.Rmd", envir = new.env())
+knitr::knit("template_n_from_power_mediation_obs_serial.Rmd.original", output = "template_n_from_power_mediation_obs_serial.Rmd", envir = new.env())
+knitr::knit("template_n_from_power_mediation_obs_parallel.Rmd.original", output = "template_n_from_power_mediation_obs_parallel.Rmd", envir = new.env())
 
-knitr::knit("template_n_from_power_mediation_lav_simple.Rmd.original", output = "template_n_from_power_mediation_lav_simple.Rmd")
-knitr::knit("template_n_from_power_mediation_lav_serial.Rmd.original", output = "template_n_from_power_mediation_lav_serial.Rmd")
-knitr::knit("template_n_from_power_mediation_lav_parallel.Rmd.original", output = "template_n_from_power_mediation_lav_parallel.Rmd")
+knitr::knit("template_n_from_power_mediation_lav_simple.Rmd.original", output = "template_n_from_power_mediation_lav_simple.Rmd", envir = new.env())
+knitr::knit("template_n_from_power_mediation_lav_serial.Rmd.original", output = "template_n_from_power_mediation_lav_serial.Rmd", envir = new.env())
+knitr::knit("template_n_from_power_mediation_lav_parallel.Rmd.original", output = "template_n_from_power_mediation_lav_parallel.Rmd", envir = new.env())
 
 knitr::knit("template_n_from_power_moderation_obs_simple.Rmd.original", output = "template_n_from_power_moderation_obs_simple.Rmd", envir = new.env())
 

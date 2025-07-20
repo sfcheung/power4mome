@@ -210,8 +210,7 @@ n_power_region
 
 # ===== Plot the (Crude) Power Curve and the Regions =====
 
-tmp <- try(plot(n_power_region))
-if (inherits(tmp, "try-error")) browser()
+plot(n_power_region)
 ```
 
 ```{r load_res, child=c("template_n_ins_find_regions_results.txt")}

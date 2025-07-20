@@ -319,7 +319,7 @@ print(out,
 #> 
 #> The models:
 #> y ~ x + w + x:w
-#> <environment: 0x000002062a461c10>
+#> <environment: 0x000002c39210daf0>
 #> 
 #> 
 #> ====================== Test(s) Conducted ======================
@@ -399,7 +399,6 @@ n_power_region
 # ===== Plot the (Crude) Power Curve and the Regions =====
 
 plot(n_power_region)
-#> Error in c.power4test_by_n(tmp1, tmp2[i]): Not all objects are based on the same model.
 ```
 
 The results:
@@ -434,21 +433,13 @@ n_power_region
 
 # ===== Plot the (Crude) Power Curve and the Regions =====
 
-tmp <- try(plot(n_power_region))
+plot(n_power_region)
 ```
 
 <div class="figure" style="text-align: center">
 <img src="template_n_from_power_moderation_obs_simple_plot-1.png" alt="Power Curve"  />
 <p class="caption">Power Curve</p>
 </div>
-
-```
-#> Error in c.power4test_by_n(tmp1, tmp2[i]) : 
-#>   Not all objects are based on the same model.
-if (inherits(tmp, "try-error")) browser()
-#> Called from: eval(expr, envir)
-#> ℹ Loading power4mome
-```
 
 
 
@@ -505,7 +496,7 @@ summary(n_power_region)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 232 to 50 
-#> - Time spent in the search: 21.9 secs 
+#> - Time spent in the search: 25.26 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -580,7 +571,7 @@ summary(n_power_region)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 365 to 373 
-#> - Time spent in the search: 22.92 secs 
+#> - Time spent in the search: 23.46 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
