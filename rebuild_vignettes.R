@@ -22,6 +22,8 @@ knitr::knit("template_n_from_power_mediation_obs_serial.Rmd.original", output = 
 knitr::knit("template_n_from_power_mediation_obs_parallel.Rmd.original", output = "template_n_from_power_mediation_obs_parallel.Rmd")
 
 knitr::knit("template_n_from_power_mediation_lav_simple.Rmd.original", output = "template_n_from_power_mediation_lav_simple.Rmd")
+knitr::knit("template_n_from_power_mediation_lav_serial.Rmd.original", output = "template_n_from_power_mediation_lav_serial.Rmd")
+knitr::knit("template_n_from_power_mediation_lav_parallel.Rmd.original", output = "template_n_from_power_mediation_lav_parallel.Rmd")
 
 # knitr::knit("template_mediation_obs.Rmd.original", output = "template_mediation_obs.Rmd")
 # knitr::knit("template_mediation_obs_serial.Rmd.original", output = "template_mediation_obs_serial.Rmd")

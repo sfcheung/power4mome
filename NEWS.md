@@ -1,4 +1,4 @@
-# power4mome 0.0.1.87
+# power4mome 0.0.1.88
 
 - Initialized the package. (0.0.0.9000)
 
@@ -525,3 +525,6 @@
 - Improved the positioning of elements
   in `plot.n_region_from_power()`.
   (0.0.1.87)
+
+- Improved the speed in computing indirect
+  paths in the printout. (0.0.1.88)

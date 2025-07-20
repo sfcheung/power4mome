@@ -1025,14 +1025,22 @@ pop_indirect <- function(x,
                          pure_y = TRUE) {
   x_i <- x[[1]]
   ptable0 <- lavaan::parameterTable(x_i$fit0)
+  # Need to select a subset because
+  # many_indirect_effects can be very slow
+  # for a large sample
+  dat_tmp <- x_i$mm_lm_dat_out
+  n <- nrow(dat_tmp)
+  i <- sample.int(n, 1000, replace = TRUE)
+  dat_tmp <- dat_tmp[i, ]
   fit_to_all_args0 <- list(model = x_i$model_final,
-                           data = x_i$mm_lm_dat_out,
+                           data = dat_tmp,
                            se = "none",
                            test = "none",
                            group = x_i$group_name,
+                           check.post = FALSE,
                            fixed.x = FALSE)
-  fit_all <- do.call(lavaan::sem,
-                      fit_to_all_args0)
+  fit_all <- suppressWarnings(do.call(lavaan::sem,
+                      fit_to_all_args0))
 
   # TODO:
   # - Need a better way to find product terms
