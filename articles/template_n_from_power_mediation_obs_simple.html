@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Quick Template: Mediation with Observed Variables • power4mome</title>
+<title>Quick Template: Simple Mediation with Observed Variables • power4mome</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="../favicon-96x96.png">
 <link rel="icon" type="”image/svg+xml”" href="../favicon.svg">
 <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
@@ -17,7 +17,7 @@
 <link href="../deps/Oxygen_Mono-0.4.10/font.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Quick Template: Mediation with Observed Variables">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Quick Template: Simple Mediation with Observed Variables">
 <meta name="google-site-verification" content="0VLBmFnW_UJFI-7gXnORPBsWxqZwmzuGpK-TeVRLBjQ">
 </head>
 <body>
@@ -49,9 +49,10 @@
     <li><a class="dropdown-item" href="../articles/x_from_power_for_n.html">Sample Size Given Desired Power</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Templates (Code Examples)</h6></li>
-    <li><a class="dropdown-item" href="../articles/template_n_from_power_mediation_obs_simple.html">Quick Template: Mediation with Observed Variables</a></li>
+    <li><a class="dropdown-item" href="../articles/template_n_from_power_mediation_obs_simple.html">Quick Template: Simple Mediation with Observed Variables</a></li>
     <li><a class="dropdown-item" href="../articles/template_n_from_power_mediation_obs_serial.html">Quick Template: Serial Mediation with Observed Variables</a></li>
     <li><a class="dropdown-item" href="../articles/template_n_from_power_mediation_obs_parallel.html">Quick Template: Parallel Mediation with Observed Variables</a></li>
+    <li><a class="dropdown-item" href="../articles/template_n_from_power_mediation_lav_simple.html">Quick Template: Simple Mediation with Latent Variables</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="dropdown-item" href="../articles/index.html">More articles...</a></li>
   </ul>
@@ -77,9 +78,9 @@
 <script src="template_n_from_power_mediation_obs_simple_files/mermaid-0.3.0/dist/mermaid.slim.min.js"></script><link href="template_n_from_power_mediation_obs_simple_files/DiagrammeR-styles-0.2/styles.css" rel="stylesheet">
 <script src="template_n_from_power_mediation_obs_simple_files/chromatography-0.1/chromatography.js"></script><script src="template_n_from_power_mediation_obs_simple_files/DiagrammeR-binding-1.0.11/DiagrammeR.js"></script><div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>Quick Template: Mediation with Observed Variables</h1>
+      <img src="../logo.png" class="logo" alt=""><h1>Quick Template: Simple Mediation with Observed Variables</h1>
             
-            <h4 data-toc-skip class="date">2025-07-18</h4>
+            <h4 data-toc-skip class="date">2025-07-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/sfcheung/power4mome/blob/main/vignettes/articles/template_n_from_power_mediation_obs_simple.Rmd" class="external-link"><code>vignettes/articles/template_n_from_power_mediation_obs_simple.Rmd</code></a></small>
       <div class="d-none name"><code>template_n_from_power_mediation_obs_simple.Rmd</code></div>
@@ -479,7 +480,7 @@ significantly different from .80.</p>
 <span><span class="co">#&gt; - Algorithm: bisection </span></span>
 <span><span class="co">#&gt; - Tolerance for 'close enough': Within 0.02000 of 0.800 </span></span>
 <span><span class="co">#&gt; - The range of values explored: 100 to 897 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 54.27 secs </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 49.62 secs </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
@@ -554,7 +555,7 @@ significantly different from .80.</p>
 <span><span class="co">#&gt; - Algorithm: bisection </span></span>
 <span><span class="co">#&gt; - Tolerance for 'close enough': Within  of 0.800 </span></span>
 <span><span class="co">#&gt; - The range of values explored: 100 to 897 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 0.08534 secs </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 0.06045 secs </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
