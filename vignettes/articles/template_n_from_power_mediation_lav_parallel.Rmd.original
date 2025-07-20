@@ -1,0 +1,333 @@
+---
+title: "Quick Template: Parallel Mediation with Latent Variables"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    fig.align: "center"
+    toc: true
+    toc_depth: 2
+    number_sections: false
+bibliography: references.bib
+csl: apa.csl
+---
+
+```{r knitr_setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "",
+  fig.align = "center"
+)
+```
+
+```{r load_pre, child=c("template_n_ins_preamble.txt")}
+```
+
+# Scope
+
+This file is for parallel mediation models
+with latent variables.
+
+```{r load_pre, child=c("template_n_ins_functions_used.txt")}
+```
+
+- `test_k_indirect_effects()`
+
+    - Test several indirect effects as one test, using
+      Monte Carlo or bootstrap confidence
+      intervals. Used by `power4test()`.
+
+```{r load_flow, echo=FALSE, results="asis"}
+# Adapted from this answer
+cat(readLines("template_n_ins_flowchart.txt"),
+    sep = "\n")
+```
+
+# Set Up The Model and Test
+
+Load the package first:
+
+```{r}
+library(power4mome)
+```
+
+Estimate the power for a sample size.
+
+A parallel mediation model has several
+parallel paths (three in the following
+example). The test function
+`test_k_indirect_effects()` can be used
+to estimate the power for having all selected indirect
+paths significant if `omnibus` is set to
+`"all_sig"`.
+
+The code:
+
+```{r model, eval=TRUE, results="hide", message=FALSE}
+# ====== Model: Form ======
+
+model <-
+"
+m1 ~ x
+m2 ~ x
+y ~ m1 + m2 + x
+"
+
+# ====== Model: Population Values ======
+# l: large (.50 by default)
+# m: medium (.30 by default)
+# s: small (.10 by default)
+# n: nil (.00 by default)
+# -l, -m, and -s denote negative values
+# Omitted paths are zero by default
+# Can also set to a number directly
+# Set each path to the hypothesized magnitude
+
+model_es <-
+"
+m1 ~ x: m
+m2 ~ x: m
+y ~ m1: l
+y ~ m2: l
+y ~ x: s
+"
+```
+
+
+```{r template_n_from_power_mediation_lav_parallel_model, echo = FALSE, fig.cap = "The Model", fig.width = 7, fig.height = 6}
+library(semPlot)
+library(semptools)
+suppressMessages(library(lavaan))
+mod <-
+"
+m1 ~ m*x
+m2 ~ m*x
+y ~ l*m1 + l*m2 + s*x
+x =~ x1 + x2 + x3
+m1 =~ m11 + m12 + m13 + m14
+m2 =~ m21 + m22 + m23
+y =~ y1 + y2 + y3
+"
+fit0 <- sem(mod, do.fit = FALSE, fixed.x = FALSE)
+set.seed(1234)
+onames <- lavNames(fit0)
+p <- length(onames)
+dat <- data.frame(MASS::mvrnorm(100, rep(0, p), diag(p)))
+colnames(dat) <- onames
+fit0 <- sem(mod, dat, do.fit = FALSE)
+layout_m <- matrix(c(NA, "m1", NA,
+                     "x", NA,  "y",
+                     NA, "m2", NA), 3, 3, byrow = TRUE)
+p <- semPaths(fit0,
+              whatLabels = "label",
+              nCharNodes = 0,
+              exoCov = FALSE,
+              edge.label.cex = 1.25,
+              label.cex = 1.25,
+              residuals = FALSE,
+              sizeMan = 6,
+              sizeMan2 = 4,
+              asize = 5,
+              DoNotPlot = TRUE)
+p2 <- set_sem_layout(
+          p,
+          factor_layout = layout_m,
+          factor_point_to = c(x = "left",
+                              m1 = "up",
+                              m2 = "down",
+                              y = "right"),
+          indicator_push = c(x = 1,
+                             y = 1),
+          indicator_spread = c(x = 2,
+                               y = 2,
+                               m1 = 2,
+                               m2 = 2)
+        ) |>
+      set_curve(c("y ~ m1" = 0))
+p2$graphAttributes$Edges$labels[1:5] <-
+  c("m\n(medium: .30)",
+    "m\n(medium: .30)",
+    "l\n(large: .50)",
+    "l\n(large: .50)",
+    "s\n(small: .10)")
+
+plot(p2)
+text(label = "Parallel Mediation Model",
+     x = 0, y = -1.3,
+     cex = 1.5)
+```
+
+
+```{r check_model, eval=TRUE, results="hide", message=FALSE}
+
+# ====== Test the Model Specification ======
+
+out <- power4test(nrep = 2,
+                  model = model,
+                  pop_es = model_es,
+                  n = 50000,
+                  iseed = 1234)
+
+# ====== Check the Data Generated ======
+
+print(out,
+      data_long = TRUE)
+
+# ====== Estimate the Power ======
+
+# For n = 150,
+# when testing all indirect effects by
+# Monte Carlo confidence intervals
+
+out <- power4test(nrep = 400,
+                  model = model,
+                  pop_es = model_es,
+                  n = 150,
+                  R = 1000,
+                  number_of_indicators = c(x = 3,
+                                           m1 = 4,
+                                           m2 = 3,
+                                           y = 3),
+                  reliability = c(x = .80,
+                                  m1 = .70,
+                                  m2 = .70,
+                                  y = .80),
+                  ci_type = "mc",
+                  test_fun = test_k_indirect_effects,
+                  test_args = list(x = "x",
+                                   y = "y",
+                                   mc_ci = TRUE,
+                                   omnibus = "all_sig"),
+                  iseed = 1234,
+                  parallel = TRUE)
+
+# ====== Compute the Rejection Rate ======
+
+rejection_rates(out)
+```
+
+The results:
+
+```{r model_out}
+print(out,
+      data_long = TRUE)
+rejection_rates(out)
+```
+
+(`est` is `NaN` because the test is for
+all three paths and so there is no single
+point estimate for the test.)
+
+```{r load_find, child=c("template_n_ins_find_regions.txt")}
+```
+
+The results:
+
+```{r template_n_from_power_mediation_lav_parallel_plot, fig.cap = "Power Curve"}
+# ===== Basic Results =====
+
+n_power_region
+
+# ===== Plot the (Crude) Power Curve and the Regions =====
+
+plot(n_power_region)
+```
+
+```{r load_res, child=c("template_n_ins_find_regions_results.txt")}
+```
+
+# Code Template {#code_template}
+
+This is the code used above:
+
+```{r code_example, eval = FALSE}
+library(power4mome)
+
+# ====== Model and Effect Size (Population Values) ======
+
+model <-
+"
+m1 ~ x
+m2 ~ x
+y ~ m1 + m2 + x
+"
+
+model_es <-
+"
+m1 ~ x: m
+m2 ~ x: m
+y ~ m1: l
+y ~ m2: l
+y ~ x: s
+"
+
+# Test the Model Specification
+
+out <- power4test(nrep = 2,
+                  model = model,
+                  pop_es = model_es,
+                  n = 50000,
+                  number_of_indicators = c(x = 3,
+                                           m1 = 4,
+                                           m2 = 3,
+                                           y = 3),
+                  reliability = c(x = .80,
+                                  m1 = .70,
+                                  m2 = .70,
+                                  y = .80),
+                  iseed = 1234)
+
+# Check the Data Generated
+
+print(out,
+      data_long = TRUE)
+
+# ====== Try One N and Estimate the Power ======
+
+# For n = 200,
+# when testing all indirect effects by
+# Monte Carlo confidence intervals
+
+out <- power4test(nrep = 400,
+                  model = model,
+                  pop_es = model_es,
+                  n = 200,
+                  number_of_indicators = c(x = 3,
+                                           m1 = 4,
+                                           m2 = 3,
+                                           y = 3),
+                  reliability = c(x = .80,
+                                  m1 = .70,
+                                  m2 = .70,
+                                  y = .80),
+                  R = 1000,
+                  ci_type = "mc",
+                  test_fun = test_k_indirect_effects,
+                  test_args = list(x = "x",
+                                   y = "y",
+                                   mc_ci = TRUE,
+                                   omnibus = "all_sig"),
+                  iseed = 1234,
+                  parallel = TRUE)
+
+rejection_rates(out)
+
+# ====== Regions of Ns ======
+
+# Call n_region_from_power()
+# - Set target power: target_power = .80 (Default, can be omitted)
+# - Set the seed for the simulation: Integer. Should always be set.
+# To set desired precision:
+# - Set final number of R: final_R = 1000 (Default, can be omitted)
+# - Set final number of replications: final_nrep = 400 (Default, can be omitted)
+
+n_power_region <- n_region_from_power(out,
+                                      seed = 1357)
+n_power_region
+plot(n_power_region)
+summary(n_power_region)
+```
+
+```{r load_final, child=c("template_n_ins_final_remarks.txt")}
+```
+
