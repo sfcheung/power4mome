@@ -55,6 +55,28 @@
 #' or the element `test_all` in
 #' a `power4test` object.
 #'
+#' @param collapse Whether a single
+#' decision (significant vs. not significant)
+#' is made across all tests for a test
+#' that consists of several tests
+#' (e.g., the tests of several parameters).
+#' If `"none"`, tests will be summarized
+#' individually. If `"all_sig"`, then
+#' the set of tests is considered significant
+#' if all individual tests are significant.
+#' If `"at_least_one_sig"`, then the set of
+#' tests is considered significant if
+#' at least one of the tests is significant.
+#' If `"at_least_k_sig"`, then the set of
+#' tests is considered significant if
+#' at least `k` tests are significant,
+#' `k` set by the argument `at_least_k`.
+#'
+#' @param at_least_k Used by `collapse`,
+#' the number of tests required to be
+#' significant for the set of tests to
+#' be considered significant.
+#'
 #' @seealso [power4test()]
 #'
 #' @examples
@@ -95,12 +117,20 @@
 #' summarize_tests(test_out)
 #'
 #' @export
-summarize_tests <- function(object) {
+summarize_tests <- function(object,
+                            collapse = c("none",
+                                         "all_sig",
+                                         "at_least_one_sig",
+                                         "at_least_k_sig"),
+                            at_least_k = 1) {
+  collapse <- match.arg(collapse)
   if (inherits(object, "power4test")) {
     object <- object$test_all
   }
   out <- sapply(object,
                 summarize_test_i,
+                collapse = collapse,
+                at_least_k = at_least_k,
                 simplify = FALSE)
   class(out) <- c("test_summary_list", class(out))
   out
@@ -258,7 +288,9 @@ format_num_cols <- function(object,
 }
 
 #' @noRd
-summarize_test_i <- function(x) {
+summarize_test_i <- function(x,
+                             collapse = collapse,
+                             at_least_k = at_least_k) {
   test_i <- x[[1]]$test_results
   if (is.vector(test_i)) {
     # A vector
@@ -267,7 +299,9 @@ summarize_test_i <- function(x) {
   }
   if (isTRUE(length(dim(test_i)) == 2)) {
     # A table, likely a data frame
-    out <- summarize_one_test_data_frame(x)
+    out <- summarize_one_test_data_frame(x,
+                                         collapse = collapse,
+                                         at_least_k = at_least_k)
     return(out)
   }
   stop("test_results not supported. Something's wrong.")
