@@ -1,4 +1,4 @@
-# power4mome 0.0.1.88
+# power4mome 0.0.1.89
 
 - Initialized the package. (0.0.0.9000)
 
@@ -528,3 +528,7 @@
 
 - Improved the speed in computing indirect
   paths in the printout. (0.0.1.88)
+
+- Disabled model checking in
+  the plot method of `n_region_from_power`,
+  which is not necessary. (0.0.1.89)
