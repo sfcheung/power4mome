@@ -50,6 +50,11 @@ articles:
   - articles/template_n_from_power_mediation_lav_serial
   - articles/template_n_from_power_mediation_lav_parallel
 
+- title: Moderation Templates (Code Examples)
+  navbar: Moderation Templates (Code Examples)
+  contents:
+  - articles/template_n_from_power_moderation_obs_simple
+
 - title: Technical Appendices
   contents:
   - articles/power4test_workflow
