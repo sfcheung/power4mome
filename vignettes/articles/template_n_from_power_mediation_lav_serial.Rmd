@@ -456,6 +456,8 @@ rejection_rates(out)
 #> - Refer to the tests for the meanings of other columns.
 ```
 
+
+
 # Find the Regions of *N* Based on the Target Power
 
 Search, by simulation, the following
@@ -607,7 +609,7 @@ summary(n_power_region)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 150 to 294 
-#> - Time spent in the search: 51.34 secs 
+#> - Time spent in the search: 1.095 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -681,7 +683,7 @@ summary(n_power_region)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 271 to 294 
-#> - Time spent in the search: 1.379 mins 
+#> - Time spent in the search: 1.354 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
