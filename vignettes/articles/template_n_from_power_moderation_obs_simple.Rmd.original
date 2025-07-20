@@ -31,11 +31,11 @@ This file is for simple mediation models.
 ```{r load_pre, child=c("template_n_ins_functions_used.txt")}
 ```
 
-- `test_indirect_effect()`
+- `test_parameters()`
 
-    - Test the indirect effect using
-      Monte Carlo or bootstrap confidence
-      intervals. Used by `power4test()`.
+    - Test selected parameters. Used by
+    `power4test()` to test a selected
+    product term (interaction term).
 
 ```{r load_flow, echo=FALSE, results="asis"}
 # Adapted from this answer
@@ -47,7 +47,7 @@ cat(readLines("template_n_ins_flowchart.txt"),
 
 Load the package first:
 
-```{r}
+```{r load_pkg}
 library(power4mome)
 ```
 
@@ -55,48 +55,64 @@ Estimate the power for a sample size.
 
 The code for the model:
 
-```{r med_simple, eval=TRUE, results="hide", message=FALSE}
+```{r model, eval=TRUE, results="hide", message=FALSE}
 # ====== Model: Form ======
 
 model <-
 "
-m ~ x
-y ~ m + x
+y ~ x + w + x:w
 "
 
 # ====== Model: Population Values ======
+
+# For a regression coefficient
 # l: large (.50 by default)
 # m: medium (.30 by default)
 # s: small (.10 by default)
 # n: nil (.00 by default)
+# For the product term:
+# l: large (.15 by default)
+# m: medium (.10 by default)
+# s: small (.05 by default)
 # -l, -m, and -s denote negative values
 # Omitted paths are zero by default
 # Can also set to a number directly
 # Set each path to the hypothesized magnitude
 
+# For a path moderated, the coefficent
+# of a predictor is its standardized
+# effect when the moderator equal to
+# its mean.
+
 model_es <-
 "
-m ~ x: s
-y ~ m: l
 y ~ x: m
+y ~ w: s
+y ~ x:w: l
 "
 ```
 
-```{r template_n_from_power_mediation_obs_simple_model, echo = FALSE, fig.cap = "The Model"}
+```{r template_n_from_power_moderation_obs_simple_model, echo = FALSE, fig.cap = "The Model", fig.width = 6, fig.height = 4}
 library(semPlot)
+library(semptools)
 suppressMessages(library(lavaan))
+out <- power4test(nrep = 2,
+                  model = model,
+                  pop_es = model_es,
+                  n = 100,
+                  iseed = 1234,
+                  parallel = FALSE,
+                  progress = FALSE)
+dat <- out$sim_all[[1]]$mm_lm_dat_out
 mod <-
 "
-m ~ s*x
-y ~ l*m + m*x
+xw ~ m*x + l*w
+y ~ xw + s*w
 "
-fit0 <- sem(mod, do.fit = FALSE, fixed.x = FALSE)
-set.seed(1234)
-dat <- data.frame(MASS::mvrnorm(100, rep(0, 3), diag(3)))
-colnames(dat) <- lavNames(fit0)
+dat$xw <- dat$x * dat$w
 fit0 <- sem(mod, dat, do.fit = FALSE, fixed.x = FALSE)
-layout_m <- matrix(c(NA, "m", NA,
-                     "x", NA, "y"), 2, 3, byrow = TRUE)
+layout_m <- matrix(c(NA, "w",    NA,
+                     "x", "xw", "y"), 2, 3, byrow = TRUE)
 p <- semPaths(fit0,
               whatLabels = "label",
               layout = layout_m,
@@ -108,26 +124,43 @@ p <- semPaths(fit0,
               sizeMan = 10,
               asize = 10,
               DoNotPlot = TRUE)
-p$graphAttributes$Edges$labels <-
-  c("s\n(small: .10)",
-    "l\n(large: .50)",
-    "m\n(medium: .30)")
-
-plot(p)
-text(label = "Simple Mediation Model",
-     x = 0, y = -1.3,
-     cex = 2)
+str_s <- "s\n(small:\n.10)"
+str_m <- "m\n(medium:\n.30)"
+str_l <- "l\n(large:\n.50)"
+str_2s <- "s\n(small:\n.05)"
+str_2m <- "m\n(medium:\n.15)"
+str_2l <- "l\n(large:\n.15)"
+p2 <- p |>
+      set_node_attribute(
+        c(xw = .01),
+        attribute_name = "width") |>
+      set_node_attribute(
+        c(xw = .01),
+        attribute_name = "height") |>
+      set_edge_attribute(
+        c("xw ~ x" = 0),
+        attribute_name = "asize") |>
+      set_edge_attribute(
+        c("xw ~ x" = str_m,
+          "xw ~ w" = str_2m,
+          "y ~ w" = str_s),
+        attribute_name = "labels")
+plot(p2)
 ```
 
 
-```{r med_simple2, eval=TRUE, results="hide", message=FALSE}
+```{r model_check, eval=TRUE, results="hide", message=FALSE}
 
 # ====== Test the Model Specification ======
+
+# Fit the model by regression using lm()
+# Add: fit_model_args = list(fit_function = "lm")
 
 out <- power4test(nrep = 2,
                   model = model,
                   pop_es = model_es,
                   n = 50000,
+                  fit_model_args = list(fit_function = "lm"),
                   iseed = 1234)
 
 # ====== Check the Data Generated ======
@@ -137,21 +170,18 @@ print(out,
 
 # ====== Estimate the Power ======
 
-# For n = 100,
-# when testing the indirect effect by
-# Monte Carlo confidence interval
+# For n = 50.
+# Test the coefficient of the product term
+# x:w in the regression results of lm().
+# The test by CI is equivalent to the one-tailed t-test.
 
 out <- power4test(nrep = 400,
                   model = model,
                   pop_es = model_es,
-                  n = 100,
-                  R = 1000,
-                  ci_type = "mc",
-                  test_fun = test_indirect_effect,
-                  test_args = list(x = "x",
-                                   m = "m",
-                                   y = "y",
-                                   mc_ci = TRUE),
+                  n = 50,
+                  fit_model_args = list(fit_function = "lm"),
+                  test_fun = test_parameters,
+                  test_args = list(pars = "y~x:w"),
                   iseed = 1234,
                   parallel = TRUE)
 
@@ -162,28 +192,29 @@ rejection_rates(out)
 
 The results:
 
-```{r med_simple_out}
+```{r model_out}
 print(out,
       data_long = TRUE)
 rejection_rates(out)
 ```
 
-```{r load_pre, child=c("template_n_ins_find_regions.txt")}
+```{r load_find, child=c("template_n_ins_find_regions.txt")}
 ```
 
 The results:
 
-```{r template_n_from_power_mediation_obs_simple_plot, fig.cap = "Power Curve"}
+```{r template_n_from_power_moderation_obs_simple_plot, fig.cap = "Power Curve"}
 # ===== Basic Results =====
 
 n_power_region
 
 # ===== Plot the (Crude) Power Curve and the Regions =====
 
-plot(n_power_region)
+tmp <- try(plot(n_power_region))
+if (inherits(tmp, "try-error")) browser()
 ```
 
-```{r load_pre, child=c("template_n_ins_find_regions_results.txt")}
+```{r load_res, child=c("template_n_ins_find_regions_results.txt")}
 ```
 
 # Code Template {#code_template}
@@ -197,14 +228,13 @@ library(power4mome)
 
 model <-
 "
-m ~ x
-y ~ m + x
+y ~ x + w + x:w
 "
 model_es <-
 "
-m ~ x: s
-y ~ m: l
 y ~ x: m
+y ~ w: s
+y ~ x:w: l
 "
 
 # Test the Model Specification
@@ -213,6 +243,7 @@ out <- power4test(nrep = 2,
                   model = model,
                   pop_es = model_es,
                   n = 50000,
+                  fit_model_args = list(fit_function = "lm"),
                   iseed = 1234)
 
 # Check the Data Generated
@@ -222,21 +253,18 @@ print(out,
 
 # ====== Try One N and Estimate the Power ======
 
-# For n = 100,
-# when testing the indirect effect by
-# Monte Carlo confidence interval
+# For n = 50.
+# Test the coefficient of the product term
+# x:w in the regression results of lm().
+# The test by CI is equivalent to the one-tailed t-test.
 
 out <- power4test(nrep = 400,
                   model = model,
                   pop_es = model_es,
-                  n = 100,
-                  R = 1000,
-                  ci_type = "mc",
-                  test_fun = test_indirect_effect,
-                  test_args = list(x = "x",
-                                   m = "m",
-                                   y = "y",
-                                   mc_ci = TRUE),
+                  n = 50,
+                  fit_model_args = list(fit_function = "lm"),
+                  test_fun = test_parameters,
+                  test_args = list(pars = "y~x:w"),
                   iseed = 1234,
                   parallel = TRUE)
 
