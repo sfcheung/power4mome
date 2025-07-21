@@ -1,4 +1,4 @@
-# power4mome 0.0.1.90
+# power4mome 0.0.1.91
 
 - Initialized the package. (0.0.0.9000)
 
@@ -535,3 +535,7 @@
 
 - Removed duplicated plot methods.
   (0.0.1.90)
+
+- Updated `test_k_indirect_effects()`'
+  with the option `"at_least_k_sig"`.
+  (0.0.1.91)
