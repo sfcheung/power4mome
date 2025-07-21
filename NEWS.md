@@ -1,4 +1,4 @@
-# power4mome 0.0.1.89
+# power4mome 0.0.1.90
 
 - Initialized the package. (0.0.0.9000)
 
@@ -532,3 +532,6 @@
 - Disabled model checking in
   the plot method of `n_region_from_power`,
   which is not necessary. (0.0.1.89)
+
+- Removed duplicated plot methods.
+  (0.0.1.90)

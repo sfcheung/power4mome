@@ -22,18 +22,7 @@
 
 \method{plot}{power4test_by_n}(
   x,
-  main = "Estimated Power vs. Sample Size",
-  xlab = "Sample Size",
-  ylab = "Estimated Power",
-  pars_ci = list(),
-  type = "l",
-  ylim = c(0, 1),
-  ci_level = 0.95,
-  ...
-)
-
-\method{plot}{power4test_by_n}(
-  x,
+  what = c("ci", "power_curve"),
   main = "Estimated Power vs. Sample Size",
   xlab = "Sample Size",
   ylab = "Estimated Power",
@@ -46,6 +35,7 @@
 
 \method{plot}{power4test_by_es}(
   x,
+  what = c("ci", "power_curve"),
   main = paste0("Estimated Power vs. Effect Size / Parameter (", attr(x[[1]],
     "pop_es_name"), ")"),
   xlab = paste0("Effect Size / Parameter (", attr(x[[1]], "pop_es_name"), ")"),
