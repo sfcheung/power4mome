@@ -1,5 +1,5 @@
 ---
-title: "Quick Template: Simple Moderation with Observed Variables"
+title: "Quick Template: Moderation with Observed Variables: Two Moderators"
 date: "2025-07-21"
 output:
   html_document:
@@ -46,7 +46,8 @@ find the regions described below.
 # Scope
 
 This file is for moderation models with
-one moderator.
+two or more moderators, and only two-way
+interaction effects are involved.
 
 
 
@@ -141,15 +142,21 @@ library(power4mome)
 
 Estimate the power for a sample size.
 
+The case of two moderators is illustrated
+but the code can be easily extended to
+any number of moderators.
+
 The code for the model:
 
 
 ``` r
 # ====== Model: Form ======
 
+# Make sure all 1st order terms (w1, w2, w3, etc.) are included
+
 model <-
 "
-y ~ x + w + x:w
+y ~ x + w1 + w2 + x:w1 + x:w2
 "
 
 # ====== Model: Population Values ======
@@ -175,14 +182,16 @@ y ~ x + w + x:w
 
 model_es <-
 "
-y ~ x: m
-y ~ w: s
-y ~ x:w: l
+y ~ x: s
+y ~ w1: s
+y ~ w2: s
+y ~ x:w1: l
+y ~ x:w2: m
 "
 ```
 
 <div class="figure" style="text-align: center">
-<img src="template_n_from_power_moderation_obs_simple_model-1.png" alt="The Model"  />
+<img src="template_n_from_power_moderation_obs_two_ws_model-1.png" alt="The Model"  />
 <p class="caption">The Model</p>
 </div>
 
@@ -209,18 +218,21 @@ print(out,
 
 # ====== Estimate the Power ======
 
-# For n = 50.
-# Test the coefficient of the product term
-# x:w in the regression results of lm().
+# For n = 100.
+# Find the power with *both* x:w1 and x:w2 significant.
+# in the regression results of lm().
 # The test by CI is equivalent to the two-tailed t-test.
+# Add omnibus = "all_sig" to find this power.
 
 out <- power4test(nrep = 400,
                   model = model,
                   pop_es = model_es,
-                  n = 50,
+                  n = 100,
                   fit_model_args = list(fit_function = "lm"),
                   test_fun = test_parameters,
-                  test_args = list(pars = "y~x:w"),
+                  test_args = list(pars = c("y~x:w1",
+                                            "y~x:w2"),
+                                   omnibus = "all_sig"),
                   iseed = 1234,
                   parallel = TRUE)
 
@@ -240,54 +252,69 @@ print(out,
 #> 
 #> == Model on Factors/Variables ==
 #> 
-#> y ~ x + w + x:w
+#> y ~ x + w1 + w2 + x:w1 + x:w2
 #> 
 #> == Model on Variables/Indicators ==
 #> 
-#> y ~ x + w + x:w
+#> y ~ x + w1 + w2 + x:w1 + x:w2
 #> 
 #> ====== Population Values ======
 #> 
 #> Regressions:
 #>                    Population
 #>   y ~                        
-#>     x                 0.300  
-#>     w                 0.100  
-#>     x:w               0.150  
+#>     x                 0.100  
+#>     w1                0.100  
+#>     w2                0.100  
+#>     x:w1              0.150  
+#>     x:w2              0.100  
 #> 
 #> Covariances:
 #>                    Population
 #>   x ~~                       
-#>     w                 0.000  
-#>     x:w               0.000  
-#>   w ~~                       
-#>     x:w               0.000  
+#>     w1                0.000  
+#>     w2                0.000  
+#>     x:w1              0.000  
+#>     x:w2              0.000  
+#>   w1 ~~                      
+#>     w2                0.000  
+#>     x:w1              0.000  
+#>     x:w2              0.000  
+#>   w2 ~~                      
+#>     x:w1              0.000  
+#>     x:w2              0.000  
+#>   x:w1 ~~                    
+#>     x:w2              0.000  
 #> 
 #> Variances:
 #>                    Population
-#>    .y                 0.877  
+#>    .y                 0.937  
 #>     x                 1.000  
-#>     w                 1.000  
-#>     x:w               1.000  
+#>     w1                1.000  
+#>     w2                1.000  
+#>     x:w1              1.000  
+#>     x:w2              1.000  
 #> 
 #> (Computing indirect effects for 0 paths ...)
 #> 
 #> ======================= Data Information =======================
 #> 
 #> Number of Replications:  400 
-#> Sample Sizes:  50 
+#> Sample Sizes:  100 
 #> 
 #> ==== Descriptive Statistics ====
 #> 
-#>     vars     n  mean   sd  skew kurtosis   se
-#> y      1 20000 -0.01 1.00  0.03     0.02 0.01
-#> x      2 20000 -0.01 1.00  0.04    -0.01 0.01
-#> w      3 20000  0.00 1.01 -0.02     0.02 0.01
-#> x:w    4 20000 -0.01 1.01 -0.01     5.04 0.01
+#>      vars     n  mean sd skew kurtosis   se
+#> y       1 40000  0.00  1 0.03     0.04 0.01
+#> x       2 40000 -0.01  1 0.00     0.02 0.01
+#> w1      3 40000  0.01  1 0.01    -0.03 0.01
+#> w2      4 40000  0.00  1 0.00     0.01 0.01
+#> x:w1    5 40000  0.00  1 0.04     5.73 0.01
+#> x:w2    6 40000  0.00  1 0.02     6.02 0.01
 #> 
 #> ==== Parameter Estimates Based on All 400 Samples Combined ====
 #> 
-#> Total Sample Size: 20000 
+#> Total Sample Size: 40000 
 #> 
 #> ==== Standardized Estimates ====
 #> 
@@ -296,17 +323,28 @@ print(out,
 #> Regressions:
 #>                     est.std
 #>   y ~                      
-#>     x                 0.296
-#>     w                 0.091
-#>     x:w               0.153
+#>     x                 0.094
+#>     w1                0.095
+#>     w2                0.106
+#>     x:w1              0.149
+#>     x:w2              0.099
 #> 
 #> Covariances:
 #>                     est.std
 #>   x ~~                     
-#>     w                -0.011
-#>     x:w               0.000
-#>   w ~~                     
-#>     x:w              -0.014
+#>     w1               -0.001
+#>     w2                0.002
+#>     x:w1              0.022
+#>     x:w2              0.007
+#>   w1 ~~                    
+#>     w2                0.004
+#>     x:w1             -0.000
+#>     x:w2              0.004
+#>   w2 ~~                    
+#>     x:w1              0.004
+#>     x:w2             -0.009
+#>   x:w1 ~~                  
+#>     x:w2              0.002
 #> 
 #> 
 #> ==================== Extra Element(s) Found ====================
@@ -319,20 +357,20 @@ print(out,
 #> 
 #> 
 #> The models:
-#> y ~ x + w + x:w
-#> <environment: 0x0000029109238708>
+#> y ~ x + w1 + w2 + x:w1 + x:w2
+#> <environment: 0x000001cc13fadb28>
 #> 
 #> 
 #> ====================== Test(s) Conducted ======================
 #> 
-#> - test_parameters: CIs (pars: y~x:w)
+#> - test_parameters: CIs (pars: y~x:w1,y~x:w2)
 #> 
 #> Call print() and set 'test_long = TRUE' for a detailed report.
 rejection_rates(out)
-#> [test]: test_parameters: CIs (pars: y~x:w) 
-#> [test_label]: y~x:w 
-#>     est   p.v reject r.cilo r.cihi
-#> 1 0.146 1.000  0.172  0.135  0.210
+#> [test]: test_parameters: CIs (pars: y~x:w1,y~x:w2) 
+#> [test_label]: All sig 
+#>    est   p.v reject r.cilo r.cihi
+#> 1  NaN 1.000  0.062  0.039  0.086
 #> Notes:
 #> - p.v: The proportion of valid replications.
 #> - est: The mean of the estimates in a test across replications.
@@ -422,13 +460,13 @@ n_power_region
 #> Solution: 
 #> 
 #> Approximate region of sample sizes with power:
-#> - not significantly different from 0.800: 303 to 371
-#> - significantly lower than 0.800: 303
-#> - significantly higher than 0.800: 371
+#> - not significantly different from 0.800: 709 to 838
+#> - significantly lower than 0.800: 709
+#> - significantly higher than 0.800: 838
 #> 
 #> Confidence intervals of the estimated power:
-#> - for the lower bound (303): [0.718, 0.802]
-#> - for the upper bound (371): [0.812, 0.883]
+#> - for the lower bound (709): [0.721, 0.804]
+#> - for the upper bound (838): [0.796, 0.869]
 #> 
 #> Call `summary()` for detailed results.
 
@@ -438,7 +476,7 @@ plot(n_power_region)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="template_n_from_power_moderation_obs_simple_plot-1.png" alt="Power Curve"  />
+<img src="template_n_from_power_moderation_obs_two_ws_plot-1.png" alt="Power Curve"  />
 <p class="caption">Power Curve</p>
 </div>
 
@@ -447,16 +485,16 @@ plot(n_power_region)
 As shown above, approximately:
 
 - sample sizes lower than
-  303 have
+  709 have
   power significantly lower than .80, and
 
 - sample sizes higher than
-  371 have
+  838 have
   power significantly higher than .80.
 
 In other words, sample sizes between
-303 and
-371 have
+709 and
+838 have
 power not significantly different from
 .80.
 
@@ -485,10 +523,10 @@ summary(n_power_region)
 #> 
 #> === Major Results ===
 #> 
-#> - Final Value (Sample Size): 303
+#> - Final Value (Sample Size): 709
 #> 
-#> - Final Estimated Power: 0.760 
-#> - Confidence Interval: [0.718; 0.802]
+#> - Final Estimated Power: 0.762 
+#> - Confidence Interval: [0.721; 0.804]
 #> - Level of confidence: 95.0%
 #> - Based on 400 replications.
 #> 
@@ -496,8 +534,8 @@ summary(n_power_region)
 #> 
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
-#> - The range of values explored: 232 to 50 
-#> - Time spent in the search: 23.68 secs 
+#> - The range of values explored: 100 to 985 
+#> - Time spent in the search: 1.095 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -515,21 +553,25 @@ summary(n_power_region)
 #> 
 #> Coefficients:
 #> (Intercept)            x  
-#>   -1.809119     0.009846  
+#>   -2.576927     0.005038  
 #> 
-#> Degrees of Freedom: 1599 Total (i.e. Null);  1598 Residual
-#> Null Deviance:	    2134 
-#> Residual Deviance: 1698 	AIC: 1702
+#> Degrees of Freedom: 3199 Total (i.e. Null);  3198 Residual
+#> Null Deviance:	    3753 
+#> Residual Deviance: 2765 	AIC: 2769
 #> 
 #> - Detailed Results:
 #> 
-#> [test]: test_parameters: CIs (pars: y~x:w) 
-#> [test_label]: y~x:w 
-#>     n   est   p.v reject r.cilo r.cihi
-#> 1  50 0.146 1.000  0.172  0.135  0.210
-#> 2 232 0.154 1.000  0.708  0.663  0.752
-#> 3 303 0.148 1.000  0.760  0.718  0.802
-#> 4 373 0.147 1.000  0.818  0.780  0.855
+#> [test]: test_parameters: CIs (pars: y~x:w1,y~x:w2) 
+#> [test_label]: All sig 
+#>      n  est   p.v reject r.cilo r.cihi
+#> 1  100  NaN 1.000  0.062  0.039  0.086
+#> 2  690  NaN 1.000  0.715  0.671  0.759
+#> 3  709  NaN 1.000  0.762  0.721  0.804
+#> 4  727  NaN 1.000  0.787  0.747  0.828
+#> 5  764  NaN 1.000  0.830  0.793  0.867
+#> 6  838  NaN 1.000  0.833  0.796  0.869
+#> 7  985  NaN 1.000  0.890  0.859  0.921
+#> 8 1280  NaN 1.000  0.935  0.911  0.959
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.
@@ -560,27 +602,28 @@ summary(n_power_region)
 #> 
 #> === Major Results ===
 #> 
-#> - Final Value (Sample Size): 371
+#> - Final Value (Sample Size): 838
 #> 
-#> - Final Estimated Power: 0.848 
-#> - Confidence Interval: [0.812; 0.883]
+#> - Final Estimated Power: 0.833 
+#> - Confidence Interval: [0.796; 0.869]
 #> - Level of confidence: 95.0%
 #> - Based on 400 replications.
 #> 
 #> === Technical Information ===
 #> 
 #> - Algorithm: bisection 
-#> - Tolerance for 'close enough': Within 0.02000 of 0.800 
-#> - The range of values explored: 365 to 373 
-#> - Time spent in the search: 23.65 secs 
+#> - Tolerance for 'close enough': Within  of 0.800 
+#> - The range of values explored: 100 to 985 
+#> - Time spent in the search: 0.5814 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
 #> 
 #> Call:
-#> power_curve(object = by_x_1, formula = power_model, start = power_curve_start, 
-#>     lower_bound = lower_bound, upper_bound = upper_bound, nls_args = nls_args, 
-#>     nls_control = nls_control, verbose = progress)
+#> power_curve(object = by_x_1, formula = power_curve_args$power_model, 
+#>     start = power_curve_args$start, lower_bound = power_curve_args$lower_bound, 
+#>     upper_bound = power_curve_args$upper_bound, nls_args = power_curve_args$nls_args, 
+#>     nls_control = power_curve_args$nls_control, verbose = progress)
 #> 
 #> Predictor: n (Sample Size)
 #> 
@@ -590,21 +633,25 @@ summary(n_power_region)
 #> 
 #> Coefficients:
 #> (Intercept)            x  
-#>     15.1241      -0.0362  
+#>   -2.576927     0.005038  
 #> 
-#> Degrees of Freedom: 1599 Total (i.e. Null);  1598 Residual
-#> Null Deviance:	    1346 
-#> Residual Deviance: 1343 	AIC: 1347
+#> Degrees of Freedom: 3199 Total (i.e. Null);  3198 Residual
+#> Null Deviance:	    3753 
+#> Residual Deviance: 2765 	AIC: 2769
 #> 
 #> - Detailed Results:
 #> 
-#> [test]: test_parameters: CIs (pars: y~x:w) 
-#> [test_label]: y~x:w 
-#>     n   est   p.v reject r.cilo r.cihi
-#> 1 365 0.153 1.000  0.855  0.820  0.890
-#> 2 369 0.154 1.000  0.885  0.854  0.916
-#> 3 371 0.152 1.000  0.848  0.812  0.883
-#> 4 373 0.147 1.000  0.818  0.780  0.855
+#> [test]: test_parameters: CIs (pars: y~x:w1,y~x:w2) 
+#> [test_label]: All sig 
+#>      n  est   p.v reject r.cilo r.cihi
+#> 1  100  NaN 1.000  0.062  0.039  0.086
+#> 2  690  NaN 1.000  0.715  0.671  0.759
+#> 3  709  NaN 1.000  0.762  0.721  0.804
+#> 4  727  NaN 1.000  0.787  0.747  0.828
+#> 5  764  NaN 1.000  0.830  0.793  0.867
+#> 6  838  NaN 1.000  0.833  0.796  0.869
+#> 7  985  NaN 1.000  0.890  0.859  0.921
+#> 8 1280  NaN 1.000  0.935  0.911  0.959
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.
@@ -629,13 +676,15 @@ library(power4mome)
 
 model <-
 "
-y ~ x + w + x:w
+y ~ x + w1 + w2 + x:w1 + x:w2
 "
 model_es <-
 "
-y ~ x: m
-y ~ w: s
-y ~ x:w: l
+y ~ x: s
+y ~ w1: s
+y ~ w2: s
+y ~ x:w1: l
+y ~ x:w2: m
 "
 
 # Test the Model Specification
@@ -654,18 +703,21 @@ print(out,
 
 # ====== Try One N and Estimate the Power ======
 
-# For n = 50.
-# Test the coefficient of the product term
-# x:w in the regression results of lm().
+# For n = 100.
+# Find the power with *both* x:w1 and x:w2 significant.
+# in the regression results of lm().
 # The test by CI is equivalent to the two-tailed t-test.
+# Add omnibus = "all_sig" to find this power.
 
 out <- power4test(nrep = 400,
                   model = model,
                   pop_es = model_es,
-                  n = 50,
+                  n = 100,
                   fit_model_args = list(fit_function = "lm"),
                   test_fun = test_parameters,
-                  test_args = list(pars = "y~x:w"),
+                  test_args = list(pars = c("y~x:w1",
+                                            "y~x:w2"),
+                                   omnibus = "all_sig"),
                   iseed = 1234,
                   parallel = TRUE)
 

@@ -54,6 +54,7 @@ articles:
   navbar: Moderation Templates (Code Examples)
   contents:
   - articles/template_n_from_power_moderation_obs_simple
+  - articles/template_n_from_power_moderation_obs_two_ws
 
 - title: Technical Appendices
   contents:

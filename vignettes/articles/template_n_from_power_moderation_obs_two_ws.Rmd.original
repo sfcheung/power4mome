@@ -1,5 +1,5 @@
 ---
-title: "Quick Template: Simple Moderation with Observed Variables"
+title: "Quick Template: Moderation with Observed Variables: Two Moderators"
 date: "`r Sys.Date()`"
 output:
   html_document:
@@ -26,7 +26,8 @@ knitr::opts_chunk$set(
 # Scope
 
 This file is for moderation models with
-one moderator.
+two or more moderators, and only two-way
+interaction effects are involved.
 
 
 ```{r load_pre, child=c("template_n_ins_functions_used.txt")}
@@ -54,14 +55,20 @@ library(power4mome)
 
 Estimate the power for a sample size.
 
+The case of two moderators is illustrated
+but the code can be easily extended to
+any number of moderators.
+
 The code for the model:
 
 ```{r model, eval=TRUE, results="hide", message=FALSE}
 # ====== Model: Form ======
 
+# Make sure all 1st order terms (w1, w2, w3, etc.) are included
+
 model <-
 "
-y ~ x + w + x:w
+y ~ x + w1 + w2 + x:w1 + x:w2
 "
 
 # ====== Model: Population Values ======
@@ -87,13 +94,15 @@ y ~ x + w + x:w
 
 model_es <-
 "
-y ~ x: m
-y ~ w: s
-y ~ x:w: l
+y ~ x: s
+y ~ w1: s
+y ~ w2: s
+y ~ x:w1: l
+y ~ x:w2: m
 "
 ```
 
-```{r template_n_from_power_moderation_obs_simple_model, echo = FALSE, fig.cap = "The Model", fig.width = 6, fig.height = 4}
+```{r template_n_from_power_moderation_obs_two_ws_model, echo = FALSE, fig.cap = "The Model", fig.width = 6, fig.height = 4}
 library(semPlot)
 library(semptools)
 suppressMessages(library(lavaan))
@@ -107,13 +116,14 @@ out <- power4test(nrep = 2,
 dat <- out$sim_all[[1]]$mm_lm_dat_out
 mod <-
 "
-xw ~ m*x + l*w
-y ~ xw + s*w
+xw ~ s*x + l*w1 + m*w2
+y ~ xw + s*w1 + s*w2
 "
-dat$xw <- dat$x * dat$w
+dat$xw <- dat$x * dat$w1
 fit0 <- sem(mod, dat, do.fit = FALSE, fixed.x = FALSE)
-layout_m <- matrix(c(NA, "w",    NA,
-                     "x", "xw", "y"), 2, 3, byrow = TRUE)
+layout_m <- matrix(c(NA, "w1",    NA,
+                     "x", "xw", "y",
+                     NA, "w2", NA), 3, 3, byrow = TRUE)
 p <- semPaths(fit0,
               whatLabels = "label",
               layout = layout_m,
@@ -123,7 +133,7 @@ p <- semPaths(fit0,
               label.cex = 1.8,
               residuals = FALSE,
               sizeMan = 10,
-              asize = 10,
+              asize = 5,
               DoNotPlot = TRUE)
 str_s <- "s\n(small:\n.10)"
 str_m <- "m\n(medium:\n.30)"
@@ -142,9 +152,11 @@ p2 <- p |>
         c("xw ~ x" = 0),
         attribute_name = "asize") |>
       set_edge_attribute(
-        c("xw ~ x" = str_m,
-          "xw ~ w" = str_2m,
-          "y ~ w" = str_s),
+        c("xw ~ x" = str_s,
+          "xw ~ w1" = str_2l,
+          "xw ~ w2" = str_2m,
+          "y ~ w1" = str_s,
+          "y ~ w2" = str_s),
         attribute_name = "labels")
 plot(p2)
 ```
@@ -171,18 +183,21 @@ print(out,
 
 # ====== Estimate the Power ======
 
-# For n = 50.
-# Test the coefficient of the product term
-# x:w in the regression results of lm().
+# For n = 100.
+# Find the power with *both* x:w1 and x:w2 significant.
+# in the regression results of lm().
 # The test by CI is equivalent to the two-tailed t-test.
+# Add omnibus = "all_sig" to find this power.
 
 out <- power4test(nrep = 400,
                   model = model,
                   pop_es = model_es,
-                  n = 50,
+                  n = 100,
                   fit_model_args = list(fit_function = "lm"),
                   test_fun = test_parameters,
-                  test_args = list(pars = "y~x:w"),
+                  test_args = list(pars = c("y~x:w1",
+                                            "y~x:w2"),
+                                   omnibus = "all_sig"),
                   iseed = 1234,
                   parallel = TRUE)
 
@@ -204,7 +219,7 @@ rejection_rates(out)
 
 The results:
 
-```{r template_n_from_power_moderation_obs_simple_plot, fig.cap = "Power Curve"}
+```{r template_n_from_power_moderation_obs_two_ws_plot, fig.cap = "Power Curve"}
 # ===== Basic Results =====
 
 n_power_region
@@ -228,13 +243,15 @@ library(power4mome)
 
 model <-
 "
-y ~ x + w + x:w
+y ~ x + w1 + w2 + x:w1 + x:w2
 "
 model_es <-
 "
-y ~ x: m
-y ~ w: s
-y ~ x:w: l
+y ~ x: s
+y ~ w1: s
+y ~ w2: s
+y ~ x:w1: l
+y ~ x:w2: m
 "
 
 # Test the Model Specification
@@ -253,18 +270,21 @@ print(out,
 
 # ====== Try One N and Estimate the Power ======
 
-# For n = 50.
-# Test the coefficient of the product term
-# x:w in the regression results of lm().
+# For n = 100.
+# Find the power with *both* x:w1 and x:w2 significant.
+# in the regression results of lm().
 # The test by CI is equivalent to the two-tailed t-test.
+# Add omnibus = "all_sig" to find this power.
 
 out <- power4test(nrep = 400,
                   model = model,
                   pop_es = model_es,
-                  n = 50,
+                  n = 100,
                   fit_model_args = list(fit_function = "lm"),
                   test_fun = test_parameters,
-                  test_args = list(pars = "y~x:w"),
+                  test_args = list(pars = c("y~x:w1",
+                                            "y~x:w2"),
+                                   omnibus = "all_sig"),
                   iseed = 1234,
                   parallel = TRUE)
 

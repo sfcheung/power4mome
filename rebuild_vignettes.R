@@ -26,6 +26,7 @@ knitr::knit("template_n_from_power_mediation_lav_serial.Rmd.original", output = 
 knitr::knit("template_n_from_power_mediation_lav_parallel.Rmd.original", output = "template_n_from_power_mediation_lav_parallel.Rmd", envir = new.env())
 
 knitr::knit("template_n_from_power_moderation_obs_simple.Rmd.original", output = "template_n_from_power_moderation_obs_simple.Rmd", envir = new.env())
+knitr::knit("template_n_from_power_moderation_obs_two_ws.Rmd.original", output = "template_n_from_power_moderation_obs_two_ws.Rmd", envir = new.env())
 
 # knitr::knit("template_mediation_obs.Rmd.original", output = "template_mediation_obs.Rmd")
 # knitr::knit("template_mediation_obs_serial.Rmd.original", output = "template_mediation_obs_serial.Rmd")
