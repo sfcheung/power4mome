@@ -15,7 +15,8 @@ test_k_indirect_effects(
   boot_out = NULL,
   check_post_check = TRUE,
   ...,
-  omnibus = c("no", "all_sig", "at_least_one_sig"),
+  omnibus = c("no", "all_sig", "at_least_one_sig", "at_least_k_sig"),
+  at_least_k = 1,
   fit_name = "fit",
   get_map_names = FALSE,
   get_test_name = FALSE
@@ -88,7 +89,18 @@ the test is declared significant if
 one row of test is stored, and the
 test is declared significant if
 at least one of the paths is
-significant.}
+significant. If \code{"at_least_k_sig"},
+then only one row of test is stored,
+and the test is declared significant
+if at least \code{k} of the paths is
+significant, \code{k} determined by the
+argument \code{at_least_k}.}
+
+\item{at_least_k}{The minimum number
+of paths required to be significant
+for the omnibus test to be considered
+significant. Used when
+\code{omnibus} is \code{"at_least_k_sig"}.}
 
 \item{fit_name}{The name of the
 model fit object to be extracted.
