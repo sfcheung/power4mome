@@ -55,6 +55,28 @@
 #' or the element `test_all` in
 #' a `power4test` object.
 #'
+#' @param collapse Whether a single
+#' decision (significant vs. not significant)
+#' is made across all tests for a test
+#' that consists of several tests
+#' (e.g., the tests of several parameters).
+#' If `"none"`, tests will be summarized
+#' individually. If `"all_sig"`, then
+#' the set of tests is considered significant
+#' if all individual tests are significant.
+#' If `"at_least_one_sig"`, then the set of
+#' tests is considered significant if
+#' at least one of the tests is significant.
+#' If `"at_least_k_sig"`, then the set of
+#' tests is considered significant if
+#' at least `k` tests are significant,
+#' `k` set by the argument `at_least_k`.
+#'
+#' @param at_least_k Used by `collapse`,
+#' the number of tests required to be
+#' significant for the set of tests to
+#' be considered significant.
+#'
 #' @seealso [power4test()]
 #'
 #' @examples
@@ -95,12 +117,20 @@
 #' summarize_tests(test_out)
 #'
 #' @export
-summarize_tests <- function(object) {
+summarize_tests <- function(object,
+                            collapse = c("none",
+                                         "all_sig",
+                                         "at_least_one_sig",
+                                         "at_least_k_sig"),
+                            at_least_k = 1) {
+  collapse <- match.arg(collapse)
   if (inherits(object, "power4test")) {
     object <- object$test_all
   }
   out <- sapply(object,
                 summarize_test_i,
+                collapse = collapse,
+                at_least_k = at_least_k,
                 simplify = FALSE)
   class(out) <- c("test_summary_list", class(out))
   out
@@ -258,7 +288,9 @@ format_num_cols <- function(object,
 }
 
 #' @noRd
-summarize_test_i <- function(x) {
+summarize_test_i <- function(x,
+                             collapse = collapse,
+                             at_least_k = at_least_k) {
   test_i <- x[[1]]$test_results
   if (is.vector(test_i)) {
     # A vector
@@ -267,7 +299,9 @@ summarize_test_i <- function(x) {
   }
   if (isTRUE(length(dim(test_i)) == 2)) {
     # A table, likely a data frame
-    out <- summarize_one_test_data_frame(x)
+    out <- summarize_one_test_data_frame(x,
+                                         collapse = collapse,
+                                         at_least_k = at_least_k)
     return(out)
   }
   stop("test_results not supported. Something's wrong.")
@@ -295,7 +329,13 @@ summarize_one_test_vector <- function(x) {
 }
 
 #' @noRd
-summarize_one_test_data_frame <- function(x) {
+summarize_one_test_data_frame <- function(x,
+                                          collapse = c("none",
+                                                       "all_sig",
+                                                       "at_least_one_sig",
+                                                       "at_least_k_sig"),
+                                          at_least_k = 1) {
+  collapse <- match.arg(collapse)
   nrep <- length(x)
   test_i <- x[[1]]$test_results
   test_label <- attr(test_i, "test_label")
@@ -311,17 +351,63 @@ summarize_one_test_data_frame <- function(x) {
                             simplify = TRUE))
                  },
                  simplify = FALSE)
-  out1 <- t(sapply(out0,
-                   colMeans,
-                   na.rm = TRUE))
-  test_not_na <- t(sapply(out0,
-                     function(x) {
-                       apply(x,
-                             2,
-                             function(xx) {sum(!is.na(xx))})
-                     }))
-  test_means <- test_i
-  test_means[, i] <- out1
+  if ((length(out0) == 1) ||
+      (collapse == "none")) {
+    out1 <- t(sapply(out0,
+                    colMeans,
+                    na.rm = TRUE))
+    test_not_na <- t(sapply(out0,
+                      function(x) {
+                        apply(x,
+                              2,
+                              function(xx) {sum(!is.na(xx))})
+                      }))
+    test_means <- test_i
+    test_means[, i] <- out1
+  } else {
+    out1a <- out0[[1]]
+    out1a[] <- as.numeric(NA)
+    sig0 <- sapply(out0,
+                    function(xx) xx[, "sig", drop = TRUE],
+                    simplify = TRUE)
+    if (collapse == "all_sig") {
+      sig1 <- apply(sig0,
+                    MARGIN = 1,
+                    function(xx) as.numeric(all(xx > 0)),
+                    simplify = TRUE)
+      out1a[, "sig"] <- sig1
+    }
+    if (collapse == "at_least_one_sig") {
+      sig1 <- apply(sig0,
+                    MARGIN = 1,
+                    function(xx) as.numeric(any(xx > 0)),
+                    simplify = TRUE)
+      out1a[, "sig"] <- sig1
+    }
+    if (collapse == "at_least_k_sig") {
+      sig1 <- apply(sig0,
+                    MARGIN = 1,
+                    function(xx) as.numeric(isTRUE(sum(xx > 0, na.rm = TRUE) >= at_least_k)),
+                    simplify = TRUE)
+      out1a[, "sig"] <- sig1
+    }
+    out1b <- colMeans(out1a, na.rm = TRUE)
+    out1 <- out1a[1, , drop = FALSE]
+    out1[] <- out1b
+    test_not_na <- out1a[1, , drop = FALSE]
+    test_not_na[] <- sum(apply(sig0,
+                       MARGIN = 1,
+                       function(xx) as.numeric(all(!is.na(xx)))))
+    test_means <- test_i[1 , ]
+    test_means[] <- NA
+    if (collapse == "at_least_k_sig") {
+      tmp <- paste0("at_least_", at_least_k, "_sig")
+    } else {
+      tmp <- collapse
+    }
+    test_means[1, "test_label"] <- tmp
+    test_means[, i] <- out1
+  }
   class(test_means) <- class(test_i)
   out1 <- list(test_attributes = attributes(x),
                nrep = nrep,

@@ -1,4 +1,4 @@
-# power4mome 0.0.1.91
+# power4mome 0.0.1.92
 
 - Initialized the package. (0.0.0.9000)
 
@@ -539,3 +539,7 @@
 - Updated `test_k_indirect_effects()`'
   with the option `"at_least_k_sig"`.
   (0.0.1.91)
+
+- Added `collapse` and `at_least_k` to
+  `rejection_rates()` and related
+  functions. (0.0.1.92)
