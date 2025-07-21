@@ -1,4 +1,4 @@
-# power4mome 0.0.1.92
+# power4mome 0.0.1.93
 
 - Initialized the package. (0.0.0.9000)
 
@@ -543,3 +543,6 @@
 - Added `collapse` and `at_least_k` to
   `rejection_rates()` and related
   functions. (0.0.1.92)
+
+- Added `omnibus` to
+  `test_parameters()`. (0.0.1.93)

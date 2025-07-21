@@ -74,6 +74,8 @@
 #'  which are usually the labels used by
 #'  `coef()` to label the parameters.
 #'
+#' @inheritParams test_k_indirect_effects
+#'
 #' @inheritParams test_indirect_effect
 #'
 #' @param fit The fit object, to be
@@ -177,9 +179,12 @@ test_parameters <- function(fit = fit,
                             remove.nonfree = TRUE,
                             check_post_check = TRUE,
                             ...,
+                            omnibus = c("no", "all_sig", "at_least_one_sig", "at_least_k_sig"),
+                            at_least_k = 1,
                             fit_name = "fit",
                             get_map_names = FALSE,
                             get_test_name = FALSE) {
+  omnibus <- match.arg(omnibus)
   map_names <- c(fit = fit_name)
   args <- list(...)
   if (get_map_names) {
@@ -325,9 +330,30 @@ test_parameters <- function(fit = fit,
     }
     out <- out[j, ]
   }
-  attr(out, "test_label") <- "test_label"
-  class(out) <- class(est)
-  return(out)
+  if (omnibus == "no") {
+    attr(out, "test_label") <- "test_label"
+    class(out) <- class(est)
+    return(out)
+  } else {
+    out2 <- out[1, ]
+    out2[1, ] <- as.numeric(NA)
+    tmp <- switch(omnibus,
+                  all_sig = "All sig",
+                  at_least_one_sig = "1+ sig",
+                  at_least_k_sig = paste0(at_least_k,
+                                          "+ sig)"))
+    out2[1, "test_label"] <- tmp
+    tmp <- switch(omnibus,
+                  all_sig = as.numeric(isTRUE(all(out$sig == 1))),
+                  at_least_one_sig = as.numeric(isTRUE(any(out$sig == 1))),
+                  at_least_k_sig = as.numeric(isTRUE(sum(out$sig == 1) >= at_least_k)))
+    out2$sig <- tmp
+    if (any(is.na(out2$sig))) {
+      out2$sig <- as.numeric(NA)
+    }
+    attr(out2, "test_label") <- "test_label"
+    return(out2)
+  }
 }
 
 #' @param object A `power4test` object.

@@ -13,6 +13,8 @@ test_parameters(
   remove.nonfree = TRUE,
   check_post_check = TRUE,
   ...,
+  omnibus = c("no", "all_sig", "at_least_one_sig", "at_least_k_sig"),
+  at_least_k = 1,
   fit_name = "fit",
   get_map_names = FALSE,
   get_test_name = FALSE
@@ -64,6 +66,29 @@ by \code{\link[lavaan:lavInspect]{lavaan::lavInspect()}} (with
 be passed to \code{\link[lavaan:parameterEstimates]{lavaan::parameterEstimates()}},
 \code{\link[lavaan:standardizedSolution]{lavaan::standardizedSolution()}},
 or \code{\link[lmhelprs:lm_list_to_partable]{lmhelprs::lm_list_to_partable()}}.}
+
+\item{omnibus}{If \code{"no"}, the default,
+then the test results for all paths
+are stored. If \code{"all_sig"}, then
+only one row of test is stored, and
+the test is declared significant if
+\emph{all} paths are significant. If
+\code{"at_least_one_sig"}, then only
+one row of test is stored, and the
+test is declared significant if
+at least one of the paths is
+significant. If \code{"at_least_k_sig"},
+then only one row of test is stored,
+and the test is declared significant
+if at least \code{k} of the paths is
+significant, \code{k} determined by the
+argument \code{at_least_k}.}
+
+\item{at_least_k}{The minimum number
+of paths required to be significant
+for the omnibus test to be considered
+significant. Used when
+\code{omnibus} is \code{"at_least_k_sig"}.}
 
 \item{fit_name}{The name of the fit
 results for which the parameter names
