@@ -152,6 +152,29 @@ rejection_rates.default <- function(object,
 #' is used to compute the standard
 #' errors.
 #'
+#' @param collapse Whether a single
+#' decision (significant vs. not significant)
+#' is made across all tests for a test
+#' that consists of several tests
+#' (e.g., the tests of several parameters).
+#' If `"none"`, tests will be summarized
+#' individually. If `"all_sig"`, then
+#' the set of tests is considered significant
+#' if all individual tests are significant.
+#' If `"at_least_one_sig"`, then the set of
+#' tests is considered significant if
+#' at least one of the tests is significant.
+#' If `"at_least_k_sig"`, then the set of
+#' tests is considered significant if
+#' at least `k` tests are significant,
+#' `k` set by the argument `at_least_k`.
+#'
+#' @param at_least_k Used by `collapse`,
+#' the number of tests required to be
+#' significant for the set of tests to
+#' be considered significant.
+#'
+#'
 #' @export
 #' @rdname rejection_rates
 rejection_rates.power4test <- function(object,
@@ -159,8 +182,15 @@ rejection_rates.power4test <- function(object,
                                        ci = TRUE,
                                        level = .95,
                                        se = FALSE,
+                                       collapse = c("none",
+                                                    "all_sig",
+                                                    "at_least_one_sig",
+                                                    "at_least_k_sig"),
+                                       at_least_k = 1,
                                        ...) {
-  out0 <- summarize_tests(object)
+  out0 <- summarize_tests(object,
+                          collapse = collapse,
+                          at_least_k = at_least_k)
   out1 <- lapply(out0,
                  rejection_rates_i,
                  all_columns = all_columns,

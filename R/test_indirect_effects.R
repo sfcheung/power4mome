@@ -79,7 +79,18 @@
 #' one row of test is stored, and the
 #' test is declared significant if
 #' at least one of the paths is
-#' significant.
+#' significant. If `"at_least_k_sig"`,
+#' then only one row of test is stored,
+#' and the test is declared significant
+#' if at least `k` of the paths is
+#' significant, `k` determined by the
+#' argument `at_least_k`.
+#'
+#' @param at_least_k The minimum number
+#' of paths required to be significant
+#' for the omnibus test to be considered
+#' significant. Used when
+#' `omnibus` is `"at_least_k_sig"`.
 #'
 #'
 #' @seealso [power4test()]
@@ -153,7 +164,8 @@ test_k_indirect_effects <- function(
                             boot_out = NULL,
                             check_post_check = TRUE,
                             ...,
-                            omnibus = c("no", "all_sig", "at_least_one_sig"),
+                            omnibus = c("no", "all_sig", "at_least_one_sig", "at_least_k_sig"),
+                            at_least_k = 1,
                             fit_name = "fit",
                             get_map_names = FALSE,
                             get_test_name = FALSE
@@ -292,12 +304,16 @@ test_k_indirect_effects <- function(
     tmp <- paste0(c(x, y), collapse = "-...->")
     tmp <- paste0(tmp, switch(omnibus,
                               all_sig = " (All sig)",
-                              at_least_one_sig = " (1+ sig)"))
+                              at_least_one_sig = " (1+ sig)"),
+                              at_least_k_sig = paste0(" (",
+                                                      at_least_k,
+                                                      "+ sig)"))
     out2[1, "test_label"] <- tmp
     out2[, c("est", "cilo", "cihi")] <- as.numeric(NA)
     tmp <- switch(omnibus,
                   all_sig = as.numeric(isTRUE(all(out1$sig == 1))),
-                  at_least_one_sig = as.numeric(isTRUE(any(out1$sig == 1))))
+                  at_least_one_sig = as.numeric(isTRUE(any(out1$sig == 1))),
+                  at_least_k_sig = as.numeric(isTRUE(sum(out1$sig == 1) >= at_least_k)))
     out2$sig <- tmp
     if (any(is.na(out2$sig))) {
       out2$sig <- as.numeric(NA)

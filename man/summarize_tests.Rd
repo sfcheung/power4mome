@@ -7,7 +7,11 @@
 \alias{print.test_out_list}
 \title{Summarize Test Results}
 \usage{
-summarize_tests(object)
+summarize_tests(
+  object,
+  collapse = c("none", "all_sig", "at_least_one_sig", "at_least_k_sig"),
+  at_least_k = 1
+)
 
 \method{print}{test_summary_list}(x, digits = 3, ...)
 
@@ -19,6 +23,28 @@ summarize_tests(object)
 \item{object}{A \code{power4test} object
 or the element \code{test_all} in
 a \code{power4test} object.}
+
+\item{collapse}{Whether a single
+decision (significant vs. not significant)
+is made across all tests for a test
+that consists of several tests
+(e.g., the tests of several parameters).
+If \code{"none"}, tests will be summarized
+individually. If \code{"all_sig"}, then
+the set of tests is considered significant
+if all individual tests are significant.
+If \code{"at_least_one_sig"}, then the set of
+tests is considered significant if
+at least one of the tests is significant.
+If \code{"at_least_k_sig"}, then the set of
+tests is considered significant if
+at least \code{k} tests are significant,
+\code{k} set by the argument \code{at_least_k}.}
+
+\item{at_least_k}{Used by \code{collapse},
+the number of tests required to be
+significant for the set of tests to
+be considered significant.}
 
 \item{x}{The object to be printed.}
 

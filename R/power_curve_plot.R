@@ -240,7 +240,7 @@ plot_power_curve_curve <- function(x,
 #' @export
 plot.power4test_by_n <- function(
                              x,
-                             what = "ci",
+                             what = c("ci", "power_curve"),
                              main = "Estimated Power vs. Sample Size",
                              xlab = "Sample Size",
                              ylab = "Estimated Power",
@@ -249,6 +249,7 @@ plot.power4test_by_n <- function(
                              ylim = c(0, 1),
                              ci_level = .95,
                              ...) {
+  what <- match.arg(what, several.ok = TRUE)
   reject_df <- rejection_rates(x,
                                ci_level = ci_level,
                                all_columns = TRUE)
@@ -269,41 +270,42 @@ plot.power4test_by_n <- function(
   invisible(x)
 }
 
-#' @rdname plot.power_curve
-#' @export
-plot.power4test_by_n <- function(
-                             x,
-                             main = "Estimated Power vs. Sample Size",
-                             xlab = "Sample Size",
-                             ylab = "Estimated Power",
-                             pars_ci = list(),
-                             type = "l",
-                             ylim = c(0, 1),
-                             ci_level = .95,
-                             ...) {
-  reject_df <- rejection_rates(x,
-                               ci_level = ci_level,
-                               all_columns = TRUE)
-  reject_df$x <- reject_df$n
-  x0 <- list(predictor = "n",
-             reject_df = reject_df)
+# #' @rdname plot.power_curve
+# #' @export
+# plot.power4test_by_n <- function(
+#                              x,
+#                              main = "Estimated Power vs. Sample Size",
+#                              xlab = "Sample Size",
+#                              ylab = "Estimated Power",
+#                              pars_ci = list(),
+#                              type = "l",
+#                              ylim = c(0, 1),
+#                              ci_level = .95,
+#                              ...) {
+#   reject_df <- rejection_rates(x,
+#                                ci_level = ci_level,
+#                                all_columns = TRUE)
+#   reject_df$x <- reject_df$n
+#   x0 <- list(predictor = "n",
+#              reject_df = reject_df)
 
-  plot.power_curve(x = x0,
-                   main = main,
-                   xlab = xlab,
-                   ylab = ylab,
-                   pars_ci = pars_ci,
-                   type = type,
-                   ylim = ylim,
-                   ci_level = ci_level,
-                   ...)
-  invisible(x)
-}
+#   plot.power_curve(x = x0,
+#                    main = main,
+#                    xlab = xlab,
+#                    ylab = ylab,
+#                    pars_ci = pars_ci,
+#                    type = type,
+#                    ylim = ylim,
+#                    ci_level = ci_level,
+#                    ...)
+#   invisible(x)
+# }
 
 #' @rdname plot.power_curve
 #' @export
 plot.power4test_by_es <- function(
                              x,
+                             what = c("ci", "power_curve"),
                              main = paste0("Estimated Power vs. Effect Size / Parameter (",
                                            attr(x[[1]], "pop_es_name"), ")"),
                              xlab = paste0("Effect Size / Parameter (",
@@ -314,6 +316,7 @@ plot.power4test_by_es <- function(
                              ylim = c(0, 1),
                              ci_level = .95,
                              ...) {
+  what <- match.arg(what, several.ok = TRUE)
   reject_df <- rejection_rates(x,
                                ci_level = ci_level,
                                all_columns = TRUE)
