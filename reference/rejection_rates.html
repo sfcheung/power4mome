@@ -11,7 +11,7 @@ object or other supported objects."><meta property="og:image" content="https://s
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.89</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.92</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -79,6 +79,8 @@ object or other supported objects.</p>
 <span>  ci <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  level <span class="op">=</span> <span class="fl">0.95</span>,</span>
 <span>  se <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  collapse <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"none"</span>, <span class="st">"all_sig"</span>, <span class="st">"at_least_one_sig"</span>, <span class="st">"at_least_k_sig"</span><span class="op">)</span>,</span>
+<span>  at_least_k <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -158,6 +160,32 @@ for the rejection rates
 be computed. Normal approximation
 is used to compute the standard
 errors.</p></dd>
+
+
+<dt id="arg-collapse">collapse<a class="anchor" aria-label="anchor" href="#arg-collapse"></a></dt>
+<dd><p>Whether a single
+decision (significant vs. not significant)
+is made across all tests for a test
+that consists of several tests
+(e.g., the tests of several parameters).
+If <code>"none"</code>, tests will be summarized
+individually. If <code>"all_sig"</code>, then
+the set of tests is considered significant
+if all individual tests are significant.
+If <code>"at_least_one_sig"</code>, then the set of
+tests is considered significant if
+at least one of the tests is significant.
+If <code>"at_least_k_sig"</code>, then the set of
+tests is considered significant if
+at least <code>k</code> tests are significant,
+<code>k</code> set by the argument <code>at_least_k</code>.</p></dd>
+
+
+<dt id="arg-at-least-k">at_least_k<a class="anchor" aria-label="anchor" href="#arg-at-least-k"></a></dt>
+<dd><p>Used by <code>collapse</code>,
+the number of tests required to be
+significant for the set of tests to
+be considered significant.</p></dd>
 
 
 <dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
