@@ -1,6 +1,6 @@
 ---
 title: "Quick Template: Simple Moderation with Observed Variables"
-date: "2025-07-20"
+date: "2025-07-21"
 output:
   html_document:
     fig.align: "center"
@@ -45,7 +45,8 @@ find the regions described below.
 
 # Scope
 
-This file is for simple mediation models.
+This file is for moderation models with
+one moderator.
 
 
 
@@ -167,7 +168,7 @@ y ~ x + w + x:w
 # Can also set to a number directly
 # Set each path to the hypothesized magnitude
 
-# For a path moderated, the coefficent
+# For a path moderated, the coefficient
 # of a predictor is its standardized
 # effect when the moderator equal to
 # its mean.
@@ -319,7 +320,7 @@ print(out,
 #> 
 #> The models:
 #> y ~ x + w + x:w
-#> <environment: 0x000002c39210daf0>
+#> <environment: 0x000002911ae1e7e8>
 #> 
 #> 
 #> ====================== Test(s) Conducted ======================
@@ -496,7 +497,7 @@ summary(n_power_region)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 232 to 50 
-#> - Time spent in the search: 25.26 secs 
+#> - Time spent in the search: 23.75 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -571,7 +572,7 @@ summary(n_power_region)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 365 to 373 
-#> - Time spent in the search: 23.46 secs 
+#> - Time spent in the search: 22.63 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 

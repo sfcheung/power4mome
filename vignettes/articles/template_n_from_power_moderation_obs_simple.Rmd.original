@@ -25,7 +25,8 @@ knitr::opts_chunk$set(
 
 # Scope
 
-This file is for simple mediation models.
+This file is for moderation models with
+one moderator.
 
 
 ```{r load_pre, child=c("template_n_ins_functions_used.txt")}
@@ -79,7 +80,7 @@ y ~ x + w + x:w
 # Can also set to a number directly
 # Set each path to the hypothesized magnitude
 
-# For a path moderated, the coefficent
+# For a path moderated, the coefficient
 # of a predictor is its standardized
 # effect when the moderator equal to
 # its mean.
