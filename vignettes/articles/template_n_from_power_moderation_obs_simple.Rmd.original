@@ -204,7 +204,7 @@ rejection_rates(out)
 
 The results:
 
-```{r template_n_from_power_moderation_obs_two_ws_plot, fig.cap = "Power Curve"}
+```{r template_n_from_power_moderation_obs_simple_plot, fig.cap = "Power Curve"}
 # ===== Basic Results =====
 
 n_power_region
