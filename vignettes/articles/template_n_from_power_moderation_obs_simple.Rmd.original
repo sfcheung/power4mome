@@ -129,7 +129,7 @@ str_s <- "s\n(small:\n.10)"
 str_m <- "m\n(medium:\n.30)"
 str_l <- "l\n(large:\n.50)"
 str_2s <- "s\n(small:\n.05)"
-str_2m <- "m\n(medium:\n.15)"
+str_2m <- "m\n(medium:\n.10)"
 str_2l <- "l\n(large:\n.15)"
 p2 <- p |>
       set_node_attribute(
@@ -204,7 +204,7 @@ rejection_rates(out)
 
 The results:
 
-```{r template_n_from_power_moderation_obs_simple_plot, fig.cap = "Power Curve"}
+```{r template_n_from_power_moderation_obs_two_ws_plot, fig.cap = "Power Curve"}
 # ===== Basic Results =====
 
 n_power_region
