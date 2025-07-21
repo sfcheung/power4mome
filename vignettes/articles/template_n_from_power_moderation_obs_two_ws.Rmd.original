@@ -1,0 +1,311 @@
+---
+title: "Quick Template: Moderation with Observed Variables: Two Moderators"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    fig.align: "center"
+    toc: true
+    toc_depth: 2
+    number_sections: false
+bibliography: references.bib
+csl: apa.csl
+---
+
+```{r knitr_setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "",
+  fig.align = "center"
+)
+```
+
+```{r load_pre, child=c("template_n_ins_preamble.txt")}
+```
+
+# Scope
+
+This file is for moderation models with
+two or more moderators, and only two-way
+interaction effects are involved.
+
+
+```{r load_pre, child=c("template_n_ins_functions_used.txt")}
+```
+
+- `test_parameters()`
+
+    - Test selected parameters. Used by
+    `power4test()` to test a selected
+    product term (interaction term).
+
+```{r load_flow, echo=FALSE, results="asis"}
+# Adapted from this answer
+cat(readLines("template_n_ins_flowchart.txt"),
+    sep = "\n")
+```
+
+# Set Up The Model and Test
+
+Load the package first:
+
+```{r load_pkg}
+library(power4mome)
+```
+
+Estimate the power for a sample size.
+
+The case of two moderators is illustrated
+but the code can be easily extended to
+any number of moderators.
+
+The code for the model:
+
+```{r model, eval=TRUE, results="hide", message=FALSE}
+# ====== Model: Form ======
+
+# Make sure all 1st order terms (w1, w2, w3, etc.) are included
+
+model <-
+"
+y ~ x + w1 + w2 + x:w1 + x:w2
+"
+
+# ====== Model: Population Values ======
+
+# For a regression coefficient
+# l: large (.50 by default)
+# m: medium (.30 by default)
+# s: small (.10 by default)
+# n: nil (.00 by default)
+# For the product term:
+# l: large (.15 by default)
+# m: medium (.10 by default)
+# s: small (.05 by default)
+# -l, -m, and -s denote negative values
+# Omitted paths are zero by default
+# Can also set to a number directly
+# Set each path to the hypothesized magnitude
+
+# For a path moderated, the coefficient
+# of a predictor is its standardized
+# effect when the moderator equal to
+# its mean.
+
+model_es <-
+"
+y ~ x: s
+y ~ w1: s
+y ~ w2: s
+y ~ x:w1: l
+y ~ x:w2: m
+"
+```
+
+```{r template_n_from_power_moderation_obs_two_ws_model, echo = FALSE, fig.cap = "The Model", fig.width = 6, fig.height = 4}
+library(semPlot)
+library(semptools)
+suppressMessages(library(lavaan))
+out <- power4test(nrep = 2,
+                  model = model,
+                  pop_es = model_es,
+                  n = 100,
+                  iseed = 1234,
+                  parallel = FALSE,
+                  progress = FALSE)
+dat <- out$sim_all[[1]]$mm_lm_dat_out
+mod <-
+"
+xw ~ s*x + l*w1 + m*w2
+y ~ xw + s*w1 + s*w2
+"
+dat$xw <- dat$x * dat$w1
+fit0 <- sem(mod, dat, do.fit = FALSE, fixed.x = FALSE)
+layout_m <- matrix(c(NA, "w1",    NA,
+                     "x", "xw", "y",
+                     NA, "w2", NA), 3, 3, byrow = TRUE)
+p <- semPaths(fit0,
+              whatLabels = "label",
+              layout = layout_m,
+              nCharNodes = 0,
+              exoCov = FALSE,
+              edge.label.cex = 1.5,
+              label.cex = 1.8,
+              residuals = FALSE,
+              sizeMan = 10,
+              asize = 5,
+              DoNotPlot = TRUE)
+str_s <- "s\n(small:\n.10)"
+str_m <- "m\n(medium:\n.30)"
+str_l <- "l\n(large:\n.50)"
+str_2s <- "s\n(small:\n.05)"
+str_2m <- "m\n(medium:\n.10)"
+str_2l <- "l\n(large:\n.15)"
+p2 <- p |>
+      set_node_attribute(
+        c(xw = .01),
+        attribute_name = "width") |>
+      set_node_attribute(
+        c(xw = .01),
+        attribute_name = "height") |>
+      set_edge_attribute(
+        c("xw ~ x" = 0),
+        attribute_name = "asize") |>
+      set_edge_attribute(
+        c("xw ~ x" = str_s,
+          "xw ~ w1" = str_2l,
+          "xw ~ w2" = str_2m,
+          "y ~ w1" = str_s,
+          "y ~ w2" = str_s),
+        attribute_name = "labels")
+plot(p2)
+```
+
+
+```{r model_check, eval=TRUE, results="hide", message=FALSE}
+
+# ====== Test the Model Specification ======
+
+# Fit the model by regression using lm()
+# Add: fit_model_args = list(fit_function = "lm")
+
+out <- power4test(nrep = 2,
+                  model = model,
+                  pop_es = model_es,
+                  n = 50000,
+                  fit_model_args = list(fit_function = "lm"),
+                  iseed = 1234)
+
+# ====== Check the Data Generated ======
+
+print(out,
+      data_long = TRUE)
+
+# ====== Estimate the Power ======
+
+# For n = 100.
+# Find the power with *both* x:w1 and x:w2 significant.
+# in the regression results of lm().
+# The test by CI is equivalent to the two-tailed t-test.
+# Add omnibus = "all_sig" to find this power.
+
+out <- power4test(nrep = 400,
+                  model = model,
+                  pop_es = model_es,
+                  n = 100,
+                  fit_model_args = list(fit_function = "lm"),
+                  test_fun = test_parameters,
+                  test_args = list(pars = c("y~x:w1",
+                                            "y~x:w2"),
+                                   omnibus = "all_sig"),
+                  iseed = 1234,
+                  parallel = TRUE)
+
+# ====== Compute the Rejection Rate ======
+
+rejection_rates(out)
+```
+
+The results:
+
+```{r model_out}
+print(out,
+      data_long = TRUE)
+rejection_rates(out)
+```
+
+```{r load_find, child=c("template_n_ins_find_regions.txt")}
+```
+
+The results:
+
+```{r template_n_from_power_moderation_obs_two_ws_plot, fig.cap = "Power Curve"}
+# ===== Basic Results =====
+
+n_power_region
+
+# ===== Plot the (Crude) Power Curve and the Regions =====
+
+plot(n_power_region)
+```
+
+```{r load_res, child=c("template_n_ins_find_regions_results.txt")}
+```
+
+# Code Template {#code_template}
+
+This is the code used above:
+
+```{r code_example, eval = FALSE}
+library(power4mome)
+
+# ====== Model and Effect Size (Population Values) ======
+
+model <-
+"
+y ~ x + w1 + w2 + x:w1 + x:w2
+"
+model_es <-
+"
+y ~ x: s
+y ~ w1: s
+y ~ w2: s
+y ~ x:w1: l
+y ~ x:w2: m
+"
+
+# Test the Model Specification
+
+out <- power4test(nrep = 2,
+                  model = model,
+                  pop_es = model_es,
+                  n = 50000,
+                  fit_model_args = list(fit_function = "lm"),
+                  iseed = 1234)
+
+# Check the Data Generated
+
+print(out,
+      data_long = TRUE)
+
+# ====== Try One N and Estimate the Power ======
+
+# For n = 100.
+# Find the power with *both* x:w1 and x:w2 significant.
+# in the regression results of lm().
+# The test by CI is equivalent to the two-tailed t-test.
+# Add omnibus = "all_sig" to find this power.
+
+out <- power4test(nrep = 400,
+                  model = model,
+                  pop_es = model_es,
+                  n = 100,
+                  fit_model_args = list(fit_function = "lm"),
+                  test_fun = test_parameters,
+                  test_args = list(pars = c("y~x:w1",
+                                            "y~x:w2"),
+                                   omnibus = "all_sig"),
+                  iseed = 1234,
+                  parallel = TRUE)
+
+rejection_rates(out)
+
+# ====== Regions of Ns ======
+
+# Call n_region_from_power()
+# - Set target power: target_power = .80 (Default, can be omitted)
+# - Set the seed for the simulation: Integer. Should always be set.
+# To set desired precision:
+# - Set final number of R: final_R = 1000 (Default, can be omitted)
+# - Set final number of replications: final_nrep = 400 (Default, can be omitted)
+
+n_power_region <- n_region_from_power(out,
+                                      seed = 1357)
+n_power_region
+plot(n_power_region)
+summary(n_power_region)
+```
+
+```{r load_final, child=c("template_n_ins_final_remarks.txt")}
+```
+
