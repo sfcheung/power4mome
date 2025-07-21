@@ -174,7 +174,7 @@ print(out,
 # For n = 50.
 # Test the coefficient of the product term
 # x:w in the regression results of lm().
-# The test by CI is equivalent to the one-tailed t-test.
+# The test by CI is equivalent to the two-tailed t-test.
 
 out <- power4test(nrep = 400,
                   model = model,
@@ -256,7 +256,7 @@ print(out,
 # For n = 50.
 # Test the coefficient of the product term
 # x:w in the regression results of lm().
-# The test by CI is equivalent to the one-tailed t-test.
+# The test by CI is equivalent to the two-tailed t-test.
 
 out <- power4test(nrep = 400,
                   model = model,
