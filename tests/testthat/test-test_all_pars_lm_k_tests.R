@@ -1,5 +1,3 @@
-skip("WIP")
-
 library(testthat)
 
 test_that("All parameters: lm", {
@@ -11,13 +9,13 @@ y ~ m + x
 "
 
 model_simple_med_es <- c("y ~ m" = "l",
-                         "m ~ x" = "m",
-                         "y ~ x" = "n")
+                         "m ~ x" = "s",
+                         "y ~ x" = "m")
 
-sim_only <- power4test(nrep = 5,
+sim_only <- power4test(nrep = 10,
                        model = model_simple_med,
                        pop_es = model_simple_med_es,
-                       n = 100,
+                       n = 200,
                        fit_model_args = list(fit_function = "lm"),
                        do_the_test = FALSE,
                        iseed = 1234)
@@ -25,41 +23,32 @@ sim_only <- power4test(nrep = 5,
 test_out <- power4test(object = sim_only,
                        test_fun = test_parameters)
 
-summarize_tests(test_out)
+chk0 <- summarize_tests(test_out)
+chk1 <- summarize_tests(test_out, collapse = "all_sig")
+chk2 <- summarize_tests(test_out, collapse = "at_least_one_sig")
+chk3 <- summarize_tests(test_out, collapse = "at_least_k_sig", at_least_k = 1)
+chk4 <- summarize_tests(test_out, collapse = "at_least_k_sig", at_least_k = 2)
+chk5 <- summarize_tests(test_out, collapse = "at_least_k_sig", at_least_k = 3)
 
-summarize_tests(test_out, collapse = "all_sig")
-summarize_tests(test_out, collapse = "at_least_one_sig")
-summarize_tests(test_out, collapse = "at_least_k_sig", at_least_k = 2)
+expect_equal(chk1[[1]]$mean$sig,
+             chk5[[1]]$mean$sig)
+expect_equal(chk2[[1]]$mean$sig,
+             chk3[[1]]$mean$sig)
+expect_true(chk3[[1]]$mean$sig >= chk4[[1]]$mean$sig)
+expect_true(chk4[[1]]$mean$sig >= chk5[[1]]$mean$sig)
 
-rejection_rates(test_out)
-rejection_rates(test_out, collapse = "all_sig")
-rejection_rates(test_out, collapse = "at_least_one_sig")
-rejection_rates(test_out, collapse = "at_least_k_sig", at_least_k = 2)
+chk0 <- rejection_rates(test_out)
+chk1 <- rejection_rates(test_out, collapse = "all_sig")
+chk2 <- rejection_rates(test_out, collapse = "at_least_one_sig")
+chk3 <- rejection_rates(test_out, collapse = "at_least_k_sig", at_least_k = 1)
+chk4 <- rejection_rates(test_out, collapse = "at_least_k_sig", at_least_k = 2)
+chk5 <- rejection_rates(test_out, collapse = "at_least_k_sig", at_least_k = 3)
 
-# TO PROCESS
-
-test_out$test_all[[1]][[2]]
-
-(chk <- test_summary(test_out))
-names(chk)
-
-test_out <- power4test(object = test_out,
-                       test_fun = test_parameters,
-                       test_args = list(pars = "y~m"))
-
-(chk <- test_summary(test_out))
-names(chk)
-expect_true(length(chk) == 2)
-
-fits <- lapply(sim_only$sim_all,
-               function(x) x$extra$fit)
-chk_outs <- sapply(fits,
-                   function(x) {
-                     confint(x[[1]])[2, 1]
-                   })
-expect_equal(chk[[1]]$cilo[1],
-             mean(chk_outs))
-
-test_out_summary <- summarize_tests(test_out)
+expect_equal(chk1$reject,
+             chk5$reject)
+expect_equal(chk2$reject,
+             chk3$reject)
+expect_true(chk3$reject >= chk4$reject)
+expect_true(chk4$reject >= chk5$reject)
 
 })

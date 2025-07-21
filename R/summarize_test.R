@@ -387,7 +387,7 @@ summarize_one_test_data_frame <- function(x,
     if (collapse == "at_least_k_sig") {
       sig1 <- apply(sig0,
                     MARGIN = 1,
-                    function(xx) as.numeric(isTRUE(sum(xx > 0, na.rm = TRUE) > at_least_k)),
+                    function(xx) as.numeric(isTRUE(sum(xx > 0, na.rm = TRUE) >= at_least_k)),
                     simplify = TRUE)
       out1a[, "sig"] <- sig1
     }
