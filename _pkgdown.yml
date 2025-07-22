@@ -56,6 +56,11 @@ articles:
   - articles/template_n_from_power_moderation_obs_simple
   - articles/template_n_from_power_moderation_obs_two_ws
 
+- title: Moderated Mediation Templates (Code Examples)
+  navbar: Moderated Mediation Templates (Code Examples)
+  contents:
+  - articles/template_n_from_power_mome_obs_a
+
 - title: Technical Appendices
   contents:
   - articles/power4test_workflow
