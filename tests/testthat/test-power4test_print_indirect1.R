@@ -107,9 +107,9 @@ power_all_sim_only <- power4test(nrep = 10,
 expect_output(print(power_all_sim_only),
               "x -> m1 -> m2")
 tmp <- pop_indirect(power_all_sim_only$sim_all,
-                    pure_x = FALSE,
-                    pure_y = FALSE)
-expect_equal(coef(tmp)[3],
+                    pure_x = TRUE,
+                    pure_y = TRUE)
+expect_equal(coef(tmp)[1],
              .141,
              ignore_attr = TRUE)
 
@@ -127,9 +127,9 @@ power_all_sim_only <- power4test(nrep = 10,
 expect_output(print(power_all_sim_only),
               "x -> m1 -> m2")
 tmp <- pop_indirect(power_all_sim_only$sim_all,
-                    pure_x = FALSE,
-                    pure_y = FALSE)
-expect_equal(coef(tmp)[3],
+                    pure_x = TRUE,
+                    pure_y = TRUE)
+expect_equal(coef(tmp)[1],
              .141,
              ignore_attr = TRUE)
 

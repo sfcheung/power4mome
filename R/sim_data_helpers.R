@@ -596,12 +596,66 @@ print_miss_pattern <- function(mp,
 
 #' @noRd
 pure_x <- function(fit) {
-  union(lavaan::lavNames(fit, "ov.x"),
-        lavaan::lavNames(fit, "lv.x"))
+  tmp1 <- union(
+            lavaan::lavNames(fit, "ov.x"),
+            lavaan::lavNames(fit, "lv.x")
+          )
+  tmp2 <- setdiff(
+            lavaan::lavNames(fit, "eqs.x"),
+            lavaan::lavNames(fit, "eqs.y")
+          )
+  tmp3 <- union(lavaan::lavNames(fit, "ov.ind"),
+                lavaan::lavNames(fit, "ov.interaction"))
+  tmp3 <- union(tmp3,
+                lavaan::lavNames(fit, "lv.interaction"))
+  out <- union(tmp1, tmp2)
+  out <- setdiff(out, tmp3)
+  out
 }
 
 #' @noRd
 pure_y <- function(fit) {
-  union(lavaan::lavNames(fit, "ov.y"),
-        lavaan::lavNames(fit, "lv.y"))
+  tmp1 <- union(
+            lavaan::lavNames(fit, "ov.y"),
+            lavaan::lavNames(fit, "lv.y")
+          )
+  tmp2 <- setdiff(
+            lavaan::lavNames(fit, "eqs.y"),
+            lavaan::lavNames(fit, "eqs.x")
+          )
+  tmp3 <- union(lavaan::lavNames(fit, "ov.ind"),
+                lavaan::lavNames(fit, "ov.interaction"))
+  tmp3 <- union(tmp3,
+                lavaan::lavNames(fit, "lv.interaction"))
+  out <- union(tmp1, tmp2)
+  out <- setdiff(out, tmp3)
+  out
+}
+
+#' @noRd
+all_x <- function(fit) {
+  tmp1 <- union(
+            lavaan::lavNames(fit, "ov.x"),
+            lavaan::lavNames(fit, "lv.x")
+          )
+  tmp3 <- union(lavaan::lavNames(fit, "ov.ind"),
+                lavaan::lavNames(fit, "ov.interaction"))
+  tmp3 <- union(tmp3,
+                lavaan::lavNames(fit, "lv.interaction"))
+  out <- setdiff(tmp1, tmp3)
+  out
+}
+
+#' @noRd
+all_y <- function(fit) {
+  tmp1 <- union(
+            lavaan::lavNames(fit, "ov.y"),
+            lavaan::lavNames(fit, "lv.y")
+          )
+  tmp3 <- union(lavaan::lavNames(fit, "ov.ind"),
+                lavaan::lavNames(fit, "ov.interaction"))
+  tmp3 <- union(tmp3,
+                lavaan::lavNames(fit, "lv.interaction"))
+  out <- setdiff(tmp1, tmp3)
+  out
 }
