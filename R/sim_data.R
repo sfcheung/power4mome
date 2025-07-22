@@ -1054,27 +1054,35 @@ pop_indirect <- function(x,
   y_terms <- NULL
   if (pure_x) {
     x_terms <- pure_x(x[[1]]$fit0)
+  } else {
+    x_terms <- all_x(x[[1]]$fit0)
   }
   if (pure_y) {
     y_terms <- pure_y(x[[1]]$fit0)
+  } else {
+    y_terms <- all_y(x[[1]]$fit0)
   }
 
   # Multigroup models automatically supported
-  all_paths <- manymome::all_indirect_paths(x[[1]]$fit0,
-                                            exclude = p_terms,
-                                            x = x_terms,
-                                            y = y_terms)
-  if (progress) {
-    cat(paste("(Computing indirect effects for",
-              length(all_paths),
-              "paths ...)\n\n"))
-  }
-  if (length(all_paths) == 0) {
-    return(NULL)
-  }
-  all_ind <- manymome::many_indirect_effects(all_paths,
-                                            fit = fit_all,
-                                            est = ptable0)
 
-  all_ind
+  if ((length(x_terms) > 0) &&
+      (length(y_terms) > 0)) {
+    all_paths <- manymome::all_indirect_paths(x[[1]]$fit0,
+                                              exclude = p_terms,
+                                              x = x_terms,
+                                              y = y_terms)
+    if (progress) {
+      cat(paste("(Computing indirect effects for",
+                length(all_paths),
+                "paths ...)\n\n"))
+    }
+    if (length(all_paths) == 0) {
+      return(NULL)
+    }
+    all_ind <- manymome::many_indirect_effects(all_paths,
+                                              fit = fit_all,
+                                              est = ptable0)
+
+    all_ind
+  }
 }
