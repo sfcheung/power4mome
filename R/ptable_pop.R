@@ -564,8 +564,12 @@ ptable_pop <- function(model = NULL,
     # Handle labels in the syntax
     tmp <- lavaan::lavParseModelString(model,
                                        as.data.frame. = TRUE)
-    tmp2 <- paste(tmp$lhs, tmp$op, tmp$rhs)
-    fit0 <- lavaan::sem(tmp2,
+    # tmp2 <- paste(tmp$lhs, tmp$op, tmp$rhs)
+    tmp$label <- ""
+    tmp$mod.idx <- 0
+    attr(tmp, "modifiers") <- list()
+    attr(tmp, "constraints") <- list()
+    fit0 <- lavaan::sem(tmp,
                         do.fit = FALSE,
                         fixed.x = FALSE)
     ptable0 <- lavaan::parTable(fit0)
@@ -1015,8 +1019,12 @@ mm_lm_i <- function(mm) {
   # Handle labels
   tmp <- lavaan::lavParseModelString(model,
                                      as.data.frame. = TRUE)
-  tmp2 <- paste(tmp$lhs, tmp$op, tmp$rhs)
-  fit1 <- lavaan::sem(tmp2,
+  # tmp2 <- paste(tmp$lhs, tmp$op, tmp$rhs)
+  tmp$label <- ""
+  tmp$mod.idx <- 0
+  attr(tmp, "modifiers") <- list()
+  attr(tmp, "constraints") <- list()
+  fit1 <- lavaan::sem(tmp,
                       do.fit = FALSE)
   mm1 <- lavaan::lavInspect(fit1,
                             "partable")
