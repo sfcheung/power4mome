@@ -274,7 +274,7 @@ print(out,
 #> 
 #> Variances:
 #>                    Population
-#>    .m                 0.878  
+#>    .m                 0.877  
 #>    .y                 0.710  
 #>     x                 1.000  
 #>     w                 1.000  
@@ -290,10 +290,10 @@ print(out,
 #>  Conditional on moderator(s): w
 #>  Moderator(s) represented by: w
 #> 
-#>       [w]    (w)   ind   m~x   y~m
-#> 1 M+1.0SD  0.964 0.222 0.445 0.500
-#> 2 Mean    -0.086 0.144 0.287 0.500
-#> 3 M-1.0SD -1.135 0.065 0.130 0.500
+#>       [w] (w)   ind   m~x   y~m
+#> 1 M+1.0SD   1 0.225 0.450 0.500
+#> 2 Mean      0 0.150 0.300 0.500
+#> 3 M-1.0SD  -1 0.075 0.150 0.500
 #> 
 #>  - The 'ind' column shows the conditional indirect effects.
 #>  - 'm~x','y~m' is/are the path coefficient(s) along the path conditional
@@ -306,10 +306,10 @@ print(out,
 #>  Conditional on moderator(s): x
 #>  Moderator(s) represented by: x
 #> 
-#>       [x]    (x)    ind    m~w   y~m
-#> 1 M+1.0SD  1.150  0.136  0.273 0.500
-#> 2 Mean     0.132  0.060  0.120 0.500
-#> 3 M-1.0SD -0.887 -0.017 -0.033 0.500
+#>       [x] (x)    ind    m~w   y~m
+#> 1 M+1.0SD   1  0.125  0.250 0.500
+#> 2 Mean      0  0.050  0.100 0.500
+#> 3 M-1.0SD  -1 -0.025 -0.050 0.500
 #> 
 #>  - The 'ind' column shows the conditional indirect effects.
 #>  - 'm~w','y~m' is/are the path coefficient(s) along the path conditional
@@ -562,7 +562,7 @@ summary(n_power_region)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 100 to 406 
-#> - Time spent in the search: 2.239 mins 
+#> - Time spent in the search: 2.158 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -638,7 +638,7 @@ summary(n_power_region)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 366 to 406 
-#> - Time spent in the search: 32.85 secs 
+#> - Time spent in the search: 33.62 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
