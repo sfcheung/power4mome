@@ -1,4 +1,4 @@
-# power4mome 0.0.1.93
+# power4mome 0.0.1.94
 
 - Initialized the package. (0.0.0.9000)
 
@@ -546,3 +546,7 @@
 
 - Added `omnibus` to
   `test_parameters()`. (0.0.1.93)
+
+- The argument `fit_to_all_args` is now
+  correctly passed to the print method
+  of `sim_data`. (0.0.1.94)
