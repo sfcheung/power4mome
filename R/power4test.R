@@ -899,6 +899,7 @@ print.power4test <- function(x,
           data_long = data_long,
           digits = digits,
           digits_descriptive = digits_descriptive,
+          fit_to_all_args = fit_to_all_args,
           ...)
   }
   if (("test" %in% what) &&
