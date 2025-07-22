@@ -75,6 +75,7 @@ mm_lm_data <- function(object,
                                     e_fun = e_fun,
                                     keep_f_scores = keep_f_scores)
   }
+  dat_all <- as.data.frame(dat_all)
   if (is.list(process_data)) {
     process_data_fun <- match.fun(process_data$fun)
     tmp <- list(dat_all)
@@ -93,7 +94,7 @@ mm_lm_data <- function(object,
       dat_all <- dat_all_amp
     }
   }
-  return(as.data.frame(dat_all))
+  return(dat_all)
 }
 
 #' @noRd
