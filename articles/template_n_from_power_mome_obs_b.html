@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.96</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.98</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -301,20 +301,25 @@ The Model
 <span><span class="co">#&gt;     x                 1.000  </span></span>
 <span><span class="co">#&gt;     w                 1.000  </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; (Computing indirect effects for 1 paths ...)</span></span>
+<span><span class="co">#&gt; (Computing conditional effects for 1 paths ...)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; (Computing indirect effects for 1 paths ...)</span></span>
+<span><span class="co">#&gt; == Population Conditional/Indirect Effect(s) ==</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; == Population Indirect Effect(s) ==</span></span>
+<span><span class="co">#&gt; == Conditional indirect effects ==</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; == Indirect Effect(s) ==</span></span>
+<span><span class="co">#&gt;  Path: x -&gt; m -&gt; y</span></span>
+<span><span class="co">#&gt;  Conditional on moderator(s): w</span></span>
+<span><span class="co">#&gt;  Moderator(s) represented by: w</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;               ind</span></span>
-<span><span class="co">#&gt; x -&gt; m -&gt; y 0.090</span></span>
+<span><span class="co">#&gt;       [w] (w)   ind   m~x   y~m</span></span>
+<span><span class="co">#&gt; 1 M+1.0SD   1 0.135 0.300 0.450</span></span>
+<span><span class="co">#&gt; 2 Mean      0 0.090 0.300 0.300</span></span>
+<span><span class="co">#&gt; 3 M-1.0SD  -1 0.045 0.300 0.150</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  - The 'ind' column shows the indirect effect(s).</span></span>
-<span><span class="co">#&gt;  </span></span>
-<span><span class="co">#&gt; NOTE: One or more path(s) is/are moderated.</span></span>
+<span><span class="co">#&gt;  - The 'ind' column shows the conditional indirect effects.</span></span>
+<span><span class="co">#&gt;  - 'm~x','y~m' is/are the path coefficient(s) along the path conditional</span></span>
+<span><span class="co">#&gt;    on the moderator(s).</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ======================= Data Information =======================</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -528,7 +533,7 @@ significantly different from .80.</p>
 <span><span class="co">#&gt; - Algorithm: bisection </span></span>
 <span><span class="co">#&gt; - Tolerance for 'close enough': Within 0.02000 of 0.800 </span></span>
 <span><span class="co">#&gt; - The range of values explored: 100 to 411 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 3.972 mins </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 3.661 mins </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
@@ -607,7 +612,7 @@ significantly different from .80.</p>
 <span><span class="co">#&gt; - Algorithm: bisection </span></span>
 <span><span class="co">#&gt; - Tolerance for 'close enough': Within  of 0.800 </span></span>
 <span><span class="co">#&gt; - The range of values explored: 100 to 411 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 0.09083 secs </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 0.09092 secs </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>

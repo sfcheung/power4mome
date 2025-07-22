@@ -11,7 +11,7 @@ object."><meta property="og:image" content="https://sfcheung.github.io/power4mom
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.96</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.98</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -312,24 +312,47 @@ fitted by regression using
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Variances:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                    Population</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    .m                 0.726  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    .m                 0.731  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    .y                 1.000  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     x                 1.000  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     w                 1.000  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     x:w               1.000  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> (Computing indirect effects for 2 paths ...)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> (Computing conditional effects for 2 paths ...)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> == Population Indirect Effect(s) ==</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> == Population Conditional/Indirect Effect(s) ==</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ==  Indirect Effect(s)   ==</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             ind</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> x -&gt; m -&gt; y   0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> w -&gt; m -&gt; y   0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> == Conditional indirect effects ==</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  - The 'ind' column shows the indirect effects.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> NOTE: One or more path(s) is/are moderated.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Path: x -&gt; m -&gt; y</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Conditional on moderator(s): w</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Moderator(s) represented by: w</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       [w] (w) ind    m~x y~m</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 M+1.0SD   1   0  0.150   0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Mean      0   0 -0.000   0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 M-1.0SD  -1   0 -0.150   0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  - The 'ind' column shows the conditional indirect effects.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  - ‘m~x’,‘y~m’ is/are the path coefficient(s) along the path conditional</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    on the moderator(s).</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> == Conditional indirect effects ==</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Path: w -&gt; m -&gt; y</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Conditional on moderator(s): x</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Moderator(s) represented by: x</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       [x] (x) ind   m~w y~m</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 M+1.0SD   1   0 0.650   0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Mean      0   0 0.500   0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 M-1.0SD  -1   0 0.350   0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  - The 'ind' column shows the conditional indirect effects.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  - ‘m~w’,‘y~m’ is/are the path coefficient(s) along the path conditional</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    on the moderator(s).</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ======================= Data Information =======================</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -347,7 +370,7 @@ fitted by regression using
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ============ &lt;fit&gt; ============</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> lavaan 0.6-19 ended normally after 1 iteration</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lavaan 0.6-19 ended normally after 2 iterations</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Estimator                                         ML</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Optimization method                           NLMINB</span>
@@ -357,7 +380,7 @@ fitted by regression using
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Model Test User Model:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                                       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Test statistic                                 5.501</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Test statistic                                 5.502</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Degrees of freedom                                 3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   P-value (Chi-square)                           0.139</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -373,7 +396,7 @@ fitted by regression using
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mean(s) across replication:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     est   cilo  cihi   sig</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  -0.006 -0.048 0.029 0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  -0.006 -0.040 0.029 0.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - The value 'sig' is the rejection rate.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - If the null hypothesis is false, this is the power.</span>

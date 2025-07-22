@@ -11,7 +11,7 @@ for a power4test object."><meta property="og:image" content="https://sfcheung.gi
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.96</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.98</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -348,24 +348,47 @@ calling the function.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Variances:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                    Population</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    .m                 0.886  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    .y                 0.750  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    .m                 0.887  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    .y                 0.751  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     x                 1.000  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     w                 1.000  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     x:w               1.000  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> (Computing indirect effects for 2 paths ...)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> (Computing conditional effects for 2 paths ...)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> == Population Indirect Effect(s) ==</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> == Population Conditional/Indirect Effect(s) ==</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ==  Indirect Effect(s)   ==</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               ind</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> x -&gt; m -&gt; y 0.150</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> w -&gt; m -&gt; y 0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> == Conditional indirect effects ==</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  - The 'ind' column shows the indirect effects.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> NOTE: One or more path(s) is/are moderated.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Path: x -&gt; m -&gt; y</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Conditional on moderator(s): w</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Moderator(s) represented by: w</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       [w] (w)   ind   m~x   y~m</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 M+1.0SD   1 0.225 0.450 0.500</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Mean      0 0.150 0.300 0.500</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 M-1.0SD  -1 0.075 0.150 0.500</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  - The 'ind' column shows the conditional indirect effects.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  - ‘m~x’,‘y~m’ is/are the path coefficient(s) along the path conditional</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    on the moderator(s).</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> == Conditional indirect effects ==</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Path: w -&gt; m -&gt; y</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Conditional on moderator(s): x</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Moderator(s) represented by: x</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       [x] (x)    ind    m~w   y~m</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 M+1.0SD   1  0.075  0.150 0.500</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Mean      0 -0.000 -0.000 0.500</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 M-1.0SD  -1 -0.075 -0.150 0.500</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  - The 'ind' column shows the conditional indirect effects.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  - ‘m~w’,‘y~m’ is/are the path coefficient(s) along the path conditional</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    on the moderator(s).</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ======================= Data Information =======================</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -409,9 +432,9 @@ calling the function.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mean(s) across replication:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             test_label     [w]    (w)   est   cilo  cihi   sig   m~x   y~m</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 x-&gt;m-&gt;y | w: M+1.0SD M+1.0SD  1.060 0.212  0.072 0.373 0.800 0.438 0.474</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2    x-&gt;m-&gt;y | w: Mean    Mean  0.061 0.132  0.038 0.246 0.800 0.275 0.474</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 x-&gt;m-&gt;y | w: M-1.0SD M-1.0SD -0.939 0.053 -0.077 0.202 0.000 0.112 0.474</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 x-&gt;m-&gt;y | w: M+1.0SD M+1.0SD  1.060 0.212  0.078 0.405 0.800 0.438 0.474</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    x-&gt;m-&gt;y | w: Mean    Mean  0.061 0.132  0.030 0.254 0.800 0.275 0.474</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 x-&gt;m-&gt;y | w: M-1.0SD M-1.0SD -0.939 0.053 -0.092 0.189 0.000 0.112 0.474</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - The column 'sig' shows the rejection rates.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - If the null hypothesis is false, the rate is the power.</span>
