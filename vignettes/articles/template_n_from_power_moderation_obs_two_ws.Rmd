@@ -1,6 +1,6 @@
 ---
 title: "Quick Template: Moderation with Observed Variables: Two Moderators"
-date: "2025-07-21"
+date: "2025-07-22"
 output:
   html_document:
     fig.align: "center"
@@ -295,8 +295,6 @@ print(out,
 #>     x:w1              1.000  
 #>     x:w2              1.000  
 #> 
-#> (Computing indirect effects for 0 paths ...)
-#> 
 #> ======================= Data Information =======================
 #> 
 #> Number of Replications:  400 
@@ -358,7 +356,7 @@ print(out,
 #> 
 #> The models:
 #> y ~ x + w1 + w2 + x:w1 + x:w2
-#> <environment: 0x000001cc13fadb28>
+#> <environment: 0x00000150f7b93b60>
 #> 
 #> 
 #> ====================== Test(s) Conducted ======================
@@ -535,7 +533,7 @@ summary(n_power_region)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 100 to 985 
-#> - Time spent in the search: 1.095 mins 
+#> - Time spent in the search: 1.085 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -614,7 +612,7 @@ summary(n_power_region)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within  of 0.800 
 #> - The range of values explored: 100 to 985 
-#> - Time spent in the search: 0.5814 secs 
+#> - Time spent in the search: 0.7143 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 

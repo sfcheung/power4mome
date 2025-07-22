@@ -280,21 +280,41 @@ print(out,
 #>     w                 1.000  
 #>     x:w               1.000  
 #> 
-#> (Computing indirect effects for 2 paths ...)
+#> (Computing conditional effects for 2 paths ...)
 #> 
-#> (Computing indirect effects for 2 paths ...)
+#> == Population Conditional/Indirect Effect(s) ==
 #> 
-#> == Population Indirect Effect(s) ==
+#> == Conditional indirect effects ==
 #> 
-#> == Indirect Effect(s) ==
+#>  Path: x -> m -> y
+#>  Conditional on moderator(s): w
+#>  Moderator(s) represented by: w
 #> 
-#>               ind
-#> x -> m -> y 0.150
-#> w -> m -> y 0.050
+#>       [w] (w)   ind   m~x   y~m
+#> 1 M+1.0SD   1 0.225 0.450 0.500
+#> 2 Mean      0 0.150 0.300 0.500
+#> 3 M-1.0SD  -1 0.075 0.150 0.500
 #> 
-#>  - The 'ind' column shows the indirect effect(s).
-#>  
-#> NOTE: One or more path(s) is/are moderated.
+#>  - The 'ind' column shows the conditional indirect effects.
+#>  - 'm~x','y~m' is/are the path coefficient(s) along the path conditional
+#>    on the moderator(s).
+#> 
+#> 
+#> == Conditional indirect effects ==
+#> 
+#>  Path: w -> m -> y
+#>  Conditional on moderator(s): x
+#>  Moderator(s) represented by: x
+#> 
+#>       [x] (x)    ind    m~w   y~m
+#> 1 M+1.0SD   1  0.125  0.250 0.500
+#> 2 Mean      0  0.050  0.100 0.500
+#> 3 M-1.0SD  -1 -0.025 -0.050 0.500
+#> 
+#>  - The 'ind' column shows the conditional indirect effects.
+#>  - 'm~w','y~m' is/are the path coefficient(s) along the path conditional
+#>    on the moderator(s).
+#> 
 #> 
 #> ======================= Data Information =======================
 #> 
@@ -377,7 +397,7 @@ rejection_rates(out)
 #> [test]: test_index_of_mome: x->m->y, moderated by w 
 #> [test_label]: Test 
 #>     est   p.v reject r.cilo r.cihi
-#> 1 0.077 1.000  0.370  0.323  0.417
+#> 1 0.077 1.000  0.362  0.315  0.410
 #> Notes:
 #> - p.v: The proportion of valid replications.
 #> - est: The mean of the estimates in a test across replications.
@@ -467,13 +487,13 @@ n_power_region
 #> Solution: 
 #> 
 #> Approximate region of sample sizes with power:
-#> - not significantly different from 0.800: 304 to 357
-#> - significantly lower than 0.800: 304
-#> - significantly higher than 0.800: 357
+#> - not significantly different from 0.800: 268 to 366
+#> - significantly lower than 0.800: 268
+#> - significantly higher than 0.800: 366
 #> 
 #> Confidence intervals of the estimated power:
-#> - for the lower bound (304): [0.723, 0.807]
-#> - for the upper bound (357): [0.804, 0.876]
+#> - for the lower bound (268): [0.702, 0.788]
+#> - for the upper bound (366): [0.815, 0.885]
 #> 
 #> Call `summary()` for detailed results.
 
@@ -492,16 +512,16 @@ plot(n_power_region)
 As shown above, approximately:
 
 - sample sizes lower than
-  304 have
+  268 have
   power significantly lower than .80, and
 
 - sample sizes higher than
-  357 have
+  366 have
   power significantly higher than .80.
 
 In other words, sample sizes between
-304 and
-357 have
+268 and
+366 have
 power not significantly different from
 .80.
 
@@ -530,10 +550,10 @@ summary(n_power_region)
 #> 
 #> === Major Results ===
 #> 
-#> - Final Value (Sample Size): 304
+#> - Final Value (Sample Size): 268
 #> 
-#> - Final Estimated Power: 0.765 
-#> - Confidence Interval: [0.723; 0.807]
+#> - Final Estimated Power: 0.745 
+#> - Confidence Interval: [0.702; 0.788]
 #> - Level of confidence: 95.0%
 #> - Based on 400 replications.
 #> 
@@ -541,8 +561,8 @@ summary(n_power_region)
 #> 
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
-#> - The range of values explored: 100 to 391 
-#> - Time spent in the search: 1.63 mins 
+#> - The range of values explored: 100 to 406 
+#> - Time spent in the search: 2.158 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -560,21 +580,22 @@ summary(n_power_region)
 #> 
 #> Coefficients:
 #> (Intercept)            x  
-#>   -1.322703     0.008428  
+#>   -1.399834     0.008845  
 #> 
-#> Degrees of Freedom: 1599 Total (i.e. Null);  1598 Residual
-#> Null Deviance:	    2042 
-#> Residual Deviance: 1786 	AIC: 1790
+#> Degrees of Freedom: 1999 Total (i.e. Null);  1998 Residual
+#> Null Deviance:	    2487 
+#> Residual Deviance: 2187 	AIC: 2191
 #> 
 #> - Detailed Results:
 #> 
 #> [test]: test_index_of_mome: x->m->y, moderated by w 
 #> [test_label]: Test 
 #>     n   est   p.v reject r.cilo r.cihi
-#> 1 100 0.077 1.000  0.370  0.323  0.417
-#> 2 216 0.076 1.000  0.647  0.601  0.694
-#> 3 304 0.074 1.000  0.765  0.723  0.807
-#> 4 391 0.075 1.000  0.875  0.843  0.907
+#> 1 100 0.077 1.000  0.362  0.315  0.410
+#> 2 221 0.074 1.000  0.640  0.593  0.687
+#> 3 268 0.075 1.000  0.745  0.702  0.788
+#> 4 314 0.078 1.000  0.797  0.758  0.837
+#> 5 406 0.074 1.000  0.887  0.857  0.918
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.
@@ -605,10 +626,10 @@ summary(n_power_region)
 #> 
 #> === Major Results ===
 #> 
-#> - Final Value (Sample Size): 357
+#> - Final Value (Sample Size): 366
 #> 
-#> - Final Estimated Power: 0.840 
-#> - Confidence Interval: [0.804; 0.876]
+#> - Final Estimated Power: 0.850 
+#> - Confidence Interval: [0.815; 0.885]
 #> - Level of confidence: 95.0%
 #> - Based on 400 replications.
 #> 
@@ -616,8 +637,8 @@ summary(n_power_region)
 #> 
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
-#> - The range of values explored: 357 to 391 
-#> - Time spent in the search: 31.95 secs 
+#> - The range of values explored: 366 to 406 
+#> - Time spent in the search: 33.62 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -635,19 +656,19 @@ summary(n_power_region)
 #> 
 #> Coefficients:
 #> (Intercept)            x  
-#>   -1.362434     0.008461  
+#>   -1.292715     0.008271  
 #> 
 #> Degrees of Freedom: 799 Total (i.e. Null);  798 Residual
-#> Null Deviance:	    655.2 
-#> Residual Deviance: 653.2 	AIC: 657.2
+#> Null Deviance:	    622 
+#> Residual Deviance: 619.5 	AIC: 623.5
 #> 
 #> - Detailed Results:
 #> 
 #> [test]: test_index_of_mome: x->m->y, moderated by w 
 #> [test_label]: Test 
 #>     n   est   p.v reject r.cilo r.cihi
-#> 1 357 0.074 1.000  0.840  0.804  0.876
-#> 2 391 0.075 1.000  0.875  0.843  0.907
+#> 1 366 0.075 1.000  0.850  0.815  0.885
+#> 2 406 0.074 1.000  0.887  0.857  0.918
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.

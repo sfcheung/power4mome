@@ -277,20 +277,25 @@ print(out,
 #>     x                 1.000  
 #>     w                 1.000  
 #> 
-#> (Computing indirect effects for 1 paths ...)
+#> (Computing conditional effects for 1 paths ...)
 #> 
-#> (Computing indirect effects for 1 paths ...)
+#> == Population Conditional/Indirect Effect(s) ==
 #> 
-#> == Population Indirect Effect(s) ==
+#> == Conditional indirect effects ==
 #> 
-#> == Indirect Effect(s) ==
+#>  Path: x -> m -> y
+#>  Conditional on moderator(s): w
+#>  Moderator(s) represented by: w
 #> 
-#>               ind
-#> x -> m -> y 0.090
+#>       [w] (w)   ind   m~x   y~m
+#> 1 M+1.0SD   1 0.135 0.300 0.450
+#> 2 Mean      0 0.090 0.300 0.300
+#> 3 M-1.0SD  -1 0.045 0.300 0.150
 #> 
-#>  - The 'ind' column shows the indirect effect(s).
-#>  
-#> NOTE: One or more path(s) is/are moderated.
+#>  - The 'ind' column shows the conditional indirect effects.
+#>  - 'm~x','y~m' is/are the path coefficient(s) along the path conditional
+#>    on the moderator(s).
+#> 
 #> 
 #> ======================= Data Information =======================
 #> 
@@ -535,7 +540,7 @@ summary(n_power_region)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 100 to 411 
-#> - Time spent in the search: 3.972 mins 
+#> - Time spent in the search: 3.661 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -614,7 +619,7 @@ summary(n_power_region)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within  of 0.800 
 #> - The range of values explored: 100 to 411 
-#> - Time spent in the search: 0.09083 secs 
+#> - Time spent in the search: 0.09092 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 

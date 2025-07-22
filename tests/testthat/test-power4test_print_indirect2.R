@@ -49,7 +49,7 @@ expect_output(print(power_all_sim_only),
               "Group1.x -> m -> y")
 
 tmp <- pop_indirect(power_all_sim_only$sim_all)
-expect_equal(coef(tmp),
+expect_equal(coef(tmp[[1]]),
              c(.10 * .30, .50 * .30),
              ignore_attr = TRUE)
 
@@ -96,10 +96,10 @@ expect_output(print(power_all_sim_only),
               "Group1.x -> m1 -> y")
 
 tmp <- pop_indirect(power_all_sim_only$sim_all)
-expect_equal(coef(tmp)["Group2.x -> m1 -> m2 -> y"],
+expect_equal(coef(tmp[[1]])["Group2.x -> m1 -> m2 -> y"],
              .51,
              ignore_attr = TRUE)
-expect_equal(coef(tmp)["Group1.x -> m1 -> m2 -> y"],
+expect_equal(coef(tmp[[1]])["Group1.x -> m1 -> m2 -> y"],
              .361,
              ignore_attr = TRUE)
 

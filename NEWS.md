@@ -1,4 +1,4 @@
-# power4mome 0.0.1.96
+# power4mome 0.0.1.98
 
 - Initialized the package. (0.0.0.9000)
 
@@ -560,3 +560,13 @@
 
 - Improved the printing of indirect
   effects. (0.0.1.96)
+
+- Updated `pop_indirect()` to handle
+  conditional indirect effects. It now
+  always return a list.
+  (0.0.1.97)
+
+- When printing conditional indirect
+  effects, the population SDs and means
+  of the moderators are now properly
+  used. (0.0.1.98)
