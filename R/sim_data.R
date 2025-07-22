@@ -1114,10 +1114,12 @@ pop_indirect <- function(x,
                     "paths ...)\n\n"))
         }
         for (i in i0) {
+          fit_tmp <- fix_w_sd_and_mean(x_i,
+                                       all_w[[i]])
           cond <- do.call(manymome::cond_indirect_effects,
                         c(all_paths[[i]],
                           list(wlevels = all_w[[i]],
-                                fit = fit_all,
+                                fit = fit_tmp,
                                 est = ptable0)))
           out <- c(out, list(cond))
         }
@@ -1126,4 +1128,42 @@ pop_indirect <- function(x,
 
   }
   out
+}
+
+#' @noRd
+fix_w_sd_and_mean <- function(x_i,
+                              w) {
+  # Can only be used for single-group model
+  dat_tmp <- x_i$mm_lm_dat_out
+  n <- nrow(dat_tmp)
+  i <- sample.int(n, 1000, replace = TRUE)
+  dat_tmp <- dat_tmp[i, ]
+  ptable0 <- lavaan::parameterTable(x_i$fit0)
+  for (w_i in w) {
+    w_tmp <- scale(dat_tmp[, w_i])[, 1]
+    w_var <- ptable0[(ptable0$lhs == w_i) &
+                   (ptable0$rhs == w_i) &
+                   (ptable0$op == "~~"), "est"]
+    i1 <- (ptable0$lhs == w_i) &
+          (ptable0$op == "~1")
+    if (any(i1)) {
+      w_m <- ptable0[i1, "est"]
+    } else {
+      w_m <- 0
+    }
+    w_tmp <- w_tmp * sqrt(w_var) + w_m
+    dat_tmp[, w_i] <- w_tmp
+  }
+  v_ind <- grepl(":", colnames(dat_tmp), fixed = TRUE)
+  dat_tmp <- dat_tmp[, !v_ind]
+  fit_to_all_args0 <- list(model = x_i$model_final,
+                          data = dat_tmp,
+                          se = "none",
+                          test = "none",
+                          group = x_i$group_name,
+                          check.post = FALSE,
+                          fixed.x = FALSE)
+  fit_all <- suppressWarnings(do.call(lavaan::sem,
+                      fit_to_all_args0))
+  fit_all
 }
