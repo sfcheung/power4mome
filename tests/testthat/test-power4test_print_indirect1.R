@@ -38,7 +38,7 @@ power_all_sim_only <- power4test(nrep = 10,
 expect_no_error(print(power_all_sim_only))
 
 tmp <- pop_indirect(power_all_sim_only$sim_all)
-expect_equal(coef(tmp),
+expect_equal(coef(tmp[[1]]),
              .50 * .30,
              ignore_attr = TRUE)
 
@@ -61,7 +61,7 @@ power_all_sim_only <- power4test(nrep = 10,
 expect_no_error(print(power_all_sim_only))
 
 tmp <- pop_indirect(power_all_sim_only$sim_all)
-expect_equal(coef(tmp),
+expect_equal(coef(tmp[[1]]),
              .50 * .30,
              ignore_attr = TRUE)
 
@@ -109,7 +109,7 @@ expect_output(print(power_all_sim_only),
 tmp <- pop_indirect(power_all_sim_only$sim_all,
                     pure_x = TRUE,
                     pure_y = TRUE)
-expect_equal(coef(tmp)[1],
+expect_equal(coef(tmp[[1]])[1],
              .141,
              ignore_attr = TRUE)
 
@@ -129,7 +129,7 @@ expect_output(print(power_all_sim_only),
 tmp <- pop_indirect(power_all_sim_only$sim_all,
                     pure_x = TRUE,
                     pure_y = TRUE)
-expect_equal(coef(tmp)[1],
+expect_equal(coef(tmp[[1]])[1],
              .141,
              ignore_attr = TRUE)
 

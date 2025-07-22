@@ -646,29 +646,31 @@ print.sim_data <- function(x,
   all_ind <- tryCatch(pop_indirect(x,
                                    pure_x = pure_x,
                                    pure_y = pure_y,
-                                   progress = FALSE),
-                       warning = function(w) w)
-  if (inherits(all_ind, "warning")) {
-    if (grepl("moderator", all_ind$message)) {
-      has_w <- TRUE
+                                   progress = TRUE),
+                       warning = function(w) w,
+                       error = function(e) e)
+  # if (inherits(all_ind, "warning")) {
+  #   if (grepl("moderator", all_ind$message)) {
+  #     has_w <- TRUE
+  #   }
+  #   all_ind <- suppressWarnings(pop_indirect(
+  #                                 x,
+  #                                 pure_x = pure_x,
+  #                                 pure_y = pure_y,
+  #                                 progress = TRUE))
+  # }
+  if (!inherits(all_ind, "error")) {
+    if (length(all_ind) > 0) {
+      cat(header_str("Population Conditional/Indirect Effect(s)",
+                    hw = .4,
+                    prefix = "",
+                    suffix = "\n"))
+      for (all_ind_i in all_ind) {
+        print(all_ind_i,
+              digits = digits)
+      }
+      cat("\n")
     }
-    all_ind <- suppressWarnings(pop_indirect(
-                                  x,
-                                  pure_x = pure_x,
-                                  pure_y = pure_y,
-                                  progress = TRUE))
-  }
-  if (length(all_ind) > 0) {
-    cat(header_str("Population Indirect Effect(s)",
-                  hw = .4,
-                  prefix = "",
-                  suffix = "\n"))
-    print(all_ind,
-          digits = digits)
-    if (has_w) {
-      cat("\nNOTE: One or more path(s) is/are moderated.\n")
-    }
-    cat("\n")
   }
 
   k0 <- x_i$number_of_indicators
@@ -1068,6 +1070,7 @@ pop_indirect <- function(x,
   }
 
   # Multigroup models automatically supported
+  out <- list()
 
   if ((length(x_terms) > 0) &&
       (length(y_terms) > 0)) {
@@ -1075,18 +1078,52 @@ pop_indirect <- function(x,
                                               exclude = p_terms,
                                               x = x_terms,
                                               y = y_terms)
-    if (progress) {
-      cat(paste("(Computing indirect effects for",
-                length(all_paths),
-                "paths ...)\n\n"))
-    }
     if (length(all_paths) == 0) {
       return(NULL)
     }
-    all_ind <- manymome::many_indirect_effects(all_paths,
-                                              fit = fit_all,
-                                              est = ptable0)
+    ngroups <- lavaan::lavTech(x[[1]]$fit0, "ngroups")
+    if (ngroups > 1) {
+      # TODO:
+      # - Within-group moderation not yet supported in
+      #   multigroup model.
+      all_ind <- manymome::many_indirect_effects(all_paths,
+                                                fit = fit_all,
+                                                est = ptable0)
+      out <- c(out, list(all_ind))
+    } else {
+      all_w <- get_w_for_paths(all_paths,
+                              fit = fit_all)
+      no_w_i <- sapply(all_w, function(xx) length(xx) == 0)
+      has_w_i <- !no_w_i
+      if (any(no_w_i)) {
+        if (progress) {
+          cat(paste("(Computing indirect effects for",
+                    sum(no_w_i),
+                    "paths ...)\n\n"))
+        }
+        all_ind <- manymome::many_indirect_effects(all_paths[no_w_i],
+                                                  fit = fit_all,
+                                                  est = ptable0)
+        out <- c(out, list(all_ind))
+      }
+      if (any(has_w_i)) {
+        i0 <- which(has_w_i)
+        if (progress) {
+          cat(paste("(Computing conditional effects for",
+                    sum(has_w_i),
+                    "paths ...)\n\n"))
+        }
+        for (i in i0) {
+          cond <- do.call(manymome::cond_indirect_effects,
+                        c(all_paths[[i]],
+                          list(wlevels = all_w[[i]],
+                                fit = fit_all,
+                                est = ptable0)))
+          out <- c(out, list(cond))
+        }
+      }
+    }
 
-    all_ind
   }
+  out
 }

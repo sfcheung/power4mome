@@ -31,10 +31,11 @@ power_all_sim_only <- power4test(nrep = 10,
 expect_output(print(power_all_sim_only),
               "w -> m -> y")
 suppressWarnings(tmp <- pop_indirect(power_all_sim_only$sim_all))
-expect_equal(coef(tmp)["x -> m -> y"],
-             .361,
-             ignore_attr = TRUE)
-
+# expect_equal(coef(tmp[[1]])["x -> m -> y"],
+#              .361,
+#              ignore_attr = TRUE)
+expect_s3_class(tmp[[1]], "cond_indirect_effects")
+expect_s3_class(tmp[[2]], "cond_indirect_effects")
 
 power_all_sim_only <- power4test(nrep = 10,
                                  model = mod,
@@ -49,9 +50,11 @@ power_all_sim_only <- power4test(nrep = 10,
 expect_output(print(power_all_sim_only),
               "w -> m -> y")
 suppressWarnings(tmp <- pop_indirect(power_all_sim_only$sim_all))
-expect_equal(coef(tmp)["x -> m -> y"],
-             .361,
-             ignore_attr = TRUE)
+# expect_equal(coef(tmp[[1]])["x -> m -> y"],
+#              .361,
+#              ignore_attr = TRUE)
+expect_s3_class(tmp[[1]], "cond_indirect_effects")
+expect_s3_class(tmp[[2]], "cond_indirect_effects")
 
 # Case 2
 
@@ -134,7 +137,7 @@ print(power_all_sim_only)
 expect_output(print(power_all_sim_only),
               "Group1.x -> m -> y")
 tmp <- pop_indirect(power_all_sim_only$sim_all)
-expect_equal(coef(tmp),
+expect_equal(coef(tmp[[1]]),
              c(.10 * .30, .30 * .50),
              ignore_attr = TRUE)
 

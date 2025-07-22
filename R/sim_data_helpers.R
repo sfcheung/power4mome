@@ -659,3 +659,48 @@ all_y <- function(fit) {
   out <- setdiff(tmp1, tmp3)
   out
 }
+
+#' @noRd
+get_w <- function(
+            x,
+            m,
+            y,
+            fit) {
+  ind_prod <- manymome::indirect_i(
+                x = x,
+                m = m,
+                y = y,
+                fit = fit,
+                get_prods_only = TRUE
+              )
+  out <- sapply(
+          ind_prod,
+          function(xx) {
+            if (identical(xx, NA)) {
+              return(as.character(NA))
+            } else {
+              if (is.null(xx$w)) {
+                return(as.character(NA))
+              } else {
+                return(xx$w)
+              }
+            }
+          })
+  out <- unlist(out)
+  out <- out[!is.na(out)]
+  out
+}
+
+#' @noRd
+get_w_for_paths <- function(all_paths,
+                            fit) {
+  f <- function(xx) {
+    do.call(get_w,
+          c(xx, list(fit = fit)))
+  }
+  out <- sapply(all_paths,
+                f,
+                simplify = FALSE,
+                USE.NAMES = TRUE)
+  out
+}
