@@ -1,4 +1,4 @@
-# power4mome 0.0.1.95
+# power4mome 0.0.1.96
 
 - Initialized the package. (0.0.0.9000)
 
@@ -554,3 +554,9 @@
 - Fixed a bug with `process_data`. The
   input is now always a data frame.
   (0.0.1.95)
+
+- Fixed an issue with interaction terms
+  involved in covariances. (0.0.1.96)
+
+- Improved the printing of indirect
+  effects. (0.0.1.96)

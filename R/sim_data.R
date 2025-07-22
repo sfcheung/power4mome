@@ -646,13 +646,17 @@ print.sim_data <- function(x,
   all_ind <- tryCatch(pop_indirect(x,
                                    pure_x = pure_x,
                                    pure_y = pure_y,
-                                   progress = TRUE),
+                                   progress = FALSE),
                        warning = function(w) w)
   if (inherits(all_ind, "warning")) {
     if (grepl("moderator", all_ind$message)) {
       has_w <- TRUE
     }
-    all_ind <- suppressWarnings(pop_indirect(x))
+    all_ind <- suppressWarnings(pop_indirect(
+                                  x,
+                                  pure_x = pure_x,
+                                  pure_y = pure_y,
+                                  progress = TRUE))
   }
   if (length(all_ind) > 0) {
     cat(header_str("Population Indirect Effect(s)",
