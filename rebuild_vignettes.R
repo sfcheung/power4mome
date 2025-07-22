@@ -29,6 +29,7 @@ knitr::knit("template_n_from_power_moderation_obs_simple.Rmd.original", output =
 knitr::knit("template_n_from_power_moderation_obs_two_ws.Rmd.original", output = "template_n_from_power_moderation_obs_two_ws.Rmd", envir = new.env())
 
 knitr::knit("template_n_from_power_mome_obs_a.Rmd.original", output = "template_n_from_power_mome_obs_a.Rmd", envir = new.env())
+knitr::knit("template_n_from_power_mome_obs_b.Rmd.original", output = "template_n_from_power_mome_obs_b.Rmd", envir = new.env())
 
 
 # knitr::knit("template_mediation_obs.Rmd.original", output = "template_mediation_obs.Rmd")
