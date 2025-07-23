@@ -1,6 +1,6 @@
 ---
 title: "Quick Template: Moderation with Observed Variables: Two Moderators"
-date: "2025-07-22"
+date: "2025-07-23"
 output:
   html_document:
     fig.align: "center"
@@ -295,6 +295,53 @@ print(out,
 #>     x:w1              1.000  
 #>     x:w2              1.000  
 #> 
+#> (Computing conditional effects for 3 paths ...)
+#> 
+#> == Population Conditional/Indirect Effect(s) ==
+#> 
+#> == Conditional effects ==
+#> 
+#>  Path: x -> y
+#>  Conditional on moderator(s): w1, w2
+#>  Moderator(s) represented by: w1, w2
+#> 
+#>      [w1]    [w2] (w1) (w2)    ind
+#> 1 M+1.0SD M+1.0SD    1    1  0.350
+#> 2 M+1.0SD M-1.0SD    1   -1  0.150
+#> 3 M-1.0SD M+1.0SD   -1    1  0.050
+#> 4 M-1.0SD M-1.0SD   -1   -1 -0.150
+#> 
+#>  - The 'ind' column shows the conditional effects.
+#>  
+#> 
+#> == Conditional effects ==
+#> 
+#>  Path: w1 -> y
+#>  Conditional on moderator(s): x
+#>  Moderator(s) represented by: x
+#> 
+#>       [x] (x)    ind
+#> 1 M+1.0SD   1  0.250
+#> 2 Mean      0  0.100
+#> 3 M-1.0SD  -1 -0.050
+#> 
+#>  - The 'ind' column shows the conditional effects.
+#>  
+#> 
+#> == Conditional effects ==
+#> 
+#>  Path: w2 -> y
+#>  Conditional on moderator(s): x
+#>  Moderator(s) represented by: x
+#> 
+#>       [x] (x)   ind
+#> 1 M+1.0SD   1 0.200
+#> 2 Mean      0 0.100
+#> 3 M-1.0SD  -1 0.000
+#> 
+#>  - The 'ind' column shows the conditional effects.
+#>  
+#> 
 #> ======================= Data Information =======================
 #> 
 #> Number of Replications:  400 
@@ -356,7 +403,7 @@ print(out,
 #> 
 #> The models:
 #> y ~ x + w1 + w2 + x:w1 + x:w2
-#> <environment: 0x00000150f7b93b60>
+#> <environment: 0x0000020d628a0f20>
 #> 
 #> 
 #> ====================== Test(s) Conducted ======================
@@ -533,7 +580,7 @@ summary(n_power_region)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 100 to 985 
-#> - Time spent in the search: 1.085 mins 
+#> - Time spent in the search: 1.127 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -612,7 +659,7 @@ summary(n_power_region)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within  of 0.800 
 #> - The range of values explored: 100 to 985 
-#> - Time spent in the search: 0.7143 secs 
+#> - Time spent in the search: 0.564 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
