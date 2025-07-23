@@ -34,8 +34,8 @@ suppressWarnings(tmp <- pop_indirect(power_all_sim_only$sim_all))
 # expect_equal(coef(tmp[[1]])["x -> m -> y"],
 #              .361,
 #              ignore_attr = TRUE)
-expect_s3_class(tmp[[1]], "cond_indirect_effects")
-expect_s3_class(tmp[[2]], "cond_indirect_effects")
+tmp2 <- sapply(tmp, function(xx) class(xx)[1])
+expect_true("cond_indirect_effects" %in% tmp2)
 
 power_all_sim_only <- power4test(nrep = 10,
                                  model = mod,
@@ -53,8 +53,8 @@ suppressWarnings(tmp <- pop_indirect(power_all_sim_only$sim_all))
 # expect_equal(coef(tmp[[1]])["x -> m -> y"],
 #              .361,
 #              ignore_attr = TRUE)
-expect_s3_class(tmp[[1]], "cond_indirect_effects")
-expect_s3_class(tmp[[2]], "cond_indirect_effects")
+tmp2 <- sapply(tmp, function(xx) class(xx)[1])
+expect_true("cond_indirect_effects" %in% tmp2)
 
 # Case 2
 
@@ -81,10 +81,10 @@ power_all_sim_only <- power4test(nrep = 10,
                                  parallel = FALSE,
                                  progress = FALSE)
 
-expect_false(any(grepl("Indirect",
+expect_true(any(grepl("Conditional",
                  capture.output(print(power_all_sim_only)))))
 tmp <- pop_indirect(power_all_sim_only$sim_all)
-expect_true(length(tmp) == 0)
+expect_true(length(tmp) > 0)
 
 
 
@@ -98,10 +98,10 @@ power_all_sim_only <- power4test(nrep = 10,
                                  parallel = FALSE,
                                  progress = FALSE)
 
-expect_false(any(grepl("Indirect",
+expect_true(any(grepl("Conditional",
                  capture.output(print(power_all_sim_only)))))
 tmp <- pop_indirect(power_all_sim_only$sim_all)
-expect_true(length(tmp) == 0)
+expect_true(length(tmp) > 0)
 
 # Multigroup
 

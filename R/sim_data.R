@@ -1071,27 +1071,38 @@ pop_indirect <- function(x,
 
   # Multigroup models automatically supported
   out <- list()
-
   if ((length(x_terms) > 0) &&
       (length(y_terms) > 0)) {
     all_paths <- manymome::all_indirect_paths(x[[1]]$fit0,
                                               exclude = p_terms,
                                               x = x_terms,
                                               y = y_terms)
-    if (length(all_paths) == 0) {
-      return(NULL)
-    }
+    has_indirect <- isTRUE(length(all_paths) > 0)
+    all_direct_paths <- get_direct(
+                          x = x_terms,
+                          y = y_terms,
+                          ptable = ptable0
+                        )
     ngroups <- lavaan::lavTech(x[[1]]$fit0, "ngroups")
     if (ngroups > 1) {
-      # TODO:
-      # - Within-group moderation not yet supported in
-      #   multigroup model.
-      all_ind <- manymome::many_indirect_effects(all_paths,
-                                                fit = fit_all,
-                                                est = ptable0)
-      out <- c(out, list(all_ind))
+
+      # ==== Multigroup Models =====
+
+      if (has_indirect) {
+        # TODO:
+        # - Within-group moderation not yet supported in
+        #   multigroup model.
+        all_ind <- manymome::many_indirect_effects(all_paths,
+                                                  fit = fit_all,
+                                                  est = ptable0)
+        out <- c(out, list(all_ind))
+      }
     } else {
-      all_w <- get_w_for_paths(all_paths,
+
+      # ==== Single-group Models =====
+
+      all_paths_combined <- c(all_paths, all_direct_paths)
+      all_w <- get_w_for_paths(all_paths_combined,
                               fit = fit_all)
       no_w_i <- sapply(all_w, function(xx) length(xx) == 0)
       has_w_i <- !no_w_i
@@ -1101,7 +1112,7 @@ pop_indirect <- function(x,
                     sum(no_w_i),
                     "paths ...)\n\n"))
         }
-        all_ind <- manymome::many_indirect_effects(all_paths[no_w_i],
+        all_ind <- manymome::many_indirect_effects(all_paths_combined[no_w_i],
                                                   fit = fit_all,
                                                   est = ptable0)
         out <- c(out, list(all_ind))
@@ -1114,10 +1125,14 @@ pop_indirect <- function(x,
                     "paths ...)\n\n"))
         }
         for (i in i0) {
+
+          # Exclude paths moderated by mediators
+          if (!all(all_w[[i]] %in% x_terms)) next
+
           fit_tmp <- fix_w_sd_and_mean(x_i,
                                        all_w[[i]])
           cond <- do.call(manymome::cond_indirect_effects,
-                        c(all_paths[[i]],
+                        c(all_paths_combined[[i]],
                           list(wlevels = all_w[[i]],
                                 fit = fit_tmp,
                                 est = ptable0)))
