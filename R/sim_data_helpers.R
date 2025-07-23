@@ -704,3 +704,25 @@ get_w_for_paths <- function(all_paths,
                 USE.NAMES = TRUE)
   out
 }
+
+#' @noRd
+get_direct <- function(x,
+                       y,
+                       ptable) {
+  out <- list()
+  for (x_i in x) {
+    for (y_i in y) {
+      i <- (ptable$lhs == y_i) &
+           (ptable$rhs == x_i) &
+           (ptable$op == "~")
+      if (any(i)) {
+        out_i <- list(list(x = x_i,
+                           m = NULL,
+                           y = y_i))
+        names(out_i) <- paste0(x_i, " -> ", y_i)
+        out <- c(out, out_i)
+      }
+    }
+  }
+  out
+}

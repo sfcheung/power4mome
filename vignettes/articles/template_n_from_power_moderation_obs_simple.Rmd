@@ -1,6 +1,6 @@
 ---
 title: "Quick Template: Simple Moderation with Observed Variables"
-date: "2025-07-22"
+date: "2025-07-23"
 output:
   html_document:
     fig.align: "center"
@@ -270,6 +270,38 @@ print(out,
 #>     w                 1.000  
 #>     x:w               1.000  
 #> 
+#> (Computing conditional effects for 2 paths ...)
+#> 
+#> == Population Conditional/Indirect Effect(s) ==
+#> 
+#> == Conditional effects ==
+#> 
+#>  Path: x -> y
+#>  Conditional on moderator(s): w
+#>  Moderator(s) represented by: w
+#> 
+#>       [w] (w)   ind
+#> 1 M+1.0SD   1 0.450
+#> 2 Mean      0 0.300
+#> 3 M-1.0SD  -1 0.150
+#> 
+#>  - The 'ind' column shows the conditional effects.
+#>  
+#> 
+#> == Conditional effects ==
+#> 
+#>  Path: w -> y
+#>  Conditional on moderator(s): x
+#>  Moderator(s) represented by: x
+#> 
+#>       [x] (x)    ind
+#> 1 M+1.0SD   1  0.250
+#> 2 Mean      0  0.100
+#> 3 M-1.0SD  -1 -0.050
+#> 
+#>  - The 'ind' column shows the conditional effects.
+#>  
+#> 
 #> ======================= Data Information =======================
 #> 
 #> Number of Replications:  400 
@@ -318,7 +350,7 @@ print(out,
 #> 
 #> The models:
 #> y ~ x + w + x:w
-#> <environment: 0x00000150d33bd118>
+#> <environment: 0x0000020d0e8057e0>
 #> 
 #> 
 #> ====================== Test(s) Conducted ======================
@@ -495,7 +527,7 @@ summary(n_power_region)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 232 to 50 
-#> - Time spent in the search: 24.16 secs 
+#> - Time spent in the search: 25.22 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -570,7 +602,7 @@ summary(n_power_region)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 365 to 373 
-#> - Time spent in the search: 22.7 secs 
+#> - Time spent in the search: 25.23 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 

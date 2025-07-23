@@ -1,4 +1,4 @@
-# power4mome 0.0.1.98
+# power4mome 0.0.1.99
 
 - Initialized the package. (0.0.0.9000)
 
@@ -570,3 +570,7 @@
   effects, the population SDs and means
   of the moderators are now properly
   used. (0.0.1.98)
+
+- Updated the print method to support
+  models with only moderation.
+  (0.0.1.99)
