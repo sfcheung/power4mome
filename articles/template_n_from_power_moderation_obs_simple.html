@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.98</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.99</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -90,7 +90,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Quick Template: Simple Moderation with Observed Variables</h1>
             
-            <h4 data-toc-skip class="date">2025-07-22</h4>
+            <h4 data-toc-skip class="date">2025-07-23</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/sfcheung/power4mome/blob/main/vignettes/articles/template_n_from_power_moderation_obs_simple.Rmd" class="external-link"><code>vignettes/articles/template_n_from_power_moderation_obs_simple.Rmd</code></a></small>
       <div class="d-none name"><code>template_n_from_power_moderation_obs_simple.Rmd</code></div>
@@ -294,6 +294,38 @@ The Model
 <span><span class="co">#&gt;     w                 1.000  </span></span>
 <span><span class="co">#&gt;     x:w               1.000  </span></span>
 <span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; (Computing conditional effects for 2 paths ...)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; == Population Conditional/Indirect Effect(s) ==</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; == Conditional effects ==</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  Path: x -&gt; y</span></span>
+<span><span class="co">#&gt;  Conditional on moderator(s): w</span></span>
+<span><span class="co">#&gt;  Moderator(s) represented by: w</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;       [w] (w)   ind</span></span>
+<span><span class="co">#&gt; 1 M+1.0SD   1 0.450</span></span>
+<span><span class="co">#&gt; 2 Mean      0 0.300</span></span>
+<span><span class="co">#&gt; 3 M-1.0SD  -1 0.150</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  - The 'ind' column shows the conditional effects.</span></span>
+<span><span class="co">#&gt;  </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; == Conditional effects ==</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  Path: w -&gt; y</span></span>
+<span><span class="co">#&gt;  Conditional on moderator(s): x</span></span>
+<span><span class="co">#&gt;  Moderator(s) represented by: x</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;       [x] (x)    ind</span></span>
+<span><span class="co">#&gt; 1 M+1.0SD   1  0.250</span></span>
+<span><span class="co">#&gt; 2 Mean      0  0.100</span></span>
+<span><span class="co">#&gt; 3 M-1.0SD  -1 -0.050</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  - The 'ind' column shows the conditional effects.</span></span>
+<span><span class="co">#&gt;  </span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ======================= Data Information =======================</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Number of Replications:  400 </span></span>
@@ -342,7 +374,7 @@ The Model
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; The models:</span></span>
 <span><span class="co">#&gt; y ~ x + w + x:w</span></span>
-<span><span class="co">#&gt; &lt;environment: 0x00000150d33bd118&gt;</span></span>
+<span><span class="co">#&gt; &lt;environment: 0x0000020d0e8057e0&gt;</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ====================== Test(s) Conducted ======================</span></span>
@@ -488,7 +520,7 @@ significantly different from .80.</p>
 <span><span class="co">#&gt; - Algorithm: bisection </span></span>
 <span><span class="co">#&gt; - Tolerance for 'close enough': Within 0.02000 of 0.800 </span></span>
 <span><span class="co">#&gt; - The range of values explored: 232 to 50 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 24.16 secs </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 25.22 secs </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
@@ -563,7 +595,7 @@ significantly different from .80.</p>
 <span><span class="co">#&gt; - Algorithm: bisection </span></span>
 <span><span class="co">#&gt; - Tolerance for 'close enough': Within 0.02000 of 0.800 </span></span>
 <span><span class="co">#&gt; - The range of values explored: 365 to 373 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 22.7 secs </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 25.23 secs </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
