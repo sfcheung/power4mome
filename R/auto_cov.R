@@ -34,6 +34,8 @@ pt_with_int <- function(ptable,
                        fixed = TRUE)
   pt_fixed <- merge_start(pt_source = ptable,
                           pt_target = pt_fixed)
+  attr(pt_fixed, "model_fixed") <- model_fixed
+  attr(pt_fixed, "model") <- model_original
   pt_fixed
 }
 
@@ -56,7 +58,7 @@ cov_to_add <- function(object) {
   cov_add <- list()
   for (xx in ov_int) {
     ww <- strsplit(xx, ":", fixed = TRUE)[[1]]
-    tmp <- combn(ww, m = 2, simplify = TRUE)
+    tmp <- utils::combn(ww, m = 2, simplify = TRUE)
     cov_add <- c(cov_add,
                 mapply(function(lhs, rhs) {
                   data.frame(lhs = lhs,
@@ -147,8 +149,12 @@ fake_fit_for_int <- function(
   names(m1) <- vnames
   dat_cov <- lapply(seq_len(ngroups),
                     function(x) d1)
-  dat_means <- lapply(seq_len(ngroups),
-                     function(x) m1)
+  if (ngroups > 1) {
+    dat_means <- lapply(seq_len(ngroups),
+                      function(x) m1)
+  } else {
+    dat_means <- NULL
+  }
   fit1 <- lavaan::sem(model_int,
                       sample.cov = dat_cov,
                       sample.mean = dat_means,
@@ -217,13 +223,21 @@ merge_start <- function(pt_source,
 # Output:
 # - A character vector of mediator(s)
 #   involved in moderation.
-m_moderated <- function(object) {
+m_moderated <- function(object,
+                        ngroups = 1) {
   if (is.character(object)) {
-    fit <- lavaan::sem(
-              object,
-              do.fit = FALSE
-            )
-    pt <- lavaan::parameterTable(fit)
+    pt0 <- lavaan::lavParseModelString(
+                    object,
+                    as.data.frame. = TRUE)
+    attr(pt0, "constraints") <- NULL
+    attr(pt0, "modifiers") <- NULL
+    pt0 <- as.data.frame(lavaan::lav_partable_complete(pt0))
+    pt <- pt0
+    # fit <- lavaan::lavaan(
+    #           pt0,
+    #           do.fit = FALSE
+    #         )
+    # pt <- lavaan::parameterTable(fit)
   }
   int_term <- union(
                 lavaan::lavNames(pt, "ov.interaction"),

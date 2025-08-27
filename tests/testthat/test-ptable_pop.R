@@ -63,9 +63,19 @@ test_check_out <- function(check_out) {
               rep(1, ncol(check_out$mm_lm_dat_out)),
               tolerance = 1e-1,
               ignore_attr = TRUE)
-  expect_equal(coef(check_out$fit),
-              coef(check_out$fit0),
-              tolerance = 1e-1)
+  pt <- parameterTable(check_out$fit)
+  pt0 <- parameterTable(check_out$fit0)
+  pt <- order_cov(pt)
+  pt0 <- order_cov(pt0)
+  pt$tmp <- lav_partable_labels(pt)
+  pt0$tmp <- lav_partable_labels(pt0)
+  tmp2 <- intersect(pt$tmp, pt0$tmp)
+  expect_equal(pt$est[match(tmp2, pt$tmp)],
+               pt0$est[match(tmp2, pt0$tmp)],
+               tolerance = 1e-1)
+  # expect_equal(coef(check_out$fit),
+  #             coef(check_out$fit0)[],
+  #             tolerance = 1e-1)
   # expect_equal(check_out$mm_out_std$psi,
   #             check_out$mm_out_std2$psi,
   #             tolerance = 1e-1)
@@ -202,11 +212,14 @@ model_mod_med_es <- c(".beta." = "s",
 check_out <- check_gen_dat(model_mod_med,
                            model_mod_med_es,
                            seed = 1234)
+check_out$ptable$coeflabel <- lav_partable_labels(check_out$ptable)
 expect_equal(check_out$ptable$start[1:9],
              c(.10, .10, .15, .10, .10, .05, -.30, .10, .05))
-expect_equal(check_out$ptable$start[21:22],
+i <- match(c("w~~z", "u~~w"), check_out$ptable$coeflabel)
+expect_equal(check_out$ptable$start[i],
              c(.50, .50))
-expect_equal(check_out$ptable$start[16:17],
+i <- match(c("w~~x", "u~~x"), check_out$ptable$coeflabel)
+expect_equal(check_out$ptable$start[i],
              c(.10, .10))
 
 test_check_out(check_out)

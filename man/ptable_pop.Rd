@@ -13,7 +13,8 @@ ptable_pop(
   es_ind = c("si", "mi", "li"),
   standardized = TRUE,
   n_std = 1e+05,
-  std_force_monte_carlo = FALSE
+  std_force_monte_carlo = FALSE,
+  add_cov_for_moderation = TRUE
 )
 
 model_matrices_pop(x, ..., drop_list_single_group = TRUE)
@@ -90,6 +91,17 @@ will be used whether the model has
 product terms or not. Always fall
 back to simulation if
 analytical standardization failed.}
+
+\item{add_cov_for_moderation}{Logical. If \code{TRUE}, the default, for
+a model in which one or product terms
+for moderation involve one or more
+mediator, covariances between their
+error terms and the product terms
+will be added automatically. If these
+covariances are not added, the model
+may not be invariant to linear
+transformation of some variables in
+the model.}
 
 \item{x}{It can be a 'lavaan' model
 syntax, to be passed to \code{\link[=ptable_pop]{ptable_pop()}},

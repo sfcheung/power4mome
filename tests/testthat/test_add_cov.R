@@ -1,4 +1,4 @@
-skip("WIP")
+skip_on_cran()
 
 library(testthat)
 suppressMessages(library(lavaan))
@@ -63,12 +63,14 @@ fit <- sim_out$fit0
 
 pt <- ptable_pop(
         model = model,
-        pop_es = model_es
+        pop_es = model_es,
+        add_cov_for_moderation = FALSE
       )
 
 pt_mg <- ptable_pop(
         model = model,
-        pop_es = model_es_mg
+        pop_es = model_es_mg,
+        add_cov_for_moderation = FALSE
       )
 
 pt_fixed <- pt_with_int(
@@ -79,6 +81,16 @@ pt_fixed_mg <- pt_with_int(
               ptable = pt_mg,
               model = model
             )
+
+pt_fixed2 <- ptable_pop(
+        model = model,
+        pop_es = model_es
+      )
+
+pt_fixed_mg2 <- ptable_pop(
+        model = model,
+        pop_es = model_es_mg
+      )
 
 sim_out <- out$sim_all[[1]]
 sim_out_mg <- out_mg$sim_all[[1]]
@@ -92,8 +104,13 @@ fit2 <- sem(pt_fixed,
 fit3 <- sem(pt_fixed,
             dat + 2,
             fixed.x = FALSE)
+fit4 <- sem(pt_fixed2,
+            dat + 2,
+            fixed.x = FALSE)
 expect_equal(fitMeasures(fit2, "chisq"),
              fitMeasures(fit3, "chisq"))
+expect_equal(fitMeasures(fit2, "chisq"),
+             fitMeasures(fit4, "chisq"))
 
 fit2b <- sem(model,
              dat,
@@ -101,7 +118,11 @@ fit2b <- sem(model,
 fit3b <- sem(model,
              dat + 2,
              fixed.x = FALSE)
+fit4b <- sem(pt,
+             dat + 2,
+             fixed.x = FALSE)
 expect_false(fitMeasures(fit2b, "chisq") == fitMeasures(fit3b, "chisq"))
+expect_false(fitMeasures(fit2b, "chisq") == fitMeasures(fit4b, "chisq"))
 
 tmpnames <- setdiff(lavNames(pt_mg, "ov"), lavNames(pt_mg, "ov.interaction"))
 dat_mg <- sim_out_mg$mm_lm_dat_out[, c(tmpnames, "group")]
@@ -116,8 +137,14 @@ fit3_mg <- sem(pt_fixed_mg,
                dat_mg_shifted,
                group = "group",
                fixed.x = FALSE)
+fit4_mg <- sem(pt_fixed_mg2,
+               dat_mg_shifted,
+               group = "group",
+               fixed.x = FALSE)
 expect_equal(fitMeasures(fit2_mg, "chisq"),
              fitMeasures(fit3_mg, "chisq"))
+expect_equal(fitMeasures(fit2_mg, "chisq"),
+             fitMeasures(fit4_mg, "chisq"))
 
 fit2b_mg <- sem(model,
                dat_mg,
@@ -127,6 +154,17 @@ fit3b_mg <- sem(pt_fixed_mg,
                dat_mg_shifted,
                group = "group",
                fixed.x = FALSE)
+fit2c_mg <- sem(model,
+               dat_mg,
+               group = "group",
+               fixed.x = FALSE,
+               meanstructure = FALSE)
+fit4b_mg <- sem(pt_mg,
+               dat_mg_shifted,
+               group = "group",
+               fixed.x = FALSE,
+               meanstructure = FALSE)
 expect_false(fitMeasures(fit2b_mg, "chisq") == fitMeasures(fit3b_mg, "chisq"))
+expect_false(fitMeasures(fit2c_mg, "chisq") == fitMeasures(fit4b_mg, "chisq"))
 
 })
