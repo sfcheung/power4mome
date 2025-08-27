@@ -31,6 +31,11 @@ y ~ m: m
 y ~ x: s
 "
 
+tmp <- m_moderated(model)
+
+expect_equal(tmp,
+             "m")
+
 out <- power4test(
             nrep = 2,
             model = model,

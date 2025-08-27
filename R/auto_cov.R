@@ -208,3 +208,40 @@ merge_start <- function(pt_source,
   pt_target$tmpid <- NULL
   pt_target
 }
+
+#' @noRd
+# Check whether at least one mediator
+# is involved in moderation.
+# Input:
+# - Model syntax or parameter table
+# Output:
+# - A character vector of mediator(s)
+#   involved in moderation.
+m_moderated <- function(object) {
+  if (is.character(object)) {
+    fit <- lavaan::sem(
+              object,
+              do.fit = FALSE
+            )
+    pt <- lavaan::parameterTable(fit)
+  }
+  int_term <- union(
+                lavaan::lavNames(pt, "ov.interaction"),
+                lavaan::lavNames(pt, "lv.interaction")
+              )
+  int_term_comp <- strsplit(
+                      int_term,
+                      split = ":"
+                    )
+  int_term_comp <- unique(unlist(int_term_comp))
+  if (length(int_term) == 0) {
+    return(character(0))
+  }
+  ovlv_y <- union(
+              lavaan::lavNames(pt, "ov.nox"),
+              lavaan::lavNames(pt, "lv.nox")
+            )
+  ovlv_y <- setdiff(ovlv_y, int_term)
+  m_in_int <- intersect(ovlv_y, int_term_comp)
+  return(m_in_int)
+}
