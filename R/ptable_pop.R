@@ -462,6 +462,17 @@
 #' back to simulation if
 #' analytical standardization failed.
 #'
+#' @param add_cov_for_moderation
+#' Logical. If `TRUE`, the default, for
+#' a model in which one or product terms
+#' for moderation involve one or more
+#' mediator, covariances between their
+#' error terms and the product terms
+#' will be added automatically. If these
+#' covariances are not added, the model
+#' may not be invariant to linear
+#' transformation of some variables in
+#' the model.
 #'
 #' @examples
 #'
@@ -545,7 +556,8 @@ ptable_pop <- function(model = NULL,
                                   "li"),
                        standardized = TRUE,
                        n_std = 100000,
-                       std_force_monte_carlo = FALSE) {
+                       std_force_monte_carlo = FALSE,
+                       add_cov_for_moderation = TRUE) {
   if (is.null(model) || is.null(pop_es)) {
     stop("Both model and pop_es must be set.")
   }
@@ -682,6 +694,19 @@ ptable_pop <- function(model = NULL,
     ptable1 <- start_from_mm(ptable1,
                              mm)
     attr(ptable1, "model") <- model
+  }
+  if ((length(m_moderated(model, ngroups = ngroups)) > 0) &&
+      add_cov_for_moderation) {
+    # Models with mediators involved in moderation
+    ptable_fixed <- pt_with_int(
+                      ptable = ptable1,
+                      model_original = model
+                    )
+    ptable1 <- ptable_fixed
+    if (utils::packageVersion("lavaan") > "0.6.19") {
+      # lavaan 0.6.20+ should support "x:w ~~ y:z"
+      attr(ptable1, "model") <- attr(ptable1, "model_fixed")
+    }
   }
 
   # It is intentional not saving the call and

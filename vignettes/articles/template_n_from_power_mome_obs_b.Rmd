@@ -1,6 +1,6 @@
 ---
 title: "Quick Template: Simple Moderated Mediation with Observed Variables: b-Path Moderated"
-date: "2025-07-22"
+date: "2025-08-29"
 output:
   html_document:
     fig.align: "center"
@@ -266,21 +266,38 @@ print(out,
 #> 
 #> Covariances:
 #>                    Population
-#>   x ~~                       
+#>  .m ~~                       
+#>     m:w               0.000  
+#>   m:w ~~                     
 #>     w                 0.000  
+#>  .m ~~                       
+#>     w                 0.000  
+#>   m:w ~~                     
+#>     x                 0.000  
+#>   w ~~                       
+#>     x                 0.000  
 #> 
 #> Variances:
 #>                    Population
 #>    .m                 0.910  
 #>    .y                 0.849  
-#>     m:w               1.000  
 #>     x                 1.000  
 #>     w                 1.000  
+#>     m:w               1.000  
 #> 
-#> (Computing conditional effects for 1 paths ...)
+#> (Computing indirect effects for 1 paths ...)
+#> 
+#> (Computing conditional effects for 2 paths ...)
 #> 
 #> == Population Conditional/Indirect Effect(s) ==
 #> 
+#> == Effect(s) ==
+#> 
+#>          ind
+#> x -> y 0.100
+#> 
+#>  - The 'ind' column shows the effect(s).
+#>  
 #> == Conditional indirect effects ==
 #> 
 #>  Path: x -> m -> y
@@ -344,19 +361,18 @@ print(out,
 #> 
 #> ============ <fit> ============
 #> 
-#> lavaan 0.6-19 ended normally after 8 iterations
+#> lavaan 0.6-19 ended normally after 20 iterations
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
-#>   Number of model parameters                         8
+#>   Number of model parameters                        15
 #> 
 #>   Number of observations                           100
 #> 
 #> Model Test User Model:
 #>                                                       
-#>   Test statistic                                 3.780
-#>   Degrees of freedom                                 4
-#>   P-value (Chi-square)                           0.437
+#>   Test statistic                                 0.000
+#>   Degrees of freedom                                 0
 #> 
 #> =========== <mc_out> ===========
 #> 
@@ -375,7 +391,7 @@ rejection_rates(out)
 #> [test]: test_index_of_mome: x->m->y, moderated by w 
 #> [test_label]: Test 
 #>     est   p.v reject r.cilo r.cihi
-#> 1 0.046 1.000  0.330  0.284  0.376
+#> 1 0.046 1.000  0.295  0.250  0.340
 #> Notes:
 #> - p.v: The proportion of valid replications.
 #> - est: The mean of the estimates in a test across replications.
@@ -465,13 +481,13 @@ n_power_region
 #> Solution: 
 #> 
 #> Approximate region of sample sizes with power:
-#> - not significantly different from 0.800: 280 to 327
-#> - significantly lower than 0.800: 280
-#> - significantly higher than 0.800: 327
+#> - not significantly different from 0.800: 290 to 346
+#> - significantly lower than 0.800: 290
+#> - significantly higher than 0.800: 346
 #> 
 #> Confidence intervals of the estimated power:
-#> - for the lower bound (280): [0.731, 0.814]
-#> - for the upper bound (327): [0.810, 0.880]
+#> - for the lower bound (290): [0.729, 0.811]
+#> - for the upper bound (346): [0.804, 0.876]
 #> 
 #> Call `summary()` for detailed results.
 
@@ -490,16 +506,16 @@ plot(n_power_region)
 As shown above, approximately:
 
 - sample sizes lower than
-  280 have
+  290 have
   power significantly lower than .80, and
 
 - sample sizes higher than
-  327 have
+  346 have
   power significantly higher than .80.
 
 In other words, sample sizes between
-280 and
-327 have
+290 and
+346 have
 power not significantly different from
 .80.
 
@@ -528,10 +544,10 @@ summary(n_power_region)
 #> 
 #> === Major Results ===
 #> 
-#> - Final Value (Sample Size): 280
+#> - Final Value (Sample Size): 290
 #> 
-#> - Final Estimated Power: 0.772 
-#> - Confidence Interval: [0.731; 0.814]
+#> - Final Estimated Power: 0.770 
+#> - Confidence Interval: [0.729; 0.811]
 #> - Level of confidence: 95.0%
 #> - Based on 400 replications.
 #> 
@@ -539,8 +555,8 @@ summary(n_power_region)
 #> 
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
-#> - The range of values explored: 100 to 411 
-#> - Time spent in the search: 3.661 mins 
+#> - The range of values explored: 100 to 420 
+#> - Time spent in the search: 2.886 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -558,25 +574,23 @@ summary(n_power_region)
 #> 
 #> Coefficients:
 #> (Intercept)            x  
-#>    -1.70644      0.01021  
+#>    -1.80105      0.01011  
 #> 
-#> Degrees of Freedom: 3199 Total (i.e. Null);  3198 Residual
-#> Null Deviance:	    3776 
-#> Residual Deviance: 3374 	AIC: 3378
+#> Degrees of Freedom: 2399 Total (i.e. Null);  2398 Residual
+#> Null Deviance:	    2829 
+#> Residual Deviance: 2395 	AIC: 2399
 #> 
 #> - Detailed Results:
 #> 
 #> [test]: test_index_of_mome: x->m->y, moderated by w 
 #> [test_label]: Test 
 #>     n   est   p.v reject r.cilo r.cihi
-#> 1 100 0.046 1.000  0.330  0.284  0.376
-#> 2 242 0.045 1.000  0.677  0.632  0.723
-#> 3 264 0.045 1.000  0.725  0.681  0.769
-#> 4 275 0.045 1.000  0.733  0.689  0.776
-#> 5 280 0.046 1.000  0.772  0.731  0.814
-#> 6 285 0.046 1.000  0.792  0.753  0.832
-#> 7 327 0.046 1.000  0.845  0.810  0.880
-#> 8 411 0.045 1.000  0.910  0.882  0.938
+#> 1 100 0.046 1.000  0.295  0.250  0.340
+#> 2 271 0.046 1.000  0.735  0.692  0.778
+#> 3 290 0.044 1.000  0.770  0.729  0.811
+#> 4 309 0.045 1.000  0.805  0.766  0.844
+#> 5 346 0.045 1.000  0.840  0.804  0.876
+#> 6 420 0.047 1.000  0.897  0.868  0.927
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.
@@ -607,10 +621,10 @@ summary(n_power_region)
 #> 
 #> === Major Results ===
 #> 
-#> - Final Value (Sample Size): 327
+#> - Final Value (Sample Size): 346
 #> 
-#> - Final Estimated Power: 0.845 
-#> - Confidence Interval: [0.810; 0.880]
+#> - Final Estimated Power: 0.840 
+#> - Confidence Interval: [0.804; 0.876]
 #> - Level of confidence: 95.0%
 #> - Based on 400 replications.
 #> 
@@ -618,8 +632,8 @@ summary(n_power_region)
 #> 
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within  of 0.800 
-#> - The range of values explored: 100 to 411 
-#> - Time spent in the search: 0.09092 secs 
+#> - The range of values explored: 100 to 420 
+#> - Time spent in the search: 0.1294 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -638,25 +652,23 @@ summary(n_power_region)
 #> 
 #> Coefficients:
 #> (Intercept)            x  
-#>    -1.70644      0.01021  
+#>    -1.80105      0.01011  
 #> 
-#> Degrees of Freedom: 3199 Total (i.e. Null);  3198 Residual
-#> Null Deviance:	    3776 
-#> Residual Deviance: 3374 	AIC: 3378
+#> Degrees of Freedom: 2399 Total (i.e. Null);  2398 Residual
+#> Null Deviance:	    2829 
+#> Residual Deviance: 2395 	AIC: 2399
 #> 
 #> - Detailed Results:
 #> 
 #> [test]: test_index_of_mome: x->m->y, moderated by w 
 #> [test_label]: Test 
 #>     n   est   p.v reject r.cilo r.cihi
-#> 1 100 0.046 1.000  0.330  0.284  0.376
-#> 2 242 0.045 1.000  0.677  0.632  0.723
-#> 3 264 0.045 1.000  0.725  0.681  0.769
-#> 4 275 0.045 1.000  0.733  0.689  0.776
-#> 5 280 0.046 1.000  0.772  0.731  0.814
-#> 6 285 0.046 1.000  0.792  0.753  0.832
-#> 7 327 0.046 1.000  0.845  0.810  0.880
-#> 8 411 0.045 1.000  0.910  0.882  0.938
+#> 1 100 0.046 1.000  0.295  0.250  0.340
+#> 2 271 0.046 1.000  0.735  0.692  0.778
+#> 3 290 0.044 1.000  0.770  0.729  0.811
+#> 4 309 0.045 1.000  0.805  0.766  0.844
+#> 5 346 0.045 1.000  0.840  0.804  0.876
+#> 6 420 0.047 1.000  0.897  0.868  0.927
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.

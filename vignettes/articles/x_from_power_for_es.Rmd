@@ -1,6 +1,6 @@
 ---
 title: "Effect Size Given Desired Power"
-date: "2025-06-22"
+date: "2025-08-29"
 output:
   rmarkdown::html_vignette:
     options:
@@ -319,15 +319,17 @@ print(out,
 #>    .y                 0.870  
 #>     x                 1.000  
 #> 
-#> (Computing indirect effects for 1 paths ...)
+#> (Computing indirect effects for 2 paths ...)
 #> 
-#> ==== Population Indirect Effect(s) ====
+#> == Population Conditional/Indirect Effect(s) ==
 #> 
-#> ==  Indirect Effect(s)   ==
+#> == Indirect Effect(s) ==
+#> 
 #>               ind
 #> x -> m -> y 0.150
+#> x -> y      0.100
 #> 
-#>  - The 'ind' column shows the indirect effects.
+#>  - The 'ind' column shows the indirect effect(s).
 #>  
 #> =============================== Data Information ===============================
 #> 
@@ -558,15 +560,17 @@ print(out,
 #>    .y                 0.870  
 #>     x                 1.000  
 #> 
-#> (Computing indirect effects for 1 paths ...)
+#> (Computing indirect effects for 2 paths ...)
 #> 
-#> ==== Population Indirect Effect(s) ====
+#> == Population Conditional/Indirect Effect(s) ==
 #> 
-#> ==  Indirect Effect(s)   ==
+#> == Indirect Effect(s) ==
+#> 
 #>               ind
 #> x -> m -> y 0.150
+#> x -> y      0.100
 #> 
-#>  - The 'ind' column shows the indirect effects.
+#>  - The 'ind' column shows the indirect effect(s).
 #>  
 #> =============================== Data Information ===============================
 #> 
@@ -769,7 +773,7 @@ summary(out_es_a)
 #> 
 #> - Algorithm: power_curve 
 #> - The range of values explored: 0.488 to 0.519 
-#> - Time spent in the search: 1.214 mins 
+#> - Time spent in the search: 1.242 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -939,7 +943,7 @@ summary(out_es_b)
 #> 
 #> - Algorithm: power_curve 
 #> - The range of values explored: 0.293 to 0.343 
-#> - Time spent in the search: 1.286 mins 
+#> - Time spent in the search: 1.201 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 

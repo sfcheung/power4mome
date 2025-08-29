@@ -1,6 +1,6 @@
 ---
 title: "Quick Template: Simple Mediation with Latent Variables"
-date: "2025-07-20"
+date: "2025-08-29"
 output:
   html_document:
     fig.align: "center"
@@ -271,14 +271,15 @@ print(out,
 #>    .y                 0.710  
 #>     x                 1.000  
 #> 
-#> (Computing indirect effects for 1 paths ...)
+#> (Computing indirect effects for 2 paths ...)
 #> 
-#> == Population Indirect Effect(s) ==
+#> == Population Conditional/Indirect Effect(s) ==
 #> 
 #> == Indirect Effect(s) ==
 #> 
 #>               ind
 #> x -> m -> y 0.150
+#> x -> y      0.100
 #> 
 #>  - The 'ind' column shows the indirect effect(s).
 #>  
@@ -548,7 +549,7 @@ summary(n_power_region)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 100 to 160 
-#> - Time spent in the search: 1.081 mins 
+#> - Time spent in the search: 1.102 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -623,7 +624,7 @@ summary(n_power_region)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 159 to 245 
-#> - Time spent in the search: 1.328 mins 
+#> - Time spent in the search: 1.283 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 

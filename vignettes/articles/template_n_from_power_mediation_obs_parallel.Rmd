@@ -1,6 +1,6 @@
 ---
 title: "Quick Template: Parallel Mediation with Observed Variables"
-date: "2025-07-18"
+date: "2025-08-29"
 output:
   html_document:
     fig.align: "center"
@@ -278,9 +278,9 @@ print(out,
 #>    .y                 0.545  
 #>     x                 1.000  
 #> 
-#> (Computing indirect effects for 3 paths ...)
+#> (Computing indirect effects for 4 paths ...)
 #> 
-#> == Population Indirect Effect(s) ==
+#> == Population Conditional/Indirect Effect(s) ==
 #> 
 #> == Indirect Effect(s) ==
 #> 
@@ -288,6 +288,7 @@ print(out,
 #> x -> m1 -> y 0.030
 #> x -> m2 -> y 0.090
 #> x -> m3 -> y 0.150
+#> x -> y       0.100
 #> 
 #>  - The 'ind' column shows the indirect effect(s).
 #>  
@@ -366,7 +367,7 @@ print(out,
 #> Call print() and set 'test_long = TRUE' for a detailed report.
 rejection_rates(out)
 #> [test]: test_indirects: x-...->y 
-#> [test_label]: x-...->y (All sig) 
+#> [test_label]: x-...->y (All sig) (1+ sig) 
 #>    est   p.v reject r.cilo r.cihi
 #> 1  NaN 1.000  0.172  0.135  0.210
 #> Notes:
@@ -537,7 +538,7 @@ summary(n_power_region)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 100 to 464 
-#> - Time spent in the search: 33.68 secs 
+#> - Time spent in the search: 35.05 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -564,7 +565,7 @@ summary(n_power_region)
 #> - Detailed Results:
 #> 
 #> [test]: test_indirects: x-...->y 
-#> [test_label]: x-...->y (All sig) 
+#> [test_label]: x-...->y (All sig) (1+ sig) 
 #>     n  est   p.v reject r.cilo r.cihi
 #> 1 100  NaN 1.000  0.172  0.135  0.210
 #> 2 464  NaN 1.000  0.767  0.726  0.809
@@ -610,7 +611,7 @@ summary(n_power_region)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 464 to 484 
-#> - Time spent in the search: 33.79 secs 
+#> - Time spent in the search: 34.15 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -637,7 +638,7 @@ summary(n_power_region)
 #> - Detailed Results:
 #> 
 #> [test]: test_indirects: x-...->y 
-#> [test_label]: x-...->y (All sig) 
+#> [test_label]: x-...->y (All sig) (1+ sig) 
 #>     n  est   p.v reject r.cilo r.cihi
 #> 1 464  NaN 1.000  0.767  0.726  0.809
 #> 2 484  NaN 1.000  0.820  0.782  0.858

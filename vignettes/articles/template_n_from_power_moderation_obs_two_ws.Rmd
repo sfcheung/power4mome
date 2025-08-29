@@ -1,6 +1,6 @@
 ---
 title: "Quick Template: Moderation with Observed Variables: Two Moderators"
-date: "2025-07-23"
+date: "2025-08-29"
 output:
   html_document:
     fig.align: "center"
@@ -403,7 +403,7 @@ print(out,
 #> 
 #> The models:
 #> y ~ x + w1 + w2 + x:w1 + x:w2
-#> <environment: 0x0000020d628a0f20>
+#> <environment: 0x000001f3a173d818>
 #> 
 #> 
 #> ====================== Test(s) Conducted ======================
@@ -580,7 +580,7 @@ summary(n_power_region)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 100 to 985 
-#> - Time spent in the search: 1.127 mins 
+#> - Time spent in the search: 59.49 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -659,7 +659,7 @@ summary(n_power_region)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within  of 0.800 
 #> - The range of values explored: 100 to 985 
-#> - Time spent in the search: 0.564 secs 
+#> - Time spent in the search: 0.6178 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 

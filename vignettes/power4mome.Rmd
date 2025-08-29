@@ -1,6 +1,6 @@
 ---
 title: "Power Analysis for Moderation, Mediation, and Moderated-Mediation"
-date: "2025-06-22"
+date: "2025-08-29"
 output:
   rmarkdown::html_vignette:
     options:
@@ -259,15 +259,17 @@ out
 #>    .y                 0.870  
 #>     x                 1.000  
 #> 
-#> (Computing indirect effects for 1 paths ...)
+#> (Computing indirect effects for 2 paths ...)
 #> 
-#> == Population Indirect Effect(s) ==
+#> == Population Conditional/Indirect Effect(s) ==
 #> 
-#> ==  Indirect Effect(s)   ==
+#> == Indirect Effect(s) ==
+#> 
 #>               ind
 #> x -> m -> y 0.150
+#> x -> y      0.100
 #> 
-#>  - The 'ind' column shows the indirect effects.
+#>  - The 'ind' column shows the indirect effect(s).
 #>  
 #> ======================= Data Information =======================
 #> 
@@ -352,15 +354,17 @@ print(out,
 #>    .y                 0.870  
 #>     x                 1.000  
 #> 
-#> (Computing indirect effects for 1 paths ...)
+#> (Computing indirect effects for 2 paths ...)
 #> 
-#> == Population Indirect Effect(s) ==
+#> == Population Conditional/Indirect Effect(s) ==
 #> 
-#> ==  Indirect Effect(s)   ==
+#> == Indirect Effect(s) ==
+#> 
 #>               ind
 #> x -> m -> y 0.150
+#> x -> y      0.100
 #> 
-#>  - The 'ind' column shows the indirect effects.
+#>  - The 'ind' column shows the indirect effect(s).
 #>  
 #> ======================= Data Information =======================
 #> 
@@ -563,15 +567,17 @@ out
 #>    .y                 0.870  
 #>     x                 1.000  
 #> 
-#> (Computing indirect effects for 1 paths ...)
+#> (Computing indirect effects for 2 paths ...)
 #> 
-#> == Population Indirect Effect(s) ==
+#> == Population Conditional/Indirect Effect(s) ==
 #> 
-#> ==  Indirect Effect(s)   ==
+#> == Indirect Effect(s) ==
+#> 
 #>               ind
 #> x -> m -> y 0.150
+#> x -> y      0.100
 #> 
-#>  - The 'ind' column shows the indirect effects.
+#>  - The 'ind' column shows the indirect effect(s).
 #>  
 #> ======================= Data Information =======================
 #> 
@@ -630,6 +636,8 @@ The summary of the test:
 
 
 ```
+#>                                                       
+#>   Test statistic                                 0.000
 #>   Degrees of freedom                                 0
 #> 
 #> =========== <mc_out> ===========
@@ -817,13 +825,52 @@ print(out2,
 #> 
 #> Variances:
 #>                    Population
-#>    .y                 0.946  
+#>    .y                 0.945  
 #>     x                 1.000  
 #>     w                 1.000  
 #>     x:w               1.000  
 #>     control           1.000  
 #> 
-#> (Computing indirect effects for 0 paths ...)
+#> (Computing indirect effects for 1 paths ...)
+#> 
+#> (Computing conditional effects for 2 paths ...)
+#> 
+#> == Population Conditional/Indirect Effect(s) ==
+#> 
+#> == Effect(s) ==
+#> 
+#>                ind
+#> control -> y 0.100
+#> 
+#>  - The 'ind' column shows the effect(s).
+#>  
+#> == Conditional effects ==
+#> 
+#>  Path: x -> y
+#>  Conditional on moderator(s): w
+#>  Moderator(s) represented by: w
+#> 
+#>       [w] (w)    ind
+#> 1 M+1.0SD   1  0.250
+#> 2 Mean      0  0.100
+#> 3 M-1.0SD  -1 -0.050
+#> 
+#>  - The 'ind' column shows the conditional effects.
+#>  
+#> 
+#> == Conditional effects ==
+#> 
+#>  Path: w -> y
+#>  Conditional on moderator(s): x
+#>  Moderator(s) represented by: x
+#> 
+#>       [x] (x)    ind
+#> 1 M+1.0SD   1  0.250
+#> 2 Mean      0  0.100
+#> 3 M-1.0SD  -1 -0.050
+#> 
+#>  - The 'ind' column shows the conditional effects.
+#>  
 #> 
 #> ======================= Data Information =======================
 #> 
@@ -1086,20 +1133,50 @@ print(out3,
 #>     w                 1.000  
 #>     x:w               1.000  
 #> 
-#> (Computing indirect effects for 2 paths ...)
+#> (Computing indirect effects for 1 paths ...)
 #> 
-#> (Computing indirect effects for 2 paths ...)
+#> (Computing conditional effects for 2 paths ...)
 #> 
-#> == Population Indirect Effect(s) ==
+#> == Population Conditional/Indirect Effect(s) ==
 #> 
-#> ==  Indirect Effect(s)   ==
-#>               ind
-#> x -> m -> y 0.090
-#> w -> m -> y 0.030
+#> == Effect(s) ==
 #> 
-#>  - The 'ind' column shows the indirect effects.
+#>          ind
+#> x -> y 0.100
+#> 
+#>  - The 'ind' column shows the effect(s).
 #>  
-#> NOTE: One or more path(s) is/are moderated.
+#> == Conditional indirect effects ==
+#> 
+#>  Path: x -> m -> y
+#>  Conditional on moderator(s): w
+#>  Moderator(s) represented by: w
+#> 
+#>       [w] (w)   ind   m~x   y~m
+#> 1 M+1.0SD   1 0.105 0.350 0.300
+#> 2 Mean      0 0.090 0.300 0.300
+#> 3 M-1.0SD  -1 0.075 0.250 0.300
+#> 
+#>  - The 'ind' column shows the conditional indirect effects.
+#>  - 'm~x','y~m' is/are the path coefficient(s) along the path conditional
+#>    on the moderator(s).
+#> 
+#> 
+#> == Conditional indirect effects ==
+#> 
+#>  Path: w -> m -> y
+#>  Conditional on moderator(s): x
+#>  Moderator(s) represented by: x
+#> 
+#>       [x] (x)   ind   m~w   y~m
+#> 1 M+1.0SD   1 0.045 0.150 0.300
+#> 2 Mean      0 0.030 0.100 0.300
+#> 3 M-1.0SD  -1 0.015 0.050 0.300
+#> 
+#>  - The 'ind' column shows the conditional indirect effects.
+#>  - 'm~w','y~m' is/are the path coefficient(s) along the path conditional
+#>    on the moderator(s).
+#> 
 #> 
 #> ======================= Data Information =======================
 #> 
@@ -1234,7 +1311,7 @@ out3_power
 #> [test]: test_index_of_mome: x->m->y, moderated by w 
 #> [test_label]: Test 
 #>     est   p.v reject r.cilo r.cihi
-#> 1 0.016 1.000  0.050  0.029  0.071
+#> 1 0.016 1.000  0.055  0.033  0.077
 #> Notes:
 #> - p.v: The proportion of valid replications.
 #> - est: The mean of the estimates in a test across replications.
@@ -1252,8 +1329,8 @@ The estimated
 power of the test of moderated mediation
 effect, conducted by a test of the
 index of moderated mediation, is
-0.050,
-95% confidence interval [0.029; 0.071].
+0.055,
+95% confidence interval [0.033; 0.077].
 
 Unlike the previous example on moderation
 tested by regression, estimating the power
