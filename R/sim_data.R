@@ -977,6 +977,18 @@ sim_data_i <- function(repid = 1,
                           SIMPLIFY = FALSE)
 
   model_original <- model
+  # TODO:
+  # - Make add_indicator_syntax() work
+  #   with a model with "x:z ~~ y:w",
+  #   before it is supported in lavaan.
+  #   The following model will be stored in
+  #   model_final and will be used for
+  #   model fitting. Make sure files that
+  #   use model_final accepts both
+  #   model syntax and parameter table.
+  #   For the parameter table, the fixed
+  #   syntax should be stored in an
+  #   attributes.
   model <- add_indicator_syntax(model,
                                 number_of_indicators = number_of_indicators[[1]],
                                 reliability = reliability[[1]])

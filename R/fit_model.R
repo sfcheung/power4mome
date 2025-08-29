@@ -258,6 +258,9 @@ fit_model_i <- function(data_i,
   # Anomalies should be checked in
   # subsequent steps, not during fitting
   # the model to many datasets.
+  # TODO:
+  # - Update the following lines to
+  #   support using a parameter table.
   if (is.null(model)) {
     model_to_fit <- data_i$model_final
   } else {
