@@ -167,4 +167,18 @@ fit4b_mg <- sem(pt_mg,
 expect_false(fitMeasures(fit2b_mg, "chisq") == fitMeasures(fit3b_mg, "chisq"))
 expect_false(fitMeasures(fit2c_mg, "chisq") == fitMeasures(fit4b_mg, "chisq"))
 
+fit_extra <- sim_out$extra$fit
+pt_extra <- parameterTable(fit_extra)
+pt_extra$tmplabel <- lav_partable_labels(pt_extra)
+pt_fixed$tmplabel <- lav_partable_labels(pt_fixed)
+expect_equal(pt_extra$tmplabel,
+             pt_fixed$tmplabel)
+
+fit_extra_mg <- sim_out_mg$extra$fit
+pt_extra_mg <- parameterTable(fit_extra_mg)
+pt_extra_mg$tmplabel <- lav_partable_labels(pt_extra_mg)
+pt_fixed_mg$tmplabel <- lav_partable_labels(pt_fixed_mg)
+expect_equal(pt_extra_mg$tmplabel,
+             pt_fixed_mg$tmplabel)
+
 })

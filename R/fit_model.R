@@ -266,6 +266,16 @@ fit_model_i <- function(data_i,
   } else {
     model_to_fit <- model
   }
+  tmp <- attr(model_to_fit, "ptable")
+  if (!is.null(tmp) &&
+      is.null(data_i$number_of_indicators[[1]]) &&
+      identical(getNamespaceName(environment(fit_function)),
+                c(name = "lavaan"))) {
+    # Do this only for lavaan
+    # TODO:
+    # - Support moderated mediation model with indicators.
+    model_to_fit <- tmp
+  }
   # For single-group models,
   # data_i$group_name would be NULL.
   fit_args0 <- list()
