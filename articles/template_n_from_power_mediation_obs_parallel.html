@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.99</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.101</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -90,7 +90,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Quick Template: Parallel Mediation with Observed Variables</h1>
             
-            <h4 data-toc-skip class="date">2025-07-18</h4>
+            <h4 data-toc-skip class="date">2025-08-29</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/sfcheung/power4mome/blob/main/vignettes/articles/template_n_from_power_mediation_obs_parallel.Rmd" class="external-link"><code>vignettes/articles/template_n_from_power_mediation_obs_parallel.Rmd</code></a></small>
       <div class="d-none name"><code>template_n_from_power_mediation_obs_parallel.Rmd</code></div>
@@ -300,9 +300,9 @@ The Model
 <span><span class="co">#&gt;    .y                 0.545  </span></span>
 <span><span class="co">#&gt;     x                 1.000  </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; (Computing indirect effects for 3 paths ...)</span></span>
+<span><span class="co">#&gt; (Computing indirect effects for 4 paths ...)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; == Population Indirect Effect(s) ==</span></span>
+<span><span class="co">#&gt; == Population Conditional/Indirect Effect(s) ==</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; == Indirect Effect(s) ==</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -310,6 +310,7 @@ The Model
 <span><span class="co">#&gt; x -&gt; m1 -&gt; y 0.030</span></span>
 <span><span class="co">#&gt; x -&gt; m2 -&gt; y 0.090</span></span>
 <span><span class="co">#&gt; x -&gt; m3 -&gt; y 0.150</span></span>
+<span><span class="co">#&gt; x -&gt; y       0.100</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  - The 'ind' column shows the indirect effect(s).</span></span>
 <span><span class="co">#&gt;  </span></span>
@@ -388,7 +389,7 @@ The Model
 <span><span class="co">#&gt; Call print() and set 'test_long = TRUE' for a detailed report.</span></span>
 <span><span class="fu"><a href="../reference/rejection_rates.html">rejection_rates</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [test]: test_indirects: x-...-&gt;y </span></span>
-<span><span class="co">#&gt; [test_label]: x-...-&gt;y (All sig) </span></span>
+<span><span class="co">#&gt; [test_label]: x-...-&gt;y (All sig) (1+ sig) </span></span>
 <span><span class="co">#&gt;    est   p.v reject r.cilo r.cihi</span></span>
 <span><span class="co">#&gt; 1  NaN 1.000  0.172  0.135  0.210</span></span>
 <span><span class="co">#&gt; Notes:</span></span>
@@ -526,7 +527,7 @@ significantly different from .80.</p>
 <span><span class="co">#&gt; - Algorithm: bisection </span></span>
 <span><span class="co">#&gt; - Tolerance for 'close enough': Within 0.02000 of 0.800 </span></span>
 <span><span class="co">#&gt; - The range of values explored: 100 to 464 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 33.68 secs </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 35.05 secs </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
@@ -553,7 +554,7 @@ significantly different from .80.</p>
 <span><span class="co">#&gt; - Detailed Results:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [test]: test_indirects: x-...-&gt;y </span></span>
-<span><span class="co">#&gt; [test_label]: x-...-&gt;y (All sig) </span></span>
+<span><span class="co">#&gt; [test_label]: x-...-&gt;y (All sig) (1+ sig) </span></span>
 <span><span class="co">#&gt;     n  est   p.v reject r.cilo r.cihi</span></span>
 <span><span class="co">#&gt; 1 100  NaN 1.000  0.172  0.135  0.210</span></span>
 <span><span class="co">#&gt; 2 464  NaN 1.000  0.767  0.726  0.809</span></span>
@@ -599,7 +600,7 @@ significantly different from .80.</p>
 <span><span class="co">#&gt; - Algorithm: bisection </span></span>
 <span><span class="co">#&gt; - Tolerance for 'close enough': Within 0.02000 of 0.800 </span></span>
 <span><span class="co">#&gt; - The range of values explored: 464 to 484 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 33.79 secs </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 34.15 secs </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
@@ -626,7 +627,7 @@ significantly different from .80.</p>
 <span><span class="co">#&gt; - Detailed Results:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [test]: test_indirects: x-...-&gt;y </span></span>
-<span><span class="co">#&gt; [test_label]: x-...-&gt;y (All sig) </span></span>
+<span><span class="co">#&gt; [test_label]: x-...-&gt;y (All sig) (1+ sig) </span></span>
 <span><span class="co">#&gt;     n  est   p.v reject r.cilo r.cihi</span></span>
 <span><span class="co">#&gt; 1 464  NaN 1.000  0.767  0.726  0.809</span></span>
 <span><span class="co">#&gt; 2 484  NaN 1.000  0.820  0.782  0.858</span></span>

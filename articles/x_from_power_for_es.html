@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.99</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.101</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -89,7 +89,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Effect Size Given Desired Power</h1>
             
-            <h4 data-toc-skip class="date">2025-06-22</h4>
+            <h4 data-toc-skip class="date">2025-08-29</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/sfcheung/power4mome/blob/main/vignettes/articles/x_from_power_for_es.Rmd" class="external-link"><code>vignettes/articles/x_from_power_for_es.Rmd</code></a></small>
       <div class="d-none name"><code>x_from_power_for_es.Rmd</code></div>
@@ -316,15 +316,17 @@ and &lt;code&gt;&lt;a href="https://rdrr.io/r/base/Random.html" class="external-
 <span><span class="co">#&gt;    .y                 0.870  </span></span>
 <span><span class="co">#&gt;     x                 1.000  </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; (Computing indirect effects for 1 paths ...)</span></span>
+<span><span class="co">#&gt; (Computing indirect effects for 2 paths ...)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ==== Population Indirect Effect(s) ====</span></span>
+<span><span class="co">#&gt; == Population Conditional/Indirect Effect(s) ==</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ==  Indirect Effect(s)   ==</span></span>
+<span><span class="co">#&gt; == Indirect Effect(s) ==</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;               ind</span></span>
 <span><span class="co">#&gt; x -&gt; m -&gt; y 0.150</span></span>
+<span><span class="co">#&gt; x -&gt; y      0.100</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  - The 'ind' column shows the indirect effects.</span></span>
+<span><span class="co">#&gt;  - The 'ind' column shows the indirect effect(s).</span></span>
 <span><span class="co">#&gt;  </span></span>
 <span><span class="co">#&gt; =============================== Data Information ===============================</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -499,15 +501,17 @@ session.</p>
 <span><span class="co">#&gt;    .y                 0.870  </span></span>
 <span><span class="co">#&gt;     x                 1.000  </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; (Computing indirect effects for 1 paths ...)</span></span>
+<span><span class="co">#&gt; (Computing indirect effects for 2 paths ...)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ==== Population Indirect Effect(s) ====</span></span>
+<span><span class="co">#&gt; == Population Conditional/Indirect Effect(s) ==</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ==  Indirect Effect(s)   ==</span></span>
+<span><span class="co">#&gt; == Indirect Effect(s) ==</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;               ind</span></span>
 <span><span class="co">#&gt; x -&gt; m -&gt; y 0.150</span></span>
+<span><span class="co">#&gt; x -&gt; y      0.100</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  - The 'ind' column shows the indirect effects.</span></span>
+<span><span class="co">#&gt;  - The 'ind' column shows the indirect effect(s).</span></span>
 <span><span class="co">#&gt;  </span></span>
 <span><span class="co">#&gt; =============================== Data Information ===============================</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -670,7 +674,7 @@ corresponding indirect effect is about 0.148</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - Algorithm: power_curve </span></span>
 <span><span class="co">#&gt; - The range of values explored: 0.488 to 0.519 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 1.214 mins </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 1.242 mins </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
@@ -802,7 +806,7 @@ varied:</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - Algorithm: power_curve </span></span>
 <span><span class="co">#&gt; - The range of values explored: 0.293 to 0.343 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 1.286 mins </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 1.201 mins </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
