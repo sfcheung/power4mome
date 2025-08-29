@@ -68,10 +68,14 @@ model_final <- sim_out$model_final
 expect_true(all(c("y2", "x3", "z5")
                 %in%
                 colnames(sim_out$mm_lm_dat_out)))
+expect_true(is.data.frame(attr(model_final, "ptable")))
 
 sim_out_mg <- out_mg$sim_all[[1]]
+model_original_mg <- sim_out_mg$model_original
+model_final_mg <- sim_out_mg$model_final
 expect_true(all(c("w2", "x2", "y4")
                 %in%
                 colnames(sim_out_mg$mm_lm_dat_out)))
+expect_true(is.data.frame(attr(model_final_mg, "ptable")))
 
 })
