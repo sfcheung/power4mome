@@ -1,6 +1,6 @@
 ---
 title: "Sample Size Given Desired Power"
-date: "2025-07-13"
+date: "2025-08-29"
 output:
   rmarkdown::html_vignette:
     options:
@@ -290,14 +290,15 @@ print(out,
 #>    .y                 0.870  
 #>     x                 1.000  
 #> 
-#> (Computing indirect effects for 1 paths ...)
+#> (Computing indirect effects for 2 paths ...)
 #> 
-#> == Population Indirect Effect(s) ==
+#> == Population Conditional/Indirect Effect(s) ==
 #> 
 #> == Indirect Effect(s) ==
 #> 
 #>               ind
 #> x -> m -> y 0.150
+#> x -> y      0.100
 #> 
 #>  - The 'ind' column shows the indirect effect(s).
 #>  
@@ -520,14 +521,15 @@ print(out,
 #>    .y                 0.870  
 #>     x                 1.000  
 #> 
-#> (Computing indirect effects for 1 paths ...)
+#> (Computing indirect effects for 2 paths ...)
 #> 
-#> == Population Indirect Effect(s) ==
+#> == Population Conditional/Indirect Effect(s) ==
 #> 
 #> == Indirect Effect(s) ==
 #> 
 #>               ind
 #> x -> m -> y 0.150
+#> x -> y      0.100
 #> 
 #>  - The 'ind' column shows the indirect effect(s).
 #>  
@@ -748,7 +750,7 @@ summary(out_n)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 105 to 91 
-#> - Time spent in the search: 1.548 mins 
+#> - Time spent in the search: 1.574 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -941,7 +943,7 @@ summary(out_n_lb)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 109 to 98 
-#> - Time spent in the search: 2.289 mins 
+#> - Time spent in the search: 2.286 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 

@@ -1,4 +1,4 @@
-# power4mome 0.0.1.100
+# power4mome 0.0.1.101
 
 - Initialized the package. (0.0.0.9000)
 
@@ -580,3 +580,5 @@
   covariances when one or more
   mediators are involved in one or
   more product terms. (0.0.1.100)
+
+- Updated the vignettes. (0.0.1.101)

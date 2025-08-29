@@ -1,6 +1,6 @@
 ---
 title: "Quick Template: Simple Moderated Mediation with Observed Variables: a-Path Moderated"
-date: "2025-07-22"
+date: "2025-08-29"
 output:
   html_document:
     fig.align: "center"
@@ -280,10 +280,19 @@ print(out,
 #>     w                 1.000  
 #>     x:w               1.000  
 #> 
+#> (Computing indirect effects for 1 paths ...)
+#> 
 #> (Computing conditional effects for 2 paths ...)
 #> 
 #> == Population Conditional/Indirect Effect(s) ==
 #> 
+#> == Effect(s) ==
+#> 
+#>          ind
+#> x -> y 0.100
+#> 
+#>  - The 'ind' column shows the effect(s).
+#>  
 #> == Conditional indirect effects ==
 #> 
 #>  Path: x -> m -> y
@@ -562,7 +571,7 @@ summary(n_power_region)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 100 to 406 
-#> - Time spent in the search: 2.158 mins 
+#> - Time spent in the search: 2.149 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -638,7 +647,7 @@ summary(n_power_region)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 366 to 406 
-#> - Time spent in the search: 33.62 secs 
+#> - Time spent in the search: 34.05 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
