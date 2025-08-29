@@ -977,15 +977,6 @@ sim_data_i <- function(repid = 1,
                           SIMPLIFY = FALSE)
 
   model_original <- model
-  # TODO:
-  # - The following model will be stored in
-  #   model_final and will be used for
-  #   model fitting. Make sure files that
-  #   use model_final accepts both
-  #   model syntax and parameter table.
-  #   For the parameter table, the fixed
-  #   syntax should be stored in an
-  #   attributes.
   # add_indicator_syntax() already supports
   # a model syntax with "x:z ~~ y:w"
   model <- add_indicator_syntax(model,
@@ -994,6 +985,9 @@ sim_data_i <- function(repid = 1,
   if (!is.null(attr(ptable, "model_fixed"))) {
     if (utils::packageVersion("lavaan") <= "0.6.19") {
       # lavaan 0.6.20+ should support "x:w ~~ y:z"
+      # TODO:
+      # - Decide which ptable to store the variables are
+      #   latent variables.
       attr(model, "ptable") <- ptable
     }
   }
