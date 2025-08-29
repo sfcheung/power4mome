@@ -977,9 +977,20 @@ sim_data_i <- function(repid = 1,
                           SIMPLIFY = FALSE)
 
   model_original <- model
+  # add_indicator_syntax() already supports
+  # a model syntax with "x:z ~~ y:w"
   model <- add_indicator_syntax(model,
                                 number_of_indicators = number_of_indicators[[1]],
                                 reliability = reliability[[1]])
+  if (!is.null(attr(ptable, "model_fixed"))) {
+    if (utils::packageVersion("lavaan") <= "0.6.19") {
+      # lavaan 0.6.20+ should support "x:w ~~ y:z"
+      # TODO:
+      # - Decide which ptable to store the variables are
+      #   latent variables.
+      attr(model, "ptable") <- ptable
+    }
+  }
   tmp <- ptable
   tmp$est <- tmp$start
   # fixed.x set to FALSE such that covariances are also displayed

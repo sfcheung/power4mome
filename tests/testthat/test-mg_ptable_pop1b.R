@@ -38,7 +38,10 @@ expect_equal(tmp1[tmp1$ptlabel == "y~~m2:w", "start"],
              tmp2[tmp2$ptlabel == "y~~m2:w", "start"],
              tolerance = 1e-3)
 
-expect_identical(mm_out[[1]],
+tmp <- mm_out[[1]]
+tmp$nu <- NULL
+tmp$alpha <- NULL
+expect_identical(tmp,
                  mm_out_ng,
                  tolerance = 1e-3)
 

@@ -1,4 +1,4 @@
-# power4mome 0.0.1.99
+# power4mome 0.0.1.100
 
 - Initialized the package. (0.0.0.9000)
 
@@ -574,3 +574,9 @@
 - Updated the print method to support
   models with only moderation.
   (0.0.1.99)
+
+- Updated several functions to add
+  necessary covariances and error
+  covariances when one or more
+  mediators are involved in one or
+  more product terms. (0.0.1.100)
