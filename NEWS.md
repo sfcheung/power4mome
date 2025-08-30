@@ -1,4 +1,4 @@
-# power4mome 0.0.1.101
+# power4mome 0.0.1.102
 
 - Initialized the package. (0.0.0.9000)
 
@@ -582,3 +582,6 @@
   more product terms. (0.0.1.100)
 
 - Updated the vignettes. (0.0.1.101)
+
+- Fixed a bug in the test label of
+  `test_indirect_effects()`. (0.0.1.102)
