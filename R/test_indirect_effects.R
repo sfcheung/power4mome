@@ -304,10 +304,10 @@ test_k_indirect_effects <- function(
     tmp <- paste0(c(x, y), collapse = "-...->")
     tmp <- paste0(tmp, switch(omnibus,
                               all_sig = " (All sig)",
-                              at_least_one_sig = " (1+ sig)"),
+                              at_least_one_sig = " (1+ sig)",
                               at_least_k_sig = paste0(" (",
                                                       at_least_k,
-                                                      "+ sig)"))
+                                                      "+ sig)")))
     out2[1, "test_label"] <- tmp
     out2[, c("est", "cilo", "cihi")] <- as.numeric(NA)
     tmp <- switch(omnibus,
