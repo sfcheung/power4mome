@@ -31,8 +31,9 @@ to use `x_from_power()` and `power4test()`
 from the package
 [power4mome](https://sfcheung.github.io/power4mome/)
 to do find by simulation, given the
-sample size and other factors, given a
-desired power, what is the minimum effect
+sample size, the
+desired power, as well as some other
+factors, the minimum effect
 size to be detected with this level of
 power (see the note below on "minimum").
 
