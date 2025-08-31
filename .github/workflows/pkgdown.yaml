@@ -5,10 +5,10 @@ on:
   push:
     branches: [main, master]
   pull_request:
-    branches: [master]
-  # release:
-  #   types: [published]
-  # workflow_dispatch:
+    branches: [main, master]
+  release:
+    types: [published]
+  workflow_dispatch:
 
 name: pkgdown.yaml
 
@@ -33,12 +33,12 @@ jobs:
         with:
           use-public-rspm: true
 
-      - name: Temp install of GitHub versions
-        run: |
-          install.packages("remotes")
-          remotes::install_github("sfcheung/manymome")
-          remotes::install_github("sfcheung/lmhelprs")
-        shell: Rscript {0}
+      # - name: Temp install of GitHub versions
+      #   run: |
+      #     install.packages("remotes")
+      #     remotes::install_github("sfcheung/manymome")
+      #     remotes::install_github("sfcheung/lmhelprs")
+      #   shell: Rscript {0}
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
