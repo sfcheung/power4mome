@@ -5,7 +5,8 @@
 #' [sim_out()].
 #'
 #' @details
-#' Do an arbitrary test in each
+#' The function [do_test()] does
+#' an arbitrary test in each
 #' replication using the function set to
 #' `test_fun`.
 #'

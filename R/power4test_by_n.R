@@ -3,7 +3,9 @@
 #' @description Estimate power for a
 #' set of sample sizes.
 #'
-#' @details This function regenerates
+#' @details
+#' The function [power4test_by_n()]
+#' regenerates
 #' datasets for a set of sample sizes
 #' and does the stored tests in each of
 #' them.
@@ -250,7 +252,8 @@ power4test_by_n <- function(object,
 #' sample sizes) combined.
 #'
 #' @details
-#' The method [c.power4test_by_n()]
+#' The `c` method of `power4test_by_n`
+#' objects
 #' is used to combine tests from different
 #' runs of [power4test_by_n()].
 #' @export

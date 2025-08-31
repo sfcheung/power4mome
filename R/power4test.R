@@ -7,7 +7,8 @@
 #' results.
 #'
 #' @details
-#' It is an all-in-one function for
+#' The function [power4test()] is an
+#' all-in-one function for
 #' estimating the power of a test for
 #' a model, given the sample size
 #' and effect sizes (population values

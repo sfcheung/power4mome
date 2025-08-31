@@ -3,7 +3,8 @@
 #' @description The summary method of
 #' the output of [x_from_power()].
 #'
-#' @details It simply prepares the
+#' @details
+#' The `summary` method simply prepares the
 #' results of [x_from_power()]
 #' to be printed in details.
 #'

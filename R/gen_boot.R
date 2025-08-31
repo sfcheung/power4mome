@@ -7,7 +7,8 @@
 #' parameters.
 #'
 #' @details
-#' It simply calls [manymome::do_boot()]
+#' The function [gen_boot()]
+#' simply calls [manymome::do_boot()]
 #' on each output of
 #' [lavaan::sem()] or [lmhelprs::many_lm()]
 #' in `fit_all`. The

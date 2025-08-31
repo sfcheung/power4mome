@@ -7,7 +7,7 @@
 #'
 #' @details
 #' For a `power4test` object,
-#' it loops over the tests stored
+#' [rejection_rates] loops over the tests stored
 #' in a `power4test` object and retrieves
 #' the rejection rate of each test.
 #'

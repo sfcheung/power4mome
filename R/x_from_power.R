@@ -9,7 +9,7 @@
 #' value.
 #'
 #' @details
-#' This is how to use this function:
+#' This is how to use [x_from_power()]:
 #'
 #' - Specify the model by [power4test()],
 #'   with `do_the_test = FALSE`, and set
@@ -1343,7 +1343,7 @@ n_region_from_power <- function(
 #' Not used for now.
 #'
 #' @details
-#' The `print` method only print
+#' The `print` method only prints
 #' basic information. Call the
 #' `summary` method of `x_from_power` objects
 #' ([summary.x_from_power()]) and its

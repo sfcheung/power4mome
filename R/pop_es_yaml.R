@@ -5,7 +5,8 @@
 #' specification.
 #'
 #' @details
-#' This allows users to specify population
+#' The function [pop_es_yaml()]
+#' allows users to specify population
 #' values of a model using one single
 #' string, as in 'lavaan' model syntax.
 #'

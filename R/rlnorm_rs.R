@@ -11,7 +11,7 @@
 #' `mui` and `sigma`, and the
 #' desired population mean and standard
 #' deviation. The random numbers, drawn
-#' from lognormal distribution by
+#' from a lognormal distribution by
 #' [stats::rlnorm()], will then be
 #' rescaled with the desired population
 #' mean and standard.

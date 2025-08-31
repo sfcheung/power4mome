@@ -5,7 +5,8 @@
 #' estimated power against sample size.
 #'
 #' @details
-#' It currently plots the relation
+#' The `plot` method of `x_from_power`
+#' objects currently plots the relation
 #' between estimated power and
 #' the values examined by [x_from_power()].
 #' Other elements

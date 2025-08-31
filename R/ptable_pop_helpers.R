@@ -6,6 +6,9 @@
 #'
 #' @details
 #'
+#' These are the input and output values
+#' for [set_pop()].
+#'
 #' Input:
 #'
 #' - par_es: The effect sizes for selected coefficients

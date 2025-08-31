@@ -6,7 +6,8 @@
 #' parameters.
 #'
 #' @details
-#' It simply calls [manymome::do_mc()]
+#' The function [gen_mc()] simply calls
+#' [manymome::do_mc()]
 #' on each output of
 #' [lavaan::sem()] in `fit_all`. The
 #' simulated

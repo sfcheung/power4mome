@@ -5,7 +5,8 @@
 #' [power_curve()].
 #'
 #' @details
-#' It works in two modes.
+#' The `predict` method of `power_curve`
+#' objects works in two modes.
 #'
 #' If new
 #' data is not supplied (through

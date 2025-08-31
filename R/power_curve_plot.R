@@ -7,7 +7,8 @@
 #' or [power4test_by_es()].
 #'
 #' @details
-#' It currently plots the relation
+#' The `plot` method of `power_curve`
+#' objects currently plots the relation
 #' between estimated power and
 #' the predictor. Other elements
 #' can be requested (see the argument

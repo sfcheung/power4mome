@@ -6,7 +6,9 @@
 #' effect size (population value of
 #' a model parameter).
 #'
-#' @details It retrieves the information
+#' @details
+#' The function [power_curve()]
+#' retrieves the information
 #' from the output of
 #' [power4test_by_n()] or
 #' [power4test_by_es()], and

@@ -4,7 +4,9 @@
 #' set of effect sizes (population
 #' values of a model parameter).
 #'
-#' @details This function regenerates
+#' @details
+#' The function [power4test_by_es()]
+#' regenerates
 #' datasets for a set of effect sizes
 #' (population values of a model parmeter)
 #' and does the stored tests in each of
@@ -250,7 +252,8 @@ power4test_by_es <- function(object,
 #' values of `pop_es_values`) combined.
 #'
 #' @details
-#' The method [c.power4test_by_es()]
+#' The `c` method of `power4test_by_es`
+#' objects
 #' is used to combine tests from different
 #' runs of [power4test_by_es()].
 #' @export

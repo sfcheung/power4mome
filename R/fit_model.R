@@ -6,7 +6,7 @@
 #' of the stored datasets.
 #'
 #' @details
-#' By default, it
+#' By default, the function [fit_model()]
 #'
 #' - extracts the model
 #' stored in the output of [sim_data()],

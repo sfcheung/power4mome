@@ -10,7 +10,7 @@
 #' First, specify the parameter `p`
 #' and the desired population
 #' mean and standard deviation. The
-#' random numbers, drawn from the
+#' random numbers, drawn from a
 #' generalized normal distribution by
 #' [pgnorm::rpgnorm()], will then be
 #' rescaled with the desired population

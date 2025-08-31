@@ -5,7 +5,8 @@
 #' user-specified population mean and
 #' standard deviation.
 #'
-#' @details First, the user specifies
+
+ First, the user specifies
 #' the parameters, min and max, and the
 #' desired population mean and standard
 #' deviation. Then the random numbers
