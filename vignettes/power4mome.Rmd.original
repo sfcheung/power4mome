@@ -1,5 +1,5 @@
 ---
-title: "Power Analysis for Moderation, Mediation, and Moderated-Mediation"
+title: "Power Analysis for Moderation, Mediation, and Moderated Mediation"
 date: "`r Sys.Date()`"
 output:
   rmarkdown::html_vignette:
@@ -8,7 +8,7 @@ output:
         depth: 2
       number_sections: true
 vignette: >
-  %\VignetteIndexEntry{Power Analysis for Moderation, Mediation, and Moderated-Mediation}
+  %\VignetteIndexEntry{Power Analysis for Moderation, Mediation, and Moderated Mediation}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 bibliography: references.bib
@@ -30,9 +30,9 @@ to use `power4test()`
 from the package
 [power4mome](https://sfcheung.github.io/power4mome/)
 to do power analysis of mediation,
-moderation, and moderated-mediation
+moderation, and moderated mediation
 in a model to be fitted by structural
-equation model modeling using `lavaan`.
+equation modeling using `lavaan`.
 
 # Prerequisite
 
@@ -63,7 +63,7 @@ library(power4mome)
 Two functions are sufficient for estimating
 power given a model, population
 values, sample size, and the test to be
-used. This is the basic workflow:
+used. This is the workflow:
 
 1.  Specify the model syntax for the
     population model, in `lavaan`
@@ -72,7 +72,7 @@ used. This is the basic workflow:
 
 3.  Call `power4test()` to examine the setup
     and the datasets generated. Repeat
-    previous steps until the model is
+    this and previous steps until the model is
     specified correctly.
 
 4.  Call `power4test()` again, with the
@@ -102,7 +102,7 @@ y ~ m + x
 
 Note that, even if we are going to
 test mediation, moderation, or
-moderated-mediation effects, we do not
+moderated mediation effects, we do not
 need to add any labels to this model.
 This will be taken care of by the
 test functions, through the use of
@@ -114,9 +114,13 @@ the package
 ## Specify The Population Values {#es_convention}
 
 There are two approaches to do this:
-using named vectors or lists, or using
-a long string similar to `lavaan`
-model syntax. The second approach is
+
+- Using named vectors or lists.
+
+- Using a multiline string similar to `lavaan`
+model syntax.
+
+The second approach is
 demonstrated below.
 
 Suppose we want to estimate the power
@@ -131,10 +135,10 @@ when:
 - The path from `x` to `m` are "small"
   in strength.
 
-By default, `power4mome` use this convention
+By default, `power4mome` uses this convention
 for regression path and correlation:^[
-Users can explicitly specify the values
-if this convention is not suitable.]
+Users can specify the values directly
+if necessary.]
 
 - Small: .10 (or -.10)
 
@@ -142,7 +146,7 @@ if this convention is not suitable.]
 
 - Large: .50 (or -.50)
 
-For product term in moderation, this is
+For a product term in moderation, this is
 the convention:
 
 - Small: .05 (or -.05)
@@ -213,7 +217,7 @@ These are the arguments used:
 - `n`: The sample size in each replications.
   In this stage, just for checking the
   model and the data generation, this
-  number can be set to a large one unless
+  number can be set to a large value unless
   the model is slow to fit when the
   sample size is large.
 
@@ -233,7 +237,7 @@ printing this object:
 out
 ```
 
-By the default, the population model
+By default, the population model
 will be fitted to each dataset, hence
 the section `<fit>`. Perfect fit is
 expected if the population model is
@@ -288,7 +292,7 @@ and then the target test will be conducted
 in each of these datasets.
 
 Suppose we would like to estimate the
-power of using Monte Carlo confidence interval
+power of using Monte Carlo confidence intervals
 to test the indirect effect from `x` to
 `y` through `m`, when sample size is 50.
 This is the call:
@@ -333,7 +337,8 @@ These are the new arguments used:
   slow to do `R` bootstrapping in `nrep`
   datasets (the model will be fitted
   `R * nrep` times). Therefore, it is
-  preferable to use Monte Carlo to do
+  preferable to use Monte Carlo confidence
+  intervals to do
   the initial estimation.
 
 - `test_fun`: The function to be used
@@ -360,7 +365,7 @@ These are the new arguments used:
 - `parallel`: If the test to be conducted
   is slow, which is the case for
   tests done by Monte Carlo or nonparametric
-  bootstrapping confidence interval,
+  bootstrapping confidence intervals,
   it is advised to enable parallel
   processing by setting `parallel` to
   `TRUE`.^[The number of cores is determined
@@ -432,7 +437,7 @@ out_reject_ci <- sprintf("[%4.3f; %4.3f]",
 In the example above, the estimated
 power of the test of the indirect
 effect, conducted by Monte Carlo
-confidence interval, is
+confidence intervals, is
 `r out_reject_str`, under the column
 `reject`.
 
@@ -493,7 +498,7 @@ This example introduces one useful
 tag, `.beta.` For a model with many
 paths, it is inconvenient to specify
 all of them manually. The tag `.beta.`
-specify the *default value* for
+specifies the *default value* for
 *all regression paths not specified explicitly*,
 which is small (.10)
 in this example. If a path is explicitly
@@ -513,7 +518,7 @@ that there is a small correlation between
 
 Last, recall from [this section](#es_convention)
 that the convention for product term
-values are different: `l` denotes
+values is different: `l` denotes
 .15 for product terms.
 
 ## Call `power4test()` to Check the Model
@@ -627,7 +632,7 @@ power of the test of the product term,
 `r out_reject_str`, with 95% confidence
 interval `r out_reject_ci`.
 
-# Moderated-Mediation
+# Moderated mediation
 
 Let's consider a moderated mediation
 model.
@@ -692,11 +697,11 @@ by `r args$nrep` or
 `r formatC(args$n * args$nrep, digit = 0, format = "f")`
 are what we expect.
 
-## Call `power4test()` to Test The Moderated-Mediation Effect
+## Call `power4test()` to Test The Moderated Mediation Effect
 
 To estimate the power of a
-moderated-mediation effect, we can
-test the *index of moderated-mediation*
+moderated mediation effect, we can
+test the *index of moderated mediation*
 [@hayes_index_2015]. In this example,
 it is the product of the coefficient
 `m ~ x:w` and the coefficient `y ~ m`.
@@ -775,7 +780,7 @@ substantially slower. However,
 this is necessary because Monte Carlo
 or nonparametric bootstrapping
 confidence interval is the test usually
-used in moderated-mediation (and mediation).
+used in moderated mediation (and mediation).
 
 # Repeating a Simulation With A Different Sample Size {#new_n}
 
@@ -838,16 +843,39 @@ repeated to find the required sample
 size for a target power, and can be
 used for all the other scenarios covered
 above, such as mediation and
-moderated-mediation.
+moderated mediation.
 
-# Find the Sample Size With Desired Power
+# Find the Sample Size With The Desired Power
 
-There are two more efficient ways to
-find the sample size with desired power.
+There are several more efficient ways to
+find the sample size with the desired power.
+
+## Using `n_region_from_power()`
+
+The function `n_region_from_power()`
+can be used to find the *region* of
+sample sizes likely to have the desired
+power. If the default settings are
+to be used, then it can be called
+directly on the output of `power4test()`:
+
+```{r eval=FALSE}
+out2_region <- n_region_from_power(out2,
+                                   seed = 2345)
+```
+
+This is the recommended way for sample
+size planning, when there is no predetermined
+range of sample sizes.
+
+See
+[the templates](https://sfcheung.github.io/power4mome/articles/)
+for examples on using `n_region_from_power()`
+for common models.
 
 ## Using `power4test_by_n()`
 
-First, the function
+The function
 `power4test_by_n()` can be used To
 estimate the power for a sequence of
 sample sizes. For example, we
@@ -886,19 +914,32 @@ The results show that, to have a power of
 about .800 to detect the moderation effect,
 a sample size of about 350 is needed.
 
+This approach is used when the range of
+sample sizes has already been decided and
+the levels of power are needed to determine
+the final sample size.
+
 Please refer to the
 help page of `power4test_by_n()`
 for other examples.
 
 ## Using `x_from_power()`
 
-Second, the function `x_from_power()`
+The function `x_from_power()`
 can be used to systematically search
 within an interval the sample size with
 the target power. This takes longer to
 run but, instead of manually trying
 different sample size, this function
 do the search automatically.
+
+This approach can be used when the goal
+is to find the probable minimum or
+maximum sample size with the desired
+level of power. The first approach,
+using `n_region_from_power()`, simply
+uses this approach twice to find the region
+of sample sizes.
 
 See
 [this article](https://sfcheung.github.io/power4mome/articles/x_from_power_for_n.html)
@@ -907,7 +948,7 @@ for an illustration of how to use
 
 # Other Advanced Features
 
-This brief illustration only covers
+This brief illustration only covers the
 basic features of `power4mome`. These
 are other advanced features to be
 covered in other articles:
@@ -933,7 +974,9 @@ covered in other articles:
   of `sim_data()` on how to set them).
   The model syntax used to fit to the
   data will automatically include the
-  indicators.
+  indicators. Examples can be found in
+  [templates](https://sfcheung.github.io/power4mome/articles/)
+  for models with latent variables.
 
 - Though not illustrated above,
   estimating the power of tests
@@ -943,7 +986,7 @@ covered in other articles:
 
 - Although this package focuses on
   moderation, mediation, and
-  moderated-mediation, in principle,
+  moderated mediation, in principle,
   the power of any test can be estimated,
   as long as a test function for
   `test_fun` is available. Some other
@@ -999,7 +1042,7 @@ out2_new_xw <- power4test(out2,
   not supported for models fitted by
   `lm()` (regression). To estimate
   power of testing mediation or
-  moderated-mediation effects
+  moderated mediation effects
   in models fitted by `lm()`,
   `ci_type = "boot"` is needed.
 
