@@ -22,7 +22,8 @@
 #' power over a sets of effect sizes
 #' (population values).
 #'
-#' @return The function
+#' @return
+#' The function
 #' [power4test_by_es()] returns a
 #' `power4test_by_es` object, which is a
 #' list of `power4test` objects, one for
@@ -315,8 +316,8 @@ c.power4test_by_es <- function(...,
 #' The function
 #' returns a data frame which is
 #' similar to the output of
-#' [rejection_rates()], with a
-#' column added for the effect size (`pop_es_name` and
+#' [rejection_rates()], with
+#' columns added for the effect size (`pop_es_name` and
 #' `pop_es_values`)
 #' for each test.
 #'

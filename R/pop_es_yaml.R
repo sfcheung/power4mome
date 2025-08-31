@@ -16,7 +16,9 @@
 #' @return
 #' Either a named vector (for a
 #' single-group model) or a list of
-#' named vector (for a multigroup model).
+#' named vector (for a multigroup model)
+#' of the population values of the
+#' parameters (the effect sizes).
 #'
 #' @param text The multiline string to be parsed
 #' to a specification of population

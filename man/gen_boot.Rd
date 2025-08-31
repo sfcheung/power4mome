@@ -62,7 +62,8 @@ bootstrap estimates of model
 parameters.
 }
 \details{
-It simply calls \code{\link[manymome:do_boot]{manymome::do_boot()}}
+The function \code{\link[=gen_boot]{gen_boot()}}
+simply calls \code{\link[manymome:do_boot]{manymome::do_boot()}}
 on each output of
 \code{\link[lavaan:sem]{lavaan::sem()}} or \code{\link[lmhelprs:many_lm]{lmhelprs::many_lm()}}
 in \code{fit_all}. The

@@ -149,7 +149,8 @@ set of effect sizes (population
 values of a model parameter).
 }
 \details{
-This function regenerates
+The function \code{\link[=power4test_by_es]{power4test_by_es()}}
+regenerates
 datasets for a set of effect sizes
 (population values of a model parmeter)
 and does the stored tests in each of
@@ -165,7 +166,8 @@ It is usually used to examine the
 power over a sets of effect sizes
 (population values).
 
-The method \code{\link[=c.power4test_by_es]{c.power4test_by_es()}}
+The \code{c} method of \code{power4test_by_es}
+objects
 is used to combine tests from different
 runs of \code{\link[=power4test_by_es]{power4test_by_es()}}.
 

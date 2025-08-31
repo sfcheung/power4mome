@@ -399,7 +399,8 @@ the target test, and returns the test
 results.
 }
 \details{
-It is an all-in-one function for
+The function \code{\link[=power4test]{power4test()}} is an
+all-in-one function for
 estimating the power of a test for
 a model, given the sample size
 and effect sizes (population values

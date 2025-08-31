@@ -107,7 +107,8 @@ or the results of \code{\link[=power4test_by_n]{power4test_by_n()}}
 or \code{\link[=power4test_by_es]{power4test_by_es()}}.
 }
 \details{
-It currently plots the relation
+The \code{plot} method of \code{power_curve}
+objects currently plots the relation
 between estimated power and
 the predictor. Other elements
 can be requested (see the argument

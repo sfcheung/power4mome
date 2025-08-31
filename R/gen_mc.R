@@ -66,7 +66,7 @@
 #' not needed and so default to `FALSE`.
 #'
 #' @return
-#' A `mc_list` object, which is a list
+#' An `mc_list` object, which is a list
 #' of the output of [manymome::do_mc()].
 #'
 #' @examples

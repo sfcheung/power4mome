@@ -19,7 +19,8 @@
 #' It is usually used to examine the
 #' power over a set of sample sizes.
 #'
-#' @return The function
+#' @return
+#' The function
 #' [power4test_by_n()] returns a
 #' `power4test_by_n` object, which is a
 #' list of `power4test` objects, one for

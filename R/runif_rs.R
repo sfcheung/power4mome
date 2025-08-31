@@ -5,8 +5,8 @@
 #' user-specified population mean and
 #' standard deviation.
 #'
-
- First, the user specifies
+#' @details
+#' First, the user specifies
 #' the parameters, min and max, and the
 #' desired population mean and standard
 #' deviation. Then the random numbers
@@ -27,7 +27,7 @@
 #' deviation.
 #'
 #' @return
-#'  A vector of the generated random numbers.
+#' A vector of the generated random numbers.
 #'
 #' @examples
 #' set.seed(90870962)

@@ -31,7 +31,8 @@
 #' @param bhigh The upper bound of the
 #' target range.
 #'
-#' @return A vector of the generated
+#' @return
+#' A vector of the generated
 #' random numbers.
 #'
 #' @examples

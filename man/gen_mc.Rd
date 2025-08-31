@@ -51,7 +51,7 @@ in each Monte Carlo replication. Usually
 not needed and so default to \code{FALSE}.}
 }
 \value{
-A \code{mc_list} object, which is a list
+An \code{mc_list} object, which is a list
 of the output of \code{\link[manymome:do_mc]{manymome::do_mc()}}.
 }
 \description{
@@ -61,7 +61,8 @@ Monte Carlo estimates of model
 parameters.
 }
 \details{
-It simply calls \code{\link[manymome:do_mc]{manymome::do_mc()}}
+The function \code{\link[=gen_mc]{gen_mc()}} simply calls
+\code{\link[manymome:do_mc]{manymome::do_mc()}}
 on each output of
 \code{\link[lavaan:sem]{lavaan::sem()}} in \code{fit_all}. The
 simulated

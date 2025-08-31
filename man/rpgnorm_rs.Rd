@@ -38,7 +38,7 @@ deviation.
 First, specify the parameter \code{p}
 and the desired population
 mean and standard deviation. The
-random numbers, drawn from the
+random numbers, drawn from a
 generalized normal distribution by
 \code{\link[pgnorm:rpgnorm]{pgnorm::rpgnorm()}}, will then be
 rescaled with the desired population

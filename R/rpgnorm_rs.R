@@ -32,7 +32,8 @@
 #' @param psd Population standard
 #' deviation.
 #'
-#' @return A vector of the generated
+#' @return
+#' A vector of the generated
 #' random numbers.
 #'
 #' @examples

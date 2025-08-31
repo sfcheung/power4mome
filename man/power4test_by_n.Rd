@@ -137,7 +137,8 @@ Estimate power for a
 set of sample sizes.
 }
 \details{
-This function regenerates
+The function \code{\link[=power4test_by_n]{power4test_by_n()}}
+regenerates
 datasets for a set of sample sizes
 and does the stored tests in each of
 them.
@@ -151,7 +152,8 @@ on the tests to be conducted.
 It is usually used to examine the
 power over a set of sample sizes.
 
-The method \code{\link[=c.power4test_by_n]{c.power4test_by_n()}}
+The \code{c} method of \code{power4test_by_n}
+objects
 is used to combine tests from different
 runs of \code{\link[=power4test_by_n]{power4test_by_n()}}.
 

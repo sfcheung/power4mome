@@ -66,7 +66,7 @@ The summary method of
 the output of \code{\link[=x_from_power]{x_from_power()}}.
 }
 \details{
-It simply prepares the
+The \code{summary} method simply prepares the
 results of \code{\link[=x_from_power]{x_from_power()}}
 to be printed in details.
 }
