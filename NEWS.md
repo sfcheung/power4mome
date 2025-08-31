@@ -1,4 +1,4 @@
-# power4mome 0.0.1.104
+# power4mome 0.0.1.105
 
 - Initialized the package. (0.0.0.9000)
 
@@ -586,8 +586,11 @@
 - Fixed a bug in the test label of
   `test_indirect_effects()`. (0.0.1.102)
 
-- Fix DESCRIPTION and help pages for
+- Fixed DESCRIPTION and help pages for
   CRAN. (0.0.1.103)
 
-- Reduce the processing times of
+- Reduced the processing times of
   some examples for CRAN. (0.0.1.104)
+
+- Updated the examples for CRAN.
+  (0.0.1.105)

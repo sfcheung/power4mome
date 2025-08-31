@@ -307,6 +307,7 @@ sim_all <- sim_out(data_all = data_all,
                    mc_out = mc_all)
 
 # Test the indirect effect in each replication
+# The argument `parallel` and `progress` can be removed in real analysis
 test_all <- do_test(sim_all,
                     test_fun = test_indirect_effect,
                     test_args = list(x = "x",
@@ -316,7 +317,7 @@ test_all <- do_test(sim_all,
                     parallel = FALSE,
                     progress = FALSE)
 
-# The results
+# The result for each dataset
 lapply(test_all, function(x) x$test_results)
 
 

@@ -1247,6 +1247,8 @@ y ~ x: n
 "
 
 # Set nrep to a large number in real analysis, such as 400
+# The argument `parallel` and `progress` can be removed in real analysis
+
 out <- power4test(nrep = 10,
                   model = model_simple_med,
                   pop_es = model_simple_med_es,

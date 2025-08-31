@@ -233,6 +233,7 @@ y ~ x: s
 "
 
 # Simulate datasets to check the model
+# The argument `parallel` and `progress` can be removed in real analysis
 
 sim_only <- power4test(nrep = 10,
                        model = model_simple_med,

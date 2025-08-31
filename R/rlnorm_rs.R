@@ -40,7 +40,11 @@
 #'
 #' @examples
 #' set.seed(90870962)
-#' x <- rlnorm_rs(n = 5000, mui = 0, sigma = 1, pmean = 0, psd = 1)
+#' x <- rlnorm_rs(n = 5000,
+#'                mui = 0,
+#'                sigma = 1,
+#'                pmean = 0,
+#'                psd = 1)
 #' mean(x)
 #' sd(x)
 #' hist(x)
