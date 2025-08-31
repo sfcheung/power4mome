@@ -11,7 +11,7 @@ object or other supported objects."><meta property="og:image" content="https://s
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.102</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.103</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -221,13 +221,14 @@ abbreviated.</p></dd>
 a <code>rejection_rates_df</code> object,
 with a <code>print</code> method.</p>
 <p>If the input (<code>object</code>) is a
-<code>power4test</code> object, the output is
+<code>power4test</code> object, the
+<code>rejection_rates_df</code> object is
 a data-frame like object with the
 number of
 rows equal to the number of tests.
 Note that some tests, such as
 the test by <code><a href="test_parameters.html">test_parameters()</a></code>,
-conduct one test for each parameters.
+conduct one test for each parameter.
 Each such test is counted as one
 test.</p>
 <p>The data frame has at least these columns:</p><ul><li><p><code>test</code>: The name of the test.</p></li>
@@ -239,7 +240,7 @@ tests across all replications.</p></li>
 <li><p><code>reject</code>: The rejection rate for
 each test. If the null hypothesis
 is false, then this is the power.</p></li>
-</ul><p>The <code>rejection_rates</code> method for
+</ul><p>The <code>rejection_rates</code> method
 for <code>power4test_by_es</code> objects
 returns an object of the
 class <code>rejection_rates_df_by_es</code>,
@@ -251,7 +252,7 @@ similar to the output of
 columns added for the effect size (<code>pop_es_name</code> and
 <code>pop_es_values</code>)
 for each test.</p>
-<p>The <code>rejection_rates</code> method for
+<p>The <code>rejection_rates</code> method
 for <code>power4test_by_n</code> objects
 returns an object of the
 class <code>rejection_rates_df_by_n</code>,
@@ -259,18 +260,18 @@ which is a subclass of
 <code>rejection_rates_df</code>.
 It is a data frame which is
 similar to the output of
-for a <code>power4test</code> object, with a
+a <code>power4test</code> object, with a
 column <code>n</code> added for the sample size
 for each test.</p>
 <p>The <code>print</code> method of a
-<code>rejection_rates_df</code> object return
+<code>rejection_rates_df</code> object returns
 the object invisibly. It is called
 for its side-effect.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>For a <code>power4test</code> object,
-it loops over the tests stored
+rejection_rates loops over the tests stored
 in a <code>power4test</code> object and retrieves
 the rejection rate of each test.</p>
 <p>The <code>rejection_rates</code> method for
