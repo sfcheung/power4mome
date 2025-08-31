@@ -778,7 +778,7 @@ for an illustration of how to use
 # Other Scenarios
 
 For other scenarios, such as moderation
-and moderated-mediation, please refer to
+and moderated mediation, please refer to
 `vignette("power4mome")`.
 
 # References

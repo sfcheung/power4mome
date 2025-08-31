@@ -12,11 +12,11 @@
 
 This package is for power analysis and
 sample size determination for
-moderation, mediation, and moderated-mediation.
+moderation, mediation, and moderated mediation.
 
 It includes functions for power
 analysis and sample size determination for
-moderation, mediation, and moderated-mediation
+moderation, mediation, and moderated mediation
 effects in models fitted by
 structural equation modeling (SEM) or multiple
 linear regression. For SEM, both latent variable
@@ -83,7 +83,7 @@ Some of us the developers have developed the package
 (Cheung & Cheung, 2024)
 for computing and testing effects in
 models with mediation, mediation,
-or moderated-mediation. The tests are
+or moderated mediation. The tests are
 usually done by simulation-based methods
 such as Monte Carlo or bootstrap
 confidence intervals, due to the complicated
@@ -99,7 +99,7 @@ There are already many excellent packages
 out there for estimating power in
 structural equation modeling in general,
 and some are also specifically for mediation
-or moderated-mediation. We are not intended
+or moderated mediation. We are not intended
 to replace with them or reinvent the wheel.
 We just want to have a tool that meet
 our own needs:
@@ -119,7 +119,7 @@ if necessary. However, time is a concern
 and we would like to
 have an tool that, though specifically
 designed with mediation, moderation,
-and moderated-mediation in mind and may
+and moderated mediation in mind and may
 be limited in scope (though it is a
 "big" scope), is easy for our daily use
 in estimating power.
@@ -128,12 +128,12 @@ So here it is, `power4mome`, developed
 with we ourselves as the users, but we
 believe are also useful for others who
 need to do power analysis for mediation,
-moderation, and moderated-mediation.
+moderation, and moderated mediation.
 
 # Not Just That ...
 
 But `power4mome` is not just for mediation,
-moderation, and moderated-mediation. We
+moderation, and moderated mediation. We
 avoided hardcoding the functions just
 for these effects, and have left room for
 testing other effects, as hinted in some

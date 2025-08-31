@@ -303,7 +303,9 @@
 #'                    mc_out = mc_all)
 #'
 #' # Test the indirect effect in each replication
-#' # The argument `parallel` and `progress` can be removed in real analysis
+#' # Set `parallel` to TRUE for faster, usually much faster, analysis
+#' # Set `progress` to TRUE to display the progress of the analysis
+#'
 #' test_all <- do_test(sim_all,
 #'                     test_fun = test_indirect_effect,
 #'                     test_args = list(x = "x",

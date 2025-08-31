@@ -291,7 +291,7 @@ Default is \code{FALSE}.}
 
 \item{progress}{If \code{TRUE}, the progress
 of each step will be displayed.
-Default is \code{FALSE}.}
+Default is \code{TRUE}.}
 
 \item{ncores}{The number of CPU
 cores to use if parallel processing
@@ -1247,7 +1247,8 @@ y ~ x: n
 "
 
 # Set nrep to a large number in real analysis, such as 400
-# The argument `parallel` and `progress` can be removed in real analysis
+# Set `parallel` to TRUE for faster, usually much faster, analysis
+# Set `progress` to TRUE to display the progress of the analysis
 
 out <- power4test(nrep = 10,
                   model = model_simple_med,
