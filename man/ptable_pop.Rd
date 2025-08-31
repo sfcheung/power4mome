@@ -557,7 +557,7 @@ ptable_final1 <- ptable_pop(model1,
                             pop_es = model1_es)
 ptable_final1
 
-# Use multiline string, illustrated by a simpler model
+# Use a multiline string, illustrated by a simpler model
 
 model2 <-
 "
@@ -566,8 +566,8 @@ y ~ m + x
 "
 
 model2_es_a <- c("m ~ x" = "s",
-               "y ~ m" = "m",
-               "y ~ x" = "nil")
+                 "y ~ m" = "m",
+                 "y ~ x" = "nil")
 
 model2_es_b <-
 "

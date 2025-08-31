@@ -28,7 +28,7 @@ workflow of `power4test()` in
 
 # From Population to Power (`power4test()`)
 
-The main `power4test()` can do all these tasks in
+The main function `power4test()` can do all these tasks in
 one call:
 
 - Generate `nrep` datasets (`nrep` replications)

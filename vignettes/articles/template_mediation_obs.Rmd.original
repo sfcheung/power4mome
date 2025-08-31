@@ -128,7 +128,7 @@ rejection_rates(out_new_n)
 
 # Try Several N's
 
-Rerun the simulation to estimate
+Rerun the simulation to estimate the
 power for with several sample sizes.
 
 The code:
@@ -182,7 +182,7 @@ with estimated either:
 Do this step after calling `power4test()`
 on a sample size.
 
-It can take some time to run if estimated power
+It can take some time to run if the estimated power
 of the sample size is too different from
 the target power.
 

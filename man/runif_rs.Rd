@@ -39,7 +39,11 @@ standard.
 }
 \examples{
 set.seed(90870962)
-x <- runif_rs(n = 5000, min = 2, max = 4, pmean = 3, psd = 1)
+x <- runif_rs(n = 5000,
+              min = 2,
+              max = 4,
+              pmean = 3,
+              psd = 1)
 mean(x)
 sd(x)
 hist(x)

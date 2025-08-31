@@ -49,19 +49,27 @@ set.seed(90870962)
 x <- rpgnorm_rs(n = 5000,
                 p = 2,
                 pmean = 0,
-psd = 1)
+                psd = 1)
 mean(x)
 sd(x)
 hist(x)
 x_kurt <- function(p) {gamma(5/p)*gamma(1/p)/(gamma(3/p)^2) - 3}
+
 p <- 6
-x <- rpgnorm_rs(n = 50000, p = p, pmean = 0, psd = 1)
+x <- rpgnorm_rs(n = 50000,
+                p = p,
+                pmean = 0,
+                psd = 1)
 mean(x)
 sd(x)
 x_kurt(p)
 qqnorm(x); qqline(x)
+
 p <- 1
-x <- rpgnorm_rs(n = 50000, p = p, pmean = 0, psd = 1)
+x <- rpgnorm_rs(n = 50000,
+                p = p,
+                pmean = 0,
+                psd = 1)
 mean(x)
 sd(x)
 x_kurt(p)

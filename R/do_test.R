@@ -303,6 +303,9 @@
 #'                    mc_out = mc_all)
 #'
 #' # Test the indirect effect in each replication
+#' # Set `parallel` to TRUE for faster, usually much faster, analysis
+#' # Set `progress` to TRUE to display the progress of the analysis
+#'
 #' test_all <- do_test(sim_all,
 #'                     test_fun = test_indirect_effect,
 #'                     test_args = list(x = "x",
@@ -312,7 +315,7 @@
 #'                     parallel = FALSE,
 #'                     progress = FALSE)
 #'
-#' # The results
+#' # The result for each dataset
 #' lapply(test_all, function(x) x$test_results)
 #'
 #'

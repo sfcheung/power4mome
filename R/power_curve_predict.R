@@ -65,6 +65,8 @@
 #' "
 #'
 #' # Simulate datasets to check the model
+#' # Set `parallel` to TRUE for faster, usually much faster, analysis
+#' # Set `progress` to TRUE to display the progress of the analysis
 #'
 #' sim_only <- power4test(nrep = 10,
 #'                        model = model_simple_med,

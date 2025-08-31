@@ -102,6 +102,8 @@
 #'                        progress = FALSE)
 #'
 #' # By n: Do a test for different sample sizes
+#' # Set `parallel` to TRUE for faster, usually much faster, analysis
+#' # Set `progress` to TRUE to display the progress of the analysis
 #'
 #' out1 <- power4test_by_n(sim_only,
 #'                         nrep = 10,
@@ -117,6 +119,8 @@
 #' plot(pout1)
 #'
 #' # By pop_es: Do a test for different population values of a model parameter
+#' # Set `parallel` to TRUE for faster, usually much faster, analysis
+#' # Set `progress` to TRUE to display the progress of the analysis
 #'
 #' out2 <- power4test_by_es(sim_only,
 #'                              nrep = 10,

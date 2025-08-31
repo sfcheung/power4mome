@@ -6,7 +6,9 @@ analysis or determine sample size in
 typical models using
 [power4mome](https://sfcheung.github.io/power4mome/).
 Users can quickly adapt
-them for their scenarios.
+them for their scenarios. A full list
+of the templates can found on
+[this page](https://sfcheung.github.io/power4mome/articles/).
 
 # Prerequisite
 

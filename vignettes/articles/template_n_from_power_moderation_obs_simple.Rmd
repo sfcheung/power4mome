@@ -1,6 +1,6 @@
 ---
 title: "Quick Template: Simple Moderation with Observed Variables"
-date: "2025-08-29"
+date: "2025-08-31"
 output:
   html_document:
     fig.align: "center"
@@ -350,7 +350,7 @@ print(out,
 #> 
 #> The models:
 #> y ~ x + w + x:w
-#> <environment: 0x000001f44ca12d60>
+#> <environment: 0x000001e60896a310>
 #> 
 #> 
 #> ====================== Test(s) Conducted ======================
@@ -527,7 +527,7 @@ summary(n_power_region)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 232 to 50 
-#> - Time spent in the search: 22.41 secs 
+#> - Time spent in the search: 21.42 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -602,7 +602,7 @@ summary(n_power_region)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 365 to 373 
-#> - Time spent in the search: 23.78 secs 
+#> - Time spent in the search: 21.61 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -722,7 +722,7 @@ summary(n_power_region)
 
 For other options of `power4test()`
 and `n_region_from_power()`, please refer to
-their help pages, as well as
+their help pages, as well as the
 [Get-Started article](https://sfcheung.github.io/power4mome/articles/power4mome.html)
 and this [article](https://sfcheung.github.io/power4mome/articles/x_from_power_for_n.html)
 for `n_from_power()`, which is the

@@ -76,7 +76,7 @@ are sufficient for estimating the sample
 size, given the desired power, along with
 other factors such as the test,
 the model, and population
-values. This is the basic workflow:
+values. This is the workflow:
 
 1.  Specify the model syntax for the
     population model, in `lavaan`
@@ -85,7 +85,7 @@ values. This is the basic workflow:
 
 3.  Call `power4test()` to examine the setup
     and the datasets generated. Repeat
-    previous steps until the model is
+    this and previous steps until the model is
     specified correctly.
 
 4.  Call `power4test()` again, with the
@@ -94,7 +94,7 @@ values. This is the basic workflow:
 
 5.  Call `rejection_rates()` to
     compute the power and verify that
-    the test is setup correctly.
+    the test is specified correctly.
 
 6.  Call `n_from_power()` to estimate
     the sample size required for the
@@ -117,16 +117,16 @@ we can also estimate, approximately,
 the region of
 sample sizes with their levels of power
 
-1) significantly lower than the target power, or
+1) significantly *lower* than the target power, or
 
-2) significantly higher than the target power.
+2) significantly *higher* than the target power.
 
 That is, we find the sample size that has
 its *confidence interval*, 95% by default,
 just below (Case 1) or
 just above (Case 2) the target power, approximately.
 
-We will consider the Case 1 first.
+We will consider Case 1 first.
 
 ## Specify the Population Model
 
@@ -143,7 +143,7 @@ y ~ m + x
 Note that, even if we are going to
 test mediation, we do not need to label
 the parameters and define the indirect
-effect as usuall in `lavaan`.
+effect as usual in `lavaan`.
 This will be taken care of by the
 test functions, through the use of
 the package
@@ -155,7 +155,7 @@ the package
 
 There are two approaches to do this:
 using named vectors or lists, or using
-a long string similar to `lavaan`
+a multiline string similar to `lavaan`
 model syntax. The second approach is
 demonstrated below.
 
@@ -173,8 +173,8 @@ when:
 
 By default, `power4mome` use this convention
 for regression path and correlation:^[
-Users can explicitly specify the values
-if this convention is not suitable.]
+Users can specify the values directly
+if necessary.]
 
 - Small: .10 (or -.10)
 
@@ -301,7 +301,7 @@ the next stage
 
 We can now do the simulation to estimate
 power for an initial sample size, to
-verify the test we wan to do.
+verify the test we want to do.
 A large number of datasets (e.g., 500)
 of the target sample size are to be generated,
 and then the target test will be conducted
@@ -406,7 +406,7 @@ print(out,
 The argument `test_long = TRUE` is added
 to verify the test we set up.
 
-As shown above, the setup is correct.
+As shown above, the settings are correct.
 We can now call `n_from_power()` to
 do the search.
 
@@ -648,7 +648,7 @@ target power and doing sample size planning.
 Therefore, if resource is a concern and so
 it is more important not to have a sample size
 with power too low, then Case 1 is sufficient
-for know the range of sample sizes that
+for knowing the range of sample sizes that
 should definitely not used.
 
 If having sufficient power is more important

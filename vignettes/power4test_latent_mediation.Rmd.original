@@ -46,7 +46,7 @@ modeling.
 
 To make this vignette self-contained,
 some sections from
-`vignette("power4mome")` is repeated
+`vignette("power4mome")` are repeated
 here.
 
 To do power analysis for a mediation
@@ -68,7 +68,7 @@ library(power4mome)
 Two functions are sufficient for estimating
 power given a model, population
 values, sample size, and the test to be
-used. This is the basic workflow:
+used. This is the workflow:
 
 1.  Specify the model syntax for the
     population model, in `lavaan`
@@ -77,7 +77,7 @@ used. This is the basic workflow:
 
 3.  Call `power4test()` to examine the setup
     and the datasets generated. Repeat
-    previous steps until the model is
+    this and previous steps until the model is
     specified correctly.
 
 4.  Call `power4test()` again, with the
@@ -127,9 +127,13 @@ the package
 ## Specify The Population Values {#es_convention}
 
 There are two approaches to do this:
-using named vectors or lists, or using
-a long string similar to `lavaan`
-model syntax. The second approach is
+
+- Using named vectors or lists.
+
+- Using a multiline string similar to `lavaan`
+model syntax.
+
+The second approach is
 demonstrated below.
 
 Suppose we want to estimate the power
@@ -146,8 +150,8 @@ when:
 
 By default, `power4mome` use this convention
 for regression path and correlation:^[
-Users can explicitly specify the values
-if this convention is not suitable.]
+Users can specify the values directly
+if necessary.]
 
 - Small: .10 (or -.10)
 
@@ -199,7 +203,7 @@ the factor loadings of all items. For the
 purpose of power analysis, which is not
 intended to be conducted with the knowledge
 of all factor loadings, we believe that,
-instead of specify explicitly all the loadings,
+instead of specifying all the loadings,
 it is sufficient to specify two values for
 each factor:
 
@@ -208,6 +212,7 @@ each factor:
 - The population reliability.
 
 This is the approach used in `power4mome`.
+
 For each factor, the population standardized
 factor loadings for each indicator will
 be derived automatically from the hypothesized
@@ -215,7 +220,7 @@ be derived automatically from the hypothesized
 of indicators, assuming that all indicators
 have equal loadings.
 
-Although the equal-loading is unrealistic,
+Although the equal-loading assumption is unrealistic,
 in *a priori* power analysis, it is difficult,
 if not impossible, to specify the pattern
 of factor loadings. This level of details is also
@@ -224,7 +229,7 @@ is merely used to guide the planning of
 data collection, instead of estimating the
 "true" power after data is collected.
 
-Two argument will be used to set
+Two arguments will be used to set
 the number of indicators and the reliability.
 
 - `number_of_indicators`: This should be
@@ -245,11 +250,15 @@ For example, suppose we will use the
 following vectors:
 
 ```{r ni}
-k <- c(fm = 3, fx = 4, fy = 5)
+k <- c(fm = 3,
+       fx = 4,
+       fy = 5)
 ```
 
 ```{r rel}
-mod_rel <- c(fy = .70, fm = .60, fx = .50)
+mod_rel <- c(fy = .70,
+             fm = .60,
+             fx = .50)
 ```
 
 The numbers of indicators for
@@ -609,12 +618,12 @@ argument, and
 For example, we can repeat the
 simulation for the test of indirect
 effect,
-but for a smaller sample size of 100. We
+but for a smaller sample size of 200. We
 simply call `power4test()` again,
 set the previous output (`out` in
-the example for moderation) as the
+the example above) as the
 first argument, and set `n` to a new
-value (100 in this example):
+value (200 in this example):
 
 ```{r new_n, results=FALSE}
 out_new_n <- power4test(out,
@@ -657,9 +666,8 @@ size for a target power.
 
 # Repeat a Simulation With Different Numbers of Indicators or Reliability
 
-We can also redo an analysis using a new values
-for reliability. We know that the power is
-low with 150 cases. We may want to see
+We can also redo an analysis using a new value
+for reliability. For example, we may want to see
 whether we can have a higher power if
 we use more reliable scales.
 
@@ -706,8 +714,31 @@ the original scenario.
 
 # Find the Sample Size With Desired Power
 
-There are two more efficient ways to
-find the sample size with desired power.
+There are several more efficient ways to
+find the sample size with the desired power.
+
+## Using `n_region_from_power()`
+
+The function `n_region_from_power()`
+can be used to find the *region* of
+sample sizes likely to have the desired
+power. If the default settings are
+to be used, then it can be called
+directly on the output of `power4test()`:
+
+```{r eval=FALSE}
+out2_region <- n_region_from_power(out2,
+                                   seed = 2345)
+```
+
+This is the recommended way for sample
+size planning, when there is no predetermined
+range of sample sizes.
+
+See
+[the templates](https://sfcheung.github.io/power4mome/articles/)
+for examples on using `n_region_from_power()`
+for common models.
 
 ## Using `power4test_by_n()`
 
@@ -740,7 +771,7 @@ of sample sizes to 5 or less.
 The argument `by_seed`, if set to an integer,
 try to make the results reproducible.
 
-The call will take some times to run because
+The call will take some time to run because
 it is equivalent to calling `power4test()`
 once for each sample size.
 
@@ -756,19 +787,32 @@ The results show that, to have a power of
 about .800 to detect the mediation effect,
 a sample size of about 200 is needed.
 
+This approach is used when the range of
+sample sizes has already been decided and
+the levels of power are needed to determine
+the final sample size.
+
 Please refer to the
 help page of `power4test_by_n()`
 for other examples.
 
 ## Using `x_from_power()`
 
-Second, the function `x_from_power()`
+The function `x_from_power()`
 can be used to systematically search
 within an interval the sample size with
 the target power. This takes longer to
 run but, instead of manually trying
 different sample size, this function
 do the search automatically.
+
+This approach can be used when the goal
+is to find the probable minimum or
+maximum sample size with the desired
+level of power. The first approach,
+using `n_region_from_power()`, simply
+uses this approach twice to find the region
+of sample sizes.
 
 See
 [this article](https://sfcheung.github.io/power4mome/articles/x_from_power_for_n.html)
@@ -778,7 +822,7 @@ for an illustration of how to use
 # Other Scenarios
 
 For other scenarios, such as moderation
-and moderated-mediation, please refer to
+and moderated mediation, please refer to
 `vignette("power4mome")`.
 
 # References

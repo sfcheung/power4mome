@@ -1,6 +1,6 @@
 ---
 title: "Quick Template: Simple Mediation with Observed Variables"
-date: "2025-08-29"
+date: "2025-08-31"
 output:
   html_document:
     fig.align: "center"
@@ -497,7 +497,7 @@ summary(n_power_region)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 100 to 897 
-#> - Time spent in the search: 50.57 secs 
+#> - Time spent in the search: 54.7 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -572,7 +572,7 @@ summary(n_power_region)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within  of 0.800 
 #> - The range of values explored: 100 to 897 
-#> - Time spent in the search: 0.06289 secs 
+#> - Time spent in the search: 0.09019 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -696,7 +696,7 @@ summary(n_power_region)
 
 For other options of `power4test()`
 and `n_region_from_power()`, please refer to
-their help pages, as well as
+their help pages, as well as the
 [Get-Started article](https://sfcheung.github.io/power4mome/articles/power4mome.html)
 and this [article](https://sfcheung.github.io/power4mome/articles/x_from_power_for_n.html)
 for `n_from_power()`, which is the

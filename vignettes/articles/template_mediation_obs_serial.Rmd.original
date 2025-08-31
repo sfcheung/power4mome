@@ -171,7 +171,7 @@ level (e.g., .80).
 Do this step after calling `power4test()`
 on a sample size.
 
-It can take some time to run if estimated power
+It can take some time to run if the estimated power
 of the sample size is too different from
 the target power.
 
@@ -217,7 +217,7 @@ on several sample sizes
 by calling `x_from_power()` on the
 output of `power4test_by_n()`.
 
-It can take some time to run if estimated levels
+It can take some time to run if the estimated levels
 of power
 of the sample sizes are too different from
 the target power.
