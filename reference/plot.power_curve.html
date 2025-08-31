@@ -15,7 +15,7 @@ or power4test_by_es()."><meta property="og:image" content="https://sfcheung.gith
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.104</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -247,6 +247,8 @@ individually.</p>
 <span class="r-in"><span>                       progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># By n: Do a test for different sample sizes</span></span></span>
+<span class="r-in"><span><span class="co"># Set `parallel` to TRUE for faster, usually much faster, analysis</span></span></span>
+<span class="r-in"><span><span class="co"># Set `progress` to TRUE to display the progress of the analysis</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">out1</span> <span class="op">&lt;-</span> <span class="fu"><a href="power4test_by_n.html">power4test_by_n</a></span><span class="op">(</span><span class="va">sim_only</span>,</span></span>
 <span class="r-in"><span>                        nrep <span class="op">=</span> <span class="fl">10</span>,</span></span>
@@ -279,6 +281,8 @@ individually.</p>
 <span class="r-plt img"><img src="plot.power_curve-1.png" alt="" width="576" height="384"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># By pop_es: Do a test for different population values of a model parameter</span></span></span>
+<span class="r-in"><span><span class="co"># Set `parallel` to TRUE for faster, usually much faster, analysis</span></span></span>
+<span class="r-in"><span><span class="co"># Set `progress` to TRUE to display the progress of the analysis</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">out2</span> <span class="op">&lt;-</span> <span class="fu"><a href="power4test_by_es.html">power4test_by_es</a></span><span class="op">(</span><span class="va">sim_only</span>,</span></span>
 <span class="r-in"><span>                             nrep <span class="op">=</span> <span class="fl">10</span>,</span></span>

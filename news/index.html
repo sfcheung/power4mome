@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.104</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -60,152 +60,8 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.0.1.104" id="power4mome-001104">power4mome 0.0.1.104<a class="anchor" aria-label="anchor" href="#power4mome-001104"></a></h2>
-<ul><li><p>Initialized the package. (0.0.0.9000)</p></li>
-<li><p>Major functions drafted and the main workflows are finalized. Ready for documenting the changes. (0.0.0.9001)</p></li>
-<li><p>Documented how to set <code>pop_es</code>. (0.0.0.9002)</p></li>
-<li><p>Added preliminary support for covariance-only models (no regression path) and confirmatory factor analytic models (CFA). (0.0.0.9003)</p></li>
-<li><p>Added support for multigroup models. (0.0.0.9004)</p></li>
-<li><p>For <code><a href="../reference/sim_data.html">sim_data()</a></code>, <code>number_of_indicators</code> and <code>reliability</code> can be set to one single values. (0.0.0.9005)</p></li>
-<li><p>Added a check for negative variances or variances greater than one in the model. (0.0.0.9006)</p></li>
-<li><p>A warning will be raised by <code><a href="../reference/ptable_pop.html">ptable_pop()</a></code> if <code>pop_es</code> has one or more variables not in the model. (0.0.0.9007)</p></li>
-<li><p>Added error and warning checking code to <code><a href="../reference/fit_model.html">fit_model()</a></code>. (0.0.0.9008)</p></li>
-<li><p>Added error checking code to <code><a href="../reference/gen_mc.html">gen_mc()</a></code>. (0.0.0.9009)</p></li>
-<li><p>Added tests for <code><a href="../reference/sim_out.html">sim_out()</a></code> and <code><a href="../reference/do_test.html">do_test()</a></code>. (0.0.0.9010)</p></li>
-<li><p>Updated the help of <code><a href="../reference/do_test.html">do_test()</a></code> on the requirement for the results and test functions. (0.0.0.9011)</p></li>
-<li><p>Updated <code><a href="../reference/fit_model.html">fit_model()</a></code> to support user-supplied models. (0.0.0.9012)</p></li>
-<li><p>Updated <code><a href="../reference/do_test.html">do_test()</a></code> and <code><a href="../reference/sim_out.html">sim_out()</a></code> for arbitrary number of models and arbitrary elements to be used in <code>test_fun()</code>. (0.0.0.9013)</p></li>
-<li><p>Updated <code><a href="../reference/do_test.html">do_test()</a></code> and <code><a href="../reference/sim_out.html">sim_out()</a></code> to support tests that compare two models. (0.0.0.9014)</p></li>
-<li><p>Added tests of <code><a href="../reference/power4test.html">power4test()</a></code>. (0.0.0.9015)</p></li>
-<li><p>Removed redundant arguments in tests of <code><a href="../reference/power4test.html">power4test()</a></code>. (0.0.0.9016)</p></li>
-<li><p>Updated <code><a href="../reference/power4test.html">power4test()</a></code> to store more than one test. (0.0.0.9017)</p></li>
-<li><p>Updated <code><a href="../reference/fit_model.html">fit_model()</a></code> to support fitting a model by another function (0.0.0.9018)</p></li>
-<li><p>Added the argument <code>x_fun()</code> to <code><a href="../reference/sim_data.html">sim_data()</a></code> for generating nonnormal exogenous variables. (0.0.0.9019)</p></li>
-<li><p>Updated <code><a href="../reference/power4test.html">power4test()</a></code> and related functions to support updating a <code>power4test</code> object with different population effect sizes or sample size(s). (0.0.0.9020)</p></li>
-<li><p>Added the option to generate nonparametric bootstrap estimates. Slow for <code>lavaan</code> but can be used with models fitted by <code><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm()</a></code>. (0.0.0.9021)</p></li>
-<li><p>Added <code><a href="../reference/test_indirect_effect.html">test_indirect_effect()</a></code> for testing an indirect effect when calling <code><a href="../reference/power4test.html">power4test()</a></code>. (0.0.0.9022)</p></li>
-<li><p>Added <code>test_index_mome()</code> for testing a moderated mediation effect (by testing the index of moderated mediation) when calling <code><a href="../reference/power4test.html">power4test()</a></code>. (0.0.0.9023)</p></li>
-<li><p>Added <code><a href="../reference/test_parameters.html">test_parameters()</a></code> for testing all free parameters when calling <code><a href="../reference/power4test.html">power4test()</a></code>. (0.0.0.9024)</p></li>
-<li><p>Added <code><a href="../reference/test_moderation.html">test_moderation()</a></code> for testing all product terms when calling <code><a href="../reference/power4test.html">power4test()</a></code>. (0.0.0.9024)</p></li>
-<li><p>Some test functions can support models fitted by <code><a href="https://sfcheung.github.io/lmhelprs/reference/many_lm.html" class="external-link">lmhelprs::many_lm()</a></code>. (0.0.0.9024)</p></li>
-<li><p>Simplified the argument <code>fit_function</code> of <code><a href="../reference/fit_model.html">fit_model()</a></code>. They can now be strings, such as <code>lavaan</code> and <code>lm</code>. (0.0.0.9025)</p></li>
-<li><p>Added <code><a href="../reference/summarize_tests.html">summarize_tests()</a></code>, along with <code>print</code> method, to summarize te test results in a <code>power4test</code> object. (0.0.0.9026)</p></li>
-<li><p>Added a print method for <code>power4test</code> objects. (0.0.0.9027)</p></li>
-<li><p><code>sim_out</code> can now be used to update a <code>sim_out</code> object by adding elements to <code>extra</code>. (0.0.0.9028)</p></li>
-<li><p><code><a href="../reference/power4test.html">power4test()</a></code> can updata a <code>power4test</code> object using only a new <code>nrep</code>. (0.0.0.9029)</p></li>
-<li><p>Added <code>get_rejection_rates()</code> to extract rejection rates from all stored tests. (0.0.0.9030)</p></li>
-<li><p>Added <code><a href="../reference/power4test_by_n.html">power4test_by_n()</a></code> and <code>power4test_by_pop_es()</code> for finding the power for a range of sample sizes or effect sizes. (0.0.0.9031)</p></li>
-<li><p>Update the help pages and the examples. (0.0.0.9032)</p></li>
-<li><p>Minor fixes on the <code>boot_ci</code> and <code>mc_ci</code> arguments of <code><a href="../reference/test_indirect_effect.html">test_indirect_effect()</a></code> and <code><a href="../reference/test_index_of_mome.html">test_index_of_mome()</a></code>. (0.0.0.9033)</p></li>
-<li><p>Revised <code><a href="../reference/fit_model.html">fit_model()</a></code> such that it can be used to refit a model on a new set of data. (0.0.0.9034)</p></li>
-<li><p>Revised <code><a href="../reference/power4test.html">power4test()</a></code> to support fitting more than one model in each datasets. The <code>test_</code> functions have also been updated to allow users specifying which model will be uesd in doing the tests. (0.0.0.9035)</p></li>
-<li><p>Drafted the <code>pkgdown</code> site. (0.0.0.9036)</p></li>
-<li><p>Added <code><a href="../reference/pop_es_yaml.html">pop_es_yaml()</a></code> and revised <code><a href="../reference/ptable_pop.html">ptable_pop()</a></code> to support this method to specify population values. (0.0.0.9037)</p></li>
-<li><p>Added the option to disable the computation of implied statistics. Default to <code>FALSE</code> becasue it is not required for testing the unstandardized effects. Require <code>manymome</code> 0.2.7.1 or above. (0.0.0.9038)</p></li>
-<li><p>Finalized for internal testing. (0.0.1)</p></li>
-<li><p>Fixed a bug in using <code>x_fun</code>. (0.0.1.1)</p></li>
-<li><p>Added a temporary check for package versions. (0.0.1.2)</p></li>
-<li><p>Fixed the issue with printing <code>boot_out</code> and <code>mc_out</code> objects by <code><a href="../reference/sim_data.html">print.sim_data()</a></code>. (0.0.1.3)</p></li>
-<li><p>Revised <code>get_rejection_rates_*</code> functions to add the option to return all columns stored by a test. (0.0.1.4)</p></li>
-<li><p>Added version requirements for <code>lmhelprs</code> and <code>manymome</code>. (0.0.1.5)</p></li>
-<li><p>Added <code><a href="../reference/test_cond_indirect.html">test_cond_indirect()</a></code> and <code><a href="../reference/test_cond_indirect_effects.html">test_cond_indirect_effects()</a></code>. (0.0.1.7)</p></li>
-<li><p>Fixed some issues with the column names. (0.0.1.8)</p></li>
-<li><p>Added <code>es1</code> and <code>es2</code> to <code><a href="../reference/power4test.html">power4test()</a></code>, to allow users to change the effect sizes for the labels. (0.0.1.9)</p></li>
-<li><p>Added a <code><a href="https://rdrr.io/r/base/c.html" class="external-link">c()</a></code> method to the output of <code><a href="../reference/power4test_by_n.html">power4test_by_n()</a></code>. (0.0.1.10)</p></li>
-<li><p>Added a <code><a href="https://rdrr.io/r/base/c.html" class="external-link">c()</a></code> method to the output of <code>power4test_by_pop_es()</code>. (0.0.1.11)</p></li>
-<li><p>Added <code>by_seed</code> to <code><a href="../reference/power4test_by_n.html">power4test_by_n()</a></code> and <code>power4test_by_pop_es()</code> for reproducible results. (0.0.1.12)</p></li>
-<li><p>Results are now reproducible is <code>parallel</code> is <code>TRUE</code>. (0.0.1.13)</p></li>
-<li><p>Updated <code>power4test_by_pop_es()</code> and <code><a href="../reference/power4test_by_n.html">power4test_by_n()</a></code> to accept the output of these two functions. (0.0.1.14)</p></li>
-<li><p>Added <code>by_nrep</code> to <code><a href="../reference/power4test_by_n.html">power4test_by_n()</a></code>. (0.0.1.15)</p></li>
-<li><p>Added more columns to the results of functions returning rejection rates. (0.0.1.16)</p></li>
-<li><p>Added <code><a href="../reference/x_from_power.html">n_from_power()</a></code> to search the sample size with the target power. (0.0.1.17)</p></li>
-<li><p>Updated <code>psi_std()</code> to skip checking the variances of product terms. (0.0.1.18)</p></li>
-<li><p>Improved <code>rejection_rates_add_ci()</code> to be usable by other functions. (0.0.1.19)</p></li>
-<li><p>Updated <code>get_rejection_rates()</code> to report confidence intervals and standard errors of rejection rates. (0.0.1.20)</p></li>
-<li><p>Revised <code>get_rejection_rates()</code> and related functions. The column of rejection rates is now always named <code>"reject"</code>. (0.0.1.21)</p></li>
-<li><p>Added more <code><a href="../reference/ptable_pop.html">ptable_pop()</a></code> arguments to <code><a href="../reference/power4test.html">power4test()</a></code>. (0.0.1.22)</p></li>
-<li><p>Added <code><a href="../reference/power_curve.html">power_curve()</a></code> to estimate the relation between rejection rates and a predictor. Updated <code><a href="../reference/x_from_power.html">n_from_power()</a></code> to use <code><a href="../reference/power_curve.html">power_curve()</a></code> internally. (0.0.1.23)</p></li>
-<li><p>The <code>print</code> method of <code>sim_out</code> objects can print the standardized and/or unstandardized estimates when fitting a model to the merged data. (0.0.1.24)</p></li>
-<li><p>Renamed <code>power4test_by_pop_es()</code> to <code><a href="../reference/power4test_by_es.html">power4test_by_es()</a></code>, because <code>"n"</code> and <code>"es"</code> (not <code>"pop_es"</code>) are used in other functions to distinguish the predictor used. (0.0.1.25)</p></li>
-<li><p>Renamed <code>get_rejection_rates_by_pop_es()</code> to <code>get_rejection_rates_by_es()</code>, to be consistent with the name <code><a href="../reference/power4test_by_es.html">power4test_by_es()</a></code>. (0.0.1.26)</p></li>
-<li><p>Replaced <code><a href="../reference/x_from_power.html">n_from_power()</a></code> by the more general version <code><a href="../reference/x_from_power.html">x_from_power()</a></code>, and updated related functions. (0.0.1.27)</p></li>
-<li><p>Updated <code><a href="../reference/x_from_power.html">x_from_power()</a></code> to fully support <code>x = "es"</code>. (0.0.1.28)</p></li>
-<li><p>Minor changes to the printout of progress for <code><a href="../reference/power4test_by_n.html">power4test_by_n()</a></code> and <code><a href="../reference/power4test_by_es.html">power4test_by_es()</a></code>. (0.0.1.29)</p></li>
-<li><p>Fixed a minor bug in the internal function <code>fix_nls_args()</code>. (0.0.1.30)</p></li>
-<li><p>Renamed <code>get_rejection_rates*</code> to <code>rejection_rates*</code> because this looks more consistent with the common naming convention. (0.0.1.31)</p></li>
-<li><p>Convert <code><a href="../reference/rejection_rates.html">rejection_rates()</a></code> to an S3 generic method. (0.0.1.32)</p></li>
-<li><p>Add <code>rejection_rates</code> methods for <code>power4test_by_n</code> and <code>power4test_by_es</code> objects. The original functions <code>rejection_rates_by_n()</code> and <code>rejection_rates_by_es()</code> are no longer exported. All relevant functions are revised to use the <code>rejection_rates</code> method instead of these two functions. (0.0.1.33)</p></li>
-<li><p>Created a class for the output of <code>rejection_rates</code> and added a print method. (0.0.1.34)</p></li>
-<li><p>Updated the arguments of the print method for <code>rejection_rate()</code> output of <code>power4test_by_es</code> and <code>power4test_by_es</code> objects. (0.0.1.35)</p></li>
-<li><p>Removed <code>power_curve_by_n()</code> and <code>power_curve_by_es()</code>. No longer needed. (0.0.1.36)</p></li>
-<li><p>Updated <code>power_by_n()</code> and <code>power_by_es()</code> to have the option not to save the data and model in the <code>sim_all</code>, and updated the <code><a href="https://rdrr.io/r/base/c.html" class="external-link">c()</a></code> method to skip testing the model. This option is used by <code><a href="../reference/x_from_power.html">x_from_power()</a></code>. (0.0.1.37)</p></li>
-<li><p>Updated <code><a href="../reference/x_from_power.html">x_from_power()</a></code> not to save the data and model by default. Dramatically reduce the size of the output. (0.0.1.37)</p></li>
-<li><p>Updated the doc of <code><a href="../reference/do_test.html">do_test()</a></code>. (0.0.1.38)</p></li>
-<li><p>Updated the doc of <code><a href="../reference/test_parameters.html">test_parameters()</a></code> on valid parameter names. Also added a helper <code><a href="../reference/test_parameters.html">find_par_names()</a></code> for finding valid names in a <code>power4test</code> object. (0.0.1.39)</p></li>
-<li><p>Updated all help pages. (0.0.1.40)</p></li>
-<li><p>Added <code>initial_R</code> and <code>initial_nrep</code> to <code><a href="../reference/x_from_power.html">x_from_power()</a></code>. (0.0.1.41)</p></li>
-<li><p>Changed the default value of <code>final_nrep</code> in <code><a href="../reference/x_from_power.html">x_from_power()</a></code> to 400. (0.0.1.41)</p></li>
-<li><p>Updated <code><a href="../reference/x_from_power.html">x_from_power()</a></code> to use the outputs of <code><a href="../reference/power4test_by_n.html">power4test_by_n()</a></code> and <code><a href="../reference/power4test_by_es.html">power4test_by_es()</a></code>. (0.0.1.42)</p></li>
-<li><p>Updated <code><a href="../reference/x_from_power.html">x_from_power()</a></code> to reuse the outputs of <code><a href="../reference/x_from_power.html">x_from_power()</a></code>. (0.0.1.43)</p></li>
-<li><p>Fixed some issues related to R CMD Check. (0.0.1.44)</p></li>
-<li><p>Fixed a typo in the help page of <code><a href="../reference/power4test.html">power4test()</a></code>. (0.0.1.45)</p></li>
-<li><p>Fixed a bug in handling <code>.cov.</code> in <code>pop_es</code>. (0.0.1.46)</p></li>
-<li><p>Added the tag <code>.ind.</code> for setting the values of all component paths along an indirect path. This tag is also supported by <code><a href="../reference/power4test_by_es.html">power4test_by_es()</a></code> and <code><a href="../reference/x_from_power.html">x_from_power()</a></code>. (0.0.1.47)</p></li>
-<li><p>The <code>print</code> method of <code>sim_data</code> will print population indirect effect(s), if any. (0.0.1.48)</p></li>
-<li><p>Corrected the value for <code>mi</code>. (0.0.1.49)</p></li>
-<li><p>Improved the search algorithm. (0.0.1.49)</p></li>
-<li><p>Clarified that the <code>x_fun</code> argument can also specify the function to generate the error terms. (0.0.1.50)</p></li>
-<li><p>Added <code>e_fun</code> for generating nonnormal error terms for indicators. (0.0.1.51)</p></li>
-<li><p>Added <code>gen_missing</code> for generating missing data. (0.0.1.52)</p></li>
-<li><p>Adopted a more robust way to process <code>fit_model_args</code> in <code><a href="../reference/power4test.html">power4test()</a></code>. (0.0.1.53)</p></li>
-<li><p>Fixed the bug that <code>pop_es</code> with all numeric cannot be processed. (0.0.1.54)</p></li>
-<li><p>Cleared obsolete TODOs in comments. (0.0.1.55)</p></li>
-<li><p>The argument <code>map_names</code> now work properly. (0.0.1.56)</p></li>
-<li><p>Rename <code>gen_missing</code> to <code>process_data</code>. (0.0.1.57)</p></li>
-<li><p>Added support for printing missing data pattern. (0.0.1.58)</p></li>
-<li><p>Improved the search algorithm of <code><a href="../reference/x_from_power.html">x_from_power()</a></code>. (0.0.1.59)</p></li>
-<li><p>Update <code><a href="../reference/sim_data.html">print.sim_data()</a></code> to compute indirect paths only for “pure x-variables and”pure y-variables”, by default. (0.0.1.60)</p></li>
-<li><p>Added the bisection method to <code><a href="../reference/x_from_power.html">x_from_power()</a></code> and set it as the default algorithm. (0.0.1.61)</p></li>
-<li><p>Added <code>check_valid_es_values()</code> to identify the range of valid values for a parameter. (0.0.1.62)</p></li>
-<li><p>The default algorithm of <code><a href="../reference/x_from_power.html">x_from_power()</a></code> now depends on <code>x</code>. (0.0.1.63)</p></li>
-<li><p>Updated <code><a href="../reference/x_from_power.html">x_from_power()</a></code> to determine the interval for <code>es</code> automatically. (0.0.1.64)</p></li>
-<li><p>Optimized the power curve algorithm. (0.0.1.65)</p></li>
-<li><p>Added <code><a href="../reference/power4test_by_n.html">as.power4test_by_n()</a></code> and <code><a href="../reference/power4test_by_es.html">as.power4test_by_es()</a></code>. (0.0.1.66)</p></li>
-<li><p>Updated <code><a href="../reference/x_from_power.html">x_from_power()</a></code> to quit early if solution is already found in the input. (0.0.1.67)</p></li>
-<li><p>Updated <code><a href="../reference/x_from_power.html">x_from_power()</a></code> and related functions to store more information. (0.0.1.68)</p></li>
-<li><p>Updated methods of <code><a href="../reference/x_from_power.html">x_from_power()</a></code> for <code>goal</code> and <code>what</code>. (0.0.1.69)</p></li>
-<li><p>Disabled <code>sig_area</code> if <code>x = "es"</code>. (0.0.1.70)</p></li>
-<li><p>Updated <code><a href="../reference/power4test_by_n.html">power4test_by_n()</a></code> and <code><a href="../reference/power4test_by_es.html">power4test_by_es()</a></code> to catch error in <code><a href="../reference/power4test.html">power4test()</a></code> and skip a value. (0.0.1.71)</p></li>
-<li><p>Added error catching to some test functions. (0.0.1.72)</p></li>
-<li><p>Some test functions will now check whether a model fit passed the <code>post.check</code> test by <code>lavaan</code>. (0.0.1.73)</p></li>
-<li><p>Updated to allow using expressions (e.g., <code>"s * 2"</code>, <code>"sqrt(.30)"</code>) to specify the population value of a parameter. (0.0.1.74)</p></li>
-<li><p>The <code>print</code> method of <code><a href="../reference/rejection_rates.html">rejection_rates()</a></code> output now always print the column of estimates. (0.0.1.75)</p></li>
-<li><p>Added a <code>print</code> method for the output of <code><a href="../reference/power4test_by_n.html">power4test_by_n()</a></code>. (0.0.1.76)</p></li>
-<li><p>Added a <code>print</code> method for the output of <code><a href="../reference/power4test_by_es.html">power4test_by_es()</a></code>. (0.0.1.77)</p></li>
-<li><p>Added <code>plot</code> methods for the output of <code><a href="../reference/power4test_by_n.html">power4test_by_n()</a></code> and <code><a href="../reference/power4test_by_es.html">power4test_by_es()</a></code>. (0.0.1.78)</p></li>
-<li><p>Added (back) <code><a href="../reference/x_from_power.html">n_from_power()</a></code>, a wrapper of <code><a href="../reference/x_from_power.html">x_from_power()</a></code> with <code>x</code> set to <code>"n"</code>. (0.0.1.79, 0.0.1.80)</p></li>
-<li><p>Updated <code><a href="../reference/sim_data.html">sim_data()</a></code> and <code><a href="../reference/fit_model.html">fit_model()</a></code> to try finding all indirect paths and store them in the output of <code>fit_model_i()</code>. (0.0.1.82)</p></li>
-<li><p>Added <code><a href="../reference/test_k_indirect_effects.html">test_k_indirect_effects()</a></code> to test two or more paths. (0.0.1.83, 0.0.1.84, 0.0.1.86)</p></li>
-<li><p>Added <code><a href="../reference/x_from_power.html">n_region_from_power()</a></code> and methods for its output. (0.0.1.85)</p></li>
-<li><p>Improved the positioning of elements in <code><a href="../reference/plot.x_from_power.html">plot.n_region_from_power()</a></code>. (0.0.1.87)</p></li>
-<li><p>Improved the speed in computing indirect paths in the printout. (0.0.1.88)</p></li>
-<li><p>Disabled model checking in the plot method of <code>n_region_from_power</code>, which is not necessary. (0.0.1.89)</p></li>
-<li><p>Removed duplicated plot methods. (0.0.1.90)</p></li>
-<li><p>Updated <code><a href="../reference/test_k_indirect_effects.html">test_k_indirect_effects()</a></code>’ with the option <code>"at_least_k_sig"</code>. (0.0.1.91)</p></li>
-<li><p>Added <code>collapse</code> and <code>at_least_k</code> to <code><a href="../reference/rejection_rates.html">rejection_rates()</a></code> and related functions. (0.0.1.92)</p></li>
-<li><p>Added <code>omnibus</code> to <code><a href="../reference/test_parameters.html">test_parameters()</a></code>. (0.0.1.93)</p></li>
-<li><p>The argument <code>fit_to_all_args</code> is now correctly passed to the print method of <code>sim_data</code>. (0.0.1.94)</p></li>
-<li><p>Fixed a bug with <code>process_data</code>. The input is now always a data frame. (0.0.1.95)</p></li>
-<li><p>Fixed an issue with interaction terms involved in covariances. (0.0.1.96)</p></li>
-<li><p>Improved the printing of indirect effects. (0.0.1.96)</p></li>
-<li><p>Updated <code>pop_indirect()</code> to handle conditional indirect effects. It now always return a list. (0.0.1.97)</p></li>
-<li><p>When printing conditional indirect effects, the population SDs and means of the moderators are now properly used. (0.0.1.98)</p></li>
-<li><p>Updated the print method to support models with only moderation. (0.0.1.99)</p></li>
-<li><p>Updated several functions to add necessary covariances and error covariances when one or more mediators are involved in one or more product terms. (0.0.1.100)</p></li>
-<li><p>Updated the vignettes. (0.0.1.101)</p></li>
-<li><p>Fixed a bug in the test label of <code>test_indirect_effects()</code>. (0.0.1.102)</p></li>
-<li><p>Fix DESCRIPTION and help pages for CRAN. (0.0.1.103)</p></li>
-<li><p>Reduce the processing times of some examples for CRAN. (0.0.1.104)</p></li>
+<h2 class="pkg-version" data-toc-text="0.1.0" id="power4mome-010">power4mome 0.1.0<a class="anchor" aria-label="anchor" href="#power4mome-010"></a></h2>
+<ul><li>First public version. (0.1.0)</li>
 </ul></div>
   </main></div>
 

@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.104</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -90,7 +90,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Quick Template: Serial Mediation with Observed Variables</h1>
             
-            <h4 data-toc-skip class="date">2025-06-22</h4>
+            <h4 data-toc-skip class="date">2025-08-31</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/sfcheung/power4mome/blob/main/vignettes/articles/template_mediation_obs_serial.Rmd" class="external-link"><code>vignettes/articles/template_mediation_obs_serial.Rmd</code></a></small>
       <div class="d-none name"><code>template_mediation_obs_serial.Rmd</code></div>
@@ -113,10 +113,10 @@ quickly adapt them for their scenarios.</p>
 <p>This file is not intended to be an introduction on how to use
 functions in <code>power4mome</code>. For details on how to use
 <code><a href="../reference/power4test.html">power4test()</a></code>, <code><a href="../reference/power4test_by_n.html">power4test_by_n()</a></code>, and
-<code><a href="../reference/x_from_power.html">x_from_power()</a></code>, refer to the <a href="https://sfcheung.github.io/power4mome/articles/power4mome.html">Get-Started
+<code><a href="../reference/x_from_power.html">n_from_power()</a></code>, refer to the <a href="https://sfcheung.github.io/power4mome/articles/power4mome.html">Get-Started
 article</a>, and the <a href="https://sfcheung.github.io/power4mome/articles/x_from_power_for_n.html">article</a>
 on finding the sample size given desired power using
-<code><a href="../reference/x_from_power.html">x_from_power()</a></code>, as well as the help pages of these
+<code><a href="../reference/x_from_power.html">n_from_power()</a></code>, as well as the help pages of these
 functions.</p>
 </div>
 <div class="section level2">
@@ -251,11 +251,12 @@ to the target power is found).</p>
 <span><span class="co">#&gt;    .y                 0.893  </span></span>
 <span><span class="co">#&gt;     x                 1.000  </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; (Computing indirect effects for 7 paths ...)</span></span>
+<span><span class="co">#&gt; (Computing indirect effects for 8 paths ...)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; == Population Indirect Effect(s) ==</span></span>
+<span><span class="co">#&gt; == Population Conditional/Indirect Effect(s) ==</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ==  Indirect Effect(s)   ==</span></span>
+<span><span class="co">#&gt; == Indirect Effect(s) ==</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;                            ind</span></span>
 <span><span class="co">#&gt; x -&gt; m1 -&gt; m2 -&gt; m3 -&gt; y 0.037</span></span>
 <span><span class="co">#&gt; x -&gt; m1 -&gt; m2 -&gt; y       0.000</span></span>
@@ -264,8 +265,9 @@ to the target power is found).</p>
 <span><span class="co">#&gt; x -&gt; m2 -&gt; m3 -&gt; y       0.000</span></span>
 <span><span class="co">#&gt; x -&gt; m2 -&gt; y             0.000</span></span>
 <span><span class="co">#&gt; x -&gt; m3 -&gt; y             0.000</span></span>
+<span><span class="co">#&gt; x -&gt; y                   0.100</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  - The 'ind' column shows the indirect effects.</span></span>
+<span><span class="co">#&gt;  - The 'ind' column shows the indirect effect(s).</span></span>
 <span><span class="co">#&gt;  </span></span>
 <span><span class="co">#&gt; ======================= Data Information =======================</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -437,8 +439,8 @@ a target level (e.g., .80).</p>
 </h3>
 <p>Do this step after calling <code><a href="../reference/power4test.html">power4test()</a></code> on a sample
 size.</p>
-<p>It can take some time to run if estimated power of the sample size is
-too different from the target power.</p>
+<p>It can take some time to run if the estimated power of the sample
+size is too different from the target power.</p>
 <p>The code:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#</span></span>
@@ -487,7 +489,7 @@ too different from the target power.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - Algorithm: bisection </span></span>
 <span><span class="co">#&gt; - The range of values explored: 107 to 50 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 23.6 secs </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 22.53 secs </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
@@ -545,7 +547,7 @@ size.</p>
 <p>Continue the search using the output on several sample sizes by
 calling <code><a href="../reference/x_from_power.html">x_from_power()</a></code> on the output of
 <code><a href="../reference/power4test_by_n.html">power4test_by_n()</a></code>.</p>
-<p>It can take some time to run if estimated levels of power of the
+<p>It can take some time to run if the estimated levels of power of the
 sample sizes are too different from the target power.</p>
 <p>The code:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
@@ -595,7 +597,7 @@ sample sizes are too different from the target power.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - Algorithm: bisection </span></span>
 <span><span class="co">#&gt; - The range of values explored: 100 to 90 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 1.39 mins </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 1.446 mins </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
@@ -732,11 +734,12 @@ steps.</p>
 <span><span class="co">#&gt;    .y                 0.898  </span></span>
 <span><span class="co">#&gt;     x                 1.000  </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; (Computing indirect effects for 7 paths ...)</span></span>
+<span><span class="co">#&gt; (Computing indirect effects for 8 paths ...)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; == Population Indirect Effect(s) ==</span></span>
+<span><span class="co">#&gt; == Population Conditional/Indirect Effect(s) ==</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ==  Indirect Effect(s)   ==</span></span>
+<span><span class="co">#&gt; == Indirect Effect(s) ==</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;                            ind</span></span>
 <span><span class="co">#&gt; x -&gt; m1 -&gt; m2 -&gt; m3 -&gt; y 0.008</span></span>
 <span><span class="co">#&gt; x -&gt; m1 -&gt; m2 -&gt; y       0.000</span></span>
@@ -745,8 +748,9 @@ steps.</p>
 <span><span class="co">#&gt; x -&gt; m2 -&gt; m3 -&gt; y       0.000</span></span>
 <span><span class="co">#&gt; x -&gt; m2 -&gt; y             0.000</span></span>
 <span><span class="co">#&gt; x -&gt; m3 -&gt; y             0.000</span></span>
+<span><span class="co">#&gt; x -&gt; y                   0.100</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  - The 'ind' column shows the indirect effects.</span></span>
+<span><span class="co">#&gt;  - The 'ind' column shows the indirect effect(s).</span></span>
 <span><span class="co">#&gt;  </span></span>
 <span><span class="co">#&gt; ======================= Data Information =======================</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -882,7 +886,7 @@ steps.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - Algorithm: bisection </span></span>
 <span><span class="co">#&gt; - The range of values explored: 100 to 174 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 1.361 mins </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 1.55 mins </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>

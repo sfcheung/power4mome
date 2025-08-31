@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.104</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -89,7 +89,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Effect Size Given Desired Power</h1>
             
-            <h4 data-toc-skip class="date">2025-08-29</h4>
+            <h4 data-toc-skip class="date">2025-08-31</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/sfcheung/power4mome/blob/main/vignettes/articles/x_from_power_for_es.Rmd" class="external-link"><code>vignettes/articles/x_from_power_for_es.Rmd</code></a></small>
       <div class="d-none name"><code>x_from_power_for_es.Rmd</code></div>
@@ -103,8 +103,8 @@
 <p>This article is a brief illustration of how to use
 <code><a href="../reference/x_from_power.html">x_from_power()</a></code> and <code><a href="../reference/power4test.html">power4test()</a></code> from the
 package <a href="https://sfcheung.github.io/power4mome/">power4mome</a>
-to do find by simulation, given the sample size and other factors, given
-a desired power, what is the minimum effect size to be detected with
+to do find by simulation, given the sample size, the desired power, as
+well as some other factors, the minimum effect size to be detected with
 this level of power (see the note below on “minimum”).</p>
 <p>The illustration will use an indirect effect tested by Monte Carlo
 confidence interval as an example, though the procedure is similar for
@@ -674,7 +674,7 @@ corresponding indirect effect is about 0.148</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - Algorithm: power_curve </span></span>
 <span><span class="co">#&gt; - The range of values explored: 0.488 to 0.519 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 1.242 mins </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 1.245 mins </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
@@ -806,7 +806,7 @@ varied:</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - Algorithm: power_curve </span></span>
 <span><span class="co">#&gt; - The range of values explored: 0.293 to 0.343 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 1.201 mins </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 1.228 mins </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>

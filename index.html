@@ -31,7 +31,7 @@
 
     <a class="navbar-brand me-2" href="index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.104</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -86,15 +86,15 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9">
-<p>(Version 0.0.1.104, updated on 2025-08-31, <a href="https://sfcheung.github.io/power4mome/news/index.html">release history</a>)</p>
+<p>(Version 0.1.0, updated on 2025-08-31, <a href="https://sfcheung.github.io/power4mome/news/index.html">release history</a>)</p>
 <div class="section level1">
 <div class="page-header">
 <img src="logo.png" class="logo" alt=""><h1 id="power4mome-">power4mome 
 <a class="anchor" aria-label="anchor" href="#power4mome-"></a>
 </h1>
 </div>
-<p>This package is for power analysis and sample size determination for moderation, mediation, and moderated-mediation.</p>
-<p>It includes functions for power analysis and sample size determination for moderation, mediation, and moderated-mediation effects in models fitted by structural equation modeling (SEM) or multiple linear regression. For SEM, both latent variable models and path models of observed variables are supported.</p>
+<p>This package is for power analysis and sample size determination for moderation, mediation, and moderated mediation.</p>
+<p>It includes functions for power analysis and sample size determination for moderation, mediation, and moderated mediation effects in models fitted by structural equation modeling (SEM) or multiple linear regression. For SEM, both latent variable models and path models of observed variables are supported.</p>
 <p>For more information on this package, please visit its GitHub page:</p>
 <p><a href="https://sfcheung.github.io/power4mome/" class="uri">https://sfcheung.github.io/power4mome/</a></p>
 <p>A get-started guide illustrates how to use this package:</p>
@@ -127,19 +127,19 @@
 <div class="section level1">
 <h1 id="background">Background<a class="anchor" aria-label="anchor" href="#background"></a>
 </h1>
-<p>Some of us the developers have developed the package <a href="https://sfcheung.github.io/manymome/" class="external-link"><code>manymome</code></a> (Cheung &amp; Cheung, 2024) for computing and testing effects in models with mediation, mediation, or moderated-mediation. The tests are usually done by simulation-based methods such as Monte Carlo or bootstrap confidence intervals, due to the complicated sampling distributions of the effects. Therefore, there are no simple ways to determine the power of the test analytically and accurately. The computation becomes more complicated when latent variables are involved, necessitating a simulation-based method to estimate the sample size.</p>
-<p>There are already many excellent packages out there for estimating power in structural equation modeling in general, and some are also specifically for mediation or moderated-mediation. We are not intended to replace with them or reinvent the wheel. We just want to have a tool that meet our own needs:</p>
+<p>Some of us the developers have developed the package <a href="https://sfcheung.github.io/manymome/" class="external-link"><code>manymome</code></a> (Cheung &amp; Cheung, 2024) for computing and testing effects in models with mediation, mediation, or moderated mediation. The tests are usually done by simulation-based methods such as Monte Carlo or bootstrap confidence intervals, due to the complicated sampling distributions of the effects. Therefore, there are no simple ways to determine the power of the test analytically and accurately. The computation becomes more complicated when latent variables are involved, necessitating a simulation-based method to estimate the sample size.</p>
+<p>There are already many excellent packages out there for estimating power in structural equation modeling in general, and some are also specifically for mediation or moderated mediation. We are not intended to replace with them or reinvent the wheel. We just want to have a tool that meet our own needs:</p>
 <ol style="list-style-type: lower-alpha">
 <li><p>It leverages on the flexibility of <code>manymome</code> in testing an indirect effect or conditional effect with little limitations on the model.</p></li>
 <li><p>It allows users (us and our collaborators) to specify the population model as easy (quickly) as typical power analysis programs.</p></li>
 </ol>
-<p>We ourselves know how to do the power estimation on our own by simulation, if necessary. However, time is a concern and we would like to have an tool that, though specifically designed with mediation, moderation, and moderated-mediation in mind and may be limited in scope (though it is a “big” scope), is easy for our daily use in estimating power.</p>
-<p>So here it is, <code>power4mome</code>, developed with we ourselves as the users, but we believe are also useful for others who need to do power analysis for mediation, moderation, and moderated-mediation.</p>
+<p>We ourselves know how to do the power estimation on our own by simulation, if necessary. However, time is a concern and we would like to have an tool that, though specifically designed with mediation, moderation, and moderated mediation in mind and may be limited in scope (though it is a “big” scope), is easy for our daily use in estimating power.</p>
+<p>So here it is, <code>power4mome</code>, developed with we ourselves as the users, but we believe are also useful for others who need to do power analysis for mediation, moderation, and moderated mediation.</p>
 </div>
 <div class="section level1">
 <h1 id="not-just-that-">Not Just That …<a class="anchor" aria-label="anchor" href="#not-just-that-"></a>
 </h1>
-<p>But <code>power4mome</code> is not just for mediation, moderation, and moderated-mediation. We avoided hardcoding the functions just for these effects, and have left room for testing other effects, as hinted in some examples in the help pages. They may be introduced later. For now, supporting effects that can be tested by <code>manymome</code> is our priority.</p>
+<p>But <code>power4mome</code> is not just for mediation, moderation, and moderated mediation. We avoided hardcoding the functions just for these effects, and have left room for testing other effects, as hinted in some examples in the help pages. They may be introduced later. For now, supporting effects that can be tested by <code>manymome</code> is our priority.</p>
 </div>
 <div class="section level1">
 <h1 id="issues">Issues<a class="anchor" aria-label="anchor" href="#issues"></a>

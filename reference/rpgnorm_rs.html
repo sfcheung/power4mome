@@ -15,7 +15,7 @@ deviation."><meta property="og:image" content="https://sfcheung.github.io/power4
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.104</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -132,7 +132,7 @@ mean and standard.</p>
 <span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">rpgnorm_rs</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">5000</span>,</span></span>
 <span class="r-in"><span>                p <span class="op">=</span> <span class="fl">2</span>,</span></span>
 <span class="r-in"><span>                pmean <span class="op">=</span> <span class="fl">0</span>,</span></span>
-<span class="r-in"><span>psd <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span>                psd <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] -0.01118704</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/sd.html" class="external-link">sd</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></span>
@@ -140,8 +140,12 @@ mean and standard.</p>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="rpgnorm_rs-1.png" alt="" width="576" height="384"></span>
 <span class="r-in"><span><span class="va">x_kurt</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">p</span><span class="op">)</span> <span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/base/Special.html" class="external-link">gamma</a></span><span class="op">(</span><span class="fl">5</span><span class="op">/</span><span class="va">p</span><span class="op">)</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/base/Special.html" class="external-link">gamma</a></span><span class="op">(</span><span class="fl">1</span><span class="op">/</span><span class="va">p</span><span class="op">)</span><span class="op">/</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Special.html" class="external-link">gamma</a></span><span class="op">(</span><span class="fl">3</span><span class="op">/</span><span class="va">p</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="op">-</span> <span class="fl">3</span><span class="op">}</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fl">6</span></span></span>
-<span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">rpgnorm_rs</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">50000</span>, p <span class="op">=</span> <span class="va">p</span>, pmean <span class="op">=</span> <span class="fl">0</span>, psd <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">rpgnorm_rs</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">50000</span>,</span></span>
+<span class="r-in"><span>                p <span class="op">=</span> <span class="va">p</span>,</span></span>
+<span class="r-in"><span>                pmean <span class="op">=</span> <span class="fl">0</span>,</span></span>
+<span class="r-in"><span>                psd <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.002266498</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/sd.html" class="external-link">sd</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></span>
@@ -150,8 +154,12 @@ mean and standard.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] -1</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/qqnorm.html" class="external-link">qqnorm</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>; <span class="fu"><a href="https://rdrr.io/r/stats/qqnorm.html" class="external-link">qqline</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="rpgnorm_rs-2.png" alt="" width="576" height="384"></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fl">1</span></span></span>
-<span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">rpgnorm_rs</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">50000</span>, p <span class="op">=</span> <span class="va">p</span>, pmean <span class="op">=</span> <span class="fl">0</span>, psd <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">rpgnorm_rs</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">50000</span>,</span></span>
+<span class="r-in"><span>                p <span class="op">=</span> <span class="va">p</span>,</span></span>
+<span class="r-in"><span>                pmean <span class="op">=</span> <span class="fl">0</span>,</span></span>
+<span class="r-in"><span>                psd <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.007350372</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/sd.html" class="external-link">sd</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></span>
