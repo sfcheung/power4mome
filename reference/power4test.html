@@ -15,7 +15,7 @@ results."><meta property="og:image" content="https://sfcheung.github.io/power4mo
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.103</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.104</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -1331,7 +1331,8 @@ then set to the argument <code>object</code> of
 <span class="r-in"><span><span class="st">y ~ x: n</span></span></span>
 <span class="r-in"><span><span class="st">"</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu">power4test</span><span class="op">(</span>nrep <span class="op">=</span> <span class="fl">50</span>,</span></span>
+<span class="r-in"><span><span class="co"># Set nrep to a large number in real analysis, such as 400</span></span></span>
+<span class="r-in"><span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu">power4test</span><span class="op">(</span>nrep <span class="op">=</span> <span class="fl">10</span>,</span></span>
 <span class="r-in"><span>                  model <span class="op">=</span> <span class="va">model_simple_med</span>,</span></span>
 <span class="r-in"><span>                  pop_es <span class="op">=</span> <span class="va">model_simple_med_es</span>,</span></span>
 <span class="r-in"><span>                  n <span class="op">=</span> <span class="fl">100</span>,</span></span>
@@ -1389,7 +1390,7 @@ then set to the argument <code>object</code> of
 <span class="r-out co"><span class="r-pr">#&gt;</span>  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ======================= Data Information =======================</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Number of Replications:  50 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Number of Replications:  10 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Sample Sizes:  100 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call print with 'data_long = TRUE' for further information.</span>
@@ -1419,11 +1420,11 @@ then set to the argument <code>object</code> of
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mean(s) across replication:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   test_label lhs op rhs   est    se     z pvalue  cilo  cihi   sig</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1        m~x   m  ~   x 0.307 0.095 3.247  0.040 0.121 0.494 0.860</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1        m~x   m  ~   x 0.320 0.098 3.234  0.092 0.128 0.512 0.800</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - The column 'sig' shows the rejection rates.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - If the null hypothesis is false, the rate is the power.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Number of valid replications for rejection rate(s): 50 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Number of valid replications for rejection rate(s): 10 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Proportion of valid replications for rejection rate(s): 1.000 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Change the sample size</span></span></span>
@@ -1483,7 +1484,7 @@ then set to the argument <code>object</code> of
 <span class="r-out co"><span class="r-pr">#&gt;</span>  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ======================= Data Information =======================</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Number of Replications:  50 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Number of Replications:  10 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Sample Sizes:  200 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call print with 'data_long = TRUE' for further information.</span>
@@ -1513,11 +1514,11 @@ then set to the argument <code>object</code> of
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mean(s) across replication:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   test_label lhs op rhs   est    se     z pvalue  cilo  cihi   sig</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1        m~x   m  ~   x 0.291 0.067 4.370  0.003 0.160 0.423 0.960</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1        m~x   m  ~   x 0.305 0.067 4.571  0.000 0.174 0.436 1.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - The column 'sig' shows the rejection rates.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - If the null hypothesis is false, the rate is the power.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Number of valid replications for rejection rate(s): 50 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Number of valid replications for rejection rate(s): 10 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Proportion of valid replications for rejection rate(s): 1.000 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Add one more test</span></span></span>
@@ -1574,7 +1575,7 @@ then set to the argument <code>object</code> of
 <span class="r-out co"><span class="r-pr">#&gt;</span>  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ======================= Data Information =======================</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Number of Replications:  50 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Number of Replications:  10 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Sample Sizes:  100 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call print with 'data_long = TRUE' for further information.</span>
@@ -1604,22 +1605,22 @@ then set to the argument <code>object</code> of
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mean(s) across replication:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   test_label lhs op rhs   est    se     z pvalue  cilo  cihi   sig</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1        m~x   m  ~   x 0.307 0.095 3.247  0.040 0.121 0.494 0.860</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1        m~x   m  ~   x 0.320 0.098 3.234  0.092 0.128 0.512 0.800</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - The column 'sig' shows the rejection rates.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - If the null hypothesis is false, the rate is the power.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Number of valid replications for rejection rate(s): 50 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Number of valid replications for rejection rate(s): 10 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Proportion of valid replications for rejection rate(s): 1.000 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ========== &lt;test_parameters: CIs (pars: y~x)&gt; ==========</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mean(s) across replication:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   test_label lhs op rhs    est    se      z pvalue   cilo  cihi   sig</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1        y~x   y  ~   x -0.021 0.091 -0.224  0.441 -0.200 0.158 0.060</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1        y~x   y  ~   x -0.069 0.093 -0.729  0.389 -0.252 0.113 0.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - The column 'sig' shows the rejection rates.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - If the null hypothesis is false, the rate is the power.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Number of valid replications for rejection rate(s): 50 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Number of valid replications for rejection rate(s): 10 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Proportion of valid replications for rejection rate(s): 1.000 </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>

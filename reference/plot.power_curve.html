@@ -15,7 +15,7 @@ or power4test_by_es()."><meta property="og:image" content="https://sfcheung.gith
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.103</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.104</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -252,7 +252,7 @@ individually.</p>
 <span class="r-in"><span>                        nrep <span class="op">=</span> <span class="fl">10</span>,</span></span>
 <span class="r-in"><span>                        test_fun <span class="op">=</span> <span class="va">test_parameters</span>,</span></span>
 <span class="r-in"><span>                        test_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>par <span class="op">=</span> <span class="st">"y~x"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>                        n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">25</span>, <span class="fl">100</span>, <span class="fl">200</span>, <span class="fl">1000</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                        n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">25</span>, <span class="fl">50</span>, <span class="fl">100</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>                        by_seed <span class="op">=</span> <span class="fl">1234</span>,</span></span>
 <span class="r-in"><span>                        parallel <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
 <span class="r-in"><span>                        progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
@@ -270,11 +270,11 @@ individually.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Coefficients:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)            x  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -1.550280     0.004213  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    -4.28606      0.02986  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Degrees of Freedom: 39 Total (i.e. Null);  38 Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Null Deviance:	    54.55 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Residual Deviance: 38.37 	AIC: 42.37</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Degrees of Freedom: 29 Total (i.e. Null);  28 Residual</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Null Deviance:	    19.5 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Residual Deviance: 17.37 	AIC: 21.37</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">pout1</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="plot.power_curve-1.png" alt="" width="576" height="384"></span>
 <span class="r-in"><span></span></span>
@@ -285,7 +285,7 @@ individually.</p>
 <span class="r-in"><span>                             test_fun <span class="op">=</span> <span class="va">test_parameters</span>,</span></span>
 <span class="r-in"><span>                             test_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>par <span class="op">=</span> <span class="st">"y~x"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>                             pop_es_name <span class="op">=</span> <span class="st">"y ~ x"</span>,</span></span>
-<span class="r-in"><span>                             pop_es_values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">.7</span>, <span class="fl">.15</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                             pop_es_values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">.3</span>, <span class="fl">.5</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>                             by_seed <span class="op">=</span> <span class="fl">1234</span>,</span></span>
 <span class="r-in"><span>                             parallel <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
 <span class="r-in"><span>                             progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
