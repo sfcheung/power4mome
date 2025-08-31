@@ -1,4 +1,4 @@
-# power4mome 0.0.1.105
+# power4mome 0.0.1.106
 
 - Initialized the package. (0.0.0.9000)
 
@@ -594,3 +594,5 @@
 
 - Updated the examples for CRAN.
   (0.0.1.105)
+
+- Updated the vignettes. (0.0.1.106)
