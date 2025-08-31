@@ -406,7 +406,8 @@
 #' y ~ x: n
 #' "
 #'
-#' out <- power4test(nrep = 50,
+#' # Set nrep to a large number in real analysis, such as 400
+#' out <- power4test(nrep = 10,
 #'                   model = model_simple_med,
 #'                   pop_es = model_simple_med_es,
 #'                   n = 100,

@@ -130,6 +130,7 @@
 #'
 #' # Simulate the data
 #'
+#' # Set nrep to a larger value in real analysis, such as 400
 #' sim_only <- power4test(nrep = 5,
 #'                        model = model_simple_mod,
 #'                        pop_es = model_simple_mod_es,
