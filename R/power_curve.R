@@ -218,7 +218,7 @@
 #'                         nrep = 10,
 #'                         test_fun = test_parameters,
 #'                         test_args = list(par = "y~x"),
-#'                         n = c(25, 100, 200, 1000),
+#'                         n = c(25, 50, 100),
 #'                         by_seed = 1234,
 #'                         parallel = FALSE,
 #'                         progress = FALSE)
@@ -230,14 +230,14 @@
 #' # By pop_es: Do a test for different population values of a model parameter
 #'
 #' out2 <- power4test_by_es(sim_only,
-#'                              nrep = 10,
-#'                              test_fun = test_parameters,
-#'                              test_args = list(par = "y~x"),
-#'                              pop_es_name = "y ~ x",
-#'                              pop_es_values = seq(0, .7, .15),
-#'                              by_seed = 1234,
-#'                              parallel = FALSE,
-#'                              progress = FALSE)
+#'                          nrep = 10,
+#'                          test_fun = test_parameters,
+#'                          test_args = list(par = "y~x"),
+#'                          pop_es_name = "y ~ x",
+#'                          pop_es_values = c(0, .3, .5),
+#'                          by_seed = 1234,
+#'                          parallel = FALSE,
+#'                          progress = FALSE)
 #'
 #' pout2 <- power_curve(out2)
 #' pout2

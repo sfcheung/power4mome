@@ -107,7 +107,7 @@
 #'                         nrep = 10,
 #'                         test_fun = test_parameters,
 #'                         test_args = list(par = "y~x"),
-#'                         n = c(25, 100, 200, 1000),
+#'                         n = c(25, 50, 100),
 #'                         by_seed = 1234,
 #'                         parallel = FALSE,
 #'                         progress = FALSE)
@@ -123,7 +123,7 @@
 #'                              test_fun = test_parameters,
 #'                              test_args = list(par = "y~x"),
 #'                              pop_es_name = "y ~ x",
-#'                              pop_es_values = seq(0, .7, .15),
+#'                              pop_es_values = c(0, .3, .5),
 #'                              by_seed = 1234,
 #'                              parallel = FALSE,
 #'                              progress = FALSE)

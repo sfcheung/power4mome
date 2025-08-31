@@ -1,4 +1,4 @@
-# power4mome 0.0.1.103
+# power4mome 0.0.1.104
 
 - Initialized the package. (0.0.0.9000)
 
@@ -588,3 +588,6 @@
 
 - Fix DESCRIPTION and help pages for
   CRAN. (0.0.1.103)
+
+- Reduce the processing times of
+  some examples for CRAN. (0.0.1.104)
