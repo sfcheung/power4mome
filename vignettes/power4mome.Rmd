@@ -1562,7 +1562,9 @@ covered in other articles:
   of `sim_data()` on how to set them).
   The model syntax used to fit to the
   data will automatically include the
-  indicators. Examples can be found in
+  indicators. An introduction can be
+  found in `vignette("power4test_latent_mediation")`.
+  Examples can be found in
   [templates](https://sfcheung.github.io/power4mome/articles/)
   for models with latent variables.
 
