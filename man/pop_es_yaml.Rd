@@ -14,7 +14,9 @@ values.}
 \value{
 Either a named vector (for a
 single-group model) or a list of
-named vector (for a multigroup model).
+named vector (for a multigroup model)
+of the population values of the
+parameters (the effect sizes).
 }
 \description{
 Convert a YAML string
@@ -22,7 +24,8 @@ to a vector or list of \code{pop_es}
 specification.
 }
 \details{
-This allows users to specify population
+The function \code{\link[=pop_es_yaml]{pop_es_yaml()}}
+allows users to specify population
 values of a model using one single
 string, as in 'lavaan' model syntax.
 }

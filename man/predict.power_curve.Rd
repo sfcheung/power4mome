@@ -31,7 +31,8 @@ values in a model fitted by
 \code{\link[=power_curve]{power_curve()}}.
 }
 \details{
-It works in two modes.
+The \code{predict} method of \code{power_curve}
+objects works in two modes.
 
 If new
 data is not supplied (through

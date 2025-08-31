@@ -31,7 +31,8 @@
 #' skewed distribution. Default is
 #' FALSE.
 #'
-#' @return A vector of the generated
+#' @return
+#' A vector of the generated
 #' random numbers.
 #'
 #' @examples

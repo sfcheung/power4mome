@@ -93,7 +93,7 @@ Get the output of
 of the stored datasets.
 }
 \details{
-By default, it
+By default, the function \code{\link[=fit_model]{fit_model()}}
 \itemize{
 \item extracts the model
 stored in the output of \code{\link[=sim_data]{sim_data()}},

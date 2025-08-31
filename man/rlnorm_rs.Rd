@@ -41,7 +41,7 @@ First, specify the parameter,
 \code{mui} and \code{sigma}, and the
 desired population mean and standard
 deviation. The random numbers, drawn
-from lognormal distribution by
+from a lognormal distribution by
 \code{\link[stats:Lognormal]{stats::rlnorm()}}, will then be
 rescaled with the desired population
 mean and standard.

@@ -142,7 +142,8 @@ effect size (population value of
 a model parameter).
 }
 \details{
-It retrieves the information
+The function \code{\link[=power_curve]{power_curve()}}
+retrieves the information
 from the output of
 \code{\link[=power4test_by_n]{power4test_by_n()}} or
 \code{\link[=power4test_by_es]{power4test_by_es()}}, and

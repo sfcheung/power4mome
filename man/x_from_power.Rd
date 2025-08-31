@@ -366,7 +366,7 @@ detect an effect close to a target
 value.
 }
 \details{
-This is how to use this function:
+This is how to use \code{\link[=x_from_power]{x_from_power()}}:
 \itemize{
 \item Specify the model by \code{\link[=power4test]{power4test()}},
 with \code{do_the_test = FALSE}, and set
@@ -444,7 +444,7 @@ a wrapper of \code{\link[=x_from_power]{x_from_power()}}, with
 with \code{what = "ub"} and one with
 \code{what = "lb"}.
 
-The \code{print} method only print
+The \code{print} method only prints
 basic information. Call the
 \code{summary} method of \code{x_from_power} objects
 (\code{\link[=summary.x_from_power]{summary.x_from_power()}}) and its

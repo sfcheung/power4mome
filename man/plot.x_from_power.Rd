@@ -190,7 +190,8 @@ of 'x_from_power', such as the
 estimated power against sample size.
 }
 \details{
-It currently plots the relation
+The \code{plot} method of \code{x_from_power}
+objects currently plots the relation
 between estimated power and
 the values examined by \code{\link[=x_from_power]{x_from_power()}}.
 Other elements

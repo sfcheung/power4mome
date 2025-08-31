@@ -125,13 +125,14 @@ a \code{rejection_rates_df} object,
 with a \code{print} method.
 
 If the input (\code{object}) is a
-\code{power4test} object, the output is
+\code{power4test} object, the
+\code{rejection_rates_df} object is
 a data-frame like object with the
 number of
 rows equal to the number of tests.
 Note that some tests, such as
 the test by \code{\link[=test_parameters]{test_parameters()}},
-conduct one test for each parameters.
+conduct one test for each parameter.
 Each such test is counted as one
 test.
 
@@ -148,7 +149,7 @@ each test. If the null hypothesis
 is false, then this is the power.
 }
 
-The \code{rejection_rates} method for
+The \code{rejection_rates} method
 for \code{power4test_by_es} objects
 returns an object of the
 class \code{rejection_rates_df_by_es},
@@ -161,7 +162,7 @@ columns added for the effect size (\code{pop_es_name} and
 \code{pop_es_values})
 for each test.
 
-The \code{rejection_rates} method for
+The \code{rejection_rates} method
 for \code{power4test_by_n} objects
 returns an object of the
 class \code{rejection_rates_df_by_n},
@@ -169,12 +170,12 @@ which is a subclass of
 \code{rejection_rates_df}.
 It is a data frame which is
 similar to the output of
-for a \code{power4test} object, with a
+a \code{power4test} object, with a
 column \code{n} added for the sample size
 for each test.
 
 The \code{print} method of a
-\code{rejection_rates_df} object return
+\code{rejection_rates_df} object returns
 the object invisibly. It is called
 for its side-effect.
 }
@@ -185,7 +186,7 @@ object or other supported objects.
 }
 \details{
 For a \code{power4test} object,
-it loops over the tests stored
+\link{rejection_rates} loops over the tests stored
 in a \code{power4test} object and retrieves
 the rejection rate of each test.
 

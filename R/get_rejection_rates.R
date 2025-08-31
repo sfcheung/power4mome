@@ -17,13 +17,14 @@
 #' with a `print` method.
 #'
 #' If the input (`object`) is a
-#' `power4test` object, the output is
+#' `power4test` object, the
+#' `rejection_rates_df` object is
 #' a data-frame like object with the
 #' number of
 #' rows equal to the number of tests.
 #' Note that some tests, such as
 #' the test by [test_parameters()],
-#' conduct one test for each parameters.
+#' conduct one test for each parameter.
 #' Each such test is counted as one
 #' test.
 #'
@@ -385,7 +386,7 @@ rbind_adv <- function(...) {
 }
 
 #' @return
-#' The `rejection_rates` method for
+#' The `rejection_rates` method
 #' for `power4test_by_es` objects
 #' returns an object of the
 #' class `rejection_rates_df_by_es`,
@@ -427,7 +428,7 @@ rejection_rates.power4test_by_es <- function(object,
 }
 
 #' @return
-#' The `rejection_rates` method for
+#' The `rejection_rates` method
 #' for `power4test_by_n` objects
 #' returns an object of the
 #' class `rejection_rates_df_by_n`,
@@ -435,7 +436,7 @@ rejection_rates.power4test_by_es <- function(object,
 #' `rejection_rates_df`.
 #' It is a data frame which is
 #' similar to the output of
-#' for a `power4test` object, with a
+#' a `power4test` object, with a
 #' column `n` added for the sample size
 #' for each test.
 #'
@@ -482,7 +483,7 @@ rejection_rates.power4test_by_n <- function(object,
 #'
 #' @return
 #' The `print` method of a
-#' `rejection_rates_df` object return
+#' `rejection_rates_df` object returns
 #' the object invisibly. It is called
 #' for its side-effect.
 #'

@@ -86,7 +86,8 @@ replication in the output of
 \code{\link[=sim_out]{sim_out()}}.
 }
 \details{
-Do an arbitrary test in each
+The function \code{\link[=do_test]{do_test()}} does
+an arbitrary test in each
 replication using the function set to
 \code{test_fun}.
 }
