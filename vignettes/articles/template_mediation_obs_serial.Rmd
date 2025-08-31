@@ -1,6 +1,6 @@
 ---
 title: "Quick Template: Serial Mediation with Observed Variables"
-date: "2025-06-22"
+date: "2025-08-31"
 output:
   html_document:
     fig.align: "center"
@@ -32,11 +32,11 @@ by `lavaan` and `power4mome` is required.
 This file is not intended to be an introduction
 on how to use functions in `power4mome`.
 For details on how to use `power4test()`,
-`power4test_by_n()`, and `x_from_power()`,
+`power4test_by_n()`, and `n_from_power()`,
 refer to the [Get-Started article](https://sfcheung.github.io/power4mome/articles/power4mome.html),
 and the [article](https://sfcheung.github.io/power4mome/articles/x_from_power_for_n.html)
 on finding the sample size
-given desired power using `x_from_power()`,
+given desired power using `n_from_power()`,
 as well as the help pages of these
 functions.
 
@@ -218,11 +218,12 @@ print(out,
 #>    .y                 0.893  
 #>     x                 1.000  
 #> 
-#> (Computing indirect effects for 7 paths ...)
+#> (Computing indirect effects for 8 paths ...)
 #> 
-#> == Population Indirect Effect(s) ==
+#> == Population Conditional/Indirect Effect(s) ==
 #> 
-#> ==  Indirect Effect(s)   ==
+#> == Indirect Effect(s) ==
+#> 
 #>                            ind
 #> x -> m1 -> m2 -> m3 -> y 0.037
 #> x -> m1 -> m2 -> y       0.000
@@ -231,8 +232,9 @@ print(out,
 #> x -> m2 -> m3 -> y       0.000
 #> x -> m2 -> y             0.000
 #> x -> m3 -> y             0.000
+#> x -> y                   0.100
 #> 
-#>  - The 'ind' column shows the indirect effects.
+#>  - The 'ind' column shows the indirect effect(s).
 #>  
 #> ======================= Data Information =======================
 #> 
@@ -420,7 +422,7 @@ level (e.g., .80).
 Do this step after calling `power4test()`
 on a sample size.
 
-It can take some time to run if estimated power
+It can take some time to run if the estimated power
 of the sample size is too different from
 the target power.
 
@@ -478,7 +480,7 @@ summary(n_power_80)
 #> 
 #> - Algorithm: bisection 
 #> - The range of values explored: 107 to 50 
-#> - Time spent in the search: 23.6 secs 
+#> - Time spent in the search: 22.53 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -539,7 +541,7 @@ on several sample sizes
 by calling `x_from_power()` on the
 output of `power4test_by_n()`.
 
-It can take some time to run if estimated levels
+It can take some time to run if the estimated levels
 of power
 of the sample sizes are too different from
 the target power.
@@ -598,7 +600,7 @@ summary(n_power_80_ns)
 #> 
 #> - Algorithm: bisection 
 #> - The range of values explored: 100 to 90 
-#> - Time spent in the search: 1.39 mins 
+#> - Time spent in the search: 1.446 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -742,11 +744,12 @@ print(out2,
 #>    .y                 0.898  
 #>     x                 1.000  
 #> 
-#> (Computing indirect effects for 7 paths ...)
+#> (Computing indirect effects for 8 paths ...)
 #> 
-#> == Population Indirect Effect(s) ==
+#> == Population Conditional/Indirect Effect(s) ==
 #> 
-#> ==  Indirect Effect(s)   ==
+#> == Indirect Effect(s) ==
+#> 
 #>                            ind
 #> x -> m1 -> m2 -> m3 -> y 0.008
 #> x -> m1 -> m2 -> y       0.000
@@ -755,8 +758,9 @@ print(out2,
 #> x -> m2 -> m3 -> y       0.000
 #> x -> m2 -> y             0.000
 #> x -> m3 -> y             0.000
+#> x -> y                   0.100
 #> 
-#>  - The 'ind' column shows the indirect effects.
+#>  - The 'ind' column shows the indirect effect(s).
 #>  
 #> ======================= Data Information =======================
 #> 
@@ -901,7 +905,7 @@ summary(n2_power_80)
 #> 
 #> - Algorithm: bisection 
 #> - The range of values explored: 100 to 174 
-#> - Time spent in the search: 1.361 mins 
+#> - Time spent in the search: 1.55 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 

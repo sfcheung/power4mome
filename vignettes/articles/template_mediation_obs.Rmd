@@ -1,6 +1,6 @@
 ---
 title: "Quick Template: Mediation with Observed Variables"
-date: "2025-07-13"
+date: "2025-08-31"
 output:
   html_document:
     fig.align: "center"
@@ -32,11 +32,11 @@ by `lavaan` and `power4mome` is required.
 This file is not intended to be an introduction
 on how to use functions in `power4mome`.
 For details on how to use `power4test()`,
-`power4test_by_n()`, and `x_from_power()`,
+`power4test_by_n()`, and `n_from_power()`,
 refer to the [Get-Started article](https://sfcheung.github.io/power4mome/articles/power4mome.html),
 and the [article](https://sfcheung.github.io/power4mome/articles/x_from_power_for_n.html)
 on finding the sample size
-given desired power using `x_from_power()`,
+given desired power using `n_from_power()`,
 as well as the help pages of these
 functions.
 
@@ -195,14 +195,15 @@ print(out,
 #>    .y                 0.630  
 #>     x                 1.000  
 #> 
-#> (Computing indirect effects for 1 paths ...)
+#> (Computing indirect effects for 2 paths ...)
 #> 
-#> == Population Indirect Effect(s) ==
+#> == Population Conditional/Indirect Effect(s) ==
 #> 
 #> == Indirect Effect(s) ==
 #> 
 #>               ind
 #> x -> m -> y 0.050
+#> x -> y      0.300
 #> 
 #>  - The 'ind' column shows the indirect effect(s).
 #>  
@@ -328,7 +329,7 @@ rejection_rates(out_new_n)
 
 # Try Several N's
 
-Rerun the simulation to estimate
+Rerun the simulation to estimate the
 power for with several sample sizes.
 
 The code:
@@ -400,7 +401,7 @@ with estimated either:
 Do this step after calling `power4test()`
 on a sample size.
 
-It can take some time to run if estimated power
+It can take some time to run if the estimated power
 of the sample size is too different from
 the target power.
 
@@ -463,7 +464,7 @@ summary(n_power_80_ub)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 100 to 897 
-#> - Time spent in the search: 54.66 secs 
+#> - Time spent in the search: 47.36 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -575,7 +576,7 @@ summary(n_power_80_lb)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 100 to 891 
-#> - Time spent in the search: 1.231 mins 
+#> - Time spent in the search: 1.052 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -702,7 +703,7 @@ summary(n_power_80_ns_ub)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 300 to 961 
-#> - Time spent in the search: 55.49 secs 
+#> - Time spent in the search: 51.89 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -811,7 +812,7 @@ summary(n_power_80_ns_lb)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 1109 to 967 
-#> - Time spent in the search: 1.978 mins 
+#> - Time spent in the search: 1.943 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -942,14 +943,15 @@ print(out2,
 #>    .y                 0.766  
 #>     x                 1.000  
 #> 
-#> (Computing indirect effects for 1 paths ...)
+#> (Computing indirect effects for 2 paths ...)
 #> 
-#> == Population Indirect Effect(s) ==
+#> == Population Conditional/Indirect Effect(s) ==
 #> 
 #> == Indirect Effect(s) ==
 #> 
 #>               ind
 #> x -> m -> y 0.090
+#> x -> y      0.300
 #> 
 #>  - The 'ind' column shows the indirect effect(s).
 #>  
@@ -1088,7 +1090,7 @@ summary(n2_power_80_ub)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 100 to 107 
-#> - Time spent in the search: 17.23 secs 
+#> - Time spent in the search: 15.94 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -1191,7 +1193,7 @@ summary(n2_power_80_lb)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 100 to 228 
-#> - Time spent in the search: 1.731 mins 
+#> - Time spent in the search: 1.715 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 

@@ -32,9 +32,9 @@ knitr::knit("template_n_from_power_mome_obs_a.Rmd.original", output = "template_
 knitr::knit("template_n_from_power_mome_obs_b.Rmd.original", output = "template_n_from_power_mome_obs_b.Rmd", envir = new.env())
 
 
-# knitr::knit("template_mediation_obs.Rmd.original", output = "template_mediation_obs.Rmd")
-# knitr::knit("template_mediation_obs_serial.Rmd.original", output = "template_mediation_obs_serial.Rmd")
-# knitr::knit("template_mediation_obs_ind.Rmd.original", output = "template_mediation_obs_ind.Rmd")
+knitr::knit("template_mediation_obs.Rmd.original", output = "template_mediation_obs.Rmd", envir = new.env())
+knitr::knit("template_mediation_obs_serial.Rmd.original", output = "template_mediation_obs_serial.Rmd", envir = new.env())
+# knitr::knit("template_mediation_obs_ind.Rmd.original", output = "template_mediation_obs_ind.Rmd", envir = new.env())
 pkgdown::build_articles("../..")
 
 setwd(base_dir)
