@@ -1,6 +1,8 @@
 <!-- badges: start -->
 [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![Project Status: Active - The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+[![CRAN status](https://www.r-pkg.org/badges/version/power4mome?color=blue)](https://CRAN.R-project.org/package=power4mome)
+[![CRAN: Release Date](https://www.r-pkg.org/badges/last-release/power4mome?color=blue)](https://cran.r-project.org/package=power4mome)
 [![Code size](https://img.shields.io/github/languages/code-size/sfcheung/power4mome.svg)](https://github.com/sfcheung/power4mome)
 [![Last Commit at Main](https://img.shields.io/github/last-commit/sfcheung/power4mome.svg)](https://github.com/sfcheung/power4mome/commits/main)
 [![R-CMD-check](https://github.com/sfcheung/power4mome/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/sfcheung/power4mome/actions/workflows/R-CMD-check.yaml)
@@ -70,6 +72,12 @@ Therefore, we also try to
 
 # Installation
 
+The stable version at CRAN can be installed by `install.packages()`:
+
+```r
+install.packages("power4mome")
+```
+
 The latest developmental version of this package can be installed by `remotes::install_github`:
 
 ```r
@@ -115,9 +123,9 @@ typical power analysis programs.
 
 We ourselves know how to do the power
 estimation on our own by simulation,
-if necessary. However, time is a concern
+if necessary. However, time is usually a concern,
 and we would like to
-have an tool that, though specifically
+have a tool that, though specifically
 designed with mediation, moderation,
 and moderated mediation in mind and may
 be limited in scope (though it is a
@@ -134,7 +142,7 @@ moderation, and moderated mediation.
 
 But `power4mome` is not just for mediation,
 moderation, and moderated mediation. We
-avoided hardcoding the functions just
+avoided wrote the functions just
 for these effects, and have left room for
 testing other effects, as hinted in some
 examples in the help pages. They may be
@@ -145,7 +153,7 @@ is our priority.
 # Issues
 
 If you have any suggestions and found any bugs, please feel
-feel to open a GitHub issue:
+free to open a GitHub issue:
 
 https://github.com/sfcheung/power4mome/issues
 
