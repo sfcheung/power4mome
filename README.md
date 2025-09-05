@@ -35,6 +35,12 @@ use this package:
 
 https://sfcheung.github.io/power4mome/articles/power4mome.html
 
+Code templates are also available for
+common mediation, moderation, and
+moderated mediation models:
+
+https://sfcheung.github.io/power4mome/articles/
+
 # Philosophy
 
 The package was developed with this
