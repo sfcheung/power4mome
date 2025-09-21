@@ -248,12 +248,15 @@ fit_model_i <- function(data_i,
                         arg_group_name = "group",
                         ...) {
   if (is.character(fit_function)) {
+    fit_function_org <- fit_function
     fit_function <- switch(fit_function,
                            lavaan = lavaan::sem,
                            lm = lmhelprs::many_lm,
                            many_lm = lmhelprs::many_lm,
                            fit_function)
 
+  } else {
+    fit_function_org <- character(0)
   }
   # Anomalies should be checked in
   # subsequent steps, not during fitting
@@ -276,6 +279,12 @@ fit_model_i <- function(data_i,
     # - Support moderated mediation model with indicators.
     model_to_fit <- tmp
   }
+
+  # Fix the model if lm() is used to fitting the model
+  if (fit_function_org %in% c("lm", "many_lm")) {
+    model_to_fit <- fix_many_lm_model(model_to_fit)
+  }
+
   # For single-group models,
   # data_i$group_name would be NULL.
   fit_args0 <- list()
