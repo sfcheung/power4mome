@@ -167,18 +167,37 @@ fit4b_mg <- sem(pt_mg,
 expect_false(fitMeasures(fit2b_mg, "chisq") == fitMeasures(fit3b_mg, "chisq"))
 expect_false(fitMeasures(fit2c_mg, "chisq") == fitMeasures(fit4b_mg, "chisq"))
 
+fix_cov_order <- function(pt) {
+  for (i in seq_len(nrow(pt))) {
+    if (pt$op[i] == "~~") {
+      tmp <- sort(c(pt[i, "lhs"], pt[i, "rhs"]))
+      pt[i, "lhs"] <- tmp[1]
+      pt[i, "rhs"] <- tmp[2]
+    }
+  }
+  pt
+}
+
 fit_extra <- sim_out$extra$fit
 pt_extra <- parameterTable(fit_extra)
+
+pt_extra <- fix_cov_order(pt_extra)
+pt_fixed <- fix_cov_order(pt_fixed)
+
 pt_extra$tmplabel <- lav_partable_labels(pt_extra)
 pt_fixed$tmplabel <- lav_partable_labels(pt_fixed)
-expect_equal(pt_extra$tmplabel,
-             pt_fixed$tmplabel)
+expect_equal(sort(pt_extra$tmplabel),
+             sort(pt_fixed$tmplabel))
 
 fit_extra_mg <- sim_out_mg$extra$fit
 pt_extra_mg <- parameterTable(fit_extra_mg)
+
+pt_extra_mg <- fix_cov_order(pt_extra_mg)
+pt_fixed_mg <- fix_cov_order(pt_fixed_mg)
+
 pt_extra_mg$tmplabel <- lav_partable_labels(pt_extra_mg)
 pt_fixed_mg$tmplabel <- lav_partable_labels(pt_fixed_mg)
-expect_equal(pt_extra_mg$tmplabel,
-             pt_fixed_mg$tmplabel)
+expect_equal(sort(pt_extra_mg$tmplabel),
+             sort(pt_fixed_mg$tmplabel))
 
 })

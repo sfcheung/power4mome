@@ -7,7 +7,7 @@
 #' @details
 #'
 #' These are the input and output values
-#' for [set_pop()].
+#' for `set_pop()`.
 #'
 #' Input:
 #'
