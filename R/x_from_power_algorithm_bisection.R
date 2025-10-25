@@ -1035,6 +1035,18 @@ extend_interval <- function(f,
           lower <- ceiling(lower)
         }
         lower <- max(lower, lower_hard)
+        f.lower <- do.call(f,
+                           c(list(x_i = lower),
+                             args))
+        # Fix the interval
+        if (upper < lower) {
+          tmp <- lower
+          lower <- upper
+          upper <- tmp
+          tmp <- f.lower
+          f.lower <- f.upper
+          f.upper <- tmp
+        }
         if (trace) {
           cat("\n\n(Extending the interval) Iteration:", i, "\n\n")
           print_interval(lower = lower,
@@ -1042,9 +1054,6 @@ extend_interval <- function(f,
                          digits = digits,
                          x_type = x_type)
         }
-        f.lower <- do.call(f,
-                           c(list(x_i = lower),
-                             args))
         i <- i + 1
       }
     }
@@ -1060,7 +1069,6 @@ extend_interval <- function(f,
     }
 
     # ==== Loop for extension ====
-
     i <- 1
     while ((i <= extend_maxiter) &&
             (sign(f.lower) == sign(f.upper))) {
@@ -1078,10 +1086,22 @@ extend_interval <- function(f,
         lower <- upper
         f.lower <- f.upper
         upper <- (1 + overshoot) * -intercept / slope
+        upper <- max(upper_hard, upper)
         if (x_type == "n") {
           upper <- ceiling(upper)
         }
-        upper <- min(upper, upper_hard)
+        # Fix the interval
+        f.upper <- do.call(f,
+                           c(list(x_i = upper),
+                             args))
+        if (upper < lower) {
+          tmp <- lower
+          lower <- upper
+          upper <- tmp
+          tmp <- f.lower
+          f.lower <- f.upper
+          f.upper <- tmp
+        }
         if (trace) {
           cat("\n\n(Extending the interval) Iteration:", i, "\n")
           print_interval(lower = lower,
@@ -1089,9 +1109,6 @@ extend_interval <- function(f,
                          digits = digits,
                          x_type = x_type)
         }
-        f.upper <- do.call(f,
-                           c(list(x_i = upper),
-                             args))
         i <- i + 1
       }
     }
