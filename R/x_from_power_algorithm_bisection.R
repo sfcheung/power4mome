@@ -968,8 +968,8 @@ extend_interval <- function(f,
                     f.upper = f.upper,
                     f.lower = f.lower
                   )
-  extend_up <- extend_which$extend_up
-  extend_down <- extend_which$extend_down
+  extend_up <- (extend_which == "extend_up")
+  extend_down <- (extend_which == "extend_down")
 
   if (extend_down && (!(extendInt %in% c("yes", "downX")))) {
 
@@ -1005,115 +1005,63 @@ extend_interval <- function(f,
   # - Need to optimize the code to reduce duplications
   interval_ok <- FALSE
 
-  # ==== Extend down ====
+  # ==== Extend the interval ====
 
-  if ((extendInt %in% c("yes", "downX")) && extend_down) {
-    # Extend lower by simple linear extrapolation
+  if (((extendInt %in% c("yes", "downX")) && extend_down) ||
+      ((extendInt %in% c("yes", "upX")) && extend_up)) {
+    # Extend simple linear extrapolation
     if (trace) {
-      cat("Interval above the solution. Extend the lower bound ...\n")
-    }
-
-    # ==== Loop for extension ====
-
-    i <- 1
-    while ((i <= extend_maxiter) &&
-            (sign(f.lower) == sign(f.upper))) {
-      if (lower == lower_hard) {
-        # Hit the hard lower limit
-        interval_ok <- FALSE
-        extend_status <- status_msg[status_msg == 4]
-        if (trace) {
-          cat(names(extend_status), ".\n", sep = "")
-        }
-        break
-      } else {
-        slope <- (f.upper - f.lower) / (upper - lower)
-        intercept <- -slope * upper +  f.upper
-        upper <- lower
-        f.upper <- f.lower
-        lower <- overshoot * -intercept / slope
-        if (x_type == "n") {
-          lower <- ceiling(lower)
-        }
-        lower <- max(lower, lower_hard)
-        f.lower <- do.call(f,
-                           c(list(x_i = lower),
-                             args))
-        # Fix the interval
-        if (upper < lower) {
-          tmp <- lower
-          lower <- upper
-          upper <- tmp
-          tmp <- f.lower
-          f.lower <- f.upper
-          f.upper <- tmp
-        }
-        if (trace) {
-          cat("\n\n(Extending the interval) Iteration:", i, "\n\n")
-          print_interval(lower = lower,
-                         upper = upper,
-                         digits = digits,
-                         x_type = x_type)
-        }
-        i <- i + 1
-      }
-    }
-  }
-
-  # ==== Extend up ====
-
-  # Should have exhausted all possibilities
-  if ((extendInt %in% c("yes", "upX")) && extend_up) {
-    # Extend upper by simple linear extrapolation
-    if (trace) {
-      cat("Interval below the solution. Extend the upper bound ...\n")
+      cat(
+        switch(extend_which,
+               extend_down =
+                "Interval above the solution. Extend the lower bound ...\n",
+               extend_up =
+                "Interval below the solution. Extend the upper bound ...\n")
+      )
     }
 
     # ==== Loop for extension ====
     i <- 1
     while ((i <= extend_maxiter) &&
             (sign(f.lower) == sign(f.upper))) {
-      if (upper == upper_hard) {
-        # Hit the hard upper limit
-        interval_ok <- FALSE
-        extend_status <- status_msg[status_msg == 5]
-        if (trace) {
-          cat(names(extend_status), ".\n\n", sep = "")
-        }
-        break
-      } else {
-        slope <- (f.upper - f.lower) / (upper - lower)
-        intercept <- -slope * upper +  f.upper
-        lower <- upper
-        f.lower <- f.upper
-        upper <- (1 + overshoot) * -intercept / slope
-        upper <- max(upper_hard, upper)
-        if (x_type == "n") {
-          upper <- ceiling(upper)
-        }
-        # Fix the interval
-        f.upper <- do.call(f,
-                           c(list(x_i = upper),
-                             args))
-        if (upper < lower) {
-          tmp <- lower
-          lower <- upper
-          upper <- tmp
-          tmp <- f.lower
-          f.lower <- f.upper
-          f.upper <- tmp
-        }
-        if (trace) {
-          cat("\n\n(Extending the interval) Iteration:", i, "\n")
-          print_interval(lower = lower,
-                         upper = upper,
-                         digits = digits,
-                         x_type = x_type)
-        }
+        out_i <- extend_i(
+            f = f,
+            args = args,
+            i = i,
+            lower = lower,
+            upper = upper,
+            f.lower = f.lower,
+            f.upper = f.upper,
+            interval_ok = interval_ok,
+            extend_status = extend_status,
+            trace = trace,
+            status_msg = status_msg,
+            lower_hard = lower_hard,
+            upper_hard = upper_hard,
+            x_type = x_type,
+            digits = digits,
+            overshoot = overshoot,
+            which = switch(extend_which,
+                           extend_down = "lower",
+                           extend_up = "upper")
+          )
+        lower <- out_i$lower
+        upper <- out_i$upper
+        f.lower <- out_i$f.lower
+        f.upper <- out_i$f.upper
+        interval_ok <- out_i$interval_ok
+        extend_status <- out_i$extend_status
+        extend_which <- check_extend_x(
+                          upper = upper,
+                          lower = lower,
+                          f.upper = f.upper,
+                          f.lower = f.lower
+                        )
+        extend_up <- (extend_which == "extend_up")
+        extend_down <- (extend_which == "extend_down")
         i <- i + 1
       }
     }
-  }
 
   # ==== Check the extended interval ====
 
@@ -1237,8 +1185,7 @@ extend_i <- function(
     f.lower = f.lower,
     f.upper = f.upper,
     interval_ok = interval_ok,
-    extend_status = extend_status,
-    interval_ok = interval_ok
+    extend_status = extend_status
   )
 }
 
@@ -1254,10 +1201,14 @@ check_extend_x <- function(
                 ((slope < 0) && (f.upper > 0))
   extend_down <- ((slope > 0) && (f.upper > 0)) ||
                   ((slope < 0) && (f.upper < 0))
-  list(
-    extend_up = extend_up,
-    extend_down = extend_down
-  )
+  if (extend_up) {
+    out <- "extend_up"
+  } else if (extend_down) {
+    out <- "extend_down"
+  } else {
+    out <- NA
+  }
+  out
 }
 
 #' @noRd
