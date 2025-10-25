@@ -1,6 +1,6 @@
 ---
 title: "Sample Size Given Desired Power"
-date: "2025-10-25"
+date: "2025-10-26"
 output:
   rmarkdown::html_vignette:
     options:
@@ -694,25 +694,25 @@ out_n
 #> Level of confidence:       95.00%
 #> Target Power:               0.800
 #> 
-#> - Final Value of Sample Size (n): 91
+#> - Final Value of Sample Size (n): 99
 #> 
-#> - Final Estimated Power (CI): 0.748 [0.705, 0.790]
+#> - Final Estimated Power (CI): 0.765 [0.721, 0.804]
 #> 
 #> Call `summary()` for detailed results.
 ```
 
 The estimated sample size is
-91. The estimated power
+99. The estimated power
 based on simulation is
-0.748,
+0.765,
 with its confidence interval equal to
-[0.705, 0.790].
-The upper bound, 0.790,
+[0.721, 0.804].
+The upper bound, 0.804,
 is .02 within the target power (.80).
 
 In other words, with 400 replications,
 it is estimated that sample sizes
-less than 91 have power
+less than 99 have power
 significantly less than .80 and should not
 be used if the target power is .80.
 
@@ -738,10 +738,10 @@ summary(out_n)
 #> 
 #> === Major Results ===
 #> 
-#> - Final Value (Sample Size): 91
+#> - Final Value (Sample Size): 99
 #> 
-#> - Final Estimated Power: 0.748 
-#> - Confidence Interval: [0.705; 0.790]
+#> - Final Estimated Power: 0.765 
+#> - Confidence Interval: [0.721; 0.804]
 #> - Level of confidence: 95.0%
 #> - Based on 400 replications.
 #> 
@@ -749,8 +749,8 @@ summary(out_n)
 #> 
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
-#> - The range of values explored: 105 to 91 
-#> - Time spent in the search: 1.605 mins 
+#> - The range of values explored: 106 to 99 
+#> - Time spent in the search: 2.198 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -768,22 +768,23 @@ summary(out_n)
 #> 
 #> Coefficients:
 #> (Intercept)            x  
-#>    -1.07476      0.02389  
+#>    -0.94206      0.02155  
 #> 
-#> Degrees of Freedom: 1649 Total (i.e. Null);  1648 Residual
-#> Null Deviance:	    1759 
-#> Residual Deviance: 1686 	AIC: 1690
+#> Degrees of Freedom: 2049 Total (i.e. Null);  2048 Residual
+#> Null Deviance:	    2243 
+#> Residual Deviance: 2178 	AIC: 2182
 #> 
 #> - Detailed Results:
 #> 
 #> [test]: test_indirect: x->m->y 
 #> [test_label]: Test 
 #>     n   est   p.v reject r.cilo r.cihi
-#> 1  50 0.167 1.000  0.520  0.382  0.658
-#> 2  77 0.147 1.000  0.685  0.639  0.731
-#> 3  91 0.145 1.000  0.748  0.705  0.790
-#> 4 105 0.153 1.000  0.810  0.772  0.848
-#> 5 133 0.152 1.000  0.890  0.859  0.921
+#> 1  50 0.167 1.000  0.520  0.385  0.652
+#> 2  77 0.147 1.000  0.685  0.638  0.729
+#> 3  92 0.147 1.000  0.715  0.669  0.757
+#> 4  99 0.148 1.000  0.765  0.721  0.804
+#> 5 106 0.151 1.000  0.810  0.769  0.845
+#> 6 134 0.149 1.000  0.873  0.836  0.902
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.
@@ -792,7 +793,7 @@ summary(out_n)
 #>   rejection rate. If the null hypothesis is true, this is the Type I
 #>   error rate. If the null hypothesis is false, this is the power.
 #> - r.cilo,r.cihi: The confidence interval of the rejection rate, based
-#>   on normal approximation.
+#>   on Wilson's (1927) method.
 #> - Refer to the tests for the meanings of other columns.
 ```
 
@@ -810,7 +811,7 @@ the relation between the power and the
 sample size. Note that this is only
 a crude model intended only for the
 values of sample size examined
-(5 in the this example).
+(6 in the this example).
 It is
 not intended to estimate power for
 sample sizes outside the range studied.
@@ -889,25 +890,25 @@ out_n_lb
 #> Level of confidence:       95.00%
 #> Target Power:               0.800
 #> 
-#> - Final Value of Sample Size (n): 114
+#> - Final Value of Sample Size (n): 120
 #> 
-#> - Final Estimated Power (CI): 0.845 [0.810, 0.880]
+#> - Final Estimated Power (CI): 0.840 [0.801, 0.873]
 #> 
 #> Call `summary()` for detailed results.
 ```
 
 The estimated sample size is
-114. The estimated power
+120. The estimated power
 based on simulation is
-0.845,
+0.840,
 with its confidence interval equal to
-[0.810, 0.790].
-The upper bound, 0.810,
+[0.801, 0.804].
+The upper bound, 0.801,
 is .02 within the target power (.80).
 
 With 400 replications,
 it is estimated that sample sizes
-greater than 114 have power
+greater than 120 have power
 significantly greater than .80 and can
 be used if the target power is .80.
 
@@ -931,10 +932,10 @@ summary(out_n_lb)
 #> 
 #> === Major Results ===
 #> 
-#> - Final Value (Sample Size): 114
+#> - Final Value (Sample Size): 120
 #> 
-#> - Final Estimated Power: 0.845 
-#> - Confidence Interval: [0.810; 0.880]
+#> - Final Estimated Power: 0.840 
+#> - Confidence Interval: [0.801; 0.873]
 #> - Level of confidence: 95.0%
 #> - Based on 400 replications.
 #> 
@@ -942,8 +943,8 @@ summary(out_n_lb)
 #> 
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
-#> - The range of values explored: 109 to 98 
-#> - Time spent in the search: 2.208 mins 
+#> - The range of values explored: 120 to 77 
+#> - Time spent in the search: 1.264 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -961,24 +962,21 @@ summary(out_n_lb)
 #> 
 #> Coefficients:
 #> (Intercept)            x  
-#>    -1.10411      0.02393  
+#>    -1.04017      0.02271  
 #> 
-#> Degrees of Freedom: 2449 Total (i.e. Null);  2448 Residual
-#> Null Deviance:	    2381 
-#> Residual Deviance: 2254 	AIC: 2258
+#> Degrees of Freedom: 1249 Total (i.e. Null);  1248 Residual
+#> Null Deviance:	    1237 
+#> Residual Deviance: 1119 	AIC: 1123
 #> 
 #> - Detailed Results:
 #> 
 #> [test]: test_indirect: x->m->y 
 #> [test_label]: Test 
 #>     n   est   p.v reject r.cilo r.cihi
-#> 1  50 0.167 1.000  0.520  0.382  0.658
-#> 2  77 0.151 1.000  0.672  0.627  0.718
-#> 3  98 0.147 1.000  0.775  0.734  0.816
-#> 4 109 0.151 1.000  0.815  0.777  0.853
-#> 5 114 0.151 1.000  0.845  0.810  0.880
-#> 6 119 0.149 1.000  0.855  0.820  0.890
-#> 7 161 0.150 1.000  0.935  0.911  0.959
+#> 1  50 0.167 1.000  0.520  0.385  0.652
+#> 2  77 0.151 1.000  0.672  0.625  0.717
+#> 3 120 0.149 1.000  0.840  0.801  0.873
+#> 4 162 0.152 1.000  0.935  0.906  0.955
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.
@@ -987,7 +985,7 @@ summary(out_n_lb)
 #>   rejection rate. If the null hypothesis is true, this is the Type I
 #>   error rate. If the null hypothesis is false, this is the power.
 #> - r.cilo,r.cihi: The confidence interval of the rejection rate, based
-#>   on normal approximation.
+#>   on Wilson's (1927) method.
 #> - Refer to the tests for the meanings of other columns.
 ```
 
@@ -1014,7 +1012,7 @@ different form the target power.
 That is, from the results above,
 we can conclude that, with 400 replications,
 sample sizes from
-91 to 114
+99 to 120
 have power levels
 not significantly different from .80.
 
