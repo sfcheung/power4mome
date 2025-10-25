@@ -1114,6 +1114,8 @@ x_from_power <- function(object,
                                               format = "f"),
                                       collapse = ", "),
                                "]"))
+      catwrap(paste0("- Changing the 'seed' to another value."),
+              exdent = 2)
       catwrap(paste0("- Changing 'x_interval' to a wider range to examine. ",
                      "(Current 'x_interval' is ",
                      tmp, ".)"),
