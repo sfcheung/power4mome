@@ -137,9 +137,12 @@ rejection_rates.default <- function(object,
 #' @param ci If `TRUE`, confidence
 #' intervals for the rejection rates
 #' (column `reject` or `sig`) will
-#' be computed. Normal approximation
-#' is used in forming the confidence
-#' intervals.
+#' be computed. The method is determined
+#' by the option `power4mome.ci_method`.
+#' If `NULL` or `"wilson"`, Wilson's
+#' (1927) method is used. If
+#' `"norm"`, normal approximation
+#' is used.
 #'
 #' @param level The level of confidence
 #' for the confidence intervals, if
@@ -175,6 +178,11 @@ rejection_rates.default <- function(object,
 #' significant for the set of tests to
 #' be considered significant.
 #'
+#' @references
+#' Wilson, E. B. (1927). Probable inference, the law of
+#' succession, and statistical inference.
+#' *Journal of the American Statistical Association, 22*(158),
+#' 209-212. \doi{10.1080/01621459.1927.10502953}
 #'
 #' @export
 #' @rdname rejection_rates
@@ -631,10 +639,15 @@ print.rejection_rates_df <- function(x,
                    "reject_ci_hi")
     if (tmp1 %in% colnames(x1)) {
       tmp <- paste0(tmp1, ",", tmp2)
+      tmp3 <- switch(getOption("power4mome.ci_method", default = "wilson"),
+                     wilson = "Wilson's (1927) method",
+                     norm = "normal approximation")
       catwrap(paste0("- ",
                      tmp,
                      ": The confidence interval ",
-                     "of the rejection rate, based on normal approximation."),
+                     "of the rejection rate, based on ",
+                     tmp3,
+                     "."),
               exdent = 2)
     }
     catwrap(paste0("- Refer to the tests for the meanings of other columns."),

@@ -185,9 +185,13 @@
 #' `NA` if a solution not found.
 #'
 #' - `ci_final`: The confidence interval
-#' of the estimated power in the solution,
-#' formed by normal approximation.
-#' `NA` if a solution not found.
+#' of the estimated power in the solution.
+#' The method is determined
+#' by the option `power4mome.ci_method`.
+#' If `NULL` or `"wilson"`, Wilson's
+#' (1927) method is used. If
+#' `"norm"`, normal approximation
+#' is used.
 #'
 #' - `ci_level`: The level of confidence
 #' of `ci_final`.
@@ -409,6 +413,11 @@
 #' of the same sign as the population
 #' value in `object` will be used.
 #'
+#' @references
+#' Wilson, E. B. (1927). Probable inference, the law of
+#' succession, and statistical inference.
+#' *Journal of the American Statistical Association, 22*(158),
+#' 209-212. \doi{10.1080/01621459.1927.10502953}
 #'
 #' @seealso [power4test()], [power4test_by_n()],
 #' and [power4test_by_es()].
