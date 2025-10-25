@@ -1,6 +1,6 @@
 ---
 title: "Quick Template: Simple Moderated Mediation with Observed Variables: b-Path Moderated"
-date: "2025-08-31"
+date: "2025-10-25"
 output:
   html_document:
     fig.align: "center"
@@ -247,10 +247,24 @@ print(out,
 #> m ~ x
 #> y ~ m + x + w + m:w
 #> 
+#> m ~~ m:w
+#> m:w ~~ w
+#> m ~~ w
+#> m:w ~~ x
+#> w ~~ x
+#> 
+#> 
 #> == Model on Variables/Indicators ==
 #> 
 #> m ~ x
 #> y ~ m + x + w + m:w
+#> 
+#> m ~~ m:w
+#> m:w ~~ w
+#> m ~~ w
+#> m:w ~~ x
+#> w ~~ x
+#> 
 #> 
 #> ====== Population Values ======
 #> 
@@ -348,6 +362,14 @@ print(out,
 #> 
 #> Covariances:
 #>                     est.std
+#>  .m ~~                     
+#>     m:w              -0.004
+#>   m:w ~~                   
+#>     w                -0.005
+#>  .m ~~                     
+#>     w                 0.006
+#>   m:w ~~                   
+#>     x                -0.000
 #>   x ~~                     
 #>     w                 0.006
 #> 
@@ -361,7 +383,7 @@ print(out,
 #> 
 #> ============ <fit> ============
 #> 
-#> lavaan 0.6-19 ended normally after 20 iterations
+#> lavaan 0.6-20 ended normally after 16 iterations
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
@@ -391,7 +413,7 @@ rejection_rates(out)
 #> [test]: test_index_of_mome: x->m->y, moderated by w 
 #> [test_label]: Test 
 #>     est   p.v reject r.cilo r.cihi
-#> 1 0.046 1.000  0.295  0.250  0.340
+#> 1 0.046 1.000  0.287  0.243  0.332
 #> Notes:
 #> - p.v: The proportion of valid replications.
 #> - est: The mean of the estimates in a test across replications.
@@ -481,13 +503,13 @@ n_power_region
 #> Solution: 
 #> 
 #> Approximate region of sample sizes with power:
-#> - not significantly different from 0.800: 290 to 346
-#> - significantly lower than 0.800: 290
-#> - significantly higher than 0.800: 346
+#> - not significantly different from 0.800: 278 to 357
+#> - significantly lower than 0.800: 278
+#> - significantly higher than 0.800: 357
 #> 
 #> Confidence intervals of the estimated power:
-#> - for the lower bound (290): [0.729, 0.811]
-#> - for the upper bound (346): [0.804, 0.876]
+#> - for the lower bound (278): [0.694, 0.781]
+#> - for the upper bound (357): [0.818, 0.887]
 #> 
 #> Call `summary()` for detailed results.
 
@@ -506,16 +528,16 @@ plot(n_power_region)
 As shown above, approximately:
 
 - sample sizes lower than
-  290 have
+  278 have
   power significantly lower than .80, and
 
 - sample sizes higher than
-  346 have
+  357 have
   power significantly higher than .80.
 
 In other words, sample sizes between
-290 and
-346 have
+278 and
+357 have
 power not significantly different from
 .80.
 
@@ -544,10 +566,10 @@ summary(n_power_region)
 #> 
 #> === Major Results ===
 #> 
-#> - Final Value (Sample Size): 290
+#> - Final Value (Sample Size): 278
 #> 
-#> - Final Estimated Power: 0.770 
-#> - Confidence Interval: [0.729; 0.811]
+#> - Final Estimated Power: 0.738 
+#> - Confidence Interval: [0.694; 0.781]
 #> - Level of confidence: 95.0%
 #> - Based on 400 replications.
 #> 
@@ -555,8 +577,8 @@ summary(n_power_region)
 #> 
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
-#> - The range of values explored: 100 to 420 
-#> - Time spent in the search: 2.699 mins 
+#> - The range of values explored: 100 to 278 
+#> - Time spent in the search: 35.12 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -574,23 +596,19 @@ summary(n_power_region)
 #> 
 #> Coefficients:
 #> (Intercept)            x  
-#>    -1.80105      0.01011  
+#>     -1.9978       0.0109  
 #> 
-#> Degrees of Freedom: 2399 Total (i.e. Null);  2398 Residual
-#> Null Deviance:	    2829 
-#> Residual Deviance: 2395 	AIC: 2399
+#> Degrees of Freedom: 799 Total (i.e. Null);  798 Residual
+#> Null Deviance:	    1109 
+#> Residual Deviance: 940.4 	AIC: 944.4
 #> 
 #> - Detailed Results:
 #> 
 #> [test]: test_index_of_mome: x->m->y, moderated by w 
 #> [test_label]: Test 
 #>     n   est   p.v reject r.cilo r.cihi
-#> 1 100 0.046 1.000  0.295  0.250  0.340
-#> 2 271 0.046 1.000  0.735  0.692  0.778
-#> 3 290 0.044 1.000  0.770  0.729  0.811
-#> 4 309 0.045 1.000  0.805  0.766  0.844
-#> 5 346 0.045 1.000  0.840  0.804  0.876
-#> 6 420 0.047 1.000  0.897  0.868  0.927
+#> 1 100 0.046 1.000  0.287  0.243  0.332
+#> 2 278 0.045 1.000  0.738  0.694  0.781
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.
@@ -621,28 +639,27 @@ summary(n_power_region)
 #> 
 #> === Major Results ===
 #> 
-#> - Final Value (Sample Size): 346
+#> - Final Value (Sample Size): 357
 #> 
-#> - Final Estimated Power: 0.840 
-#> - Confidence Interval: [0.804; 0.876]
+#> - Final Estimated Power: 0.853 
+#> - Confidence Interval: [0.818; 0.887]
 #> - Level of confidence: 95.0%
 #> - Based on 400 replications.
 #> 
 #> === Technical Information ===
 #> 
 #> - Algorithm: bisection 
-#> - Tolerance for 'close enough': Within  of 0.800 
-#> - The range of values explored: 100 to 420 
-#> - Time spent in the search: 0.08634 secs 
+#> - Tolerance for 'close enough': Within 0.02000 of 0.800 
+#> - The range of values explored: 278 to 520 
+#> - Time spent in the search: 2.114 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
 #> 
 #> Call:
-#> power_curve(object = by_x_1, formula = power_curve_args$power_model, 
-#>     start = power_curve_args$start, lower_bound = power_curve_args$lower_bound, 
-#>     upper_bound = power_curve_args$upper_bound, nls_args = power_curve_args$nls_args, 
-#>     nls_control = power_curve_args$nls_control, verbose = progress)
+#> power_curve(object = by_x_1, formula = power_model, start = power_curve_start, 
+#>     lower_bound = lower_bound, upper_bound = upper_bound, nls_args = nls_args, 
+#>     nls_control = nls_control, verbose = progress)
 #> 
 #> Predictor: n (Sample Size)
 #> 
@@ -652,23 +669,22 @@ summary(n_power_region)
 #> 
 #> Coefficients:
 #> (Intercept)            x  
-#>    -1.80105      0.01011  
+#>   -0.948174     0.007293  
 #> 
-#> Degrees of Freedom: 2399 Total (i.e. Null);  2398 Residual
-#> Null Deviance:	    2829 
-#> Residual Deviance: 2395 	AIC: 2399
+#> Degrees of Freedom: 1999 Total (i.e. Null);  1998 Residual
+#> Null Deviance:	    1765 
+#> Residual Deviance: 1683 	AIC: 1687
 #> 
 #> - Detailed Results:
 #> 
 #> [test]: test_index_of_mome: x->m->y, moderated by w 
 #> [test_label]: Test 
 #>     n   est   p.v reject r.cilo r.cihi
-#> 1 100 0.046 1.000  0.295  0.250  0.340
-#> 2 271 0.046 1.000  0.735  0.692  0.778
-#> 3 290 0.044 1.000  0.770  0.729  0.811
-#> 4 309 0.045 1.000  0.805  0.766  0.844
-#> 5 346 0.045 1.000  0.840  0.804  0.876
-#> 6 420 0.047 1.000  0.897  0.868  0.927
+#> 1 278 0.045 1.000  0.738  0.694  0.781
+#> 2 302 0.045 1.000  0.772  0.731  0.814
+#> 3 357 0.046 1.000  0.853  0.818  0.887
+#> 4 411 0.044 1.000  0.897  0.868  0.927
+#> 5 520 0.044 1.000  0.935  0.911  0.959
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.

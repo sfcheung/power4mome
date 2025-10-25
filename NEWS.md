@@ -1,3 +1,9 @@
+# power4mome 0.1.1.1
+
+- Improve the function for extending the
+  initial interval before doing a
+  bisection search. (0.1.1.1)
+
 # power4mome 0.1.1
 
 - Updated to be compatible with the

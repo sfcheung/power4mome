@@ -1,6 +1,6 @@
 ---
 title: "Power Analysis for Latent Variable Mediation"
-date: "2025-08-31"
+date: "2025-10-25"
 output:
   rmarkdown::html_vignette:
     options:
@@ -403,7 +403,7 @@ out
 #> 
 #> ============ <fit> ============
 #> 
-#> lavaan 0.6-19 ended normally after 44 iterations
+#> lavaan 0.6-20 ended normally after 44 iterations
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
@@ -755,7 +755,7 @@ out
 #> 
 #> ============ <fit> ============
 #> 
-#> lavaan 0.6-19 ended normally after 38 iterations
+#> lavaan 0.6-20 ended normally after 38 iterations
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
