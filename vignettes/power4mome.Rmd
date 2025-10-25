@@ -1,6 +1,6 @@
 ---
 title: "Power Analysis for Moderation, Mediation, and Moderated Mediation"
-date: "2025-10-25"
+date: "2025-10-26"
 output:
   rmarkdown::html_vignette:
     options:
@@ -683,7 +683,7 @@ out_power
 #>   rejection rate. If the null hypothesis is true, this is the Type I
 #>   error rate. If the null hypothesis is false, this is the power.
 #> - r.cilo,r.cihi: The confidence interval of the rejection rate, based
-#>   on normal approximation.
+#>   on Wilson's (1927) method.
 #> - Refer to the tests for the meanings of other columns.
 ```
 
@@ -1020,7 +1020,7 @@ out2_power
 #> [test]: test_moderation: CIs  
 #> [test_label]: y~x:w 
 #>     est   p.v reject r.cilo r.cihi
-#> 1 0.158 1.000  0.347  0.301  0.394
+#> 1 0.158 1.000  0.347  0.302  0.395
 #> Notes:
 #> - p.v: The proportion of valid replications.
 #> - est: The mean of the estimates in a test across replications.
@@ -1028,7 +1028,7 @@ out2_power
 #>   rejection rate. If the null hypothesis is true, this is the Type I
 #>   error rate. If the null hypothesis is false, this is the power.
 #> - r.cilo,r.cihi: The confidence interval of the rejection rate, based
-#>   on normal approximation.
+#>   on Wilson's (1927) method.
 #> - Refer to the tests for the meanings of other columns.
 ```
 
@@ -1038,7 +1038,7 @@ The estimated
 power of the test of the product term,
 `x:w`, is
 0.347, with 95% confidence
-interval [0.301; 0.394].
+interval [0.302; 0.395].
 
 # Moderated mediation
 
@@ -1316,7 +1316,7 @@ out3_power
 #> [test]: test_index_of_mome: x->m->y, moderated by w 
 #> [test_label]: Test 
 #>     est   p.v reject r.cilo r.cihi
-#> 1 0.016 1.000  0.055  0.033  0.077
+#> 1 0.016 1.000  0.055  0.037  0.082
 #> Notes:
 #> - p.v: The proportion of valid replications.
 #> - est: The mean of the estimates in a test across replications.
@@ -1324,7 +1324,7 @@ out3_power
 #>   rejection rate. If the null hypothesis is true, this is the Type I
 #>   error rate. If the null hypothesis is false, this is the power.
 #> - r.cilo,r.cihi: The confidence interval of the rejection rate, based
-#>   on normal approximation.
+#>   on Wilson's (1927) method.
 #> - Refer to the tests for the meanings of other columns.
 ```
 
@@ -1335,7 +1335,7 @@ power of the test of moderated mediation
 effect, conducted by a test of the
 index of moderated mediation, is
 0.055,
-95% confidence interval [0.033; 0.077].
+95% confidence interval [0.037; 0.082].
 
 Unlike the previous example on moderation
 tested by regression, estimating the power
@@ -1394,7 +1394,7 @@ out2_new_n_reject
 #>   rejection rate. If the null hypothesis is true, this is the Type I
 #>   error rate. If the null hypothesis is false, this is the power.
 #> - r.cilo,r.cihi: The confidence interval of the rejection rate, based
-#>   on normal approximation.
+#>   on Wilson's (1927) method.
 #> - Refer to the tests for the meanings of other columns.
 ```
 
@@ -1482,10 +1482,10 @@ rejection_rates(out2_several_ns)
 #> [test]: test_moderation: CIs  
 #> [test_label]: y~x:w 
 #>     n   est   p.v reject r.cilo r.cihi
-#> 1 250 0.149 1.000  0.660  0.614  0.706
-#> 2 300 0.150 1.000  0.733  0.689  0.776
-#> 3 350 0.151 1.000  0.810  0.772  0.848
-#> 4 400 0.150 1.000  0.850  0.815  0.885
+#> 1 250 0.149 1.000  0.660  0.612  0.705
+#> 2 300 0.150 1.000  0.733  0.687  0.774
+#> 3 350 0.151 1.000  0.810  0.769  0.845
+#> 4 400 0.150 1.000  0.850  0.812  0.882
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.
@@ -1494,7 +1494,7 @@ rejection_rates(out2_several_ns)
 #>   rejection rate. If the null hypothesis is true, this is the Type I
 #>   error rate. If the null hypothesis is false, this is the power.
 #> - r.cilo,r.cihi: The confidence interval of the rejection rate, based
-#>   on normal approximation.
+#>   on Wilson's (1927) method.
 #> - Refer to the tests for the meanings of other columns.
 ```
 

@@ -1,6 +1,6 @@
 ---
 title: "Quick Template: Simple Moderated Mediation with Observed Variables: a-Path Moderated"
-date: "2025-10-25"
+date: "2025-10-26"
 output:
   html_document:
     fig.align: "center"
@@ -406,7 +406,7 @@ rejection_rates(out)
 #> [test]: test_index_of_mome: x->m->y, moderated by w 
 #> [test_label]: Test 
 #>     est   p.v reject r.cilo r.cihi
-#> 1 0.077 1.000  0.362  0.315  0.410
+#> 1 0.077 1.000  0.362  0.317  0.411
 #> Notes:
 #> - p.v: The proportion of valid replications.
 #> - est: The mean of the estimates in a test across replications.
@@ -414,7 +414,7 @@ rejection_rates(out)
 #>   rejection rate. If the null hypothesis is true, this is the Type I
 #>   error rate. If the null hypothesis is false, this is the power.
 #> - r.cilo,r.cihi: The confidence interval of the rejection rate, based
-#>   on normal approximation.
+#>   on Wilson's (1927) method.
 #> - Refer to the tests for the meanings of other columns.
 ```
 
@@ -496,13 +496,13 @@ n_power_region
 #> Solution: 
 #> 
 #> Approximate region of sample sizes with power:
-#> - not significantly different from 0.800: 268 to 366
+#> - not significantly different from 0.800: 268 to 360
 #> - significantly lower than 0.800: 268
-#> - significantly higher than 0.800: 366
+#> - significantly higher than 0.800: 360
 #> 
 #> Confidence intervals of the estimated power:
-#> - for the lower bound (268): [0.702, 0.788]
-#> - for the upper bound (366): [0.815, 0.885]
+#> - for the lower bound (268): [0.700, 0.785]
+#> - for the upper bound (360): [0.812, 0.882]
 #> 
 #> Call `summary()` for detailed results.
 
@@ -525,12 +525,12 @@ As shown above, approximately:
   power significantly lower than .80, and
 
 - sample sizes higher than
-  366 have
+  360 have
   power significantly higher than .80.
 
 In other words, sample sizes between
 268 and
-366 have
+360 have
 power not significantly different from
 .80.
 
@@ -562,7 +562,7 @@ summary(n_power_region)
 #> - Final Value (Sample Size): 268
 #> 
 #> - Final Estimated Power: 0.745 
-#> - Confidence Interval: [0.702; 0.788]
+#> - Confidence Interval: [0.700; 0.785]
 #> - Level of confidence: 95.0%
 #> - Based on 400 replications.
 #> 
@@ -570,8 +570,8 @@ summary(n_power_region)
 #> 
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
-#> - The range of values explored: 100 to 406 
-#> - Time spent in the search: 2.086 mins 
+#> - The range of values explored: 100 to 408 
+#> - Time spent in the search: 2.131 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -589,22 +589,22 @@ summary(n_power_region)
 #> 
 #> Coefficients:
 #> (Intercept)            x  
-#>   -1.399834     0.008845  
+#>   -1.472763     0.009248  
 #> 
 #> Degrees of Freedom: 1999 Total (i.e. Null);  1998 Residual
-#> Null Deviance:	    2487 
-#> Residual Deviance: 2187 	AIC: 2191
+#> Null Deviance:	    2473 
+#> Residual Deviance: 2148 	AIC: 2152
 #> 
 #> - Detailed Results:
 #> 
 #> [test]: test_index_of_mome: x->m->y, moderated by w 
 #> [test_label]: Test 
 #>     n   est   p.v reject r.cilo r.cihi
-#> 1 100 0.077 1.000  0.362  0.315  0.410
-#> 2 221 0.074 1.000  0.640  0.593  0.687
-#> 3 268 0.075 1.000  0.745  0.702  0.788
-#> 4 314 0.078 1.000  0.797  0.758  0.837
-#> 5 406 0.074 1.000  0.887  0.857  0.918
+#> 1 100 0.077 1.000  0.362  0.317  0.411
+#> 2 221 0.074 1.000  0.640  0.592  0.686
+#> 3 268 0.075 1.000  0.745  0.700  0.785
+#> 4 315 0.076 1.000  0.800  0.758  0.836
+#> 5 408 0.076 1.000  0.907  0.875  0.932
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.
@@ -613,7 +613,7 @@ summary(n_power_region)
 #>   rejection rate. If the null hypothesis is true, this is the Type I
 #>   error rate. If the null hypothesis is false, this is the power.
 #> - r.cilo,r.cihi: The confidence interval of the rejection rate, based
-#>   on normal approximation.
+#>   on Wilson's (1927) method.
 #> - Refer to the tests for the meanings of other columns.
 #> 
 #> 
@@ -635,10 +635,10 @@ summary(n_power_region)
 #> 
 #> === Major Results ===
 #> 
-#> - Final Value (Sample Size): 366
+#> - Final Value (Sample Size): 360
 #> 
 #> - Final Estimated Power: 0.850 
-#> - Confidence Interval: [0.815; 0.885]
+#> - Confidence Interval: [0.812; 0.882]
 #> - Level of confidence: 95.0%
 #> - Based on 400 replications.
 #> 
@@ -646,8 +646,8 @@ summary(n_power_region)
 #> 
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
-#> - The range of values explored: 366 to 406 
-#> - Time spent in the search: 34.83 secs 
+#> - The range of values explored: 360 to 408 
+#> - Time spent in the search: 31.87 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -665,19 +665,19 @@ summary(n_power_region)
 #> 
 #> Coefficients:
 #> (Intercept)            x  
-#>   -1.292715     0.008271  
+#>    -2.38203      0.01144  
 #> 
 #> Degrees of Freedom: 799 Total (i.e. Null);  798 Residual
-#> Null Deviance:	    622 
-#> Residual Deviance: 619.5 	AIC: 623.5
+#> Null Deviance:	    591.1 
+#> Residual Deviance: 584.8 	AIC: 588.8
 #> 
 #> - Detailed Results:
 #> 
 #> [test]: test_index_of_mome: x->m->y, moderated by w 
 #> [test_label]: Test 
 #>     n   est   p.v reject r.cilo r.cihi
-#> 1 366 0.075 1.000  0.850  0.815  0.885
-#> 2 406 0.074 1.000  0.887  0.857  0.918
+#> 1 360 0.075 1.000  0.850  0.812  0.882
+#> 2 408 0.076 1.000  0.907  0.875  0.932
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.
@@ -686,7 +686,7 @@ summary(n_power_region)
 #>   rejection rate. If the null hypothesis is true, this is the Type I
 #>   error rate. If the null hypothesis is false, this is the power.
 #> - r.cilo,r.cihi: The confidence interval of the rejection rate, based
-#>   on normal approximation.
+#>   on Wilson's (1927) method.
 #> - Refer to the tests for the meanings of other columns.
 ```
 

@@ -1319,9 +1319,15 @@ gen_objective <- function(object,
 
     # ==== Compute CI ====
 
-    a <- abs(stats::qnorm((1 - ci_level) / 2))
+    # a <- abs(stats::qnorm((1 - ci_level) / 2))
     se_i <- sqrt(power_i * (1 - power_i) / nrep)
-    ci_i <- power_i + c(-a, a) * se_i
+    # ci_i <- power_i + c(-a, a) * se_i
+    ci_i <- reject_ci(
+              nreject = round(power_i * nrep),
+              nvalid = nrep,
+              level = ci_level,
+              method = getOption("power4mome.ci_method", default = "wilson"))
+    ci_i <- as.vector(ci_i)
 
     if (progress) {
       tmp1 <- formatC(power_i, digits = digits, format = "f")

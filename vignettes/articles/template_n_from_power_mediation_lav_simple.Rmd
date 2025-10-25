@@ -1,6 +1,6 @@
 ---
 title: "Quick Template: Simple Mediation with Latent Variables"
-date: "2025-10-25"
+date: "2025-10-26"
 output:
   html_document:
     fig.align: "center"
@@ -392,7 +392,7 @@ rejection_rates(out)
 #>   rejection rate. If the null hypothesis is true, this is the Type I
 #>   error rate. If the null hypothesis is false, this is the power.
 #> - r.cilo,r.cihi: The confidence interval of the rejection rate, based
-#>   on normal approximation.
+#>   on Wilson's (1927) method.
 #> - Refer to the tests for the meanings of other columns.
 ```
 
@@ -479,8 +479,8 @@ n_power_region
 #> - significantly higher than 0.800: 182
 #> 
 #> Confidence intervals of the estimated power:
-#> - for the lower bound (145): [0.726, 0.809]
-#> - for the upper bound (182): [0.807, 0.878]
+#> - for the lower bound (145): [0.724, 0.806]
+#> - for the upper bound (182): [0.804, 0.875]
 #> 
 #> Call `summary()` for detailed results.
 
@@ -540,7 +540,7 @@ summary(n_power_region)
 #> - Final Value (Sample Size): 145
 #> 
 #> - Final Estimated Power: 0.767 
-#> - Confidence Interval: [0.726; 0.809]
+#> - Confidence Interval: [0.724; 0.806]
 #> - Level of confidence: 95.0%
 #> - Based on 400 replications.
 #> 
@@ -549,7 +549,7 @@ summary(n_power_region)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 100 to 160 
-#> - Time spent in the search: 57.16 secs 
+#> - Time spent in the search: 1.136 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -579,9 +579,9 @@ summary(n_power_region)
 #> [test_label]: Test 
 #>     n   est   p.v reject r.cilo r.cihi
 #> 1 100 0.168 0.998  0.499  0.450  0.548
-#> 2 130 0.167 1.000  0.708  0.663  0.752
-#> 3 145 0.159 1.000  0.767  0.726  0.809
-#> 4 160 0.164 1.000  0.807  0.769  0.846
+#> 2 130 0.167 1.000  0.708  0.661  0.750
+#> 3 145 0.159 1.000  0.767  0.724  0.806
+#> 4 160 0.164 1.000  0.807  0.766  0.843
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.
@@ -590,7 +590,7 @@ summary(n_power_region)
 #>   rejection rate. If the null hypothesis is true, this is the Type I
 #>   error rate. If the null hypothesis is false, this is the power.
 #> - r.cilo,r.cihi: The confidence interval of the rejection rate, based
-#>   on normal approximation.
+#>   on Wilson's (1927) method.
 #> - Refer to the tests for the meanings of other columns.
 #> 
 #> 
@@ -615,7 +615,7 @@ summary(n_power_region)
 #> - Final Value (Sample Size): 182
 #> 
 #> - Final Estimated Power: 0.843 
-#> - Confidence Interval: [0.807; 0.878]
+#> - Confidence Interval: [0.804; 0.875]
 #> - Level of confidence: 95.0%
 #> - Based on 400 replications.
 #> 
@@ -624,7 +624,7 @@ summary(n_power_region)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 159 to 245 
-#> - Time spent in the search: 1.278 mins 
+#> - Time spent in the search: 1.512 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -653,11 +653,11 @@ summary(n_power_region)
 #> [test]: test_indirect: x->m->y 
 #> [test_label]: Test 
 #>     n   est   p.v reject r.cilo r.cihi
-#> 1 159 0.157 1.000  0.797  0.758  0.837
-#> 2 160 0.164 1.000  0.807  0.769  0.846
-#> 3 182 0.157 1.000  0.843  0.807  0.878
-#> 4 203 0.162 1.000  0.902  0.873  0.932
-#> 5 245 0.156 1.000  0.953  0.932  0.973
+#> 1 159 0.157 1.000  0.797  0.755  0.834
+#> 2 160 0.164 1.000  0.807  0.766  0.843
+#> 3 182 0.157 1.000  0.843  0.804  0.875
+#> 4 203 0.162 1.000  0.902  0.869  0.928
+#> 5 245 0.156 1.000  0.953  0.927  0.969
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.
@@ -666,7 +666,7 @@ summary(n_power_region)
 #>   rejection rate. If the null hypothesis is true, this is the Type I
 #>   error rate. If the null hypothesis is false, this is the power.
 #> - r.cilo,r.cihi: The confidence interval of the rejection rate, based
-#>   on normal approximation.
+#>   on Wilson's (1927) method.
 #> - Refer to the tests for the meanings of other columns.
 ```
 

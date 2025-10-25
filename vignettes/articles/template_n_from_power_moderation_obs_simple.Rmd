@@ -1,6 +1,6 @@
 ---
 title: "Quick Template: Simple Moderation with Observed Variables"
-date: "2025-10-25"
+date: "2025-10-26"
 output:
   html_document:
     fig.align: "center"
@@ -350,7 +350,7 @@ print(out,
 #> 
 #> The models:
 #> y ~ x + w + x:w
-#> <environment: 0x0000021619c34430>
+#> <environment: 0x0000020858857e40>
 #> 
 #> 
 #> ====================== Test(s) Conducted ======================
@@ -362,7 +362,7 @@ rejection_rates(out)
 #> [test]: test_parameters: CIs (pars: y~x:w) 
 #> [test_label]: y~x:w 
 #>     est   p.v reject r.cilo r.cihi
-#> 1 0.146 1.000  0.172  0.135  0.210
+#> 1 0.146 1.000  0.172  0.139  0.213
 #> Notes:
 #> - p.v: The proportion of valid replications.
 #> - est: The mean of the estimates in a test across replications.
@@ -370,7 +370,7 @@ rejection_rates(out)
 #>   rejection rate. If the null hypothesis is true, this is the Type I
 #>   error rate. If the null hypothesis is false, this is the power.
 #> - r.cilo,r.cihi: The confidence interval of the rejection rate, based
-#>   on normal approximation.
+#>   on Wilson's (1927) method.
 #> - Refer to the tests for the meanings of other columns.
 ```
 
@@ -452,13 +452,13 @@ n_power_region
 #> Solution: 
 #> 
 #> Approximate region of sample sizes with power:
-#> - not significantly different from 0.800: 303 to 371
+#> - not significantly different from 0.800: 303 to 336
 #> - significantly lower than 0.800: 303
-#> - significantly higher than 0.800: 371
+#> - significantly higher than 0.800: 336
 #> 
 #> Confidence intervals of the estimated power:
-#> - for the lower bound (303): [0.718, 0.802]
-#> - for the upper bound (371): [0.812, 0.883]
+#> - for the lower bound (303): [0.716, 0.799]
+#> - for the upper bound (336): [0.809, 0.879]
 #> 
 #> Call `summary()` for detailed results.
 
@@ -481,12 +481,12 @@ As shown above, approximately:
   power significantly lower than .80, and
 
 - sample sizes higher than
-  371 have
+  336 have
   power significantly higher than .80.
 
 In other words, sample sizes between
 303 and
-371 have
+336 have
 power not significantly different from
 .80.
 
@@ -518,7 +518,7 @@ summary(n_power_region)
 #> - Final Value (Sample Size): 303
 #> 
 #> - Final Estimated Power: 0.760 
-#> - Confidence Interval: [0.718; 0.802]
+#> - Confidence Interval: [0.716; 0.799]
 #> - Level of confidence: 95.0%
 #> - Based on 400 replications.
 #> 
@@ -527,7 +527,7 @@ summary(n_power_region)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 232 to 50 
-#> - Time spent in the search: 20.7 secs 
+#> - Time spent in the search: 21.68 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -545,21 +545,21 @@ summary(n_power_region)
 #> 
 #> Coefficients:
 #> (Intercept)            x  
-#>   -1.809119     0.009846  
+#>     -1.9878       0.0111  
 #> 
 #> Degrees of Freedom: 1599 Total (i.e. Null);  1598 Residual
-#> Null Deviance:	    2134 
-#> Residual Deviance: 1698 	AIC: 1702
+#> Null Deviance:	    2104 
+#> Residual Deviance: 1582 	AIC: 1586
 #> 
 #> - Detailed Results:
 #> 
 #> [test]: test_parameters: CIs (pars: y~x:w) 
 #> [test_label]: y~x:w 
 #>     n   est   p.v reject r.cilo r.cihi
-#> 1  50 0.146 1.000  0.172  0.135  0.210
-#> 2 232 0.154 1.000  0.708  0.663  0.752
-#> 3 303 0.148 1.000  0.760  0.718  0.802
-#> 4 373 0.147 1.000  0.818  0.780  0.855
+#> 1  50 0.146 1.000  0.172  0.139  0.213
+#> 2 232 0.154 1.000  0.708  0.661  0.750
+#> 3 303 0.148 1.000  0.760  0.716  0.799
+#> 4 374 0.156 1.000  0.890  0.856  0.917
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.
@@ -568,7 +568,7 @@ summary(n_power_region)
 #>   rejection rate. If the null hypothesis is true, this is the Type I
 #>   error rate. If the null hypothesis is false, this is the power.
 #> - r.cilo,r.cihi: The confidence interval of the rejection rate, based
-#>   on normal approximation.
+#>   on Wilson's (1927) method.
 #> - Refer to the tests for the meanings of other columns.
 #> 
 #> 
@@ -590,10 +590,10 @@ summary(n_power_region)
 #> 
 #> === Major Results ===
 #> 
-#> - Final Value (Sample Size): 371
+#> - Final Value (Sample Size): 336
 #> 
 #> - Final Estimated Power: 0.848 
-#> - Confidence Interval: [0.812; 0.883]
+#> - Confidence Interval: [0.809; 0.879]
 #> - Level of confidence: 95.0%
 #> - Based on 400 replications.
 #> 
@@ -601,8 +601,8 @@ summary(n_power_region)
 #> 
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
-#> - The range of values explored: 365 to 373 
-#> - Time spent in the search: 21.05 secs 
+#> - The range of values explored: 336 to 374 
+#> - Time spent in the search: 6.833 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -620,21 +620,19 @@ summary(n_power_region)
 #> 
 #> Coefficients:
 #> (Intercept)            x  
-#>     15.1241      -0.0362  
+#>   -1.606100     0.009885  
 #> 
-#> Degrees of Freedom: 1599 Total (i.e. Null);  1598 Residual
-#> Null Deviance:	    1346 
-#> Residual Deviance: 1343 	AIC: 1347
+#> Degrees of Freedom: 799 Total (i.e. Null);  798 Residual
+#> Null Deviance:	    622 
+#> Residual Deviance: 618.8 	AIC: 622.8
 #> 
 #> - Detailed Results:
 #> 
 #> [test]: test_parameters: CIs (pars: y~x:w) 
 #> [test_label]: y~x:w 
 #>     n   est   p.v reject r.cilo r.cihi
-#> 1 365 0.153 1.000  0.855  0.820  0.890
-#> 2 369 0.154 1.000  0.885  0.854  0.916
-#> 3 371 0.152 1.000  0.848  0.812  0.883
-#> 4 373 0.147 1.000  0.818  0.780  0.855
+#> 1 336 0.154 1.000  0.848  0.809  0.879
+#> 2 374 0.156 1.000  0.890  0.856  0.917
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.
@@ -643,7 +641,7 @@ summary(n_power_region)
 #>   rejection rate. If the null hypothesis is true, this is the Type I
 #>   error rate. If the null hypothesis is false, this is the power.
 #> - r.cilo,r.cihi: The confidence interval of the rejection rate, based
-#>   on normal approximation.
+#>   on Wilson's (1927) method.
 #> - Refer to the tests for the meanings of other columns.
 ```
 
