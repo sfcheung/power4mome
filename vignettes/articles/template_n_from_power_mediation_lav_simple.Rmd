@@ -1,6 +1,6 @@
 ---
 title: "Quick Template: Simple Mediation with Latent Variables"
-date: "2025-08-31"
+date: "2025-10-25"
 output:
   html_document:
     fig.align: "center"
@@ -353,7 +353,7 @@ print(out,
 #> 
 #> ============ <fit> ============
 #> 
-#> lavaan 0.6-19 ended normally after 27 iterations
+#> lavaan 0.6-20 ended normally after 27 iterations
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
@@ -549,7 +549,7 @@ summary(n_power_region)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 100 to 160 
-#> - Time spent in the search: 58.24 secs 
+#> - Time spent in the search: 57.16 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -624,7 +624,7 @@ summary(n_power_region)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 159 to 245 
-#> - Time spent in the search: 1.287 mins 
+#> - Time spent in the search: 1.278 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 

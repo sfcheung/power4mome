@@ -1,6 +1,6 @@
 ---
 title: "Power Analysis for Moderation, Mediation, and Moderated Mediation"
-date: "2025-08-31"
+date: "2025-10-25"
 output:
   rmarkdown::html_vignette:
     options:
@@ -290,7 +290,7 @@ out
 #> 
 #> ============ <fit> ============
 #> 
-#> lavaan 0.6-19 ended normally after 1 iteration
+#> lavaan 0.6-20 ended normally after 1 iteration
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
@@ -407,7 +407,7 @@ print(out,
 #> 
 #> ============ <fit> ============
 #> 
-#> lavaan 0.6-19 ended normally after 1 iteration
+#> lavaan 0.6-20 ended normally after 1 iteration
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
@@ -600,7 +600,7 @@ out
 #> 
 #> ============ <fit> ============
 #> 
-#> lavaan 0.6-19 ended normally after 1 iteration
+#> lavaan 0.6-20 ended normally after 1 iteration
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
@@ -928,7 +928,7 @@ print(out2,
 #> 
 #> ============ <fit> ============
 #> 
-#> lavaan 0.6-19 ended normally after 1 iteration
+#> lavaan 0.6-20 ended normally after 1 iteration
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
@@ -1232,7 +1232,7 @@ print(out3,
 #> 
 #> ============ <fit> ============
 #> 
-#> lavaan 0.6-19 ended normally after 1 iteration
+#> lavaan 0.6-20 ended normally after 1 iteration
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
