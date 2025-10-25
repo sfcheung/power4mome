@@ -185,9 +185,16 @@ rejection_rates_add_ci <- function(object,
     df1$reject <- df1$sig
   }
   df1$reject_se <- sqrt(reject * (1 - reject) / df1$nvalid)
-  a <- stats::qnorm(1 - (1 - level) / 2)
-  df1$reject_ci_lo <- reject - a * df1$reject_se
-  df1$reject_ci_hi <- reject + a * df1$reject_se
+  # a <- stats::qnorm(1 - (1 - level) / 2)
+  # df1$reject_ci_lo <- reject - a * df1$reject_se
+  # df1$reject_ci_hi <- reject + a * df1$reject_se
+  ci_i <- reject_ci(
+            nreject = round(reject * df1$nvalid),
+            nvalid = df1$nvalid,
+            level = level,
+            method = "norm")
+  df1$reject_ci_lo <- as.vector(ci_i[, 1])
+  df1$reject_ci_hi <- as.vector(ci_i[, 2])
   if (!add_se) {
     df1$reject_se <- NULL
   }
@@ -533,11 +540,17 @@ check_solution <- function(f_i,
     return(FALSE)
   }
   goal <- match.arg(goal)
-  a <- abs(stats::qnorm((1 - ci_level) / 2))
+  # a <- abs(stats::qnorm((1 - ci_level) / 2))
   se_i <- sqrt(f_i * (1 - f_i) / nrep)
-  cilb <- f_i - a * se_i
-  ciub <- f_i + a * se_i
-
+  # cilb <- f_i - a * se_i
+  # ciub <- f_i + a * se_i
+  ci_i <- reject_ci(
+            nreject = round(f_i * nrep),
+            nvalid = nrep,
+            level = ci_level,
+            method = "norm")
+  cilb <- as.vector(ci_i[, 1])
+  ciub <- as.vector(ci_i[, 2])
   if (goal == "ci_hit") {
     # Ignore what
     if ((cilb < target_power) && (ciub > target_power)) {
