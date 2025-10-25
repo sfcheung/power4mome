@@ -300,9 +300,13 @@ of the value in the solution.
 solution in \code{power4test_trials}.
 \code{NA} if a solution not found.
 \item \code{ci_final}: The confidence interval
-of the estimated power in the solution,
-formed by normal approximation.
-\code{NA} if a solution not found.
+of the estimated power in the solution.
+The method is determined
+by the option \code{power4mome.ci_method}.
+If \code{NULL} or \code{"wilson"}, Wilson's
+(1927) method is used. If
+\code{"norm"}, normal approximation
+is used.
 \item \code{ci_level}: The level of confidence
 of \code{ci_final}.
 \item \code{nrep_final}: The number of
@@ -575,6 +579,12 @@ summary(power_vs_n)
 plot(power_vs_n)
 
 
+}
+\references{
+Wilson, E. B. (1927). Probable inference, the law of
+succession, and statistical inference.
+\emph{Journal of the American Statistical Association, 22}(158),
+209-212. \doi{10.1080/01621459.1927.10502953}
 }
 \seealso{
 \code{\link[=power4test]{power4test()}}, \code{\link[=power4test_by_n]{power4test_by_n()}},

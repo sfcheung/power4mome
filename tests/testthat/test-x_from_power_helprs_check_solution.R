@@ -12,6 +12,15 @@ p_ci <- function(x,
   c(cilb, ciub)
 }
 
+# Use Wilson CI
+p_ci <- function(x,
+                 nrep,
+                 ci_level = .95) {
+  reject_ci_wilson(round(x * nrep),
+                   nrep,
+                   ci_level)
+}
+
 
 reject_out <- data.frame(nrep = c(60, 60, 50),
                          reject = c(.60, .70, .80))
@@ -57,7 +66,7 @@ chk3 <- check_solution_in_by_x(
 )
 
 expect_equal(chk3,
-             c(FALSE, FALSE, FALSE))
+             c(FALSE, FALSE, TRUE))
 
 chk4 <- check_solution_in_by_x(
   reject_out,

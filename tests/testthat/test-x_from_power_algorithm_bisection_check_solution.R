@@ -12,6 +12,15 @@ ci_from_f <- function(f_i,
   c(cilb, ciub)
 }
 
+# Use Wilson CI
+ci_from_f <- function(f_i,
+                      nrep,
+                      ci_level = .95) {
+  reject_ci_wilson(round(f_i * nrep),
+                   nrep,
+                   ci_level)
+}
+
 ci_from_f(.70, 100)
 expect_false(check_solution(
                .70,
@@ -54,9 +63,9 @@ expect_true(check_solution(
               goal = "close_enough"
             ))
 
-ci_from_f(.60, 25)
+ci_from_f(.65, 25)
 expect_true(check_solution(
-              .60,
+              .65,
               target_power = .80,
               nrep = 25,
               final_nrep = 25,

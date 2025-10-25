@@ -67,9 +67,12 @@ power will be printed.}
 \item{ci}{If \code{TRUE}, confidence
 intervals for the rejection rates
 (column \code{reject} or \code{sig}) will
-be computed. Normal approximation
-is used in forming the confidence
-intervals.}
+be computed. The method is determined
+by the option \code{power4mome.ci_method}.
+If \code{NULL} or \code{"wilson"}, Wilson's
+(1927) method is used. If
+\code{"norm"}, normal approximation
+is used.}
 
 \item{level}{The level of confidence
 for the confidence intervals, if
@@ -257,6 +260,12 @@ rejection_rates(test_out)
 # See the help pages of power4test_by_n() and power4test_by_es()
 # for other examples.
 
+}
+\references{
+Wilson, E. B. (1927). Probable inference, the law of
+succession, and statistical inference.
+\emph{Journal of the American Statistical Association, 22}(158),
+209-212. \doi{10.1080/01621459.1927.10502953}
 }
 \seealso{
 \code{\link[=power4test]{power4test()}},
