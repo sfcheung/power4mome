@@ -962,15 +962,6 @@ extend_interval <- function(f,
 
   # ==== How should the interval be extended? ====
 
-  # slope <- (f.upper - f.lower) / (upper - lower)
-  # intercept <- -slope * lower +  f.lower
-  # # TODO:
-  # # - Need to optimize the code to reduce duplications
-  # extend_up <- ((slope > 0) && (f.upper < 0)) ||
-  #               ((slope < 0) && (f.upper > 0))
-  # extend_down <- ((slope > 0) && (f.upper > 0)) ||
-  #                 ((slope < 0) && (f.upper < 0))
-
   extend_which <- check_extend_x(
                     upper = upper,
                     lower = lower,
