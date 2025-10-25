@@ -4,7 +4,7 @@ reject_ci <- function(
       nreject,
       nvalid,
       level = .95,
-      method = c("norm", "wilson")
+      method = c("wilson", "norm")
     ) {
   method <- match.arg(method)
   out <- switch(method,
@@ -42,5 +42,11 @@ reject_ci_wilson <- function(
       nvalid,
       level
     ) {
-  stop("Wilson CI not yet supported")
+  z0 <- abs(stats::qnorm((1 - level) / 2, lower.tail = FALSE))
+  a1 <- (nreject + z0^2 / 2) / (nvalid + z0^2)
+  a2 <- (z0 / (nvalid + z0^2)) * sqrt(nreject * (nvalid - nreject) / nvalid + z0^2 / 4)
+  reject_ci_lo <- a1 - a2
+  reject_ci_hi <- a1 + a2
+  cbind(cilo = reject_ci_lo,
+        cihi = reject_ci_hi)
 }

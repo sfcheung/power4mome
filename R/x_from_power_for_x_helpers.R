@@ -192,7 +192,7 @@ rejection_rates_add_ci <- function(object,
             nreject = round(reject * df1$nvalid),
             nvalid = df1$nvalid,
             level = level,
-            method = "norm")
+            method = "wilson")
   df1$reject_ci_lo <- as.vector(ci_i[, 1])
   df1$reject_ci_hi <- as.vector(ci_i[, 2])
   if (!add_se) {
@@ -548,7 +548,7 @@ check_solution <- function(f_i,
             nreject = round(f_i * nrep),
             nvalid = nrep,
             level = ci_level,
-            method = "norm")
+            method = "wilson")
   cilb <- as.vector(ci_i[, 1])
   ciub <- as.vector(ci_i[, 2])
   if (goal == "ci_hit") {

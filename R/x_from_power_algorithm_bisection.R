@@ -1326,7 +1326,7 @@ gen_objective <- function(object,
               nreject = round(power_i * nrep),
               nvalid = nrep,
               level = ci_level,
-              method = "norm")
+              method = "wilson")
     ci_i <- as.vector(ci_i)
 
     if (progress) {
