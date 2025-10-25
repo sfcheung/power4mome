@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -90,7 +90,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Quick Template: Moderation with Observed Variables: Two Moderators</h1>
             
-            <h4 data-toc-skip class="date">2025-10-25</h4>
+            <h4 data-toc-skip class="date">2025-10-26</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/sfcheung/power4mome/blob/main/vignettes/articles/template_n_from_power_moderation_obs_two_ws.Rmd" class="external-link"><code>vignettes/articles/template_n_from_power_moderation_obs_two_ws.Rmd</code></a></small>
       <div class="d-none name"><code>template_n_from_power_moderation_obs_two_ws.Rmd</code></div>
@@ -425,7 +425,7 @@ The Model
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; The models:</span></span>
 <span><span class="co">#&gt; y ~ x + w1 + w2 + x:w1 + x:w2</span></span>
-<span><span class="co">#&gt; &lt;environment: 0x00000213f895ba50&gt;</span></span>
+<span><span class="co">#&gt; &lt;environment: 0x00000208641ac778&gt;</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ====================== Test(s) Conducted ======================</span></span>
@@ -437,7 +437,7 @@ The Model
 <span><span class="co">#&gt; [test]: test_parameters: CIs (pars: y~x:w1,y~x:w2) </span></span>
 <span><span class="co">#&gt; [test_label]: All sig </span></span>
 <span><span class="co">#&gt;    est   p.v reject r.cilo r.cihi</span></span>
-<span><span class="co">#&gt; 1  NaN 1.000  0.062  0.039  0.086</span></span>
+<span><span class="co">#&gt; 1  NaN 1.000  0.062  0.043  0.091</span></span>
 <span><span class="co">#&gt; Notes:</span></span>
 <span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>
 <span><span class="co">#&gt; - est: The mean of the estimates in a test across replications.</span></span>
@@ -445,7 +445,7 @@ The Model
 <span><span class="co">#&gt;   rejection rate. If the null hypothesis is true, this is the Type I</span></span>
 <span><span class="co">#&gt;   error rate. If the null hypothesis is false, this is the power.</span></span>
 <span><span class="co">#&gt; - r.cilo,r.cihi: The confidence interval of the rejection rate, based</span></span>
-<span><span class="co">#&gt;   on normal approximation.</span></span>
+<span><span class="co">#&gt;   on Wilson's (1927) method.</span></span>
 <span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -514,8 +514,8 @@ size is too different from the target power.</p>
 <span><span class="co">#&gt; - significantly higher than 0.800: 838</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Confidence intervals of the estimated power:</span></span>
-<span><span class="co">#&gt; - for the lower bound (709): [0.721, 0.804]</span></span>
-<span><span class="co">#&gt; - for the upper bound (838): [0.796, 0.869]</span></span>
+<span><span class="co">#&gt; - for the lower bound (709): [0.718, 0.802]</span></span>
+<span><span class="co">#&gt; - for the upper bound (838): [0.793, 0.866]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call `summary()` for detailed results.</span></span>
 <span></span>
@@ -562,7 +562,7 @@ significantly different from .80.</p>
 <span><span class="co">#&gt; - Final Value (Sample Size): 709</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - Final Estimated Power: 0.762 </span></span>
-<span><span class="co">#&gt; - Confidence Interval: [0.721; 0.804]</span></span>
+<span><span class="co">#&gt; - Confidence Interval: [0.718; 0.802]</span></span>
 <span><span class="co">#&gt; - Level of confidence: 95.0%</span></span>
 <span><span class="co">#&gt; - Based on 400 replications.</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -571,7 +571,7 @@ significantly different from .80.</p>
 <span><span class="co">#&gt; - Algorithm: bisection </span></span>
 <span><span class="co">#&gt; - Tolerance for 'close enough': Within 0.02000 of 0.800 </span></span>
 <span><span class="co">#&gt; - The range of values explored: 100 to 985 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 58.37 secs </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 59.23 secs </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
@@ -600,14 +600,14 @@ significantly different from .80.</p>
 <span><span class="co">#&gt; [test]: test_parameters: CIs (pars: y~x:w1,y~x:w2) </span></span>
 <span><span class="co">#&gt; [test_label]: All sig </span></span>
 <span><span class="co">#&gt;      n  est   p.v reject r.cilo r.cihi</span></span>
-<span><span class="co">#&gt; 1  100  NaN 1.000  0.062  0.039  0.086</span></span>
-<span><span class="co">#&gt; 2  690  NaN 1.000  0.715  0.671  0.759</span></span>
-<span><span class="co">#&gt; 3  709  NaN 1.000  0.762  0.721  0.804</span></span>
-<span><span class="co">#&gt; 4  727  NaN 1.000  0.787  0.747  0.828</span></span>
-<span><span class="co">#&gt; 5  764  NaN 1.000  0.830  0.793  0.867</span></span>
-<span><span class="co">#&gt; 6  838  NaN 1.000  0.833  0.796  0.869</span></span>
-<span><span class="co">#&gt; 7  985  NaN 1.000  0.890  0.859  0.921</span></span>
-<span><span class="co">#&gt; 8 1280  NaN 1.000  0.935  0.911  0.959</span></span>
+<span><span class="co">#&gt; 1  100  NaN 1.000  0.062  0.043  0.091</span></span>
+<span><span class="co">#&gt; 2  690  NaN 1.000  0.715  0.669  0.757</span></span>
+<span><span class="co">#&gt; 3  709  NaN 1.000  0.762  0.718  0.802</span></span>
+<span><span class="co">#&gt; 4  727  NaN 1.000  0.787  0.745  0.825</span></span>
+<span><span class="co">#&gt; 5  764  NaN 1.000  0.830  0.790  0.864</span></span>
+<span><span class="co">#&gt; 6  838  NaN 1.000  0.833  0.793  0.866</span></span>
+<span><span class="co">#&gt; 7  985  NaN 1.000  0.890  0.856  0.917</span></span>
+<span><span class="co">#&gt; 8 1280  NaN 1.000  0.935  0.906  0.955</span></span>
 <span><span class="co">#&gt; Notes:</span></span>
 <span><span class="co">#&gt; - n: The sample size in a trial.</span></span>
 <span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>
@@ -616,7 +616,7 @@ significantly different from .80.</p>
 <span><span class="co">#&gt;   rejection rate. If the null hypothesis is true, this is the Type I</span></span>
 <span><span class="co">#&gt;   error rate. If the null hypothesis is false, this is the power.</span></span>
 <span><span class="co">#&gt; - r.cilo,r.cihi: The confidence interval of the rejection rate, based</span></span>
-<span><span class="co">#&gt;   on normal approximation.</span></span>
+<span><span class="co">#&gt;   on Wilson's (1927) method.</span></span>
 <span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
@@ -641,7 +641,7 @@ significantly different from .80.</p>
 <span><span class="co">#&gt; - Final Value (Sample Size): 838</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - Final Estimated Power: 0.833 </span></span>
-<span><span class="co">#&gt; - Confidence Interval: [0.796; 0.869]</span></span>
+<span><span class="co">#&gt; - Confidence Interval: [0.793; 0.866]</span></span>
 <span><span class="co">#&gt; - Level of confidence: 95.0%</span></span>
 <span><span class="co">#&gt; - Based on 400 replications.</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -650,7 +650,7 @@ significantly different from .80.</p>
 <span><span class="co">#&gt; - Algorithm: bisection </span></span>
 <span><span class="co">#&gt; - Tolerance for 'close enough': Within  of 0.800 </span></span>
 <span><span class="co">#&gt; - The range of values explored: 100 to 985 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 0.5784 secs </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 0.5908 secs </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
@@ -680,14 +680,14 @@ significantly different from .80.</p>
 <span><span class="co">#&gt; [test]: test_parameters: CIs (pars: y~x:w1,y~x:w2) </span></span>
 <span><span class="co">#&gt; [test_label]: All sig </span></span>
 <span><span class="co">#&gt;      n  est   p.v reject r.cilo r.cihi</span></span>
-<span><span class="co">#&gt; 1  100  NaN 1.000  0.062  0.039  0.086</span></span>
-<span><span class="co">#&gt; 2  690  NaN 1.000  0.715  0.671  0.759</span></span>
-<span><span class="co">#&gt; 3  709  NaN 1.000  0.762  0.721  0.804</span></span>
-<span><span class="co">#&gt; 4  727  NaN 1.000  0.787  0.747  0.828</span></span>
-<span><span class="co">#&gt; 5  764  NaN 1.000  0.830  0.793  0.867</span></span>
-<span><span class="co">#&gt; 6  838  NaN 1.000  0.833  0.796  0.869</span></span>
-<span><span class="co">#&gt; 7  985  NaN 1.000  0.890  0.859  0.921</span></span>
-<span><span class="co">#&gt; 8 1280  NaN 1.000  0.935  0.911  0.959</span></span>
+<span><span class="co">#&gt; 1  100  NaN 1.000  0.062  0.043  0.091</span></span>
+<span><span class="co">#&gt; 2  690  NaN 1.000  0.715  0.669  0.757</span></span>
+<span><span class="co">#&gt; 3  709  NaN 1.000  0.762  0.718  0.802</span></span>
+<span><span class="co">#&gt; 4  727  NaN 1.000  0.787  0.745  0.825</span></span>
+<span><span class="co">#&gt; 5  764  NaN 1.000  0.830  0.790  0.864</span></span>
+<span><span class="co">#&gt; 6  838  NaN 1.000  0.833  0.793  0.866</span></span>
+<span><span class="co">#&gt; 7  985  NaN 1.000  0.890  0.856  0.917</span></span>
+<span><span class="co">#&gt; 8 1280  NaN 1.000  0.935  0.906  0.955</span></span>
 <span><span class="co">#&gt; Notes:</span></span>
 <span><span class="co">#&gt; - n: The sample size in a trial.</span></span>
 <span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>
@@ -696,7 +696,7 @@ significantly different from .80.</p>
 <span><span class="co">#&gt;   rejection rate. If the null hypothesis is true, this is the Type I</span></span>
 <span><span class="co">#&gt;   error rate. If the null hypothesis is false, this is the power.</span></span>
 <span><span class="co">#&gt; - r.cilo,r.cihi: The confidence interval of the rejection rate, based</span></span>
-<span><span class="co">#&gt;   on normal approximation.</span></span>
+<span><span class="co">#&gt;   on Wilson's (1927) method.</span></span>
 <span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span></code></pre></div>
 </div>
 <div class="section level2">

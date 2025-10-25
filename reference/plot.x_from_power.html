@@ -11,7 +11,7 @@ estimated power against sample size."><meta property="og:image" content="https:/
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -389,7 +389,7 @@ to the <code>plot</code>-method for <code>x_from_power</code>.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Update the test(s):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Update test_parameters: CIs (pars: m~x) :</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Estimated power at n: 0.900, 95.0% confidence interval: [0.714,1.086]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Estimated power at n: 0.900, 95.0% confidence interval: [0.596,0.982]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Initial interval: [100, 125] </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -397,8 +397,8 @@ to the <code>plot</code>-method for <code>x_from_power</code>.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [test]: test_parameters: CIs (pars: m~x) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [test_label]: m~x </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     n   est   p.v reject r.cilo r.cihi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 100 0.320 1.000  0.800  0.552  1.048</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 125 0.314 1.000  0.900  0.714  1.086</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 100 0.320 1.000  0.800  0.490  0.943</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 125 0.314 1.000  0.900  0.596  0.982</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> One of the bounds in the interval is already a solution.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -408,14 +408,14 @@ to the <code>plot</code>-method for <code>x_from_power</code>.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --- Final Stage ---</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-10-25 14:05:23 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-10-25 17:11:15 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Rejection Rates:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [test]: test_parameters: CIs (pars: m~x) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [test_label]: m~x </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     n   est   p.v reject r.cilo r.cihi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 100 0.320 1.000  0.800  0.552  1.048</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 125 0.314 1.000  0.900  0.714  1.086</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 100 0.320 1.000  0.800  0.490  0.943</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 125 0.314 1.000  0.900  0.596  0.982</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Notes:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - n: The sample size in a trial.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - p.v: The proportion of valid replications.</span>
@@ -424,7 +424,7 @@ to the <code>plot</code>-method for <code>x_from_power</code>.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   rejection rate. If the null hypothesis is true, this is the Type I</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   error rate. If the null hypothesis is false, this is the power.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - r.cilo,r.cihi: The confidence interval of the rejection rate, based</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   on normal approximation.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   on Wilson's (1927) method.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Refer to the tests for the meanings of other columns.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Estimated Power Curve:</span>
@@ -452,7 +452,7 @@ to the <code>plot</code>-method for <code>x_from_power</code>.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Final Value: 100 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Final Estimated Power: 0.8000 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Confidence Interval: [0.5521; 1.0479]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Confidence Interval: [0.4902; 0.9433]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - CI Level: 95.00%</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">power_vs_n</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="plot.x_from_power-1.png" alt="" width="576" height="384"></span>

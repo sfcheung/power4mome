@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -90,7 +90,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Quick Template: Simple Mediation with Latent Variables</h1>
             
-            <h4 data-toc-skip class="date">2025-10-25</h4>
+            <h4 data-toc-skip class="date">2025-10-26</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/sfcheung/power4mome/blob/main/vignettes/articles/template_n_from_power_mediation_lav_simple.Rmd" class="external-link"><code>vignettes/articles/template_n_from_power_mediation_lav_simple.Rmd</code></a></small>
       <div class="d-none name"><code>template_n_from_power_mediation_lav_simple.Rmd</code></div>
@@ -416,7 +416,7 @@ on how to set <code>number_of_indicators</code> and
 <span><span class="co">#&gt;   rejection rate. If the null hypothesis is true, this is the Type I</span></span>
 <span><span class="co">#&gt;   error rate. If the null hypothesis is false, this is the power.</span></span>
 <span><span class="co">#&gt; - r.cilo,r.cihi: The confidence interval of the rejection rate, based</span></span>
-<span><span class="co">#&gt;   on normal approximation.</span></span>
+<span><span class="co">#&gt;   on Wilson's (1927) method.</span></span>
 <span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -485,8 +485,8 @@ size is too different from the target power.</p>
 <span><span class="co">#&gt; - significantly higher than 0.800: 182</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Confidence intervals of the estimated power:</span></span>
-<span><span class="co">#&gt; - for the lower bound (145): [0.726, 0.809]</span></span>
-<span><span class="co">#&gt; - for the upper bound (182): [0.807, 0.878]</span></span>
+<span><span class="co">#&gt; - for the lower bound (145): [0.724, 0.806]</span></span>
+<span><span class="co">#&gt; - for the upper bound (182): [0.804, 0.875]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call `summary()` for detailed results.</span></span>
 <span></span>
@@ -533,7 +533,7 @@ significantly different from .80.</p>
 <span><span class="co">#&gt; - Final Value (Sample Size): 145</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - Final Estimated Power: 0.767 </span></span>
-<span><span class="co">#&gt; - Confidence Interval: [0.726; 0.809]</span></span>
+<span><span class="co">#&gt; - Confidence Interval: [0.724; 0.806]</span></span>
 <span><span class="co">#&gt; - Level of confidence: 95.0%</span></span>
 <span><span class="co">#&gt; - Based on 400 replications.</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -542,7 +542,7 @@ significantly different from .80.</p>
 <span><span class="co">#&gt; - Algorithm: bisection </span></span>
 <span><span class="co">#&gt; - Tolerance for 'close enough': Within 0.02000 of 0.800 </span></span>
 <span><span class="co">#&gt; - The range of values explored: 100 to 160 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 57.16 secs </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 1.136 mins </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
@@ -572,9 +572,9 @@ significantly different from .80.</p>
 <span><span class="co">#&gt; [test_label]: Test </span></span>
 <span><span class="co">#&gt;     n   est   p.v reject r.cilo r.cihi</span></span>
 <span><span class="co">#&gt; 1 100 0.168 0.998  0.499  0.450  0.548</span></span>
-<span><span class="co">#&gt; 2 130 0.167 1.000  0.708  0.663  0.752</span></span>
-<span><span class="co">#&gt; 3 145 0.159 1.000  0.767  0.726  0.809</span></span>
-<span><span class="co">#&gt; 4 160 0.164 1.000  0.807  0.769  0.846</span></span>
+<span><span class="co">#&gt; 2 130 0.167 1.000  0.708  0.661  0.750</span></span>
+<span><span class="co">#&gt; 3 145 0.159 1.000  0.767  0.724  0.806</span></span>
+<span><span class="co">#&gt; 4 160 0.164 1.000  0.807  0.766  0.843</span></span>
 <span><span class="co">#&gt; Notes:</span></span>
 <span><span class="co">#&gt; - n: The sample size in a trial.</span></span>
 <span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>
@@ -583,7 +583,7 @@ significantly different from .80.</p>
 <span><span class="co">#&gt;   rejection rate. If the null hypothesis is true, this is the Type I</span></span>
 <span><span class="co">#&gt;   error rate. If the null hypothesis is false, this is the power.</span></span>
 <span><span class="co">#&gt; - r.cilo,r.cihi: The confidence interval of the rejection rate, based</span></span>
-<span><span class="co">#&gt;   on normal approximation.</span></span>
+<span><span class="co">#&gt;   on Wilson's (1927) method.</span></span>
 <span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
@@ -608,7 +608,7 @@ significantly different from .80.</p>
 <span><span class="co">#&gt; - Final Value (Sample Size): 182</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - Final Estimated Power: 0.843 </span></span>
-<span><span class="co">#&gt; - Confidence Interval: [0.807; 0.878]</span></span>
+<span><span class="co">#&gt; - Confidence Interval: [0.804; 0.875]</span></span>
 <span><span class="co">#&gt; - Level of confidence: 95.0%</span></span>
 <span><span class="co">#&gt; - Based on 400 replications.</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -617,7 +617,7 @@ significantly different from .80.</p>
 <span><span class="co">#&gt; - Algorithm: bisection </span></span>
 <span><span class="co">#&gt; - Tolerance for 'close enough': Within 0.02000 of 0.800 </span></span>
 <span><span class="co">#&gt; - The range of values explored: 159 to 245 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 1.278 mins </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 1.512 mins </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
@@ -646,11 +646,11 @@ significantly different from .80.</p>
 <span><span class="co">#&gt; [test]: test_indirect: x-&gt;m-&gt;y </span></span>
 <span><span class="co">#&gt; [test_label]: Test </span></span>
 <span><span class="co">#&gt;     n   est   p.v reject r.cilo r.cihi</span></span>
-<span><span class="co">#&gt; 1 159 0.157 1.000  0.797  0.758  0.837</span></span>
-<span><span class="co">#&gt; 2 160 0.164 1.000  0.807  0.769  0.846</span></span>
-<span><span class="co">#&gt; 3 182 0.157 1.000  0.843  0.807  0.878</span></span>
-<span><span class="co">#&gt; 4 203 0.162 1.000  0.902  0.873  0.932</span></span>
-<span><span class="co">#&gt; 5 245 0.156 1.000  0.953  0.932  0.973</span></span>
+<span><span class="co">#&gt; 1 159 0.157 1.000  0.797  0.755  0.834</span></span>
+<span><span class="co">#&gt; 2 160 0.164 1.000  0.807  0.766  0.843</span></span>
+<span><span class="co">#&gt; 3 182 0.157 1.000  0.843  0.804  0.875</span></span>
+<span><span class="co">#&gt; 4 203 0.162 1.000  0.902  0.869  0.928</span></span>
+<span><span class="co">#&gt; 5 245 0.156 1.000  0.953  0.927  0.969</span></span>
 <span><span class="co">#&gt; Notes:</span></span>
 <span><span class="co">#&gt; - n: The sample size in a trial.</span></span>
 <span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>
@@ -659,7 +659,7 @@ significantly different from .80.</p>
 <span><span class="co">#&gt;   rejection rate. If the null hypothesis is true, this is the Type I</span></span>
 <span><span class="co">#&gt;   error rate. If the null hypothesis is false, this is the power.</span></span>
 <span><span class="co">#&gt; - r.cilo,r.cihi: The confidence interval of the rejection rate, based</span></span>
-<span><span class="co">#&gt;   on normal approximation.</span></span>
+<span><span class="co">#&gt;   on Wilson's (1927) method.</span></span>
 <span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span></code></pre></div>
 </div>
 <div class="section level2">

@@ -19,7 +19,7 @@ value."><meta property="og:image" content="https://sfcheung.github.io/power4mome
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -429,9 +429,13 @@ of the value in the solution.
 solution in <code>power4test_trials</code>.
 <code>NA</code> if a solution not found.</p></li>
 <li><p><code>ci_final</code>: The confidence interval
-of the estimated power in the solution,
-formed by normal approximation.
-<code>NA</code> if a solution not found.</p></li>
+of the estimated power in the solution.
+The method is determined
+by the option <code>power4mome.ci_method</code>.
+If <code>NULL</code> or <code>"wilson"</code>, Wilson's
+(1927) method is used. If
+<code>"norm"</code>, normal approximation
+is used.</p></li>
 <li><p><code>ci_level</code>: The level of confidence
 of <code>ci_final</code>.</p></li>
 <li><p><code>nrep_final</code>: The number of
@@ -627,6 +631,13 @@ this page: <a href="https://sfcheung.github.io/power4mome/articles/x_from_power_
 
     </div>
     <div class="section level2">
+    <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
+    <p>Wilson, E. B. (1927). Probable inference, the law of
+succession, and statistical inference.
+<em>Journal of the American Statistical Association, 22</em>(158),
+209-212. <a href="https://doi.org/10.1080/01621459.1927.10502953" class="external-link">doi:10.1080/01621459.1927.10502953</a></p>
+    </div>
+    <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><code><a href="power4test.html">power4test()</a></code>, <code><a href="power4test_by_n.html">power4test_by_n()</a></code>,
 and <code><a href="power4test_by_es.html">power4test_by_es()</a></code>.</p></div>
@@ -712,7 +723,7 @@ and <code><a href="power4test_by_es.html">power4test_by_es()</a></code>.</p></di
 <span class="r-out co"><span class="r-pr">#&gt;</span> Update the test(s):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Update test_parameters: CIs (pars: m~x) :</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Estimated power at n: 1.000, 95.0% confidence interval: [1.000,1.000]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Estimated power at n: 1.000, 95.0% confidence interval: [0.566,1.000]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Initial interval: [100, 125] </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -720,8 +731,8 @@ and <code><a href="power4test_by_es.html">power4test_by_es()</a></code>.</p></di
 <span class="r-out co"><span class="r-pr">#&gt;</span> [test]: test_parameters: CIs (pars: m~x) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [test_label]: m~x </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     n   est   p.v reject r.cilo r.cihi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 100 0.298 1.000  0.800  0.449  1.151</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 125 0.310 1.000  1.000  1.000  1.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 100 0.298 1.000  0.800  0.376  0.964</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 125 0.310 1.000  1.000  0.566  1.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> One of the bounds in the interval is already a solution.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -731,14 +742,14 @@ and <code><a href="power4test_by_es.html">power4test_by_es()</a></code>.</p></di
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --- Final Stage ---</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-10-25 14:06:01 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-10-25 17:11:54 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Rejection Rates:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [test]: test_parameters: CIs (pars: m~x) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [test_label]: m~x </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     n   est   p.v reject r.cilo r.cihi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 100 0.298 1.000  0.800  0.449  1.151</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 125 0.310 1.000  1.000  1.000  1.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 100 0.298 1.000  0.800  0.376  0.964</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 125 0.310 1.000  1.000  0.566  1.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Notes:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - n: The sample size in a trial.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - p.v: The proportion of valid replications.</span>
@@ -747,7 +758,7 @@ and <code><a href="power4test_by_es.html">power4test_by_es()</a></code>.</p></di
 <span class="r-out co"><span class="r-pr">#&gt;</span>   rejection rate. If the null hypothesis is true, this is the Type I</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   error rate. If the null hypothesis is false, this is the power.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - r.cilo,r.cihi: The confidence interval of the rejection rate, based</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   on normal approximation.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   on Wilson's (1927) method.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Refer to the tests for the meanings of other columns.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Estimated Power Curve:</span>
@@ -775,7 +786,7 @@ and <code><a href="power4test_by_es.html">power4test_by_es()</a></code>.</p></di
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Final Value: 100 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Final Estimated Power: 0.8000 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Confidence Interval: [0.4494; 1.1506]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Confidence Interval: [0.3755; 0.9638]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - CI Level: 95.00%</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">power_vs_n</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -796,7 +807,7 @@ and <code><a href="power4test_by_es.html">power4test_by_es()</a></code>.</p></di
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Final Value (Sample Size): 100</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Final Estimated Power: 0.800 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Confidence Interval: [0.449; 1.151]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Confidence Interval: [0.376; 0.964]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Level of confidence: 95.0%</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Based on 5 replications.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -804,7 +815,7 @@ and <code><a href="power4test_by_es.html">power4test_by_es()</a></code>.</p></di
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Algorithm: bisection </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - The range of values explored: 100 to 125 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Time spent in the search: 0.432 secs </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Time spent in the search: 0.4741 secs </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - The final crude model for the power-predictor relation:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Model Type: Logistic Regression </span>
@@ -833,8 +844,8 @@ and <code><a href="power4test_by_es.html">power4test_by_es()</a></code>.</p></di
 <span class="r-out co"><span class="r-pr">#&gt;</span> [test]: test_parameters: CIs (pars: m~x) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [test_label]: m~x </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     n   est   p.v reject r.cilo r.cihi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 100 0.298 1.000  0.800  0.449  1.151</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 125 0.310 1.000  1.000  1.000  1.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 100 0.298 1.000  0.800  0.376  0.964</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 125 0.310 1.000  1.000  0.566  1.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Notes:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - n: The sample size in a trial.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - p.v: The proportion of valid replications.</span>
@@ -843,7 +854,7 @@ and <code><a href="power4test_by_es.html">power4test_by_es()</a></code>.</p></di
 <span class="r-out co"><span class="r-pr">#&gt;</span>   rejection rate. If the null hypothesis is true, this is the Type I</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   error rate. If the null hypothesis is false, this is the power.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - r.cilo,r.cihi: The confidence interval of the rejection rate, based</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   on normal approximation.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   on Wilson's (1927) method.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Refer to the tests for the meanings of other columns.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">power_vs_n</span><span class="op">)</span></span></span>

@@ -11,7 +11,7 @@ object or other supported objects."><meta property="og:image" content="https://s
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -146,9 +146,12 @@ power will be printed.</p></dd>
 <dd><p>If <code>TRUE</code>, confidence
 intervals for the rejection rates
 (column <code>reject</code> or <code>sig</code>) will
-be computed. Normal approximation
-is used in forming the confidence
-intervals.</p></dd>
+be computed. The method is determined
+by the option <code>power4mome.ci_method</code>.
+If <code>NULL</code> or <code>"wilson"</code>, Wilson's
+(1927) method is used. If
+<code>"norm"</code>, normal approximation
+is used.</p></dd>
 
 
 <dt id="arg-level">level<a class="anchor" aria-label="anchor" href="#arg-level"></a></dt>
@@ -287,6 +290,13 @@ rates, with sample sizes added to
 the output.</p>
     </div>
     <div class="section level2">
+    <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
+    <p>Wilson, E. B. (1927). Probable inference, the law of
+succession, and statistical inference.
+<em>Journal of the American Statistical Association, 22</em>(158),
+209-212. <a href="https://doi.org/10.1080/01621459.1927.10502953" class="external-link">doi:10.1080/01621459.1927.10502953</a></p>
+    </div>
+    <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><code><a href="power4test.html">power4test()</a></code>,
 <code><a href="power4test_by_n.html">power4test_by_n()</a></code>, and
@@ -351,10 +361,10 @@ supported by this method.</p></div>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">rejection_rates</span><span class="op">(</span><span class="va">test_out</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                     test test_label    est   p.v reject r.cilo r.cihi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 test_indirect: x-&gt;m-&gt;y       Test  0.149 1.000  1.000  1.000  1.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  test_parameters: CIs         m~x  0.317 1.000  1.000  1.000  1.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  test_parameters: CIs         y~m  0.475 1.000  1.000  1.000  1.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4  test_parameters: CIs         y~x -0.080 1.000  0.000  0.000  0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 test_indirect: x-&gt;m-&gt;y       Test  0.149 1.000  1.000  0.510  1.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  test_parameters: CIs         m~x  0.317 1.000  1.000  0.510  1.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  test_parameters: CIs         y~m  0.475 1.000  1.000  0.510  1.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  test_parameters: CIs         y~x -0.080 1.000  0.000  0.000  0.490</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Notes:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - p.v: The proportion of valid replications.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - est: The mean of the estimates in a test across replications.</span>
@@ -362,7 +372,7 @@ supported by this method.</p></div>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   rejection rate. If the null hypothesis is true, this is the Type I</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   error rate. If the null hypothesis is false, this is the power.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - r.cilo,r.cihi: The confidence interval of the rejection rate, based</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   on normal approximation.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   on Wilson's (1927) method.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Refer to the tests for the meanings of other columns.</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># See the help pages of power4test_by_n() and power4test_by_es()</span></span></span>

@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -89,7 +89,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Power Analysis for Moderation, Mediation, and Moderated Mediation</h1>
             
-            <h4 data-toc-skip class="date">2025-10-25</h4>
+            <h4 data-toc-skip class="date">2025-10-26</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/sfcheung/power4mome/blob/main/vignettes/power4mome.Rmd" class="external-link"><code>vignettes/power4mome.Rmd</code></a></small>
       <div class="d-none name"><code>power4mome.Rmd</code></div>
@@ -636,7 +636,7 @@ false. In addition to using <code>test_long = TRUE</code> in
 <span><span class="co">#&gt;   rejection rate. If the null hypothesis is true, this is the Type I</span></span>
 <span><span class="co">#&gt;   error rate. If the null hypothesis is false, this is the power.</span></span>
 <span><span class="co">#&gt; - r.cilo,r.cihi: The confidence interval of the rejection rate, based</span></span>
-<span><span class="co">#&gt;   on normal approximation.</span></span>
+<span><span class="co">#&gt;   on Wilson's (1927) method.</span></span>
 <span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span></code></pre></div>
 <p>In the example above, the estimated power of the test of the indirect
 effect, conducted by Monte Carlo confidence intervals, is 0.468, under
@@ -910,7 +910,7 @@ power:</p>
 <span><span class="co">#&gt; [test]: test_moderation: CIs  </span></span>
 <span><span class="co">#&gt; [test_label]: y~x:w </span></span>
 <span><span class="co">#&gt;     est   p.v reject r.cilo r.cihi</span></span>
-<span><span class="co">#&gt; 1 0.158 1.000  0.347  0.301  0.394</span></span>
+<span><span class="co">#&gt; 1 0.158 1.000  0.347  0.302  0.395</span></span>
 <span><span class="co">#&gt; Notes:</span></span>
 <span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>
 <span><span class="co">#&gt; - est: The mean of the estimates in a test across replications.</span></span>
@@ -918,11 +918,11 @@ power:</p>
 <span><span class="co">#&gt;   rejection rate. If the null hypothesis is true, this is the Type I</span></span>
 <span><span class="co">#&gt;   error rate. If the null hypothesis is false, this is the power.</span></span>
 <span><span class="co">#&gt; - r.cilo,r.cihi: The confidence interval of the rejection rate, based</span></span>
-<span><span class="co">#&gt;   on normal approximation.</span></span>
+<span><span class="co">#&gt;   on Wilson's (1927) method.</span></span>
 <span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span></code></pre></div>
 <p>The estimated power of the test of the product term,
-<code>x:w</code>, is 0.347, with 95% confidence interval [0.301;
-0.394].</p>
+<code>x:w</code>, is 0.347, with 95% confidence interval [0.302;
+0.395].</p>
 </div>
 </div>
 <div class="section level2">
@@ -1170,7 +1170,7 @@ power:</p>
 <span><span class="co">#&gt; [test]: test_index_of_mome: x-&gt;m-&gt;y, moderated by w </span></span>
 <span><span class="co">#&gt; [test_label]: Test </span></span>
 <span><span class="co">#&gt;     est   p.v reject r.cilo r.cihi</span></span>
-<span><span class="co">#&gt; 1 0.016 1.000  0.055  0.033  0.077</span></span>
+<span><span class="co">#&gt; 1 0.016 1.000  0.055  0.037  0.082</span></span>
 <span><span class="co">#&gt; Notes:</span></span>
 <span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>
 <span><span class="co">#&gt; - est: The mean of the estimates in a test across replications.</span></span>
@@ -1178,11 +1178,11 @@ power:</p>
 <span><span class="co">#&gt;   rejection rate. If the null hypothesis is true, this is the Type I</span></span>
 <span><span class="co">#&gt;   error rate. If the null hypothesis is false, this is the power.</span></span>
 <span><span class="co">#&gt; - r.cilo,r.cihi: The confidence interval of the rejection rate, based</span></span>
-<span><span class="co">#&gt;   on normal approximation.</span></span>
+<span><span class="co">#&gt;   on Wilson's (1927) method.</span></span>
 <span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span></code></pre></div>
 <p>The estimated power of the test of moderated mediation effect,
 conducted by a test of the index of moderated mediation, is 0.055, 95%
-confidence interval [0.033; 0.077].</p>
+confidence interval [0.037; 0.082].</p>
 <p>Unlike the previous example on moderation tested by regression,
 estimating the power of Monte Carlo confidence intervals is
 substantially slower. However, this is necessary because Monte Carlo or
@@ -1225,7 +1225,7 @@ and set <code>n</code> to a new value (200 in this example):</p>
 <span><span class="co">#&gt;   rejection rate. If the null hypothesis is true, this is the Type I</span></span>
 <span><span class="co">#&gt;   error rate. If the null hypothesis is false, this is the power.</span></span>
 <span><span class="co">#&gt; - r.cilo,r.cihi: The confidence interval of the rejection rate, based</span></span>
-<span><span class="co">#&gt;   on normal approximation.</span></span>
+<span><span class="co">#&gt;   on Wilson's (1927) method.</span></span>
 <span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span></code></pre></div>
 <p>The estimated power is 0.527, 95% confidence interval [0.479; 0.576],
 when the sample size is 200.</p>
@@ -1280,10 +1280,10 @@ calling <code><a href="../reference/power4test.html">power4test()</a></code> onc
 <span><span class="co">#&gt; [test]: test_moderation: CIs  </span></span>
 <span><span class="co">#&gt; [test_label]: y~x:w </span></span>
 <span><span class="co">#&gt;     n   est   p.v reject r.cilo r.cihi</span></span>
-<span><span class="co">#&gt; 1 250 0.149 1.000  0.660  0.614  0.706</span></span>
-<span><span class="co">#&gt; 2 300 0.150 1.000  0.733  0.689  0.776</span></span>
-<span><span class="co">#&gt; 3 350 0.151 1.000  0.810  0.772  0.848</span></span>
-<span><span class="co">#&gt; 4 400 0.150 1.000  0.850  0.815  0.885</span></span>
+<span><span class="co">#&gt; 1 250 0.149 1.000  0.660  0.612  0.705</span></span>
+<span><span class="co">#&gt; 2 300 0.150 1.000  0.733  0.687  0.774</span></span>
+<span><span class="co">#&gt; 3 350 0.151 1.000  0.810  0.769  0.845</span></span>
+<span><span class="co">#&gt; 4 400 0.150 1.000  0.850  0.812  0.882</span></span>
 <span><span class="co">#&gt; Notes:</span></span>
 <span><span class="co">#&gt; - n: The sample size in a trial.</span></span>
 <span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>
@@ -1292,7 +1292,7 @@ calling <code><a href="../reference/power4test.html">power4test()</a></code> onc
 <span><span class="co">#&gt;   rejection rate. If the null hypothesis is true, this is the Type I</span></span>
 <span><span class="co">#&gt;   error rate. If the null hypothesis is false, this is the power.</span></span>
 <span><span class="co">#&gt; - r.cilo,r.cihi: The confidence interval of the rejection rate, based</span></span>
-<span><span class="co">#&gt;   on normal approximation.</span></span>
+<span><span class="co">#&gt;   on Wilson's (1927) method.</span></span>
 <span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span></code></pre></div>
 <p>The results show that, to have a power of about .800 to detect the
 moderation effect, a sample size of about 350 is needed.</p>

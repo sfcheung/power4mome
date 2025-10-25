@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -89,7 +89,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Power Analysis for Latent Variable Mediation</h1>
             
-            <h4 data-toc-skip class="date">2025-10-25</h4>
+            <h4 data-toc-skip class="date">2025-10-26</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/sfcheung/power4mome/blob/main/vignettes/power4test_latent_mediation.Rmd" class="external-link"><code>vignettes/power4test_latent_mediation.Rmd</code></a></small>
       <div class="d-none name"><code>power4test_latent_mediation.Rmd</code></div>
@@ -702,7 +702,7 @@ false. The rejection rate can be retrieved by
 <span><span class="co">#&gt;   rejection rate. If the null hypothesis is true, this is the Type I</span></span>
 <span><span class="co">#&gt;   error rate. If the null hypothesis is false, this is the power.</span></span>
 <span><span class="co">#&gt; - r.cilo,r.cihi: The confidence interval of the rejection rate, based</span></span>
-<span><span class="co">#&gt;   on normal approximation.</span></span>
+<span><span class="co">#&gt;   on Wilson's (1927) method.</span></span>
 <span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span></code></pre></div>
 <p>In the example above, the estimated power of the test of the indirect
 effect, conducted by Monte Carlo confidence interval, is 0.492, under
@@ -743,7 +743,7 @@ effect, but for a smaller sample size of 200. We simply call
 <span><span class="co">#&gt; [test]: test_indirect: fx-&gt;fm-&gt;fy </span></span>
 <span><span class="co">#&gt; [test_label]: Test </span></span>
 <span><span class="co">#&gt;     est   p.v reject r.cilo r.cihi</span></span>
-<span><span class="co">#&gt; 1 0.352 1.000  0.815  0.777  0.853</span></span>
+<span><span class="co">#&gt; 1 0.352 1.000  0.815  0.774  0.850</span></span>
 <span><span class="co">#&gt; Notes:</span></span>
 <span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>
 <span><span class="co">#&gt; - est: The mean of the estimates in a test across replications.</span></span>
@@ -751,9 +751,9 @@ effect, but for a smaller sample size of 200. We simply call
 <span><span class="co">#&gt;   rejection rate. If the null hypothesis is true, this is the Type I</span></span>
 <span><span class="co">#&gt;   error rate. If the null hypothesis is false, this is the power.</span></span>
 <span><span class="co">#&gt; - r.cilo,r.cihi: The confidence interval of the rejection rate, based</span></span>
-<span><span class="co">#&gt;   on normal approximation.</span></span>
+<span><span class="co">#&gt;   on Wilson's (1927) method.</span></span>
 <span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span></code></pre></div>
-<p>The estimated power is 0.815, 95% confidence interval [0.777; 0.853],
+<p>The estimated power is 0.815, 95% confidence interval [0.774; 0.850],
 when the sample size is 200.</p>
 <p>This technique can be repeated to find the required sample size for a
 target power.</p>
@@ -783,7 +783,7 @@ all scales having a population reliability of .80:</p>
 <span><span class="co">#&gt; [test]: test_indirect: fx-&gt;fm-&gt;fy </span></span>
 <span><span class="co">#&gt; [test_label]: Test </span></span>
 <span><span class="co">#&gt;     est   p.v reject r.cilo r.cihi</span></span>
-<span><span class="co">#&gt; 1 0.235 1.000  0.985  0.973  0.997</span></span>
+<span><span class="co">#&gt; 1 0.235 1.000  0.985  0.968  0.993</span></span>
 <span><span class="co">#&gt; Notes:</span></span>
 <span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>
 <span><span class="co">#&gt; - est: The mean of the estimates in a test across replications.</span></span>
@@ -791,9 +791,9 @@ all scales having a population reliability of .80:</p>
 <span><span class="co">#&gt;   rejection rate. If the null hypothesis is true, this is the Type I</span></span>
 <span><span class="co">#&gt;   error rate. If the null hypothesis is false, this is the power.</span></span>
 <span><span class="co">#&gt; - r.cilo,r.cihi: The confidence interval of the rejection rate, based</span></span>
-<span><span class="co">#&gt;   on normal approximation.</span></span>
+<span><span class="co">#&gt;   on Wilson's (1927) method.</span></span>
 <span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span></code></pre></div>
-<p>The estimated power is 0.985, 95% confidence interval [0.973; 0.997],
+<p>The estimated power is 0.985, 95% confidence interval [0.968; 0.993],
 much higher than the original scenario.</p>
 </div>
 <div class="section level2">
@@ -847,10 +847,10 @@ calling <code><a href="../reference/power4test.html">power4test()</a></code> onc
 <span><span class="co">#&gt; [test]: test_indirect: fx-&gt;fm-&gt;fy </span></span>
 <span><span class="co">#&gt; [test_label]: Test </span></span>
 <span><span class="co">#&gt;     n   est   p.v reject r.cilo r.cihi</span></span>
-<span><span class="co">#&gt; 1 175 0.327 1.000  0.703  0.658  0.747</span></span>
-<span><span class="co">#&gt; 2 200 0.329 1.000  0.830  0.793  0.867</span></span>
-<span><span class="co">#&gt; 3 225 0.340 1.000  0.892  0.862  0.923</span></span>
-<span><span class="co">#&gt; 4 250 0.330 1.000  0.902  0.873  0.932</span></span>
+<span><span class="co">#&gt; 1 175 0.327 1.000  0.703  0.656  0.745</span></span>
+<span><span class="co">#&gt; 2 200 0.329 1.000  0.830  0.790  0.864</span></span>
+<span><span class="co">#&gt; 3 225 0.340 1.000  0.892  0.858  0.919</span></span>
+<span><span class="co">#&gt; 4 250 0.330 1.000  0.902  0.869  0.928</span></span>
 <span><span class="co">#&gt; Notes:</span></span>
 <span><span class="co">#&gt; - n: The sample size in a trial.</span></span>
 <span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>
@@ -859,7 +859,7 @@ calling <code><a href="../reference/power4test.html">power4test()</a></code> onc
 <span><span class="co">#&gt;   rejection rate. If the null hypothesis is true, this is the Type I</span></span>
 <span><span class="co">#&gt;   error rate. If the null hypothesis is false, this is the power.</span></span>
 <span><span class="co">#&gt; - r.cilo,r.cihi: The confidence interval of the rejection rate, based</span></span>
-<span><span class="co">#&gt;   on normal approximation.</span></span>
+<span><span class="co">#&gt;   on Wilson's (1927) method.</span></span>
 <span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span></code></pre></div>
 <p>The results show that, to have a power of about .800 to detect the
 mediation effect, a sample size of about 200 is needed.</p>
