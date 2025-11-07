@@ -107,6 +107,21 @@
 #' name of this test. Users should not
 #' use this argument.
 #'
+#' @param test_method The method to do
+#' the test. If `"ci"`, then the
+#' confidence interval (e.g., bootstrap
+#' confidence interval) will be used to
+#' do the test. If
+#' `"pvalue"`, then asymmetric *p*-value
+#' by Asparouhov & Muthén (2021) will
+#' be used to do the test, and the
+#' confidence interval will not be
+#' computed.
+#'
+#' @references
+#' Asparouhov, A., & Muthén, B. (2021). Bootstrap p-value computation.
+#' Retrieved from https://www.statmodel.com/download/FAQ-Bootstrap%20-%20Pvalue.pdf
+#'
 #' @seealso [power4test()]
 #'
 #' @examples
@@ -160,10 +175,22 @@ test_indirect_effect <- function(fit = fit,
                                  boot_ci = FALSE,
                                  boot_out = NULL,
                                  check_post_check = TRUE,
+                                 test_method = c("ci", "pvalue"),
                                  ...,
                                  fit_name = "fit",
                                  get_map_names = FALSE,
                                  get_test_name = FALSE) {
+  test_method <- match.arg(test_method)
+  internal_options <- list()
+  if (test_method == "pvalue") {
+    internal_options <- utils::modifyList(internal_options,
+                                          list(skip_ci = TRUE,
+                                               pvalue_min_size = -Inf))
+  }
+  if (test_method == "ci") {
+    internal_options <- utils::modifyList(internal_options,
+                                          list(skip_ci = FALSE))
+  }
   if (fit_name != "fit") {
     mc_name <- paste0(fit_name, "_mc_out")
     boot_name <- paste0(fit_name, "_boot_out")
@@ -212,7 +239,8 @@ test_indirect_effect <- function(fit = fit,
                                    boot_ci = boot_ci,
                                    boot_out = boot_out,
                                    progress = FALSE,
-                                   ...),
+                                   ...,
+                                   internal_options = internal_options),
                   error = function(e) e)
   } else {
     out <- NA
@@ -225,10 +253,31 @@ test_indirect_effect <- function(fit = fit,
               sig = as.numeric(NA))
     return(out2)
   }
-  ci0 <- stats::confint(out)
-  out1 <- ifelse((ci0[1, 1] > 0) || (ci0[1, 2] < 0),
-                  yes = 1,
-                  no = 0)
+  if (test_method == "ci") {
+    ci0 <- stats::confint(out)
+    out1 <- ifelse((ci0[1, 1] > 0) || (ci0[1, 2] < 0),
+                    yes = 1,
+                    no = 0)
+  }
+  if (test_method == "pvalue") {
+    ci0 <- matrix(
+              as.numeric(NA),
+              nrow = 1,
+              ncol = 2
+            )
+    if (isTRUE(boot_ci)) {
+      out1a <- out$boot_p %||% as.numeric(NA)
+    } else if (isTRUE(mc_ci)) {
+      out1a <- out$mc_p %||% as.numeric(NA)
+    } else {
+      out1a <- as.numeric(NA)
+    }
+    out1 <- ifelse(
+                out1a < (1 - out$level),
+                yes = 1,
+                no = 0
+              )
+  }
   out2 <- c(est = unname(stats::coef(out)),
             cilo = ci0[1, 1],
             cihi = ci0[1, 2],

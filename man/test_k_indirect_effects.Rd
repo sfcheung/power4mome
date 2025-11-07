@@ -14,6 +14,7 @@ test_k_indirect_effects(
   boot_ci = FALSE,
   boot_out = NULL,
   check_post_check = TRUE,
+  test_method = c("ci", "pvalue"),
   ...,
   omnibus = c("no", "all_sig", "at_least_one_sig", "at_least_k_sig"),
   at_least_k = 1,
@@ -75,6 +76,17 @@ will be conducted only if the model
 passes the \code{post.check} conducted
 by \code{\link[lavaan:lavInspect]{lavaan::lavInspect()}} (with
 \code{what = "post.check"}).}
+
+\item{test_method}{The method to do
+the test. If \code{"ci"}, then the
+confidence interval (e.g., bootstrap
+confidence interval) will be used to
+do the test. If
+\code{"pvalue"}, then asymmetric \emph{p}-value
+by Asparouhov & Muthén (2021) will
+be used to do the test, and the
+confidence interval will not be
+computed.}
 
 \item{...}{Additional arguments to
 be passed to \code{\link[manymome:cond_indirect]{manymome::many_indirect_effects()}}.}

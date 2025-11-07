@@ -31,6 +31,20 @@ test_out1 <- power4test(object = sim_only,
 
 (chk <- test_summary(test_out1))
 
+
+test_out1b <- power4test(object = sim_only,
+                         test_fun = test_index_of_mome,
+                         test_args = list(x = "x",
+                                          m = "m",
+                                          y = "y",
+                                          w = "w",
+                                          mc_ci = TRUE,
+                                          test_method = "pvalue"))
+
+(chkb <- test_summary(test_out1b))
+expect_equal(chk[[1]]["sig"],
+             chkb[[1]]["sig"])
+
 fits <- lapply(sim_only$sim_all,
                function(x) x$extra$fit)
 mc_outs <- lapply(sim_only$sim_all,
