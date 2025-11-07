@@ -18,7 +18,7 @@ sim_only <- power4test(nrep = 5,
                        model = mod,
                        pop_es = mod_es,
                        n = 100,
-                       R = 100,
+                       R = 79,
                        do_the_test = FALSE,
                        iseed = 12345)
 
