@@ -1,4 +1,4 @@
-# power4mome 0.1.1.2
+# power4mome 0.1.1.3
 
 - Improve the function for extending the
   initial interval before doing a
@@ -11,6 +11,11 @@
   `options(power4mome.ci_method = "norm")`
   to set the default method to
   normal approximation. (0.1.1.2)
+
+- Add the `test_method` argument for
+  tests of indirect effects and their
+  variants to use asymmetric *p*-values
+  to do the tests. (0.1.1.3)
 
 # power4mome 0.1.1
 
