@@ -20,7 +20,7 @@ sim_only <- power4test(nrep = 5,
                        n = 100,
                        R = 100,
                        do_the_test = FALSE,
-                       iseed = 1234)
+                       iseed = 12345)
 
 test_ind <- power4test(object = sim_only,
                        test_fun = test_cond_indirect_effects,
