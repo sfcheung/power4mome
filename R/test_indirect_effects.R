@@ -163,6 +163,7 @@ test_k_indirect_effects <- function(
                             boot_ci = FALSE,
                             boot_out = NULL,
                             check_post_check = TRUE,
+                            test_method = c("ci", "pvalue"),
                             ...,
                             omnibus = c("no", "all_sig", "at_least_one_sig", "at_least_k_sig"),
                             at_least_k = 1,
@@ -170,6 +171,17 @@ test_k_indirect_effects <- function(
                             get_map_names = FALSE,
                             get_test_name = FALSE
                           ) {
+  test_method <- match.arg(test_method)
+  internal_options <- list()
+  if (test_method == "pvalue") {
+    internal_options <- utils::modifyList(internal_options,
+                                          list(skip_ci = TRUE,
+                                               pvalue_min_size = -Inf))
+  }
+  if (test_method == "ci") {
+    internal_options <- utils::modifyList(internal_options,
+                                          list(skip_ci = FALSE))
+  }
   omnibus <- match.arg(omnibus)
   if (fit_name != "fit") {
     mc_name <- paste0(fit_name, "_mc_out")
@@ -261,7 +273,8 @@ test_k_indirect_effects <- function(
                                    boot_ci = boot_ci,
                                    boot_out = boot_out,
                                    progress = FALSE,
-                                   ...),
+                                   ...,
+                                   internal_options = internal_options),
                   error = function(e) e)
   } else {
     out <- NA
@@ -291,11 +304,20 @@ test_k_indirect_effects <- function(
   out1_names <- gsub("ind", "est", out1_names)
   out1_names <- gsub("std", "est", out1_names)
   colnames(out1) <- out1_names
-  sig <- ifelse((out1$cilo > 0) |
-                (out1$cihi < 0),
+  if (test_method == "ci") {
+    sig <- ifelse((out1$cilo > 0) |
+                  (out1$cihi < 0),
+                  yes = 1,
+                  no = 0)
+    out1$sig <- sig
+  }
+  if (test_method == "pvalue") {
+    out1$sig <- ifelse(
+                out1$pvalue < (1 -  out[[1]]$level),
                 yes = 1,
-                no = 0)
-  out1$sig <- sig
+                no = 0
+              )
+  }
   if (omnibus == "no") {
     attr(out1, "test_label") <- "test_label"
     return(out1)
