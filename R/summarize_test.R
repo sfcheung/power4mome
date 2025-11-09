@@ -346,6 +346,9 @@ summarize_one_test_vector <- function(x) {
                nrep = nrep,
                mean = test_means,
                nvalid = test_not_na)
+  # May add other attributes in the future
+  attr(out1,
+      "extra") <- list(bz_extrapolated = do_bz)
   class(out1) <- c("test_summary", class(out1))
   out1
 }
@@ -363,6 +366,7 @@ summarize_one_test_data_frame <- function(x,
   test_label <- attr(test_i, "test_label")
   i <- sapply(test_i,
               is.numeric)
+  i_names <- colnames(test_i)[i]
   out0 <- sapply(test_i[, "test_label", drop = TRUE],
                  function(xx) {
                    t(sapply(x,
@@ -373,6 +377,8 @@ summarize_one_test_data_frame <- function(x,
                             simplify = TRUE))
                  },
                  simplify = FALSE)
+  do_bz <- FALSE
+  has_R <- FALSE
   if ((length(out0) == 1) ||
       (collapse == "none")) {
     has_R <- "R" %in% colnames(out0[[1]])
@@ -429,7 +435,7 @@ summarize_one_test_data_frame <- function(x,
                               function(xx) {sum(!is.na(xx))})
                       }))
     test_means <- test_i
-    test_means[, i] <- out1
+    test_means[, i_names] <- out1[, i_names, drop = FALSE]
   } else {
     # Boos-Zhang method not supported if collapse != "none"
     out1a <- out0[[1]]
@@ -473,13 +479,16 @@ summarize_one_test_data_frame <- function(x,
       tmp <- collapse
     }
     test_means[1, "test_label"] <- tmp
-    test_means[, i] <- out1
+    test_means[, i_names] <- out1[, i_names, drop = FALSE]
   }
   class(test_means) <- class(test_i)
   out1 <- list(test_attributes = attributes(x),
                nrep = nrep,
                mean = test_means,
                nvalid = test_not_na)
+  # May add other attributes in the future
+  attr(out1,
+      "extra") <- list(bz_extrapolated = do_bz)
   class(out1) <- c("test_summary", class(out1))
   out1
 }
