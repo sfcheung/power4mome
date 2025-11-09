@@ -40,7 +40,7 @@ BugReports: https://github.com/sfcheung/power4mome/issues
 Imports:
     lavaan,
     stats,
-    manymome (>= 0.2.8),
+    manymome (>= 0.3.1.4),
     pbapply,
     parallel,
     pgnorm,
