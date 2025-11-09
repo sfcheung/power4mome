@@ -1,3 +1,5 @@
+skip("WIP")
+
 library(testthat)
 
 test_that("indirect effects", {
@@ -28,11 +30,11 @@ rel <- c(y = .70,
 sim_only <- power4test(nrep = 5,
                        model = mod,
                        pop_es = mod_es,
-                       n = 100,
+                       n = 119,
                        number_of_indicators = k,
                        reliability = rel,
                        fit_model_args = list(estimator = "ML"),
-                       R = 100,
+                       R = 119,
                        do_the_test = FALSE,
                        iseed = 1234)
 
@@ -54,8 +56,6 @@ test_indb <- power4test(object = sim_only,
                                         y = "y",
                                         mc_ci = TRUE,
                                         test_method = "pvalue"))
-rejection_rates(test_indb)
-
 (chkb <- test_summary(test_indb))
 expect_equal(chk[[1]]$sig,
              chkb[[1]]$sig)

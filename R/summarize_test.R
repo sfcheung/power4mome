@@ -375,9 +375,53 @@ summarize_one_test_data_frame <- function(x,
                  simplify = FALSE)
   if ((length(out0) == 1) ||
       (collapse == "none")) {
+    has_R <- "R" %in% colnames(out0[[1]])
+    if (has_R) {
+      R <- sapply(out0,
+                  \(x) x[, "R"],
+                  simplify = FALSE)
+      R <- unname(unlist(R))
+      if (all(R != R[1])) {
+        # Not all R equal. Do not do Boos-Zhang
+        do_bz <- FALSE
+      } else {
+        R <- R[1]
+        Rext <- R_extrapolate()
+        do_bz <- (R %in% Rext[-1]) &&
+                 getOption("power4mome.bz", default = TRUE)
+      }
+    } else {
+      R <- NULL
+      do_bz <- FALSE
+    }
+    if (do_bz) {
+      Rk <- Rext[seq(1, which(Rext == R) - 1)]
+      for (j1 in seq_along(out0)) {
+        tmp0 <- out0[[j1]]
+        # Need to keep the colnames
+        tmp <- lapply(
+                  seq_len(nrow(tmp0)),
+                  \(x) tmp0[x, , drop = TRUE]
+                )
+        tmp2 <- lapply(
+                    tmp,
+                    add_rr_ext,
+                    R = R,
+                    Rk = Rk
+                  )
+        tmp2 <- do.call(rbind,
+                        tmp2)
+        out0[[j1]] <- tmp2
+      }
+    }
     out1 <- t(sapply(out0,
                     colMeans,
                     na.rm = TRUE))
+    if (do_bz) {
+      for (j1 in seq_len(nrow(out1))) {
+        out1[j1, "sig"] <- bz_rr(out1[j1, , drop = TRUE])
+      }
+    }
     test_not_na <- t(sapply(out0,
                       function(x) {
                         apply(x,
@@ -387,6 +431,7 @@ summarize_one_test_data_frame <- function(x,
     test_means <- test_i
     test_means[, i] <- out1
   } else {
+    # Boos-Zhang method not supported if collapse != "none"
     out1a <- out0[[1]]
     out1a[] <- as.numeric(NA)
     sig0 <- sapply(out0,
