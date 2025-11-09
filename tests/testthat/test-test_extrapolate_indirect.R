@@ -28,7 +28,7 @@ sim_only <- power4test(nrep = 5,
                        number_of_indicators = k,
                        reliability = rel,
                        fit_model_args = list(estimator = "ML"),
-                       R = 199,
+                       R = 200,
                        do_the_test = FALSE,
                        iseed = 1234)
 
@@ -39,7 +39,7 @@ test_ind <- power4test(object = sim_only,
                                         y = "y",
                                         mc_ci = TRUE))
 
-rejection_rates(test_indb)
+rejection_rates(test_ind)
 (chk <- test_summary(test_ind))
 expect_true(length(chk) == 1)
 
