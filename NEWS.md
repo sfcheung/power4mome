@@ -1,4 +1,4 @@
-# power4mome 0.1.1.4
+# power4mome 0.1.1.5
 
 - Improve the function for extending the
   initial interval before doing a
@@ -22,6 +22,14 @@
   bootstrap or Monte Carlo samples
   and the number of estimates less than
   zero. (0.1.1.4)
+
+- Updated `summarize_tests()` and
+  `rejection_rates()` to use the
+  extrapolation method by Boos and
+  Zhang (2000) if the number of
+  resamples for bootstrapping or
+  Monte Carlo is of the supported
+  values. (0.1.1.5)
 
 # power4mome 0.1.1
 
