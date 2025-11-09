@@ -311,12 +311,34 @@ summarize_test_i <- function(x,
 summarize_one_test_vector <- function(x) {
   test_results_all <- lapply(x,
                              function(xx) xx$test_results)
+  has_R <- !is.null(test_results_all[[1]]["R"])
+  if (has_R) {
+    R <- unname(test_results_all[[1]]["R"])
+    Rext <- R_extrapolate()
+    do_bz <- (R %in% Rext[-1]) &&
+             getOption("power4mome.bz", default = TRUE)
+  } else {
+    R <- NULL
+    do_bz <- FALSE
+  }
+  if (do_bz) {
+    Rk <- Rext[seq(1, which(Rext == R) - 1)]
+    test_results_all <- lapply(
+            test_results_all,
+            add_rr_ext,
+            R = R,
+            Rk = Rk
+          )
+  }
   nrep <- length(test_results_all)
   test_results_all <- do.call(rbind,
                               test_results_all)
   test_results_all <- as.data.frame(test_results_all,
                                     check.names = FALSE)
   test_means <- colMeans(test_results_all, na.rm = TRUE)
+  if (do_bz) {
+    test_means["sig"] <- bz_rr(test_means)
+  }
   test_not_na <- apply(test_results_all,
                        2,
                        function(x) {sum(!is.na(x))})
