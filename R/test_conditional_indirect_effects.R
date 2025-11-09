@@ -291,6 +291,17 @@ test_cond_indirect_effects <- function(fit = fit,
                 yes = 1,
                 no = 0
               )
+    est_name <- switch(ci_type,
+                       mc = "mc_indirect",
+                       boot = "boot_indirect")
+    est_all <- lapply(out_all,
+                      \(x) x[[est_name]])
+    R <- sapply(est_all,
+                length)
+    nlt0 <- sapply(est_all,
+                   \(x) sum(as.numeric(x < 0)))
+    out2$R <- R
+    out2$nlt0 <- nlt0
   }
   rownames(out2) <- NULL
   attr(out2, "test_label") <- "test_label"
