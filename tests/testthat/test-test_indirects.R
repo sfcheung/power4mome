@@ -54,6 +54,8 @@ test_indb <- power4test(object = sim_only,
                                         y = "y",
                                         mc_ci = TRUE,
                                         test_method = "pvalue"))
+rejection_rates(test_indb)
+
 (chkb <- test_summary(test_indb))
 expect_equal(chk[[1]]$sig,
              chkb[[1]]$sig)

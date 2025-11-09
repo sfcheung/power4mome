@@ -311,12 +311,34 @@ summarize_test_i <- function(x,
 summarize_one_test_vector <- function(x) {
   test_results_all <- lapply(x,
                              function(xx) xx$test_results)
+  has_R <- !is.null(test_results_all[[1]]["R"])
+  if (has_R) {
+    R <- unname(test_results_all[[1]]["R"])
+    Rext <- R_extrapolate()
+    do_bz <- (R %in% Rext[-1]) &&
+             getOption("power4mome.bz", default = TRUE)
+  } else {
+    R <- NULL
+    do_bz <- FALSE
+  }
+  if (do_bz) {
+    Rk <- Rext[seq(1, which(Rext == R) - 1)]
+    test_results_all <- lapply(
+            test_results_all,
+            add_rr_ext,
+            R = R,
+            Rk = Rk
+          )
+  }
   nrep <- length(test_results_all)
   test_results_all <- do.call(rbind,
                               test_results_all)
   test_results_all <- as.data.frame(test_results_all,
                                     check.names = FALSE)
   test_means <- colMeans(test_results_all, na.rm = TRUE)
+  if (do_bz) {
+    test_means["sig"] <- bz_rr(test_means)
+  }
   test_not_na <- apply(test_results_all,
                        2,
                        function(x) {sum(!is.na(x))})
@@ -324,6 +346,9 @@ summarize_one_test_vector <- function(x) {
                nrep = nrep,
                mean = test_means,
                nvalid = test_not_na)
+  # May add other attributes in the future
+  attr(out1,
+      "extra") <- list(bz_extrapolated = do_bz)
   class(out1) <- c("test_summary", class(out1))
   out1
 }
@@ -341,6 +366,7 @@ summarize_one_test_data_frame <- function(x,
   test_label <- attr(test_i, "test_label")
   i <- sapply(test_i,
               is.numeric)
+  i_names <- colnames(test_i)[i]
   out0 <- sapply(test_i[, "test_label", drop = TRUE],
                  function(xx) {
                    t(sapply(x,
@@ -351,11 +377,57 @@ summarize_one_test_data_frame <- function(x,
                             simplify = TRUE))
                  },
                  simplify = FALSE)
+  do_bz <- FALSE
+  has_R <- FALSE
   if ((length(out0) == 1) ||
       (collapse == "none")) {
+    has_R <- "R" %in% colnames(out0[[1]])
+    if (has_R) {
+      R <- sapply(out0,
+                  \(x) x[, "R"],
+                  simplify = FALSE)
+      R <- unname(unlist(R))
+      if (all(R != R[1])) {
+        # Not all R equal. Do not do Boos-Zhang
+        do_bz <- FALSE
+      } else {
+        R <- R[1]
+        Rext <- R_extrapolate()
+        do_bz <- (R %in% Rext[-1]) &&
+                 getOption("power4mome.bz", default = TRUE)
+      }
+    } else {
+      R <- NULL
+      do_bz <- FALSE
+    }
+    if (do_bz) {
+      Rk <- Rext[seq(1, which(Rext == R) - 1)]
+      for (j1 in seq_along(out0)) {
+        tmp0 <- out0[[j1]]
+        # Need to keep the colnames
+        tmp <- lapply(
+                  seq_len(nrow(tmp0)),
+                  \(x) tmp0[x, , drop = TRUE]
+                )
+        tmp2 <- lapply(
+                    tmp,
+                    add_rr_ext,
+                    R = R,
+                    Rk = Rk
+                  )
+        tmp2 <- do.call(rbind,
+                        tmp2)
+        out0[[j1]] <- tmp2
+      }
+    }
     out1 <- t(sapply(out0,
                     colMeans,
                     na.rm = TRUE))
+    if (do_bz) {
+      for (j1 in seq_len(nrow(out1))) {
+        out1[j1, "sig"] <- bz_rr(out1[j1, , drop = TRUE])
+      }
+    }
     test_not_na <- t(sapply(out0,
                       function(x) {
                         apply(x,
@@ -363,8 +435,9 @@ summarize_one_test_data_frame <- function(x,
                               function(xx) {sum(!is.na(xx))})
                       }))
     test_means <- test_i
-    test_means[, i] <- out1
+    test_means[, i_names] <- out1[, i_names, drop = FALSE]
   } else {
+    # Boos-Zhang method not supported if collapse != "none"
     out1a <- out0[[1]]
     out1a[] <- as.numeric(NA)
     sig0 <- sapply(out0,
@@ -406,13 +479,16 @@ summarize_one_test_data_frame <- function(x,
       tmp <- collapse
     }
     test_means[1, "test_label"] <- tmp
-    test_means[, i] <- out1
+    test_means[, i_names] <- out1[, i_names, drop = FALSE]
   }
   class(test_means) <- class(test_i)
   out1 <- list(test_attributes = attributes(x),
                nrep = nrep,
                mean = test_means,
                nvalid = test_not_na)
+  # May add other attributes in the future
+  attr(out1,
+      "extra") <- list(bz_extrapolated = do_bz)
   class(out1) <- c("test_summary", class(out1))
   out1
 }
