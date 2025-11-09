@@ -232,10 +232,16 @@ test_cond_indirect <- function(fit = fit,
             )
     if (isTRUE(boot_ci)) {
       out1a <- out$boot_p %||% as.numeric(NA)
+      R <- length(out$boot_indirect)
+      nlt0 <- sum(as.numeric(out$boot_indirect < 0))
     } else if (isTRUE(mc_ci)) {
       out1a <- out$mc_p %||% as.numeric(NA)
+      R <- length(out$mc_indirect)
+      nlt0 <- sum(as.numeric(out$mc_indirect < 0))
     } else {
       out1a <- as.numeric(NA)
+      R <- as.numeric(NA)
+      nlt0 <- as.numeric(NA)
     }
     out1 <- ifelse(
                 out1a < (1 - out$level),
@@ -247,6 +253,10 @@ test_cond_indirect <- function(fit = fit,
             cilo = ci0[1, 1],
             cihi = ci0[1, 2],
             sig = out1)
+  if (test_method == "pvalue") {
+    # For Boos & Zhang (2000)
+    out2 <- c(out2, R = R, nlt0 = nlt0)
+  }
   return(out2)
 }
 

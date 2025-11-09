@@ -192,10 +192,25 @@ test_index_of_mome <- function(fit = fit,
                 yes = 1,
                 no = 0
               )
+    if (out$ci_type %in% c("mc", "boot")) {
+      diff_name <- switch(out$ci_type,
+                          mc = "mc_diff",
+                          boot = "boot_diff")
+      est_diff <- out[[diff_name]]
+      R <- length(est_diff)
+      nlt0 <- sum(as.numeric(est_diff < 0))
+    } else {
+      R <- as.numeric(NA)
+      nlt0 <- as.numeric(NA)
+    }
   }
   out2 <- c(est = unname(stats::coef(out)),
             cilo = ci0[1, 1],
             cihi = ci0[1, 2],
             sig = out1)
+  if (test_method == "pvalue") {
+    # For Boos & Zhang (2000)
+    out2 <- c(out2, R = R, nlt0 = nlt0)
+  }
   return(out2)
 }

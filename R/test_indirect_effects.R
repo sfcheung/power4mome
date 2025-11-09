@@ -317,6 +317,14 @@ test_k_indirect_effects <- function(
                 yes = 1,
                 no = 0
               )
+    R <- sapply(out,
+                \(x) max(length(x$boot_indirect),
+                         length(x$mc_indirect)))
+    nlt0 <- sapply(out,
+                \(x) max(sum(as.numeric(x$boot_indirect < 0)),
+                         sum(as.numeric(x$mc_indirect < 0))))
+    out1$R <- unname(R)
+    out1$nlt0 <- unname(nlt0)
   }
   if (omnibus == "no") {
     attr(out1, "test_label") <- "test_label"
