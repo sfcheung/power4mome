@@ -1,4 +1,4 @@
-# power4mome 0.1.1.3
+# power4mome 0.1.1.4
 
 - Improve the function for extending the
   initial interval before doing a
@@ -12,10 +12,16 @@
   to set the default method to
   normal approximation. (0.1.1.2)
 
-- Add the `test_method` argument for
+- Added the `test_method` argument for
   tests of indirect effects and their
   variants to use asymmetric *p*-values
   to do the tests. (0.1.1.3)
+
+- Updated test functions that used
+  `manymome` to store the number of
+  bootstrap or Monte Carlo samples
+  and the number of estimates less than
+  zero. (0.1.1.4)
 
 # power4mome 0.1.1
 
