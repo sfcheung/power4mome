@@ -82,8 +82,12 @@ rr_extrapolated <- function(
 }
 
 #' @noRd
-R_extrapolate <- function(alpha = .05,
-                          Rmax = 300) {
+R_extrapolate <- function(
+                  alpha = .05,
+                  Rmax = getOption(
+                            "power4mome.bz_Rmax",
+                            default = 359)
+) {
   # Find supported values of R
   # alpha is two-tailed alpha
   alpha2 <- alpha / 2
