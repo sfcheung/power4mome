@@ -315,20 +315,23 @@ summarize_one_test_vector <- function(x) {
   if (has_R) {
     R <- unname(test_results_all[[1]]["R"])
     Rext <- R_extrapolate()
-    do_bz <- (R %in% Rext[-1]) &&
+    R_case0 <- R_case(R)
+    do_bz <- (R_case0 != "") &&
              getOption("power4mome.bz", default = TRUE)
   } else {
     R <- NULL
     do_bz <- FALSE
   }
   if (do_bz) {
-    Rk <- Rext[seq(1, which(Rext == R) - 1)]
-    test_results_all <- lapply(
-            test_results_all,
-            add_rr_ext,
-            R = R,
-            Rk = Rk
-          )
+    if (R_case0 == "one") {
+      Rk <- Rext[seq(1, which(Rext == R) - 1)]
+      test_results_all <- lapply(
+              test_results_all,
+              add_rr_ext,
+              R = R,
+              Rk = Rk
+            )
+    }
   }
   nrep <- length(test_results_all)
   test_results_all <- do.call(rbind,
