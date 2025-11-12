@@ -1,6 +1,20 @@
 # Functions for the Boos-Zhang method
 
 #' @noRd
+R_indices <- function(R) {
+  Rext <- R_extrapolate()
+  Rext_cm <- cumsum(Rext)
+  i <- which(R == Rext_cm)
+  if (length(i) == 0) stop("R not supported.")
+  Rs <- Rext[seq(from = 1, to = i)]
+  ik <- split(seq_len(R),
+              rep(seq_along(Rs),
+              times = Rs))
+  names(ik) <- as.character(Rs)
+  ik
+}
+
+#' @noRd
 R_case <- function(R) {
   Rext <- R_extrapolate()
   Rext_cm <- cumsum(Rext)
