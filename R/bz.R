@@ -1,6 +1,25 @@
 # Functions for the Boos-Zhang method
 
 #' @noRd
+bz_sig_partition <- function(boot_est,
+                             alpha = .05) {
+  R <- length(boot_est)
+  R_case0 <- R_case(R)
+  if (R_case0 == "cum") {
+    Rs <- R_indices(R)
+    boot_ps <- sapply(Rs,
+                  \(x) est2p(boot_est[x],
+                             min_size = -Inf)
+                )
+    boot_sig <- as.numeric(boot_ps < alpha)
+    names(boot_sig) <- paste0("sig_", names(boot_ps))
+  } else {
+    boot_sig <- numeric()
+  }
+  boot_sig
+}
+
+#' @noRd
 R_indices <- function(R) {
   Rext <- R_extrapolate()
   Rext_cm <- cumsum(Rext)
