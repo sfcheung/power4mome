@@ -1,6 +1,20 @@
 # Functions for the Boos-Zhang method
 
 #' @noRd
+R_case <- function(R) {
+  Rext <- R_extrapolate()
+  Rext_cm <- cumsum(Rext)
+  out <- ""
+  if (R %in% Rext[-1]) {
+    out <- "one"
+  }
+  if ((R %in% Rext_cm[-1])) {
+    out <- "cum"
+  }
+  out
+}
+
+#' @noRd
 bz_rr <- function(out) {
   tmp <- names(out)
   tmp <- tmp[grepl("bz_",
