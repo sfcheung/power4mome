@@ -12,7 +12,7 @@ bz_sig_partition <- function(boot_est,
                              min_size = -Inf)
                 )
     boot_sig <- as.numeric(boot_ps < alpha)
-    names(boot_sig) <- paste0("sig_", names(boot_ps))
+    names(boot_sig) <- paste0("bz_", names(boot_ps))
   } else {
     boot_sig <- numeric()
   }
