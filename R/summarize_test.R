@@ -393,6 +393,7 @@ summarize_one_test_data_frame <- function(x,
   do_bz <- FALSE
   has_R <- FALSE
   R_case0 <- ""
+  bz_model <- NULL
   if ((length(out0) == 1) ||
       (collapse == "none")) {
     has_R <- "R" %in% colnames(out0[[1]])
@@ -442,9 +443,15 @@ summarize_one_test_data_frame <- function(x,
                     colMeans,
                     na.rm = TRUE))
     if (do_bz) {
+      bz_model <- as.list(seq_len(nrow(out1)))
       for (j1 in seq_len(nrow(out1))) {
-        out1[j1, "sig"] <- bz_rr(out1[j1, , drop = TRUE])
+        tmp <- bz_rr(out1[j1, , drop = TRUE])
+        bz_model[[j1]] <- attr(tmp,
+                               "bz_model")
+        out1[j1, "sig"] <- tmp
       }
+    } else {
+      bz_model <- NULL
     }
     test_not_na <- t(sapply(out0,
                       function(x) {
@@ -507,7 +514,8 @@ summarize_one_test_data_frame <- function(x,
   # May add other attributes in the future
   attr(out1,
       "extra") <- list(bz_extrapolated = do_bz,
-                       R_case = R_case0)
+                       R_case = R_case0,
+                       bz_model = bz_model)
   class(out1) <- c("test_summary", class(out1))
   out1
 }

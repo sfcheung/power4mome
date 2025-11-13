@@ -302,6 +302,19 @@ test_cond_indirect_effects <- function(fit = fit,
                    \(x) sum(as.numeric(x < 0)))
     out2$R <- R
     out2$nlt0 <- nlt0
+    tmp <- lapply(out_all,
+            function(x) {
+              boot_est <- x$boot_indirect %||% x$mc_indirect
+              boot_sig <- bz_sig_partition(
+                            boot_est,
+                            alpha = 1 - x$level
+                          )
+              boot_sig
+            })
+    tmp <- do.call(rbind,
+                   unname(tmp))
+    out2 <- cbind(out2,
+                  tmp)
   }
   rownames(out2) <- NULL
   attr(out2, "test_label") <- "test_label"

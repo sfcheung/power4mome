@@ -61,6 +61,7 @@ bz_rr <- function(out) {
   Rk <- as.numeric(tmp2)
   lm_out <- stats::lm(rr_mean ~ I(1 / Rk))
   rr_inf <- unname(stats::coef(lm_out)["(Intercept)"])
+  rr_inf <- min(max(rr_inf, 0), 1)
   attr(rr_inf, "bz_model") <- lm_out
   rr_inf
 }
