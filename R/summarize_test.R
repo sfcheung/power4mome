@@ -321,6 +321,7 @@ summarize_one_test_vector <- function(x) {
   } else {
     R <- NULL
     do_bz <- FALSE
+    R_case0 <- ""
   }
   if (do_bz) {
     if (R_case0 == "one") {
@@ -340,7 +341,14 @@ summarize_one_test_vector <- function(x) {
                                     check.names = FALSE)
   test_means <- colMeans(test_results_all, na.rm = TRUE)
   if (do_bz) {
-    test_means["sig"] <- bz_rr(test_means)
+    tmp <- bz_rr(test_means)
+    test_means["sig"] <- as.numeric(tmp)
+    bz_model <- attr(
+                  tmp,
+                  "bz_model"
+                )
+  } else {
+    bz_model <- NULL
   }
   test_not_na <- apply(test_results_all,
                        2,
@@ -351,7 +359,9 @@ summarize_one_test_vector <- function(x) {
                nvalid = test_not_na)
   # May add other attributes in the future
   attr(out1,
-      "extra") <- list(bz_extrapolated = do_bz)
+      "extra") <- list(bz_extrapolated = do_bz,
+                       R_case = R_case0,
+                       bz_model = bz_model)
   class(out1) <- c("test_summary", class(out1))
   out1
 }

@@ -230,6 +230,11 @@ test_cond_indirect <- function(fit = fit,
               nrow = 1,
               ncol = 2
             )
+    boot_est <- out$boot_indirect %||% out$mc_indirect
+    boot_sig <- bz_sig_partition(
+                  boot_est,
+                  alpha = 1 - out$level
+                )
     if (isTRUE(boot_ci)) {
       out1a <- out$boot_p %||% as.numeric(NA)
       R <- length(out$boot_indirect)
@@ -255,7 +260,8 @@ test_cond_indirect <- function(fit = fit,
             sig = out1)
   if (test_method == "pvalue") {
     # For Boos & Zhang (2000)
-    out2 <- c(out2, R = R, nlt0 = nlt0)
+    out2 <- c(out2, R = R, nlt0 = nlt0,
+              boot_sig)
   }
   return(out2)
 }
