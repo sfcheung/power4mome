@@ -392,6 +392,7 @@ summarize_one_test_data_frame <- function(x,
                  simplify = FALSE)
   do_bz <- FALSE
   has_R <- FALSE
+  R_case0 <- ""
   if ((length(out0) == 1) ||
       (collapse == "none")) {
     has_R <- "R" %in% colnames(out0[[1]])
@@ -406,31 +407,35 @@ summarize_one_test_data_frame <- function(x,
       } else {
         R <- R[1]
         Rext <- R_extrapolate()
-        do_bz <- (R %in% Rext[-1]) &&
+        R_case0 <- R_case(R)
+        do_bz <- (R_case0 != "") &&
                  getOption("power4mome.bz", default = TRUE)
       }
     } else {
       R <- NULL
       do_bz <- FALSE
+      R_case0 <- ""
     }
     if (do_bz) {
-      Rk <- Rext[seq(1, which(Rext == R) - 1)]
-      for (j1 in seq_along(out0)) {
-        tmp0 <- out0[[j1]]
-        # Need to keep the colnames
-        tmp <- lapply(
-                  seq_len(nrow(tmp0)),
-                  \(x) tmp0[x, , drop = TRUE]
-                )
-        tmp2 <- lapply(
-                    tmp,
-                    add_rr_ext,
-                    R = R,
-                    Rk = Rk
+      if (R_case0 == "one") {
+        Rk <- Rext[seq(1, which(Rext == R) - 1)]
+        for (j1 in seq_along(out0)) {
+          tmp0 <- out0[[j1]]
+          # Need to keep the colnames
+          tmp <- lapply(
+                    seq_len(nrow(tmp0)),
+                    \(x) tmp0[x, , drop = TRUE]
                   )
-        tmp2 <- do.call(rbind,
-                        tmp2)
-        out0[[j1]] <- tmp2
+          tmp2 <- lapply(
+                      tmp,
+                      add_rr_ext,
+                      R = R,
+                      Rk = Rk
+                    )
+          tmp2 <- do.call(rbind,
+                          tmp2)
+          out0[[j1]] <- tmp2
+        }
       }
     }
     out1 <- t(sapply(out0,
@@ -501,7 +506,8 @@ summarize_one_test_data_frame <- function(x,
                nvalid = test_not_na)
   # May add other attributes in the future
   attr(out1,
-      "extra") <- list(bz_extrapolated = do_bz)
+      "extra") <- list(bz_extrapolated = do_bz,
+                       R_case = R_case0)
   class(out1) <- c("test_summary", class(out1))
   out1
 }
