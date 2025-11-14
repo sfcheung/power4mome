@@ -1,6 +1,57 @@
 # Functions for the Boos-Zhang method
 
 #' @noRd
+add_bz_i <- function(outi) {
+  # Receive a table or a vector
+  # Add bz_pvalues from R and nlt0
+  out_type <- ifelse(is.null(dim(outi)),
+                     yes = "vector",
+                     no = "table")
+  if (out_type == "vector") {
+    outz1 <- rbind(outi)
+  } else {
+    outz1 <- outi
+  }
+  outz1 <- split(outz1,
+                 seq_len(nrow(outz1)),
+                 drop = FALSE)
+  R <- sapply(outz1,
+              \(x) x[,"R"])
+  if (length(unique(R)) != 1) {
+    return(outi)
+  } else {
+    R <- unique(R)
+  }
+  R_case0 <- sapply(R,
+                    R_case)
+  if (!all(R_case0 == "one")) {
+    return(outi)
+  }
+  R_case0 <- R_case0[1]
+  Rk <- Rext[seq(1, which(Rext == R) - 1)]
+  for (j1 in seq_along(outz1)) {
+    # Need to keep the colnames
+    tmp <- unlist(outz1[[j1]][, c("sig", "R", "nlt0")])
+    tmp2 <- add_rr_ext(
+                tmp,
+                R = R,
+                Rk = Rk
+              )
+    tmp2 <- tmp2[-which(names(tmp2) %in% c("sig", "R", "nlt0"))]
+    tmp3 <- cbind(outz1[[j1]], rbind(tmp2))
+    outz1[[j1]] <- tmp3
+  }
+  if (out_type == "vector") {
+    # TODO:
+    # - Check
+    return((unlist(outz1[[1]])))
+  } else {
+    return(do.call(rbind,
+                   outz1))
+  }
+}
+
+#' @noRd
 bz_sig_partition <- function(boot_est,
                              alpha = .05) {
   R <- length(boot_est)
