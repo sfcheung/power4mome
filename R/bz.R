@@ -11,6 +11,9 @@ add_bz_i <- function(outi) {
     outz1 <- rbind(outi)
   } else {
     outz1 <- outi
+    if (!inherits(outz1, "data.frame")) {
+      outz1 <- as.data.frame(outz1)
+    }
   }
   outz1 <- split(outz1,
                  seq_len(nrow(outz1)),
@@ -27,6 +30,7 @@ add_bz_i <- function(outi) {
   if (!all(R_case0 == "one")) {
     return(outi)
   }
+  Rext <- R_extrapolate()
   R_case0 <- R_case0[1]
   Rk <- Rext[seq(1, which(Rext == R) - 1)]
   for (j1 in seq_along(outz1)) {
@@ -46,8 +50,13 @@ add_bz_i <- function(outi) {
     # - Check
     return((unlist(outz1[[1]])))
   } else {
-    return(do.call(rbind,
-                   outz1))
+    out <- do.call(rbind,
+                   outz1)
+    if (inherits(outi, "matrix")) {
+      out <- as.matrix(out)
+    }
+    rownames(out) <- rownames(outi)
+    return(out)
   }
 }
 

@@ -420,22 +420,12 @@ summarize_one_test_data_frame <- function(x,
     if (do_bz) {
       if (R_case0 == "one") {
         Rk <- Rext[seq(1, which(Rext == R) - 1)]
-        for (j1 in seq_along(out0)) {
+       for (j1 in seq_along(out0)) {
           tmp0 <- out0[[j1]]
-          # Need to keep the colnames
-          tmp <- lapply(
-                    seq_len(nrow(tmp0)),
-                    \(x) tmp0[x, , drop = TRUE]
-                  )
-          tmp2 <- lapply(
-                      tmp,
-                      add_rr_ext,
-                      R = R,
-                      Rk = Rk
-                    )
-          tmp2 <- do.call(rbind,
-                          tmp2)
-          out0[[j1]] <- tmp2
+          if (!(paste0("bz_", R) %in% colnames(tmp0))) {
+            tmp2 <- add_bz_i(tmp0)
+            out0[[j1]] <- tmp2
+          }
         }
       }
     }
