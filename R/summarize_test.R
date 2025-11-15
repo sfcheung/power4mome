@@ -316,8 +316,12 @@ summarize_one_test_vector <- function(x) {
     R <- unname(test_results_all[[1]]["R"])
     Rext <- R_extrapolate()
     R_case <- bz_case(R)
+    bz_alpha_ok <- isTRUE(all.equal(unname(test_results_all[[1]]["alpha"]),
+                                    getOption("power4mome.bz.alpha",
+                                                        default = .05)))
     do_bz <- (R_case != "") &&
-             getOption("power4mome.bz", default = TRUE)
+             getOption("power4mome.bz", default = TRUE) &&
+             bz_alpha_ok
   } else {
     R <- NULL
     do_bz <- FALSE
