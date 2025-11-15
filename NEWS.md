@@ -1,4 +1,4 @@
-# power4mome 0.1.1.8
+# power4mome 0.1.1.9
 
 - Improve the function for extending the
   initial interval before doing a
@@ -36,6 +36,11 @@
   attempts with different number of
   columns (due to the new Boos-Zhang
   methods). (0.1.1.8)
+
+- Boos-Zhang-2000 method is disabled
+  by default. Enable it by setting
+  the option `power4mome.bz` to `TRUE`.
+  (0.1.1.9)
 
 # power4mome 0.1.1
 

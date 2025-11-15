@@ -320,7 +320,7 @@ summarize_one_test_vector <- function(x) {
                                     getOption("power4mome.bz.alpha",
                                                         default = .05)))
     do_bz <- (R_case != "") &&
-             getOption("power4mome.bz", default = TRUE) &&
+             getOption("power4mome.bz", default = FALSE) &&
              bz_alpha_ok
   } else {
     R <- NULL
@@ -417,7 +417,7 @@ summarize_one_test_data_frame <- function(x,
                                       getOption("power4mome.bz.alpha",
                                                           default = .05)))
       do_bz <- (R_case != "") &&
-                getOption("power4mome.bz", default = TRUE) &&
+                getOption("power4mome.bz", default = FALSE) &&
                 bz_alpha_ok
     }
   } else {

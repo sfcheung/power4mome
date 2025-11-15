@@ -4,6 +4,8 @@ library(testthat)
 
 test_that("Boos-Zhang", {
 
+opt_old <- options(power4mome.bz = TRUE)
+
 mod <-
 "
 m ~ x + w + x:w
@@ -59,4 +61,5 @@ test_out1 <- power4test(object = sim_only,
 (rr <- rejection_rates(test_out1))
 expect_true(is.null(attr(rr, "extra")$bz_model))
 
+options(opt_old)
 })

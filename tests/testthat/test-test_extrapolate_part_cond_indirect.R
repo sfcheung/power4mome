@@ -4,6 +4,8 @@ library(testthat)
 
 test_that("Boos-Zhang: Set of Rs", {
 
+opt_old <- options(power4mome.bz = TRUE)
+
 mod <-
 "
 m ~ x + w1 + x:w1
@@ -60,4 +62,5 @@ test_ind <- power4test(object = sim_only,
 (chk <- test_summary(test_ind))
 expect_false(any(grepl("bz_", names(chk[[1]]))))
 
+options(opt_old)
 })
