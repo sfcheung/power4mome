@@ -1,4 +1,4 @@
-# power4mome 0.1.1.10
+# power4mome 0.1.1.11
 
 - Improve the function for extending the
   initial interval before doing a
@@ -47,6 +47,10 @@
   testing two parameters but `omnibus`
   is `"none"`). If yes, it will throw
   an error. (0.1.1.10)
+
+- Added two levels of effects, `sm`
+  for small-to-moderate, and `ml` for
+  moderate-to-large. (0.1.1.11)
 
 # power4mome 0.1.1
 

@@ -36,8 +36,9 @@ power4test(
   parallel = FALSE,
   progress = TRUE,
   ncores = max(1, parallel::detectCores(logical = FALSE) - 1),
-  es1 = c(n = 0, nil = 0, s = 0.1, m = 0.3, l = 0.5, si = 0.141, mi = 0.361, li = 0.51),
-  es2 = c(n = 0, nil = 0, s = 0.05, m = 0.1, l = 0.15),
+  es1 = c(n = 0, nil = 0, s = 0.1, m = 0.3, l = 0.5, si = 0.141, mi = 0.361, li = 0.51,
+    sm = 0.2, ml = 0.4),
+  es2 = c(n = 0, nil = 0, s = 0.05, m = 0.1, l = 0.15, sm = 0.075, ml = 0.125),
   es_ind = c("si", "mi", "li"),
   n_std = 1e+05,
   std_force_monte_carlo = FALSE
