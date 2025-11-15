@@ -330,19 +330,22 @@ test_k_indirect_effects <- function(
                          sum(as.numeric(x$mc_indirect < 0))))
     out1$R <- unname(R)
     out1$nlt0 <- unname(nlt0)
-    tmp <- lapply(out,
-            function(x) {
-              boot_est <- x$boot_indirect %||% x$mc_indirect
-              boot_sig <- bz_sig_partition(
-                            boot_est,
-                            alpha = 1 - x$level
-                          )
-              boot_sig
-            })
-    tmp <- do.call(rbind,
-                   unname(tmp))
-    out1 <- cbind(out1,
-                  tmp)
+    out1$alpha <- unname(1 -  out[[1]]$level)
+    if (bz_alpha_ok) {
+      tmp <- lapply(out,
+              function(x) {
+                boot_est <- x$boot_indirect %||% x$mc_indirect
+                boot_sig <- bz_sig_partition(
+                              boot_est,
+                              alpha = 1 - x$level
+                            )
+                boot_sig
+              })
+      tmp <- do.call(rbind,
+                    unname(tmp))
+      out1 <- cbind(out1,
+                    tmp)
+    }
   }
   if (omnibus == "no") {
     attr(out1, "test_label") <- "test_label"

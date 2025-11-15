@@ -200,10 +200,14 @@ test_index_of_mome <- function(fit = fit,
                           mc = "mc_diff",
                           boot = "boot_diff")
       est_diff <- out[[diff_name]]
-      est_sig <- bz_sig_partition(
-                    est_diff,
-                    alpha = 1 - out$level
-                  )
+      if (bz_alpha_ok) {
+        est_sig <- bz_sig_partition(
+                      est_diff,
+                      alpha = 1 - out$level
+                    )
+      } else {
+        est_sig <- as.numeric()
+      }
       R <- length(est_diff)
       nlt0 <- sum(as.numeric(est_diff < 0))
     } else {
@@ -219,6 +223,7 @@ test_index_of_mome <- function(fit = fit,
   if (test_method == "pvalue") {
     # For Boos & Zhang (2000)
     out2 <- c(out2, R = R, nlt0 = nlt0,
+              alpha = 1 - out$level,
               est_sig)
   }
   return(out2)
