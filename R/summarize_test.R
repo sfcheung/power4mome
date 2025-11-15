@@ -394,29 +394,31 @@ summarize_one_test_data_frame <- function(x,
   has_R <- FALSE
   R_case <- ""
   bz_model <- NULL
+
+  has_R <- "R" %in% colnames(out0[[1]])
+  if (has_R) {
+    R <- sapply(out0,
+                \(x) x[, "R"],
+                simplify = FALSE)
+    R <- unname(unlist(R))
+    if (all(R != R[1])) {
+      # Not all R equal. Do not do Boos-Zhang
+      do_bz <- FALSE
+    } else {
+      R <- R[1]
+      Rext <- R_extrapolate()
+      R_case <- bz_case(R)
+      do_bz <- (R_case != "") &&
+                getOption("power4mome.bz", default = TRUE)
+    }
+  } else {
+    R <- NULL
+    do_bz <- FALSE
+    R_case <- ""
+  }
+
   if ((length(out0) == 1) ||
       (collapse == "none")) {
-    has_R <- "R" %in% colnames(out0[[1]])
-    if (has_R) {
-      R <- sapply(out0,
-                  \(x) x[, "R"],
-                  simplify = FALSE)
-      R <- unname(unlist(R))
-      if (all(R != R[1])) {
-        # Not all R equal. Do not do Boos-Zhang
-        do_bz <- FALSE
-      } else {
-        R <- R[1]
-        Rext <- R_extrapolate()
-        R_case <- bz_case(R)
-        do_bz <- (R_case != "") &&
-                 getOption("power4mome.bz", default = TRUE)
-      }
-    } else {
-      R <- NULL
-      do_bz <- FALSE
-      R_case <- ""
-    }
     if (do_bz) {
       if (R_case == "one") {
         for (j1 in seq_along(out0)) {
@@ -453,13 +455,16 @@ summarize_one_test_data_frame <- function(x,
     test_means <- test_i
     test_means[, i_names] <- out1[, i_names, drop = FALSE]
   } else {
-    # Boos-Zhang method not supported if collapse != "none"
     out1a <- out0[[1]]
     out1a[] <- as.numeric(NA)
     sig0 <- sapply(out0,
                     function(xx) xx[, "sig", drop = TRUE],
                     simplify = TRUE)
     if (collapse == "all_sig") {
+      # Boos-Zhang method "all_sig" only
+      # TODO:
+      # - Reduce code duplication
+
       sig1 <- apply(sig0,
                     MARGIN = 1,
                     function(xx) as.numeric(all(xx > 0)),
