@@ -462,14 +462,35 @@ summarize_one_test_data_frame <- function(x,
                     simplify = TRUE)
     if (collapse == "all_sig") {
       # Boos-Zhang method "all_sig" only
-      # TODO:
-      # - Reduce code duplication
-
-      sig1 <- apply(sig0,
-                    MARGIN = 1,
-                    function(xx) as.numeric(all(xx > 0)),
-                    simplify = TRUE)
-      out1a[, "sig"] <- sig1
+      if (R_case == "one") {
+        out1_bz1 <- merge_for_collapse(out0)
+        if (!any(grepl("bz_", colnames(out1_bz1[[1]])))) {
+          # Add bz_* if not present
+          out1_bz1 <- lapply(
+                        out1_bz1,
+                        function(x) {
+                          a <- add_bz_i(x)
+                          i <- grepl("bz_", colnames(a))
+                          a[, i]
+                        }
+                      )
+        }
+        # Always have bz_*
+        out1_bz2 <- lapply(
+                      out1_bz1,
+                      \(x) apply(x,
+                                 MARGIN = 2,
+                                 min))
+        out1_bz2 <- do.call(rbind,
+                            out1_bz2)
+        out1a <- cbind(out1a, out1_bz2)
+      } else {
+        sig1 <- apply(sig0,
+                      MARGIN = 1,
+                      function(xx) as.numeric(all(xx > 0)),
+                      simplify = TRUE)
+        out1a[, "sig"] <- sig1
+      }
     }
     if (collapse == "at_least_one_sig") {
       sig1 <- apply(sig0,
@@ -488,6 +509,17 @@ summarize_one_test_data_frame <- function(x,
     out1b <- colMeans(out1a, na.rm = TRUE)
     out1 <- out1a[1, , drop = FALSE]
     out1[] <- out1b
+    if (do_bz) {
+      bz_model <- as.list(seq_len(nrow(out1)))
+      for (j1 in seq_len(nrow(out1))) {
+        tmp <- bz_rr(out1[j1, , drop = TRUE])
+        bz_model[[j1]] <- attr(tmp,
+                               "bz_model")
+        out1[j1, "sig"] <- tmp
+      }
+    } else {
+      bz_model <- NULL
+    }
     test_not_na <- out1a[1, , drop = FALSE]
     test_not_na[] <- sum(apply(sig0,
                        MARGIN = 1,

@@ -13,6 +13,27 @@
 # - test_cond_indirect_effects()
 
 #' @noRd
+merge_for_collapse <- function(out0) {
+  outnames <- colnames(out0[[1]])
+  a <- lapply(out0,
+              \(x) split(x, seq_len(nrow(x))))
+  f <- function(...,
+                cnames = NULL) {
+    args <- list(...)
+    out <- do.call(
+            rbind,
+            args)
+    colnames(out) <- cnames
+    out
+  }
+  b <- do.call(mapply,
+               c(list(FUN = f),
+                 a,
+                 list(MoreArgs = list(cnames = outnames),
+                      SIMPLIFY = FALSE)))
+}
+
+#' @noRd
 add_bz_i <- function(outi) {
   # Receive a table or a vector
   # Add bz_pvalues from R and nlt0
