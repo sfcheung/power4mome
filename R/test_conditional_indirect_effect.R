@@ -235,6 +235,9 @@ test_cond_indirect <- function(fit = fit,
                   boot_est,
                   alpha = 1 - out$level
                 )
+    bz_alpha_ok <- isTRUE(all.equal(1 - out$level,
+                                    getOption("power4mome.bz.alpha",
+                                                        default = .05)))
     if (isTRUE(boot_ci)) {
       out1a <- out$boot_p %||% as.numeric(NA)
       R <- length(out$boot_indirect)

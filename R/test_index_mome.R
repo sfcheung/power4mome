@@ -192,6 +192,9 @@ test_index_of_mome <- function(fit = fit,
                 yes = 1,
                 no = 0
               )
+    bz_alpha_ok <- isTRUE(all.equal(1 - out$level,
+                                    getOption("power4mome.bz.alpha",
+                                                        default = .05)))
     if (out$ci_type %in% c("mc", "boot")) {
       diff_name <- switch(out$ci_type,
                           mc = "mc_diff",

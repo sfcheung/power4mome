@@ -253,6 +253,9 @@ test_indirect_effect <- function(fit = fit,
               sig = as.numeric(NA))
     return(out2)
   }
+  bz_alpha_ok <- isTRUE(all.equal(1 - out$level,
+                                  getOption("power4mome.bz.alpha",
+                                                      default = .05)))
   if (test_method == "ci") {
     ci0 <- stats::confint(out)
     out1 <- ifelse((ci0[1, 1] > 0) || (ci0[1, 2] < 0),

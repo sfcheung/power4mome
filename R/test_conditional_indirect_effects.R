@@ -296,6 +296,9 @@ test_cond_indirect_effects <- function(fit = fit,
                        boot = "boot_indirect")
     est_all <- lapply(out_all,
                       \(x) x[[est_name]])
+    bz_alpha_ok <- isTRUE(all.equal(1 - out_all[[1]]$level,
+                                    getOption("power4mome.bz.alpha",
+                                                        default = .05)))
     R <- sapply(est_all,
                 length)
     nlt0 <- sapply(est_all,

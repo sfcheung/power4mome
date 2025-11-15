@@ -312,6 +312,9 @@ test_k_indirect_effects <- function(
     out1$sig <- sig
   }
   R_case <- ""
+  bz_alpha_ok <- isTRUE(all.equal(1 - out[[1]]$level,
+                                  getOption("power4mome.bz.alpha",
+                                                      default = .05)))
   if (test_method == "pvalue") {
     out1$sig <- ifelse(
                 out1$pvalue < (1 -  out[[1]]$level),
@@ -361,7 +364,8 @@ test_k_indirect_effects <- function(
                   at_least_k_sig = as.numeric(isTRUE(sum(out1$sig == 1) >= at_least_k)))
     out2$sig <- tmp
     if ((R_case == "one") &&
-        (omnibus == "all_sig")) {
+        (omnibus == "all_sig") &&
+        bz_alpha_ok) {
       out1_bz <- add_bz_i(out1)
       out1_bz <- out1_bz[, !(colnames(out1_bz) %in% colnames(out2))]
       out1_bz2 <- apply(
@@ -374,7 +378,8 @@ test_k_indirect_effects <- function(
       out2 <- cbind(out2, out1_bz2)
     }
     if ((R_case == "cum") &&
-        (omnibus == "all_sig")) {
+        (omnibus == "all_sig") &&
+        bz_alpha_ok) {
       out1_bz <- out1
       out1_bz <- out1_bz[, grepl("bz_", colnames(out1_bz))]
       out1_bz2 <- apply(
