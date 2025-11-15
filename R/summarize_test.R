@@ -462,7 +462,7 @@ summarize_one_test_data_frame <- function(x,
                     simplify = TRUE)
     if (collapse == "all_sig") {
       # Boos-Zhang method "all_sig" only
-      if (R_case == "one") {
+      if (isTRUE(R_case %in% c("one", "cum"))) {
         out1_bz1 <- merge_for_collapse(out0)
         if (!any(grepl("bz_", colnames(out1_bz1[[1]])))) {
           # Add bz_* if not present
@@ -474,6 +474,14 @@ summarize_one_test_data_frame <- function(x,
                           a[, i]
                         }
                       )
+        } else {
+          out1_bz1 <- lapply(
+                        out1_bz1,
+                        function(x) {
+                          i <- grepl("bz_", colnames(x))
+                          x[, i]
+                        }
+                      )
         }
         # Always have bz_*
         out1_bz2 <- lapply(
@@ -483,7 +491,12 @@ summarize_one_test_data_frame <- function(x,
                                  min))
         out1_bz2 <- do.call(rbind,
                             out1_bz2)
-        out1a <- cbind(out1a, out1_bz2)
+        i <- colnames(out1_bz2)
+        if (all(i %in% colnames(out1a))) {
+          out1a[, i] <- out1_bz2
+        } else {
+          out1a <- cbind(out1a, out1_bz2)
+        }
       } else {
         sig1 <- apply(sig0,
                       MARGIN = 1,
