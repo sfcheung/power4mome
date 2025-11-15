@@ -70,4 +70,34 @@ test_indb <- power4test(object = sim_only,
 (chkb <- test_summary(test_indb))
 expect_true(any(grepl("bz_", colnames(chkb[[1]]))))
 
+# Alpha/level not supported
+
+test_ind <- power4test(object = sim_only,
+                       test_fun = test_k_indirect_effects,
+                       test_args = list(x = "x",
+                                        y = "y",
+                                        mc_ci = TRUE,
+                                        level = .90,
+                                        test_method = "pvalue"),
+                       parallel = FALSE,
+                       progress = FALSE)
+
+(rr <- rejection_rates(test_ind))
+expect_true(is.null(attr(rr, "extra")$bz_model))
+
+
+test_ind <- power4test(object = sim_only,
+                       test_fun = test_k_indirect_effects,
+                       test_args = list(x = "x",
+                                        y = "y",
+                                        mc_ci = TRUE,
+                                        level = .90,
+                                        omnibus = "all_sig",
+                                        test_method = "pvalue"),
+                       parallel = FALSE,
+                       progress = FALSE)
+
+(rr <- rejection_rates(test_ind))
+expect_true(is.null(attr(rr, "extra")$bz_model))
+
 })

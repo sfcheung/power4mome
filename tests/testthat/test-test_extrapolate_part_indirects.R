@@ -54,4 +54,18 @@ expect_output(print(rr),
 (chk <- test_summary(test_ind))
 expect_true(any(grepl("bz_", colnames(chk[[1]]))))
 
+# Alpha/level not supported
+
+test_ind <- power4test(object = sim_only,
+                       test_fun = test_k_indirect_effects,
+                       test_args = list(x = "x",
+                                        y = "y",
+                                        mc_ci = TRUE,
+                                        level = .90,
+                                        test_method = "pvalue"),
+                       parallel = FALSE,
+                       progress = FALSE)
+(chk <- test_summary(test_ind))
+expect_false(any(grepl("bz_", colnames(chk[[1]]))))
+
 })

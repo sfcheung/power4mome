@@ -42,4 +42,21 @@ expect_output(print(rr),
               "Boos and Zhang")
 expect_true(any(grepl("bz_", names(chk[[1]]))))
 
+# Alpha/level not supported
+
+test_out1 <- power4test(object = sim_only,
+                         test_fun = test_index_of_mome,
+                         test_args = list(x = "x",
+                                          m = "m",
+                                          y = "y",
+                                          w = "w",
+                                          mc_ci = TRUE,
+                                          level = .90,
+                                          test_method = "pvalue"),
+                         parallel = FALSE,
+                         progress = FALSE)
+
+(chk <- test_summary(test_out1))
+expect_false(any(grepl("bz_", names(chk[[1]]))))
+
 })

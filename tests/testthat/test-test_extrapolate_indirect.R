@@ -48,4 +48,19 @@ expect_output(print(rejection_rates(test_ind)),
 (chk <- test_summary(test_ind))
 expect_true("nlt0" %in% names(chk[[1]]))
 
+# Alpha/level not supported
+
+test_ind <- power4test(object = sim_only,
+                       test_fun = test_indirect_effect,
+                       test_args = list(x = "x",
+                                        m = "m",
+                                        y = "y",
+                                        mc_ci = TRUE,
+                                        level = .90,
+                                        test_method = "pvalue"),
+                       progress = FALSE)
+
+(rr <- rejection_rates(test_ind))
+expect_true(is.null(attr(rr, "extra")$bz_model))
+
 })
