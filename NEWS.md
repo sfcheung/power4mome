@@ -1,4 +1,4 @@
-# power4mome 0.1.1.7
+# power4mome 0.1.1.8
 
 - Improve the function for extending the
   initial interval before doing a
@@ -30,6 +30,12 @@
   resamples for bootstrapping or
   Monte Carlo is of the supported
   values. (0.1.1.5, 0.1.1.6, 0.1.1.7)
+
+- Improved `rejection_rates_by_n()`
+  and `rejection_rates_by_es()` to handle
+  attempts with different number of
+  columns (due to the new Boos-Zhang
+  methods). (0.1.1.8)
 
 # power4mome 0.1.1
 

@@ -331,6 +331,15 @@ rejection_rates_by_n <- function(object_by_n,
                 x = object_by_n,
                 n = as.numeric(names(object_by_n)),
                 SIMPLIFY = FALSE)
+  # Keep common columns
+  cnames <- lapply(out,
+                   \(x) tryCatch(colnames(x),
+                                 error = function(e) names(x)))
+  cnames1 <- Reduce(intersect,
+                    cnames)
+  out <- lapply(out,
+                \(x) tryCatch(x[, cnames1],
+                              error = function(e) x[cnames1]))
   out <- do.call(rbind,
                  out)
   rownames(out) <- NULL
