@@ -311,7 +311,7 @@ test_k_indirect_effects <- function(
                   no = 0)
     out1$sig <- sig
   }
-  R_case0 <- ""
+  R_case <- ""
   if (test_method == "pvalue") {
     out1$sig <- ifelse(
                 out1$pvalue < (1 -  out[[1]]$level),
@@ -321,7 +321,7 @@ test_k_indirect_effects <- function(
     R <- sapply(out,
                 \(x) max(length(x$boot_indirect),
                          length(x$mc_indirect)))
-    R_case0 <- R_case(R[1])
+    R_case <- bz_case(R[1])
     nlt0 <- sapply(out,
                 \(x) max(sum(as.numeric(x$boot_indirect < 0)),
                          sum(as.numeric(x$mc_indirect < 0))))
@@ -360,7 +360,7 @@ test_k_indirect_effects <- function(
                   at_least_one_sig = as.numeric(isTRUE(any(out1$sig == 1))),
                   at_least_k_sig = as.numeric(isTRUE(sum(out1$sig == 1) >= at_least_k)))
     out2$sig <- tmp
-    if ((R_case0 == "one") &&
+    if ((R_case == "one") &&
         (omnibus == "all_sig")) {
       out1_bz <- add_bz_i(out1)
       out1_bz <- out1_bz[, !(colnames(out1_bz) %in% colnames(out2))]

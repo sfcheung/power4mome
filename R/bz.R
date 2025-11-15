@@ -1,5 +1,17 @@
 # Functions for the Boos-Zhang method
 
+# Functions affected by this methods
+# - summarize_one_test_vector()
+# - rejection_rates_i_vector()
+# - test_indirect_effect()
+# - test_index_of_mome()
+# - test_cond_indirect()
+#
+# - summarize_one_test_data_frame()
+# - rejection_rates_i_data_frame()
+# - test_k_indirect_effects()
+# - test_cond_indirect_effects()
+
 #' @noRd
 add_bz_i <- function(outi) {
   # Receive a table or a vector
@@ -25,13 +37,13 @@ add_bz_i <- function(outi) {
   } else {
     R <- unique(R)
   }
-  R_case0 <- sapply(R,
-                    R_case)
-  if (!all(R_case0 == "one")) {
+  R_case <- sapply(R,
+                    bz_case)
+  if (!all(R_case == "one")) {
     return(outi)
   }
   Rext <- R_extrapolate()
-  R_case0 <- R_case0[1]
+  R_case <- R_case[1]
   Rk <- Rext[seq(1, which(Rext == R) - 1)]
   for (j1 in seq_along(outz1)) {
     # Need to keep the colnames
@@ -63,9 +75,12 @@ add_bz_i <- function(outi) {
 #' @noRd
 bz_sig_partition <- function(boot_est,
                              alpha = .05) {
+  # If R denotes a set of Rs,
+  # compute the rejection rate for each partition and
+  # return a vector of these rates
   R <- length(boot_est)
-  R_case0 <- R_case(R)
-  if (R_case0 == "cum") {
+  R_case <- bz_case(R)
+  if (R_case == "cum") {
     Rs <- R_indices(R)
     boot_ps <- sapply(Rs,
                   \(x) est2p(boot_est[x],
@@ -81,6 +96,8 @@ bz_sig_partition <- function(boot_est,
 
 #' @noRd
 R_indices <- function(R) {
+  # Generate a list of indices
+  # for a set of Rs
   Rext <- R_extrapolate()
   Rext_cm <- cumsum(Rext)
   i <- which(R == Rext_cm)
@@ -94,7 +111,11 @@ R_indices <- function(R) {
 }
 
 #' @noRd
-R_case <- function(R) {
+bz_case <- function(R) {
+  # Check whether the R is one of those
+  # for one-R extrapolation ("one"), or
+  # for a set of Rs ("cum")
+  # Default is ""
   Rext <- R_extrapolate()
   Rext_cm <- cumsum(Rext)
   out <- ""
@@ -109,6 +130,11 @@ R_case <- function(R) {
 
 #' @noRd
 bz_rr <- function(out) {
+  # Do simple linear regression to
+  # estimate the rejection rate when R == Inf
+  # Input:
+  # - A vector with "bz_*" elements,
+  #   "*" the number of resamples.
   tmp <- names(out)
   tmp <- tmp[grepl("bz_",
                    tmp,
@@ -132,6 +158,9 @@ add_rr_ext <- function(
                 R,
                 Rk) {
   # Add extrapolated values to a vector
+  # R is the number of resamples
+  # Rk is the values of R to extrapolate the
+  # rejection rates
   out <- outi
   nlt0 <- unname(out["nlt0"])
   for (Ri in Rk) {
@@ -162,7 +191,14 @@ rr_extrapolated <- function(
       k,
       alpha = .05
     ) {
+  # Compute the rejection rates for
+  # a value of R (k), given
+  # - the number of estimates, or
+  # - the number of resamples
   if (length(x) == 0) {
+    # TODO:
+    # - This section does not work,
+    #   but it is not used.
     # x is the bootstrap estimates
     x <- x[!is.na(x)]
     R <- length(x)

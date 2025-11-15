@@ -315,16 +315,16 @@ summarize_one_test_vector <- function(x) {
   if (has_R) {
     R <- unname(test_results_all[[1]]["R"])
     Rext <- R_extrapolate()
-    R_case0 <- R_case(R)
-    do_bz <- (R_case0 != "") &&
+    R_case <- bz_case(R)
+    do_bz <- (R_case != "") &&
              getOption("power4mome.bz", default = TRUE)
   } else {
     R <- NULL
     do_bz <- FALSE
-    R_case0 <- ""
+    R_case <- ""
   }
   if (do_bz) {
-    if (R_case0 == "one") {
+    if (R_case == "one") {
       Rk <- Rext[seq(1, which(Rext == R) - 1)]
       test_results_all <- lapply(
               test_results_all,
@@ -360,7 +360,7 @@ summarize_one_test_vector <- function(x) {
   # May add other attributes in the future
   attr(out1,
       "extra") <- list(bz_extrapolated = do_bz,
-                       R_case = R_case0,
+                       R_case = R_case,
                        bz_model = bz_model)
   class(out1) <- c("test_summary", class(out1))
   out1
@@ -392,7 +392,7 @@ summarize_one_test_data_frame <- function(x,
                  simplify = FALSE)
   do_bz <- FALSE
   has_R <- FALSE
-  R_case0 <- ""
+  R_case <- ""
   bz_model <- NULL
   if ((length(out0) == 1) ||
       (collapse == "none")) {
@@ -408,17 +408,17 @@ summarize_one_test_data_frame <- function(x,
       } else {
         R <- R[1]
         Rext <- R_extrapolate()
-        R_case0 <- R_case(R)
-        do_bz <- (R_case0 != "") &&
+        R_case <- bz_case(R)
+        do_bz <- (R_case != "") &&
                  getOption("power4mome.bz", default = TRUE)
       }
     } else {
       R <- NULL
       do_bz <- FALSE
-      R_case0 <- ""
+      R_case <- ""
     }
     if (do_bz) {
-      if (R_case0 == "one") {
+      if (R_case == "one") {
         Rk <- Rext[seq(1, which(Rext == R) - 1)]
        for (j1 in seq_along(out0)) {
           tmp0 <- out0[[j1]]
@@ -504,7 +504,7 @@ summarize_one_test_data_frame <- function(x,
   # May add other attributes in the future
   attr(out1,
       "extra") <- list(bz_extrapolated = do_bz,
-                       R_case = R_case0,
+                       R_case = R_case,
                        bz_model = bz_model)
   class(out1) <- c("test_summary", class(out1))
   out1
