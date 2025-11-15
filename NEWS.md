@@ -1,4 +1,4 @@
-# power4mome 0.1.1.11
+# power4mome 0.1.1.12
 
 - Improve the function for extending the
   initial interval before doing a
@@ -51,6 +51,10 @@
 - Added two levels of effects, `sm`
   for small-to-moderate, and `ml` for
   moderate-to-large. (0.1.1.11)
+
+- Updated `extend_interval()` to handle
+  intervals with nearly equal function
+  values. (0.1.1.12)
 
 # power4mome 0.1.1
 

@@ -962,8 +962,20 @@ extend_interval <- function(f,
 
   # ==== How should the interval be extended? ====
 
-  # TODO:
-  # - What to do when f.upper == f.lower
+  if (isTRUE(all.equal(f.lower, f.upper))) {
+    # If f.upper == f.lower,
+    # widen the interval slightly
+    upper <- min(upper_hard,
+                 ifelse(x_type == "n",
+                        floor(upper * 1.1),
+                        upper * 1.1))
+    lower <- max(lower_hard,
+                 ifelse(x_type == "n",
+                        floor(lower * 0.9),
+                        lower * 0.9))
+    f.upper <- f(upper, ...)
+    f.lower <- f(lower, ...)
+  }
   extend_which <- check_extend_x(
                     upper = upper,
                     lower = lower,
