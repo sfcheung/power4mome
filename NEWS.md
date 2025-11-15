@@ -1,4 +1,4 @@
-# power4mome 0.1.1.6
+# power4mome 0.1.1.7
 
 - Improve the function for extending the
   initial interval before doing a
@@ -29,7 +29,7 @@
   Zhang (2000) if the number of
   resamples for bootstrapping or
   Monte Carlo is of the supported
-  values. (0.1.1.5, 0.1.1.6)
+  values. (0.1.1.5, 0.1.1.6, 0.1.1.7)
 
 # power4mome 0.1.1
 
