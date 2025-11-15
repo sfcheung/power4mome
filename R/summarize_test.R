@@ -419,9 +419,10 @@ summarize_one_test_data_frame <- function(x,
     }
     if (do_bz) {
       if (R_case == "one") {
-        Rk <- Rext[seq(1, which(Rext == R) - 1)]
-       for (j1 in seq_along(out0)) {
+        for (j1 in seq_along(out0)) {
           tmp0 <- out0[[j1]]
+          # bz_* may have been added by the test function.
+          # Add bz_* only if not available.
           if (!(paste0("bz_", R) %in% colnames(tmp0))) {
             tmp2 <- add_bz_i(tmp0)
             out0[[j1]] <- tmp2
