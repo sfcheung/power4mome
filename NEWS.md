@@ -1,4 +1,4 @@
-# power4mome 0.1.1.9
+# power4mome 0.1.1.10
 
 - Improve the function for extending the
   initial interval before doing a
@@ -41,6 +41,12 @@
   by default. Enable it by setting
   the option `power4mome.bz` to `TRUE`.
   (0.1.1.9)
+
+- `x_from_power()` now detects whether
+  a test has more than one result (e.g.,
+  testing two parameters but `omnibus`
+  is `"none"`). If yes, it will throw
+  an error. (0.1.1.10)
 
 # power4mome 0.1.1
 

@@ -841,6 +841,19 @@ x_from_power <- function(object,
   x_max <- max(x_interval)
   x_min <- min(x_interval)
 
+  # ==== Check the tests ====
+  tmp <- object$test_all[[1]][[1]]$test_results
+  if (!is.null(dim(tmp))) {
+    if (dim(tmp)[1] > 1) {
+      tmp2 <- utils::capture.output(print(tmp))
+      tmp3 <- paste(
+                c("Does not support a test with more than one result:",
+                tmp2),
+                collapse = "\n")
+      stop(tmp3)
+    }
+  }
+
   # ==== Call the algorithm ====
 
   if ((algorithm == "power_curve") && !solution_found) {
