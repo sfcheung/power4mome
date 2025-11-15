@@ -373,6 +373,19 @@ test_k_indirect_effects <- function(
       rownames(out1_bz2) <- NULL
       out2 <- cbind(out2, out1_bz2)
     }
+    if ((R_case == "cum") &&
+        (omnibus == "all_sig")) {
+      out1_bz <- out1
+      out1_bz <- out1_bz[, grepl("bz_", colnames(out1_bz))]
+      out1_bz2 <- apply(
+                      out1_bz,
+                      MARGIN = 2,
+                      \(x) as.numeric(all(x == 1))
+                    )
+      out1_bz2 <- rbind(out1_bz2)
+      rownames(out1_bz2) <- NULL
+      out2[, colnames(out1_bz2)] <- out1_bz2
+    }
     if (any(is.na(out2$sig))) {
       out2$sig <- as.numeric(NA)
     }
