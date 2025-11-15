@@ -192,16 +192,28 @@ test_index_of_mome <- function(fit = fit,
                 yes = 1,
                 no = 0
               )
+    bz_alpha_ok <- isTRUE(all.equal(1 - out$level,
+                                    getOption("power4mome.bz.alpha",
+                                                        default = .05)))
     if (out$ci_type %in% c("mc", "boot")) {
       diff_name <- switch(out$ci_type,
                           mc = "mc_diff",
                           boot = "boot_diff")
       est_diff <- out[[diff_name]]
+      if (bz_alpha_ok) {
+        est_sig <- bz_sig_partition(
+                      est_diff,
+                      alpha = 1 - out$level
+                    )
+      } else {
+        est_sig <- as.numeric()
+      }
       R <- length(est_diff)
       nlt0 <- sum(as.numeric(est_diff < 0))
     } else {
       R <- as.numeric(NA)
       nlt0 <- as.numeric(NA)
+      est_sig <- as.numeric()
     }
   }
   out2 <- c(est = unname(stats::coef(out)),
@@ -210,7 +222,9 @@ test_index_of_mome <- function(fit = fit,
             sig = out1)
   if (test_method == "pvalue") {
     # For Boos & Zhang (2000)
-    out2 <- c(out2, R = R, nlt0 = nlt0)
+    out2 <- c(out2, R = R, nlt0 = nlt0,
+              alpha = 1 - out$level,
+              est_sig)
   }
   return(out2)
 }

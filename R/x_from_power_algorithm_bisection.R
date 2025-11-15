@@ -962,6 +962,8 @@ extend_interval <- function(f,
 
   # ==== How should the interval be extended? ====
 
+  # TODO:
+  # - What to do when f.upper == f.lower
   extend_which <- check_extend_x(
                     upper = upper,
                     lower = lower,
@@ -1206,7 +1208,9 @@ check_extend_x <- function(
   } else if (extend_down) {
     out <- "extend_down"
   } else {
-    out <- NA
+    # If f.upper and f.lower are equal,
+    # err on larger value
+    out <- "extend_up"
   }
   out
 }

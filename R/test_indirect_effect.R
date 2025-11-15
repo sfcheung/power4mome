@@ -253,6 +253,9 @@ test_indirect_effect <- function(fit = fit,
               sig = as.numeric(NA))
     return(out2)
   }
+  bz_alpha_ok <- isTRUE(all.equal(1 - out$level,
+                                  getOption("power4mome.bz.alpha",
+                                                      default = .05)))
   if (test_method == "ci") {
     ci0 <- stats::confint(out)
     out1 <- ifelse((ci0[1, 1] > 0) || (ci0[1, 2] < 0),
@@ -265,6 +268,15 @@ test_indirect_effect <- function(fit = fit,
               nrow = 1,
               ncol = 2
             )
+    if (bz_alpha_ok) {
+      boot_est <- out$boot_indirect %||% out$mc_indirect
+      boot_sig <- bz_sig_partition(
+                    boot_est,
+                    alpha = 1 - out$level
+                  )
+    } else {
+      boot_sig <- NULL
+    }
     if (isTRUE(boot_ci)) {
       out1a <- out$boot_p %||% as.numeric(NA)
       R <- length(out$boot_indirect)
@@ -290,7 +302,9 @@ test_indirect_effect <- function(fit = fit,
             sig = out1)
   if (test_method == "pvalue") {
     # For Boos & Zhang (2000)
-    out2 <- c(out2, R = R, nlt0 = nlt0)
+    out2 <- c(out2, R = R, nlt0 = nlt0,
+              alpha = 1 - out$level,
+              boot_sig)
   }
   return(out2)
 }

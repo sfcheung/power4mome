@@ -1,8 +1,8 @@
-skip("WIP")
+skip_on_cran()
 
 library(testthat)
 
-test_that("indirect effects", {
+test_that("Boos-Zhang", {
 
 mod <-
 "
@@ -36,83 +36,68 @@ sim_only <- power4test(nrep = 5,
                        fit_model_args = list(estimator = "ML"),
                        R = 119,
                        do_the_test = FALSE,
-                       iseed = 1234)
+                       iseed = 1234,
+                       parallel = FALSE,
+                       progress = FALSE)
 
 test_ind <- power4test(object = sim_only,
                        test_fun = test_k_indirect_effects,
                        test_args = list(x = "x",
                                         y = "y",
-                                        mc_ci = TRUE))
+                                        mc_ci = TRUE,
+                                        test_method = "pvalue"),
+                       parallel = FALSE,
+                       progress = FALSE)
 (rr <- rejection_rates(test_ind))
+expect_output(print(rr),
+              "Boos and Zhang")
 (chk <- test_summary(test_ind))
-expect_true(length(chk) == 1)
+expect_true("nlt0" %in% colnames(chk[[1]]))
 
-chk0 <- rejection_rates(test_ind, collapse = "all_sig")
-chk1 <- rejection_rates(test_ind, collapse = "at_least_one_sig")
+# chk0 <- rejection_rates(test_ind, collapse = "all_sig")
+# chk1 <- rejection_rates(test_ind, collapse = "at_least_one_sig")
 
 test_indb <- power4test(object = sim_only,
                        test_fun = test_k_indirect_effects,
                        test_args = list(x = "x",
                                         y = "y",
                                         mc_ci = TRUE,
-                                        test_method = "pvalue"))
+                                        omnibus = "all_sig",
+                                        test_method = "pvalue"),
+                       parallel = FALSE,
+                       progress = FALSE)
 (rrb <- rejection_rates(test_indb))
 (chkb <- test_summary(test_indb))
-expect_equal(chk[[1]]$sig,
-             chkb[[1]]$sig)
-expect_false(all(rr$reject == rrb$reject))
+expect_true(any(grepl("bz_", colnames(chkb[[1]]))))
 
-# test_ind <- power4test(object = sim_only,
-#                        test_fun = test_k_indirect_effects,
-#                        test_args = list(x = "x",
-#                                         y = "y",
-#                                         omnibus = "all_sig",
-#                                         mc_ci = TRUE))
+# Alpha/level not supported
 
-# test_ind$test_all[[1]][[1]][[1]]
-# (chk <- test_summary(test_ind))
-# expect_true(length(chk) == 1)
+test_ind <- power4test(object = sim_only,
+                       test_fun = test_k_indirect_effects,
+                       test_args = list(x = "x",
+                                        y = "y",
+                                        mc_ci = TRUE,
+                                        level = .90,
+                                        test_method = "pvalue"),
+                       parallel = FALSE,
+                       progress = FALSE)
 
-# expect_equal(chk0$reject,
-#              chk[[1]]$sig)
+(rr <- rejection_rates(test_ind))
+expect_true(is.null(attr(rr, "extra")$bz_model))
 
-# test_ind <- power4test(object = sim_only,
-#                        test_fun = test_k_indirect_effects,
-#                        test_args = list(x = "x",
-#                                         y = "y",
-#                                         omnibus = "at_least_one_sig",
-#                                         mc_ci = TRUE))
-# test_ind$test_all[[1]][[1]][[1]]
-# (chk <- test_summary(test_ind))
-# expect_true(length(chk) == 1)
-# expect_equal(chk1$reject,
-#              chk[[1]]$sig)
 
-# test_ind <- power4test(object = sim_only,
-#                        test_fun = test_k_indirect_effects,
-#                        test_args = list(x = "x",
-#                                         y = "y",
-#                                         omnibus = "at_least_k_sig",
-#                                         at_least_k = 2,
-#                                         mc_ci = TRUE))
-# test_ind$test_all[[1]][[1]][[1]]
-# (chk <- test_summary(test_ind))
-# expect_true(length(chk) == 1)
-# expect_equal(chk0$reject,
-#              chk[[1]]$sig)
+test_ind <- power4test(object = sim_only,
+                       test_fun = test_k_indirect_effects,
+                       test_args = list(x = "x",
+                                        y = "y",
+                                        mc_ci = TRUE,
+                                        level = .90,
+                                        omnibus = "all_sig",
+                                        test_method = "pvalue"),
+                       parallel = FALSE,
+                       progress = FALSE)
 
-# test_ind <- power4test(object = sim_only,
-#                        test_fun = test_k_indirect_effects,
-#                        test_args = list(x = "x",
-#                                         y = "y",
-#                                         omnibus = "at_least_k_sig",
-#                                         at_least_k = 1,
-#                                         mc_ci = TRUE))
-# test_ind$test_all[[1]][[1]][[1]]
-# (chk <- test_summary(test_ind))
-# expect_true(length(chk) == 1)
-# expect_equal(chk1$reject,
-#              chk[[1]]$sig)
-
+(rr <- rejection_rates(test_ind))
+expect_true(is.null(attr(rr, "extra")$bz_model))
 
 })
