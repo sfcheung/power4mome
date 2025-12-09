@@ -5,6 +5,8 @@ q_power_region_mediation_simple <- function(
   a = "m",
   b = "m",
   cp = "n",
+  number_of_indicators = NULL,
+  reliability = NULL,
   target_power = 0.8,
   nrep = 400,
   n_start = 100,
@@ -36,12 +38,33 @@ q_power_region_mediation_simple <- function(
   ),
   collapse = "\n"),
   a, b, cp)
-
+  if (length(number_of_indicators) > 1) {
+    if (length(number_of_indicators) != 3) {
+      stop("number_of_indicators must be one or three values")
+    }
+    if (!setequal(
+          names(number_of_indicators),
+          c("x", "m", "y"))) {
+      stop("Names of number_of_indicators must 'x', 'm', and 'y'")
+    }
+  }
+  if (length(reliability) > 1) {
+    if (length(reliability) != 3) {
+      stop("reliability must be one or three values")
+    }
+    if (!setequal(
+          names(reliability),
+          c("x", "m", "y"))) {
+      stop("Names of reliability must 'x', 'm', and 'y'")
+    }
+  }
   out <- power4test(
             nrep = nrep,
             model = model,
             pop_es = model_es,
             n = n_start,
+            number_of_indicators = number_of_indicators,
+            reliability = reliability,
             R = R,
             ci_type = ci_type,
             test_fun = test_indirect_effect,
