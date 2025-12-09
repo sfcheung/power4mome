@@ -55,7 +55,10 @@ alg_bisection <- function(
     is_by_x = is_by_x,
     object_by_org = object_by_org,
     final_nrep = final_nrep,
-    final_R = final_R
+    final_R = final_R,
+    what = what,
+    goal = goal,
+    tol = tol
   )
 
   # ==== Process output ====
@@ -1424,7 +1427,11 @@ power_algorithm_bisection_pre_i <- function(object,
                                             nls_control,
                                             nls_args,
                                             final_nrep,
-                                            final_R) {
+                                            final_R,
+                                            what,
+                                            goal,
+                                            tol
+                                            ) {
 
   # ==== Initial values ====
 
