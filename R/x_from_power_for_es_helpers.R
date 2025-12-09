@@ -1,3 +1,64 @@
+set_es_range_by_x <- function(
+                          object,
+                          pop_es_name,
+                          target_power = .80,
+                          k = 4,
+                          es_max = .7,
+                          es_min = 0,
+                          object_by_org = NULL,
+                          what = NULL,
+                          goal = NULL,
+                          tol = NULL) {
+  # TODO:
+  # - WIP. Not yet ready.
+  # TODO:
+  # - Add support for multigroup models.
+  es0 <- pop_es(object,
+                pop_es_name = pop_es_name)
+  es0_sign <- sign(es0)
+  es0_abs <- abs(es0)
+  reject0 <- rejection_rates(object)
+  power0 <- reject0$reject[1]
+  if (es0 > es_max) {
+    # Use x_max because es_max and es_min are internal arguments
+    stop("Initial population value (",
+          es0,
+          ") is equal to or greater than 'x_max' (",
+          es_max,
+          "). Please increase 'x_max'.")
+  }
+  if (es0 < es_min) {
+    # Use x_max because es_max and es_min are internal arguments
+    stop("Initial population value (",
+          es0,
+          ") is equal to or less than 'x_min' (",
+          es_min,
+          "). Please decrease 'x_min'.")
+  }
+
+  if (power0 == target_power) {
+    # If power0 == target_power,
+    # Be conservative and decrease power by a small amount
+    power0 <- target_power * .99
+  }
+
+  b <- power0 / es0_abs
+  es_bound <- ifelse(es0_sign >= 0,
+                      abs(es_max),
+                      abs(es_min))
+  es_end <- min(target_power / b,
+                es_bound)
+  es_out <- seq(from = es0_abs,
+                to = es_end,
+                length.out = k)
+  if (es0_sign >= 0) {
+    return(es_out)
+  } else {
+    es_out <- sort(-es_out)
+    return(es_out)
+  }
+}
+
 set_es_range <- function(object,
                          pop_es_name,
                          target_power = .80,

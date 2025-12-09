@@ -1,3 +1,49 @@
+set_n_range_by_x <- function(
+                        object,
+                        target_power = .80,
+                        k = 4,
+                        n_max = 1000,
+                        object_by_org = NULL,
+                        what = NULL,
+                        goal = NULL,
+                        tol = NULL) {
+  # TODO:
+  # - WIP. Not yet ready.
+  n0 <- attr(object, "args")$n
+  reject0 <- rejection_rates(object)
+  power0 <- reject0$reject[1]
+  if (n0 >= n_max) {
+    stop("Initial sample size (",
+          n0,
+          ") is equal to or greater than 'n_max' (",
+          n_max,
+          "). Please increase 'n_max'.")
+  }
+  if (power0 < target_power) {
+    b <- power0 / n0
+    n_end <- min(round(target_power / b),
+                 n_max)
+    n_out <- seq(from = n0,
+                 to = n_end,
+                 length.out = k)
+    n_out <- round(n_out)
+    return(n_out)
+  } else {
+    # If power0 == target_power,
+    # Be conservative and decrease power by a small amount,
+    if (power0 == target_power) {
+      power0 <- target_power * .80
+    }
+    b <- power0 / n0
+    n_end <- min(round(target_power / b),
+                 n_max)
+    n_out <- seq(from = n_end,
+                 to = n0,
+                 length.out = k)
+    n_out <- round(n_out)
+    return(n_out)
+  }
+}
 
 set_n_range <- function(object,
                         target_power = .80,

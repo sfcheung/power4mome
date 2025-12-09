@@ -1,3 +1,43 @@
+set_x_range_by_x <- function(object,
+                        x,
+                        pop_es_name,
+                        target_power = .80,
+                        k = 4,
+                        x_max = switch(x, n = 1000, es = .7),
+                        x_min = switch(x, n = 10, es = .0),
+                        object_by_org = NULL,
+                        what = NULL,
+                        goal = NULL,
+                        tol = NULL) {
+  if (x == "n") {
+    out <- set_n_range_by_x(
+                        object = object,
+                        target_power = target_power,
+                        k = k,
+                        n_max = x_max,
+                        object_by_org = object_by_org,
+                        what = what,
+                        goal = goal,
+                        tol = tol
+                      )
+    return(out)
+  }
+  if (x == "es") {
+    out <- set_es_range_by_x(
+                        object = object,
+                        pop_es_name = pop_es_name,
+                        target_power = target_power,
+                        k = k,
+                        es_max = x_max,
+                        es_min = x_min,
+                        object_by_org = object_by_org,
+                        what = what,
+                        goal = goal,
+                        tol = tol
+                      )
+    return(out)
+  }
+}
 
 set_x_range <- function(object,
                         x,

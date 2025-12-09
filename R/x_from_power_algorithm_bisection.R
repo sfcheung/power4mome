@@ -1438,13 +1438,29 @@ power_algorithm_bisection_pre_i <- function(object,
   # TODO:
   # - Make use of by_* object's results.
   # This method only needs an initial interval
-  x_i <- set_x_range(object,
-                    x = x,
-                    pop_es_name = pop_es_name,
-                    target_power = target_power,
-                    k = 2,
-                    x_max = x_max,
-                    x_min = x_min)
+  if (inherits(object_by_org, "power4test_by_n") ||
+      inherits(object_by_org, "power4test_by_es")) {
+    x_i <- set_x_range_by_x(
+                      object,
+                      x = x,
+                      pop_es_name = pop_es_name,
+                      target_power = target_power,
+                      k = 2,
+                      x_max = x_max,
+                      x_min = x_min,
+                      object_by_org = object_by_org,
+                      what = what,
+                      goal = goal,
+                      tol = tol)
+  } else {
+    x_i <- set_x_range(object,
+                      x = x,
+                      pop_es_name = pop_es_name,
+                      target_power = target_power,
+                      k = 2,
+                      x_max = x_max,
+                      x_min = x_min)
+  }
 
   # For bisection, no need to exclude the value in the input objects
   # Exclude the value in the input object
