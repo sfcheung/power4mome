@@ -1156,6 +1156,9 @@ extend_i <- function(
       upper <- lower
       f.upper <- f.lower
       lower <- overshoot * -intercept / slope
+      if (lower > upper) {
+        lower <- mean(c(lower_hard, upper))
+      }
       if (x_type == "n") {
         lower <- ceiling(lower)
       }
@@ -1167,6 +1170,9 @@ extend_i <- function(
       lower <- upper
       f.lower <- f.upper
       upper <- (1 + overshoot) * -intercept / slope
+      if (upper < lower) {
+        upper <- mean(c(lower, upper_hard))
+      }
       if (x_type == "n") {
         upper <- ceiling(upper)
       }
