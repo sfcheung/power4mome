@@ -8,7 +8,8 @@ set_es_range_by_x <- function(
                           object_by_org = NULL,
                           what = NULL,
                           goal = NULL,
-                          tol = NULL) {
+                          tol = NULL,
+                          ci_level = .95) {
   # TODO:
   # - WIP. Not yet ready.
   # TODO:

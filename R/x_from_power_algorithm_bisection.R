@@ -58,7 +58,8 @@ alg_bisection <- function(
     final_R = final_R,
     what = what,
     goal = goal,
-    tol = tol
+    tol = tol,
+    ci_level = ci_level
   )
 
   # ==== Process output ====
@@ -1430,7 +1431,8 @@ power_algorithm_bisection_pre_i <- function(object,
                                             final_R,
                                             what,
                                             goal,
-                                            tol
+                                            tol,
+                                            ci_level
                                             ) {
 
   # ==== Initial values ====
@@ -1451,7 +1453,8 @@ power_algorithm_bisection_pre_i <- function(object,
                       object_by_org = object_by_org,
                       what = what,
                       goal = goal,
-                      tol = tol)
+                      tol = tol,
+                      ci_level = ci_level)
   } else {
     x_i <- set_x_range(object,
                       x = x,

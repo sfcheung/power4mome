@@ -8,7 +8,8 @@ set_x_range_by_x <- function(object,
                         object_by_org = NULL,
                         what = NULL,
                         goal = NULL,
-                        tol = NULL) {
+                        tol = NULL,
+                        ci_level = .95) {
   if (x == "n") {
     out <- set_n_range_by_x(
                         object = object,
@@ -18,7 +19,8 @@ set_x_range_by_x <- function(object,
                         object_by_org = object_by_org,
                         what = what,
                         goal = goal,
-                        tol = tol
+                        tol = tol,
+                        ci_level = ci_level
                       )
     return(out)
   }
@@ -33,7 +35,8 @@ set_x_range_by_x <- function(object,
                         object_by_org = object_by_org,
                         what = what,
                         goal = goal,
-                        tol = tol
+                        tol = tol,
+                        ci_level = ci_level
                       )
     return(out)
   }
