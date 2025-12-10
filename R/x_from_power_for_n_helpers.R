@@ -1,3 +1,24 @@
+set_n_range_from_by_x <- function(
+                            object_by_org,
+                            target_power = .80,
+                            n_max = 1000,
+                            what = NULL,
+                            goal = NULL,
+                            tol = NULL
+                          ) {
+  # TODO:
+  # - WIP. Not yet ready.
+  browser()
+  names(attr(object_by_org[[1]], "args"))
+  reject0by <- rejection_rates(
+                  object_by_org = object_by_org,
+                  all_columns = FALSE,
+                  ci = TRUE,
+                  level = .95,
+                  se = TRUE
+                )
+}
+
 set_n_range_by_x <- function(
                         object,
                         target_power = .80,
@@ -10,6 +31,15 @@ set_n_range_by_x <- function(
   # TODO:
   # - WIP. Not yet ready.
   n0 <- attr(object, "args")$n
+  # out <- set_n_range_from_by_x(object_by_org = object_by_org,
+  #                              target_power = target_power,
+  #                              n_max = n_max,
+  #                              what = what,
+  #                              goal = goal,
+  #                              tol = tol)
+  # reject0by <- rejection_rates(object_by_org)
+  # TODO:
+  # - Write a function to find an interval from the by_x object
   reject0 <- rejection_rates(object)
   power0 <- reject0$reject[1]
   if (n0 >= n_max) {
