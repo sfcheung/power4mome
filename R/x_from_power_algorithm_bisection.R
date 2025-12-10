@@ -69,11 +69,13 @@ alg_bisection <- function(
   fit_1 <- a_out$fit_1
 
   # TODO:
-  # - Need to take care of duplicated objects
-  # if (is_by_x) {
-  #   by_x_1 <- c(by_x_1,
-  #               object_by_org)
-  # }
+  # - Need to take care of duplicated objects:
+  #   Check whether it works
+  if (is_by_x) {
+    tmp <- setdiff(names(object_by_org), names(by_x_1))
+    by_x_1 <- c(by_x_1,
+                object_by_org[tmp])
+  }
 
   rm(a_out)
 
