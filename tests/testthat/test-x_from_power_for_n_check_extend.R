@@ -1,4 +1,4 @@
-skip("WIP")
+skip("Internal")
 
 library(testthat)
 
@@ -98,5 +98,6 @@ out2 <- n_region_from_power(
           max_trials = 10,
           seed = 1234
         )
-
+summary(out2)
+plot(out2)
 })

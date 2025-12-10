@@ -323,10 +323,13 @@ find_solution <- function(object,
                           goal = c("ci_hit", "close_enough"),
                           final_nrep = 400,
                           closest_ok = FALSE,
-                          if_ties = c("min", "max")) {
+                          if_ties = c("min", "max"),
+                          weight_by = c("nrep", "ci_width", "se", "none"),
+                          debug = FALSE) {
 
   what <- match.arg(what)
   goal <- match.arg(goal)
+  weight_by <- match.arg(weight_by)
 
   out <- switch(goal,
                 ci_hit = find_ci_hit(
@@ -344,7 +347,9 @@ find_solution <- function(object,
                            tol = tol,
                            what = what,
                            closest_ok = closest_ok,
-                           if_ties = if_ties))
+                           if_ties = if_ties,
+                           weight_by = weight_by,
+                           debug = debug))
   out
 }
 
@@ -359,18 +364,28 @@ find_close_enough <- function(
   tol = 1e-2,
   final_nrep = 400,
   closest_ok = FALSE,
-  if_ties = c("min", "max")) {
+  if_ties = c("min", "max"),
+  weight_by = c("nrep", "ci_width", "se", "none"),
+  debug = FALSE) {
+  # if (debug) browser()
+
   # If no solution, return NULL
   # If solution, always return one number
   # If closest_ok, accept the closest trial
-
   what <- match.arg(what)
   if_ties <- match.arg(if_ties)
+  weight_by <- match.arg(weight_by)
 
   by_x_ci <- rejection_rates_add_ci(object,
                                     level = ci_level,
                                     add_se = TRUE)
-  var_all <- by_x_ci$reject_se ^ 2
+  var_all <- switch(
+                weight_by,
+                se = by_x_ci$reject_se ^ 2,
+                ci_width = (by_x_ci$reject_ci_hi - by_x_ci$reject_ci_lo),
+                none = rep(1, nrow(by_x_ci)),
+                nrep = max(by_x_ci$nvalid) / by_x_ci$nvalid
+              )
   r_all <- switch(what,
                   point = by_x_ci$reject,
                   ub = by_x_ci$reject_ci_hi,

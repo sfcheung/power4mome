@@ -1,24 +1,3 @@
-set_n_range_from_by_x <- function(
-                            object_by_org,
-                            target_power = .80,
-                            n_max = 1000,
-                            what = NULL,
-                            goal = NULL,
-                            tol = NULL
-                          ) {
-  # TODO:
-  # - WIP. Not yet ready.
-  browser()
-  names(attr(object_by_org[[1]], "args"))
-  reject0by <- rejection_rates(
-                  object_by_org = object_by_org,
-                  all_columns = FALSE,
-                  ci = TRUE,
-                  level = .95,
-                  se = TRUE
-                )
-}
-
 set_n_range_by_x <- function(
                         object,
                         target_power = .80,
@@ -29,51 +8,56 @@ set_n_range_by_x <- function(
                         goal = NULL,
                         tol = NULL,
                         ci_level = .95) {
-  # TODO:
-  # - WIP. Not yet ready.
-  n0 <- attr(object, "args")$n
-  # out <- set_n_range_from_by_x(object_by_org = object_by_org,
-  #                              target_power = target_power,
-  #                              n_max = n_max,
-  #                              what = what,
-  #                              goal = goal,
-  #                              tol = tol)
-  # reject0by <- rejection_rates(object_by_org)
-  # TODO:
-  # - Write a function to find an interval from the by_x object
-  reject0 <- rejection_rates(object)
-  power0 <- reject0$reject[1]
-  if (n0 >= n_max) {
-    stop("Initial sample size (",
-          n0,
-          ") is equal to or greater than 'n_max' (",
-          n_max,
-          "). Please increase 'n_max'.")
+  reject0by <- rejection_rates(object_by_org,
+                               level = ci_level,
+                               add_se = TRUE,
+                               all_columns = TRUE)
+  # Always return a value because closest_ok is TRUE
+  i0 <- find_solution(
+                object_by_org,
+                target_power = target_power,
+                ci_level = ci_level,
+                what = what,
+                tol = tol,
+                goal = goal,
+                final_nrep = 0,
+                closest_ok = TRUE,
+                weight_by = "nrep",
+                debug = TRUE
+              )
+  n0 <- reject0by$n[i0]
+  what0 <- switch(
+              what,
+              point = "reject",
+              lb = "reject_ci_lo",
+              ub = "reject_ci_hi"
+            )
+  est0 <- reject0by[i0, what0, drop = TRUE]
+  # Display est0 a little bit
+  if (est0 == target_power) {
+    est0 <- target_power * .95
   }
-  if (power0 < target_power) {
-    b <- power0 / n0
-    n_end <- min(round(target_power / b),
-                 n_max)
-    n_out <- seq(from = n0,
-                 to = n_end,
-                 length.out = k)
-    n_out <- round(n_out)
-    return(n_out)
+  if (est0 < target_power) {
+    i1a <- reject0by[, what0, drop = TRUE] > target_power
+    i1b <- reject0by$n > n0
+    i1 <- i1a & i1b
   } else {
-    # If power0 == target_power,
-    # Be conservative and decrease power by a small amount,
-    if (power0 == target_power) {
-      power0 <- target_power * .80
-    }
-    b <- power0 / n0
-    n_end <- min(round(target_power / b),
-                 n_max)
-    n_out <- seq(from = n_end,
-                 to = n0,
-                 length.out = k)
-    n_out <- round(n_out)
-    return(n_out)
+    i1a <- reject0by[, what0, drop = TRUE] < target_power
+    i1b <- reject0by$n < n0
+    i1 <- i1a & i1b
   }
+  if (any(i1)) {
+    i1 <- which(i1)[1]
+    n1 <- reject0by$n[i1]
+  } else {
+    n1 <- n0 * target_power / est0
+  }
+  n1 <- ceiling(n1)
+  n0 <- min(n0, n_max)
+  n1 <- min(n1, n_max)
+  # Displace n0 and n1
+  n_out <- range(n0, n1)
+  n_out
 }
 
 set_n_range <- function(object,
