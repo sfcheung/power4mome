@@ -11,8 +11,6 @@ set_es_range_by_x <- function(
                           tol = NULL,
                           ci_level = .95) {
   # TODO:
-  # - WIP. Not yet ready.
-  # TODO:
   # - Add support for multigroup models.
   es0 <- pop_es(object,
                 pop_es_name = pop_es_name)

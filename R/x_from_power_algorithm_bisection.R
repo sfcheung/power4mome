@@ -69,8 +69,7 @@ alg_bisection <- function(
   fit_1 <- a_out$fit_1
 
   # TODO:
-  # - Need to take care of duplicated objects:
-  #   Check whether it works
+  # - Check whether it works
   if (is_by_x) {
     tmp <- setdiff(names(object_by_org), names(by_x_1))
     by_x_1 <- c(by_x_1,
@@ -1021,8 +1020,6 @@ extend_interval <- function(f,
                 extend_status = status_msg[status_msg == 3],
                 extendInt = extendInt))
   }
-  # TODO:
-  # - Need to optimize the code to reduce duplications
   interval_ok <- FALSE
 
   # ==== Extend the interval ====
@@ -1441,6 +1438,7 @@ power_algorithm_bisection_pre_i <- function(object,
 
   # TODO:
   # - Make use of by_* object's results.
+  #   - Still need to update for x = "es".
   # This method only needs an initial interval
   if (inherits(object_by_org, "power4test_by_n") ||
       inherits(object_by_org, "power4test_by_es")) {
