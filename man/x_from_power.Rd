@@ -6,15 +6,19 @@
 \alias{n_region_from_power}
 \alias{print.x_from_power}
 \alias{print.n_region_from_power}
+\alias{arg_x_from_power}
 \title{Sample Size and Effect Size Determination}
 \usage{
 x_from_power(
   object,
-  x,
-  pop_es_name = NULL,
+  x = arg_x_from_power(object, "x", arg_in = "call") \%||\% "n",
+  pop_es_name = arg_x_from_power(object, "pop_es_name", arg_in = "call"),
   target_power = 0.8,
-  what = c("point", "ub", "lb"),
-  goal = switch(what, point = "ci_hit", ub = "close_enough", lb = "close_enough"),
+  what = arg_x_from_power(object, "what") \%||\% "point",
+  goal = arg_x_from_power(object, "goal") \%||\% {
+     switch(what, point = "ci_hit", ub
+    = "close_enough", lb = "close_enough")
+ },
   ci_level = 0.95,
   tolerance = 0.02,
   x_interval = switch(x, n = c(50, 2000), es = NULL),
@@ -85,6 +89,8 @@ n_region_from_power(
 \method{print}{x_from_power}(x, digits = 3, ...)
 
 \method{print}{n_region_from_power}(x, digits = 3, ...)
+
+arg_x_from_power(object, arg, arg_in = NULL)
 }
 \arguments{
 \item{object}{A \code{power4test} object,
@@ -269,6 +275,13 @@ the results.}
 
 \item{...}{Optional arguments.
 Not used for now.}
+
+\item{arg}{The name of element to
+retrieve.}
+
+\item{arg_in}{The name of the element
+from which an element is to be
+retrieved.}
 }
 \value{
 The function \code{\link[=x_from_power]{x_from_power()}}
@@ -359,6 +372,11 @@ The \code{print}-method of \code{x_from_power_region}
 objects returns the object \code{x}
 invisibly.
 It is called for its side effect.
+
+The function \code{\link[=arg_x_from_power]{arg_x_from_power()}}
+returns the requested argument if
+available. If not available, it
+returns \code{NULL}.
 }
 \description{
 It searches by simulation
@@ -453,6 +471,12 @@ basic information. Call the
 \code{summary} method of \code{x_from_power} objects
 (\code{\link[=summary.x_from_power]{summary.x_from_power()}}) and its
 \code{print} method for detailed results
+
+The function \code{\link[=arg_x_from_power]{arg_x_from_power()}}
+is a helper to set argument values
+if \code{object} is an output
+of \code{\link[=x_from_power]{x_from_power()}} or similar
+functions.
 }
 \section{Algorithms}{
 Two algorithms are currently available,
