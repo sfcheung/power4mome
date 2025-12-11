@@ -480,14 +480,14 @@
 #'
 #' @export
 x_from_power <- function(object,
-                         x,
-                         pop_es_name = NULL,
+                         x = arg_x_from_power(object, "x", arg_in = "call") %||% "n",
+                         pop_es_name = arg_x_from_power(object, "pop_es_name", arg_in = "call"),
                          target_power = .80,
-                         what = c("point", "ub", "lb"),
-                         goal = switch(what,
+                         what = arg_x_from_power(object, "what") %||% "point",
+                         goal = arg_x_from_power(object, "goal") %||% {switch(what,
                                        point = "ci_hit",
                                        ub = "close_enough",
-                                       lb = "close_enough"),
+                                       lb = "close_enough")},
                          ci_level = .95,
                          tolerance = .02,
                          x_interval = switch(x,
@@ -528,9 +528,30 @@ x_from_power <- function(object,
   # - Final power4test object.
   # - Final model by nls.
 
-  what <- match.arg(what)
+  what <- match.arg(what,
+                    c("point", "ub", "lb"))
   goal <- match.arg(goal,
                     c("ci_hit", "close_enough"))
+
+  # ==== Update the object if x_from_power ====
+
+  if (inherits(object, "x_from_power")) {
+    # Make object to be match some arguments
+    if ((object$what != what) ||
+        (object$goal != goal)) {
+      # what or goal changed.
+      object$solution_found <- FALSE
+    }
+    object$what <- what
+    object$goal <- goal
+    # No need to update them.
+    # They will be updated using
+    # what and goal in this call
+    # object$call$what <- what
+    # object$call$goal <- goal
+  }
+
+  # ==== Fix some arguments ====
 
   changed_to_point <- FALSE
   if ((goal == "ci_hit") &&
@@ -929,6 +950,7 @@ x_from_power <- function(object,
           object_by_org = object_by_org,
           final_nrep = final_nrep,
           final_R = final_R,
+          ci_level = ci_level,
           extendInt = extendInt,
           max_trials = max_trials,
           R = attr(object, "args")$R,
@@ -1629,3 +1651,41 @@ print.n_region_from_power <- function(
   invisible(x)
 }
 
+#' @rdname x_from_power
+#'
+#' @details
+#'
+#' The function [arg_x_from_power()]
+#' is a helper to set argument values
+#' if `object` is an output
+#' of [x_from_power()] or similar
+#' functions.
+#'
+#' @return
+#' The function [arg_x_from_power()]
+#' returns the requested argument if
+#' available. If not available, it
+#' returns `NULL`.
+#'
+#' @param arg The name of element to
+#' retrieve.
+#'
+#' @param arg_in The name of the element
+#' from which an element is to be
+#' retrieved.
+#'
+#' @export
+arg_x_from_power <- function(
+                      object,
+                      arg,
+                      arg_in = NULL) {
+  if (inherits(object, "x_from_power")) {
+    if (is.null(arg_in)) {
+      return(object[[arg]])
+    } else {
+      return(object[[arg_in]][[arg]])
+    }
+  } else {
+    return(NULL)
+  }
+}

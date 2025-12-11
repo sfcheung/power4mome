@@ -1,4 +1,4 @@
-# power4mome 0.1.1.12
+# power4mome 0.1.1.13
 
 - Improve the function for extending the
   initial interval before doing a
@@ -55,6 +55,11 @@
 - Updated `extend_interval()` to handle
   intervals with nearly equal function
   values. (0.1.1.12)
+
+- Improve `x_from_power()` and friends
+  (e.g., `n_from_power()` and
+  `n_region_from_power()`) to make use
+  of previous trials. (0.1.1.3)
 
 # power4mome 0.1.1
 

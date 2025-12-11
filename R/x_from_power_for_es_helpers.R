@@ -1,3 +1,65 @@
+set_es_range_by_x <- function(
+                          object,
+                          pop_es_name,
+                          target_power = .80,
+                          k = 4,
+                          es_max = .7,
+                          es_min = 0,
+                          object_by_org = NULL,
+                          what = NULL,
+                          goal = NULL,
+                          tol = NULL,
+                          ci_level = .95) {
+  reject0by <- rejection_rates(object_by_org,
+                               level = ci_level,
+                               add_se = TRUE,
+                               all_columns = TRUE)
+  # Always return a value because closest_ok is TRUE
+  i0 <- find_solution(
+                object_by_org,
+                target_power = target_power,
+                ci_level = ci_level,
+                what = what,
+                tol = tol,
+                goal = goal,
+                final_nrep = 0,
+                closest_ok = TRUE,
+                weight_by = "nrep",
+                debug = TRUE
+              )
+  es0 <- reject0by$es[i0]
+  what0 <- switch(
+              what,
+              point = "reject",
+              lb = "reject_ci_lo",
+              ub = "reject_ci_hi"
+            )
+  est0 <- reject0by[i0, what0, drop = TRUE]
+  # Displace est0 a little bit
+  if (est0 == target_power) {
+    est0 <- target_power * .95
+  }
+  if (est0 < target_power) {
+    i1a <- reject0by[, what0, drop = TRUE] > target_power
+    i1b <- reject0by$es > es0
+    i1 <- i1a & i1b
+  } else {
+    i1a <- reject0by[, what0, drop = TRUE] < target_power
+    i1b <- reject0by$es < es0
+    i1 <- i1a & i1b
+  }
+  if (any(i1)) {
+    i1 <- which(i1)[1]
+    es1 <- reject0by$es[i1]
+  } else {
+    es1 <- es0 * target_power / est0
+  }
+  es0 <- min(es0, es_max)
+  es1 <- min(es1, es_max)
+  es_out <- range(es0, es1)
+  es_out
+}
+
 set_es_range <- function(object,
                          pop_es_name,
                          target_power = .80,

@@ -55,7 +55,11 @@ alg_bisection <- function(
     is_by_x = is_by_x,
     object_by_org = object_by_org,
     final_nrep = final_nrep,
-    final_R = final_R
+    final_R = final_R,
+    what = what,
+    goal = goal,
+    tol = tol,
+    ci_level = ci_level
   )
 
   # ==== Process output ====
@@ -65,11 +69,12 @@ alg_bisection <- function(
   fit_1 <- a_out$fit_1
 
   # TODO:
-  # - Need to take care of duplicated objects
-  # if (is_by_x) {
-  #   by_x_1 <- c(by_x_1,
-  #               object_by_org)
-  # }
+  # - Check whether it works
+  if (is_by_x) {
+    tmp <- setdiff(names(object_by_org), names(by_x_1))
+    by_x_1 <- c(by_x_1,
+                object_by_org[tmp])
+  }
 
   rm(a_out)
 
@@ -1015,8 +1020,6 @@ extend_interval <- function(f,
                 extend_status = status_msg[status_msg == 3],
                 extendInt = extendInt))
   }
-  # TODO:
-  # - Need to optimize the code to reduce duplications
   interval_ok <- FALSE
 
   # ==== Extend the interval ====
@@ -1156,6 +1159,9 @@ extend_i <- function(
       upper <- lower
       f.upper <- f.lower
       lower <- overshoot * -intercept / slope
+      if (lower > upper) {
+        lower <- mean(c(lower_hard, upper))
+      }
       if (x_type == "n") {
         lower <- ceiling(lower)
       }
@@ -1167,6 +1173,9 @@ extend_i <- function(
       lower <- upper
       f.lower <- f.upper
       upper <- (1 + overshoot) * -intercept / slope
+      if (upper < lower) {
+        upper <- mean(c(lower, upper_hard))
+      }
       if (x_type == "n") {
         upper <- ceiling(upper)
       }
@@ -1418,20 +1427,40 @@ power_algorithm_bisection_pre_i <- function(object,
                                             nls_control,
                                             nls_args,
                                             final_nrep,
-                                            final_R) {
+                                            final_R,
+                                            what,
+                                            goal,
+                                            tol,
+                                            ci_level
+                                            ) {
 
   # ==== Initial values ====
 
-  # TODO:
-  # - Make use of by_* object's results.
   # This method only needs an initial interval
-  x_i <- set_x_range(object,
-                    x = x,
-                    pop_es_name = pop_es_name,
-                    target_power = target_power,
-                    k = 2,
-                    x_max = x_max,
-                    x_min = x_min)
+  if (inherits(object_by_org, "power4test_by_n") ||
+      inherits(object_by_org, "power4test_by_es")) {
+    x_i <- set_x_range_by_x(
+                      object,
+                      x = x,
+                      pop_es_name = pop_es_name,
+                      target_power = target_power,
+                      k = 2,
+                      x_max = x_max,
+                      x_min = x_min,
+                      object_by_org = object_by_org,
+                      what = what,
+                      goal = goal,
+                      tol = tol,
+                      ci_level = ci_level)
+  } else {
+    x_i <- set_x_range(object,
+                      x = x,
+                      pop_es_name = pop_es_name,
+                      target_power = target_power,
+                      k = 2,
+                      x_max = x_max,
+                      x_min = x_min)
+  }
 
   # For bisection, no need to exclude the value in the input objects
   # Exclude the value in the input object
