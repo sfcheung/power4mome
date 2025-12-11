@@ -483,7 +483,7 @@ x_from_power <- function(object,
                          x = arg_x_from_power(object, "x", arg_in = "call") %||% "n",
                          pop_es_name = arg_x_from_power(object, "pop_es_name", arg_in = "call"),
                          target_power = .80,
-                         what = arg_x_from_power(object, "what") %||% c("point", "ub", "lb"),
+                         what = arg_x_from_power(object, "what") %||% "point",
                          goal = arg_x_from_power(object, "goal") %||% {switch(what,
                                        point = "ci_hit",
                                        ub = "close_enough",
@@ -528,9 +528,30 @@ x_from_power <- function(object,
   # - Final power4test object.
   # - Final model by nls.
 
-  what <- match.arg(what)
+  what <- match.arg(what,
+                    c("point", "ub", "lb"))
   goal <- match.arg(goal,
                     c("ci_hit", "close_enough"))
+
+  # ==== Update the object if x_from_power ====
+
+  if (inherits(object, "x_from_power")) {
+    # Make object to be match some arguments
+    if ((object$what != what) ||
+        (object$goal != goal)) {
+      # what or goal changed.
+      object$solution_found <- FALSE
+    }
+    object$what <- what
+    object$goal <- goal
+    # No need to update them.
+    # They will be updated using
+    # what and goal in this call
+    # object$call$what <- what
+    # object$call$goal <- goal
+  }
+
+  # ==== Fix some arguments ====
 
   changed_to_point <- FALSE
   if ((goal == "ci_hit") &&

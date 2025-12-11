@@ -14,7 +14,7 @@ x_from_power(
   x = arg_x_from_power(object, "x", arg_in = "call") \%||\% "n",
   pop_es_name = arg_x_from_power(object, "pop_es_name", arg_in = "call"),
   target_power = 0.8,
-  what = arg_x_from_power(object, "what") \%||\% c("point", "ub", "lb"),
+  what = arg_x_from_power(object, "what") \%||\% "point",
   goal = arg_x_from_power(object, "goal") \%||\% {
      switch(what, point = "ci_hit", ub
     = "close_enough", lb = "close_enough")
