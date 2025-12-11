@@ -10,52 +10,54 @@ set_es_range_by_x <- function(
                           goal = NULL,
                           tol = NULL,
                           ci_level = .95) {
-  # TODO:
-  # - Add support for multigroup models.
-  es0 <- pop_es(object,
-                pop_es_name = pop_es_name)
-  es0_sign <- sign(es0)
-  es0_abs <- abs(es0)
-  reject0 <- rejection_rates(object)
-  power0 <- reject0$reject[1]
-  if (es0 > es_max) {
-    # Use x_max because es_max and es_min are internal arguments
-    stop("Initial population value (",
-          es0,
-          ") is equal to or greater than 'x_max' (",
-          es_max,
-          "). Please increase 'x_max'.")
+  reject0by <- rejection_rates(object_by_org,
+                               level = ci_level,
+                               add_se = TRUE,
+                               all_columns = TRUE)
+  # Always return a value because closest_ok is TRUE
+  i0 <- find_solution(
+                object_by_org,
+                target_power = target_power,
+                ci_level = ci_level,
+                what = what,
+                tol = tol,
+                goal = goal,
+                final_nrep = 0,
+                closest_ok = TRUE,
+                weight_by = "nrep",
+                debug = TRUE
+              )
+  es0 <- reject0by$es[i0]
+  what0 <- switch(
+              what,
+              point = "reject",
+              lb = "reject_ci_lo",
+              ub = "reject_ci_hi"
+            )
+  est0 <- reject0by[i0, what0, drop = TRUE]
+  # Displace est0 a little bit
+  if (est0 == target_power) {
+    est0 <- target_power * .95
   }
-  if (es0 < es_min) {
-    # Use x_max because es_max and es_min are internal arguments
-    stop("Initial population value (",
-          es0,
-          ") is equal to or less than 'x_min' (",
-          es_min,
-          "). Please decrease 'x_min'.")
-  }
-
-  if (power0 == target_power) {
-    # If power0 == target_power,
-    # Be conservative and decrease power by a small amount
-    power0 <- target_power * .99
-  }
-
-  b <- power0 / es0_abs
-  es_bound <- ifelse(es0_sign >= 0,
-                      abs(es_max),
-                      abs(es_min))
-  es_end <- min(target_power / b,
-                es_bound)
-  es_out <- seq(from = es0_abs,
-                to = es_end,
-                length.out = k)
-  if (es0_sign >= 0) {
-    return(es_out)
+  if (est0 < target_power) {
+    i1a <- reject0by[, what0, drop = TRUE] > target_power
+    i1b <- reject0by$es > es0
+    i1 <- i1a & i1b
   } else {
-    es_out <- sort(-es_out)
-    return(es_out)
+    i1a <- reject0by[, what0, drop = TRUE] < target_power
+    i1b <- reject0by$es < es0
+    i1 <- i1a & i1b
   }
+  if (any(i1)) {
+    i1 <- which(i1)[1]
+    es1 <- reject0by$es[i1]
+  } else {
+    es1 <- es0 * target_power / est0
+  }
+  es0 <- min(es0, es_max)
+  es1 <- min(es1, es_max)
+  es_out <- range(es0, es1)
+  es_out
 }
 
 set_es_range <- function(object,
