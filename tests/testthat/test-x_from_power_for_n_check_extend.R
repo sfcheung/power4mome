@@ -4,6 +4,9 @@ library(testthat)
 
 test_that("n_region_from_power: check_extend: short", {
 
+# A case the failed in previous versions due to invalid
+# ranges.
+
 mod <-
 "
 m ~ x
