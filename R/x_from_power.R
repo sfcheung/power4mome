@@ -480,14 +480,14 @@
 #'
 #' @export
 x_from_power <- function(object,
-                         x,
-                         pop_es_name = NULL,
+                         x = arg_x_from_power(object, "x", arg_in = "call") %||% "n",
+                         pop_es_name = arg_x_from_power(object, "pop_es_name", arg_in = "call"),
                          target_power = .80,
-                         what = c("point", "ub", "lb"),
-                         goal = switch(what,
+                         what = arg_x_from_power(object, "what") %||% c("point", "ub", "lb"),
+                         goal = arg_x_from_power(object, "goal") %||% {switch(what,
                                        point = "ci_hit",
                                        ub = "close_enough",
-                                       lb = "close_enough"),
+                                       lb = "close_enough")},
                          ci_level = .95,
                          tolerance = .02,
                          x_interval = switch(x,
@@ -1630,3 +1630,41 @@ print.n_region_from_power <- function(
   invisible(x)
 }
 
+#' @rdname x_from_power
+#'
+#' @details
+#'
+#' The function [arg_x_from_power()]
+#' is a helper to set argument values
+#' if `object` is an output
+#' of [x_from_power()] or similar
+#' functions.
+#'
+#' @return
+#' The function [arg_x_from_power()]
+#' returns the requested argument if
+#' available. If not available, it
+#' returns `NULL`.
+#'
+#' @param arg The name of element to
+#' retrieve.
+#'
+#' @param arg_in The name of the element
+#' from which an element is to be
+#' retrieved.
+#'
+#' @export
+arg_x_from_power <- function(
+                      object,
+                      arg,
+                      arg_in = NULL) {
+  if (inherits(object, "x_from_power")) {
+    if (is.null(arg_in)) {
+      return(object[[arg]])
+    } else {
+      return(object[[arg_in]][[arg]])
+    }
+  } else {
+    return(NULL)
+  }
+}
