@@ -1436,9 +1436,6 @@ power_algorithm_bisection_pre_i <- function(object,
 
   # ==== Initial values ====
 
-  # TODO:
-  # - Make use of by_* object's results.
-  #   - Still need to update for x = "es".
   # This method only needs an initial interval
   if (inherits(object_by_org, "power4test_by_n") ||
       inherits(object_by_org, "power4test_by_es")) {
