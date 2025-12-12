@@ -991,6 +991,13 @@ extend_interval <- function(f,
                    ifelse(x_type == "n",
                           floor(lower * tmp),
                           lower * tmp))
+      lower <- force_new_x(
+                    lower,
+                    x_tried = get_x_tried(object = by_x_1,
+                                          x = x_type),
+                    x_interval = range(lower_hard, upper_hard),
+                    x_type = x_type
+                  )
       f.lower <- f(lower, ...)
       by_x_1 <- c(by_x_1, attr(f.lower, "output"),
                   skip_checking_models = TRUE)
@@ -1003,6 +1010,13 @@ extend_interval <- function(f,
                    ifelse(x_type == "n",
                           floor(upper * tmp),
                           upper * tmp))
+      upper <- force_new_x(
+                    upper,
+                    x_tried = get_x_tried(object = by_x_1,
+                                          x = x_type),
+                    x_interval = range(lower_hard, upper_hard),
+                    x_type = x_type
+                  )
       f.upper <- f(upper, ...)
       by_x_1 <- c(by_x_1, attr(f.upper, "output"),
                   skip_checking_models = TRUE)
@@ -1020,6 +1034,20 @@ extend_interval <- function(f,
                    ifelse(x_type == "n",
                           floor(lower * tmp_lower),
                           lower * tmp_lower))
+      upper <- force_new_x(
+                    upper,
+                    x_tried = get_x_tried(object = by_x_1,
+                                          x = x_type),
+                    x_interval = range(lower_hard, upper_hard),
+                    x_type = x_type
+                  )
+      lower <- force_new_x(
+                    lower,
+                    x_tried = get_x_tried(object = by_x_1,
+                                          x = x_type),
+                    x_interval = range(lower_hard, upper_hard),
+                    x_type = x_type
+                  )
       f.upper <- f(upper, ...)
       f.lower <- f(lower, ...)
       by_x_1 <- c(by_x_1, attr(f.upper, "output"),
@@ -1111,7 +1139,8 @@ extend_interval <- function(f,
             overshoot = overshoot,
             which = switch(extend_which,
                            extend_down = "lower",
-                           extend_up = "upper")
+                           extend_up = "upper"),
+            by_x_1 = by_x_1
           )
         lower <- out_i$lower
         upper <- out_i$upper
@@ -1195,7 +1224,8 @@ extend_i <- function(
                   x_type,
                   digits,
                   overshoot,
-                  which = c("lower", "upper")) {
+                  which = c("lower", "upper"),
+                  by_x_1 = NULL) {
   which <- match.arg(which)
   if (((which == "lower") && (lower == lower_hard)) ||
       ((which == "upper") && (upper == upper_hard))) {
@@ -1222,6 +1252,15 @@ extend_i <- function(
         lower <- ceiling(lower)
       }
       lower <- max(lower, lower_hard)
+      if (!is.null(by_x_1)) {
+        lower <- force_new_x(
+                      lower,
+                      x_tried = get_x_tried(object = by_x_1,
+                                            x = x_type),
+                      x_interval = range(lower_hard, upper_hard),
+                      x_type = x_type
+                    )
+      }
       f.lower <- do.call(f,
                           c(list(x_i = lower),
                            args))
@@ -1236,6 +1275,15 @@ extend_i <- function(
         upper <- ceiling(upper)
       }
       upper <- min(upper, upper_hard)
+      if (!is.null(by_x_1)) {
+        upper <- force_new_x(
+                      upper,
+                      x_tried = get_x_tried(object = by_x_1,
+                                            x = x_type),
+                      x_interval = range(lower_hard, upper_hard),
+                      x_type = x_type
+                    )
+      }
       f.upper <- do.call(f,
                          c(list(x_i = upper),
                            args))

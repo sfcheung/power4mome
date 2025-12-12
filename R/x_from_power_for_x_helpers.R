@@ -488,6 +488,34 @@ in_x_tried <- function(test_x,
 }
 
 #' @noRd
+force_new_x <- function(
+                    x0,
+                    x_tried,
+                    x_interval,
+                    x_type = c("es", "n"),
+                    step = switch(x_type,
+                                  n = 1,
+                                  es = .01),
+                    post_process = switch(x_type,
+                                          es = function(x) x,
+                                          n = ceiling),
+                    k = 20
+                  ) {
+  k0 <- 0
+  xi <- x0
+  step_all <- as.vector(rbind(seq_len(k), -seq_len(k)))
+  while ((k0 <= k * 2) &&
+         ((xi %in% x_tried) ||
+          (xi < min(x_interval)) ||
+          (xi > max(x_interval)))) {
+    k0 <- k0 + 1
+    xi <- xi + step_all[k0] * step
+    xi <- post_process(xi)
+  }
+  xi
+}
+
+#' @noRd
 # Determine the probable range of valid values
 # for a parameter
 fix_es_interval <- function(object,
