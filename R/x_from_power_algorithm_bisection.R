@@ -928,7 +928,27 @@ extend_interval <- function(f,
   args <- list(...)
   # x is always supplied
   x_type <- args$x
-  # by_x_1 is always supplied
+
+  # ==== by_x_1 not supplied ====
+
+  # This rarely happens.
+
+  if (is.null(by_x_1)) {
+    if (is.null((attr(f.lower, "output")))) {
+      f.lower <- f(lower, ...)
+    }
+    if (is.null((attr(f.upper, "output")))) {
+      f.upper <- f(upper, ...)
+    }
+    tmp <- switch(
+              x_type,
+              n = as.power4test_by_n(f.lower),
+              es = as.power4test_by_es(f.lower,
+                                       pop_es_name = args$pop_es_name)
+            )
+    by_x_1 <- c(tmp,
+                f.upper)
+  }
 
   # ==== Interval already valid? ====
 
@@ -1146,10 +1166,23 @@ extend_interval <- function(f,
         upper <- out_i$upper
         f.lower <- out_i$f.lower
         f.upper <- out_i$f.upper
-        by_x_1 <- c(by_x_1, attr(f.lower, "output"),
-                    skip_checking_models = TRUE)
-        by_x_1 <- c(by_x_1, attr(f.upper, "output"),
-                    skip_checking_models = TRUE)
+
+        if (is.na(in_x_tried(
+                    lower,
+                    by_x_1,
+                    x = x_type
+              ))) {
+          by_x_1 <- c(by_x_1, attr(f.lower, "output"),
+                      skip_checking_models = TRUE)
+        }
+        if (is.na(in_x_tried(
+                    upper,
+                    by_x_1,
+                    x = x_type
+              ))) {
+          by_x_1 <- c(by_x_1, attr(f.upper, "output"),
+                      skip_checking_models = TRUE)
+        }
         interval_ok <- out_i$interval_ok
         extend_status <- out_i$extend_status
         extend_which <- check_extend_x(
