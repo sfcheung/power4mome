@@ -1063,8 +1063,8 @@ extend_interval <- function(f,
   extend_which <- check_extend_x(
                     upper = upper,
                     lower = lower,
-                    f.upper = f.upper,
-                    f.lower = f.lower
+                    f.upper = as.numeric(f.upper),
+                    f.lower = as.numeric(f.lower)
                   )
   extend_up <- (extend_which == "extend_up")
   extend_down <- (extend_which == "extend_down")
@@ -1155,8 +1155,8 @@ extend_interval <- function(f,
         extend_which <- check_extend_x(
                           upper = upper,
                           lower = lower,
-                          f.upper = f.upper,
-                          f.lower = f.lower
+                          f.upper = as.numeric(f.upper),
+                          f.lower = as.numeric(f.lower)
                         )
         extend_up <- (extend_which == "extend_up")
         extend_down <- (extend_which == "extend_down")
@@ -1239,8 +1239,8 @@ extend_i <- function(
       cat(names(extend_status), ".\n", sep = "")
     }
   } else {
-    slope <- (f.upper - f.lower) / (upper - lower)
-    intercept <- -slope * upper +  f.upper
+    slope <- (as.numeric(f.upper) - as.numeric(f.lower)) / (upper - lower)
+    intercept <- -slope * upper +  as.numeric(f.upper)
     if (which == "lower") {
       upper <- lower
       f.upper <- f.lower
