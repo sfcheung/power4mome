@@ -139,7 +139,7 @@ power_algorithm_bisection <- function(object,
                                       nls_args = list(),
                                       save_sim_all = FALSE,
                                       start = mean(x_interval),
-                                      by_x_1 = by_x_1,
+                                      by_x_1 = NULL,
                                       fit_1 = NULL,
                                       is_by_x = FALSE,
                                       digits = 3,
@@ -396,6 +396,7 @@ power_algorithm_bisection <- function(object,
                                         save_sim_all = save_sim_all,
                                         progress = progress,
                                         x_type = x_type,
+                                        by_x_1 = by_x_1,
                                         lower = lower,
                                         upper = upper,
                                         f.lower = f.lower,
@@ -410,7 +411,7 @@ power_algorithm_bisection <- function(object,
                                         overshoot = switch(x,
                                                            n = .5,
                                                            es = .05))
-
+    by_x_1 <- interval_updated$by_x_1 %||% by_x_1
     ci_hit <- FALSE
     solution_found <- FALSE
 
@@ -927,6 +928,7 @@ extend_interval <- function(f,
   args <- list(...)
   # x is always supplied
   x_type <- args$x
+  # by_x_1 is always supplied
 
   # ==== Interval already valid? ====
 
@@ -965,22 +967,71 @@ extend_interval <- function(f,
                 extendInt = extendInt))
   }
 
+  # ==== Handle bounds with equal function values ====
+
+  rate_i <- .9
+  rate_tmp <- 1
+  max_tmp <- 5
+  while (isTRUE(all.equal(
+                  as.numeric(f.lower),
+                  as.numeric(f.upper)
+                )
+              ) ||
+          (max_tmp == 0)
+          ) {
+    max_tmp <- max_tmp - 1
+    # To handle bounds with equal f values.
+    # If f.upper == f.lower,
+    if ((upper > 0) && (lower > 0)) {
+      # Only extend lower
+      tmp <- (args$target_power - as.numeric(f.lower)) /
+             (args$target_power + as.numeric(f.lower))
+      tmp <- tmp * rate_tmp
+      lower <- max(lower_hard,
+                   ifelse(x_type == "n",
+                          floor(lower * tmp),
+                          lower * tmp))
+      f.lower <- f(lower, ...)
+      by_x_1 <- c(by_x_1, attr(f.lower, "output"),
+                  skip_checking_models = TRUE)
+    } else if (((upper < 0 && (lower < 0)))) {
+      # Only extend upper
+      tmp <- (args$target_power - as.numeric(f.upper)) /
+             (args$target_power + as.numeric(f.upper))
+      tmp <- tmp * 1 / rate_tmp
+      upper <- min(upper_hard,
+                   ifelse(x_type == "n",
+                          floor(upper * tmp),
+                          upper * tmp))
+      f.upper <- f(upper, ...)
+      by_x_1 <- c(by_x_1, attr(f.upper, "output"),
+                  skip_checking_models = TRUE)
+    } else {
+      # This possibility should not happen. Just in case.
+      # widen the interval slightly
+      tmp_upper <- tmp * 1 / rate_tmp
+      tmp_lower <- tmp * rate_tmp
+
+      upper <- min(upper_hard,
+                   ifelse(x_type == "n",
+                          floor(upper * tmp_upper),
+                          upper * tmp_upper))
+      lower <- max(lower_hard,
+                   ifelse(x_type == "n",
+                          floor(lower * tmp_lower),
+                          lower * tmp_lower))
+      f.upper <- f(upper, ...)
+      f.lower <- f(lower, ...)
+      by_x_1 <- c(by_x_1, attr(f.upper, "output"),
+                  skip_checking_models = TRUE)
+      by_x_1 <- c(by_x_1, attr(f.lower, "output"),
+                  skip_checking_models = TRUE)
+    }
+    rate_tmp <- rate_tmp * rate_i
+  }
+
   # ==== How should the interval be extended? ====
 
-  if (isTRUE(all.equal(f.lower, f.upper))) {
-    # If f.upper == f.lower,
-    # widen the interval slightly
-    upper <- min(upper_hard,
-                 ifelse(x_type == "n",
-                        floor(upper * 1.1),
-                        upper * 1.1))
-    lower <- max(lower_hard,
-                 ifelse(x_type == "n",
-                        floor(lower * 0.9),
-                        lower * 0.9))
-    f.upper <- f(upper, ...)
-    f.lower <- f(lower, ...)
-  }
   extend_which <- check_extend_x(
                     upper = upper,
                     lower = lower,
@@ -1066,6 +1117,10 @@ extend_interval <- function(f,
         upper <- out_i$upper
         f.lower <- out_i$f.lower
         f.upper <- out_i$f.upper
+        by_x_1 <- c(by_x_1, attr(f.lower, "output"),
+                    skip_checking_models = TRUE)
+        by_x_1 <- c(by_x_1, attr(f.upper, "output"),
+                    skip_checking_models = TRUE)
         interval_ok <- out_i$interval_ok
         extend_status <- out_i$extend_status
         extend_which <- check_extend_x(
@@ -1118,7 +1173,8 @@ extend_interval <- function(f,
               f.upper = f.upper,
               interval_ok = interval_ok,
               extend_status = extend_status,
-              extendInt = extendInt))
+              extendInt = extendInt,
+              by_x_1 = by_x_1))
 }
 
 #' @noRd

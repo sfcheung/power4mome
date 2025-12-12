@@ -2,10 +2,7 @@ skip("Internal")
 
 library(testthat)
 
-test_that("n_region_from_power: check_extend: short", {
-
-# A case the failed in previous versions due to invalid
-# ranges.
+test_that("check_extend: Start with very small n", {
 
 mod <-
 "
@@ -25,7 +22,7 @@ out <- power4test(
           nrep = 400,
           model = mod,
           pop_es = pop_es,
-          n = 110,
+          n = 51,
           reliability = .70,
           number_of_indicators = 6,
           R = 199,
@@ -42,22 +39,19 @@ out <- power4test(
         )
 
 out1 <- n_from_power(out,
-                     x_interval = c(110, 300),
                      what = "ub",
                      seed = 1234)
-tmp <- out1
-tmp$what <- "lb"
-tmp$goal <- "close_enough"
-tmp$solution_found <- FALSE
-tmp$call$what <- "lb"
-tmp$call$goal <- "close_enough"
-out2 <- n_from_power(tmp,
-                     what = "lb",
-                     seed = 4567)
+plot(out1)
+
+out2 <- n_region_from_power(
+          out,
+          seed = 1234
+        )
+plot(out2)
 
 })
 
-test_that("n_region_from_power: check_extend", {
+test_that("check_extend: Start with very large n", {
 
 mod <-
 "
@@ -73,11 +67,11 @@ y ~ x: m
 "
 
 options(power4mome.bz = TRUE)
-out <- power4test(
+outb <- power4test(
           nrep = 400,
           model = mod,
           pop_es = pop_es,
-          n = 50,
+          n = 1999,
           reliability = .70,
           number_of_indicators = 6,
           R = 199,
@@ -93,14 +87,15 @@ out <- power4test(
           ncores = max(1, parallel::detectCores(logical = FALSE) - 1)
         )
 
-out2 <- n_region_from_power(
-          out,
-          target_power = .80,
-          progress = TRUE,
-          simulation_progress = TRUE,
-          max_trials = 10,
+outb1 <- n_from_power(outb,
+                     what = "ub",
+                     seed = 1234)
+plot(outb1)
+
+outb2 <- n_region_from_power(
+          outb,
           seed = 1234
         )
-summary(out2)
-plot(out2)
+plot(outb2)
+
 })
