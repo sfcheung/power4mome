@@ -77,7 +77,8 @@ set_n_range <- function(object,
   if (power0 < target_power) {
     b <- power0 / n0
     n_end <- min(round(target_power / b),
-                 n_max)
+                 n_max,
+                 n0 * 2)
     n_out <- seq(from = n0,
                  to = n_end,
                  length.out = k)
@@ -86,12 +87,13 @@ set_n_range <- function(object,
   } else {
     # If power0 == target_power,
     # Be conservative and decrease power by a small amount,
-    if (power0 == target_power) {
-      power0 <- target_power * .80
-    }
+    # if (power0 == target_power) {
+    #   power0 <- target_power * .80
+    # }
     b <- power0 / n0
     n_end <- min(round(target_power / b),
-                 n_max)
+                 n_max,
+                 n0 / 2)
     n_out <- seq(from = n_end,
                  to = n0,
                  length.out = k)

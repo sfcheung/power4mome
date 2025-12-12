@@ -1,4 +1,4 @@
-# power4mome 0.1.1.13
+# power4mome 0.1.1.14
 
 - Improve the function for extending the
   initial interval before doing a
@@ -56,10 +56,14 @@
   intervals with nearly equal function
   values. (0.1.1.12)
 
-- Improve `x_from_power()` and friends
+- Improved `x_from_power()` and friends
   (e.g., `n_from_power()` and
   `n_region_from_power()`) to make use
-  of previous trials. (0.1.1.3)
+  of previous trials. (0.1.1.13)
+
+- Optimize the search by bisection, to
+  make use of value already tried and
+  store all values tried. (0.1.1.14)
 
 # power4mome 0.1.1
 
