@@ -934,11 +934,11 @@ extend_interval <- function(f,
 
   if (sign(f.lower) != sign(f.upper)) {
 
-    # ==== Yes. Exist ====
+    # ==== Yes. Exit ====
 
     # No need to extend
     if (trace) {
-      cat("\n\n== Exist extending interval ...\n\n")
+      cat("\n\n== Exit extending interval ...\n\n")
     }
     return(list(lower = lower,
                 upper = upper,
@@ -953,10 +953,10 @@ extend_interval <- function(f,
 
   if (extendInt == "no") {
 
-    # ==== "No". Exist ====
+    # ==== "No". Exit ====
 
     if (trace) {
-      cat("\n\n== Exist extending interval ...\n\n")
+      cat("\n\n== Exit extending interval ...\n\n")
     }
     return(list(lower = lower,
                 upper = upper,
@@ -1074,7 +1074,7 @@ extend_interval <- function(f,
     # ==== Should extend down but not requested. Exist ====
 
     if (trace) {
-      cat("\n\n== Exist extending interval ...\n\n")
+      cat("\n\n== Exit extending interval ...\n\n")
     }
     return(list(lower = lower,
                 upper = upper,
@@ -1089,7 +1089,7 @@ extend_interval <- function(f,
     # ==== Should extend up but not requested. Exist ====
 
     if (trace) {
-      cat("\n\n== Exist extending interval ...\n\n")
+      cat("\n\n== Exit extending interval ...\n\n")
     }
     return(list(lower = lower,
                 upper = upper,
@@ -1191,7 +1191,7 @@ extend_interval <- function(f,
   }
 
   if (trace) {
-    cat("\n\n== Exist extending interval ...\n\n")
+    cat("\n\n== Exit extending interval ...\n\n")
   }
 
   # ==== Return the extended interval ====
