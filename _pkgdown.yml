@@ -73,6 +73,7 @@ articles:
   - articles/template_mediation_obs
   - articles/template_mediation_obs_serial
   - articles/x_from_power_for_es
+  - articles/x_from_power_for_n_test_printout
 
 reference:
 - title: Main Functions

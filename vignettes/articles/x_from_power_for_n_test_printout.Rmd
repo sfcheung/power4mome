@@ -1,0 +1,953 @@
+---
+title: "Sample Size Given Desired Power (Internal)"
+date: "2025-12-13"
+output:
+  rmarkdown::html_vignette:
+    options:
+      toc:
+        depth: 2
+      number_sections: true
+vignette: >
+  %\VignetteIndexEntry{Sample Size Given Desired Power (Internal)}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+bibliography: references.bib
+csl: apa.csl
+---
+
+
+
+# NOTE
+
+This article is for internal testing
+of the printout.
+
+
+``` r
+library(power4mome)
+```
+
+
+``` r
+mod <-
+"
+m ~ x
+y ~ m + x
+"
+```
+
+
+
+``` r
+mod_es <-
+"
+m ~ x: l
+y ~ m: m
+y ~ x: s
+"
+```
+
+
+``` r
+out <- power4test(nrep = 2,
+                  model = mod,
+                  pop_es = mod_es,
+                  n = 50000,
+                  iseed = 1234)
+```
+
+
+``` r
+print(out,
+      data_long = TRUE)
+#> 
+#> ====================== Model Information ======================
+#> 
+#> == Model on Factors/Variables ==
+#> 
+#> m ~ x
+#> y ~ m + x
+#> 
+#> == Model on Variables/Indicators ==
+#> 
+#> m ~ x
+#> y ~ m + x
+#> 
+#> ====== Population Values ======
+#> 
+#> Regressions:
+#>                    Population
+#>   m ~                        
+#>     x                 0.500  
+#>   y ~                        
+#>     m                 0.300  
+#>     x                 0.100  
+#> 
+#> Variances:
+#>                    Population
+#>    .m                 0.750  
+#>    .y                 0.870  
+#>     x                 1.000  
+#> 
+#> (Computing indirect effects for 2 paths ...)
+#> 
+#> == Population Conditional/Indirect Effect(s) ==
+#> 
+#> == Indirect Effect(s) ==
+#> 
+#>               ind
+#> x -> m -> y 0.150
+#> x -> y      0.100
+#> 
+#>  - The 'ind' column shows the indirect effect(s).
+#>  
+#> ======================= Data Information =======================
+#> 
+#> Number of Replications:  2 
+#> Sample Sizes:  50000 
+#> 
+#> ==== Descriptive Statistics ====
+#> 
+#>   vars     n mean sd skew kurtosis se
+#> m    1 1e+05 0.00  1 0.01     0.03  0
+#> y    2 1e+05 0.01  1 0.01     0.00  0
+#> x    3 1e+05 0.00  1 0.01     0.01  0
+#> 
+#> ===== Parameter Estimates Based on All 2 Samples Combined =====
+#> 
+#> Total Sample Size: 100000 
+#> 
+#> ==== Standardized Estimates ====
+#> 
+#> Variances and error variances omitted.
+#> 
+#> Regressions:
+#>                     est.std
+#>   m ~                      
+#>     x                 0.500
+#>   y ~                      
+#>     m                 0.295
+#>     x                 0.102
+#> 
+#> 
+#> ==================== Extra Element(s) Found ====================
+#> 
+#> - fit
+#> 
+#> === Element(s) of the First Dataset ===
+#> 
+#> ============ <fit> ============
+#> 
+#> lavaan 0.6-21.2434 ended normally after 1 iteration
+#> 
+#>   Estimator                                         ML
+#>   Optimization method                           NLMINB
+#>   Number of model parameters                         5
+#> 
+#>   Number of observations                         50000
+#> 
+#> Model Test User Model:
+#>                                                       
+#>   Test statistic                                 0.000
+#>   Degrees of freedom                                 0
+```
+
+
+``` r
+out <- power4test(nrep = 10,
+                  model = mod,
+                  pop_es = mod_es,
+                  n = 50,
+                  R = 199,
+                  ci_type = "mc",
+                  test_fun = test_indirect_effect,
+                  test_args = list(x = "x",
+                                   m = "m",
+                                   y = "y",
+                                   mc_ci = TRUE),
+                  iseed = 2345,
+                  parallel = TRUE)
+```
+
+
+``` r
+print(out,
+      test_long = TRUE)
+#> 
+#> ====================== Model Information ======================
+#> 
+#> == Model on Factors/Variables ==
+#> 
+#> m ~ x
+#> y ~ m + x
+#> 
+#> == Model on Variables/Indicators ==
+#> 
+#> m ~ x
+#> y ~ m + x
+#> 
+#> ====== Population Values ======
+#> 
+#> Regressions:
+#>                    Population
+#>   m ~                        
+#>     x                 0.500  
+#>   y ~                        
+#>     m                 0.300  
+#>     x                 0.100  
+#> 
+#> Variances:
+#>                    Population
+#>    .m                 0.750  
+#>    .y                 0.870  
+#>     x                 1.000  
+#> 
+#> (Computing indirect effects for 2 paths ...)
+#> 
+#> == Population Conditional/Indirect Effect(s) ==
+#> 
+#> == Indirect Effect(s) ==
+#> 
+#>               ind
+#> x -> m -> y 0.150
+#> x -> y      0.100
+#> 
+#>  - The 'ind' column shows the indirect effect(s).
+#>  
+#> ======================= Data Information =======================
+#> 
+#> Number of Replications:  10 
+#> Sample Sizes:  50 
+#> 
+#> Call print with 'data_long = TRUE' for further information.
+#> 
+#> ==================== Extra Element(s) Found ====================
+#> 
+#> - fit
+#> - mc_out
+#> 
+#> === Element(s) of the First Dataset ===
+#> 
+#> ============ <fit> ============
+#> 
+#> lavaan 0.6-21.2434 ended normally after 1 iteration
+#> 
+#>   Estimator                                         ML
+#>   Optimization method                           NLMINB
+#>   Number of model parameters                         5
+#> 
+#>   Number of observations                            50
+#> 
+#> Model Test User Model:
+#>                                                       
+#>   Test statistic                                 0.000
+#>   Degrees of freedom                                 0
+#> 
+#> =========== <mc_out> ===========
+#> 
+#> 
+#> == A 'mc_out' class object ==
+#> 
+#> Number of Monte Carlo replications: 199 
+#> 
+#> 
+#> =============== <test_indirect: x->m->y> ===============
+#> 
+#> Mean(s) across replication:
+#>    est  cilo  cihi   sig
+#>  0.143 0.002 0.327 0.600
+#> 
+#> - The value 'sig' is the rejection rate.
+#> - If the null hypothesis is false, this is the power.
+#> - Number of valid replications for rejection rate: 10 
+#> - Proportion of valid replications for rejection rate: 1.000
+```
+
+
+``` r
+out_n <- n_from_power(out,
+                      target_power = .80,
+                      final_nrep = 50,
+                      what = "ub",
+                      seed = 4567)
+```
+
+
+``` r
+out_n
+#> Call:
+#> power4mome::x_from_power(object = out, x = "n", target_power = 0.8, 
+#>     what = "ub", goal = "close_enough", final_nrep = 50, seed = 4567)
+#> 
+#>                           Setting
+#> Predictor(x):         Sample Size
+#> Parameter:                    N/A
+#> goal:                close_enough
+#> what:                          ub
+#> algorithm:              bisection
+#> Level of confidence:       95.00%
+#> Target Power:               0.800
+#> 
+#> - Final Value of Sample Size (n): 81
+#> 
+#> - Final Estimated Power (CI): 0.700 [0.562, 0.809]
+#> 
+#> Call `summary()` for detailed results.
+```
+
+
+``` r
+summary(out_n)
+#> 
+#> ====== x_from_power Results ======
+#> 
+#> Call:
+#> x_from_power(object = out, x = "n", target_power = 0.8, what = "ub", 
+#>     goal = "close_enough", final_nrep = 50, seed = 4567)
+#> 
+#> Predictor (x): Sample Size 
+#> 
+#> - Target Power: 0.800 
+#> - Goal: Find 'x' with estimated upper confidence bound close enough to
+#>   the target power.
+#> 
+#> === Major Results ===
+#> 
+#> - Final Value (Sample Size): 81
+#> 
+#> - Final Estimated Power: 0.700 
+#> - Confidence Interval: [0.562; 0.809]
+#> - Level of confidence: 95.0%
+#> - Based on 50 replications.
+#> 
+#> === Technical Information ===
+#> 
+#> - Algorithm: bisection 
+#> - Tolerance for 'close enough': Within 0.02000 of 0.800 
+#> - The range of values explored: 113 to 90 
+#> - Time spent in the search: 37.31 secs 
+#> - The final crude model for the power-predictor relation:
+#> 
+#> Model Type: Logistic Regression 
+#> 
+#> Call:
+#> power_curve(object = by_x_1, formula = power_model, start = power_curve_start, 
+#>     lower_bound = lower_bound, upper_bound = upper_bound, nls_args = nls_args, 
+#>     nls_control = nls_control, verbose = progress)
+#> 
+#> Predictor: n (Sample Size)
+#> 
+#> Model:
+#> 
+#> Call:  stats::glm(formula = reject ~ x, family = "binomial", data = reject1)
+#> 
+#> Coefficients:
+#> (Intercept)            x  
+#>    -0.93552      0.02219  
+#> 
+#> Degrees of Freedom: 359 Total (i.e. Null);  358 Residual
+#> Null Deviance:	    431 
+#> Residual Deviance: 424.3 	AIC: 428.3
+#> 
+#> - Detailed Results:
+#> 
+#> [test]: test_indirect: x->m->y 
+#> [test_label]: Test 
+#>     n   est   p.v reject r.cilo r.cihi
+#> 1  50 0.143 1.000  0.600  0.313  0.832
+#> 2  67 0.164 1.000  0.660  0.522  0.776
+#> 3  79 0.153 1.000  0.600  0.462  0.724
+#> 4  81 0.157 1.000  0.700  0.562  0.809
+#> 5  82 0.156 1.000  0.720  0.583  0.825
+#> 6  85 0.150 1.000  0.760  0.626  0.857
+#> 7  90 0.152 1.000  0.740  0.604  0.841
+#> 8 113 0.145 1.000  0.840  0.715  0.917
+#> Notes:
+#> - n: The sample size in a trial.
+#> - p.v: The proportion of valid replications.
+#> - est: The mean of the estimates in a test across replications.
+#> - reject: The proportion of 'significant' replications, that is, the
+#>   rejection rate. If the null hypothesis is true, this is the Type I
+#>   error rate. If the null hypothesis is false, this is the power.
+#> - r.cilo,r.cihi: The confidence interval of the rejection rate, based
+#>   on Wilson's (1927) method.
+#> - Refer to the tests for the meanings of other columns.
+```
+
+
+``` r
+plot(out_n)
+```
+
+<div class="figure" style="text-align: center">
+<img src="x_from_power_for_n_plot_test-1.png" alt="The Power Curve"  />
+<p class="caption">The Power Curve</p>
+</div>
+
+
+``` r
+out_n_lb <- n_from_power(out,
+                         target_power = .80,
+                         final_nrep = 50,
+                         what = "lb",
+                         seed = 2345)
+```
+
+
+``` r
+out_n_lb
+#> Call:
+#> power4mome::x_from_power(object = out, x = "n", target_power = 0.8, 
+#>     what = "lb", goal = "close_enough", final_nrep = 50, seed = 2345)
+#> 
+#>                           Setting
+#> Predictor(x):         Sample Size
+#> Parameter:                    N/A
+#> goal:                close_enough
+#> what:                          lb
+#> algorithm:              bisection
+#> Level of confidence:       95.00%
+#> Target Power:               0.800
+#> 
+#> - Solution not found.
+#> 
+#> Call `summary()` for detailed results.
+```
+
+
+``` r
+summary(out_n_lb)
+#> 
+#> ====== x_from_power Results ======
+#> 
+#> Call:
+#> x_from_power(object = out, x = "n", target_power = 0.8, what = "lb", 
+#>     goal = "close_enough", final_nrep = 50, seed = 2345)
+#> 
+#> Predictor (x): Sample Size 
+#> 
+#> - Target Power: 0.800 
+#> - Goal: Find 'x' with estimated lower confidence bound close enough to
+#>   the target power.
+#> 
+#> === Major Results ===
+#> 
+#> - Solution not found.
+#> - None of the values examined in the interval meet the target power.
+#> - Try changing the settings, such as expanding the range of values by
+#>   setting 'x_interval' to one that includes the crude estimate, if
+#>   available, increasing 'max_trials', or increasing 'tolerance' if the
+#>   goal is 'close_enough'.
+#> 
+#> === Technical Information ===
+#> 
+#> - Algorithm: bisection 
+#> - Tolerance for 'close enough': Within 0.02000 of 0.800 
+#> - The range of values explored: 50 to 67 
+#> - Time spent in the search: 4.427 secs 
+#> - The final crude model for the power-predictor relation:
+#> 
+#> Model Type: Logistic Regression 
+#> 
+#> Call:
+#> power_curve(object = by_x_1, formula = power_model, start = power_curve_start, 
+#>     lower_bound = lower_bound, upper_bound = upper_bound, nls_args = nls_args, 
+#>     nls_control = nls_control, verbose = progress)
+#> 
+#> Predictor: n (Sample Size)
+#> 
+#> Model:
+#> 
+#> Call:  stats::glm(formula = reject ~ x, family = "binomial", data = reject1)
+#> 
+#> Coefficients:
+#> (Intercept)            x  
+#>    0.648676    -0.004864  
+#> 
+#> Degrees of Freedom: 59 Total (i.e. Null);  58 Residual
+#> Null Deviance:	    81.5 
+#> Residual Deviance: 81.49 	AIC: 85.49
+#> 
+#> - Detailed Results:
+#> 
+#> [test]: test_indirect: x->m->y 
+#> [test_label]: Test 
+#>    n   est   p.v reject r.cilo r.cihi
+#> 1 50 0.143 1.000  0.600  0.313  0.832
+#> 2 67 0.137 1.000  0.580  0.442  0.706
+#> Notes:
+#> - n: The sample size in a trial.
+#> - p.v: The proportion of valid replications.
+#> - est: The mean of the estimates in a test across replications.
+#> - reject: The proportion of 'significant' replications, that is, the
+#>   rejection rate. If the null hypothesis is true, this is the Type I
+#>   error rate. If the null hypothesis is false, this is the power.
+#> - r.cilo,r.cihi: The confidence interval of the rejection rate, based
+#>   on Wilson's (1927) method.
+#> - Refer to the tests for the meanings of other columns.
+```
+
+
+``` r
+plot(out_n_lb)
+```
+
+<div class="figure" style="text-align: center">
+<img src="x_from_power_for_n_lb_plot_test-1.png" alt="The Power Curve"  />
+<p class="caption">The Power Curve</p>
+</div>
+
+
+``` r
+n_power_region <- n_region_from_power(out,
+                                      seed = 1357)
+#> 
+#> 
+#> --- Phase 1 ---
+#> 
+#> Find the approximate region with power significantly below 0.8 ...
+#> 
+#> 
+#> --- Setting ---
+#> 
+#> Algorithm:  bisection 
+#> Goal:  close_enough 
+#> What:  ub   (Upper bound of the confidence interval) 
+#> 
+#> --- Progress  ---
+#> 
+#> - Set 'progress = FALSE' to suppress displaying the progress.
+#> - Set 'simulation progress = FALSE' to suppress displaying the progress
+#>   in the simulation.
+#> 
+#> Initial interval: [50, 67] 
+#> 
+#> 
+#> Do the simulation for the upper bound:
+#> 
+#> Try x = 67 
+#> 
+#> Updating the simulation for sample size: 67 
+#> Re-simulate the data:
+#> Fit the model(s):
+#> Generate Monte Carlo estimates:
+#> Update the test(s):
+#> Update test_indirect: x->m->y :
+#> 
+#> Estimated power at n: 0.618, 95.0% confidence interval: [0.569,0.664]
+#> 
+#> Initial interval: [50, 67] 
+#> 
+#> - Rejection Rates:
+#> [test]: test_indirect: x->m->y 
+#> [test_label]: Test 
+#>    n   est   p.v reject r.cilo r.cihi
+#> 1 50 0.143 1.000  0.600  0.313  0.832
+#> 2 67 0.153 1.000  0.618  0.569  0.664
+#> 
+#> 
+#> 
+#> == Enter extending interval ...
+#> 
+#> Interval below the solution. Extend the upper bound ...
+#> 
+#> Try x = 306 
+#> 
+#> Updating the simulation for sample size: 306 
+#> Re-simulate the data:
+#> Fit the model(s):
+#> Generate Monte Carlo estimates:
+#> Update the test(s):
+#> Update test_indirect: x->m->y :
+#> 
+#> Estimated power at n: 0.998, 95.0% confidence interval: [0.986,1.000]
+#> 
+#> 
+#> (Extending the interval) Iteration: 1 
+#> 
+#> New interval: [67, 306] 
+#> Interval OK.
+#> Final extended interval: [67, 306] 
+#> 
+#> 
+#> == Exit extending interval ...
+#> 
+#> 
+#> Iteration # 1 
+#> 
+#> Try x = 187 
+#> 
+#> Updating the simulation for sample size: 187 
+#> Re-simulate the data:
+#> Fit the model(s):
+#> Generate Monte Carlo estimates:
+#> Update the test(s):
+#> Update test_indirect: x->m->y :
+#> 
+#> Estimated power at n: 0.940, 95.0% confidence interval: [0.912,0.959]
+#> - Rejection Rates:
+#> [test]: test_indirect: x->m->y 
+#> [test_label]: Test 
+#>     n   est   p.v reject r.cilo r.cihi
+#> 1  50 0.143 1.000  0.600  0.313  0.832
+#> 2  67 0.153 1.000  0.618  0.569  0.664
+#> 3 187 0.149 1.000  0.940  0.912  0.959
+#> 4 306 0.152 1.000  0.998  0.986  1.000
+#> 
+#> New interval: [67, 187] 
+#> Updated x: 127 
+#> 
+#> Iteration # 2 
+#> 
+#> Try x = 127 
+#> 
+#> Updating the simulation for sample size: 127 
+#> Re-simulate the data:
+#> Fit the model(s):
+#> Generate Monte Carlo estimates:
+#> Update the test(s):
+#> Update test_indirect: x->m->y :
+#> 
+#> Estimated power at n: 0.870, 95.0% confidence interval: [0.833,0.899]
+#> - Rejection Rates:
+#> [test]: test_indirect: x->m->y 
+#> [test_label]: Test 
+#>     n   est   p.v reject r.cilo r.cihi
+#> 1  50 0.143 1.000  0.600  0.313  0.832
+#> 2  67 0.153 1.000  0.618  0.569  0.664
+#> 3 127 0.150 1.000  0.870  0.833  0.899
+#> 4 187 0.149 1.000  0.940  0.912  0.959
+#> 5 306 0.152 1.000  0.998  0.986  1.000
+#> 
+#> New interval: [67, 127] 
+#> Updated x: 97 
+#> 
+#> Iteration # 3 
+#> 
+#> Try x = 97 
+#> 
+#> Updating the simulation for sample size: 97 
+#> Re-simulate the data:
+#> Fit the model(s):
+#> Generate Monte Carlo estimates:
+#> Update the test(s):
+#> Update test_indirect: x->m->y :
+#> 
+#> Estimated power at n: 0.757, 95.0% confidence interval: [0.713,0.797]
+#> - Rejection Rates:
+#> [test]: test_indirect: x->m->y 
+#> [test_label]: Test 
+#>     n   est   p.v reject r.cilo r.cihi
+#> 1  50 0.143 1.000  0.600  0.313  0.832
+#> 2  67 0.153 1.000  0.618  0.569  0.664
+#> 3  97 0.150 1.000  0.757  0.713  0.797
+#> 4 127 0.150 1.000  0.870  0.833  0.899
+#> 5 187 0.149 1.000  0.940  0.912  0.959
+#> 6 306 0.152 1.000  0.998  0.986  1.000
+#> 
+#> - 'nls()' estimation failed. Switch to logistic regression.
+#> Solution found.
+#> 
+#> 
+#> --- Final Stage ---
+#> 
+#> - Start at 2025-12-13 10:18:27 
+#> - Rejection Rates:
+#> 
+#> [test]: test_indirect: x->m->y 
+#> [test_label]: Test 
+#>     n   est   p.v reject r.cilo r.cihi
+#> 1  50 0.143 1.000  0.600  0.313  0.832
+#> 2  67 0.153 1.000  0.618  0.569  0.664
+#> 3  97 0.150 1.000  0.757  0.713  0.797
+#> 4 127 0.150 1.000  0.870  0.833  0.899
+#> 5 187 0.149 1.000  0.940  0.912  0.959
+#> 6 306 0.152 1.000  0.998  0.986  1.000
+#> Notes:
+#> - n: The sample size in a trial.
+#> - p.v: The proportion of valid replications.
+#> - est: The mean of the estimates in a test across replications.
+#> - reject: The proportion of 'significant' replications, that is, the
+#>   rejection rate. If the null hypothesis is true, this is the Type I
+#>   error rate. If the null hypothesis is false, this is the power.
+#> - r.cilo,r.cihi: The confidence interval of the rejection rate, based
+#>   on Wilson's (1927) method.
+#> - Refer to the tests for the meanings of other columns.
+#> 
+#> - Estimated Power Curve:
+#> 
+#> Call:
+#> power_curve(object = by_x_1, formula = power_model, start = power_curve_start, 
+#>     lower_bound = lower_bound, upper_bound = upper_bound, nls_args = nls_args, 
+#>     nls_control = nls_control, verbose = progress)
+#> 
+#> Predictor: n (Sample Size)
+#> 
+#> Model:
+#> 
+#> Call:  stats::glm(formula = reject ~ x, family = "binomial", data = reject1)
+#> 
+#> Coefficients:
+#> (Intercept)            x  
+#>    -0.86451      0.02062  
+#> 
+#> Degrees of Freedom: 2009 Total (i.e. Null);  2008 Residual
+#> Null Deviance:	    1798 
+#> Residual Deviance: 1496 	AIC: 1500
+#> 
+#> 
+#> - Final Value: 97 
+#> 
+#> - Final Estimated Power: 0.7575 
+#> - Confidence Interval: [0.7132; 0.7969]
+#> - CI Level: 95.00%
+#> 
+#> 
+#> --- Phase 2 ---
+#> 
+#> Find the approximate region with power significantly above 0.8 ...
+#> 
+#> 
+#> --- Setting ---
+#> 
+#> Algorithm:  bisection 
+#> Goal:  close_enough 
+#> What:  lb   (Lower bound of the confidence interval) 
+#> 
+#> --- Progress  ---
+#> 
+#> - Set 'progress = FALSE' to suppress displaying the progress.
+#> - Set 'simulation progress = FALSE' to suppress displaying the progress
+#>   in the simulation.
+#> 
+#> Initial interval: [50, 127] 
+#> 
+#> 
+#> Initial interval: [50, 127] 
+#> 
+#> - Rejection Rates:
+#> [test]: test_indirect: x->m->y 
+#> [test_label]: Test 
+#>     n   est   p.v reject r.cilo r.cihi
+#> 1  50 0.143 1.000  0.600  0.313  0.832
+#> 2  67 0.153 1.000  0.618  0.569  0.664
+#> 3  97 0.150 1.000  0.757  0.713  0.797
+#> 4 127 0.150 1.000  0.870  0.833  0.899
+#> 5 187 0.149 1.000  0.940  0.912  0.959
+#> 6 306 0.152 1.000  0.998  0.986  1.000
+#> 
+#> 
+#> 
+#> == Enter extending interval ...
+#> 
+#> 
+#> 
+#> == Exit extending interval ...
+#> 
+#> 
+#> Iteration # 1 
+#> 
+#> Try x = 89 
+#> 
+#> Updating the simulation for sample size: 89 
+#> Re-simulate the data:
+#> Fit the model(s):
+#> Generate Monte Carlo estimates:
+#> Update the test(s):
+#> Update test_indirect: x->m->y :
+#> 
+#> Estimated power at n: 0.730, 95.0% confidence interval: [0.684,0.771]
+#> - Rejection Rates:
+#> [test]: test_indirect: x->m->y 
+#> [test_label]: Test 
+#>     n   est   p.v reject r.cilo r.cihi
+#> 1  50 0.143 1.000  0.600  0.313  0.832
+#> 2  67 0.153 1.000  0.618  0.569  0.664
+#> 3  89 0.152 1.000  0.730  0.684  0.771
+#> 4  97 0.150 1.000  0.757  0.713  0.797
+#> 5 127 0.150 1.000  0.870  0.833  0.899
+#> 6 187 0.149 1.000  0.940  0.912  0.959
+#> 7 306 0.152 1.000  0.998  0.986  1.000
+#> 
+#> New interval: [89, 127] 
+#> Updated x: 108 
+#> 
+#> Iteration # 2 
+#> 
+#> Try x = 108 
+#> 
+#> Updating the simulation for sample size: 108 
+#> Re-simulate the data:
+#> Fit the model(s):
+#> Generate Monte Carlo estimates:
+#> Update the test(s):
+#> Update test_indirect: x->m->y :
+#> 
+#> Estimated power at n: 0.800, 95.0% confidence interval: [0.758,0.836]
+#> - Rejection Rates:
+#> [test]: test_indirect: x->m->y 
+#> [test_label]: Test 
+#>     n   est   p.v reject r.cilo r.cihi
+#> 1  50 0.143 1.000  0.600  0.313  0.832
+#> 2  67 0.153 1.000  0.618  0.569  0.664
+#> 3  89 0.152 1.000  0.730  0.684  0.771
+#> 4  97 0.150 1.000  0.757  0.713  0.797
+#> 5 108 0.148 1.000  0.800  0.758  0.836
+#> 6 127 0.150 1.000  0.870  0.833  0.899
+#> 7 187 0.149 1.000  0.940  0.912  0.959
+#> 8 306 0.152 1.000  0.998  0.986  1.000
+#> 
+#> New interval: [108, 127] 
+#> Updated x: 118 
+#> 
+#> Iteration # 3 
+#> 
+#> Try x = 118 
+#> 
+#> Updating the simulation for sample size: 118 
+#> Re-simulate the data:
+#> Fit the model(s):
+#> Generate Monte Carlo estimates:
+#> Update the test(s):
+#> Update test_indirect: x->m->y :
+#> 
+#> Estimated power at n: 0.802, 95.0% confidence interval: [0.761,0.839]
+#> - Rejection Rates:
+#> [test]: test_indirect: x->m->y 
+#> [test_label]: Test 
+#>     n   est   p.v reject r.cilo r.cihi
+#> 1  50 0.143 1.000  0.600  0.313  0.832
+#> 2  67 0.153 1.000  0.618  0.569  0.664
+#> 3  89 0.152 1.000  0.730  0.684  0.771
+#> 4  97 0.150 1.000  0.757  0.713  0.797
+#> 5 108 0.148 1.000  0.800  0.758  0.836
+#> 6 118 0.145 1.000  0.802  0.761  0.839
+#> 7 127 0.150 1.000  0.870  0.833  0.899
+#> 8 187 0.149 1.000  0.940  0.912  0.959
+#> 9 306 0.152 1.000  0.998  0.986  1.000
+#> 
+#> New interval: [118, 127] 
+#> Updated x: 123 
+#> 
+#> Iteration # 4 
+#> 
+#> Try x = 123 
+#> 
+#> Updating the simulation for sample size: 123 
+#> Re-simulate the data:
+#> Fit the model(s):
+#> Generate Monte Carlo estimates:
+#> Update the test(s):
+#> Update test_indirect: x->m->y :
+#> 
+#> Estimated power at n: 0.835, 95.0% confidence interval: [0.795,0.868]
+#> - Rejection Rates:
+#> [test]: test_indirect: x->m->y 
+#> [test_label]: Test 
+#>      n   est   p.v reject r.cilo r.cihi
+#> 1   50 0.143 1.000  0.600  0.313  0.832
+#> 2   67 0.153 1.000  0.618  0.569  0.664
+#> 3   89 0.152 1.000  0.730  0.684  0.771
+#> 4   97 0.150 1.000  0.757  0.713  0.797
+#> 5  108 0.148 1.000  0.800  0.758  0.836
+#> 6  118 0.145 1.000  0.802  0.761  0.839
+#> 7  123 0.151 1.000  0.835  0.795  0.868
+#> 8  127 0.150 1.000  0.870  0.833  0.899
+#> 9  187 0.149 1.000  0.940  0.912  0.959
+#> 10 306 0.152 1.000  0.998  0.986  1.000
+#> 
+#> - 'nls()' estimation failed. Switch to logistic regression.
+#> Solution found.
+#> 
+#> 
+#> --- Final Stage ---
+#> 
+#> - Start at 2025-12-13 10:19:24 
+#> - Rejection Rates:
+#> 
+#> [test]: test_indirect: x->m->y 
+#> [test_label]: Test 
+#>      n   est   p.v reject r.cilo r.cihi
+#> 1   50 0.143 1.000  0.600  0.313  0.832
+#> 2   67 0.153 1.000  0.618  0.569  0.664
+#> 3   89 0.152 1.000  0.730  0.684  0.771
+#> 4   97 0.150 1.000  0.757  0.713  0.797
+#> 5  108 0.148 1.000  0.800  0.758  0.836
+#> 6  118 0.145 1.000  0.802  0.761  0.839
+#> 7  123 0.151 1.000  0.835  0.795  0.868
+#> 8  127 0.150 1.000  0.870  0.833  0.899
+#> 9  187 0.149 1.000  0.940  0.912  0.959
+#> 10 306 0.152 1.000  0.998  0.986  1.000
+#> Notes:
+#> - n: The sample size in a trial.
+#> - p.v: The proportion of valid replications.
+#> - est: The mean of the estimates in a test across replications.
+#> - reject: The proportion of 'significant' replications, that is, the
+#>   rejection rate. If the null hypothesis is true, this is the Type I
+#>   error rate. If the null hypothesis is false, this is the power.
+#> - r.cilo,r.cihi: The confidence interval of the rejection rate, based
+#>   on Wilson's (1927) method.
+#> - Refer to the tests for the meanings of other columns.
+#> 
+#> - Estimated Power Curve:
+#> 
+#> Call:
+#> power_curve(object = by_x_1, formula = power_model, start = power_curve_start, 
+#>     lower_bound = lower_bound, upper_bound = upper_bound, nls_args = nls_args, 
+#>     nls_control = nls_control, verbose = progress)
+#> 
+#> Predictor: n (Sample Size)
+#> 
+#> Model:
+#> 
+#> Call:  stats::glm(formula = reject ~ x, family = "binomial", data = reject1)
+#> 
+#> Coefficients:
+#> (Intercept)            x  
+#>     -0.8295       0.0201  
+#> 
+#> Degrees of Freedom: 3609 Total (i.e. Null);  3608 Residual
+#> Null Deviance:	    3446 
+#> Residual Deviance: 3121 	AIC: 3125
+#> 
+#> 
+#> - Final Value: 123 
+#> 
+#> - Final Estimated Power: 0.8350 
+#> - Confidence Interval: [0.7955; 0.8682]
+#> - CI Level: 95.00%
+n_power_region
+#> Call:
+#> n_region_from_power(object = out, seed = 1357)
+#> 
+#>                      Setting                                      
+#> Predictor(x)         Sample Size                                  
+#> Goal:                Power significantly below or above the target
+#> algorithm:           bisection                                    
+#> Level of confidence: 95.00%                                       
+#> Target Power:        0.800                                        
+#> 
+#> Solution: 
+#> 
+#> Approximate region of sample sizes with power:
+#> - not significantly different from 0.800: 97 to 123
+#> - significantly lower than 0.800: 97
+#> - significantly higher than 0.800: 123
+#> 
+#> Confidence intervals of the estimated power:
+#> - for the lower bound (97): [0.713, 0.797]
+#> - for the upper bound (123): [0.795, 0.868]
+#> 
+#> Call `summary()` for detailed results.
+```
+
+
+``` r
+plot(n_power_region)
+```
+
+<div class="figure" style="text-align: center">
+<img src="region_plot-1.png" alt="The Power Curve (Region)"  />
+<p class="caption">The Power Curve (Region)</p>
+</div>
+
