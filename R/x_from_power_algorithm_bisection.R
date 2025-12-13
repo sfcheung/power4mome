@@ -27,7 +27,7 @@ alg_bisection <- function(
     digits = 3,
     lower_hard = switch(x, n = 10, es = 0),
     upper_hard = switch(x, n = 10000, es = .999),
-    extend_maxiter = 3,
+    extend_maxiter = 5,
     what = c("point", "ub", "lb"),
     goal = c("ci_hit", "close_enough"),
     tol = .02,
@@ -706,6 +706,68 @@ power_algorithm_bisection <- function(object,
         f.upper_i <- out_i
       }
 
+      tmp <- switch(x_type,
+                    n = 2,
+                    es = .05)
+      if (abs(lower_i - upper_i) <= tmp) {
+
+        # ==== Interval too narrow. Extend it ====
+
+        if (progress) {
+          print_interval(lower = lower_i,
+                         upper = upper_i,
+                         digits = digits,
+                         x_type = x_type,
+                         prefix = "Current interval: ")
+          cat("- Interval too narrow. Extend it ... \n")
+          cat("\n")
+        }
+
+        lower_hard_i <- lower_i * .70
+        upper_hard_i <- upper_i * 1.30
+        if (x_type == "n") {
+          lower_hard_i <- ceiling(lower_hard_i)
+          upper_hard_i <- ceiling(upper_hard_i)
+        }
+
+        interval_updated_i <- extend_interval(
+              f = f,
+              x = x_type,
+              pop_es_name = pop_es_name,
+              target_power = target_power,
+              ci_level = ci_level,
+              nrep = final_nrep,
+              R = R,
+              what = what,
+              simulation_progress = simulation_progress,
+              save_sim_all = save_sim_all,
+              progress = progress,
+              x_type = x_type,
+              by_x_1 = by_x_1,
+              lower = lower_i,
+              upper = upper_i,
+              f.lower = f.lower_i,
+              f.upper = f.upper_i,
+              lower_hard = lower_hard_i,
+              upper_hard = upper_hard_i,
+              extendInt = "yes",
+              extend_maxiter = extend_maxiter,
+              trace = as.numeric(progress),
+              digits = digits,
+              store_output = TRUE,
+              overshoot = switch(x,
+                                 n = .9,
+                                 es = .90),
+              min_x_diff = tmp * 4
+            )
+
+        by_x_1 <- interval_updated_i$by_x_1
+        lower_i <- interval_updated_i$lower
+        upper_i <- interval_updated_i$upper
+        f.lower_i <- interval_updated_i$f.lower
+        f.upper_i <- interval_updated_i$f.upper
+      }
+
       if (isTRUE(variants$muller) &&
           (i >= 3)) {
 
@@ -913,7 +975,8 @@ extend_interval <- function(f,
                             trace = 0,
                             digits = 3,
                             by_x_1 = NULL,
-                            overshoot = .5) {
+                            overshoot = .5,
+                            min_x_diff = 0) {
   if (trace) {
     cat("\n\n== Enter extending interval ...\n\n")
   }
@@ -952,7 +1015,8 @@ extend_interval <- function(f,
 
   # ==== Interval already valid? ====
 
-  if (sign(f.lower) != sign(f.upper)) {
+  if ((sign(f.lower) != sign(f.upper)) &&
+      (abs(lower - upper) >= min_x_diff)) {
 
     # ==== Yes. Exit ====
 
@@ -1013,15 +1077,16 @@ extend_interval <- function(f,
                           lower * tmp))
       lower <- force_new_x(
                     lower,
-                    x_tried = get_x_tried(object = by_x_1,
-                                          x = x_type),
+                    x_tried = c(get_x_tried(object = by_x_1,
+                                            x = x_type),
+                                upper),
                     x_interval = range(lower_hard, upper_hard),
                     x_type = x_type
                   )
       f.lower <- f(lower, ...)
       by_x_1 <- c(by_x_1, attr(f.lower, "output"),
                   skip_checking_models = TRUE)
-    } else if (((upper < 0 && (lower < 0)))) {
+    } else if (((upper < 0) && (lower < 0))) {
       # Only extend upper
       tmp <- (args$target_power - as.numeric(f.upper)) /
              (args$target_power + as.numeric(f.upper))
@@ -1032,8 +1097,9 @@ extend_interval <- function(f,
                           upper * tmp))
       upper <- force_new_x(
                     upper,
-                    x_tried = get_x_tried(object = by_x_1,
-                                          x = x_type),
+                    x_tried = c(get_x_tried(object = by_x_1,
+                                            x = x_type),
+                                lower),
                     x_interval = range(lower_hard, upper_hard),
                     x_type = x_type
                   )
@@ -1056,15 +1122,17 @@ extend_interval <- function(f,
                           lower * tmp_lower))
       upper <- force_new_x(
                     upper,
-                    x_tried = get_x_tried(object = by_x_1,
-                                          x = x_type),
+                    x_tried = c(get_x_tried(object = by_x_1,
+                                            x = x_type),
+                                lower),
                     x_interval = range(lower_hard, upper_hard),
                     x_type = x_type
                   )
       lower <- force_new_x(
                     lower,
-                    x_tried = get_x_tried(object = by_x_1,
-                                          x = x_type),
+                    x_tried = c(get_x_tried(object = by_x_1,
+                                            x = x_type),
+                                upper),
                     x_interval = range(lower_hard, upper_hard),
                     x_type = x_type
                   )
@@ -1127,6 +1195,11 @@ extend_interval <- function(f,
       ((extendInt %in% c("yes", "upX")) && extend_up)) {
     # Extend simple linear extrapolation
     if (trace) {
+      print_interval(lower = lower,
+                     upper = upper,
+                     digits = digits,
+                     x_type = x_type,
+                     prefix = "Current interval:")
       cat(
         switch(extend_which,
                extend_down =
@@ -1138,8 +1211,10 @@ extend_interval <- function(f,
 
     # ==== Loop for extension ====
     i <- 1
+
     while ((i <= extend_maxiter) &&
-            (sign(f.lower) == sign(f.upper))) {
+           ((sign(f.lower) == sign(f.upper)) ||
+            (abs(lower - upper) < min_x_diff))) {
         out_i <- extend_i(
             f = f,
             args = args,
@@ -1189,7 +1264,9 @@ extend_interval <- function(f,
                           upper = upper,
                           lower = lower,
                           f.upper = as.numeric(f.upper),
-                          f.lower = as.numeric(f.lower)
+                          f.lower = as.numeric(f.lower),
+                          upper_hard = upper_hard,
+                          lower_hard = lower_hard
                         )
         extend_up <- (extend_which == "extend_up")
         extend_down <- (extend_which == "extend_down")
@@ -1199,7 +1276,8 @@ extend_interval <- function(f,
 
   # ==== Check the extended interval ====
 
-  interval_ok <- sign(f.lower) != sign(f.upper)
+  interval_ok <- (sign(f.lower) != sign(f.upper)) &&
+                 (abs(lower - upper) >= min_x_diff)
   if (!interval_ok) {
     if (is.na(extend_status)) {
       # extend_maxiter reached
@@ -1262,22 +1340,52 @@ extend_i <- function(
   which <- match.arg(which)
   if (((which == "lower") && (lower == lower_hard)) ||
       ((which == "upper") && (upper == upper_hard))) {
-    # Hit the hard limit
-    interval_ok <- FALSE
-    tmp <- switch(which,
-                  lower = 4,
-                  upper = 5)
-    extend_status <- status_msg[status_msg == tmp]
-    if (trace) {
-      cat(names(extend_status), ".\n", sep = "")
+    if (!is.null(by_x_1)) {
+      # if (which == "lower") {
+      #   lower <- force_new_x(
+      #                 lower,
+      #                 x_tried = c(get_x_tried(object = by_x_1,
+      #                                         x = x_type),
+      #                             upper),
+      #                 x_interval = range(lower_hard, upper_hard),
+      #                 x_type = x_type
+      #               )
+      # } else {
+      #   upper <- force_new_x(
+      #                 upper,
+      #                 x_tried = c(get_x_tried(object = by_x_1,
+      #                                         x = x_type),
+      #                             lower),
+      #                 x_interval = range(lower_hard, upper_hard),
+      #                 x_type = x_type
+      #               )
+      # }
+    } else {
+      # Hit the hard limit
+      interval_ok <- FALSE
+      tmp <- switch(which,
+                    lower = 4,
+                    upper = 5)
+      extend_status <- status_msg[status_msg == tmp]
+      if (trace) {
+        cat(names(extend_status), ".\n", sep = "")
+      }
     }
+  }
+  if (FALSE) {
+    # Placeholder: For keeping the indentation.
   } else {
     slope <- (as.numeric(f.upper) - as.numeric(f.lower)) / (upper - lower)
     intercept <- -slope * upper +  as.numeric(f.upper)
     if (which == "lower") {
       upper <- lower
       f.upper <- f.lower
-      lower <- overshoot * -intercept / slope
+      # Handle upper == lower
+      if (upper == lower) {
+        lower <- overshoot * lower
+      } else {
+        lower <- overshoot * -intercept / slope
+      }
       if (lower > upper) {
         lower <- mean(c(lower_hard, upper))
       }
@@ -1288,8 +1396,9 @@ extend_i <- function(
       if (!is.null(by_x_1)) {
         lower <- force_new_x(
                       lower,
-                      x_tried = get_x_tried(object = by_x_1,
-                                            x = x_type),
+                      x_tried = c(get_x_tried(object = by_x_1,
+                                              x = x_type),
+                                  upper),
                       x_interval = range(lower_hard, upper_hard),
                       x_type = x_type
                     )
@@ -1300,7 +1409,12 @@ extend_i <- function(
     } else {
       lower <- upper
       f.lower <- f.upper
-      upper <- (1 + overshoot) * -intercept / slope
+      # Handle upper == lower
+      if (upper == lower) {
+        upper <- 1 + overshoot * upper
+      } else {
+        upper <- (1 + overshoot) * -intercept / slope
+      }
       if (upper < lower) {
         upper <- mean(c(lower, upper_hard))
       }
@@ -1311,8 +1425,9 @@ extend_i <- function(
       if (!is.null(by_x_1)) {
         upper <- force_new_x(
                       upper,
-                      x_tried = get_x_tried(object = by_x_1,
-                                            x = x_type),
+                      x_tried = c(get_x_tried(object = by_x_1,
+                                              x = x_type),
+                                  lower),
                       x_interval = range(lower_hard, upper_hard),
                       x_type = x_type
                     )
@@ -1355,7 +1470,9 @@ check_extend_x <- function(
                     upper,
                     lower,
                     f.upper,
-                    f.lower) {
+                    f.lower,
+                    upper_hard = Inf,
+                    lower_hard = -Inf) {
   slope <- (f.upper - f.lower) / (upper - lower)
   extend_up <- ((slope > 0) && (f.upper < 0)) ||
                 ((slope < 0) && (f.upper > 0))
@@ -1367,8 +1484,13 @@ check_extend_x <- function(
     out <- "extend_down"
   } else {
     # If f.upper and f.lower are equal,
-    # err on larger value
-    out <- "extend_up"
+    if (upper == upper_hard) {
+      out <- "extend_down"
+    } else if (lower == lower_hard) {
+      out <- "extend_up"
+    } else {
+      out <- "extend_down"
+    }
   }
   out
 }
