@@ -1,4 +1,4 @@
-# power4mome 0.1.1.18
+# power4mome 0.1.1.19
 
 - Improve the function for extending the
   initial interval before doing a
@@ -79,7 +79,7 @@
 
 - Added `q_power_mediation()` and
   friends for common mediation models.
-  (0.1.1.18)
+  (0.1.1.18, 0.1.1.19)
 
 # power4mome 0.1.1
 
