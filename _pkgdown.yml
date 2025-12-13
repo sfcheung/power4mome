@@ -85,6 +85,13 @@ reference:
   - power4test_by_n
   - power4test_by_es
   - x_from_power
+- tilte: Mediation
+    models
+  desc:  >
+    All-in-one functions for common
+    mediation models.
+- contents:
+  - q_power_mediation
 - title: Helper Functions
   desc:  >
     Helpers for main functions

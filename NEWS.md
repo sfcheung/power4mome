@@ -1,4 +1,4 @@
-# power4mome 0.1.1.17
+# power4mome 0.1.1.18
 
 - Improve the function for extending the
   initial interval before doing a
@@ -66,16 +66,20 @@
   store all values tried. (0.1.1.14)
 
 - Fixed duplicated values of x when
-  extending the range. (0.0.1.15)
+  extending the range. (0.1.1.15)
 
 - Functions that print a call will
   replace `object` with `<hidden>`
-  if it is not a symbol. (0.0.1.16)
+  if it is not a symbol. (0.1.1.16)
 
 - Functions that print a call will
   replace the function with the
   original function name
-  if it is not a symbol. (0.0.1.17)
+  if it is not a symbol. (0.1.1.17)
+
+- Added `q_power_mediation()` and
+  friends for common mediation models.
+  (0.1.1.18)
 
 # power4mome 0.1.1
 
