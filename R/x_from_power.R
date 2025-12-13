@@ -1408,6 +1408,9 @@ print.x_from_power <- function(x,
   my_call <- x$call
   cat("Call:\n")
   print(my_call)
+  if (!is.symbol(my_call$object)) {
+    my_call$object <- as.symbol("<hidden>")
+  }
   cat("\n")
   solution_found <- !is.na(x$x_final)
   predictor <- x$x
@@ -1523,6 +1526,9 @@ print.n_region_from_power <- function(
                               ...) {
   my_call <- attr(x, "call")
   cat("Call:\n")
+  if (!is.symbol(my_call$object)) {
+    my_call$object <- as.symbol("<hidden>")
+  }
   print(my_call)
   cat("\n")
   x_below <- x$below

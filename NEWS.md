@@ -1,4 +1,4 @@
-# power4mome 0.1.1.15
+# power4mome 0.1.1.16
 
 - Improve the function for extending the
   initial interval before doing a
@@ -67,6 +67,12 @@
 
 - Fixed duplicated values of x when
   extending the range. (0.0.1.15)
+
+- Functions that print a call will
+  replace `object` with `<hiddne>`
+  if it is not a symbol. (0.0.1.16)
+
+
 
 # power4mome 0.1.1
 
