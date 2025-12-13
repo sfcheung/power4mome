@@ -458,6 +458,9 @@ print.power_curve <- function(x,
   if (!is.symbol(my_call$object)) {
     my_call$object <- as.symbol("<hidden>")
   }
+  if (!is.symbol(my_call[[1]])) {
+    my_call[[1]] <- as.symbol("power_curve")
+  }
   print(my_call)
   cat("\nPredictor: ",
       x$predictor,
