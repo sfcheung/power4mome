@@ -1,4 +1,4 @@
-# power4mome 0.1.1.16
+# power4mome 0.1.1.17
 
 - Improve the function for extending the
   initial interval before doing a
@@ -69,10 +69,13 @@
   extending the range. (0.0.1.15)
 
 - Functions that print a call will
-  replace `object` with `<hiddne>`
+  replace `object` with `<hidden>`
   if it is not a symbol. (0.0.1.16)
 
-
+- Functions that print a call will
+  replace the function with the
+  original function name
+  if it is not a symbol. (0.0.1.17)
 
 # power4mome 0.1.1
 

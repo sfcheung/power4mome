@@ -8,11 +8,16 @@ knitr::knit("power4mome.Rmd.original", output = "power4mome.Rmd", envir = new.en
 knitr::knit("power4test_latent_mediation.Rmd.original", output = "power4test_latent_mediation.Rmd", envir = new.env())
 pkgdown::build_articles("..")
 
+pkgdown::preview_site("../..")
+
 setwd(base_dir)
 
 # For articles
 
 setwd(paste0(base_dir, "/vignettes/articles/"))
+
+knitr::knit("x_from_power_for_n_test_printout.Rmd.original", output = "x_from_power_for_n_test_printout.Rmd", envir = new.env())
+# file:///C:/GitHub/power4mome/docs/articles/x_from_power_for_n_test_printout.html
 
 knitr::knit("x_from_power_for_n.Rmd.original", output = "x_from_power_for_n.Rmd", envir = new.env())
 knitr::knit("x_from_power_for_es.Rmd.original", output = "x_from_power_for_es.Rmd", envir = new.env())
@@ -36,5 +41,7 @@ knitr::knit("template_n_from_power_mome_obs_b.Rmd.original", output = "template_
 # knitr::knit("template_mediation_obs_serial.Rmd.original", output = "template_mediation_obs_serial.Rmd", envir = new.env())
 # knitr::knit("template_mediation_obs_ind.Rmd.original", output = "template_mediation_obs_ind.Rmd", envir = new.env())
 pkgdown::build_articles("../..")
+
+pkgdown::preview_site("../..")
 
 setwd(base_dir)
