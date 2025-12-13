@@ -26,8 +26,8 @@ x_from_power(
   progress = TRUE,
   simulation_progress = TRUE,
   max_trials = 10,
-  final_nrep = 400,
-  final_R = 1000,
+  final_nrep = attr(object, "args")$nrep \%||\% (object$nrep_final \%||\% 400),
+  final_R = attr(object, "args")$R \%||\% (object$args$final_R \%||\% 1000),
   seed = NULL,
   x_include_interval = FALSE,
   check_es_interval = TRUE,
@@ -42,8 +42,8 @@ n_from_power(
   object,
   pop_es_name = NULL,
   target_power = 0.8,
-  what = c("point", "ub", "lb"),
-  goal = switch(what, point = "ci_hit", ub = "close_enough", lb = "close_enough"),
+  what = formals(x_from_power)$what,
+  goal = formals(x_from_power)$goal,
   ci_level = 0.95,
   tolerance = 0.02,
   x_interval = c(50, 2000),
@@ -51,8 +51,8 @@ n_from_power(
   progress = TRUE,
   simulation_progress = TRUE,
   max_trials = 10,
-  final_nrep = 400,
-  final_R = 1000,
+  final_nrep = formals(x_from_power)$final_nrep,
+  final_R = formals(x_from_power)$final_R,
   seed = NULL,
   x_include_interval = FALSE,
   check_es_interval = TRUE,
@@ -74,8 +74,8 @@ n_region_from_power(
   progress = TRUE,
   simulation_progress = TRUE,
   max_trials = 10,
-  final_nrep = 400,
-  final_R = 1000,
+  final_nrep = formals(x_from_power)$final_nrep,
+  final_R = formals(x_from_power)$final_R,
   seed = NULL,
   x_include_interval = FALSE,
   check_es_interval = TRUE,
@@ -201,7 +201,14 @@ replications in the final stage,
 also the maximum number of replications
 in each call to \code{\link[=power4test]{power4test()}},
 \code{\link[=power4test_by_n]{power4test_by_n()}}, or
-\code{\link[=power4test_by_es]{power4test_by_es()}}.}
+\code{\link[=power4test_by_es]{power4test_by_es()}}.
+If \code{object}
+is an output of \code{\link[=power4test]{power4test()}}
+or \code{\link[=x_from_power]{x_from_power()}} and
+this argument is not set, \code{final_nrep}
+will be set to \code{nrep} or \code{final_nrep}
+stored in
+\code{object}.}
 
 \item{final_R}{The number of
 Monte Carlo simulation or
@@ -214,7 +221,14 @@ when approaching the target
 power. Do not need to be very large
 because the goal is to estimate
 power by replications, not for high
-precision in one single replication.}
+precision in one single replication.
+If \code{object}
+is an output of \code{\link[=power4test]{power4test()}}
+or \code{\link[=x_from_power]{x_from_power()}} and
+this argument is not set, \code{finalR}
+will be set to \code{R} or \code{final_R}
+stored in
+\code{object}.}
 
 \item{seed}{If not \code{NULL}, \code{\link[=set.seed]{set.seed()}}
 will be used to make the process

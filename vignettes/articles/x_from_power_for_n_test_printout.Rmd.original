@@ -30,6 +30,7 @@ of the printout.
 
 ```{r load_packages}
 library(power4mome)
+options(power4mome.bz = TRUE)
 ```
 
 ```{r model}
@@ -64,10 +65,10 @@ print(out,
 ```
 
 ```{r test_out, results=FALSE}
-out <- power4test(nrep = 10,
+out <- power4test(nrep = 50,
                   model = mod,
                   pop_es = mod_es,
-                  n = 50,
+                  n = 100,
                   R = 199,
                   ci_type = "mc",
                   test_fun = test_indirect_effect,
@@ -86,8 +87,6 @@ print(out,
 
 ```{r x_out, results=FALSE, message=FALSE}
 out_n <- n_from_power(out,
-                      target_power = .80,
-                      final_nrep = 50,
                       what = "ub",
                       seed = 4567)
 ```
@@ -106,8 +105,6 @@ plot(out_n)
 
 ```{r x_out_lb, results=FALSE, message=FALSE}
 out_n_lb <- n_from_power(out,
-                         target_power = .80,
-                         final_nrep = 50,
                          what = "lb",
                          seed = 2345)
 ```
@@ -126,11 +123,22 @@ plot(out_n_lb)
 
 ```{r region}
 n_power_region <- n_region_from_power(out,
-                                      seed = 1357)
+                                      seed = 2468)
 n_power_region
 ```
 
 ```{r region_plot, fig.cap="The Power Curve (Region)", fig.align="center"}
 plot(n_power_region)
 ```
+
+```{r region2}
+n_power_region2 <- n_region_from_power(out_n_lb,
+                                      seed = 24680)
+n_power_region2
+```
+
+```{r region_plot2, fig.cap="The Power Curve (Region) Version 2", fig.align="center"}
+plot(n_power_region2)
+```
+
 

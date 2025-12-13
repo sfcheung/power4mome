@@ -346,6 +346,13 @@
 #' in each call to [power4test()],
 #' [power4test_by_n()], or
 #' [power4test_by_es()].
+#' If `object`
+#' is an output of [power4test()]
+#' or [x_from_power()] and
+#' this argument is not set, `final_nrep`
+#' will be set to `nrep` or `final_nrep`
+#' stored in
+#' `object`.
 #'
 #' @param final_R The number of
 #' Monte Carlo simulation or
@@ -359,6 +366,14 @@
 #' because the goal is to estimate
 #' power by replications, not for high
 #' precision in one single replication.
+#' If `object`
+#' is an output of [power4test()]
+#' or [x_from_power()] and
+#' this argument is not set, `finalR`
+#' will be set to `R` or `final_R`
+#' stored in
+#' `object`.
+
 #'
 #' @param seed If not `NULL`, [set.seed()]
 #' will be used to make the process
@@ -497,8 +512,8 @@ x_from_power <- function(object,
                          progress = TRUE,
                          simulation_progress = TRUE,
                          max_trials = 10,
-                         final_nrep = 400,
-                         final_R = 1000,
+                         final_nrep = attr(object, "args")$nrep %||% (object$nrep_final %||% 400),
+                         final_R = attr(object, "args")$R %||% (object$args$final_R %||% 1000),
                          seed = NULL,
                          x_include_interval = FALSE,
                          check_es_interval = TRUE,
@@ -1236,11 +1251,8 @@ x_from_power <- function(object,
 n_from_power <- function(object,
                          pop_es_name = NULL,
                          target_power = .80,
-                         what = c("point", "ub", "lb"),
-                         goal = switch(what,
-                                       point = "ci_hit",
-                                       ub = "close_enough",
-                                       lb = "close_enough"),
+                         what = formals(x_from_power)$what,
+                         goal = formals(x_from_power)$goal,
                          ci_level = .95,
                          tolerance = .02,
                          x_interval = c(50, 2000),
@@ -1248,8 +1260,8 @@ n_from_power <- function(object,
                          progress = TRUE,
                          simulation_progress = TRUE,
                          max_trials = 10,
-                         final_nrep = 400,
-                         final_R = 1000,
+                         final_nrep = formals(x_from_power)$final_nrep,
+                         final_R = formals(x_from_power)$final_R,
                          seed = NULL,
                          x_include_interval = FALSE,
                          check_es_interval = TRUE,
@@ -1263,8 +1275,9 @@ n_from_power <- function(object,
                          algorithm = NULL,
                          control = list()
                          ) {
-  what <- match.arg(what)
-  goal <- match.arg(goal,
+  what <- match.arg(eval(what),
+                    c("point", "ub", "lb"))
+  goal <- match.arg(eval(goal),
                     c("ci_hit", "close_enough"))
   if ((goal == "ci_hit") &&
       (what != "point")) {
@@ -1274,6 +1287,8 @@ n_from_power <- function(object,
   my_call$x <- "n"
   my_call$what <- what
   my_call$goal <- goal
+  my_call$final_nrep <- eval(final_nrep)
+  my_call$final_R <- eval(final_R)
   my_call[[1]] <- quote(power4mome::x_from_power)
   out <- eval(my_call,
               envir = parent.frame())
@@ -1311,8 +1326,8 @@ n_region_from_power <- function(
                          progress = TRUE,
                          simulation_progress = TRUE,
                          max_trials = 10,
-                         final_nrep = 400,
-                         final_R = 1000,
+                         final_nrep = formals(x_from_power)$final_nrep,
+                         final_R = formals(x_from_power)$final_R,
                          seed = NULL,
                          x_include_interval = FALSE,
                          check_es_interval = TRUE,
@@ -1327,6 +1342,8 @@ n_region_from_power <- function(
                          control = list()
                          ) {
   my_call <- match.call()
+  my_call$final_nrep <- eval(final_nrep)
+  my_call$final_R <- eval(final_R)
   my_call$x <- "n"
   my_call[[1]] <- quote(power4mome::x_from_power)
   if (progress) {

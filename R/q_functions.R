@@ -304,9 +304,10 @@ q_power_mediation <- function(
   n_region_from_power_args <- names(formals(n_region_from_power))
   ddd_n_from_region <- ddd[names(ddd) %in% n_region_from_power_args]
 
-  if (is.null(ddd_n_from_region$final_nrep)) {
-    ddd_n_from_region$final_nrep <- nrep
-  }
+  # No need. This is the new default behavior of n_from_region
+  # if (is.null(ddd_n_from_region$final_nrep)) {
+  #   ddd_n_from_region$final_nrep <- nrep
+  # }
 
   # ==== Process number of indicators and reliability =====
 
