@@ -1,4 +1,4 @@
-# power4mome 0.1.1.20
+# power4mome 0.1.1.21
 
 - Improve the function for extending the
   initial interval before doing a
@@ -85,6 +85,11 @@
   `final_R` of `x_from_power()` and
   its wrappers will use stored values
   if available. (0.1.1.20)
+
+- The bisection algorithm has been
+  improved in handling unusual intervals.
+  (0.0.1.21)
+
 
 # power4mome 0.1.1
 
