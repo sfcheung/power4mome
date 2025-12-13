@@ -509,7 +509,7 @@ force_new_x <- function(
           (xi < min(x_interval)) ||
           (xi > max(x_interval)))) {
     k0 <- k0 + 1
-    xi <- xi + step_all[k0] * step
+    xi <- x0 + step_all[k0] * step
     xi <- post_process(xi)
   }
   xi
