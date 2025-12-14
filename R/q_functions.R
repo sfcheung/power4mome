@@ -309,29 +309,6 @@ q_power_mediation <- function(
   #   ddd_n_from_region$final_nrep <- nrep
   # }
 
-  # ==== Process number of indicators and reliability =====
-
-  if (length(number_of_indicators) > 1) {
-      if (length(number_of_indicators) != 3) {
-        stop("number_of_indicators must be one or three values")
-      }
-      if (!setequal(
-            names(number_of_indicators),
-            c("x", "m", "y"))) {
-        stop("Names of number_of_indicators must 'x', 'm', and 'y'")
-      }
-    }
-  if (length(reliability) > 1) {
-    if (length(reliability) != 3) {
-      stop("reliability must be one or three values")
-    }
-    if (!setequal(
-          names(reliability),
-          c("x", "m", "y"))) {
-      stop("Names of reliability must 'x', 'm', and 'y'")
-    }
-  }
-
   # ==== Set test arguments ====
 
   test_args0 <- list(
@@ -590,6 +567,32 @@ q_power_mediation_simple <- function(
       a, b, cp
     )
 
+  # ==== Process number of indicators and reliability =====
+
+  # Do not do the test for now because some of the variables
+  # may be observed variables
+
+  # if (length(number_of_indicators) > 1) {
+  #     if (length(number_of_indicators) != 3) {
+  #       stop("number_of_indicators must be one or three values")
+  #     }
+  #     if (!setequal(
+  #           names(number_of_indicators),
+  #           c("x", "m", "y"))) {
+  #       stop("Names of number_of_indicators must 'x', 'm', and 'y'")
+  #     }
+  #   }
+  # if (length(reliability) > 1) {
+  #   if (length(reliability) != 3) {
+  #     stop("reliability must be one or three values")
+  #   }
+  #   if (!setequal(
+  #         names(reliability),
+  #         c("x", "m", "y"))) {
+  #     stop("Names of reliability must 'x', 'm', and 'y'")
+  #   }
+  # }
+
   # ==== Set test arguments ====
 
   # Set model specific arguments
@@ -755,6 +758,33 @@ q_power_mediation_serial <- function(
         es_y),
       collapse = "\n"
     )
+
+  # ==== Process number of indicators and reliability =====
+
+  # Do not do the test for now because some of the variables
+  # may be observed variables
+
+  # if (length(number_of_indicators) > 1) {
+  #     if (length(number_of_indicators) != 3) {
+  #       stop("number_of_indicators must be one or the number of factors")
+  #     }
+  #     if (!setequal(
+  #           names(number_of_indicators),
+  #           c("x", "m", "y"))) {
+  #       stop("Names of number_of_indicators must 'x', 'm', and 'y'")
+  #     }
+  #   }
+  # if (length(reliability) > 1) {
+  #   if (length(reliability) != 3) {
+  #     stop("reliability must be one or three values")
+  #   }
+  #   if (!setequal(
+  #         names(reliability),
+  #         c("x", "m", "y"))) {
+  #     stop("Names of reliability must 'x', 'm', and 'y'")
+  #   }
+  # }
+
 
   # ==== Set the test arguments ====
 
@@ -925,6 +955,32 @@ q_power_mediation_parallel <- function(
         es_cp),
       collapse = "\n"
     )
+
+# ==== Process number of indicators and reliability =====
+
+  # Do not do the test for now because some of the variables
+  # may be observed variables
+
+  # if (length(number_of_indicators) > 1) {
+  #     if (length(number_of_indicators) != 3) {
+  #       stop("number_of_indicators must be one or three values")
+  #     }
+  #     if (!setequal(
+  #           names(number_of_indicators),
+  #           c("x", "m", "y"))) {
+  #       stop("Names of number_of_indicators must 'x', 'm', and 'y'")
+  #     }
+  #   }
+  # if (length(reliability) > 1) {
+  #   if (length(reliability) != 3) {
+  #     stop("reliability must be one or three values")
+  #   }
+  #   if (!setequal(
+  #         names(reliability),
+  #         c("x", "m", "y"))) {
+  #     stop("Names of reliability must 'x', 'm', and 'y'")
+  #   }
+  # }
 
   # ==== Set the test arguments ====
 
