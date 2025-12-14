@@ -1,0 +1,148 @@
+# Generate Bootstrap Estimates
+
+Get a list of the output of
+[`lavaan::sem()`](https://rdrr.io/pkg/lavaan/man/sem.html) or
+[`lmhelprs::many_lm()`](https://sfcheung.github.io/lmhelprs/reference/many_lm.html)
+and generate bootstrap estimates of model parameters.
+
+## Usage
+
+``` r
+gen_boot(
+  fit_all,
+  R = 100,
+  ...,
+  iseed = NULL,
+  parallel = FALSE,
+  progress = FALSE,
+  ncores = max(1, parallel::detectCores(logical = FALSE) - 1),
+  compute_implied_stats = FALSE
+)
+```
+
+## Arguments
+
+- fit_all:
+
+  The output of
+  [`fit_model()`](https://sfcheung.github.io/power4mome/reference/fit_model.md)
+  or an object of the class `fit_out`.
+
+- R:
+
+  The number of replications to generate the bootstrap estimates for
+  each fit output.
+
+- ...:
+
+  Optional arguments to be passed to
+  [`manymome::do_boot()`](https://sfcheung.github.io/manymome/reference/do_boot.html)
+  when generating the bootstrap estimates.
+
+- iseed:
+
+  The seed for the random number generator. Default is `NULL` and the
+  seed is not changed.
+
+- parallel:
+
+  If `TRUE`, parallel processing will be used to generate bootstrap
+  estimates for the fit outputs. Default is `FALSE`.
+
+- progress:
+
+  If `TRUE`, the progress will be displayed. Default is \`FALSE.
+
+- ncores:
+
+  The number of CPU cores to use if parallel processing is used.
+
+- compute_implied_stats:
+
+  Whether implied statistics are computed in each bootstrap samples.
+  Usually not needed and so default to `FALSE`
+
+## Value
+
+A `boot_list` object, which is a list of the output of
+[`manymome::do_boot()`](https://sfcheung.github.io/manymome/reference/do_boot.html).
+
+## Details
+
+The function `gen_boot()` simply calls
+[`manymome::do_boot()`](https://sfcheung.github.io/manymome/reference/do_boot.html)
+on each output of
+[`lavaan::sem()`](https://rdrr.io/pkg/lavaan/man/sem.html) or
+[`lmhelprs::many_lm()`](https://sfcheung.github.io/lmhelprs/reference/many_lm.html)
+in `fit_all`. The simulated estimates can then be used to test effects
+such as indirect effects, usually by functions from the `manymome`
+package, such as
+[`manymome::indirect_effect()`](https://sfcheung.github.io/manymome/reference/cond_indirect.html).
+
+## The role of `gen_boot()`
+
+This function is used by the all-in-one function
+[`power4test()`](https://sfcheung.github.io/power4mome/reference/power4test.md).
+Users usually do not call this function directly, though developers can
+use this function to customize the workflow of the power analysis.
+
+## See also
+
+See
+[`power4test()`](https://sfcheung.github.io/power4mome/reference/power4test.md)
+for the all-in-one function that uses this function.
+
+## Examples
+
+``` r
+# Specify the population model
+
+mod <-
+"m ~ x
+ y ~ m + x"
+
+# Specify the effect sizes (population parameter values)
+
+es <-
+"
+y ~ m: m
+m ~ x: m
+y ~ x: n
+"
+
+# Generate several simulated datasets
+
+data_all <- sim_data(nrep = 2,
+                     model = mod,
+                     pop_es = es,
+                     n = 50,
+                     iseed = 1234)
+
+# Fit the population model to each datasets
+
+fit_all <- fit_model(data_all)
+
+# Generate bootstrap estimates for each replication
+
+boot_all <- gen_boot(fit_all,
+                     R = 10,
+                     iseed = 4567)
+boot_all
+#> [[1]]
+#> 
+#> == A 'boot_out' class object ==
+#> 
+#> Number of bootstrap samples: 10 
+#> 
+#> 
+#> [[2]]
+#> 
+#> == A 'boot_out' class object ==
+#> 
+#> Number of bootstrap samples: 10 
+#> 
+#> 
+#> attr(,"class")
+#> [1] "boot_list" "list"     
+
+```

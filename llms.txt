@@ -1,0 +1,337 @@
+# power4mome
+
+(Version 0.1.1.22, updated on 2025-12-13, [release
+history](https://sfcheung.github.io/power4mome/news/index.html))
+
+This package is for power analysis and sample size determination for
+moderation, mediation, and moderated mediation.
+
+It includes functions for power analysis and sample size determination
+for moderation, mediation, and moderated mediation effects in models
+fitted by structural equation modeling (SEM) or multiple linear
+regression. For SEM, both latent variable models and path models of
+observed variables are supported.
+
+For more information on this package, please visit its GitHub page:
+
+<https://sfcheung.github.io/power4mome/>
+
+A get-started guide illustrates how to use this package:
+
+<https://sfcheung.github.io/power4mome/articles/power4mome.html>
+
+Code templates are also available for common mediation, moderation, and
+moderated mediation models:
+
+<https://sfcheung.github.io/power4mome/articles/>
+
+# Philosophy
+
+The package was developed with this philosophy:
+
+- Easy to specify the population models, even with latent variables.
+
+- As few manually-set numbers as possible when specifying the population
+  models, with convenient default values.
+
+- As few restrictions as possible on the form of the models, even when
+  the models have latent factors.
+
+- As automatic as possible in finding the sample size with the target
+  power.
+
+To achieve this comes with some costs, and some of the goals conflict
+with other goals: Being flexible usually means being less user-friendly,
+and being easy to specify the model usually means not supporting some
+models.
+
+Therefore, we also try to
+
+- balance these goals, and
+
+- allow the functions to be used in different ways, to accommodate
+  scenarios that prioritize these goals differently.
+
+# Installation
+
+The stable version at CRAN can be installed by
+[`install.packages()`](https://rdrr.io/r/utils/install.packages.html):
+
+``` r
+install.packages("power4mome")
+```
+
+The latest developmental version of this package can be installed by
+`remotes::install_github`:
+
+``` r
+remotes::install_github("sfcheung/power4mome")
+```
+
+# Background
+
+Some of us the developers have developed the package
+[`manymome`](https://sfcheung.github.io/manymome/) (Cheung & Cheung,
+2024) for computing and testing effects in models with mediation,
+mediation, or moderated mediation. The tests are usually done by
+simulation-based methods such as Monte Carlo or bootstrap confidence
+intervals, due to the complicated sampling distributions of the effects.
+Therefore, there are no simple ways to determine the power of the test
+analytically and accurately. The computation becomes more complicated
+when latent variables are involved, necessitating a simulation-based
+method to estimate the sample size.
+
+There are already many excellent packages out there for estimating power
+in structural equation modeling in general, and some are also
+specifically for mediation or moderated mediation. We are not intended
+to replace with them or reinvent the wheel. We just want to have a tool
+that meet our own needs:
+
+1.  It leverages on the flexibility of `manymome` in testing an indirect
+    effect or conditional effect with little limitations on the model.
+
+2.  It allows users (us and our collaborators) to specify the population
+    model as easy (quickly) as typical power analysis programs.
+
+We ourselves know how to do the power estimation on our own by
+simulation, if necessary. However, time is usually a concern, and we
+would like to have a tool that, though specifically designed with
+mediation, moderation, and moderated mediation in mind and may be
+limited in scope (though it is a “big” scope), is easy for our daily use
+in estimating power.
+
+So here it is, `power4mome`, developed with we ourselves as the users,
+but we believe are also useful for others who need to do power analysis
+for mediation, moderation, and moderated mediation.
+
+# Not Just That …
+
+But `power4mome` is not just for mediation, moderation, and moderated
+mediation. We avoided wrote the functions just for these effects, and
+have left room for testing other effects, as hinted in some examples in
+the help pages. They may be introduced later. For now, supporting
+effects that can be tested by `manymome` is our priority.
+
+# Issues
+
+If you have any suggestions and found any bugs, please feel free to open
+a GitHub issue:
+
+<https://github.com/sfcheung/power4mome/issues>
+
+Thanks.
+
+# Reference
+
+Cheung, S. F., & Cheung, S.-H. (2024). *manymome*: An R package for
+computing the indirect effects, conditional effects, and conditional
+indirect effects, standardized or unstandardized, and their bootstrap
+confidence intervals, in many (though not all) models. *Behavior
+Research Methods, 56*(5), 4862–4882.
+<https://doi.org/10.3758/s13428-023-02224-z>
+
+# Package index
+
+## Main Functions
+
+All-in-one functions for common tasks.
+
+- [`power4test()`](https://sfcheung.github.io/power4mome/reference/power4test.md)
+  [`print(`*`<power4test>`*`)`](https://sfcheung.github.io/power4mome/reference/power4test.md)
+  : Estimate the Power of a Test
+- [`power4test_by_n()`](https://sfcheung.github.io/power4mome/reference/power4test_by_n.md)
+  [`c(`*`<power4test_by_n>`*`)`](https://sfcheung.github.io/power4mome/reference/power4test_by_n.md)
+  [`as.power4test_by_n()`](https://sfcheung.github.io/power4mome/reference/power4test_by_n.md)
+  [`print(`*`<power4test_by_n>`*`)`](https://sfcheung.github.io/power4mome/reference/power4test_by_n.md)
+  : Power By Sample Sizes
+- [`power4test_by_es()`](https://sfcheung.github.io/power4mome/reference/power4test_by_es.md)
+  [`c(`*`<power4test_by_es>`*`)`](https://sfcheung.github.io/power4mome/reference/power4test_by_es.md)
+  [`as.power4test_by_es()`](https://sfcheung.github.io/power4mome/reference/power4test_by_es.md)
+  [`print(`*`<power4test_by_es>`*`)`](https://sfcheung.github.io/power4mome/reference/power4test_by_es.md)
+  : Power By Effect Sizes
+- [`x_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md)
+  [`n_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md)
+  [`n_region_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md)
+  [`print(`*`<x_from_power>`*`)`](https://sfcheung.github.io/power4mome/reference/x_from_power.md)
+  [`print(`*`<n_region_from_power>`*`)`](https://sfcheung.github.io/power4mome/reference/x_from_power.md)
+  [`arg_x_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md)
+  : Sample Size and Effect Size Determination
+
+- [`q_power_mediation()`](https://sfcheung.github.io/power4mome/reference/q_power_mediation.md)
+  [`print(`*`<q_power_mediation>`*`)`](https://sfcheung.github.io/power4mome/reference/q_power_mediation.md)
+  [`plot(`*`<q_power_mediation>`*`)`](https://sfcheung.github.io/power4mome/reference/q_power_mediation.md)
+  [`summary(`*`<q_power_mediation>`*`)`](https://sfcheung.github.io/power4mome/reference/q_power_mediation.md)
+  [`q_power_mediation_simple()`](https://sfcheung.github.io/power4mome/reference/q_power_mediation.md)
+  [`q_power_mediation_serial()`](https://sfcheung.github.io/power4mome/reference/q_power_mediation.md)
+  [`q_power_mediation_parallel()`](https://sfcheung.github.io/power4mome/reference/q_power_mediation.md)
+  : All-in-One Power Estimation For Mediation Models
+
+## Helper Functions
+
+Helpers for main functions
+
+- [`rejection_rates()`](https://sfcheung.github.io/power4mome/reference/rejection_rates.md)
+  [`print(`*`<rejection_rates_df>`*`)`](https://sfcheung.github.io/power4mome/reference/rejection_rates.md)
+  : Rejection Rates
+- [`plot(`*`<x_from_power>`*`)`](https://sfcheung.github.io/power4mome/reference/plot.x_from_power.md)
+  [`plot(`*`<n_region_from_power>`*`)`](https://sfcheung.github.io/power4mome/reference/plot.x_from_power.md)
+  : Plot The Results of 'x_from_power'
+- [`summary(`*`<x_from_power>`*`)`](https://sfcheung.github.io/power4mome/reference/summary.x_from_power.md)
+  [`summary(`*`<n_region_from_power>`*`)`](https://sfcheung.github.io/power4mome/reference/summary.x_from_power.md)
+  [`print(`*`<summary.x_from_power>`*`)`](https://sfcheung.github.io/power4mome/reference/summary.x_from_power.md)
+  [`print(`*`<summary.n_region_from_power>`*`)`](https://sfcheung.github.io/power4mome/reference/summary.x_from_power.md)
+  : Summarize 'x_from_power' Results
+- [`power_curve()`](https://sfcheung.github.io/power4mome/reference/power_curve.md)
+  [`print(`*`<power_curve>`*`)`](https://sfcheung.github.io/power4mome/reference/power_curve.md)
+  : Power Curve
+- [`plot(`*`<power_curve>`*`)`](https://sfcheung.github.io/power4mome/reference/plot.power_curve.md)
+  [`plot(`*`<power4test_by_n>`*`)`](https://sfcheung.github.io/power4mome/reference/plot.power_curve.md)
+  [`plot(`*`<power4test_by_es>`*`)`](https://sfcheung.github.io/power4mome/reference/plot.power_curve.md)
+  : Plot a Power Curve
+- [`predict(`*`<power_curve>`*`)`](https://sfcheung.github.io/power4mome/reference/predict.power_curve.md)
+  : Predict Method for a 'power_curve' Object
+
+## Test Functions
+
+Built-in functions for do common tests such as testing indirect effects
+and model parameters.
+
+- [`test_indirect_effect()`](https://sfcheung.github.io/power4mome/reference/test_indirect_effect.md)
+  : Test an Indirect Effect
+- [`test_k_indirect_effects()`](https://sfcheung.github.io/power4mome/reference/test_k_indirect_effects.md)
+  : Test Several Indirect Effects
+- [`test_cond_indirect()`](https://sfcheung.github.io/power4mome/reference/test_cond_indirect.md)
+  : Test a Conditional Indirect Effect
+- [`test_cond_indirect_effects()`](https://sfcheung.github.io/power4mome/reference/test_cond_indirect_effects.md)
+  : Test Several Conditional Indirect Effects
+- [`test_moderation()`](https://sfcheung.github.io/power4mome/reference/test_moderation.md)
+  : Test All Moderation Effects
+- [`test_index_of_mome()`](https://sfcheung.github.io/power4mome/reference/test_index_of_mome.md)
+  : Test a Moderated Mediation Effect
+- [`test_parameters()`](https://sfcheung.github.io/power4mome/reference/test_parameters.md)
+  [`find_par_names()`](https://sfcheung.github.io/power4mome/reference/test_parameters.md)
+  : Test All Free Parameters
+
+## Advanced Functions
+
+For advanced users to do the power analysis step-by-step or build a
+customized workflow.
+
+- [`ptable_pop()`](https://sfcheung.github.io/power4mome/reference/ptable_pop.md)
+  [`model_matrices_pop()`](https://sfcheung.github.io/power4mome/reference/ptable_pop.md)
+  : Generate the Population Model
+- [`sim_data()`](https://sfcheung.github.io/power4mome/reference/sim_data.md)
+  [`print(`*`<sim_data>`*`)`](https://sfcheung.github.io/power4mome/reference/sim_data.md)
+  [`pool_sim_data()`](https://sfcheung.github.io/power4mome/reference/sim_data.md)
+  : Simulate Datasets Based on a Model
+- [`fit_model()`](https://sfcheung.github.io/power4mome/reference/fit_model.md)
+  : Fit a Model to a List of Datasets
+- [`gen_mc()`](https://sfcheung.github.io/power4mome/reference/gen_mc.md)
+  : Generate Monte Carlo Estimates
+- [`gen_boot()`](https://sfcheung.github.io/power4mome/reference/gen_boot.md)
+  : Generate Bootstrap Estimates
+- [`sim_out()`](https://sfcheung.github.io/power4mome/reference/sim_out.md)
+  [`print(`*`<sim_out>`*`)`](https://sfcheung.github.io/power4mome/reference/sim_out.md)
+  : Create a 'sim_out' Object
+- [`do_test()`](https://sfcheung.github.io/power4mome/reference/do_test.md)
+  : Do a Test on Each Replication
+
+## Generate Random Numbers
+
+Functions for generating one variable from a specific distribution.
+
+- [`rbeta_rs()`](https://sfcheung.github.io/power4mome/reference/rbeta_rs.md)
+  : Random Variable From a Beta Distribution
+- [`rbeta_rs2()`](https://sfcheung.github.io/power4mome/reference/rbeta_rs2.md)
+  : Random Variable From a Beta Distribution (User Range)
+- [`rbinary_rs()`](https://sfcheung.github.io/power4mome/reference/rbinary_rs.md)
+  : Random Binary Variable
+- [`rexp_rs()`](https://sfcheung.github.io/power4mome/reference/rexp_rs.md)
+  : Random Variable From an Exponential Distribution
+- [`rlnorm_rs()`](https://sfcheung.github.io/power4mome/reference/rlnorm_rs.md)
+  : Random Variable From a Lognormal Distribution
+- [`rpgnorm_rs()`](https://sfcheung.github.io/power4mome/reference/rpgnorm_rs.md)
+  : Random Variable From a Generalized Normal Distribution
+- [`rt_rs()`](https://sfcheung.github.io/power4mome/reference/rt_rs.md)
+  : Random Variable From a t Distribution
+- [`runif_rs()`](https://sfcheung.github.io/power4mome/reference/runif_rs.md)
+  : Random Variable From a Uniform Distribution
+
+## Miscellaneous Functions
+
+Miscellaneous functions
+
+- [`summarize_tests()`](https://sfcheung.github.io/power4mome/reference/summarize_tests.md)
+  [`print(`*`<test_summary_list>`*`)`](https://sfcheung.github.io/power4mome/reference/summarize_tests.md)
+  [`print(`*`<test_summary>`*`)`](https://sfcheung.github.io/power4mome/reference/summarize_tests.md)
+  [`print(`*`<test_out_list>`*`)`](https://sfcheung.github.io/power4mome/reference/summarize_tests.md)
+  : Summarize Test Results
+- [`pop_es_yaml()`](https://sfcheung.github.io/power4mome/reference/pop_es_yaml.md)
+  : Parse YAML-Stye Values For 'pop_es'
+
+# Articles
+
+### Scenarios
+
+- [Power Analysis for Latent Variable
+  Mediation](https://sfcheung.github.io/power4mome/articles/power4test_latent_mediation.md):
+
+### Given Power, Find x
+
+- [Sample Size Given Desired
+  Power](https://sfcheung.github.io/power4mome/articles/x_from_power_for_n.md):
+
+### Common Mediation Models
+
+- [Quick Function: Simple Mediation with Observed
+  Variables](https://sfcheung.github.io/power4mome/articles/template_q_med_obs_simple.md):
+- [Quick Function: Serial Mediation with Observed
+  Variables](https://sfcheung.github.io/power4mome/articles/template_q_med_obs_serial.md):
+- [Quick Function: Parallel Mediation with Observed
+  Variables](https://sfcheung.github.io/power4mome/articles/template_q_med_obs_parallel.md):
+- [Quick Function: Simple Mediation with Latent
+  Variables](https://sfcheung.github.io/power4mome/articles/template_q_med_lav_simple.md):
+- [Quick Function: Serial Mediation with Latent
+  Variables](https://sfcheung.github.io/power4mome/articles/template_q_med_lav_serial.md):
+- [Quick Function: Parallel Mediation with Latent
+  Variables](https://sfcheung.github.io/power4mome/articles/template_q_med_lav_parallel.md):
+
+### Templates (Code Examples)
+
+- [Quick Template: Simple Mediation with Observed
+  Variables](https://sfcheung.github.io/power4mome/articles/template_n_from_power_mediation_obs_simple.md):
+- [Quick Template: Serial Mediation with Observed
+  Variables](https://sfcheung.github.io/power4mome/articles/template_n_from_power_mediation_obs_serial.md):
+- [Quick Template: Parallel Mediation with Observed
+  Variables](https://sfcheung.github.io/power4mome/articles/template_n_from_power_mediation_obs_parallel.md):
+- [Quick Template: Simple Mediation with Latent
+  Variables](https://sfcheung.github.io/power4mome/articles/template_n_from_power_mediation_lav_simple.md):
+- [Quick Template: Serial Mediation with Latent
+  Variables](https://sfcheung.github.io/power4mome/articles/template_n_from_power_mediation_lav_serial.md):
+- [Quick Template: Parallel Mediation with Latent
+  Variables](https://sfcheung.github.io/power4mome/articles/template_n_from_power_mediation_lav_parallel.md):
+
+### Moderation Templates (Code Examples)
+
+- [Quick Template: Simple Moderation with Observed
+  Variables](https://sfcheung.github.io/power4mome/articles/template_n_from_power_moderation_obs_simple.md):
+- [Quick Template: Moderation with Observed Variables: Two
+  Moderators](https://sfcheung.github.io/power4mome/articles/template_n_from_power_moderation_obs_two_ws.md):
+
+### Moderated Mediation Templates (Code Examples)
+
+- [Quick Template: Simple Moderated Mediation with Observed Variables:
+  a-Path
+  Moderated](https://sfcheung.github.io/power4mome/articles/template_n_from_power_mome_obs_a.md):
+- [Quick Template: Simple Moderated Mediation with Observed Variables:
+  b-Path
+  Moderated](https://sfcheung.github.io/power4mome/articles/template_n_from_power_mome_obs_b.md):
+
+### Technical Appendices
+
+- [Workflow of
+  \`power4test()\`](https://sfcheung.github.io/power4mome/articles/power4test_workflow.md):
+- [Workflow of 'x_from_power()' Using the 'power_curve'
+  Algorithm](https://sfcheung.github.io/power4mome/articles/x_from_power_workflow.md):
+- [Workflows of
+  \`sim_data_i()](https://sfcheung.github.io/power4mome/articles/sim_data_i_workflow.md):

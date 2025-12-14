@@ -19,7 +19,7 @@ value."><meta property="og:image" content="https://sfcheung.github.io/power4mome
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.22</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,6 +36,14 @@ value."><meta property="og:image" content="https://sfcheung.github.io/power4mome
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Given Power, Find x</h6></li>
     <li><a class="dropdown-item" href="../articles/x_from_power_for_n.html">Sample Size Given Desired Power</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Common Mediation Models</h6></li>
+    <li><a class="dropdown-item" href="../articles/template_q_med_obs_simple.html">Quick Function: Simple Mediation with Observed Variables</a></li>
+    <li><a class="dropdown-item" href="../articles/template_q_med_obs_serial.html">Quick Function: Serial Mediation with Observed Variables</a></li>
+    <li><a class="dropdown-item" href="../articles/template_q_med_obs_parallel.html">Quick Function: Parallel Mediation with Observed Variables</a></li>
+    <li><a class="dropdown-item" href="../articles/template_q_med_lav_simple.html">Quick Function: Simple Mediation with Latent Variables</a></li>
+    <li><a class="dropdown-item" href="../articles/template_q_med_lav_serial.html">Quick Function: Serial Mediation with Latent Variables</a></li>
+    <li><a class="dropdown-item" href="../articles/template_q_med_lav_parallel.html">Quick Function: Parallel Mediation with Latent Variables</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Templates (Code Examples)</h6></li>
     <li><a class="dropdown-item" href="../articles/template_n_from_power_mediation_obs_simple.html">Quick Template: Simple Mediation with Observed Variables</a></li>
@@ -86,11 +94,14 @@ value.</p>
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">x_from_power</span><span class="op">(</span></span>
 <span>  <span class="va">object</span>,</span>
-<span>  <span class="va">x</span>,</span>
-<span>  pop_es_name <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  x <span class="op">=</span> <span class="fu">arg_x_from_power</span><span class="op">(</span><span class="va">object</span>, <span class="st">"x"</span>, arg_in <span class="op">=</span> <span class="st">"call"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/Control.html" class="external-link">%||%</a></span> <span class="st">"n"</span>,</span>
+<span>  pop_es_name <span class="op">=</span> <span class="fu">arg_x_from_power</span><span class="op">(</span><span class="va">object</span>, <span class="st">"pop_es_name"</span>, arg_in <span class="op">=</span> <span class="st">"call"</span><span class="op">)</span>,</span>
 <span>  target_power <span class="op">=</span> <span class="fl">0.8</span>,</span>
-<span>  what <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"point"</span>, <span class="st">"ub"</span>, <span class="st">"lb"</span><span class="op">)</span>,</span>
-<span>  goal <span class="op">=</span> <span class="kw"><a href="https://rdrr.io/r/base/switch.html" class="external-link">switch</a></span><span class="op">(</span><span class="va">what</span>, point <span class="op">=</span> <span class="st">"ci_hit"</span>, ub <span class="op">=</span> <span class="st">"close_enough"</span>, lb <span class="op">=</span> <span class="st">"close_enough"</span><span class="op">)</span>,</span>
+<span>  what <span class="op">=</span> <span class="fu">arg_x_from_power</span><span class="op">(</span><span class="va">object</span>, <span class="st">"what"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/Control.html" class="external-link">%||%</a></span> <span class="st">"point"</span>,</span>
+<span>  goal <span class="op">=</span> <span class="fu">arg_x_from_power</span><span class="op">(</span><span class="va">object</span>, <span class="st">"goal"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/Control.html" class="external-link">%||%</a></span> <span class="op">{</span></span>
+<span>     <span class="kw"><a href="https://rdrr.io/r/base/switch.html" class="external-link">switch</a></span><span class="op">(</span><span class="va">what</span>, point <span class="op">=</span> <span class="st">"ci_hit"</span>, ub</span>
+<span>    <span class="op">=</span> <span class="st">"close_enough"</span>, lb <span class="op">=</span> <span class="st">"close_enough"</span><span class="op">)</span></span>
+<span> <span class="op">}</span>,</span>
 <span>  ci_level <span class="op">=</span> <span class="fl">0.95</span>,</span>
 <span>  tolerance <span class="op">=</span> <span class="fl">0.02</span>,</span>
 <span>  x_interval <span class="op">=</span> <span class="kw"><a href="https://rdrr.io/r/base/switch.html" class="external-link">switch</a></span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">50</span>, <span class="fl">2000</span><span class="op">)</span>, es <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>,</span>
@@ -98,8 +109,8 @@ value.</p>
 <span>  progress <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  simulation_progress <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  max_trials <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>  final_nrep <span class="op">=</span> <span class="fl">400</span>,</span>
-<span>  final_R <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>  final_nrep <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">object</span>, <span class="st">"args"</span><span class="op">)</span><span class="op">$</span><span class="va">nrep</span> <span class="op"><a href="https://rdrr.io/r/base/Control.html" class="external-link">%||%</a></span> <span class="op">(</span><span class="va">object</span><span class="op">$</span><span class="va">nrep_final</span> <span class="op"><a href="https://rdrr.io/r/base/Control.html" class="external-link">%||%</a></span> <span class="fl">400</span><span class="op">)</span>,</span>
+<span>  final_R <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">object</span>, <span class="st">"args"</span><span class="op">)</span><span class="op">$</span><span class="va">R</span> <span class="op"><a href="https://rdrr.io/r/base/Control.html" class="external-link">%||%</a></span> <span class="op">(</span><span class="va">object</span><span class="op">$</span><span class="va">args</span><span class="op">$</span><span class="va">final_R</span> <span class="op"><a href="https://rdrr.io/r/base/Control.html" class="external-link">%||%</a></span> <span class="fl">1000</span><span class="op">)</span>,</span>
 <span>  seed <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  x_include_interval <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  check_es_interval <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -114,8 +125,8 @@ value.</p>
 <span>  <span class="va">object</span>,</span>
 <span>  pop_es_name <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  target_power <span class="op">=</span> <span class="fl">0.8</span>,</span>
-<span>  what <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"point"</span>, <span class="st">"ub"</span>, <span class="st">"lb"</span><span class="op">)</span>,</span>
-<span>  goal <span class="op">=</span> <span class="kw"><a href="https://rdrr.io/r/base/switch.html" class="external-link">switch</a></span><span class="op">(</span><span class="va">what</span>, point <span class="op">=</span> <span class="st">"ci_hit"</span>, ub <span class="op">=</span> <span class="st">"close_enough"</span>, lb <span class="op">=</span> <span class="st">"close_enough"</span><span class="op">)</span>,</span>
+<span>  what <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/formals.html" class="external-link">formals</a></span><span class="op">(</span><span class="va">x_from_power</span><span class="op">)</span><span class="op">$</span><span class="va">what</span>,</span>
+<span>  goal <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/formals.html" class="external-link">formals</a></span><span class="op">(</span><span class="va">x_from_power</span><span class="op">)</span><span class="op">$</span><span class="va">goal</span>,</span>
 <span>  ci_level <span class="op">=</span> <span class="fl">0.95</span>,</span>
 <span>  tolerance <span class="op">=</span> <span class="fl">0.02</span>,</span>
 <span>  x_interval <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">50</span>, <span class="fl">2000</span><span class="op">)</span>,</span>
@@ -123,8 +134,8 @@ value.</p>
 <span>  progress <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  simulation_progress <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  max_trials <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>  final_nrep <span class="op">=</span> <span class="fl">400</span>,</span>
-<span>  final_R <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>  final_nrep <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/formals.html" class="external-link">formals</a></span><span class="op">(</span><span class="va">x_from_power</span><span class="op">)</span><span class="op">$</span><span class="va">final_nrep</span>,</span>
+<span>  final_R <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/formals.html" class="external-link">formals</a></span><span class="op">(</span><span class="va">x_from_power</span><span class="op">)</span><span class="op">$</span><span class="va">final_R</span>,</span>
 <span>  seed <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  x_include_interval <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  check_es_interval <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -146,8 +157,8 @@ value.</p>
 <span>  progress <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  simulation_progress <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  max_trials <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>  final_nrep <span class="op">=</span> <span class="fl">400</span>,</span>
-<span>  final_R <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>  final_nrep <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/formals.html" class="external-link">formals</a></span><span class="op">(</span><span class="va">x_from_power</span><span class="op">)</span><span class="op">$</span><span class="va">final_nrep</span>,</span>
+<span>  final_R <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/formals.html" class="external-link">formals</a></span><span class="op">(</span><span class="va">x_from_power</span><span class="op">)</span><span class="op">$</span><span class="va">final_R</span>,</span>
 <span>  seed <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  x_include_interval <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  check_es_interval <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -162,7 +173,9 @@ value.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, digits <span class="op">=</span> <span class="fl">3</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'n_region_from_power'</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, digits <span class="op">=</span> <span class="fl">3</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, digits <span class="op">=</span> <span class="fl">3</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">arg_x_from_power</span><span class="op">(</span><span class="va">object</span>, <span class="va">arg</span>, arg_in <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -304,7 +317,14 @@ replications in the final stage,
 also the maximum number of replications
 in each call to <code><a href="power4test.html">power4test()</a></code>,
 <code><a href="power4test_by_n.html">power4test_by_n()</a></code>, or
-<code><a href="power4test_by_es.html">power4test_by_es()</a></code>.</p></dd>
+<code><a href="power4test_by_es.html">power4test_by_es()</a></code>.
+If <code>object</code>
+is an output of <code><a href="power4test.html">power4test()</a></code>
+or <code>x_from_power()</code> and
+this argument is not set, <code>final_nrep</code>
+will be set to <code>nrep</code> or <code>final_nrep</code>
+stored in
+<code>object</code>.</p></dd>
 
 
 <dt id="arg-final-r">final_R<a class="anchor" aria-label="anchor" href="#arg-final-r"></a></dt>
@@ -319,7 +339,14 @@ when approaching the target
 power. Do not need to be very large
 because the goal is to estimate
 power by replications, not for high
-precision in one single replication.</p></dd>
+precision in one single replication.
+If <code>object</code>
+is an output of <code><a href="power4test.html">power4test()</a></code>
+or <code>x_from_power()</code> and
+this argument is not set, <code>finalR</code>
+will be set to <code>R</code> or <code>final_R</code>
+stored in
+<code>object</code>.</p></dd>
 
 
 <dt id="arg-seed">seed<a class="anchor" aria-label="anchor" href="#arg-seed"></a></dt>
@@ -398,6 +425,17 @@ the results.</p></dd>
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>Optional arguments.
 Not used for now.</p></dd>
+
+
+<dt id="arg-arg">arg<a class="anchor" aria-label="anchor" href="#arg-arg"></a></dt>
+<dd><p>The name of element to
+retrieve.</p></dd>
+
+
+<dt id="arg-arg-in">arg_in<a class="anchor" aria-label="anchor" href="#arg-arg-in"></a></dt>
+<dd><p>The name of the element
+from which an element is to be
+retrieved.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -484,6 +522,10 @@ It is called for its side effect.</p>
 objects returns the object <code>x</code>
 invisibly.
 It is called for its side effect.</p>
+<p>The function <code>arg_x_from_power()</code>
+returns the requested argument if
+available. If not available, it
+returns <code>NULL</code>.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -557,6 +599,11 @@ basic information. Call the
 <code>summary</code> method of <code>x_from_power</code> objects
 (<code><a href="summary.x_from_power.html">summary.x_from_power()</a></code>) and its
 <code>print</code> method for detailed results</p>
+<p>The function <code>arg_x_from_power()</code>
+is a helper to set argument values
+if <code>object</code> is an output
+of <code>x_from_power()</code> or similar
+functions.</p>
     </div>
     <div class="section level2">
     <h2 id="algorithms">Algorithms<a class="anchor" aria-label="anchor" href="#algorithms"></a></h2>
@@ -710,31 +757,57 @@ and <code><a href="power4test_by_es.html">power4test_by_es()</a></code>.</p></di
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Set 'simulation progress = FALSE' to suppress displaying the progress</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   in the simulation.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Initial interval: [100, 125] </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Initial interval: [50, 100] </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Do the simulation for the upper bound:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Do the simulation for the lower bound:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Try x = 125 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Try x = 50 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Updating the simulation for sample size: 125 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Updating the simulation for sample size: 50 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Re-simulate the data:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Fit the model(s):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Update the test(s):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Update test_parameters: CIs (pars: m~x) :</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Estimated power at n: 0.400, 95.0% confidence interval: [0.118,0.769]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Initial interval: [50, 100] </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Rejection Rates:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [test]: test_parameters: CIs (pars: m~x) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [test_label]: m~x </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     n   est   p.v reject r.cilo r.cihi</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  50 0.222 1.000  0.400  0.118  0.769</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 100 0.298 1.000  0.800  0.376  0.964</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> == Enter extending interval ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> == Exit extending interval ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration # 1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Try x = 75 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Updating the simulation for sample size: 75 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Re-simulate the data:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Fit the model(s):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Update the test(s):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Update test_parameters: CIs (pars: m~x) :</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Estimated power at n: 1.000, 95.0% confidence interval: [0.566,1.000]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Initial interval: [100, 125] </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Rejection Rates:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [test]: test_parameters: CIs (pars: m~x) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [test_label]: m~x </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     n   est   p.v reject r.cilo r.cihi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 100 0.298 1.000  0.800  0.376  0.964</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 125 0.310 1.000  1.000  0.566  1.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> One of the bounds in the interval is already a solution.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  50 0.222 1.000  0.400  0.118  0.769</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  75 0.334 1.000  1.000  0.566  1.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 100 0.298 1.000  0.800  0.376  0.964</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - 'nls()' estimation skipped when less than 4 values of predictor examined.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Solution found.</span>
@@ -742,14 +815,15 @@ and <code><a href="power4test_by_es.html">power4test_by_es()</a></code>.</p></di
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --- Final Stage ---</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-10-25 17:11:54 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2025-12-14 12:36:25 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Rejection Rates:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [test]: test_parameters: CIs (pars: m~x) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [test_label]: m~x </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     n   est   p.v reject r.cilo r.cihi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 100 0.298 1.000  0.800  0.376  0.964</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 125 0.310 1.000  1.000  0.566  1.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  50 0.222 1.000  0.400  0.118  0.769</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  75 0.334 1.000  1.000  0.566  1.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 100 0.298 1.000  0.800  0.376  0.964</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Notes:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - n: The sample size in a trial.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - p.v: The proportion of valid replications.</span>
@@ -776,17 +850,17 @@ and <code><a href="power4test_by_es.html">power4test_by_es()</a></code>.</p></di
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Coefficients:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)            x  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    -75.3328       0.7672  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    -2.25384      0.04624  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Degrees of Freedom: 9 Total (i.e. Null);  8 Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Null Deviance:	    6.502 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Residual Deviance: 5.004 	AIC: 9.004</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Degrees of Freedom: 14 Total (i.e. Null);  13 Residual</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Null Deviance:	    17.4 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Residual Deviance: 15.23 	AIC: 19.23</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Final Value: 100 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Final Value: 75 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Final Estimated Power: 0.8000 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Confidence Interval: [0.3755; 0.9638]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Final Estimated Power: 1.0000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Confidence Interval: [0.5655; 1.0000]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - CI Level: 95.00%</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">power_vs_n</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -804,18 +878,18 @@ and <code><a href="power4test_by_es.html">power4test_by_es()</a></code>.</p></di
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> === Major Results ===</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Final Value (Sample Size): 100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Final Value (Sample Size): 75</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Final Estimated Power: 0.800 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Confidence Interval: [0.376; 0.964]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Final Estimated Power: 1.000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Confidence Interval: [0.566; 1.000]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Level of confidence: 95.0%</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Based on 5 replications.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> === Technical Information ===</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Algorithm: bisection </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - The range of values explored: 100 to 125 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Time spent in the search: 0.4741 secs </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - The range of values explored: 100 to 75 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Time spent in the search: 0.8678 secs </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - The final crude model for the power-predictor relation:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Model Type: Logistic Regression </span>
@@ -833,19 +907,20 @@ and <code><a href="power4test_by_es.html">power4test_by_es()</a></code>.</p></di
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Coefficients:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)            x  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    -75.3328       0.7672  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    -2.25384      0.04624  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Degrees of Freedom: 9 Total (i.e. Null);  8 Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Null Deviance:	    6.502 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Residual Deviance: 5.004 	AIC: 9.004</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Degrees of Freedom: 14 Total (i.e. Null);  13 Residual</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Null Deviance:	    17.4 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Residual Deviance: 15.23 	AIC: 19.23</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Detailed Results:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [test]: test_parameters: CIs (pars: m~x) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [test_label]: m~x </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     n   est   p.v reject r.cilo r.cihi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 100 0.298 1.000  0.800  0.376  0.964</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 125 0.310 1.000  1.000  0.566  1.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  50 0.222 1.000  0.400  0.118  0.769</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  75 0.334 1.000  1.000  0.566  1.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 100 0.298 1.000  0.800  0.376  0.964</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Notes:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - n: The sample size in a trial.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - p.v: The proportion of valid replications.</span>
@@ -872,7 +947,7 @@ and <code><a href="power4test_by_es.html">power4test_by_es()</a></code>.</p></di
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>
