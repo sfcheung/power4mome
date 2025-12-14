@@ -1,0 +1,25 @@
+
+# Find the Region of Sample Sizes
+
+In addition to estimate the power for
+a sample size, the function can also
+be used to find an approximate region
+of sample sizes with levels of power
+*not* significantly different from the
+target power. This region is useful
+for determining a range of sample sizes
+likely to have sufficient power, but
+are not greater than necessary when
+resources are limited.
+
+Note that this process can be slow.
+Nevertheless, power analysis is usually
+conducted in the planning stage of a
+study, and so the slow processing time is
+acceptable in this stage.
+
+Finding the region can be done using the
+same code
+above, with the argument `mode = "region"`
+added:
+

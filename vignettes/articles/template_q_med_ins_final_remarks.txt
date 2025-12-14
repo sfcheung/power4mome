@@ -1,4 +1,21 @@
+
 # Final Remarks {#final_remarks}
+
+## Other Models
+
+Quick how-to articles on other common
+mediation models, including those with
+latent variables, can be found from
+the [list of articles](index.html)
+
+The package
+[`power4mome`](https://sfcheung.github.io/power4mome/)
+supports an arbitrary model specified
+by `lavaan` syntax, including those
+with moderators. Interested users can
+refer to the articles above.
+
+## Technical Details
 
 For options of `power4test()`
 and `n_region_from_power()`, please refer to
@@ -8,3 +25,4 @@ and this [article](https://sfcheung.github.io/power4mome/articles/x_from_power_f
 for `n_from_power()`, which is the
 function to find one of the regions,
 called twice by `n_region_from_power()`.
+

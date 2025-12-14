@@ -1,5 +1,5 @@
 ---
-title: "Quick Function: Parallel Mediation with Observed Variables"
+title: "Quick Function: Parallel Mediation with Latent Variables"
 date: "`r Sys.Date()`"
 output:
   html_document:
@@ -38,84 +38,95 @@ library(power4mome)
 
 Suppose this is the model:
 
-```{r template_q_med_obs_parallel_model, echo = FALSE, fig.cap = "The Model"}
+```{r template_q_med_lav_parallel_model, echo = FALSE, fig.cap = "The Model"}
 library(semPlot)
+library(semptools)
 suppressMessages(library(lavaan))
 mod <-
 "
 m1 ~ m*x
 m2 ~ m*x
-m3 ~ m*x
-y ~ s*m1 + m*m2 + l*m3 + s*x
+y ~ l*m1 + l*m2 + s*x
+x =~ x1 + x2 + x3
+m1 =~ m11 + m12 + m13 + m14
+m2 =~ m21 + m22 + m23
+y =~ y1 + y2 + y3
 "
 fit0 <- sem(mod, do.fit = FALSE, fixed.x = FALSE)
 set.seed(1234)
-dat <- data.frame(MASS::mvrnorm(100, rep(0, 5), diag(5)))
-colnames(dat) <- lavNames(fit0)
-fit0 <- sem(mod, dat, do.fit = FALSE, fixed.x = FALSE)
+onames <- lavNames(fit0)
+p <- length(onames)
+dat <- data.frame(MASS::mvrnorm(100, rep(0, p), diag(p)))
+colnames(dat) <- onames
+fit0 <- sem(mod, dat, do.fit = FALSE)
 layout_m <- matrix(c(NA, "m1", NA,
-                     NA, "m2", NA,
-                     NA, "m3", NA,
-                     "x", NA,  "y"), 4, 3, byrow = TRUE)
+                     "x", NA,  "y",
+                     NA, "m2", NA), 3, 3, byrow = TRUE)
 p <- semPaths(fit0,
               whatLabels = "label",
-              layout = layout_m,
               nCharNodes = 0,
               exoCov = FALSE,
-              edge.label.cex = 1.25,
-              label.cex = 1.5,
+              edge.label.cex = 1.25 * 1.5,
+              label.cex = 1.25,
               residuals = FALSE,
-              sizeMan = 8,
+              sizeMan = 6,
+              sizeMan2 = 4,
               asize = 5,
               DoNotPlot = TRUE)
-p$graphAttributes$Edges$labels <-
+p2 <- set_sem_layout(
+          p,
+          factor_layout = layout_m,
+          factor_point_to = c(x = "left",
+                              m1 = "up",
+                              m2 = "down",
+                              y = "right"),
+          indicator_push = c(x = 1,
+                             y = 1),
+          indicator_spread = c(x = 2,
+                               y = 2,
+                               m1 = 2,
+                               m2 = 2)
+        ) |>
+      set_curve(c("y ~ m1" = 0))
+p2$graphAttributes$Edges$labels[1:5] <-
   c("a1",
     "a2",
-    "a3",
     "b1",
     "b2",
-    "b3",
     "c'")
 
-# p$graphAttributes$Edges$labels <-
+# p2$graphAttributes$Edges$labels[1:5] <-
 #   c("m\n(medium: .30)",
 #     "m\n(medium: .30)",
-#     "m\n(medium: .30)",
-#     "s\n(small: .10)",
-#     "m\n(medium: .30)",
+#     "l\n(large: .50)",
 #     "l\n(large: .50)",
 #     "s\n(small: .10)")
-plot(p)
+
+plot(p2)
 text(label = "Parallel Mediation Model",
-     x = 0, y = -1.4,
-     cex = 1.25)
+     x = 0, y = -1.3,
+     cex = 1.5)
 ```
+
+This is a parallel mediation model, but
+the model is on the latent variables,
+each with some indicators.
 
 We want to do power analysis for the
 indirect effects from `x` to `y`:
-`x->m1->y`, `x->m2->y`, and `x->m2->y`.
+`x->m1->y` and `x->m2->y`.
 Suppose these are the expected
 effects:
 
-- `x->m1`: small
+- `x->m1`: medium
 
-- `x->m2`: medium
-
-- `x->m3`: medium
+- `x->m2`: large
 
 - `m1->y`: large
 
 - `m2->y`: medium
 
-- `m3->y`: large
-
-- `x->y`: nil (no effect)
-
-In `power4mome`, the convention for
-Pearson's *r* is used just for convenience.
-If necessary, users can specify the
-effect (on the standardized metric)
-directly.
+- `x->y`: small
 
 ```{r load_convention, child=c("template_q_med_ins_convention.txt")}
 ```
@@ -125,17 +136,18 @@ directly.
 
 ## Model with Hypothesized Path Coefficients
 
-This is the model with the effect sizes:
 
-```{r template_q_med_obs_parallel_model_es, echo = FALSE, fig.cap = "The Model (with Effect Sizes)"}
+This is the model with the effect sizes,
+showing only the latent variables:
+
+```{r template_q_med_lav_parallel_model_es, echo = FALSE, fig.cap = "The Model (with Effect Sizes)"}
 library(semPlot)
 suppressMessages(library(lavaan))
 mod <-
 "
 m1 ~ m*x
 m2 ~ m*x
-m3 ~ m*x
-y ~ s*m1 + m*m2 + l*m3 + s*x
+y ~ s*m1 + m*m2 + s*x
 "
 fit0 <- sem(mod, do.fit = FALSE, fixed.x = FALSE)
 set.seed(1234)
@@ -143,9 +155,8 @@ dat <- data.frame(MASS::mvrnorm(100, rep(0, 5), diag(5)))
 colnames(dat) <- lavNames(fit0)
 fit0 <- sem(mod, dat, do.fit = FALSE, fixed.x = FALSE)
 layout_m <- matrix(c(NA, "m1", NA,
-                     NA, "m2", NA,
-                     NA, "m3", NA,
-                     "x", NA,  "y"), 4, 3, byrow = TRUE)
+                     "x", NA, "y",
+                     NA, "m2", NA), 3, 3, byrow = TRUE)
 p <- semPaths(fit0,
               whatLabels = "label",
               layout = layout_m,
@@ -158,13 +169,11 @@ p <- semPaths(fit0,
               asize = 5,
               DoNotPlot = TRUE)
 p$graphAttributes$Edges$labels <-
-  c("a1" = "s\n(small: .10)",
-    "a2" = "m\n(medium: .30)",
-    "a3" = "m\n(medium: .30)",
+  c("a1" = "m\n(medium: .30)",
+    "a2" = "l\n(large: .50)",
     "b1" = "l\n(large: .50)",
     "b2" = "m\n(medium: .30)",
-    "b3" = "l\n(large: .50)",
-    "c'" = "nil\n(0)")
+    "c'" = "s\n(small: .10)")
 
 # p$graphAttributes$Edges$labels <-
 #   c("m\n(medium: .30)",
@@ -174,38 +183,37 @@ p$graphAttributes$Edges$labels <-
 #     "m\n(medium: .30)",
 #     "l\n(large: .50)",
 #     "s\n(small: .10)")
+p$graphAttributes$Nodes$shape[] <- "circle"
 plot(p)
 text(label = "Parallel Mediation Model",
      x = 0, y = -1.4,
      cex = 1.25)
 ```
 
-## Omnibus Power for All Indirect Paths
-
-There are more than one indirect path,
-so there are more than one tests.
-The function in `power4mome`
-supports finding the power for detecting
-*all* the indirect paths, that is, the
-probability that all the *tests* of
-indirect effects are
-significant. We call this power the
-*omnibus* power for the indirect paths.
-
 ```{r load_mc, child=c("template_q_med_ins_mc.txt")}
 ```
 
+```{r load_mc, child=c("template_q_med_ins_loadings_reliability.txt")}
+```
 
 # Find the Power
 
 To estimate the power for a sample size,
 this is the code:
 
-```{r power_only, eval=TRUE, results="hide", message=FALSE}
+```{r power, eval=TRUE, results="hide", message=FALSE}
 out_power <- q_power_mediation_parallel(
-  as = c("s", "m", "m"),
-  bs = c("l", "m", "l"),
-  cp = "nil",
+  as = c("m", "l"),
+  bs = c("l", "m"),
+  cp = "s",
+  number_of_indicators = c(x = 3,
+                           m1 = 4,
+                           m2 = 3,
+                           y = 3),
+  reliability = c(x = .70,
+                  m1 = .80,
+                  m2 = .70,
+                  y = .70),
   target_power = .80,
   nrep = 400,
   n = 300,
@@ -214,7 +222,6 @@ out_power <- q_power_mediation_parallel(
 )
 ```
 
-These are the arguments:
 
 - `as`: The hypothesized standardized effects
   from the predictor `x`
@@ -245,6 +252,19 @@ These are the arguments:
   by the [convention](#convention), or
   a numeric value.
 
+- `number_of_indicators`: A named
+  numeric vector of the numbers of
+  indicators. The names need to be
+  `x`, `m1`, `m2`, ... , and `y`. If it has only one
+  value, then all latent variables have
+  the same number of indicators.
+
+- `reliability`: A named
+  numeric vector of the population
+  reliability. The names need to be
+  `x`, `m1`, `m2`, ... , and `y`. If it has only one
+  value, then all latent variables have
+  the same value for reliability.
 
 ```{r load_args, child=c("template_q_med_ins_arguments.txt")}
 ```
@@ -255,6 +275,7 @@ This is the output:
 out_power
 ```
 
+
 ```{r load_p4t_output, child=c("template_q_med_ins_power4test_output.txt")}
 ```
 
@@ -264,9 +285,17 @@ out_power
 
 ```{r region, eval=TRUE, results="hide", message=FALSE}
 out_region <- q_power_mediation_parallel(
-  as = c("s", "m", "m"),
-  bs = c("l", "m", "l"),
-  cp = "nil",
+  as = c("m", "l"),
+  bs = c("l", "m"),
+  cp = "s",
+  number_of_indicators = c(x = 3,
+                           m1 = 4,
+                           m2 = 3,
+                           y = 3),
+  reliability = c(x = .70,
+                  m1 = .80,
+                  m2 = .70,
+                  y = .70),
   target_power = .80,
   nrep = 400,
   n = 300,
@@ -279,9 +308,11 @@ out_region <- q_power_mediation_parallel(
 ```{r load_regions_out, child=c("template_q_med_ins_regions_printout.txt")}
 ```
 
-```{r template_q_med_obs_simple_model_region, echo = FALSE, fig.cap = "The Plot of Sample Sizes Searched"}
+
+```{r template_q_med_lav_parallel_model_region, echo = FALSE, fig.cap = "The Plot of Sample Sizes Searched"}
 plot(out_region)
 ```
+
 
 The region between the shaded areas is the
 approximate region of sample sizes found.
@@ -289,6 +320,4 @@ approximate region of sample sizes found.
 
 ```{r load_final, child=c("template_q_med_ins_final_remarks.txt")}
 ```
-
-
 

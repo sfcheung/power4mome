@@ -6,12 +6,11 @@ range of sample sizes for a target level of power
 or estimate the power for a specific
 scenario in
 typical mediation models using
-[power4mome](https://sfcheung.github.io/power4mome/).
+[`power4mome`](https://sfcheung.github.io/power4mome/).
 Users can quickly adapt
-them for their scenarios. A summary
-of the code examples can be found
-in the section [Code Template](#code_template)
-at the end of this document.
+them for their scenarios. They are
+how-to guides and will not cover the
+technical details involved.
 
 # Prerequisite
 

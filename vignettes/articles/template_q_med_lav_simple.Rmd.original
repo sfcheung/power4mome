@@ -1,5 +1,5 @@
 ---
-title: "Quick Function: Simple Mediation with Observed Variables"
+title: "Quick Function: Simple Mediation with Latent Variables"
 date: "`r Sys.Date()`"
 output:
   html_document:
@@ -38,41 +38,61 @@ library(power4mome)
 
 Suppose this is the model:
 
-```{r template_q_med_obs_simple_model, echo = FALSE, fig.cap = "The Model"}
+```{r template_q_med_lav_simple_model, echo = FALSE, fig.cap = "The Model"}
+# knitr::opts_chunk$set(dpi = 300, dev.args = list(png = list(type = "cairo")))
 library(semPlot)
+library(semptools)
 suppressMessages(library(lavaan))
 mod <-
 "
-m ~ a*x
-y ~ b*m + cp*x
+m ~ m*x
+y ~ l*m + s*x
+x =~ x1 + x2 + x3 + x4
+m =~ m1 + m2 + m3
+y =~ y1 + y2 + y3
 "
 fit0 <- sem(mod, do.fit = FALSE, fixed.x = FALSE)
 set.seed(1234)
-dat <- data.frame(MASS::mvrnorm(100, rep(0, 3), diag(3)))
-colnames(dat) <- lavNames(fit0)
-fit0 <- sem(mod, dat, do.fit = FALSE, fixed.x = FALSE)
+onames <- lavNames(fit0)
+p <- length(onames)
+dat <- data.frame(MASS::mvrnorm(100, rep(0, p), diag(p)))
+colnames(dat) <- onames
+fit0 <- sem(mod, dat, do.fit = FALSE)
 layout_m <- matrix(c(NA, "m", NA,
                      "x", NA, "y"), 2, 3, byrow = TRUE)
 p <- semPaths(fit0,
               whatLabels = "label",
-              layout = layout_m,
               nCharNodes = 0,
               exoCov = FALSE,
-              edge.label.cex = 1.5 * 2,
+              edge.label.cex = 1.25,
               label.cex = 1.8,
               residuals = FALSE,
-              sizeMan = 10,
-              asize = 10,
+              sizeMan = 6,
+              sizeMan2 = 4,
+              sizeLat = 8,
+              sizeLat2 = 7,
+              asize = 5,
               DoNotPlot = TRUE)
-p$graphAttributes$Edges$labels <-
+p2 <- set_sem_layout(
+          p,
+          factor_layout = layout_m,
+          factor_point_to = c(x = "left",
+                              m = "up",
+                              y = "right"),
+          indicator_spread = c(m = 1.2)
+        )
+p2$graphAttributes$Edges$labels[1:3] <-
+  c("m\n(medium: .30)",
+    "l\n(large: .50)",
+    "s\n(small: .10)")
+p2$graphAttributes$Edges$labels[1:3] <-
   c("a",
     "b",
     "c'")
-
-plot(p)
+plot(p2)
 text(label = "Simple Mediation Model",
-     x = 0, y = -1.3,
-     cex = 2)
+     x = 0, y = -1,
+     cex = 1.25)
 ```
 
 We want to do power analysis for the
@@ -95,9 +115,11 @@ effects:
 
 ## Model with Hypothesized Path Coefficients
 
-This is the model with the effect sizes:
 
-```{r template_q_med_obs_simple_model_es, echo = FALSE, fig.cap = "The Model with Effect Sizes"}
+This is the model with the effect sizes,
+showing only the latent variables:
+
+```{r template_q_med_lav_simple_model_es, echo = FALSE, fig.cap = "The Model with Effect Sizes"}
 library(semPlot)
 suppressMessages(library(lavaan))
 mod <-
@@ -120,17 +142,14 @@ p <- semPaths(fit0,
               edge.label.cex = 1.5 * 1.2,
               label.cex = 1.8,
               residuals = FALSE,
-              sizeMan = 10,
+              sizeMan = 15,
               asize = 10,
               DoNotPlot = TRUE)
-# p$graphAttributes$Edges$labels <-
-#   c("s\n(small: .10)",
-#     "l\n(large: .50)",
-#     "m\n(medium: .30)")
 p$graphAttributes$Edges$labels <-
-  c("m\n(medium: .30)",
-    "m\n(medium: .30)",
-    "s\n(small: .10)")
+  c("s\n(small: .10)",
+    "l\n(large: .50)",
+    "m\n(medium: .30)")
+p$graphAttributes$Nodes$shape[] <- "circle"
 
 plot(p)
 text(label = "Simple Mediation Model",
@@ -138,8 +157,10 @@ text(label = "Simple Mediation Model",
      cex = 2)
 ```
 
-
 ```{r load_mc, child=c("template_q_med_ins_mc.txt")}
+```
+
+```{r load_mc, child=c("template_q_med_ins_loadings_reliability.txt")}
 ```
 
 # Find the Power
@@ -147,14 +168,20 @@ text(label = "Simple Mediation Model",
 To estimate the power for a sample size,
 this is the code:
 
-```{r med_simple, eval=TRUE, results="hide", message=FALSE}
+```{r power, eval=TRUE, results="hide", message=FALSE}
 out_power <- q_power_mediation_simple(
   a = "m",
   b = "m",
   cp = "s",
+  number_of_indicators = c(x = 3,
+                           m = 4,
+                           y = 5),
+  reliability = c(x = .70,
+                  m = .75,
+                  y = .80),
   target_power = .80,
   nrep = 400,
-  n = 80,
+  n = 150,
   R = 1000,
   seed = 1234
 )
@@ -181,6 +208,21 @@ These are the arguments:
   by the [convention](#convention), or
   a numeric value.
 
+- `number_of_indicators`: A named
+  numeric vector of the numbers of
+  indicators. The names need to be
+  `x`, `m`, and `y`. If it has only one
+  value, then all latent variables have
+  the same number of indicators.
+
+- `reliability`: A named
+  numeric vector of the population
+  reliability. The names need to be
+  `x`, `m`, and `y`. If it has only one
+  value, then all latent variables have
+  the same value for reliability.
+
+
 
 ```{r load_args, child=c("template_q_med_ins_arguments.txt")}
 ```
@@ -197,14 +239,21 @@ out_power
 ```{r load_regions, child=c("template_q_med_ins_regions.txt")}
 ```
 
-```{r med_simple_region, eval=TRUE, results="hide", message=FALSE}
+
+```{r region, eval=TRUE, results="hide", message=FALSE}
 out_region <- q_power_mediation_simple(
   a = "m",
   b = "m",
   cp = "s",
+  number_of_indicators = c(x = 3,
+                           m = 4,
+                           y = 5),
+  reliability = c(x = .70,
+                  m = .75,
+                  y = .80),
   target_power = .80,
   nrep = 400,
-  n = 80,
+  n = 150,
   R = 1000,
   seed = 1234,
   mode = "region"
@@ -214,7 +263,7 @@ out_region <- q_power_mediation_simple(
 ```{r load_regions_out, child=c("template_q_med_ins_regions_printout.txt")}
 ```
 
-```{r template_q_med_obs_simple_model_region, echo = FALSE, fig.cap = "The Plot of Sample Sizes Searched"}
+```{r template_q_med_lav_simple_model_region, echo = FALSE, fig.cap = "The Plot of Sample Sizes Searched"}
 plot(out_region)
 ```
 
