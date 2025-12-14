@@ -1,0 +1,226 @@
+---
+title: "Quick Function: Parallel Mediation with Observed Variables"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    fig.align: "center"
+    toc: true
+    toc_depth: 2
+    number_sections: false
+bibliography: references.bib
+csl: apa.csl
+---
+
+```{r knitr_setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "",
+  fig.align = "center"
+)
+```
+
+```{r load_pre, child=c("template_q_med_ins_preamble.txt")}
+```
+
+# Scope
+
+This file is for parallel mediation models,
+and only use one Function `q_power_mediation_parallel()`
+from the package `power4mome`.
+
+```{r}
+library(power4mome)
+```
+
+# The Model
+
+Suppose this is the model:
+
+```{r template_q_med_obs_parallel_model, echo = FALSE, fig.cap = "The Model"}
+library(semPlot)
+suppressMessages(library(lavaan))
+mod <-
+"
+m1 ~ m*x
+m2 ~ m*x
+m3 ~ m*x
+y ~ s*m1 + m*m2 + l*m3 + s*x
+"
+fit0 <- sem(mod, do.fit = FALSE, fixed.x = FALSE)
+set.seed(1234)
+dat <- data.frame(MASS::mvrnorm(100, rep(0, 5), diag(5)))
+colnames(dat) <- lavNames(fit0)
+fit0 <- sem(mod, dat, do.fit = FALSE, fixed.x = FALSE)
+layout_m <- matrix(c(NA, "m1", NA,
+                     NA, "m2", NA,
+                     NA, "m3", NA,
+                     "x", NA,  "y"), 4, 3, byrow = TRUE)
+p <- semPaths(fit0,
+              whatLabels = "label",
+              layout = layout_m,
+              nCharNodes = 0,
+              exoCov = FALSE,
+              edge.label.cex = 1.25,
+              label.cex = 1.5,
+              residuals = FALSE,
+              sizeMan = 8,
+              asize = 5,
+              DoNotPlot = TRUE)
+p$graphAttributes$Edges$labels <-
+  c("a1",
+    "a2",
+    "a3",
+    "b1",
+    "b2",
+    "b3",
+    "c'")
+
+# p$graphAttributes$Edges$labels <-
+#   c("m\n(medium: .30)",
+#     "m\n(medium: .30)",
+#     "m\n(medium: .30)",
+#     "s\n(small: .10)",
+#     "m\n(medium: .30)",
+#     "l\n(large: .50)",
+#     "s\n(small: .10)")
+plot(p)
+text(label = "Parallel Mediation Model",
+     x = 0, y = -1.4,
+     cex = 1.25)
+```
+
+We want to do power analysis for the
+indirect effects from `x` to `y`:
+`x->m1->y`, `x->m2->y`, and `x->m2->y`.
+Suppose the expected
+effects for the three a-paths (`x->m1`,
+`x->m2`, and `x->m3`) are small, medium,
+and large, respectively,
+using the convention for
+Pearson's *r* just for convenience.
+The expected
+effects for the three b-paths (`m1->y`,
+`m2->y`, and `m3->y`) are large, medium,
+and small, respectively.
+Assume that the direct path `x->y` has
+no effect (`nil`).
+This is the model with the effect sizes:
+
+```{r template_q_med_obs_parallel_model_es, echo = FALSE, fig.cap = "The Model (with Effect Sizes)"}
+library(semPlot)
+suppressMessages(library(lavaan))
+mod <-
+"
+m1 ~ m*x
+m2 ~ m*x
+m3 ~ m*x
+y ~ s*m1 + m*m2 + l*m3 + s*x
+"
+fit0 <- sem(mod, do.fit = FALSE, fixed.x = FALSE)
+set.seed(1234)
+dat <- data.frame(MASS::mvrnorm(100, rep(0, 5), diag(5)))
+colnames(dat) <- lavNames(fit0)
+fit0 <- sem(mod, dat, do.fit = FALSE, fixed.x = FALSE)
+layout_m <- matrix(c(NA, "m1", NA,
+                     NA, "m2", NA,
+                     NA, "m3", NA,
+                     "x", NA,  "y"), 4, 3, byrow = TRUE)
+p <- semPaths(fit0,
+              whatLabels = "label",
+              layout = layout_m,
+              nCharNodes = 0,
+              exoCov = FALSE,
+              edge.label.cex = 1.25,
+              label.cex = 1.5,
+              residuals = FALSE,
+              sizeMan = 8,
+              asize = 5,
+              DoNotPlot = TRUE)
+p$graphAttributes$Edges$labels <-
+  c("a1" = "s\n(small: .10)",
+    "a2" = "m\n(medium: .30)",
+    "a3" = "l\n(medium: .50)",
+    "b1" = "l\n(medium: .50)",
+    "b2" = "m\n(medium: .30)",
+    "b3" = "s\n(medium: .10)",
+    "c'" = "nil\n(0)")
+
+# p$graphAttributes$Edges$labels <-
+#   c("m\n(medium: .30)",
+#     "m\n(medium: .30)",
+#     "m\n(medium: .30)",
+#     "s\n(small: .10)",
+#     "m\n(medium: .30)",
+#     "l\n(large: .50)",
+#     "s\n(small: .10)")
+plot(p)
+text(label = "Parallel Mediation Model",
+     x = 0, y = -1.4,
+     cex = 1.25)
+```
+
+There are three indirect paths, and
+there are three tests. The function
+supports finding the power for detecting
+*all* the indirect paths, that is, the
+probability that all three *tests* are
+significant. We call this power the
+*omnibus* power for the indirect paths.
+
+In practice, nonparametric
+bootstrapping is usually used. However,
+estimating its power using simulation
+is slow. A good-enough proxy is to
+estimate the power when testing this
+effect by Monte Carlo confidence interval.
+
+# Find the Power
+
+Estimate the power for a sample size,
+say, 150. This is the code for this scenario:
+
+```{r power_only, eval=TRUE, results="hide", message=FALSE}
+out_power <- q_power_mediation_parallel(
+    as = c("s", "m", "l"),
+    bs = c("l", "m", "s"),
+    cp = "nil",
+    target_power = .80,
+    nrep = 400,
+    n = 150,
+    R = 1000,
+    seed = 1234
+  )
+```
+
+```{r}
+out_power
+```
+
+```{r output=FALSE}
+power_i <- rejection_rates(out_power$power4test)$reject
+```
+
+# Find the Region of Sample Sizes
+
+```{r region, eval=TRUE, results="hide", message=FALSE}
+out_region <- q_power_mediation_parallel(
+    as = c("s", "m", "l"),
+    bs = c("l", "m", "s"),
+    cp = "nil",
+    target_power = .80,
+    nrep = 400,
+    n = 150,
+    R = 1000,
+    seed = 1234,
+    mode = "region"
+  )
+```
+
+```{r}
+plot(out_region)
+```
+
+```{r load_final, child=c("template_q_med_ins_final_remarks.txt")}
+```
+
