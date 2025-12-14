@@ -1,3 +1,46 @@
+set_x_range_by_x <- function(object,
+                        x,
+                        pop_es_name,
+                        target_power = .80,
+                        k = 4,
+                        x_max = switch(x, n = 1000, es = .7),
+                        x_min = switch(x, n = 10, es = .0),
+                        object_by_org = NULL,
+                        what = NULL,
+                        goal = NULL,
+                        tol = NULL,
+                        ci_level = .95) {
+  if (x == "n") {
+    out <- set_n_range_by_x(
+                        object = object,
+                        target_power = target_power,
+                        k = k,
+                        n_max = x_max,
+                        object_by_org = object_by_org,
+                        what = what,
+                        goal = goal,
+                        tol = tol,
+                        ci_level = ci_level
+                      )
+    return(out)
+  }
+  if (x == "es") {
+    out <- set_es_range_by_x(
+                        object = object,
+                        pop_es_name = pop_es_name,
+                        target_power = target_power,
+                        k = k,
+                        es_max = x_max,
+                        es_min = x_min,
+                        object_by_org = object_by_org,
+                        what = what,
+                        goal = goal,
+                        tol = tol,
+                        ci_level = ci_level
+                      )
+    return(out)
+  }
+}
 
 set_x_range <- function(object,
                         x,
@@ -280,10 +323,13 @@ find_solution <- function(object,
                           goal = c("ci_hit", "close_enough"),
                           final_nrep = 400,
                           closest_ok = FALSE,
-                          if_ties = c("min", "max")) {
+                          if_ties = c("min", "max"),
+                          weight_by = c("nrep", "ci_width", "se", "none"),
+                          debug = FALSE) {
 
   what <- match.arg(what)
   goal <- match.arg(goal)
+  weight_by <- match.arg(weight_by)
 
   out <- switch(goal,
                 ci_hit = find_ci_hit(
@@ -301,7 +347,9 @@ find_solution <- function(object,
                            tol = tol,
                            what = what,
                            closest_ok = closest_ok,
-                           if_ties = if_ties))
+                           if_ties = if_ties,
+                           weight_by = weight_by,
+                           debug = debug))
   out
 }
 
@@ -316,18 +364,28 @@ find_close_enough <- function(
   tol = 1e-2,
   final_nrep = 400,
   closest_ok = FALSE,
-  if_ties = c("min", "max")) {
+  if_ties = c("min", "max"),
+  weight_by = c("nrep", "ci_width", "se", "none"),
+  debug = FALSE) {
+  # if (debug) browser()
+
   # If no solution, return NULL
   # If solution, always return one number
   # If closest_ok, accept the closest trial
-
   what <- match.arg(what)
   if_ties <- match.arg(if_ties)
+  weight_by <- match.arg(weight_by)
 
   by_x_ci <- rejection_rates_add_ci(object,
                                     level = ci_level,
                                     add_se = TRUE)
-  var_all <- by_x_ci$reject_se ^ 2
+  var_all <- switch(
+                weight_by,
+                se = by_x_ci$reject_se ^ 2,
+                ci_width = (by_x_ci$reject_ci_hi - by_x_ci$reject_ci_lo),
+                none = rep(1, nrow(by_x_ci)),
+                nrep = max(by_x_ci$nvalid) / by_x_ci$nvalid
+              )
   r_all <- switch(what,
                   point = by_x_ci$reject,
                   ub = by_x_ci$reject_ci_hi,
@@ -427,6 +485,34 @@ in_x_tried <- function(test_x,
   x_tried <- get_x_tried(object = object,
                          x = x)
   match(test_x, x_tried)
+}
+
+#' @noRd
+force_new_x <- function(
+                    x0,
+                    x_tried,
+                    x_interval,
+                    x_type = c("es", "n"),
+                    step = switch(x_type,
+                                  n = 1,
+                                  es = .01),
+                    post_process = switch(x_type,
+                                          es = function(x) x,
+                                          n = ceiling),
+                    k = 20
+                  ) {
+  k0 <- 0
+  xi <- x0
+  step_all <- as.vector(rbind(seq_len(k), -seq_len(k)))
+  while ((k0 <= k * 2) &&
+         ((xi %in% x_tried) ||
+          (xi < min(x_interval)) ||
+          (xi > max(x_interval)))) {
+    k0 <- k0 + 1
+    xi <- x0 + step_all[k0] * step
+    xi <- post_process(xi)
+  }
+  xi
 }
 
 #' @noRd

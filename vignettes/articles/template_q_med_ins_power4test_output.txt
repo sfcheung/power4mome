@@ -1,0 +1,20 @@
+
+```{r output=FALSE, echo=FALSE}
+power_i <- rejection_rates(out_power$power4test)$reject
+n_i <- attr(out_power$power4test, "args")$n
+```
+
+
+The first set of output is the default printout
+of the output of `power4test()`. This
+can be used to check the model specified.
+It also automatically computes the
+population standardized indirect effect(s).
+
+The second section is the output of
+`rejection_rates()`, showing the power
+under the column `reject`.
+
+In this example, the power is about
+`r sprintf("%4.2f", power_i)` for
+sample size `r n_i`.

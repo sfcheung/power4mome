@@ -48,6 +48,18 @@ expect_true(length(chk) == 1)
 chk0 <- rejection_rates(test_ind, collapse = "all_sig")
 chk1 <- rejection_rates(test_ind, collapse = "at_least_one_sig")
 
+test_indb <- power4test(object = sim_only,
+                       test_fun = test_k_indirect_effects,
+                       test_args = list(x = "x",
+                                        y = "y",
+                                        mc_ci = TRUE,
+                                        test_method = "pvalue"))
+rejection_rates(test_indb)
+
+(chkb <- test_summary(test_indb))
+expect_equal(chk[[1]]$sig,
+             chkb[[1]]$sig)
+
 test_ind <- power4test(object = sim_only,
                        test_fun = test_k_indirect_effects,
                        test_args = list(x = "x",

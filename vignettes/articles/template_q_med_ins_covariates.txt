@@ -1,0 +1,17 @@
+## Covariates in the Model to be Fitted
+
+In applied research, the model to be fitted
+usually have other control variables,
+such as educational level. It may not
+be practical to specify all the probable
+effects of these control variables (though
+it is possible in [`power4mome`](https://sfcheung.github.io/power4mome/)).
+
+Therefore, as a conservative assessment
+of power, users can first decide the
+population effects, and then adjust them
+slightly downward (e.g., from medium, `"m"`,
+to small-to-medium, `"sm"`) to take into
+account potential decrease in effects
+due to control variables to be included.
+

@@ -135,10 +135,22 @@ test_cond_indirect <- function(fit = fit,
                                boot_ci = FALSE,
                                boot_out = NULL,
                                check_post_check = TRUE,
+                               test_method = c("ci", "pvalue"),
                                ...,
                                fit_name = "fit",
                                get_map_names = FALSE,
                                get_test_name = FALSE) {
+  test_method <- match.arg(test_method)
+  internal_options <- list()
+  if (test_method == "pvalue") {
+    internal_options <- utils::modifyList(internal_options,
+                                          list(skip_ci = TRUE,
+                                               pvalue_min_size = -Inf))
+  }
+  if (test_method == "ci") {
+    internal_options <- utils::modifyList(internal_options,
+                                          list(skip_ci = FALSE))
+  }
   if (fit_name != "fit") {
     mc_name <- paste0(fit_name, "_mc_out")
     boot_name <- paste0(fit_name, "_boot_out")
@@ -206,14 +218,59 @@ test_cond_indirect <- function(fit = fit,
               sig = as.numeric(NA))
     return(out2)
   }
-  ci0 <- stats::confint(out)
-  out1 <- ifelse((ci0[1, 1] > 0) || (ci0[1, 2] < 0),
-                  yes = 1,
-                  no = 0)
+  if (test_method == "ci") {
+    ci0 <- stats::confint(out)
+    out1 <- ifelse((ci0[1, 1] > 0) || (ci0[1, 2] < 0),
+                    yes = 1,
+                    no = 0)
+  }
+  if (test_method == "pvalue") {
+    ci0 <- matrix(
+              as.numeric(NA),
+              nrow = 1,
+              ncol = 2
+            )
+    bz_alpha_ok <- isTRUE(all.equal(1 - out$level,
+                                    getOption("power4mome.bz.alpha",
+                                                        default = .05)))
+    if (bz_alpha_ok) {
+      boot_est <- out$boot_indirect %||% out$mc_indirect
+      boot_sig <- bz_sig_partition(
+                    boot_est,
+                    alpha = 1 - out$level
+                  )
+    } else {
+      boot_sig <- NULL
+    }
+    if (isTRUE(boot_ci)) {
+      out1a <- out$boot_p %||% as.numeric(NA)
+      R <- length(out$boot_indirect)
+      nlt0 <- sum(as.numeric(out$boot_indirect < 0))
+    } else if (isTRUE(mc_ci)) {
+      out1a <- out$mc_p %||% as.numeric(NA)
+      R <- length(out$mc_indirect)
+      nlt0 <- sum(as.numeric(out$mc_indirect < 0))
+    } else {
+      out1a <- as.numeric(NA)
+      R <- as.numeric(NA)
+      nlt0 <- as.numeric(NA)
+    }
+    out1 <- ifelse(
+                out1a < (1 - out$level),
+                yes = 1,
+                no = 0
+              )
+  }
   out2 <- c(est = unname(stats::coef(out)),
             cilo = ci0[1, 1],
             cihi = ci0[1, 2],
             sig = out1)
+  if (test_method == "pvalue") {
+    # For Boos & Zhang (2000)
+    out2 <- c(out2, R = R, nlt0 = nlt0,
+              alpha = 1 - out$level,
+              boot_sig)
+  }
   return(out2)
 }
 

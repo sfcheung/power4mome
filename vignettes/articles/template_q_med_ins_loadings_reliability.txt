@@ -1,0 +1,23 @@
+# Setting the Factor Loadings
+
+One difficulty in doing power analysis
+for latent variable model is setting
+the population values for the indicators.
+
+In [`power4mome`](https://sfcheung.github.io/power4mome/), instead of setting
+factor loadings and error variances,
+users can specify the number of indicators
+and the population reliability of each
+latent factor. The corresponding factor
+loadings and error variances will be
+computed and specified automatically.
+
+Therefore, when doing the power analysis,
+users can just specify the number of
+indicators (items) for each factor, which
+is usually known exactly or approximately
+in advance. The hypothesized population
+reliability coefficient may be
+based on previous studies or set to to
+a reasonable expectation (e.g., .70 for
+minimal acceptable reliability).

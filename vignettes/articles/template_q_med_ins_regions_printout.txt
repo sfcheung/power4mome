@@ -1,0 +1,22 @@
+
+```{r echo=FALSE, results="hide"}
+tmp <- capture.output(print(out_region))
+i <- grepl("n_region_from_power Results", tmp)
+tmp <- tmp[-seq(1, which(i)-1)]
+n_lower <- out_region$n_region_from_power$below$x_final
+n_upper <- out_region$n_region_from_power$above$x_final
+```
+
+This is the printout, showing only the
+section from the output of `n_region_from_power()`:
+
+```{r echo=FALSE}
+cat(tmp, sep = "\n")
+```
+
+In this example, the range of the sample
+size is `r n_lower` to `r n_upper`.
+
+The results can also be visualized using
+the `plot()` function:
+

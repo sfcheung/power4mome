@@ -1,3 +1,64 @@
+set_n_range_by_x <- function(
+                        object,
+                        target_power = .80,
+                        k = 4,
+                        n_max = 1000,
+                        object_by_org = NULL,
+                        what = NULL,
+                        goal = NULL,
+                        tol = NULL,
+                        ci_level = .95) {
+  reject0by <- rejection_rates(object_by_org,
+                               level = ci_level,
+                               add_se = TRUE,
+                               all_columns = TRUE)
+  # Always return a value because closest_ok is TRUE
+  i0 <- find_solution(
+                object_by_org,
+                target_power = target_power,
+                ci_level = ci_level,
+                what = what,
+                tol = tol,
+                goal = goal,
+                final_nrep = 0,
+                closest_ok = TRUE,
+                weight_by = "nrep",
+                debug = TRUE
+              )
+  n0 <- reject0by$n[i0]
+  what0 <- switch(
+              what,
+              point = "reject",
+              lb = "reject_ci_lo",
+              ub = "reject_ci_hi"
+            )
+  est0 <- reject0by[i0, what0, drop = TRUE]
+  # Display est0 a little bit
+  if (est0 == target_power) {
+    est0 <- target_power * .95
+  }
+  if (est0 < target_power) {
+    i1a <- reject0by[, what0, drop = TRUE] > target_power
+    i1b <- reject0by$n > n0
+    i1 <- i1a & i1b
+  } else {
+    i1a <- reject0by[, what0, drop = TRUE] < target_power
+    i1b <- reject0by$n < n0
+    i1 <- i1a & i1b
+  }
+  if (any(i1)) {
+    i1 <- which(i1)[1]
+    n1 <- reject0by$n[i1]
+  } else {
+    n1 <- n0 * target_power / est0
+  }
+  n1 <- ceiling(n1)
+  n0 <- min(n0, n_max)
+  n1 <- min(n1, n_max)
+  # Displace n0 and n1
+  n_out <- range(n0, n1)
+  n_out
+}
 
 set_n_range <- function(object,
                         target_power = .80,
@@ -16,7 +77,8 @@ set_n_range <- function(object,
   if (power0 < target_power) {
     b <- power0 / n0
     n_end <- min(round(target_power / b),
-                 n_max)
+                 n_max,
+                 n0 * 2)
     n_out <- seq(from = n0,
                  to = n_end,
                  length.out = k)
@@ -25,12 +87,13 @@ set_n_range <- function(object,
   } else {
     # If power0 == target_power,
     # Be conservative and decrease power by a small amount,
-    if (power0 == target_power) {
-      power0 <- target_power * .80
-    }
+    # if (power0 == target_power) {
+    #   power0 <- target_power * .80
+    # }
     b <- power0 / n0
     n_end <- min(round(target_power / b),
-                 n_max)
+                 n_max,
+                 n0 / 2)
     n_out <- seq(from = n_end,
                  to = n0,
                  length.out = k)

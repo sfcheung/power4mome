@@ -346,6 +346,13 @@
 #' in each call to [power4test()],
 #' [power4test_by_n()], or
 #' [power4test_by_es()].
+#' If `object`
+#' is an output of [power4test()]
+#' or [x_from_power()] and
+#' this argument is not set, `final_nrep`
+#' will be set to `nrep` or `final_nrep`
+#' stored in
+#' `object`.
 #'
 #' @param final_R The number of
 #' Monte Carlo simulation or
@@ -359,6 +366,14 @@
 #' because the goal is to estimate
 #' power by replications, not for high
 #' precision in one single replication.
+#' If `object`
+#' is an output of [power4test()]
+#' or [x_from_power()] and
+#' this argument is not set, `finalR`
+#' will be set to `R` or `final_R`
+#' stored in
+#' `object`.
+
 #'
 #' @param seed If not `NULL`, [set.seed()]
 #' will be used to make the process
@@ -480,14 +495,14 @@
 #'
 #' @export
 x_from_power <- function(object,
-                         x,
-                         pop_es_name = NULL,
+                         x = arg_x_from_power(object, "x", arg_in = "call") %||% "n",
+                         pop_es_name = arg_x_from_power(object, "pop_es_name", arg_in = "call"),
                          target_power = .80,
-                         what = c("point", "ub", "lb"),
-                         goal = switch(what,
+                         what = arg_x_from_power(object, "what") %||% "point",
+                         goal = arg_x_from_power(object, "goal") %||% {switch(what,
                                        point = "ci_hit",
                                        ub = "close_enough",
-                                       lb = "close_enough"),
+                                       lb = "close_enough")},
                          ci_level = .95,
                          tolerance = .02,
                          x_interval = switch(x,
@@ -497,8 +512,8 @@ x_from_power <- function(object,
                          progress = TRUE,
                          simulation_progress = TRUE,
                          max_trials = 10,
-                         final_nrep = 400,
-                         final_R = 1000,
+                         final_nrep = attr(object, "args")$nrep %||% (object$nrep_final %||% 400),
+                         final_R = attr(object, "args")$R %||% (object$args$final_R %||% 1000),
                          seed = NULL,
                          x_include_interval = FALSE,
                          check_es_interval = TRUE,
@@ -528,9 +543,30 @@ x_from_power <- function(object,
   # - Final power4test object.
   # - Final model by nls.
 
-  what <- match.arg(what)
+  what <- match.arg(what,
+                    c("point", "ub", "lb"))
   goal <- match.arg(goal,
                     c("ci_hit", "close_enough"))
+
+  # ==== Update the object if x_from_power ====
+
+  if (inherits(object, "x_from_power")) {
+    # Make object to be match some arguments
+    if ((object$what != what) ||
+        (object$goal != goal)) {
+      # what or goal changed.
+      object$solution_found <- FALSE
+    }
+    object$what <- what
+    object$goal <- goal
+    # No need to update them.
+    # They will be updated using
+    # what and goal in this call
+    # object$call$what <- what
+    # object$call$goal <- goal
+  }
+
+  # ==== Fix some arguments ====
 
   changed_to_point <- FALSE
   if ((goal == "ci_hit") &&
@@ -841,6 +877,19 @@ x_from_power <- function(object,
   x_max <- max(x_interval)
   x_min <- min(x_interval)
 
+  # ==== Check the tests ====
+  tmp <- object$test_all[[1]][[1]]$test_results
+  if (!is.null(dim(tmp))) {
+    if (dim(tmp)[1] > 1) {
+      tmp2 <- utils::capture.output(print(tmp))
+      tmp3 <- paste(
+                c("Does not support a test with more than one result:",
+                tmp2),
+                collapse = "\n")
+      stop(tmp3)
+    }
+  }
+
   # ==== Call the algorithm ====
 
   if ((algorithm == "power_curve") && !solution_found) {
@@ -916,6 +965,7 @@ x_from_power <- function(object,
           object_by_org = object_by_org,
           final_nrep = final_nrep,
           final_R = final_R,
+          ci_level = ci_level,
           extendInt = extendInt,
           max_trials = max_trials,
           R = attr(object, "args")$R,
@@ -1201,11 +1251,8 @@ x_from_power <- function(object,
 n_from_power <- function(object,
                          pop_es_name = NULL,
                          target_power = .80,
-                         what = c("point", "ub", "lb"),
-                         goal = switch(what,
-                                       point = "ci_hit",
-                                       ub = "close_enough",
-                                       lb = "close_enough"),
+                         what = formals(x_from_power)$what,
+                         goal = formals(x_from_power)$goal,
                          ci_level = .95,
                          tolerance = .02,
                          x_interval = c(50, 2000),
@@ -1213,8 +1260,8 @@ n_from_power <- function(object,
                          progress = TRUE,
                          simulation_progress = TRUE,
                          max_trials = 10,
-                         final_nrep = 400,
-                         final_R = 1000,
+                         final_nrep = formals(x_from_power)$final_nrep,
+                         final_R = formals(x_from_power)$final_R,
                          seed = NULL,
                          x_include_interval = FALSE,
                          check_es_interval = TRUE,
@@ -1228,8 +1275,9 @@ n_from_power <- function(object,
                          algorithm = NULL,
                          control = list()
                          ) {
-  what <- match.arg(what)
-  goal <- match.arg(goal,
+  what <- match.arg(eval(what),
+                    c("point", "ub", "lb"))
+  goal <- match.arg(eval(goal),
                     c("ci_hit", "close_enough"))
   if ((goal == "ci_hit") &&
       (what != "point")) {
@@ -1239,6 +1287,8 @@ n_from_power <- function(object,
   my_call$x <- "n"
   my_call$what <- what
   my_call$goal <- goal
+  my_call$final_nrep <- eval(final_nrep)
+  my_call$final_R <- eval(final_R)
   my_call[[1]] <- quote(power4mome::x_from_power)
   out <- eval(my_call,
               envir = parent.frame())
@@ -1276,8 +1326,8 @@ n_region_from_power <- function(
                          progress = TRUE,
                          simulation_progress = TRUE,
                          max_trials = 10,
-                         final_nrep = 400,
-                         final_R = 1000,
+                         final_nrep = formals(x_from_power)$final_nrep,
+                         final_R = formals(x_from_power)$final_R,
                          seed = NULL,
                          x_include_interval = FALSE,
                          check_es_interval = TRUE,
@@ -1292,6 +1342,8 @@ n_region_from_power <- function(
                          control = list()
                          ) {
   my_call <- match.call()
+  my_call$final_nrep <- eval(final_nrep)
+  my_call$final_R <- eval(final_R)
   my_call$x <- "n"
   my_call[[1]] <- quote(power4mome::x_from_power)
   if (progress) {
@@ -1373,6 +1425,12 @@ print.x_from_power <- function(x,
   my_call <- x$call
   cat("Call:\n")
   print(my_call)
+  if (!is.symbol(my_call$object)) {
+    my_call$object <- as.symbol("<hidden>")
+  }
+  if (!is.symbol(my_call[[1]])) {
+    my_call[[1]] <- as.symbol("x_from_power")
+  }
   cat("\n")
   solution_found <- !is.na(x$x_final)
   predictor <- x$x
@@ -1488,6 +1546,12 @@ print.n_region_from_power <- function(
                               ...) {
   my_call <- attr(x, "call")
   cat("Call:\n")
+  if (!is.symbol(my_call$object)) {
+    my_call$object <- as.symbol("<hidden>")
+  }
+  if (!is.symbol(my_call[[1]])) {
+    my_call[[1]] <- as.symbol("n_region_from_power")
+  }
   print(my_call)
   cat("\n")
   x_below <- x$below
@@ -1616,3 +1680,41 @@ print.n_region_from_power <- function(
   invisible(x)
 }
 
+#' @rdname x_from_power
+#'
+#' @details
+#'
+#' The function [arg_x_from_power()]
+#' is a helper to set argument values
+#' if `object` is an output
+#' of [x_from_power()] or similar
+#' functions.
+#'
+#' @return
+#' The function [arg_x_from_power()]
+#' returns the requested argument if
+#' available. If not available, it
+#' returns `NULL`.
+#'
+#' @param arg The name of element to
+#' retrieve.
+#'
+#' @param arg_in The name of the element
+#' from which an element is to be
+#' retrieved.
+#'
+#' @export
+arg_x_from_power <- function(
+                      object,
+                      arg,
+                      arg_in = NULL) {
+  if (inherits(object, "x_from_power")) {
+    if (is.null(arg_in)) {
+      return(object[[arg]])
+    } else {
+      return(object[[arg_in]][[arg]])
+    }
+  } else {
+    return(NULL)
+  }
+}

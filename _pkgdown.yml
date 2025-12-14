@@ -40,6 +40,16 @@ articles:
   contents:
   - articles/x_from_power_for_n
 
+- title: Common Mediation Models
+  navbar: Common Mediation Models
+  contents:
+  - articles/template_q_med_obs_simple
+  - articles/template_q_med_obs_serial
+  - articles/template_q_med_obs_parallel
+  - articles/template_q_med_lav_simple
+  - articles/template_q_med_lav_serial
+  - articles/template_q_med_lav_parallel
+
 - title: Templates (Code Examples)
   navbar: Templates (Code Examples)
   contents:
@@ -73,6 +83,7 @@ articles:
   - articles/template_mediation_obs
   - articles/template_mediation_obs_serial
   - articles/x_from_power_for_es
+  - articles/x_from_power_for_n_test_printout
 
 reference:
 - title: Main Functions
@@ -84,6 +95,13 @@ reference:
   - power4test_by_n
   - power4test_by_es
   - x_from_power
+- tilte: Mediation
+    models
+  desc:  >
+    All-in-one functions for common
+    mediation models.
+- contents:
+  - q_power_mediation
 - title: Helper Functions
   desc:  >
     Helpers for main functions

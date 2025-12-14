@@ -1,0 +1,38 @@
+## Convention for the Effect Sizes {#convention}
+
+To make it easy to specify the standardized
+population values of parameters,
+[`power4mome`](https://sfcheung.github.io/power4mome/)]
+adopted the convention for
+Pearson's *r*, just for convenience.
+
+- `"nil"`: Nil (.00).
+
+- `"s"`: Small (.10).
+
+- `"m"`: Medium (.30),
+
+- `"l"`: Large (.50).
+
+There are also two intermediate levels:
+
+- `"sm"`: Small-to-medium (.20).
+
+- `"ml"`: Medium-to-large (.40).
+
+If the effect is negative, just add
+a minus sign. For example, use
+`"-m"` to denote a negative medium effect.
+
+For a path from one variable to another
+variable, the standardized coefficient
+is equal to the correlation if there are
+not other predictor, or if this predictor
+is uncorrelated with all other predictors.
+Therefore, though may not be perfect,
+we believe the convention of Pearson's *r*
+is a reasonable one.
+
+If necessary, users can specify the
+effect (on the standardized metric)
+directly.

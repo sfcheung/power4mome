@@ -8,7 +8,7 @@
 [![R-CMD-check](https://github.com/sfcheung/power4mome/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/sfcheung/power4mome/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-(Version 0.1.1.2, updated on 2025-10-26, [release history](https://sfcheung.github.io/power4mome/news/index.html))
+(Version 0.1.1.22, updated on 2025-12-13, [release history](https://sfcheung.github.io/power4mome/news/index.html))
 
 # power4mome <a href="https://sfcheung.github.io/power4mome/"><img src="man/figures/logo.png" align="right" height="120" alt="power4mome website" /></a>
 

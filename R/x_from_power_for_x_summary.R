@@ -123,6 +123,12 @@ print.summary.x_from_power <- function(x,
   cat("\n====== x_from_power Results ======\n\n")
   my_call <- x$call
   cat("Call:\n")
+  if (!is.symbol(my_call$object)) {
+    my_call$object <- as.symbol("<hidden>")
+  }
+  if (!is.symbol(my_call[[1]])) {
+    my_call[[1]] <- as.symbol("x_from_power")
+  }
   print(my_call)
   solution_found <- !is.na(x$x_final)
 

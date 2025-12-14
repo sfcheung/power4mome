@@ -1,0 +1,283 @@
+---
+title: "Quick Function: Serial Mediation with Observed Variables"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    fig.align: "center"
+    toc: true
+    toc_depth: 2
+    number_sections: false
+bibliography: references.bib
+csl: apa.csl
+---
+
+```{r knitr_setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "",
+  fig.align = "center"
+)
+```
+
+```{r load_pre, child=c("template_q_med_ins_preamble.txt")}
+```
+
+# Scope
+
+This file is for serial mediation models,
+and only use one function `q_power_mediation_serial()`
+from the package
+[power4mome](https://sfcheung.github.io/power4mome/).
+
+```{r}
+library(power4mome)
+```
+
+# The Model
+
+Suppose this is the model:
+
+```{r template_q_med_obs_serial_model, echo = FALSE, fig.cap = "The Model"}
+library(semPlot)
+suppressMessages(library(lavaan))
+mod <-
+"
+m1 ~ l*x
+m2 ~ m*m1 + x
+y ~ s*m2 + m1 + s*x
+"
+fit0 <- sem(mod, do.fit = FALSE, fixed.x = FALSE)
+set.seed(1234)
+dat <- data.frame(MASS::mvrnorm(100, rep(0, 5), diag(5)))
+colnames(dat) <- lavNames(fit0)
+fit0 <- sem(mod, dat, do.fit = FALSE, fixed.x = FALSE)
+layout_m <- matrix(c(NA, "m1", "m2", NA,
+                     "x", NA,   NA, "y"), 2, 4, byrow = TRUE)
+p <- semPaths(fit0,
+              whatLabels = "label",
+              layout = layout_m,
+              nCharNodes = 0,
+              exoCov = FALSE,
+              edge.label.cex = 1.25,
+              label.cex = 1.5,
+              residuals = FALSE,
+              sizeMan = 8,
+              asize = 5,
+              DoNotPlot = TRUE)
+p$graphAttributes$Edges$labels <-
+  c("a",
+    "b1",
+    "bx2",
+    "b2",
+    "b1y",
+    "c'")
+# p$graphAttributes$Edges$labels <-
+#   c("l\n(large:\n.50)",
+#     "l\n(large:\n.50)",
+#     "l\n(large:\n.50)",
+#     "m\n(medium:\n.30)",
+#     "s\n(small:\n.10)")
+p$graphAttributes$Edges$width <-
+  c("a" = 4,
+    "b1" = 4,
+    "bx2" = 1,
+    "b2" = 4,
+    "b1y" = 1,
+    "c'" = 2)
+p$graphAttributes$Edges$lty <-
+  c("a" = 1,
+    "b1" = 1,
+    "bx2" = 2,
+    "b2" = 1,
+    "b1y" = 2,
+    "c'" = 1)
+plot(p)
+text(label = "Serial Mediation Model",
+     x = 0, y = -1.4,
+     cex = 1)
+```
+
+We want to do power analysis for the
+indirect effect along the path
+`x->m1->m2->y`.
+Suppose these are the expected
+effects:
+
+- `x->m1`: medium
+
+- `m1->m2`: medium
+
+- `m2->y`: large
+
+- `x->y`: small
+
+The other paths involving
+the mediators, `x->m2` and `m1->y`, are
+assumed to have no effect (`nil`).
+
+```{r load_convention, child=c("template_q_med_ins_convention.txt")}
+```
+
+```{r load_cov, child=c("template_q_med_ins_covariates.txt")}
+```
+
+## Model with Hypothesized Path Coefficients
+
+This is the model with the effect sizes:
+
+```{r template_q_med_obs_serial_model_es, echo = FALSE, fig.cap = "The Model"}
+library(semPlot)
+suppressMessages(library(lavaan))
+mod <-
+"
+m1 ~ l*x
+m2 ~ m*m1 + x
+y ~ s*m2 + m1 + s*x
+"
+fit0 <- sem(mod, do.fit = FALSE, fixed.x = FALSE)
+set.seed(1234)
+dat <- data.frame(MASS::mvrnorm(100, rep(0, 5), diag(5)))
+colnames(dat) <- lavNames(fit0)
+fit0 <- sem(mod, dat, do.fit = FALSE, fixed.x = FALSE)
+layout_m <- matrix(c(NA, "m1", "m2", NA,
+                     "x", NA,   NA, "y"), 2, 4, byrow = TRUE)
+p <- semPaths(fit0,
+              whatLabels = "label",
+              layout = layout_m,
+              nCharNodes = 0,
+              exoCov = FALSE,
+              edge.label.cex = 1.25 * 1.1,
+              label.cex = 1.5,
+              residuals = FALSE,
+              sizeMan = 8,
+              asize = 5,
+              DoNotPlot = TRUE)
+p$graphAttributes$Edges$labels <-
+  c("a" = "m\n(medium:\n.30)",
+    "b1" = "m\n(medium:\n.30)",
+    "bx2" = "nil\n(0)",
+    "b2" = "l\n(large:\n.50)",
+    "b1y" = "nil\n(0)",
+    "c'" = "s\n(small:\n.10)")
+# p$graphAttributes$Edges$labels <-
+#   c("l\n(large:\n.50)",
+#     "l\n(large:\n.50)",
+#     "l\n(large:\n.50)",
+#     "m\n(medium:\n.30)",
+#     "s\n(small:\n.10)")
+p$graphAttributes$Edges$width <-
+  c("a" = 4,
+    "b1" = 4,
+    "bx2" = 1,
+    "b2" = 4,
+    "b1y" = 1,
+    "c'" = 2)
+p$graphAttributes$Edges$lty <-
+  c("a" = 1,
+    "b1" = 1,
+    "bx2" = 2,
+    "b2" = 1,
+    "b1y" = 2,
+    "c'" = 1)
+plot(p)
+text(label = "Serial Mediation Model",
+     x = 0, y = -1.4,
+     cex = 1)
+```
+
+```{r load_mc, child=c("template_q_med_ins_mc.txt")}
+```
+
+
+# Find the Power
+
+To estimate the power for a sample size,
+this is the code:
+
+```{r power_only, eval=TRUE, results="hide", message=FALSE}
+out_power <- q_power_mediation_serial(
+  ab = c("m", "m", "l"),
+  ab_other = "nil",
+  cp = "s",
+  target_power = .80,
+  nrep = 400,
+  n = 100,
+  R = 1000,
+  seed = 1234
+)
+```
+
+These are the arguments:
+
+- `ab`: The hypothesized standardized effects
+  along the path from the predictor `x`
+  to the outcome variable `y`. This
+  should be a character vector with elements
+  equal to the number of mediators
+  for the path coefficients `x->m1->m2->...->y`.
+  Can be one of the labels supported
+  by the [convention](#convention), or
+  a numeric value.
+
+- `ab_other`: The hypothesized standardized
+  effect for all other paths involving
+  the mediators. For simplicity, it only
+  support one value, and this value will
+  be used for all these paths.
+  Can be one of the labels supported
+  by the [convention](#convention), or
+  a numeric value.
+
+- `cp`: The hypothesized standardized direct
+  effect from
+  the predictor `x` to the outcome variable `y`.
+  Can be one of the labels supported
+  by the [convention](#convention), or
+  a numeric value.
+
+
+```{r load_args, child=c("template_q_med_ins_arguments.txt")}
+```
+
+This is the output:
+
+```{r}
+out_power
+```
+
+```{r load_p4t_output, child=c("template_q_med_ins_power4test_output.txt")}
+```
+
+```{r load_regions, child=c("template_q_med_ins_regions.txt")}
+```
+
+
+```{r region, eval=TRUE, results="hide", message=FALSE}
+out_region <- q_power_mediation_serial(
+  ab = c("m", "m", "l"),
+  ab_other = "nil",
+  cp = "s",
+  target_power = .80,
+  nrep = 400,
+  n = 100,
+  R = 1000,
+  seed = 1234,
+  mode = "region"
+)
+```
+
+```{r load_regions_out, child=c("template_q_med_ins_regions_printout.txt")}
+```
+
+```{r template_q_med_obs_simple_model_region, echo = FALSE, fig.cap = "The Plot of Sample Sizes Searched"}
+plot(out_region)
+```
+
+The region between the shaded areas is the
+approximate region of sample sizes found.
+
+
+```{r load_final, child=c("template_q_med_ins_final_remarks.txt")}
+```
+

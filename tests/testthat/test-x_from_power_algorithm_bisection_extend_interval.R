@@ -23,7 +23,7 @@ out <- power4test(nrep = 20,
                   test_fun = test_parameters,
                   test_args = list(par = "m~x"),
                   iseed = 1234)
-
+out_by <- as.power4test_by_n(out)
 f0 <- gen_objective(out,
                     x = "n",
                     pop_es_name = NULL,
@@ -53,7 +53,8 @@ chk <- extend_interval(f = f0,
                        lower_hard = 10,
                        upper_hard = 1000,
                        extendInt = "no",
-                       trace = TRUE)
+                       trace = TRUE,
+                       by_x_1 = out_by)
 expect_equal(chk$extend_status,
              1,
              ignore_attr = TRUE)
@@ -68,7 +69,8 @@ chk <- extend_interval(f = f0,
                        lower_hard = 10,
                        upper_hard = 1000,
                        extendInt = "yes",
-                       trace = TRUE)
+                       trace = TRUE,
+                       by_x_1 = out_by)
 expect_equal(chk$extend_status,
              0,
              ignore_attr = TRUE)
@@ -83,7 +85,8 @@ chk <- extend_interval(f = f0,
                        lower_hard = 10,
                        upper_hard = 1000,
                        extendInt = "downX",
-                       trace = TRUE)
+                       trace = TRUE,
+                       by_x_1 = out_by)
 expect_equal(chk$extend_status,
              3,
              ignore_attr = TRUE)
@@ -104,7 +107,8 @@ chk <- extend_interval(f = f0,
                        lower_hard = 10,
                        upper_hard = 1000,
                        extendInt = "no",
-                       trace = TRUE)
+                       trace = TRUE,
+                       by_x_1 = out_by)
 expect_equal(chk$extend_status,
              1,
              ignore_attr = TRUE)
@@ -119,7 +123,8 @@ chk <- extend_interval(f = f0,
                        lower_hard = 10,
                        upper_hard = 5000,
                        extendInt = "yes",
-                       trace = TRUE)
+                       trace = TRUE,
+                       by_x_1 = out_by)
 expect_equal(chk$extend_status,
              0,
              ignore_attr = TRUE)
@@ -134,7 +139,8 @@ chk <- extend_interval(f = f0,
                        lower_hard = 10,
                        upper_hard = 1000,
                        extendInt = "downX",
-                       trace = TRUE)
+                       trace = TRUE,
+                       by_x_1 = out_by)
 expect_equal(chk$extend_status,
              0,
              ignore_attr = TRUE)
@@ -149,7 +155,8 @@ chk <- extend_interval(f = f0,
                        lower_hard = 10,
                        upper_hard = 1000,
                        extendInt = "upX",
-                       trace = TRUE)
+                       trace = TRUE,
+                       by_x_1 = out_by)
 expect_equal(chk$extend_status,
              2,
              ignore_attr = TRUE)

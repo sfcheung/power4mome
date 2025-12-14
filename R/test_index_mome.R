@@ -104,10 +104,22 @@ test_index_of_mome <- function(fit = fit,
                       boot_ci = FALSE,
                       boot_out = NULL,
                       check_post_check = TRUE,
+                      test_method = c("ci", "pvalue"),
                       ...,
                       fit_name = "fit",
                       get_map_names = FALSE,
                       get_test_name = FALSE) {
+  test_method <- match.arg(test_method)
+  internal_options <- list()
+  if (test_method == "pvalue") {
+    internal_options <- utils::modifyList(internal_options,
+                                          list(skip_ci = TRUE,
+                                               pvalue_min_size = -Inf))
+  }
+  if (test_method == "ci") {
+    internal_options <- utils::modifyList(internal_options,
+                                          list(skip_ci = FALSE))
+  }
   if (fit_name != "fit") {
     mc_name <- paste0(fit_name, "_mc_out")
     boot_name <- paste0(fit_name, "_boot_out")
@@ -149,7 +161,8 @@ test_index_of_mome <- function(fit = fit,
                                  boot_ci = boot_ci,
                                  boot_out = boot_out,
                                  progress = FALSE,
-                                 ...),
+                                 ...,
+                                 internal_options = internal_options),
                    error = function(e) e)
   } else {
     out <- NA
@@ -162,13 +175,56 @@ test_index_of_mome <- function(fit = fit,
               sig = as.numeric(NA))
     return(out2)
   }
-  ci0 <- stats::confint(out)
-  out1 <- ifelse((ci0[1, 1] > 0) || (ci0[1, 2] < 0),
-                  yes = 1,
-                  no = 0)
+  if (test_method == "ci") {
+    ci0 <- stats::confint(out)
+    out1 <- ifelse((ci0[1, 1] > 0) || (ci0[1, 2] < 0),
+                    yes = 1,
+                    no = 0)
+  }
+  if (test_method == "pvalue") {
+    ci0 <- matrix(
+              as.numeric(NA),
+              nrow = 1,
+              ncol = 2
+            )
+    out1 <- ifelse(
+                out$pvalue < (1 - out$level),
+                yes = 1,
+                no = 0
+              )
+    bz_alpha_ok <- isTRUE(all.equal(1 - out$level,
+                                    getOption("power4mome.bz.alpha",
+                                                        default = .05)))
+    if (out$ci_type %in% c("mc", "boot")) {
+      diff_name <- switch(out$ci_type,
+                          mc = "mc_diff",
+                          boot = "boot_diff")
+      est_diff <- out[[diff_name]]
+      if (bz_alpha_ok) {
+        est_sig <- bz_sig_partition(
+                      est_diff,
+                      alpha = 1 - out$level
+                    )
+      } else {
+        est_sig <- as.numeric()
+      }
+      R <- length(est_diff)
+      nlt0 <- sum(as.numeric(est_diff < 0))
+    } else {
+      R <- as.numeric(NA)
+      nlt0 <- as.numeric(NA)
+      est_sig <- as.numeric()
+    }
+  }
   out2 <- c(est = unname(stats::coef(out)),
             cilo = ci0[1, 1],
             cihi = ci0[1, 2],
             sig = out1)
+  if (test_method == "pvalue") {
+    # For Boos & Zhang (2000)
+    out2 <- c(out2, R = R, nlt0 = nlt0,
+              alpha = 1 - out$level,
+              est_sig)
+  }
   return(out2)
 }

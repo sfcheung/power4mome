@@ -163,6 +163,7 @@ test_k_indirect_effects <- function(
                             boot_ci = FALSE,
                             boot_out = NULL,
                             check_post_check = TRUE,
+                            test_method = c("ci", "pvalue"),
                             ...,
                             omnibus = c("no", "all_sig", "at_least_one_sig", "at_least_k_sig"),
                             at_least_k = 1,
@@ -170,6 +171,17 @@ test_k_indirect_effects <- function(
                             get_map_names = FALSE,
                             get_test_name = FALSE
                           ) {
+  test_method <- match.arg(test_method)
+  internal_options <- list()
+  if (test_method == "pvalue") {
+    internal_options <- utils::modifyList(internal_options,
+                                          list(skip_ci = TRUE,
+                                               pvalue_min_size = -Inf))
+  }
+  if (test_method == "ci") {
+    internal_options <- utils::modifyList(internal_options,
+                                          list(skip_ci = FALSE))
+  }
   omnibus <- match.arg(omnibus)
   if (fit_name != "fit") {
     mc_name <- paste0(fit_name, "_mc_out")
@@ -261,7 +273,8 @@ test_k_indirect_effects <- function(
                                    boot_ci = boot_ci,
                                    boot_out = boot_out,
                                    progress = FALSE,
-                                   ...),
+                                   ...,
+                                   internal_options = internal_options),
                   error = function(e) e)
   } else {
     out <- NA
@@ -291,11 +304,49 @@ test_k_indirect_effects <- function(
   out1_names <- gsub("ind", "est", out1_names)
   out1_names <- gsub("std", "est", out1_names)
   colnames(out1) <- out1_names
-  sig <- ifelse((out1$cilo > 0) |
-                (out1$cihi < 0),
+  if (test_method == "ci") {
+    sig <- ifelse((out1$cilo > 0) |
+                  (out1$cihi < 0),
+                  yes = 1,
+                  no = 0)
+    out1$sig <- sig
+  }
+  R_case <- ""
+  bz_alpha_ok <- isTRUE(all.equal(1 - out[[1]]$level,
+                                  getOption("power4mome.bz.alpha",
+                                                      default = .05)))
+  if (test_method == "pvalue") {
+    out1$sig <- ifelse(
+                out1$pvalue < (1 -  out[[1]]$level),
                 yes = 1,
-                no = 0)
-  out1$sig <- sig
+                no = 0
+              )
+    R <- sapply(out,
+                \(x) max(length(x$boot_indirect),
+                         length(x$mc_indirect)))
+    R_case <- bz_case(R[1])
+    nlt0 <- sapply(out,
+                \(x) max(sum(as.numeric(x$boot_indirect < 0)),
+                         sum(as.numeric(x$mc_indirect < 0))))
+    out1$R <- unname(R)
+    out1$nlt0 <- unname(nlt0)
+    out1$alpha <- unname(1 -  out[[1]]$level)
+    if (bz_alpha_ok) {
+      tmp <- lapply(out,
+              function(x) {
+                boot_est <- x$boot_indirect %||% x$mc_indirect
+                boot_sig <- bz_sig_partition(
+                              boot_est,
+                              alpha = 1 - x$level
+                            )
+                boot_sig
+              })
+      tmp <- do.call(rbind,
+                    unname(tmp))
+      out1 <- cbind(out1,
+                    tmp)
+    }
+  }
   if (omnibus == "no") {
     attr(out1, "test_label") <- "test_label"
     return(out1)
@@ -315,6 +366,34 @@ test_k_indirect_effects <- function(
                   at_least_one_sig = as.numeric(isTRUE(any(out1$sig == 1))),
                   at_least_k_sig = as.numeric(isTRUE(sum(out1$sig == 1) >= at_least_k)))
     out2$sig <- tmp
+    if ((R_case == "one") &&
+        (omnibus == "all_sig") &&
+        bz_alpha_ok) {
+      out1_bz <- add_bz_i(out1)
+      out1_bz <- out1_bz[, !(colnames(out1_bz) %in% colnames(out2))]
+      out1_bz2 <- apply(
+                      out1_bz,
+                      MARGIN = 2,
+                      min
+                    )
+      out1_bz2 <- rbind(out1_bz2)
+      rownames(out1_bz2) <- NULL
+      out2 <- cbind(out2, out1_bz2)
+    }
+    if ((R_case == "cum") &&
+        (omnibus == "all_sig") &&
+        bz_alpha_ok) {
+      out1_bz <- out1
+      out1_bz <- out1_bz[, grepl("bz_", colnames(out1_bz))]
+      out1_bz2 <- apply(
+                      out1_bz,
+                      MARGIN = 2,
+                      \(x) as.numeric(all(x == 1))
+                    )
+      out1_bz2 <- rbind(out1_bz2)
+      rownames(out1_bz2) <- NULL
+      out2[, colnames(out1_bz2)] <- out1_bz2
+    }
     if (any(is.na(out2$sig))) {
       out2$sig <- as.numeric(NA)
     }

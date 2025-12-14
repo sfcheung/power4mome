@@ -163,10 +163,22 @@ test_cond_indirect_effects <- function(fit = fit,
                                        boot_ci = FALSE,
                                        boot_out = NULL,
                                        check_post_check = TRUE,
+                                       test_method = c("ci", "pvalue"),
                                        ...,
                                        fit_name = "fit",
                                        get_map_names = FALSE,
                                        get_test_name = FALSE) {
+  test_method <- match.arg(test_method)
+  internal_options <- list()
+  if (test_method == "pvalue") {
+    internal_options <- utils::modifyList(internal_options,
+                                          list(skip_ci = TRUE,
+                                               pvalue_min_size = -Inf))
+  }
+  if (test_method == "ci") {
+    internal_options <- utils::modifyList(internal_options,
+                                          list(skip_ci = FALSE))
+  }
   if (fit_name != "fit") {
     mc_name <- paste0(fit_name, "_mc_out")
     boot_name <- paste0(fit_name, "_boot_out")
@@ -216,7 +228,8 @@ test_cond_indirect_effects <- function(fit = fit,
                                          boot_ci = boot_ci,
                                          boot_out = boot_out,
                                          progress = FALSE,
-                                         ...),
+                                         ...,
+                                         internal_options = internal_options),
                    error = function(e) e)
   } else {
     out <- NA
@@ -250,10 +263,65 @@ test_cond_indirect_effects <- function(fit = fit,
   tmp <- gsub("CI.hi", "cihi", tmp, fixed = TRUE)
   tmp <- gsub("Sig", "sig", tmp, fixed = TRUE)
   colnames(out2) <- tmp
-  out1 <- ifelse((out2$cilo > 0) | (out2$cihi < 0),
-                 yes = 1,
-                 no = 0)
-  out2$sig <- out1
+  if (test_method == "ci") {
+    out1 <- ifelse((out2$cilo > 0) | (out2$cihi < 0),
+                  yes = 1,
+                  no = 0)
+    out2$sig <- out1
+  }
+  if (test_method == "pvalue") {
+    out_all <- attr(out,
+                    "full_output")
+    ci_type <- NA
+    if (!is.null(out_all[[1]]$mc_indirect)) {
+      ci_type <- "mc"
+    }
+    if (!is.null(out_all[[1]]$boot_indirect)) {
+      ci_type <- "boot"
+    }
+    p_name <- switch(ci_type,
+                     mc = "mc_p",
+                     boot = "boot_p")
+    p_all <- sapply(out_all,
+                    \(x) unname(x[[p_name]]),
+                    USE.NAMES = FALSE)
+    out2$pvalue <- p_all
+    out2$sig <- ifelse(
+                out2$pvalue < (1 -  out_all[[1]]$level),
+                yes = 1,
+                no = 0
+              )
+    est_name <- switch(ci_type,
+                       mc = "mc_indirect",
+                       boot = "boot_indirect")
+    est_all <- lapply(out_all,
+                      \(x) x[[est_name]])
+    bz_alpha_ok <- isTRUE(all.equal(1 - out_all[[1]]$level,
+                                    getOption("power4mome.bz.alpha",
+                                                        default = .05)))
+    R <- sapply(est_all,
+                length)
+    nlt0 <- sapply(est_all,
+                   \(x) sum(as.numeric(x < 0)))
+    out2$R <- R
+    out2$nlt0 <- nlt0
+    out2$alpha <- 1 - out_all[[1]]$level
+    if (bz_alpha_ok) {
+      tmp <- lapply(out_all,
+              function(x) {
+                boot_est <- x$boot_indirect %||% x$mc_indirect
+                boot_sig <- bz_sig_partition(
+                              boot_est,
+                              alpha = 1 - x$level
+                            )
+                boot_sig
+              })
+      tmp <- do.call(rbind,
+                    unname(tmp))
+      out2 <- cbind(out2,
+                    tmp)
+    }
+  }
   rownames(out2) <- NULL
   attr(out2, "test_label") <- "test_label"
   return(out2)

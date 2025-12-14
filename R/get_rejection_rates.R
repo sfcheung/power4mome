@@ -216,6 +216,11 @@ rejection_rates.power4test <- function(object,
   rownames(out2) <- NULL
   class(out2) <- c("rejection_rates_df",
                    class(out2))
+  extra_attr <- lapply(
+                    out1,
+                    \(x) attr(x, "extra")
+                  )
+  attr(out2, "extra_list") <- extra_attr
   out2
 }
 
@@ -289,6 +294,7 @@ rejection_rates_i_vector <- function(object_i,
     # nvalid used only for adding CI and SE
     out_i$nvalid <- NULL
   }
+  attr(out_i, "extra") <- attr(object_i, "extra")
   out_i
 }
 
@@ -339,6 +345,7 @@ rejection_rates_i_data_frame <- function(object_i,
     # nvalid used only for adding CI and SE
     out_i$nvalid <- NULL
   }
+  attr(out_i, "extra") <- attr(object_i, "extra")
   out_i
 }
 
@@ -559,6 +566,13 @@ print.rejection_rates_df <- function(x,
         ...)
 
   if (annotation) {
+
+    # Any rejection rates estimated by Boos-Zhang-2000?
+    extra_list <- attr(x,
+                      "extra_list")
+    is_bz <- sapply(extra_list,
+                    \(x) x$bz_extrapolated)
+
     cat("Notes:\n")
 
     if ("n" %in% colnames(x1)) {
@@ -620,6 +634,11 @@ print.rejection_rates_df <- function(x,
                      "If the null hypothesis is true, this is the Type I error rate. ",
                      "If the null hypothesis is false, this is the power."),
               exdent = 2)
+      if (any(is_bz)) {
+        catwrap(paste0("- Some or all values in 'reject' are estimated using ",
+                      "the extrapolation method by Boos and Zhang (2000)."),
+                exdent = 2)
+      }
     }
     tmp <- ifelse(abbreviate_col_names,
                   abbr_names["reject_se"],
@@ -639,7 +658,8 @@ print.rejection_rates_df <- function(x,
                    "reject_ci_hi")
     if (tmp1 %in% colnames(x1)) {
       tmp <- paste0(tmp1, ",", tmp2)
-      tmp3 <- switch(getOption("power4mome.ci_method", default = "wilson"),
+      ci_method <- getOption("power4mome.ci_method", default = "wilson")
+      tmp3 <- switch(ci_method,
                      wilson = "Wilson's (1927) method",
                      norm = "normal approximation")
       catwrap(paste0("- ",
@@ -649,6 +669,15 @@ print.rejection_rates_df <- function(x,
                      tmp3,
                      "."),
               exdent = 2)
+      if (any(is_bz) &&
+          (ci_method == "wilson")) {
+        catwrap(paste0(
+                  "- Wilson's (1927) method is used to ",
+                  "approximate the confidence intervals of the rejection rates ",
+                  "estimated by the method of Boos and Zhang (2000)."
+                ),
+                exdent = 2)
+      }
     }
     catwrap(paste0("- Refer to the tests for the meanings of other columns."),
             exdent = 2)

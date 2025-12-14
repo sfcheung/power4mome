@@ -348,6 +348,15 @@ rejection_rates_by_es <- function(object_by_es,
                 # pv = attr(object_by_es, "pop_es_values"),
                 # MoreArgs = list(pn = attr(object_by_es, "pop_es_name")),
                 SIMPLIFY = FALSE)
+  # Keep common columns
+  cnames <- lapply(out,
+                   \(x) tryCatch(colnames(x),
+                                 error = function(e) names(x)))
+  cnames1 <- Reduce(intersect,
+                    cnames)
+  out <- lapply(out,
+                \(x) tryCatch(x[, cnames1],
+                              error = function(e) x[cnames1]))
   out <- do.call(rbind,
                  out)
   rownames(out) <- NULL

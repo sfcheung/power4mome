@@ -86,7 +86,7 @@ tmp <- x_from_power(out,
                     x_interval = c(100, 120),
                     extendInt = "yes",
                     max_trials = 2,
-                    seed = 1234,
+                    seed = 12345,
                     progress = FALSE,
                     simulation_progress = FALSE,
                     algorithm = "power_curve")

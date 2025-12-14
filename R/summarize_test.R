@@ -311,12 +311,49 @@ summarize_test_i <- function(x,
 summarize_one_test_vector <- function(x) {
   test_results_all <- lapply(x,
                              function(xx) xx$test_results)
+  has_R <- !is.null(test_results_all[[1]]["R"])
+  if (has_R) {
+    R <- unname(test_results_all[[1]]["R"])
+    Rext <- R_extrapolate()
+    R_case <- bz_case(R)
+    bz_alpha_ok <- isTRUE(all.equal(unname(test_results_all[[1]]["alpha"]),
+                                    getOption("power4mome.bz.alpha",
+                                                        default = .05)))
+    do_bz <- (R_case != "") &&
+             getOption("power4mome.bz", default = FALSE) &&
+             bz_alpha_ok
+  } else {
+    R <- NULL
+    do_bz <- FALSE
+    R_case <- ""
+  }
+  if (do_bz) {
+    if (R_case == "one") {
+      Rk <- Rext[seq(1, which(Rext == R) - 1)]
+      test_results_all <- lapply(
+              test_results_all,
+              add_rr_ext,
+              R = R,
+              Rk = Rk
+            )
+    }
+  }
   nrep <- length(test_results_all)
   test_results_all <- do.call(rbind,
                               test_results_all)
   test_results_all <- as.data.frame(test_results_all,
                                     check.names = FALSE)
   test_means <- colMeans(test_results_all, na.rm = TRUE)
+  if (do_bz) {
+    tmp <- bz_rr(test_means)
+    test_means["sig"] <- as.numeric(tmp)
+    bz_model <- attr(
+                  tmp,
+                  "bz_model"
+                )
+  } else {
+    bz_model <- NULL
+  }
   test_not_na <- apply(test_results_all,
                        2,
                        function(x) {sum(!is.na(x))})
@@ -324,6 +361,11 @@ summarize_one_test_vector <- function(x) {
                nrep = nrep,
                mean = test_means,
                nvalid = test_not_na)
+  # May add other attributes in the future
+  attr(out1,
+      "extra") <- list(bz_extrapolated = do_bz,
+                       R_case = R_case,
+                       bz_model = bz_model)
   class(out1) <- c("test_summary", class(out1))
   out1
 }
@@ -341,6 +383,7 @@ summarize_one_test_data_frame <- function(x,
   test_label <- attr(test_i, "test_label")
   i <- sapply(test_i,
               is.numeric)
+  i_names <- colnames(test_i)[i]
   out0 <- sapply(test_i[, "test_label", drop = TRUE],
                  function(xx) {
                    t(sapply(x,
@@ -351,11 +394,67 @@ summarize_one_test_data_frame <- function(x,
                             simplify = TRUE))
                  },
                  simplify = FALSE)
+  do_bz <- FALSE
+  has_R <- FALSE
+  R_case <- ""
+  bz_model <- NULL
+
+  has_R <- "R" %in% colnames(out0[[1]])
+  if (has_R) {
+    R <- sapply(out0,
+                \(x) x[, "R"],
+                simplify = FALSE)
+    R <- unname(unlist(R))
+    if (all(R != R[1])) {
+      # Not all R equal. Do not do Boos-Zhang
+      do_bz <- FALSE
+    } else {
+      R <- R[1]
+      Rext <- R_extrapolate()
+      R_case <- bz_case(R)
+      bz_alpha_ok <- isTRUE(all.equal(tryCatch(unname(out0[[1]][, "alpha"])[1],
+                                               error = function(e) NA),
+                                      getOption("power4mome.bz.alpha",
+                                                          default = .05)))
+      do_bz <- (R_case != "") &&
+                getOption("power4mome.bz", default = FALSE) &&
+                bz_alpha_ok
+    }
+  } else {
+    R <- NULL
+    do_bz <- FALSE
+    R_case <- ""
+  }
+
   if ((length(out0) == 1) ||
       (collapse == "none")) {
+    if (do_bz) {
+      if (R_case == "one") {
+        for (j1 in seq_along(out0)) {
+          tmp0 <- out0[[j1]]
+          # bz_* may have been added by the test function.
+          # Add bz_* only if not available.
+          if (!(paste0("bz_", R) %in% colnames(tmp0))) {
+            tmp2 <- add_bz_i(tmp0)
+            out0[[j1]] <- tmp2
+          }
+        }
+      }
+    }
     out1 <- t(sapply(out0,
                     colMeans,
                     na.rm = TRUE))
+    if (do_bz) {
+      bz_model <- as.list(seq_len(nrow(out1)))
+      for (j1 in seq_len(nrow(out1))) {
+        tmp <- bz_rr(out1[j1, , drop = TRUE])
+        bz_model[[j1]] <- attr(tmp,
+                               "bz_model")
+        out1[j1, "sig"] <- tmp
+      }
+    } else {
+      bz_model <- NULL
+    }
     test_not_na <- t(sapply(out0,
                       function(x) {
                         apply(x,
@@ -363,7 +462,7 @@ summarize_one_test_data_frame <- function(x,
                               function(xx) {sum(!is.na(xx))})
                       }))
     test_means <- test_i
-    test_means[, i] <- out1
+    test_means[, i_names] <- out1[, i_names, drop = FALSE]
   } else {
     out1a <- out0[[1]]
     out1a[] <- as.numeric(NA)
@@ -371,11 +470,49 @@ summarize_one_test_data_frame <- function(x,
                     function(xx) xx[, "sig", drop = TRUE],
                     simplify = TRUE)
     if (collapse == "all_sig") {
-      sig1 <- apply(sig0,
-                    MARGIN = 1,
-                    function(xx) as.numeric(all(xx > 0)),
-                    simplify = TRUE)
-      out1a[, "sig"] <- sig1
+      # Boos-Zhang method "all_sig" only
+      if (isTRUE(R_case %in% c("one", "cum"))) {
+        out1_bz1 <- merge_for_collapse(out0)
+        if (!any(grepl("bz_", colnames(out1_bz1[[1]])))) {
+          # Add bz_* if not present
+          out1_bz1 <- lapply(
+                        out1_bz1,
+                        function(x) {
+                          a <- add_bz_i(x)
+                          i <- grepl("bz_", colnames(a))
+                          a[, i]
+                        }
+                      )
+        } else {
+          out1_bz1 <- lapply(
+                        out1_bz1,
+                        function(x) {
+                          i <- grepl("bz_", colnames(x))
+                          x[, i]
+                        }
+                      )
+        }
+        # Always have bz_*
+        out1_bz2 <- lapply(
+                      out1_bz1,
+                      \(x) apply(x,
+                                 MARGIN = 2,
+                                 min))
+        out1_bz2 <- do.call(rbind,
+                            out1_bz2)
+        i <- colnames(out1_bz2)
+        if (all(i %in% colnames(out1a))) {
+          out1a[, i] <- out1_bz2
+        } else {
+          out1a <- cbind(out1a, out1_bz2)
+        }
+      } else {
+        sig1 <- apply(sig0,
+                      MARGIN = 1,
+                      function(xx) as.numeric(all(xx > 0)),
+                      simplify = TRUE)
+        out1a[, "sig"] <- sig1
+      }
     }
     if (collapse == "at_least_one_sig") {
       sig1 <- apply(sig0,
@@ -394,6 +531,17 @@ summarize_one_test_data_frame <- function(x,
     out1b <- colMeans(out1a, na.rm = TRUE)
     out1 <- out1a[1, , drop = FALSE]
     out1[] <- out1b
+    if (do_bz) {
+      bz_model <- as.list(seq_len(nrow(out1)))
+      for (j1 in seq_len(nrow(out1))) {
+        tmp <- bz_rr(out1[j1, , drop = TRUE])
+        bz_model[[j1]] <- attr(tmp,
+                               "bz_model")
+        out1[j1, "sig"] <- tmp
+      }
+    } else {
+      bz_model <- NULL
+    }
     test_not_na <- out1a[1, , drop = FALSE]
     test_not_na[] <- sum(apply(sig0,
                        MARGIN = 1,
@@ -406,13 +554,18 @@ summarize_one_test_data_frame <- function(x,
       tmp <- collapse
     }
     test_means[1, "test_label"] <- tmp
-    test_means[, i] <- out1
+    test_means[, i_names] <- out1[, i_names, drop = FALSE]
   }
   class(test_means) <- class(test_i)
   out1 <- list(test_attributes = attributes(x),
                nrep = nrep,
                mean = test_means,
                nvalid = test_not_na)
+  # May add other attributes in the future
+  attr(out1,
+      "extra") <- list(bz_extrapolated = do_bz,
+                       R_case = R_case,
+                       bz_model = bz_model)
   class(out1) <- c("test_summary", class(out1))
   out1
 }
