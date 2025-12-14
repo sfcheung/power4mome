@@ -1,0 +1,227 @@
+---
+title: "Quick Function: Simple Mediation with Observed Variables"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    fig.align: "center"
+    toc: true
+    toc_depth: 2
+    number_sections: false
+bibliography: references.bib
+csl: apa.csl
+---
+
+```{r knitr_setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "",
+  fig.align = "center"
+)
+```
+
+```{r load_pre, child=c("template_q_med_ins_preamble.txt")}
+```
+
+# Scope
+
+This file is for simple mediation models,
+and only use one function `q_power_mediation_simple()`
+from the package
+[power4mome](https://sfcheung.github.io/power4mome/).
+
+```{r}
+library(power4mome)
+```
+
+# The Model
+
+Suppose this is the model:
+
+```{r template_q_med_obs_simple_model, echo = FALSE, fig.cap = "The Model"}
+library(semPlot)
+suppressMessages(library(lavaan))
+mod <-
+"
+m ~ a*x
+y ~ b*m + cp*x
+"
+fit0 <- sem(mod, do.fit = FALSE, fixed.x = FALSE)
+set.seed(1234)
+dat <- data.frame(MASS::mvrnorm(100, rep(0, 3), diag(3)))
+colnames(dat) <- lavNames(fit0)
+fit0 <- sem(mod, dat, do.fit = FALSE, fixed.x = FALSE)
+layout_m <- matrix(c(NA, "m", NA,
+                     "x", NA, "y"), 2, 3, byrow = TRUE)
+p <- semPaths(fit0,
+              whatLabels = "label",
+              layout = layout_m,
+              nCharNodes = 0,
+              exoCov = FALSE,
+              edge.label.cex = 1.5 * 2,
+              label.cex = 1.8,
+              residuals = FALSE,
+              sizeMan = 10,
+              asize = 10,
+              DoNotPlot = TRUE)
+p$graphAttributes$Edges$labels <-
+  c("a",
+    "b",
+    "c'")
+
+plot(p)
+text(label = "Simple Mediation Model",
+     x = 0, y = -1.3,
+     cex = 2)
+```
+
+We want to do power analysis for the
+indirect effect along the path
+`x->m->y`.
+Suppose these are the expected
+effects:
+
+- a-path: medium
+
+- b-path: medium
+
+- c'-path: small
+
+```{r load_convention, child=c("template_q_med_ins_convention.txt")}
+```
+
+```{r load_cov, child=c("template_q_med_ins_covariates.txt")}
+```
+
+## Model with Hypothesized Path Coefficients
+
+This is the model with the effect sizes:
+
+```{r template_q_med_obs_simple_model_es, echo = FALSE, fig.cap = "The Model with Effect Sizes"}
+library(semPlot)
+suppressMessages(library(lavaan))
+mod <-
+"
+m ~ s*x
+y ~ l*m + m*x
+"
+fit0 <- sem(mod, do.fit = FALSE, fixed.x = FALSE)
+set.seed(1234)
+dat <- data.frame(MASS::mvrnorm(100, rep(0, 3), diag(3)))
+colnames(dat) <- lavNames(fit0)
+fit0 <- sem(mod, dat, do.fit = FALSE, fixed.x = FALSE)
+layout_m <- matrix(c(NA, "m", NA,
+                     "x", NA, "y"), 2, 3, byrow = TRUE)
+p <- semPaths(fit0,
+              whatLabels = "label",
+              layout = layout_m,
+              nCharNodes = 0,
+              exoCov = FALSE,
+              edge.label.cex = 1.5 * 1.2,
+              label.cex = 1.8,
+              residuals = FALSE,
+              sizeMan = 10,
+              asize = 10,
+              DoNotPlot = TRUE)
+# p$graphAttributes$Edges$labels <-
+#   c("s\n(small: .10)",
+#     "l\n(large: .50)",
+#     "m\n(medium: .30)")
+p$graphAttributes$Edges$labels <-
+  c("m\n(medium: .30)",
+    "m\n(medium: .30)",
+    "s\n(small: .10)")
+
+plot(p)
+text(label = "Simple Mediation Model",
+     x = 0, y = -1.3,
+     cex = 2)
+```
+
+
+```{r load_mc, child=c("template_q_med_ins_mc.txt")}
+```
+
+# Find the Power
+
+To estimate the power for a sample size,
+this is the code:
+
+```{r med_simple, eval=TRUE, results="hide", message=FALSE}
+out_power <- q_power_mediation_simple(
+  a = "m",
+  b = "m",
+  cp = "s",
+  target_power = .80,
+  nrep = 400,
+  n = 80,
+  R = 1000,
+  seed = 1234
+)
+```
+
+These are the arguments:
+
+- `a`: The hypothesized standardized effect from
+  the predictor `x` to the mediator `m`.
+  Can be one of the labels supported
+  by the [convention](#convention), or
+  a numeric value.
+
+- `b`: The hypothesized standardized effect from
+  the mediator `m` to the outcome variable `y`.
+  Can be one of the labels supported
+  by the [convention](#convention), or
+  a numeric value.
+
+- `cp`: The hypothesized standardized direct
+  effect from
+  the predictor `x` to the outcome variable `y`.
+  Can be one of the labels supported
+  by the [convention](#convention), or
+  a numeric value.
+
+
+```{r load_args, child=c("template_q_med_ins_arguments.txt")}
+```
+
+This is the output:
+
+```{r}
+out_power
+```
+
+```{r load_p4t_output, child=c("template_q_med_ins_power4test_output.txt")}
+```
+
+```{r load_regions, child=c("template_q_med_ins_regions.txt")}
+```
+
+```{r med_simple_region, eval=TRUE, results="hide", message=FALSE}
+out_region <- q_power_mediation_simple(
+  a = "m",
+  b = "m",
+  cp = "s",
+  target_power = .80,
+  nrep = 400,
+  n = 80,
+  R = 1000,
+  seed = 1234,
+  mode = "region"
+)
+```
+
+```{r load_regions_out, child=c("template_q_med_ins_regions_printout.txt")}
+```
+
+```{r template_q_med_obs_simple_model_region, echo = FALSE, fig.cap = "The Plot of Sample Sizes Searched"}
+plot(out_region)
+```
+
+The region between the shaded areas is the
+approximate region of sample sizes found.
+
+
+```{r load_final, child=c("template_q_med_ins_final_remarks.txt")}
+```
+

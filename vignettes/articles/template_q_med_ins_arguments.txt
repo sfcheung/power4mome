@@ -1,0 +1,36 @@
+
+- `target_power`: The target level of
+  power. Default is .80, and can be
+  omitted if this is the desired level
+  of power
+
+- `nrep`: The number of replications
+  when estimating the power for a
+  sample size. Default is 400.
+  Can be omitted if this is the desired
+  number of replications.
+
+- `R`: The number of random samples used
+  in forming Monte Carlo or nonparametric
+  bootstrapping confidence intervals.
+  Although they should be large when
+  testing an effect in one single sample,
+  they can be smaller because the goal
+  is to estimate power across replications,
+  not to achieve high accuracy in each
+  sample. Default is 1000. Can be omitted
+  if the default is acceptable.
+
+- `seed`: The seed for the random number
+  generator. Note that, if parallel
+  processing is used (this is the default),
+  then the results are reproducible
+  *only* if the configuration is exactly
+  identical. Moreover, changes in the
+  algorithm will also make results
+  not reproducible even with the same
+  seed. Nevertheless, it is still advised
+  to set this seed to an integer, to
+  make the results reproducible at least
+  on the same machine.
+

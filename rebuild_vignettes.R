@@ -22,6 +22,13 @@ knitr::knit("x_from_power_for_n_test_printout.Rmd.original", output = "x_from_po
 knitr::knit("x_from_power_for_n.Rmd.original", output = "x_from_power_for_n.Rmd", envir = new.env())
 knitr::knit("x_from_power_for_es.Rmd.original", output = "x_from_power_for_es.Rmd", envir = new.env())
 
+knitr::knit("template_q_med_obs_simple.Rmd.original", output = "template_q_med_obs_simple.Rmd", envir = new.env())
+knitr::knit("template_q_med_obs_serial.Rmd.original", output = "template_q_med_obs_serial.Rmd", envir = new.env())
+knitr::knit("template_q_med_obs_parallel.Rmd.original", output = "template_q_med_obs_parallel.Rmd", envir = new.env())
+knitr::knit("template_q_med_lav_simple.Rmd.original", output = "template_q_med_lav_simple.Rmd", envir = new.env())
+knitr::knit("template_q_med_lav_serial.Rmd.original", output = "template_q_med_lav_serial.Rmd", envir = new.env())
+knitr::knit("template_q_med_lav_parallel.Rmd.original", output = "template_q_med_lav_parallel.Rmd", envir = new.env())
+
 knitr::knit("template_n_from_power_mediation_obs_simple.Rmd.original", output = "template_n_from_power_mediation_obs_simple.Rmd", envir = new.env())
 knitr::knit("template_n_from_power_mediation_obs_serial.Rmd.original", output = "template_n_from_power_mediation_obs_serial.Rmd", envir = new.env())
 knitr::knit("template_n_from_power_mediation_obs_parallel.Rmd.original", output = "template_n_from_power_mediation_obs_parallel.Rmd", envir = new.env())
@@ -36,12 +43,10 @@ knitr::knit("template_n_from_power_moderation_obs_two_ws.Rmd.original", output =
 knitr::knit("template_n_from_power_mome_obs_a.Rmd.original", output = "template_n_from_power_mome_obs_a.Rmd", envir = new.env())
 knitr::knit("template_n_from_power_mome_obs_b.Rmd.original", output = "template_n_from_power_mome_obs_b.Rmd", envir = new.env())
 
+pkgdown::build_articles("../.."); pkgdown::preview_site("../..")
 
 # knitr::knit("template_mediation_obs.Rmd.original", output = "template_mediation_obs.Rmd", envir = new.env())
 # knitr::knit("template_mediation_obs_serial.Rmd.original", output = "template_mediation_obs_serial.Rmd", envir = new.env())
 # knitr::knit("template_mediation_obs_ind.Rmd.original", output = "template_mediation_obs_ind.Rmd", envir = new.env())
-pkgdown::build_articles("../..")
-
-pkgdown::preview_site("../..")
 
 setwd(base_dir)

@@ -1,0 +1,11 @@
+## Test to be Used
+
+In practice, nonparametric
+bootstrapping is usually used to
+test indirect effects. However,
+estimating its power using simulation
+is slow. A good-enough proxy is to
+estimate the power when testing this
+effect by Monte Carlo confidence interval.
+This is the default method in [`power4mome`](https://sfcheung.github.io/power4mome/)
+for tests of indirect effects.
