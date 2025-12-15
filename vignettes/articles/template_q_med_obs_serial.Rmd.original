@@ -270,7 +270,7 @@ out_region <- q_power_mediation_serial(
 ```{r load_regions_out, child=c("template_q_med_ins_regions_printout.txt")}
 ```
 
-```{r template_q_med_obs_simple_model_region, echo = FALSE, fig.cap = "The Plot of Sample Sizes Searched"}
+```{r template_q_med_obs_serial_model_region, echo = FALSE, fig.cap = "The Plot of Sample Sizes Searched"}
 plot(out_region)
 ```
 
