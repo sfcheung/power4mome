@@ -97,7 +97,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Quick Function: Simple Mediation with Observed Variables</h1>
             
-            <h4 data-toc-skip class="date">2025-12-14</h4>
+            <h4 data-toc-skip class="date">2025-12-15</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/sfcheung/power4mome/blob/main/vignettes/articles/template_q_med_obs_simple.Rmd" class="external-link"><code>vignettes/articles/template_q_med_obs_simple.Rmd</code></a></small>
       <div class="d-none name"><code>template_q_med_obs_simple.Rmd</code></div>
@@ -118,11 +118,12 @@ and will not cover the technical details involved.</p>
 <div class="section level2">
 <h2 id="prerequisite">Prerequisite<a class="anchor" aria-label="anchor" href="#prerequisite"></a>
 </h2>
-<p>These functions are wrappers to [power4test()] and
-[n_region_from_power()]. For simple scenarios, users do not need to know
-how to use these advanced functions, though knowledge about them can
-help customizing the search for the region. Further information on these
-functions can be found in <a href="#final_remarks">Final Remarks</a></p>
+<p>These functions are wrappers to <code><a href="../reference/power4test.html">power4test()</a></code> and
+<code><a href="../reference/x_from_power.html">n_region_from_power()</a></code>. For simple scenarios, users do not
+need to know how to use these advanced functions, though knowledge about
+them can help customizing the search for the region. Further information
+on these functions can be found in <a href="#final_remarks">Final
+Remarks</a></p>
 </div>
 <div class="section level2">
 <h2 id="scope">Scope<a class="anchor" aria-label="anchor" href="#scope"></a>
@@ -152,7 +153,7 @@ The Model
 <h3 id="convention">Convention for the Effect Sizes<a class="anchor" aria-label="anchor" href="#convention"></a>
 </h3>
 <p>To make it easy to specify the standardized population values of
-parameters, <a href="https://sfcheung.github.io/power4mome/"><code>power4mome</code></a>]
+parameters, <a href="https://sfcheung.github.io/power4mome/"><code>power4mome</code></a>
 adopted the convention for Pearson’s <em>r</em>, just for
 convenience.</p>
 <ul>
@@ -260,95 +261,95 @@ least on the same machine.</p></li>
 <p>This is the output:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">out_power</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ========== power4test Results ==========</span></span>
-<span><span class="co">#&gt;</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ====================== Model Information ======================</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; == Model on Factors/Variables ==</span></span>
 <span><span class="co">#&gt; m ~ x</span></span>
 <span><span class="co">#&gt; y ~ m + x</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; == Model on Variables/Indicators ==</span></span>
 <span><span class="co">#&gt; m ~ x</span></span>
 <span><span class="co">#&gt; y ~ m + x</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ====== Population Values ======</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Regressions:</span></span>
 <span><span class="co">#&gt;                    Population</span></span>
-<span><span class="co">#&gt;   m ~</span></span>
-<span><span class="co">#&gt;     x                 0.300</span></span>
-<span><span class="co">#&gt;   y ~</span></span>
-<span><span class="co">#&gt;     m                 0.300</span></span>
-<span><span class="co">#&gt;     x                 0.100</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt;   m ~                        </span></span>
+<span><span class="co">#&gt;     x                 0.300  </span></span>
+<span><span class="co">#&gt;   y ~                        </span></span>
+<span><span class="co">#&gt;     m                 0.300  </span></span>
+<span><span class="co">#&gt;     x                 0.100  </span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Variances:</span></span>
 <span><span class="co">#&gt;                    Population</span></span>
-<span><span class="co">#&gt;    .m                 0.910</span></span>
-<span><span class="co">#&gt;    .y                 0.882</span></span>
-<span><span class="co">#&gt;     x                 1.000</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt;    .m                 0.910  </span></span>
+<span><span class="co">#&gt;    .y                 0.882  </span></span>
+<span><span class="co">#&gt;     x                 1.000  </span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; (Computing indirect effects for 2 paths ...)</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; == Population Conditional/Indirect Effect(s) ==</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; == Indirect Effect(s) ==</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;               ind</span></span>
 <span><span class="co">#&gt; x -&gt; m -&gt; y 0.090</span></span>
 <span><span class="co">#&gt; x -&gt; y      0.100</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  - The 'ind' column shows the indirect effect(s).</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt;  </span></span>
 <span><span class="co">#&gt; ======================= Data Information =======================</span></span>
-<span><span class="co">#&gt;</span></span>
-<span><span class="co">#&gt; Number of Replications:  400</span></span>
-<span><span class="co">#&gt; Sample Sizes:  80</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Number of Replications:  400 </span></span>
+<span><span class="co">#&gt; Sample Sizes:  80 </span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call print with 'data_long = TRUE' for further information.</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ==================== Extra Element(s) Found ====================</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - fit</span></span>
 <span><span class="co">#&gt; - mc_out</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; === Element(s) of the First Dataset ===</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ============ &lt;fit&gt; ============</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; lavaan 0.6-21.2434 ended normally after 1 iteration</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Estimator                                         ML</span></span>
 <span><span class="co">#&gt;   Optimization method                           NLMINB</span></span>
 <span><span class="co">#&gt;   Number of model parameters                         5</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Number of observations                            80</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Test User Model:</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt;                                                       </span></span>
 <span><span class="co">#&gt;   Test statistic                                 0.000</span></span>
 <span><span class="co">#&gt;   Degrees of freedom                                 0</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; =========== &lt;mc_out&gt; ===========</span></span>
-<span><span class="co">#&gt;</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; == A 'mc_out' class object ==</span></span>
-<span><span class="co">#&gt;</span></span>
-<span><span class="co">#&gt; Number of Monte Carlo replications: 1000</span></span>
-<span><span class="co">#&gt;</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Number of Monte Carlo replications: 1000 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ====================== Test(s) Conducted ======================</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - test_indirect: x-&gt;m-&gt;y</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call print() and set 'test_long = TRUE' for a detailed report.</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ========== power4test Power ==========</span></span>
-<span><span class="co">#&gt;</span></span>
-<span><span class="co">#&gt; [test]: test_indirect: x-&gt;m-&gt;y</span></span>
-<span><span class="co">#&gt; [test_label]: Test</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [test]: test_indirect: x-&gt;m-&gt;y </span></span>
+<span><span class="co">#&gt; [test_label]: Test </span></span>
 <span><span class="co">#&gt;     est   p.v reject r.cilo r.cihi</span></span>
 <span><span class="co">#&gt; 1 0.088 1.000  0.537  0.489  0.586</span></span>
 <span><span class="co">#&gt; Notes:</span></span>
@@ -360,10 +361,10 @@ least on the same machine.</p></li>
 <span><span class="co">#&gt; - r.cilo,r.cihi: The confidence interval of the rejection rate, based</span></span>
 <span><span class="co">#&gt;   on Wilson's (1927) method.</span></span>
 <span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ========== n_region_from_power Results ==========</span></span>
-<span><span class="co">#&gt;</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; 'mode' is not 'region' and results not available.</span></span></code></pre></div>
 <p>The first set of output is the default printout of the output of
 <code><a href="../reference/power4test.html">power4test()</a></code>. This can be used to check the model
@@ -402,30 +403,30 @@ argument <code>mode = "region"</code> added:</p>
 <p>This is the printout, showing only the section from the output of
 <code><a href="../reference/x_from_power.html">n_region_from_power()</a></code>:</p>
 <pre><code><span><span class="co">#&gt; ========== n_region_from_power Results ==========</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call:</span></span>
-<span><span class="co">#&gt; n_region_from_power(object = `&lt;hidden&gt;`, target_power = 0.8,</span></span>
-<span><span class="co">#&gt;     progress = TRUE, simulation_progress = TRUE, max_trials = 10,</span></span>
+<span><span class="co">#&gt; n_region_from_power(object = `&lt;hidden&gt;`, target_power = 0.8, </span></span>
+<span><span class="co">#&gt;     progress = TRUE, simulation_progress = TRUE, max_trials = 10, </span></span>
 <span><span class="co">#&gt;     seed = 1234)</span></span>
-<span><span class="co">#&gt;</span></span>
-<span><span class="co">#&gt;                      Setting</span></span>
-<span><span class="co">#&gt; Predictor(x)         Sample Size</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;                      Setting                                      </span></span>
+<span><span class="co">#&gt; Predictor(x)         Sample Size                                  </span></span>
 <span><span class="co">#&gt; Goal:                Power significantly below or above the target</span></span>
-<span><span class="co">#&gt; algorithm:           bisection</span></span>
-<span><span class="co">#&gt; Level of confidence: 95.00%</span></span>
-<span><span class="co">#&gt; Target Power:        0.800</span></span>
-<span><span class="co">#&gt;</span></span>
-<span><span class="co">#&gt; Solution:</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; algorithm:           bisection                                    </span></span>
+<span><span class="co">#&gt; Level of confidence: 95.00%                                       </span></span>
+<span><span class="co">#&gt; Target Power:        0.800                                        </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Solution: </span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Approximate region of sample sizes with power:</span></span>
 <span><span class="co">#&gt; - not significantly different from 0.800: 100 to 117</span></span>
 <span><span class="co">#&gt; - significantly lower than 0.800: 100</span></span>
 <span><span class="co">#&gt; - significantly higher than 0.800: 117</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Confidence intervals of the estimated power:</span></span>
 <span><span class="co">#&gt; - for the lower bound (100): [0.708, 0.792]</span></span>
 <span><span class="co">#&gt; - for the upper bound (117): [0.804, 0.875]</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call `summary()` for detailed results.</span></span></code></pre>
 <p>In this example, the range of the sample size is 100 to 117.</p>
 <p>The results can also be visualized using the <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>
@@ -446,9 +447,10 @@ sample sizes found.</p>
 </h3>
 <p>Quick how-to articles on other common mediation models, including
 those with latent variables, can be found from the <a href="index.html">list of articles</a></p>
-<p>The package <a href="https://sfcheung.github.io/power4mome/">power4mome</a> supports an
-arbitrary model specified by <code>lavaan</code> syntax, including those
-with moderators. Interested users can refer to the articles above.</p>
+<p>The package <a href="https://sfcheung.github.io/power4mome/"><code>power4mome</code></a>
+supports an arbitrary model specified by <code>lavaan</code> syntax,
+including those with moderators. Interested users can refer to the
+articles above.</p>
 </div>
 <div class="section level3">
 <h3 id="technical-details">Technical Details<a class="anchor" aria-label="anchor" href="#technical-details"></a>

@@ -11,11 +11,14 @@ not cover the technical details involved.
 
 ## Prerequisite
 
-These functions are wrappers to \[power4test()\] and
-\[n_region_from_power()\]. For simple scenarios, users do not need to
-know how to use these advanced functions, though knowledge about them
-can help customizing the search for the region. Further information on
-these functions can be found in [Final Remarks](#final_remarks)
+These functions are wrappers to
+[`power4test()`](https://sfcheung.github.io/power4mome/reference/power4test.md)
+and
+[`n_region_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md).
+For simple scenarios, users do not need to know how to use these
+advanced functions, though knowledge about them can help customizing the
+search for the region. Further information on these functions can be
+found in [Final Remarks](#final_remarks)
 
 ## Scope
 
@@ -119,10 +122,11 @@ indirect effects.
 One difficulty in doing power analysis for latent variable model is
 setting the population values for the indicators.
 
-In `power4mome`, instead of setting factor loadings and error variances,
-users can specify the number of indicators and the population
-reliability of each latent factor. The corresponding factor loadings and
-error variances will be computed and specified automatically.
+In [`power4mome`](https://sfcheung.github.io/power4mome/), instead of
+setting factor loadings and error variances, users can specify the
+number of indicators and the population reliability of each latent
+factor. The corresponding factor loadings and error variances will be
+computed and specified automatically.
 
 Therefore, when doing the power analysis, users can just specify the
 number of indicators (items) for each factor, which is usually known
@@ -207,12 +211,12 @@ This is the output:
 
 ``` r
 out_power
-#>
+#> 
 #> ========== power4test Results ==========
-#>
-#>
+#> 
+#> 
 #> ====================== Model Information ======================
-#>
+#> 
 #> == Model on Factors/Variables ==
 #> m1 ~ x
 #> m2 ~ x
@@ -226,95 +230,95 @@ out_power
 #> m2 =~ m21 + m22 + m23
 #> y =~ y1 + y2 + y3
 #> ====== Population Values ======
-#>
+#> 
 #> Regressions:
 #>                    Population
-#>   m1 ~
-#>     x                 0.300
-#>   m2 ~
-#>     x                 0.500
-#>   y ~
-#>     m1                0.500
-#>     m2                0.300
-#>     x                 0.100
-#>
+#>   m1 ~                       
+#>     x                 0.300  
+#>   m2 ~                       
+#>     x                 0.500  
+#>   y ~                        
+#>     m1                0.500  
+#>     m2                0.300  
+#>     x                 0.100  
+#> 
 #> Variances:
 #>                    Population
-#>    .m1                0.910
-#>    .m2                0.750
-#>    .y                 0.545
-#>     x                 1.000
-#>
+#>    .m1                0.910  
+#>    .m2                0.750  
+#>    .y                 0.545  
+#>     x                 1.000  
+#> 
 #> (Computing indirect effects for 3 paths ...)
-#>
+#> 
 #> == Population Conditional/Indirect Effect(s) ==
-#>
+#> 
 #> == Indirect Effect(s) ==
-#>
+#> 
 #>                ind
 #> x -> m1 -> y 0.150
 #> x -> m2 -> y 0.150
 #> x -> y       0.100
-#>
+#> 
 #>  - The 'ind' column shows the indirect effect(s).
-#>
+#>  
 #> ==== Population Reliability ====
-#>
+#> 
 #>    x  m1  m2   y
 #>  0.7 0.8 0.7 0.7
-#>
+#> 
 #> == Population Standardized Loadings ==
-#>
+#> 
 #>      x    m1    m2     y
 #>  0.661 0.707 0.661 0.661
 #> ======================= Data Information =======================
-#>
-#> Number of Replications:  400
-#> Sample Sizes:  300
-#>
+#> 
+#> Number of Replications:  400 
+#> Sample Sizes:  300 
+#> 
 #> Call print with 'data_long = TRUE' for further information.
-#>
+#> 
 #> ==================== Extra Element(s) Found ====================
-#>
+#> 
 #> - fit
 #> - mc_out
-#>
+#> 
 #> === Element(s) of the First Dataset ===
-#>
+#> 
 #> ============ <fit> ============
-#>
+#> 
 #> lavaan 0.6-21.2434 ended normally after 30 iterations
-#>
+#> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
 #>   Number of model parameters                        31
-#>
+#> 
 #>   Number of observations                           300
-#>
+#> 
 #> Model Test User Model:
-#>
+#>                                                       
 #>   Test statistic                                98.780
 #>   Degrees of freedom                                60
 #>   P-value (Chi-square)                           0.001
-#>
+#> 
 #> =========== <mc_out> ===========
-#>
-#>
+#> 
+#> 
 #> == A 'mc_out' class object ==
-#>
-#> Number of Monte Carlo replications: 1000
-#>
-#>
+#> 
+#> Number of Monte Carlo replications: 1000 
+#> 
+#> 
 #> ====================== Test(s) Conducted ======================
-#>
+#> 
 #> - test_indirects: x-...->y
-#>
+#> 
 #> Call print() and set 'test_long = TRUE' for a detailed report.
-#>
+#> 
 #> ========== power4test Power ==========
-#>
-#> [test]: test_indirects: x-...->y
-#> [test_label]: x-...->y (All sig)
+#> 
+#> [test]: test_indirects: x-...->y 
+#> [test_label]: x-...->y (All sig) 
 #>    est   p.v reject r.cilo r.cihi
 #> 1  NaN 1.000  0.887  0.853  0.915
 #> Notes:
@@ -326,10 +330,10 @@ out_power
 #> - r.cilo,r.cihi: The confidence interval of the rejection rate, based
 #>   on Wilson's (1927) method.
 #> - Refer to the tests for the meanings of other columns.
-#>
+#> 
 #> ========== n_region_from_power Results ==========
-#>
-#>
+#> 
+#> 
 #> 'mode' is not 'region' and results not available.
 ```
 
@@ -386,30 +390,30 @@ This is the printout, showing only the section from the output of
 [`n_region_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md):
 
     #> ========== n_region_from_power Results ==========
-    #>
+    #> 
     #> Call:
-    #> n_region_from_power(object = `<hidden>`, target_power = 0.8,
-    #>     progress = TRUE, simulation_progress = TRUE, max_trials = 10,
+    #> n_region_from_power(object = `<hidden>`, target_power = 0.8, 
+    #>     progress = TRUE, simulation_progress = TRUE, max_trials = 10, 
     #>     seed = 1234)
-    #>
-    #>                      Setting
-    #> Predictor(x)         Sample Size
+    #> 
+    #>                      Setting                                      
+    #> Predictor(x)         Sample Size                                  
     #> Goal:                Power significantly below or above the target
-    #> algorithm:           bisection
-    #> Level of confidence: 95.00%
-    #> Target Power:        0.800
-    #>
-    #> Solution:
-    #>
+    #> algorithm:           bisection                                    
+    #> Level of confidence: 95.00%                                       
+    #> Target Power:        0.800                                        
+    #> 
+    #> Solution: 
+    #> 
     #> Approximate region of sample sizes with power:
     #> - not significantly different from 0.800: 235 to 263
     #> - significantly lower than 0.800: 235
     #> - significantly higher than 0.800: 263
-    #>
+    #> 
     #> Confidence intervals of the estimated power:
     #> - for the lower bound (235): [0.708, 0.792]
     #> - for the upper bound (263): [0.790, 0.864]
-    #>
+    #> 
     #> Call `summary()` for detailed results.
 
 In this example, the range of the sample size is 235 to 263.
@@ -433,7 +437,7 @@ Quick how-to articles on other common mediation models, including those
 with latent variables, can be found from the [list of
 articles](https://sfcheung.github.io/power4mome/articles/index.md)
 
-The package [power4mome](https://sfcheung.github.io/power4mome/)
+The package [`power4mome`](https://sfcheung.github.io/power4mome/)
 supports an arbitrary model specified by `lavaan` syntax, including
 those with moderators. Interested users can refer to the articles above.
 
