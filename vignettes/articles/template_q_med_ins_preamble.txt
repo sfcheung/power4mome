@@ -15,7 +15,7 @@ technical details involved.
 # Prerequisite
 
 These functions are wrappers to
-[power4test()] and [n_region_from_power()].
+`power4test()` and `n_region_from_power()`.
 For simple scenarios, users do not need
 to know how to use these advanced functions,
 though knowledge about them can help

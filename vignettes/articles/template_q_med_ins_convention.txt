@@ -2,7 +2,7 @@
 
 To make it easy to specify the standardized
 population values of parameters,
-[`power4mome`](https://sfcheung.github.io/power4mome/)]
+[`power4mome`](https://sfcheung.github.io/power4mome/)
 adopted the convention for
 Pearson's *r*, just for convenience.
 
