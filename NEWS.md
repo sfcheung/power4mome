@@ -1,4 +1,4 @@
-# power4mome 0.1.1.22
+# power4mome 0.1.1.23
 
 - Improve the function for extending the
   initial interval before doing a
@@ -94,6 +94,11 @@
   elements in `number_of_indicators`
   and `reliability` in the `q_power_mediation_*()`
   functions. (0.0.1.22)
+
+- Skip the check for combining objects
+  in the bisection algorithm because
+  they must be identical in the model.
+  (0.0.1.23)
 
 # power4mome 0.1.1
 

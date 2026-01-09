@@ -73,7 +73,8 @@ alg_bisection <- function(
   if (is_by_x) {
     tmp <- setdiff(names(object_by_org), names(by_x_1))
     by_x_1 <- c(by_x_1,
-                object_by_org[tmp])
+                object_by_org[tmp],
+                skip_checking_models = TRUE)
   }
 
   rm(a_out)
