@@ -16,13 +16,13 @@ Source:
 [`DESCRIPTION`](https://github.com/sfcheung/power4mome/blob/main/DESCRIPTION)
 
 Cheung S, Cheung S, Yang W (2026). *power4mome: Power Analysis for
-Moderation and Mediation*. R package version 0.1.1.23,
+Moderation and Mediation*. R package version 0.1.1.24,
 <https://sfcheung.github.io/power4mome/>.
 
     @Manual{,
       title = {power4mome: Power Analysis for Moderation and Mediation},
       author = {Shu Fai Cheung and Sing-Hang Cheung and Wendie Yang},
       year = {2026},
-      note = {R package version 0.1.1.23},
+      note = {R package version 0.1.1.24},
       url = {https://sfcheung.github.io/power4mome/},
     }

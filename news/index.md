@@ -1,6 +1,6 @@
 # Changelog
 
-## power4mome 0.1.1.23
+## power4mome 0.1.1.24
 
 - Improve the function for extending the initial interval before doing a
   bisection search. (0.1.1.1)
@@ -71,13 +71,18 @@
   and its wrappers will use stored values if available. (0.1.1.20)
 
 - The bisection algorithm has been improved in handling unusual
-  intervals. (0.0.1.21)
+  intervals. (0.1.1.21)
 
 - Disable the check for the number of elements in `number_of_indicators`
-  and `reliability` in the `q_power_mediation_*()` functions. (0.0.1.22)
+  and `reliability` in the `q_power_mediation_*()` functions. (0.1.1.22)
 
 - Skip the check for combining objects in the bisection algorithm
-  because they must be identical in the model. (0.0.1.23)
+  because they must be identical in the model. (0.1.1.23)
+
+- Revised
+  [`c.power4test_by_n()`](https://sfcheung.github.io/power4mome/reference/power4test_by_n.md)
+  to allow for minor differences in error variances when they are
+  determined by Monte Carlo simulation. (0.1.1.24)
 
 ## power4mome 0.1.1
 

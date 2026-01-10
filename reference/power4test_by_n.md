@@ -16,7 +16,13 @@ power4test_by_n(
 )
 
 # S3 method for class 'power4test_by_n'
-c(..., sort = TRUE, skip_checking_models = FALSE)
+c(
+  ...,
+  sort = TRUE,
+  skip_checking_models = FALSE,
+  tolerance_if_std_by_monte_carlo =
+    getOption("power4mome.tolerance_if_std_by_monte_carlo", default = 0.01)
+)
 
 as.power4test_by_n(original_object)
 
@@ -93,6 +99,16 @@ print(x, print_all = FALSE, ...)
   [`x_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md)
   for efficiency, and is rarely used when calling the `c` method
   directly.
+
+- tolerance_if_std_by_monte_carlo:
+
+  The tolerance to be used by
+  [`all.equal()`](https://rdrr.io/r/base/all.equal.html) when checking
+  population values. If standardization is conducted using error
+  variances estimated by Monte Carlo simulation, then they may not be
+  exactly the same across replications. This is the tolerance used to
+  compare population values, to allow for minor variation due to
+  simulation.
 
 - original_object:
 
