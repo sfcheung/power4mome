@@ -1,4 +1,4 @@
-# power4mome 0.1.1.24
+# power4mome 0.1.1.25
 
 - Improve the function for extending the
   initial interval before doing a
@@ -104,6 +104,9 @@
   allow for minor differences in error
   variances when they are determined by
   Monte Carlo simulation. (0.1.1.24)
+
+- Properly support a model with only one
+  latent variable. (0.1.1.25)
 
 # power4mome 0.1.1
 
