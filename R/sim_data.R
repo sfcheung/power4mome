@@ -943,7 +943,8 @@ sim_data_i <- function(repid = 1,
   p <- length(vnames)
 
   if ((length(number_of_indicators) == 1) &&
-      is.numeric(number_of_indicators)) {
+      is.numeric(number_of_indicators) &&
+      is.null(names(number_of_indicators))) {
     number_of_indicators <- rep(number_of_indicators,
                                 p)
     names(number_of_indicators) <- vnames
@@ -954,7 +955,8 @@ sim_data_i <- function(repid = 1,
   }
 
   if ((length(reliability) == 1) &&
-      is.numeric(reliability)) {
+      is.numeric(reliability) &&
+      is.null(names(reliability))) {
     reliability <- rep(reliability,
                                 p)
     names(reliability) <- vnames
