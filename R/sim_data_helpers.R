@@ -254,15 +254,18 @@ has_p_terms <- function(object) {
 #
 psi_std <- function(object,
                     n_std = 100000) {
+  std_by_monte_carlo <- FALSE
   if (has_p_terms(object)) {
     out <- psi_std_monte_carlo(object = object,
                                n_std = n_std)
+    std_by_monte_carlo <- TRUE
   } else {
     out <- tryCatch(psi_std_analytic(object = object),
                     error = function(e) e)
     if (inherits(out, "error")) {
       out <- psi_std_monte_carlo(object = object,
                                  n_std = n_std)
+      std_by_monte_carlo <- TRUE
     }
   }
   if (any(diag(out) < 0)) {
@@ -292,6 +295,7 @@ psi_std <- function(object,
       stop(msg)
     }
   }
+  attr(out, "std_by_monte_carlo") <- std_by_monte_carlo
   return(out)
 }
 
