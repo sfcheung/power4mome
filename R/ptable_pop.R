@@ -696,9 +696,15 @@ ptable_pop <- function(model = NULL,
         mm[[i]]$theta <- stats::cov2cor(mm[[i]]$theta)
       }
     }
+    std_by_monte_carlo <- attr(mm[[i]]$psi, "std_by_monte_carlo")
+    if (is.null(std_by_monte_carlo)) {
+      # For backward compatibility
+      std_by_monte_carlo <- NA
+    }
     ptable1 <- start_from_mm(ptable1,
                              mm)
     attr(ptable1, "model") <- model
+    attr(ptable1, "std_by_monte_carlo") <- std_by_monte_carlo
   }
   if ((length(m_moderated(model, ngroups = ngroups)) > 0) &&
       add_cov_for_moderation) {
