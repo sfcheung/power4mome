@@ -1,6 +1,6 @@
 # Changelog
 
-## power4mome 0.1.1.24
+## power4mome 0.1.1.25
 
 - Improve the function for extending the initial interval before doing a
   bisection search. (0.1.1.1)
@@ -83,6 +83,8 @@
   [`c.power4test_by_n()`](https://sfcheung.github.io/power4mome/reference/power4test_by_n.md)
   to allow for minor differences in error variances when they are
   determined by Monte Carlo simulation. (0.1.1.24)
+
+- Properly support a model with only one latent variable. (0.1.1.25)
 
 ## power4mome 0.1.1
 
