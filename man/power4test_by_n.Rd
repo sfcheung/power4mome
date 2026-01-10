@@ -17,7 +17,13 @@ power4test_by_n(
   save_sim_all = TRUE
 )
 
-\method{c}{power4test_by_n}(..., sort = TRUE, skip_checking_models = FALSE)
+\method{c}{power4test_by_n}(
+  ...,
+  sort = TRUE,
+  skip_checking_models = FALSE,
+  tolerance_if_std_by_monte_carlo =
+    getOption("power4mome.tolerance_if_std_by_monte_carlo", default = 0.01)
+)
 
 as.power4test_by_n(original_object)
 
@@ -97,6 +103,16 @@ This argument is used by
 \code{\link[=x_from_power]{x_from_power()}} for efficiency, and
 is rarely used when calling
 the \code{c} method directly.}
+
+\item{tolerance_if_std_by_monte_carlo}{The tolerance to be used by \code{\link[=all.equal]{all.equal()}}
+when checking population values. If
+standardization is conducted using
+error variances estimated by
+Monte Carlo simulation, then they may
+not be exactly the same across replications.
+This is the tolerance used to compare
+population values, to allow for
+minor variation due to simulation.}
 
 \item{original_object}{The object
 to be converted to a \code{power4test_by_n}

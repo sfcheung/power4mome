@@ -246,6 +246,17 @@ power4test_by_n <- function(object,
 #' is rarely used when calling
 #' the `c` method directly.
 #'
+#' @param tolerance_if_std_by_monte_carlo
+#' The tolerance to be used by [all.equal()]
+#' when checking population values. If
+#' standardization is conducted using
+#' error variances estimated by
+#' Monte Carlo simulation, then they may
+#' not be exactly the same across replications.
+#' This is the tolerance used to compare
+#' population values, to allow for
+#' minor variation due to simulation.
+#'
 #' @return
 #' The method [c.power4test_by_n()] returns
 #' a `power4test_by_n` object with
@@ -260,18 +271,42 @@ power4test_by_n <- function(object,
 #' @export
 c.power4test_by_n <- function(...,
                               sort = TRUE,
-                              skip_checking_models = FALSE) {
+                              skip_checking_models = FALSE,
+                              tolerance_if_std_by_monte_carlo = getOption("power4mome.tolerance_if_std_by_monte_carlo",
+                                                                          default = .01)) {
 
   # Check whether they have the same ptable
   tmp <- list(...)
   if ((length(tmp) > 1) && !skip_checking_models) {
     ptables <- lapply(tmp,
                       \(x) {x[[1]]$sim_all[[1]]$ptable})
+    std_by_monte_carlo <- sapply(
+                            ptables,
+                            \(x) isTRUE(attr(x, "std_by_monte_carlo"))
+                          )
+    std_by_monte_carlo <- any(std_by_monte_carlo)
+    # Check structure
+    j_start <- match("start", colnames(ptables[[1]]))
     for (i in seq_along(ptables)[-1]) {
-      chk <- identical(ptables[[i]],
-                       ptables[[i - 1]])
+      chk <- identical(ptables[[i]][, -j_start, drop = FALSE],
+                       ptables[[i - 1]][, -j_start, drop = FALSE])
       if (!chk) {
         stop("Not all objects are based on the same model.")
+      }
+    }
+    std_by_monte_carlo <- any(std_by_monte_carlo)
+    # Check population values,
+    #
+    for (i in seq_along(ptables)[-1]) {
+      chk <- isTRUE(all.equal(
+                        ptables[[i]][, j_start, drop = TRUE],
+                        ptables[[i - 1]][, j_start, drop = TRUE],
+                        tolerance = ifelse(isTRUE(std_by_monte_carlo),
+                                           yes = tolerance_if_std_by_monte_carlo,
+                                           no = sqrt(.Machine$double.eps))
+                      ))
+      if (!chk) {
+        stop("Not all population values are based on the same model.")
       }
     }
   }
@@ -288,6 +323,11 @@ c.power4test_by_n <- function(...,
   out <- out[i]
   class(out) <- c("power4test_by_n", class(out))
   return(out)
+}
+
+#' @noRd
+is_std_by_monte_carlo <- function(object) {
+
 }
 
 #' @param object_by_n A `power4test_by_n`

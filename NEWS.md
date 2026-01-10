@@ -1,4 +1,4 @@
-# power4mome 0.1.1.23
+# power4mome 0.1.1.24
 
 - Improve the function for extending the
   initial interval before doing a
@@ -99,6 +99,11 @@
   in the bisection algorithm because
   they must be identical in the model.
   (0.0.1.23)
+
+- Revised `c.power4test_by_n()` to
+  allow for minor differences in error
+  variances when they are determined by
+  Monte Carlo simulation. (0.1.1.24)
 
 # power4mome 0.1.1
 
