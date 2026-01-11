@@ -45,7 +45,9 @@
   pars_target_power = list(lty = "dashed", lwd = 2, col = "black"),
   pars_final_x = list(lty = "dotted"),
   pars_final_power = list(lty = "dotted", col = "blue"),
-  pars_text_final_x = list(y = 0, pos = 3, cex = 1),
+  pars_text_final_x = list(pos = 3, cex = 1),
+  pars_text_final_x_lower = pars_text_final_x,
+  pars_text_final_x_upper = pars_text_final_x,
   pars_text_final_power = list(cex = 1),
   pars_sig_area = list(col = adjustcolor("lightblue", alpha.f = 0.1)),
   pars_text_sig_area = list(cex = 1),
@@ -174,6 +176,12 @@ the target power.}
 Passed to \code{\link[=plot]{plot()}} when drawing
 the estimated power against the
 predictor.}
+
+\item{pars_text_final_x_lower, pars_text_final_x_upper}{If two values of the predictor are to
+be printed, these are the named list
+of the arguments to be passed to \code{\link[=text]{text()}}
+when adding the labels for these two
+values.}
 }
 \value{
 The \code{plot}-method of \code{x_from_power}

@@ -1,4 +1,4 @@
-# power4mome 0.1.1.25
+# power4mome 0.1.1.26
 
 - Improve the function for extending the
   initial interval before doing a
@@ -107,6 +107,10 @@
 
 - Properly support a model with only one
   latent variable. (0.1.1.25)
+
+- Vertically displace the labels of
+  sample sizes in `plot.n_region_from_power()`
+  to prevent overlapping. (0.1.2.26)
 
 # power4mome 0.1.1
 
