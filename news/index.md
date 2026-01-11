@@ -1,6 +1,6 @@
 # Changelog
 
-## power4mome 0.1.1.25
+## power4mome 0.1.1.26
 
 - Improve the function for extending the initial interval before doing a
   bisection search. (0.1.1.1)
@@ -85,6 +85,10 @@
   determined by Monte Carlo simulation. (0.1.1.24)
 
 - Properly support a model with only one latent variable. (0.1.1.25)
+
+- Vertically displace the labels of sample sizes in
+  [`plot.n_region_from_power()`](https://sfcheung.github.io/power4mome/reference/plot.x_from_power.md)
+  to prevent overlapping. (0.1.2.26)
 
 ## power4mome 0.1.1
 

@@ -48,7 +48,9 @@ plot(
   pars_target_power = list(lty = "dashed", lwd = 2, col = "black"),
   pars_final_x = list(lty = "dotted"),
   pars_final_power = list(lty = "dotted", col = "blue"),
-  pars_text_final_x = list(y = 0, pos = 3, cex = 1),
+  pars_text_final_x = list(pos = 3, cex = 1),
+  pars_text_final_x_lower = pars_text_final_x,
+  pars_text_final_x_upper = pars_text_final_x,
   pars_text_final_power = list(cex = 1),
   pars_sig_area = list(col = adjustcolor("lightblue", alpha.f = 0.1)),
   pars_text_sig_area = list(cex = 1),
@@ -174,6 +176,13 @@ plot(
   [`plot()`](https://rdrr.io/r/graphics/plot.default.html) when drawing
   the estimated power against the predictor.
 
+- pars_text_final_x_lower, pars_text_final_x_upper:
+
+  If two values of the predictor are to be printed, these are the named
+  list of the arguments to be passed to
+  [`text()`](https://rdrr.io/r/graphics/text.html) when adding the
+  labels for these two values.
+
 ## Value
 
 The `plot`-method of `x_from_power` returns `x` invisibly. It is called
@@ -293,7 +302,7 @@ power_vs_n <- x_from_power(test_out,
 #> 
 #> --- Final Stage ---
 #> 
-#> - Start at 2026-01-10 14:54:02 
+#> - Start at 2026-01-11 08:33:09 
 #> - Rejection Rates:
 #> 
 #> [test]: test_parameters: CIs (pars: m~x) 

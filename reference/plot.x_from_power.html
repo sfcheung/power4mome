@@ -11,7 +11,7 @@ estimated power against sample size."><meta property="og:image" content="https:/
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.25</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.26</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -122,7 +122,9 @@ estimated power against sample size.</p>
 <span>  pars_target_power <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>lty <span class="op">=</span> <span class="st">"dashed"</span>, lwd <span class="op">=</span> <span class="fl">2</span>, col <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span>,</span>
 <span>  pars_final_x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>lty <span class="op">=</span> <span class="st">"dotted"</span><span class="op">)</span>,</span>
 <span>  pars_final_power <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>lty <span class="op">=</span> <span class="st">"dotted"</span>, col <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span>,</span>
-<span>  pars_text_final_x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fl">0</span>, pos <span class="op">=</span> <span class="fl">3</span>, cex <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
+<span>  pars_text_final_x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pos <span class="op">=</span> <span class="fl">3</span>, cex <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
+<span>  pars_text_final_x_lower <span class="op">=</span> <span class="va">pars_text_final_x</span>,</span>
+<span>  pars_text_final_x_upper <span class="op">=</span> <span class="va">pars_text_final_x</span>,</span>
 <span>  pars_text_final_power <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>cex <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
 <span>  pars_sig_area <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/adjustcolor.html" class="external-link">adjustcolor</a></span><span class="op">(</span><span class="st">"lightblue"</span>, alpha.f <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  pars_text_sig_area <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>cex <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
@@ -291,6 +293,14 @@ Passed to <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="ex
 the estimated power against the
 predictor.</p></dd>
 
+
+<dt id="arg-pars-text-final-x-lower-pars-text-final-x-upper">pars_text_final_x_lower, pars_text_final_x_upper<a class="anchor" aria-label="anchor" href="#arg-pars-text-final-x-lower-pars-text-final-x-upper"></a></dt>
+<dd><p>If two values of the predictor are to
+be printed, these are the named list
+of the arguments to be passed to <code><a href="https://rdrr.io/r/graphics/text.html" class="external-link">text()</a></code>
+when adding the labels for these two
+values.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -416,7 +426,7 @@ to the <code>plot</code>-method for <code>x_from_power</code>.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --- Final Stage ---</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2026-01-10 14:54:02 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2026-01-11 08:33:09 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Rejection Rates:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [test]: test_parameters: CIs (pars: m~x) </span>
