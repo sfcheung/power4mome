@@ -519,6 +519,13 @@ plot_power_curve_x <- function(object,
 
 #' @rdname plot.x_from_power
 #'
+#' @param pars_text_final_x_lower,pars_text_final_x_upper
+#' If two values of the predictor are to
+#' be printed, these are the named list
+#' of the arguments to be passed to [text()]
+#' when adding the labels for these two
+#' values.
+#'
 #' @details
 #' The `plot`-method for
 #' `n_region_from_power` objects is
@@ -557,7 +564,9 @@ plot.n_region_from_power <- function(x,
                                                        col = "black"),
                               pars_final_x = list(lty = "dotted"),
                               pars_final_power = list(lty = "dotted", col = "blue"),
-                              pars_text_final_x = list(y = 0, pos = 3, cex = 1),
+                              pars_text_final_x = list(pos = 3, cex = 1),
+                              pars_text_final_x_lower = pars_text_final_x,
+                              pars_text_final_x_upper = pars_text_final_x,
                               pars_text_final_power = list(cex = 1),
                               pars_sig_area = list(col = adjustcolor("lightblue",
                                                    alpha.f = .1)),
@@ -770,7 +779,9 @@ plot.n_region_from_power <- function(x,
                                               n = 0,
                                               es = digits),
                               format = "f")
-        tmp_args <- utils::modifyList(pars_text_final_x,
+        tmp_args <- utils::modifyList(list(y = par("usr")[3] + .05 * (par("usr")[4] - par("usr")[3])),
+                                      pars_text_final_x_lower)
+        tmp_args <- utils::modifyList(tmp_args,
                                       list(x = x$below$x_final,
                                           labels = x_final_str))
         do.call(text,
@@ -782,7 +793,9 @@ plot.n_region_from_power <- function(x,
                                               n = 0,
                                               es = digits),
                               format = "f")
-        tmp_args <- utils::modifyList(pars_text_final_x,
+        tmp_args <- utils::modifyList(list(y = par("usr")[3] + .10 * (par("usr")[4] - par("usr")[3])),
+                                      pars_text_final_x_upper)
+        tmp_args <- utils::modifyList(tmp_args,
                                       list(x = x$above$x_final,
                                           labels = x_final_str))
         do.call(text,
