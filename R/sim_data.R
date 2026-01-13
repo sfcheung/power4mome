@@ -1105,10 +1105,26 @@ pop_indirect <- function(x,
         # TODO:
         # - Within-group moderation not yet supported in
         #   multigroup model.
-        all_ind <- manymome::many_indirect_effects(all_paths,
-                                                  fit = fit_all,
-                                                  est = ptable0)
-        out <- c(out, list(all_ind))
+        all_ind <- tryCatch(manymome::many_indirect_effects(
+                              all_paths,
+                              fit = fit_all,
+                              est = ptable0),
+                            warning = function(e) e,
+                            error = function(e) e)
+        if (inherits(all_ind, "warning")) {
+          if (grepl("moderator", all_ind$message)) {
+            # TODO:
+            # - Handle multigroup model with within-group moderation
+            all_ind <- tryCatch(suppressWarnings(manymome::many_indirect_effects(
+                                  all_paths,
+                                  fit = fit_all,
+                                  est = ptable0)),
+                                error = function(e) e)
+          }
+        }
+        if (!inherits(all_ind, "error")) {
+          out <- c(out, list(all_ind))
+        }
       }
     } else {
 
