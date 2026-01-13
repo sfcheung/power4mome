@@ -1,4 +1,4 @@
-# power4mome 0.1.1.26
+# power4mome 0.1.1.27
 
 - Improve the function for extending the
   initial interval before doing a
@@ -110,7 +110,11 @@
 
 - Vertically displace the labels of
   sample sizes in `plot.n_region_from_power()`
-  to prevent overlapping. (0.1.2.26)
+  to prevent overlapping. (0.1.1.26)
+
+- Fixed the printing of effects in a
+  multigroup model with within-group
+  moderation. (0.1.1.27)
 
 # power4mome 0.1.1
 
