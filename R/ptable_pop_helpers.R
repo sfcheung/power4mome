@@ -205,6 +205,7 @@ fix_par_es <- function(par_es,
     par_es <- par_es[-i[!is.na(i)]]
     ptable <- lavaan::parTable(lavaan::sem(model = model,
                                            do.fit = FALSE))
+    # ptable <- fix_kway_names(ptable)
     if (".beta." %in% names(par_es_def)) {
       all_beta <- ptable[ptable$op == "~", c("lhs", "op", "rhs")]
       all_beta <- apply(all_beta, 1, paste, collapse = " ")
@@ -264,6 +265,7 @@ fix_par_es <- function(par_es,
     x_name <- names(par_es[i])
     tmp1 <- lavaan::lavParseModelString(x_name,
                                         as.data.frame. = TRUE)
+    # tmp1 <- fix_kway_names(tmp1)
     tmp2 <- paste(tmp1$lhs,
                   tmp1$op,
                   tmp1$rhs)
@@ -488,4 +490,13 @@ check_valid_es_values <- function(object,
   if (verbose) print(es_ok)
   es_range <- range(es_to_test[es_ok])
   es_range
+}
+
+#' @noRd
+# Input:
+# - A lavaan parameter table:
+fix_kway_names <- function(x) {
+  x$lhs <- gsub("__", ":", x$lhs)
+  x$rhs <- gsub("__", ":", x$rhs)
+  x
 }
