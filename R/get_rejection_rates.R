@@ -178,6 +178,10 @@ rejection_rates.default <- function(object,
 #' significant for the set of tests to
 #' be considered significant.
 #'
+#' @param merge_all_tests If `TRUE`, all
+#' the tests in each replication will be
+#' merged into one test.
+#'
 #' @references
 #' Wilson, E. B. (1927). Probable inference, the law of
 #' succession, and statistical inference.
@@ -196,10 +200,13 @@ rejection_rates.power4test <- function(object,
                                                     "at_least_one_sig",
                                                     "at_least_k_sig"),
                                        at_least_k = 1,
+                                       merge_all_tests = FALSE,
                                        ...) {
   out0 <- summarize_tests(object,
                           collapse = collapse,
-                          at_least_k = at_least_k)
+                          at_least_k = at_least_k,
+                          merge_all_tests = merge_all_tests)
+  tests_merged <- out0[[1]]$test_attributes$tests
   out1 <- lapply(out0,
                  rejection_rates_i,
                  all_columns = all_columns,
@@ -221,6 +228,7 @@ rejection_rates.power4test <- function(object,
                     \(x) attr(x, "extra")
                   )
   attr(out2, "extra_list") <- extra_attr
+  attr(out2, "tests_merged") <- tests_merged
   out2
 }
 
@@ -678,6 +686,15 @@ print.rejection_rates_df <- function(x,
                 ),
                 exdent = 2)
       }
+    }
+    tmp <- attr(x, "tests_merged")
+    if (!is.null(tmp)) {
+      catwrap(paste0(
+                "- Test(s) merged:"
+              ),
+              exdent = 2)
+      catwrap(paste("-", tmp),
+              indent = 1)
     }
     catwrap(paste0("- Refer to the tests for the meanings of other columns."),
             exdent = 2)

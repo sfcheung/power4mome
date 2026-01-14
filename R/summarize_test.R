@@ -77,6 +77,10 @@
 #' significant for the set of tests to
 #' be considered significant.
 #'
+#' @param merge_all_tests If `TRUE`, all
+#' the tests in each replication will be
+#' merged into one test.
+#'
 #' @seealso [power4test()]
 #'
 #' @examples
@@ -122,10 +126,14 @@ summarize_tests <- function(object,
                                          "all_sig",
                                          "at_least_one_sig",
                                          "at_least_k_sig"),
-                            at_least_k = 1) {
+                            at_least_k = 1,
+                            merge_all_tests = FALSE) {
   collapse <- match.arg(collapse)
   if (inherits(object, "power4test")) {
     object <- object$test_all
+  }
+  if (merge_all_tests) {
+    object <- list(all_tests_merged = collapse_all_tests(object))
   }
   out <- sapply(object,
                 summarize_test_i,
@@ -183,6 +191,7 @@ print.test_summary <- function(x,
   } else {
     results_type <- "data.frame"
   }
+  is_merged_tests <- isTRUE(!is.null(test_attr$tests))
   if (results_type == "vector") {
     nvalid_sig <- unname(nvalid["sig"])
     propvalid_sig <- unname(nvalid_sig / x0$nrep)
@@ -227,6 +236,12 @@ print.test_summary <- function(x,
       cat(strwrap(paste0("- The column 'p_sig' shows proportions of ",
                         "valid replications for rejection rates."),
                   exdent = 2), sep = "\n")
+    }
+    if (is_merged_tests) {
+      cat(strwrap(paste0("- Test(s) merged:"),
+                  exdent = 2), sep = "\n")
+      cat(paste(" -", test_attr$tests),
+          sep = "\n")
     }
   }
   invisible(x)
