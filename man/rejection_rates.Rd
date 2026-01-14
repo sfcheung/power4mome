@@ -21,6 +21,7 @@ rejection_rates(object, ...)
   se = FALSE,
   collapse = c("none", "all_sig", "at_least_one_sig", "at_least_k_sig"),
   at_least_k = 1,
+  merge_all_tests = FALSE,
   ...
 )
 
@@ -107,6 +108,10 @@ at least \code{k} tests are significant,
 the number of tests required to be
 significant for the set of tests to
 be considered significant.}
+
+\item{merge_all_tests}{If \code{TRUE}, all
+the tests in each replication will be
+merged into one test.}
 
 \item{x}{The \code{rejection_rates_df}
 object to be printed.}
