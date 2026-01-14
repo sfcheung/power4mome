@@ -20,6 +20,7 @@ rejection_rates(
   se = FALSE,
   collapse = c("none", "all_sig", "at_least_one_sig", "at_least_k_sig"),
   at_least_k = 1,
+  merge_all_tests = FALSE,
   ...
 )
 
@@ -102,6 +103,11 @@ print(x, digits = 3, annotation = TRUE, abbreviate_col_names = TRUE, ...)
 
   Used by `collapse`, the number of tests required to be significant for
   the set of tests to be considered significant.
+
+- merge_all_tests:
+
+  If `TRUE`, all the tests in each replication will be merged into one
+  test.
 
 - x:
 

@@ -8,7 +8,8 @@ Extract and summarize test results.
 summarize_tests(
   object,
   collapse = c("none", "all_sig", "at_least_one_sig", "at_least_k_sig"),
-  at_least_k = 1
+  at_least_k = 1,
+  merge_all_tests = FALSE
 )
 
 # S3 method for class 'test_summary_list'
@@ -44,6 +45,11 @@ print(x, digits = 3, test_long = FALSE, ...)
 
   Used by `collapse`, the number of tests required to be significant for
   the set of tests to be considered significant.
+
+- merge_all_tests:
+
+  If `TRUE`, all the tests in each replication will be merged into one
+  test.
 
 - x:
 
