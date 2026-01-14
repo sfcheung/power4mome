@@ -1,4 +1,4 @@
-# power4mome 0.1.1.27
+# power4mome 0.1.1.28
 
 - Improve the function for extending the
   initial interval before doing a
@@ -115,6 +115,14 @@
 - Fixed the printing of effects in a
   multigroup model with within-group
   moderation. (0.1.1.27)
+
+- Added `merge_all_tests` to
+  `rejection_rates()` to support
+  merging all tests into one. The argument
+  `collapse` can then be used for collapse
+  several different tests, not just for
+  one test with several results.
+  (0.1.1.28)
 
 # power4mome 0.1.1
 
