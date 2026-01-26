@@ -792,9 +792,9 @@ power4test <- function(object = NULL,
                         map_names = map_names,
                         results_fun = results_fun,
                         results_args = results_args,
-                        parallel = parallel,
-                        progress = progress,
-                        ncores = ncores)
+                        parallel = args$parallel,
+                        progress = args$progress,
+                        ncores = args$ncores)
     attr(test_all, "test_note") <- test_note
     attr(test_all, "test_name") <- test_name
     test_all <- list(test_all)
