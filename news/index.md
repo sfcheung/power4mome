@@ -1,6 +1,6 @@
 # Changelog
 
-## power4mome 0.1.1.28
+## power4mome 0.1.1.29
 
 - Improve the function for extending the initial interval before doing a
   bisection search. (0.1.1.1)
@@ -98,6 +98,11 @@
   to support merging all tests into one. The argument `collapse` can
   then be used for collapse several different tests, not just for one
   test with several results. (0.1.1.28)
+
+- The function
+  [`power4test()`](https://sfcheung.github.io/power4mome/reference/power4test.md)
+  now properly reuse arguments such as `parallel` and `ncores` when
+  adding a new test to a `power4test` object. (0.1.1.29)
 
 ## power4mome 0.1.1
 
