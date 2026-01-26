@@ -1,4 +1,4 @@
-# power4mome 0.1.1.28
+# power4mome 0.1.1.29
 
 - Improve the function for extending the
   initial interval before doing a
@@ -123,6 +123,12 @@
   several different tests, not just for
   one test with several results.
   (0.1.1.28)
+
+- The function `power4test()` now properly
+  reuse arguments such as `parallel`
+  and `ncores` when adding a new test
+  to a `power4test` object.
+  (0.1.1.29)
 
 # power4mome 0.1.1
 
