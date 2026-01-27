@@ -1,4 +1,4 @@
-# power4mome 0.1.1.29
+# power4mome 0.1.1.30
 
 - Improve the function for extending the
   initial interval before doing a
@@ -129,6 +129,10 @@
   and `ncores` when adding a new test
   to a `power4test` object.
   (0.1.1.29)
+
+- Updated all test functions to include
+  *p*-values in the output.
+  (0.0.1.30)
 
 # power4mome 0.1.1
 
