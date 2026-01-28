@@ -181,6 +181,7 @@ test_parameters <- function(fit = fit,
                             ...,
                             omnibus = c("no", "all_sig", "at_least_one_sig", "at_least_k_sig"),
                             at_least_k = 1,
+                            p_adjust_method = "none",
                             fit_name = "fit",
                             get_map_names = FALSE,
                             get_test_name = FALSE) {
@@ -284,6 +285,13 @@ test_parameters <- function(fit = fit,
         est$se <- as.numeric(NA)
       }
     }
+  }
+  if (p_adjust_method != "none") {
+    est$pvalue_org <- est$pvalue
+    est$pvalue <- stats::p.adjust(
+                        est$pvalue_org,
+                        method = p_adjust_method
+                      )
   }
   enames <- colnames(est)
   enames <- gsub("ci.lower",
