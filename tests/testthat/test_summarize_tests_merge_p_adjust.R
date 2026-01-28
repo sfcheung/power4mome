@@ -96,6 +96,8 @@ tmp2 <- summarize_tests(out3,
                        collapse = "at_least_k",
                        at_least_k = 1,
                        merge_all_tests = TRUE)
+tmp
+tmp2
 
 tmp <- rejection_rates(out3,
                 merge_all_tests = TRUE,
@@ -109,5 +111,7 @@ tmp2 <- rejection_rates(out3,
 
 expect_output(print(tmp2),
               "merged")
+
+tmp
 
 })

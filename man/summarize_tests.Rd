@@ -11,7 +11,9 @@ summarize_tests(
   object,
   collapse = c("none", "all_sig", "at_least_one_sig", "at_least_k_sig"),
   at_least_k = 1,
-  merge_all_tests = FALSE
+  merge_all_tests = FALSE,
+  p_adjust_method = "none",
+  alpha = 0.05
 )
 
 \method{print}{test_summary_list}(x, digits = 3, ...)
@@ -50,6 +52,24 @@ be considered significant.}
 \item{merge_all_tests}{If \code{TRUE}, all
 the tests in each replication will be
 merged into one test.}
+
+\item{p_adjust_method}{The method to be
+passed to \code{\link[=p.adjust]{p.adjust()}} to adjust the
+\emph{p}-values when testing the effects.
+Default is \code{"none"} and the \emph{p}-values
+will not be adjusted. The unadjusted
+\emph{p}-values will be stored in the column
+\code{pvalue_org}. Ignored if some tests
+do not have \emph{p}-values stored.
+NOTE: Use this only if all tests
+can be  conducted using \emph{p}-values.}
+
+\item{alpha}{The level of significance
+to use when using \code{p_adjust_method}.
+The significance results (the column
+\code{sig}) will be updated using the
+adjusted \emph{p}-values. Used only if
+\code{p_adjust_method} is not \code{"none"}.}
 
 \item{x}{The object to be printed.}
 
