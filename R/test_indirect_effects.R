@@ -92,6 +92,13 @@
 #' significant. Used when
 #' `omnibus` is `"at_least_k_sig"`.
 #'
+#' @param p_adjust_method The method to be
+#' passed to [p.adjust()] to adjust the
+#' *p*-values when testing the effects.
+#' Default is `"none"` and the *p*-values
+#' will not be adjusted. The unadjusted
+#' *p*-values will be stored in the column
+#' `pvalue_org`.
 #'
 #' @seealso [power4test()]
 #'
@@ -167,6 +174,7 @@ test_k_indirect_effects <- function(
                             ...,
                             omnibus = c("no", "all_sig", "at_least_one_sig", "at_least_k_sig"),
                             at_least_k = 1,
+                            p_adjust_method = "none",
                             fit_name = "fit",
                             get_map_names = FALSE,
                             get_test_name = FALSE
@@ -285,7 +293,8 @@ test_k_indirect_effects <- function(
               est = as.numeric(NA),
               cilo = as.numeric(NA),
               cihi = as.numeric(NA),
-              sig = as.numeric(NA)
+              sig = as.numeric(NA),
+              pvalue = as.numeric(NA)
             )
     return(out2)
   }
@@ -295,6 +304,13 @@ test_k_indirect_effects <- function(
                               pvalue = TRUE,
                               se = FALSE
                             )
+  if (p_adjust_method != "none") {
+    out1$pvalue_org <- out1$pvalue
+    out1$pvalue <- stats::p.adjust(
+                        out1$pvalue_org,
+                        method = p_adjust_method
+                      )
+  }
   out1 <- cbind(test_label = rownames(out1),
                 out1)
   rownames(out1) <- NULL
