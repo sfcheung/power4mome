@@ -286,13 +286,6 @@ test_parameters <- function(fit = fit,
       }
     }
   }
-  if (p_adjust_method != "none") {
-    est$pvalue_org <- est$pvalue
-    est$pvalue <- stats::p.adjust(
-                        est$pvalue_org,
-                        method = p_adjust_method
-                      )
-  }
   enames <- colnames(est)
   enames <- gsub("ci.lower",
                  "cilo",
@@ -337,6 +330,13 @@ test_parameters <- function(fit = fit,
       stop("'pars' set but not found in the test results.")
     }
     out <- out[j, ]
+  }
+  if (p_adjust_method != "none") {
+    out$pvalue_org <- out$pvalue
+    out$pvalue <- stats::p.adjust(
+                        out$pvalue_org,
+                        method = p_adjust_method
+                      )
   }
   if (omnibus == "no") {
     attr(out, "test_label") <- "test_label"
