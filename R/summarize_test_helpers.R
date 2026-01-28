@@ -85,7 +85,8 @@ rbind_diff_cols <- function(x) {
 #' @noRd
 collapse_all_tests <- function(
   object,
-  keep = c("est", "cilo", "cihi", "sig", "pvalue")
+  keep = c("est", "cilo", "cihi", "sig", "pvalue"),
+  p_adjust_method = "none"
 ) {
   # Get test_all
   # Collapse all tests into one test
@@ -114,6 +115,17 @@ collapse_all_tests <- function(
               # Some old tests may not have pvalues
               keep <- intersect(keep, colnames(out1))
               out1 <- out1[, c("test", "test_label", keep), drop = FALSE]
+              if ((p_adjust_method != "none") &&
+                  ("pvalue" %in% colnames(out1))) {
+                if (!all(is.na(out1$pvalue))) {
+                  out1$pvalue_org <- out1$pvalue
+                  out1$pvalue <- p.adjust(out1$pvalue_org,
+                                          method = p_adjust_method)
+                  # TODO:
+                  # - Need to update `sig`.
+                  # - Where to get the alpha?
+                }
+              }
               out1 <- list(test_results = out1)
               attr(out1$test_results, "test_label") <- "test_label"
               out1
