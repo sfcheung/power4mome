@@ -3,9 +3,9 @@
 on:
 # Set to 'branches: [main, master]' when making public
   push:
-    branches: [main, master]
+    branches: [main, master, devel]
   pull_request:
-    branches: [main, master]
+    branches: [main, master, devel]
 
 name: R-CMD-check.yaml
 
