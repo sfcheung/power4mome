@@ -3,7 +3,7 @@
 on:
 # Set to 'branches: [main, master]' when making public
   push:
-    branches: [main, master, devel]
+    branches: [main, master]
   pull_request:
     branches: [main, master, devel]
 
