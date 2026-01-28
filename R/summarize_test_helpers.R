@@ -85,7 +85,7 @@ rbind_diff_cols <- function(x) {
 #' @noRd
 collapse_all_tests <- function(
   object,
-  keep = c("est", "cilo", "cihi", "sig")
+  keep = c("est", "cilo", "cihi", "sig", "pvalue")
 ) {
   # Get test_all
   # Collapse all tests into one test
@@ -111,6 +111,8 @@ collapse_all_tests <- function(
               tmp <- rep("--", nrow(out1))
               i <- out1$test_label == out1$test
               out1$test_label[i] <- tmp[i]
+              # Some old tests may not have pvalues
+              keep <- intersect(keep, colnames(out1))
               out1 <- out1[, c("test", "test_label", keep), drop = FALSE]
               out1 <- list(test_results = out1)
               attr(out1$test_results, "test_label") <- "test_label"
