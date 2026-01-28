@@ -4,12 +4,14 @@ test_that("All parameters: lm: p-adjust", {
 
 model_simple_med <-
 "
-m ~ x
-y ~ m + x
+m1 ~ x
+m2 ~ x
+m3 ~ x
+y ~ m1 + m2 + m3 + x
 "
 
-model_simple_med_es <- c("y ~ m" = "l",
-                         "m ~ x" = "m",
+model_simple_med_es <- c("y ~ m1" = "l",
+                         "m1 ~ x" = "m",
                          "y ~ x" = "n")
 
 sim_only <- power4test(nrep = 5,
@@ -24,6 +26,21 @@ sim_only <- power4test(nrep = 5,
 test_out <- power4test(object = sim_only,
                        test_fun = test_parameters,
                        test_args = list(p_adjust_method = "BH"))
+
+p_org <- test_out$test_all[[1]][[2]]$test_results$pvalue_org
+p_adj <- test_out$test_all[[1]][[2]]$test_results$pvalue
+
+expect_equal(
+  p.adjust(p_org, method = "BH"),
+  p_adj
+)
+
+# Only some parameters are selected
+
+test_out <- power4test(object = sim_only,
+                       test_fun = test_parameters,
+                       test_args = list(p_adjust_method = "BH",
+                                        par = c("m1~x", "m2~x", "y~m1", "y~x")))
 
 p_org <- test_out$test_all[[1]][[2]]$test_results$pvalue_org
 p_adj <- test_out$test_all[[1]][[2]]$test_results$pvalue
