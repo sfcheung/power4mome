@@ -9,6 +9,7 @@ test_moderation(
   standardized = FALSE,
   check_post_check = TRUE,
   ...,
+  p_adjust_method = "none",
   fit_name = "fit",
   get_map_names = FALSE,
   get_test_name = FALSE
@@ -37,6 +38,14 @@ by \code{\link[lavaan:lavInspect]{lavaan::lavInspect()}} (with
 be passed to \code{\link[lavaan:parameterEstimates]{lavaan::parameterEstimates()}},
 \code{\link[lavaan:standardizedSolution]{lavaan::standardizedSolution()}},
 or \code{\link[lmhelprs:lm_list_to_partable]{lmhelprs::lm_list_to_partable()}}.}
+
+\item{p_adjust_method}{The method to be
+passed to \code{\link[=p.adjust]{p.adjust()}} to adjust the
+\emph{p}-values when testing the effects.
+Default is \code{"none"} and the \emph{p}-values
+will not be adjusted. The unadjusted
+\emph{p}-values will be stored in the column
+\code{pvalue_org}.}
 
 \item{fit_name}{The name of the fit
 results for which the parameter names

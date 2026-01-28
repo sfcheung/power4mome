@@ -15,6 +15,7 @@ test_parameters(
   ...,
   omnibus = c("no", "all_sig", "at_least_one_sig", "at_least_k_sig"),
   at_least_k = 1,
+  p_adjust_method = "none",
   fit_name = "fit",
   get_map_names = FALSE,
   get_test_name = FALSE
@@ -89,6 +90,14 @@ of paths required to be significant
 for the omnibus test to be considered
 significant. Used when
 \code{omnibus} is \code{"at_least_k_sig"}.}
+
+\item{p_adjust_method}{The method to be
+passed to \code{\link[=p.adjust]{p.adjust()}} to adjust the
+\emph{p}-values when testing the effects.
+Default is \code{"none"} and the \emph{p}-values
+will not be adjusted. The unadjusted
+\emph{p}-values will be stored in the column
+\code{pvalue_org}.}
 
 \item{fit_name}{The name of the fit
 results for which the parameter names

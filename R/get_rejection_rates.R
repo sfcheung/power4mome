@@ -182,6 +182,22 @@ rejection_rates.default <- function(object,
 #' the tests in each replication will be
 #' merged into one test.
 #'
+#' @param p_adjust_method The method to be
+#' passed to [p.adjust()] to adjust the
+#' *p*-values when testing the effects.
+#' Default is `"none"` and the *p*-values
+#' will not be adjusted. Ignored if some tests
+#' do not have *p*-values stored.
+#' NOTE: Use this only if all tests
+#' can be  conducted using *p*-values.
+#'
+#' @param alpha The level of significance
+#' to use when using `p_adjust_method`.
+#' The significance results (the column
+#' `sig`) will be updated using the
+#' adjusted *p*-values. Used only if
+#' `p_adjust_method` is not `"none"`.
+#'
 #' @references
 #' Wilson, E. B. (1927). Probable inference, the law of
 #' succession, and statistical inference.
@@ -201,11 +217,15 @@ rejection_rates.power4test <- function(object,
                                                     "at_least_k_sig"),
                                        at_least_k = 1,
                                        merge_all_tests = FALSE,
+                                       p_adjust_method = "none",
+                                       alpha = .05,
                                        ...) {
   out0 <- summarize_tests(object,
                           collapse = collapse,
                           at_least_k = at_least_k,
-                          merge_all_tests = merge_all_tests)
+                          merge_all_tests = merge_all_tests,
+                          p_adjust_method = p_adjust_method,
+                          alpha = alpha)
   tests_merged <- out0[[1]]$test_attributes$tests
   out1 <- lapply(out0,
                  rejection_rates_i,
