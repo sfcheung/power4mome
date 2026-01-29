@@ -1,6 +1,6 @@
 # Changelog
 
-## power4mome 0.1.1.31
+## power4mome 0.1.1.32
 
 - Improve the function for extending the initial interval before doing a
   bisection search. (0.1.1.1)
@@ -118,6 +118,9 @@
   This feature is used to estimate power when multiple-comparison
   adjustment is used, such as false discover rate (FDR) or Bonferroni
   correction. (0.1.1.31)
+
+- Updated all tests to disable printout when running in a test context.
+  (0.1.1.32)
 
 ## power4mome 0.1.1
 
