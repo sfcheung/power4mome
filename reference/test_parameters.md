@@ -16,6 +16,7 @@ test_parameters(
   ...,
   omnibus = c("no", "all_sig", "at_least_one_sig", "at_least_k_sig"),
   at_least_k = 1,
+  p_adjust_method = "none",
   fit_name = "fit",
   get_map_names = FALSE,
   get_test_name = FALSE
@@ -91,6 +92,14 @@ find_par_names(object, fit_name = "fit")
   The minimum number of paths required to be significant for the omnibus
   test to be considered significant. Used when `omnibus` is
   `"at_least_k_sig"`.
+
+- p_adjust_method:
+
+  The method to be passed to
+  [`p.adjust()`](https://rdrr.io/r/stats/p.adjust.html) to adjust the
+  *p*-values when testing the effects. Default is `"none"` and the
+  *p*-values will not be adjusted. The unadjusted *p*-values will be
+  stored in the column `pvalue_org`.
 
 - fit_name:
 

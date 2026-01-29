@@ -339,7 +339,7 @@ print(
 
   A named list of arguments to be passed to
   [`lavaan::sem()`](https://rdrr.io/pkg/lavaan/man/sem.html) when the
-  model is fitted to a sample combined from
+  model is fitted to a sample combined from all samples stored.
 
 - ...:
 

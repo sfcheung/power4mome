@@ -9,7 +9,9 @@ summarize_tests(
   object,
   collapse = c("none", "all_sig", "at_least_one_sig", "at_least_k_sig"),
   at_least_k = 1,
-  merge_all_tests = FALSE
+  merge_all_tests = FALSE,
+  p_adjust_method = "none",
+  alpha = 0.05
 )
 
 # S3 method for class 'test_summary_list'
@@ -50,6 +52,22 @@ print(x, digits = 3, test_long = FALSE, ...)
 
   If `TRUE`, all the tests in each replication will be merged into one
   test.
+
+- p_adjust_method:
+
+  The method to be passed to
+  [`p.adjust()`](https://rdrr.io/r/stats/p.adjust.html) to adjust the
+  *p*-values when testing the effects. Default is `"none"` and the
+  *p*-values will not be adjusted. The unadjusted *p*-values will be
+  stored in the column `pvalue_org`. Ignored if some tests do not have
+  *p*-values stored. NOTE: Use this only if all tests can be conducted
+  using *p*-values.
+
+- alpha:
+
+  The level of significance to use when using `p_adjust_method`. The
+  significance results (the column `sig`) will be updated using the
+  adjusted *p*-values. Used only if `p_adjust_method` is not `"none"`.
 
 - x:
 

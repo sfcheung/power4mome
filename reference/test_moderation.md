@@ -11,6 +11,7 @@ test_moderation(
   standardized = FALSE,
   check_post_check = TRUE,
   ...,
+  p_adjust_method = "none",
   fit_name = "fit",
   get_map_names = FALSE,
   get_test_name = FALSE
@@ -48,6 +49,14 @@ test_moderation(
   [`lavaan::standardizedSolution()`](https://rdrr.io/pkg/lavaan/man/standardizedSolution.html),
   or
   [`lmhelprs::lm_list_to_partable()`](https://sfcheung.github.io/lmhelprs/reference/lm_list_to_partable.html).
+
+- p_adjust_method:
+
+  The method to be passed to
+  [`p.adjust()`](https://rdrr.io/r/stats/p.adjust.html) to adjust the
+  *p*-values when testing the effects. Default is `"none"` and the
+  *p*-values will not be adjusted. The unadjusted *p*-values will be
+  stored in the column `pvalue_org`.
 
 - fit_name:
 

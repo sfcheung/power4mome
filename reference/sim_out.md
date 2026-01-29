@@ -51,7 +51,7 @@ print(x, digits = 3, digits_descriptive = 2, fit_to_all_args = list(), ...)
 
   A named list of arguments to be passed to
   [`lavaan::sem()`](https://rdrr.io/pkg/lavaan/man/sem.html) when the
-  model is fitted to a sample combined from
+  model is fitted to a sample combined from all samples stored.
 
 ## Value
 

@@ -11,7 +11,7 @@ object or other supported objects."><meta property="og:image" content="https://s
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.28</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.31</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -95,6 +95,8 @@ object or other supported objects.</p>
 <span>  collapse <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"none"</span>, <span class="st">"all_sig"</span>, <span class="st">"at_least_one_sig"</span>, <span class="st">"at_least_k_sig"</span><span class="op">)</span>,</span>
 <span>  at_least_k <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  merge_all_tests <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  p_adjust_method <span class="op">=</span> <span class="st">"none"</span>,</span>
+<span>  alpha <span class="op">=</span> <span class="fl">0.05</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -209,6 +211,26 @@ be considered significant.</p></dd>
 <dd><p>If <code>TRUE</code>, all
 the tests in each replication will be
 merged into one test.</p></dd>
+
+
+<dt id="arg-p-adjust-method">p_adjust_method<a class="anchor" aria-label="anchor" href="#arg-p-adjust-method"></a></dt>
+<dd><p>The method to be
+passed to <code><a href="https://rdrr.io/r/stats/p.adjust.html" class="external-link">p.adjust()</a></code> to adjust the
+<em>p</em>-values when testing the effects.
+Default is <code>"none"</code> and the <em>p</em>-values
+will not be adjusted. Ignored if some tests
+do not have <em>p</em>-values stored.
+NOTE: Use this only if all tests
+can be  conducted using <em>p</em>-values.</p></dd>
+
+
+<dt id="arg-alpha">alpha<a class="anchor" aria-label="anchor" href="#arg-alpha"></a></dt>
+<dd><p>The level of significance
+to use when using <code>p_adjust_method</code>.
+The significance results (the column
+<code>sig</code>) will be updated using the
+adjusted <em>p</em>-values. Used only if
+<code>p_adjust_method</code> is not <code>"none"</code>.</p></dd>
 
 
 <dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>

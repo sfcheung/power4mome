@@ -19,6 +19,7 @@ test_k_indirect_effects(
   ...,
   omnibus = c("no", "all_sig", "at_least_one_sig", "at_least_k_sig"),
   at_least_k = 1,
+  p_adjust_method = "none",
   fit_name = "fit",
   get_map_names = FALSE,
   get_test_name = FALSE
@@ -114,6 +115,14 @@ test_k_indirect_effects(
   The minimum number of paths required to be significant for the omnibus
   test to be considered significant. Used when `omnibus` is
   `"at_least_k_sig"`.
+
+- p_adjust_method:
+
+  The method to be passed to
+  [`p.adjust()`](https://rdrr.io/r/stats/p.adjust.html) to adjust the
+  *p*-values when testing the effects. Default is `"none"` and the
+  *p*-values will not be adjusted. The unadjusted *p*-values will be
+  stored in the column `pvalue_org`.
 
 - fit_name:
 
@@ -312,8 +321,8 @@ print(test_ind,
 #> 
 #> Mean(s) across replication:
 #>     test_label   est   cilo  cihi pvalue   sig
-#> 1 x -> m1 -> y 0.026 -0.042 0.103  0.504 0.000
-#> 2 x -> m2 -> y 0.034 -0.081 0.155  0.408 0.200
+#> 1 x -> m1 -> y 0.026 -0.042 0.104  0.512 0.000
+#> 2 x -> m2 -> y 0.034 -0.069 0.149  0.412 0.200
 #> 
 #> - The column 'sig' shows the rejection rates.
 #> - If the null hypothesis is false, the rate is the power.
@@ -424,7 +433,7 @@ print(test_ind_all_sig,
 #> 
 #> Mean(s) across replication:
 #>           test_label  est cilo cihi pvalue   sig
-#> 1 x-...->y (All sig)  NaN  NaN  NaN  0.504 0.000
+#> 1 x-...->y (All sig)  NaN  NaN  NaN  0.512 0.000
 #> 
 #> - The column 'sig' shows the rejection rates.
 #> - If the null hypothesis is false, the rate is the power.

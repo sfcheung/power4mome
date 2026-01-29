@@ -353,10 +353,14 @@ print(test_out,
 #> ======== <test_cond_indirect_effects: x->m->y> ========
 #> 
 #> Mean(s) across replication:
-#>             test_label     [w]    (w)   est   cilo  cihi   sig   m~x   y~m
-#> 1 x->m->y | w: M+1.0SD M+1.0SD  1.060 0.212  0.081 0.408 0.800 0.438 0.474
-#> 2    x->m->y | w: Mean    Mean  0.061 0.132  0.033 0.254 0.800 0.275 0.474
-#> 3 x->m->y | w: M-1.0SD M-1.0SD -0.939 0.053 -0.093 0.192 0.000 0.112 0.474
+#>             test_label     [w]    (w)   est   cilo  cihi   sig pvalue   m~x
+#> 1 x->m->y | w: M+1.0SD M+1.0SD  1.060 0.212  0.071 0.394 0.800  0.036 0.438
+#> 2    x->m->y | w: Mean    Mean  0.061 0.132  0.035 0.244 0.800  0.192 0.275
+#> 3 x->m->y | w: M-1.0SD M-1.0SD -0.939 0.053 -0.085 0.196 0.000  0.148 0.112
+#>     y~m
+#> 1 0.474
+#> 2 0.474
+#> 3 0.474
 #> 
 #> - The column 'sig' shows the rejection rates.
 #> - If the null hypothesis is false, the rate is the power.
