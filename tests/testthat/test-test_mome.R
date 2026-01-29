@@ -19,6 +19,8 @@ sim_only <- power4test(nrep = 5,
                        n = 100,
                        R = 100,
                        do_the_test = FALSE,
+                       progress = !is_testing(),
+                       parallel = FALSE,
                        iseed = 1234)
 
 test_out1 <- power4test(object = sim_only,
@@ -70,6 +72,6 @@ expect_equal(chk[[1]][c("cilo", "cihi")],
              colMeans(chk_cis),
              ignore_attr = TRUE)
 
-expect_no_error(print(test_out1))
+expect_no_error(capture.output(print(test_out1)))
 
 })

@@ -44,7 +44,7 @@ out <- power4test(
                             y = .60),
             iseed = 1234,
             parallel = FALSE,
-            progress = FALSE)
+            progress = !is_testing())
 
 out_mg <- power4test(
             nrep = 2,
@@ -59,7 +59,7 @@ out_mg <- power4test(
                             y = .60),
             iseed = 1234,
             parallel = FALSE,
-            progress = FALSE)
+            progress = !is_testing())
 
 sim_out <- out$sim_all[[1]]
 names(sim_out)

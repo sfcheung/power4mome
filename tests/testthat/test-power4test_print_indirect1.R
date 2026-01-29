@@ -33,11 +33,12 @@ power_all_sim_only <- power4test(nrep = 10,
                                  do_the_test = FALSE,
                                  iseed = 1234,
                                  parallel = FALSE,
-                                 progress = FALSE)
+                                 progress = !is_testing())
 
-expect_no_error(print(power_all_sim_only))
+expect_no_error(capture.output(print(power_all_sim_only)))
 
-tmp <- pop_indirect(power_all_sim_only$sim_all)
+tmp <- pop_indirect(power_all_sim_only$sim_all,
+                    progress = !is_testing())
 expect_equal(coef(tmp[[1]])["x -> m -> y"],
              .50 * .30,
              ignore_attr = TRUE)
@@ -56,11 +57,12 @@ power_all_sim_only <- power4test(nrep = 10,
                                  do_the_test = FALSE,
                                  iseed = 1234,
                                  parallel = FALSE,
-                                 progress = FALSE)
+                                 progress = !is_testing())
 
-expect_no_error(print(power_all_sim_only))
+expect_no_error(capture.output(print(power_all_sim_only)))
 
-tmp <- pop_indirect(power_all_sim_only$sim_all)
+tmp <- pop_indirect(power_all_sim_only$sim_all,
+                    progress = !is_testing())
 expect_equal(coef(tmp[[1]])["x -> m -> y"],
              .50 * .30,
              ignore_attr = TRUE)
@@ -102,13 +104,14 @@ power_all_sim_only <- power4test(nrep = 10,
                                  do_the_test = FALSE,
                                  iseed = 1234,
                                  parallel = FALSE,
-                                 progress = FALSE)
+                                 progress = !is_testing())
 
 expect_output(print(power_all_sim_only),
               "x -> m1 -> m2")
 tmp <- pop_indirect(power_all_sim_only$sim_all,
                     pure_x = TRUE,
-                    pure_y = TRUE)
+                    pure_y = TRUE,
+                    progress = !is_testing())
 expect_equal(coef(tmp[[1]])[1],
              .141,
              ignore_attr = TRUE)
@@ -122,13 +125,14 @@ power_all_sim_only <- power4test(nrep = 10,
                                  do_the_test = FALSE,
                                  iseed = 1234,
                                  parallel = FALSE,
-                                 progress = FALSE)
+                                 progress = !is_testing())
 
 expect_output(print(power_all_sim_only),
               "x -> m1 -> m2")
 tmp <- pop_indirect(power_all_sim_only$sim_all,
                     pure_x = TRUE,
-                    pure_y = TRUE)
+                    pure_y = TRUE,
+                    progress = !is_testing())
 expect_equal(coef(tmp[[1]])[1],
              .141,
              ignore_attr = TRUE)

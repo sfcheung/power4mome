@@ -39,7 +39,7 @@ expect_no_warning(data_all <- sim_data(nrep = 2,
                                        reliability = rel,
                                        iseed = 2345,
                                        parallel = FALSE,
-                                       progress = FALSE))
+                                       progress = !is_testing()))
 expect_no_warning(fit_all <- fit_model(data_all,
                                        control = list(iter.max = 50)))
 suppressWarnings(tmp <- sapply(fit_all,
@@ -59,7 +59,7 @@ expect_no_warning(data_all <- sim_data(nrep = 3,
                                        reliability = rel,
                                        iseed = 2345,
                                        parallel = FALSE,
-                                       progress = FALSE))
+                                       progress = !is_testing()))
 data_all[[2]]$model_final <- data_all[[2]]$model_original
 expect_no_warning(fit_all <- fit_model(data_all,
                                        control = list(iter.max = 50)))

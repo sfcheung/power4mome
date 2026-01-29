@@ -25,7 +25,7 @@ sim_only <- power4test(nrep = 2,
                        fit_model_args = list(fit_function = "lm"),
                        do_the_test = FALSE,
                        iseed = 1234,
-                       progress = FALSE,
+                       progress = !is_testing(),
                        parallel = FALSE)
 
 test_out <- power4test(object = sim_only,
@@ -88,7 +88,7 @@ sim_only <- power4test(nrep = 2,
                        n = 100,
                        do_the_test = FALSE,
                        iseed = 1234,
-                       progress = FALSE,
+                       progress = !is_testing(),
                        parallel = FALSE)
 
 chk1 <- check_valid_es_values(sim_only,

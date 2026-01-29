@@ -1,5 +1,5 @@
 library(testthat)
-library(lavaan)
+suppressMessages(library(lavaan))
 
 test_that("Multigroup models", {
 
@@ -54,7 +54,8 @@ dats <- sim_data(nrep = 9,
                  reliability = list(x = .80,
                                     y = c(.80, .80, .80),
                                     m = .80),
-                 iseed = 1234)
+                 iseed = 1234,
+                 progress = !is_testing())
 expect_equal(coef(dats[[1]]$fit0)["m~x"],
              -.30,
              ignore_attr = TRUE)

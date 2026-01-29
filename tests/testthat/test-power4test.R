@@ -60,6 +60,7 @@ power_all_sim_only <- power4test(nrep = 10,
                                  fit_model_args = list(estimator = "ML"),
                                  R = 50,
                                  do_the_test = FALSE,
+                                 progress = !is_testing(),
                                  iseed = 1234)
 
 # Indirect effect

@@ -28,7 +28,7 @@ out <- power4test(nrep = 50,
                   test_args = list(pars = "y~m"),
                   iseed = 1234,
                   parallel = FALSE,
-                  progress = FALSE)
+                  progress = !is_testing())
 out_power <- rejection_rates(out)
 out_power
 
@@ -39,10 +39,10 @@ expect_no_error(tmp <- x_from_power(out,
                     final_nrep = 60,
                     max_trials = 2,
                     seed = 1234,
-                    progress = TRUE,
-                    simulation_progress = FALSE,
+                    progress = !is_testing(),
+                    simulation_progress = !is_testing(),
                     algorithm = "power_curve"))
-expect_no_error(print(summary(tmp)))
+expect_no_error(capture.output(print(summary(tmp))))
 expect_true((tmp$power_final > .70) &&
             (tmp$power_final < .90))
 
@@ -53,8 +53,8 @@ tmp2 <- x_from_power(tmp,
                     final_nrep = 60,
                     max_trials = 2,
                     seed = 1234,
-                    progress = TRUE,
-                    simulation_progress = FALSE,
+                    progress = !is_testing(),
+                    simulation_progress = !is_testing(),
                     algorithm = "power_curve")
 expect_identical(tmp2,
                  tmp)
@@ -66,8 +66,8 @@ tmp3 <- x_from_power(tmp$power4test_trials,
                     final_nrep = 60,
                     max_trials = 2,
                     seed = 1234,
-                    progress = TRUE,
-                    simulation_progress = FALSE,
+                    progress = !is_testing(),
+                    simulation_progress = !is_testing(),
                     algorithm = "power_curve")
 expect_identical(tmp3$x_tried,
                  tmp$x_tried)
@@ -83,7 +83,7 @@ out <- power4test(nrep = 10,
                   test_args = list(pars = "y~m"),
                   iseed = 1234,
                   parallel = FALSE,
-                  progress = FALSE)
+                  progress = !is_testing())
 out_power <- rejection_rates(out)
 out_power
 
@@ -94,10 +94,10 @@ expect_no_error(tmp <- x_from_power(out,
                     final_nrep = 60,
                     max_trials = 2,
                     seed = 1234,
-                    progress = TRUE,
-                    simulation_progress = FALSE,
+                    progress = !is_testing(),
+                    simulation_progress = !is_testing(),
                     algorithm = "power_curve"))
-expect_no_error(print(summary(tmp)))
+expect_no_error(capture.output(print(summary(tmp))))
 expect_true((tmp$power_final > .60) &&
             (tmp$power_final < .90))
 })

@@ -25,7 +25,7 @@ sim_only <- power4test(nrep = 5,
                        do_the_test = FALSE,
                        iseed = 1234,
                        parallel = FALSE,
-                       progress = FALSE)
+                       progress = !is_testing())
 
 test_out1 <- power4test(object = sim_only,
                          test_fun = test_index_of_mome,
@@ -36,7 +36,7 @@ test_out1 <- power4test(object = sim_only,
                                           mc_ci = TRUE,
                                           test_method = "pvalue"),
                          parallel = FALSE,
-                         progress = FALSE)
+                         progress = !is_testing())
 
 (rr <- rejection_rates(test_out1))
 (chk <- test_summary(test_out1))
@@ -56,7 +56,7 @@ test_out1 <- power4test(object = sim_only,
                                           level = .90,
                                           test_method = "pvalue"),
                          parallel = FALSE,
-                         progress = FALSE)
+                         progress = !is_testing())
 
 (rr <- rejection_rates(test_out1))
 expect_true(is.null(attr(rr, "extra")$bz_model))

@@ -14,6 +14,7 @@ data_all <- sim_data(nrep = 3,
                      model = mod,
                      pop_es = es,
                      n = 100,
+                     progress = !is_testing(),
                      iseed = 1234)
 
 expect_output(print(data_all), "Variances and error variances")

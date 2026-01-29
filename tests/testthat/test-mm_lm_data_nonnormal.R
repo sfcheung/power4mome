@@ -75,7 +75,8 @@ sim_out <- sim_data(nrep = 2,
                     iseed = 1234,
                     x_fun = list(x = list(rexp_rs),
                                w = list(rbinary_rs,
-                                        p1 = .70)))
+                                        p1 = .70)),
+                    progress = !is_testing())
 chk <- sim_out[[2]]$mm_lm_dat_out
 head(chk)
 expect_equal(length(table(chk[, "w"])),

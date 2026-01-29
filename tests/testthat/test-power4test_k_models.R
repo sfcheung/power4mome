@@ -37,6 +37,8 @@ power_all_sim_only_k1 <- power4test(nrep = 3,
                                     pop_es = model_simple_med_es,
                                     n = 100,
                                     do_the_test = FALSE,
+                                    progress = !is_testing(),
+                                    parallel = FALSE,
                                     iseed = 1234)
 
 power_all_sim_only_k2 <- power4test(nrep = 3,
@@ -47,6 +49,8 @@ power_all_sim_only_k2 <- power4test(nrep = 3,
                                                           fit2 = list(model = model_simple_med_complete),
                                                           fit3 = list(model = model_simple_med_test) ),
                                     do_the_test = FALSE,
+                                    progress = !is_testing(),
+                                    parallel = FALSE,
                                     iseed = 1234)
 
 power_all_test_only <- power4test(object = power_all_sim_only_k2,
@@ -67,8 +71,10 @@ power_all_test_only <- power4test(object = power_all_test_only,
                                   map_names = c(fit = "fit3"),
                                   test_name = "Model 3")
 
+if (!is_testing()) {
 print(power_all_test_only$test_all,
       test_long = TRUE)
+}
 
 chk1 <- power_all_test_only$test_all$`Model 1`[[1]]$test_results$est
 chk2 <- coef(power_all_test_only$sim_all[[1]]$extra$fit)["b"]

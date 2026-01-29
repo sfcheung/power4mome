@@ -22,6 +22,8 @@ sim_only <- power4test(nrep = 3,
                        ci_type = "boot",
                        fit_model_args = list(fit_function = "lm"),
                        do_the_test = FALSE,
+                       parallel = FALSE,
+                       progress = !is_testing(),
                        iseed = 1234)
 
 out1 <- power4test_by_es(sim_only,
@@ -33,12 +35,14 @@ out1 <- power4test_by_es(sim_only,
                                               y = "y",
                                               boot_ci = TRUE,
                                               mc_ci = FALSE),
-                             by_seed = 1234)
+                             by_seed = 1234,
+                             progress = !is_testing())
 
 out2 <- power4test_by_es(out1,
                              pop_es_name = "y ~ m",
                              pop_es_values = c(.05, .15),
-                             by_seed = 2345)
+                             by_seed = 2345,
+                             progress = !is_testing())
 
 out_reject1 <- rejection_rates(out1)
 out_reject1

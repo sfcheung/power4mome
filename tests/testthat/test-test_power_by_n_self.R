@@ -22,6 +22,8 @@ sim_only <- power4test(nrep = 3,
                        ci_type = "boot",
                        fit_model_args = list(fit_function = "lm"),
                        do_the_test = FALSE,
+                       progress = !is_testing(),
+                       parallel = FALSE,
                        iseed = 1234)
 
 out1 <- power4test_by_n(sim_only,
@@ -32,11 +34,13 @@ out1 <- power4test_by_n(sim_only,
                                           y = "y",
                                           boot_ci = TRUE,
                                           mc_ci = FALSE),
+                        progress = !is_testing(),
                         by_seed = 1234)
 
 out2 <- power4test_by_n(out1,
                         n = c(50, 150),
-                        by_seed = 2345)
+                        by_seed = 2345,
+                        progress = !is_testing())
 
 out_reject1 <- rejection_rates(out1)
 out_reject1

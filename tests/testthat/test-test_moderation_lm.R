@@ -20,6 +20,7 @@ sim_only <- power4test(nrep = 5,
                        n = 100,
                        fit_model_args = list(fit_function = "lm"),
                        do_the_test = FALSE,
+                       progress = !is_testing(),
                        iseed = 1234)
 
 test_out <- power4test(object = sim_only,
@@ -40,6 +41,7 @@ expect_equal(chk[[1]]$sig,
 
 expect_error(test_out <- power4test(object = sim_only,
                        test_fun = test_moderation,
-                       test_args = list(standardized = TRUE)))
+                       test_args = list(standardized = TRUE),
+                       progress = !is_testing()))
 
 })

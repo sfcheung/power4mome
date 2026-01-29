@@ -43,12 +43,13 @@ power_all_sim_only <- power4test(nrep = 10,
                                  do_the_test = FALSE,
                                  iseed = 1234,
                                  parallel = FALSE,
-                                 progress = FALSE)
+                                 progress = !is_testing())
 
 expect_output(print(power_all_sim_only),
               "Group1.x -> m -> y")
 
-tmp <- pop_indirect(power_all_sim_only$sim_all)
+tmp <- pop_indirect(power_all_sim_only$sim_all,
+                    progress = !is_testing())
 expect_equal(coef(tmp[[1]]),
              c(.10 * .30, .50 * .30),
              ignore_attr = TRUE)
@@ -90,12 +91,13 @@ power_all_sim_only <- power4test(nrep = 2,
                                  do_the_test = FALSE,
                                  iseed = 1234,
                                  parallel = FALSE,
-                                 progress = FALSE)
+                                 progress = !is_testing())
 
 expect_output(print(power_all_sim_only),
               "Group1.x -> m1 -> y")
 
-tmp <- pop_indirect(power_all_sim_only$sim_all)
+tmp <- pop_indirect(power_all_sim_only$sim_all,
+                    progress = !is_testing())
 expect_equal(coef(tmp[[1]])["Group2.x -> m1 -> m2 -> y"],
              .51,
              ignore_attr = TRUE)

@@ -22,7 +22,7 @@ sim_only <- power4test(nrep = 50,
                        do_the_test = FALSE,
                        iseed = 1234,
                        parallel = FALSE,
-                       progress = FALSE)
+                       progress = !is_testing())
 
 # By n
 
@@ -33,15 +33,15 @@ out1 <- power4test_by_n(sim_only,
                         n = c(25, 100, 200, 250, 500),
                         by_seed = 1234,
                         parallel = FALSE,
-                        progress = FALSE)
+                        progress = !is_testing())
 
 rejection_rates(out1)
 
 expect_no_error(pout1 <- power_curve(out1,
-                                     verbose = TRUE))
-expect_no_error(print(pout1))
+                                     verbose = FALSE))
+expect_no_error(capture.output(print(pout1)))
 
-expect_no_error(print(pout1, data_used = TRUE))
+expect_no_error(capture.output(print(pout1, data_used = TRUE)))
 
 # expect_no_error(plot(pout1))
 
@@ -55,16 +55,16 @@ out2 <- power4test_by_es(sim_only,
                              pop_es_values = seq(0, .7, .15),
                              by_seed = 1234,
                              parallel = FALSE,
-                             progress = FALSE)
+                             progress = !is_testing())
 
 rejection_rates(out2,
                 all_columns = TRUE)
 
 expect_no_error(pout2 <- power_curve(out2,
-                                     verbose = TRUE))
-expect_no_error(print(out2))
+                                     verbose = FALSE))
+expect_no_error(capture.output(print(out2)))
 
-expect_no_error(print(pout2, data_used = TRUE))
+expect_no_error(capture.output(print(pout2, data_used = TRUE)))
 
 # expect_no_error(plot(pout2))
 
