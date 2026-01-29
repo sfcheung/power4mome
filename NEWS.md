@@ -1,4 +1,4 @@
-# power4mome 0.1.1.29
+# power4mome 0.1.1.31
 
 - Improve the function for extending the
   initial interval before doing a
@@ -129,6 +129,25 @@
   and `ncores` when adding a new test
   to a `power4test` object.
   (0.1.1.29)
+
+- Updated all test functions to include
+  *p*-values in the output.
+  (0.0.1.30)
+
+- Added the `p_adjust_method` argument
+  to some tests, as well as the
+  `rejection_rates` method and
+  `summarize_tests()`. Users can adjust
+  *p*-values using `p.adjust()` when
+  there are more than one test in a
+  test function set to `test_fun`,
+  or when merging several tests
+  in `summarize_tests()`. This feature
+  is used to estimate power when
+  multiple-comparison adjustment is
+  used, such as false discover rate (FDR)
+  or Bonferroni correction.
+  (0.1.1.31)
 
 # power4mome 0.1.1
 

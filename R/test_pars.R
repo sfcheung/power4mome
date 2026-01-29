@@ -181,6 +181,7 @@ test_parameters <- function(fit = fit,
                             ...,
                             omnibus = c("no", "all_sig", "at_least_one_sig", "at_least_k_sig"),
                             at_least_k = 1,
+                            p_adjust_method = "none",
                             fit_name = "fit",
                             get_map_names = FALSE,
                             get_test_name = FALSE) {
@@ -329,6 +330,13 @@ test_parameters <- function(fit = fit,
       stop("'pars' set but not found in the test results.")
     }
     out <- out[j, ]
+  }
+  if (p_adjust_method != "none") {
+    out$pvalue_org <- out$pvalue
+    out$pvalue <- stats::p.adjust(
+                        out$pvalue_org,
+                        method = p_adjust_method
+                      )
   }
   if (omnibus == "no") {
     attr(out, "test_label") <- "test_label"

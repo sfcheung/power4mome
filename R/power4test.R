@@ -882,7 +882,7 @@ power4test <- function(object = NULL,
 #' of arguments to be passed to
 #' [lavaan::sem()] when the model is
 #' fitted to a sample combined from
-#  all samples stored.
+#' all samples stored.
 #'
 #' @param ... Optional arguments to
 #' be passed to other print methods

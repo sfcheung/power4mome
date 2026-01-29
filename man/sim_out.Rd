@@ -37,7 +37,8 @@ statistics table.}
 \item{fit_to_all_args}{A named list
 of arguments to be passed to
 \code{\link[lavaan:sem]{lavaan::sem()}} when the model is
-fitted to a sample combined from}
+fitted to a sample combined from
+all samples stored.}
 }
 \value{
 The function \code{\link[=sim_out]{sim_out()}} returns a \code{sim_out} object, which

@@ -164,7 +164,7 @@ sim_out <- function(data_all,
 #' of arguments to be passed to
 #' [lavaan::sem()] when the model is
 #' fitted to a sample combined from
-#  all samples stored.
+#' all samples stored.
 #'
 #' @param x The `sim_out` object
 #' to be printed.

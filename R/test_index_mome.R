@@ -172,7 +172,8 @@ test_index_of_mome <- function(fit = fit,
     out2 <- c(est = as.numeric(NA),
               cilo = as.numeric(NA),
               cihi = as.numeric(NA),
-              sig = as.numeric(NA))
+              sig = as.numeric(NA),
+              pvalue = as.numeric(NA))
     return(out2)
   }
   if (test_method == "ci") {
@@ -219,7 +220,8 @@ test_index_of_mome <- function(fit = fit,
   out2 <- c(est = unname(stats::coef(out)),
             cilo = ci0[1, 1],
             cihi = ci0[1, 2],
-            sig = out1)
+            sig = out1,
+            pvalue = out$pvalue %||% as.numeric(NA))
   if (test_method == "pvalue") {
     # For Boos & Zhang (2000)
     out2 <- c(out2, R = R, nlt0 = nlt0,

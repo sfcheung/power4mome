@@ -85,8 +85,13 @@ rbind_diff_cols <- function(x) {
 #' @noRd
 collapse_all_tests <- function(
   object,
-  keep = c("est", "cilo", "cihi", "sig")
+  keep = c("est", "cilo", "cihi", "sig", "pvalue"),
+  alpha = .05,
+  p_adjust_method = "none"
 ) {
+  # p_adjust_method: To be passed to p.adjust()
+  # alpha: Used if p_adjust_method != "none",
+  #        Update `sig`.
   # Get test_all
   # Collapse all tests into one test
   # NOTE:
@@ -111,7 +116,20 @@ collapse_all_tests <- function(
               tmp <- rep("--", nrow(out1))
               i <- out1$test_label == out1$test
               out1$test_label[i] <- tmp[i]
+              # Some old tests may not have pvalues
+              keep <- intersect(keep, colnames(out1))
               out1 <- out1[, c("test", "test_label", keep), drop = FALSE]
+              if ((p_adjust_method != "none") &&
+                  ("pvalue" %in% colnames(out1))) {
+                if (!all(is.na(out1$pvalue))) {
+                  out1$pvalue_org <- out1$pvalue
+                  out1$pvalue <- stats::p.adjust(
+                                        out1$pvalue_org,
+                                        method = p_adjust_method
+                                      )
+                  out1$sig <- as.numeric(out1$pvalue < alpha)
+                }
+              }
               out1 <- list(test_results = out1)
               attr(out1$test_results, "test_label") <- "test_label"
               out1

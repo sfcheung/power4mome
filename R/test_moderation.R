@@ -94,6 +94,7 @@ test_moderation <- function(fit = fit,
                             standardized = FALSE,
                             check_post_check = TRUE,
                             ...,
+                            p_adjust_method = "none",
                             fit_name = "fit",
                             get_map_names = FALSE,
                             get_test_name = FALSE) {
@@ -137,6 +138,7 @@ test_moderation <- function(fit = fit,
   out <- test_parameters(fit = fit,
                          standardized = standardized,
                          pars = pars,
+                         p_adjust_method = p_adjust_method,
                          ...)
   return(out)
 }

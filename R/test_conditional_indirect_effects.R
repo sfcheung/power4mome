@@ -240,7 +240,8 @@ test_cond_indirect_effects <- function(fit = fit,
               est = as.numeric(NA),
               cilo = as.numeric(NA),
               cihi = as.numeric(NA),
-              sig = as.numeric(NA)
+              sig = as.numeric(NA),
+              pvalue = as.numeric(NA)
             )
     return(out2)
   }
@@ -252,6 +253,19 @@ test_cond_indirect_effects <- function(fit = fit,
                         check.names = FALSE)
   out2 <- cbind(test_label = test_label,
                 out2)
+
+  # Add pvalues
+  tmpfct <- function(x) {
+    x$mc_p %||% (x$boot_p %||% as.numeric(NA))
+  }
+  out_p <- sapply(attr(out, "full_output"),
+                  tmpfct,
+                  USE.NAMES = FALSE)
+  i <- match("Sig", colnames(out2))
+  out2 <- cbind(out2[, 1:i],
+                pvalue = out_p,
+                out2[, -c(1:i)])
+
   tmp <- colnames(out2)
   if ("std" %in% tmp) {
     tmp <- gsub("ind", "est_raw", tmp, fixed = TRUE)
