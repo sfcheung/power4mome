@@ -22,6 +22,7 @@ out <- power4test(nrep = 20,
                   fit_model_args = list(fit_function = "lm"),
                   test_fun = test_parameters,
                   test_args = list(par = "m~x"),
+                  progress = !is_testing(),
                   iseed = 1234)
 
 f0 <- gen_objective(out,
@@ -29,12 +30,12 @@ f0 <- gen_objective(out,
                     pop_es_name = NULL,
                     target_power = .80,
                     ci_level = .95,
-                    progress = TRUE,
+                    progress = !is_testing(),
                     digits = 3,
                     nrep = 20,
                     R = NULL,
                     what = "point",
-                    simulation_progress = TRUE,
+                    simulation_progress = !is_testing(),
                     save_sim_all = TRUE,
                     store_output = TRUE)
 set.seed(1234)
@@ -64,9 +65,9 @@ expect_identical(as.numeric(f_i),
 
 # With power_i or output_i
 
-expect_equal(f0(20, out_i = output_i, what = "ub", progress = FALSE),
+expect_equal(f0(20, out_i = output_i, what = "ub", progress = !is_testing()),
              as.numeric(f_i))
-expect_equal(f0(20, power_i = rejection_rates(output_i)$reject, what = "ub", progress = FALSE),
+expect_equal(f0(20, power_i = rejection_rates(output_i)$reject, what = "ub", progress = !is_testing()),
              as.numeric(f_i))
 
 

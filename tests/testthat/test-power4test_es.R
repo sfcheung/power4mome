@@ -37,6 +37,8 @@ power_all_sim_only <- power4test(nrep = 2,
                                  reliability = rel,
                                  fit_model_args = list(estimator = "ML"),
                                  do_the_test = FALSE,
+                                 progress = !is_testing(),
+                                 parallel = FALSE,
                                  iseed = 1234)
 tmp <- fit_model_i(power_all_sim_only$sim_all[[1]])
 std <- standardizedSolution(tmp, se = FALSE)

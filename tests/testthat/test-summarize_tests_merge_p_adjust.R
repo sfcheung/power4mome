@@ -28,7 +28,7 @@ out <- power4test(
             R = 100,
             iseed = 1234,
             parallel = FALSE,
-            progress = FALSE)
+            progress = !is_testing())
 
 rejection_rates(out)
 
@@ -38,7 +38,7 @@ out2 <- power4test(
             test_args = list(pars = c("m~z", "y~m")),
             iseed = 1234,
             parallel = FALSE,
-            progress = FALSE)
+            progress = !is_testing())
 
 rejection_rates(out2)
 
@@ -51,7 +51,7 @@ out3 <- power4test(
                              w = "z"),
             iseed = 1234,
             parallel = FALSE,
-            progress = FALSE)
+            progress = !is_testing())
 
 tmp2 <- collapse_all_tests(out3)
 
@@ -96,9 +96,6 @@ tmp2 <- summarize_tests(out3,
                        collapse = "at_least_k",
                        at_least_k = 1,
                        merge_all_tests = TRUE)
-tmp
-tmp2
-
 tmp <- rejection_rates(out3,
                 merge_all_tests = TRUE,
                 p_adjust_method = "BH")
@@ -111,7 +108,5 @@ tmp2 <- rejection_rates(out3,
 
 expect_output(print(tmp2),
               "merged")
-
-tmp
 
 })

@@ -40,7 +40,7 @@ sim_only <- power4test(nrep = 5,
                        do_the_test = FALSE,
                        iseed = 1234,
                        parallel = FALSE,
-                       progress = FALSE)
+                       progress = !is_testing())
 
 test_ind <- power4test(object = sim_only,
                        test_fun = test_k_indirect_effects,
@@ -49,7 +49,7 @@ test_ind <- power4test(object = sim_only,
                                         mc_ci = TRUE,
                                         test_method = "pvalue"),
                        parallel = FALSE,
-                       progress = FALSE)
+                       progress = !is_testing())
 (rr <- rejection_rates(test_ind))
 expect_output(print(rr),
               "Boos and Zhang")
@@ -67,7 +67,7 @@ test_indb <- power4test(object = sim_only,
                                         omnibus = "all_sig",
                                         test_method = "pvalue"),
                        parallel = FALSE,
-                       progress = FALSE)
+                       progress = !is_testing())
 (rrb <- rejection_rates(test_indb))
 (chkb <- test_summary(test_indb))
 expect_true(any(grepl("bz_", colnames(chkb[[1]]))))
@@ -82,7 +82,7 @@ test_ind <- power4test(object = sim_only,
                                         level = .90,
                                         test_method = "pvalue"),
                        parallel = FALSE,
-                       progress = FALSE)
+                       progress = !is_testing())
 
 (rr <- rejection_rates(test_ind))
 expect_true(is.null(attr(rr, "extra")$bz_model))
@@ -97,7 +97,7 @@ test_ind <- power4test(object = sim_only,
                                         omnibus = "all_sig",
                                         test_method = "pvalue"),
                        parallel = FALSE,
-                       progress = FALSE)
+                       progress = !is_testing())
 
 (rr <- rejection_rates(test_ind))
 expect_true(is.null(attr(rr, "extra")$bz_model))

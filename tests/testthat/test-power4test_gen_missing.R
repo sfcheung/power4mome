@@ -48,6 +48,8 @@ power_all_sim_only <- power4test(nrep = 10,
                                                      args = list(prop = .10)),
                                  R = 50,
                                  do_the_test = FALSE,
+                                 parallel = FALSE,
+                                 progress = !is_testing(),
                                  iseed = 1234)
 chk <- power_all_sim_only$sim_all[[1]]$mm_lm_dat_out
 expect_equal(sum(is.na(chk)) / (nrow(chk) * ncol(chk)),
@@ -63,6 +65,8 @@ power_all_sim_only <- power4test(nrep = 10,
                                                      args = list(prop = .20)),
                                  R = 50,
                                  do_the_test = FALSE,
+                                 parallel = FALSE,
+                                 progress = !is_testing(),
                                  iseed = 1234)
 chk <- power_all_sim_only$sim_all[[1]]$mm_lm_dat_out
 expect_equal(sum(is.na(chk)) / (nrow(chk) * ncol(chk)),

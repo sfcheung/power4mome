@@ -1,5 +1,5 @@
 library(testthat)
-library(lavaan)
+suppressMessages(library(lavaan))
 
 # Moderated mediation multigroup model.
 # Some are latent factors.

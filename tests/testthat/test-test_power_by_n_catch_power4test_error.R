@@ -26,12 +26,12 @@ out <- power4test(nrep = 5,
                                    y = "y",
                                    mc_ci = TRUE),
                   iseed = 1234,
-                  progress = FALSE,
+                  progress = !is_testing(),
                   parallel = FALSE)
 tmp <- power4test_by_n(out,
                        n = c(10, 50, -10),
                        by_nrep = 10,
-                       progress = TRUE)
+                       progress = !is_testing())
 expect_true(length(tmp) == 2)
 expect_equal(names(tmp), c("10", "50"))
 })

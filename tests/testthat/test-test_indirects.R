@@ -34,6 +34,7 @@ sim_only <- power4test(nrep = 5,
                        fit_model_args = list(estimator = "ML"),
                        R = 100,
                        do_the_test = FALSE,
+                       progress = !is_testing(),
                        iseed = 1234)
 
 test_ind <- power4test(object = sim_only,

@@ -28,7 +28,7 @@ out <- power4test(
             R = 100,
             iseed = 1234,
             parallel = FALSE,
-            progress = FALSE)
+            progress = !is_testing())
 
 rejection_rates(out)
 
@@ -38,7 +38,7 @@ out2 <- power4test(
             test_args = list(pars = c("m~z", "y~m")),
             iseed = 1234,
             parallel = FALSE,
-            progress = FALSE)
+            progress = !is_testing())
 
 rejection_rates(out2)
 
@@ -51,7 +51,7 @@ out3 <- power4test(
                              w = "z"),
             iseed = 1234,
             parallel = FALSE,
-            progress = FALSE)
+            progress = !is_testing())
 
 rejection_rates(out3)
 
@@ -78,13 +78,14 @@ expect_false(identical(
 expect_s3_class(chk[[1]]$test_results, "data.frame")
 
 tmp <- as_test_data_frame_all_tests(out3)
+
+if (!is_testing()) {
 print(out2$test_all, test_long = TRUE)
 print(out3$test_all, test_long = TRUE)
 print(tmp, test_long = TRUE)
+}
 
 tmp2 <- collapse_all_tests(out3)
-
-names(attributes(out3$test_all[[2]]))
 
 summarize_one_test_data_frame(tmp2,
                               collapse = "all_sig")

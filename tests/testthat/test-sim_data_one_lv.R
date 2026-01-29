@@ -22,6 +22,7 @@ data_all <- sim_data(nrep = 1,
                      n = 100,
                      number_of_indicators = c(m = 3),
                      reliability = c(m = .70),
+                     progress = !is_testing(),
                      iseed = 1234)
 
 chk <- c("y", "x", "m1", "m2", "m3")

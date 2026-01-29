@@ -57,6 +57,8 @@ power_all_sim_only <- power4test(nrep = 3,
                                  reliability = rel,
                                  fit_model_args = list(estimator = "ML"),
                                  do_the_test = FALSE,
+                                 progress = !is_testing(),
+                                 parallel = FALSE,
                                  iseed = 1234)
 
 # Update the model and regenerate the data
@@ -220,7 +222,8 @@ power_all_sim_only_5 <- power4test(nrep = 5,
                                  reliability = rel,
                                  fit_model_args = list(estimator = "ML"),
                                  do_the_test = FALSE,
-                                 iseed = 1234)
+                                 iseed = 1234,
+                                 progress = !is_testing())
 
 power_all_test_only_5 <- power4test(object = power_all_sim_only_5,
                                   test_fun = test_par,

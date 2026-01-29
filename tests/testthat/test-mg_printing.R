@@ -1,5 +1,5 @@
 library(testthat)
-library(lavaan)
+suppressMessages(library(lavaan))
 
 test_that("Multigroup models", {
 
@@ -17,7 +17,8 @@ dats <- sim_data(nrep = 9,
                  model = model2,
                  pop_es = model2_es,
                  n = c(100, 200, 300),
-                 iseed = 1234)
+                 iseed = 1234,
+                 progress = !is_testing())
 tmp <- capture.output(print(dats))
 expect_true(all(!grepl("function", tmp)))
 })

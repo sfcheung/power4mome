@@ -20,6 +20,7 @@ sim_only <- power4test(nrep = 4,
                        ci_type = "boot",
                        fit_model_args = list(fit_function = "lm"),
                        do_the_test = FALSE,
+                       progress = !is_testing(),
                        iseed = 1234)
 
 test_out <- power4test(object = sim_only,
@@ -28,18 +29,22 @@ test_out <- power4test(object = sim_only,
                                         m = "m",
                                         y = "y",
                                         boot_ci = TRUE,
-                                        mc_ci = FALSE))
-test_out <- power4test(object = test_out,
-                       test_fun = test_parameters)
+                                        mc_ci = FALSE),
+                       progress = !is_testing())
 test_out <- power4test(object = test_out,
                        test_fun = test_parameters,
-                       test_args = list(op = "~"))
+                       progress = !is_testing())
+test_out <- power4test(object = test_out,
+                       test_fun = test_parameters,
+                       test_args = list(op = "~"),
+                       progress = !is_testing())
 test_out <- power4test(object = test_out,
                        test_fun = test_indirect_effect,
                        test_args = list(x = "x",
                                         y = "y",
                                         boot_ci = TRUE,
-                                        mc_ci = FALSE))
+                                        mc_ci = FALSE),
+                       progress = !is_testing())
 
 expect_no_error(rejection_rates(test_out))
 expect_no_error(rejection_rates(test_out,

@@ -14,6 +14,7 @@ data_all <- sim_data(nrep = 3,
                      model = mod,
                      pop_es = es,
                      n = 100,
+                     progress = !is_testing(),
                      iseed = 1234)
 fit_all <- fit_model(data_all)
 fit_all2 <- fit_model(data_all,
@@ -51,7 +52,7 @@ test_all <- do_test(sim_all,
                                   fit2 = "fit2"),
                     results_fun = lrt_results,
                     parallel = FALSE,
-                    progress = FALSE)
+                    progress = !is_testing())
 
 chk <- lavTestLRT(fit_all[[2]],
                   fit_all2[[2]])

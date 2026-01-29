@@ -22,6 +22,8 @@ sim_only <- power4test(nrep = 2,
                        ci_type = "boot",
                        fit_model_args = list(fit_function = "lm"),
                        do_the_test = FALSE,
+                       progress = !is_testing(),
+                       parallel = FALSE,
                        iseed = 1234)
 
 test_out <- power4test(object = sim_only,
@@ -46,11 +48,13 @@ power_all_test_only_new_es <- power4test(object = test_out,
 out1 <- power4test_by_es(test_out,
                              pop_es_name = "y ~ m",
                              pop_es_values = c(.10, .20),
-                             by_seed = 1234)
+                             by_seed = 1234,
+                             progress = !is_testing())
 out2 <- power4test_by_es(test_out,
                              pop_es_name = "y ~ m",
                              pop_es_values = c(.40, .30),
-                             by_seed = 5678)
+                             by_seed = 5678,
+                             progress = !is_testing())
 out <- c(out1, out2)
 
 out_reject <- rejection_rates(out)
@@ -59,7 +63,8 @@ tmp <- sapply(out,
 out_chk <- power4test_by_es(test_out,
                                 pop_es_name = "y ~ m",
                                 pop_es_values = c(.10, .20, .30, .40),
-                                by_seed = tmp)
+                                by_seed = tmp,
+                                progress = !is_testing())
 out_reject_chk <- rejection_rates(out_chk)
 
 expect_identical(out_reject,
@@ -69,7 +74,8 @@ expect_identical(out_reject,
 
 out4 <- power4test_by_es(test_out,
                              pop_es_name = "y ~ x",
-                             pop_es_values = c(.40, .30))
+                             pop_es_values = c(.40, .30),
+                             progress = !is_testing())
 expect_error(c(out1, out4))
 
 # Test sort = FALSE
@@ -81,7 +87,8 @@ tmp <- sapply(out,
 out_chk <- power4test_by_es(test_out,
                                 pop_es_name = "y ~ m",
                                 pop_es_values = c(.10, .20, .40, .30),
-                                by_seed = tmp)
+                                by_seed = tmp,
+                                progress = !is_testing())
 out_reject_chk <- rejection_rates(out_chk)
 
 expect_identical(out_reject,
@@ -105,6 +112,7 @@ sim_only2 <- power4test(nrep = 2,
                         ci_type = "boot",
                         fit_model_args = list(fit_function = "lm"),
                         do_the_test = FALSE,
+                        progress = !is_testing(),
                         iseed = 1234)
 
 test_out2 <- power4test(object = sim_only2,
@@ -116,7 +124,8 @@ test_out2 <- power4test(object = sim_only2,
 
 out3 <- power4test_by_es(test_out2,
                              pop_es_name = "y ~ m",
-                             pop_es_values = c(.10, .20))
+                             pop_es_values = c(.10, .20),
+                             progress = !is_testing())
 
 expect_error(c(out3, out1))
 

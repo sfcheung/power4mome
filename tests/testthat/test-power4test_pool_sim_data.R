@@ -25,7 +25,8 @@ out1 <- power4test(nrep = 2,
                    n = 199,
                    do_the_test = FALSE,
                    iseed = 1234,
-                   progress = FALSE)
+                   parallel = FALSE,
+                   progress = !is_testing())
 
 out2 <- power4test(nrep = 2,
                    model = model_simple_med,
@@ -35,7 +36,8 @@ out2 <- power4test(nrep = 2,
                    reliability = rel,
                    do_the_test = FALSE,
                    iseed = 1234,
-                   progress = FALSE)
+                   parallel = FALSE,
+                   progress = !is_testing())
 
 chk1a <- pool_sim_data(out1)
 chk1b <- pool_sim_data(out1$sim_all)

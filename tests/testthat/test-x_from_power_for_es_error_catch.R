@@ -26,7 +26,7 @@ out <- power4test(nrep = 20,
                   test_args = list(pars = "y~m"),
                   iseed = 1234,
                   parallel = FALSE,
-                  progress = FALSE)
+                  progress = !is_testing())
 out_power <- rejection_rates(out)
 out_power
 
@@ -41,10 +41,10 @@ tmp <- x_from_power(out,
                     extendInt = "no",
                     max_trials = 2,
                     seed = 1234,
-                    progress = FALSE,
-                    simulation_progress = FALSE,
+                    progress = !is_testing(),
+                    simulation_progress = !is_testing(),
                     algorithm = "power_curve")
-expect_no_error(print(summary(tmp)))
+expect_no_error(capture.output(print(summary(tmp))))
 expect_true(is.na(tmp$power_final))
 expect_true(is.na(tmp$x_final))
 
@@ -59,10 +59,10 @@ tmp <- x_from_power(out,
                     extendInt = "yes",
                     max_trials = 3,
                     seed = 12,
-                    progress = FALSE,
-                    simulation_progress = FALSE,
+                    progress = !is_testing(),
+                    simulation_progress = !is_testing(),
                     algorithm = "power_curve")
-expect_no_error(print(summary(tmp)))
+expect_no_error(capture.output(print(summary(tmp))))
 expect_true(!is.na(tmp$power_final))
 expect_true(!is.na(tmp$x_final))
 
@@ -84,7 +84,7 @@ out <- power4test(nrep = 20,
                   test_args = list(pars = "y~m"),
                   iseed = 1234,
                   parallel = FALSE,
-                  progress = FALSE)
+                  progress = !is_testing())
 out_power <- rejection_rates(out)
 out_power
 
@@ -97,10 +97,10 @@ tmp <- x_from_power(out,
                     extendInt = "yes",
                     max_trials = 3,
                     seed = 12,
-                    progress = FALSE,
-                    simulation_progress = FALSE,
+                    progress = !is_testing(),
+                    simulation_progress = !is_testing(),
                     algorithm = "power_curve")
-expect_no_error(print(summary(tmp)))
+expect_no_error(capture.output(print(summary(tmp))))
 expect_true(!is.na(tmp$power_final))
 expect_true(!is.na(tmp$x_final))
 })

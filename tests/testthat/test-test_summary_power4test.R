@@ -29,11 +29,12 @@ sim_only <- power4test(nrep = 10,
                        reliability = rel,
                        fit_model_args = list(estimator = "ML"),
                        do_the_test = FALSE,
+                       progress = !is_testing(),
                        iseed = 1234)
 
 sim_all <- sim_only$sim_all
 
-expect_no_error(print(sim_all))
+expect_no_error(capture.output(print(sim_all)))
 
 # Multigroup
 
@@ -63,8 +64,9 @@ sim_gp02 <- power4test(nrep = 2,
                        reliability = rel2,
                        fit_model_args = list(estimator = "ML"),
                        do_the_test = FALSE,
+                       progress = !is_testing(),
                        iseed = 1234)
 
-expect_no_error(print(sim_gp02$sim_all))
+expect_no_error(capture.output(print(sim_gp02$sim_all)))
 
 })

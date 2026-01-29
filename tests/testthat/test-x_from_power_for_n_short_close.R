@@ -28,7 +28,7 @@ out <- power4test(nrep = 50,
                   test_args = list(pars = "y~m"),
                   iseed = 1234,
                   parallel = FALSE,
-                  progress = FALSE)
+                  progress = !is_testing())
 out_power <- rejection_rates(out)
 out_power
 
@@ -38,10 +38,10 @@ expect_no_error(tmp <- x_from_power(out,
                     final_nrep = 60,
                     max_trials = 2,
                     seed = 2345,
-                    progress = TRUE,
-                    simulation_progress = FALSE,
+                    progress = !is_testing(),
+                    simulation_progress = !is_testing(),
                     what = "ub"))
-expect_no_error(print(summary(tmp)))
+expect_no_error(capture.output(print(summary(tmp))))
 expect_true(abs(tmp$ci_final - .80)[2] < formals(x_from_power)$tolerance)
 
 # Use x_from_power object as input
@@ -52,8 +52,8 @@ tmp2 <- x_from_power(tmp,
                     final_nrep = 60,
                     max_trials = 2,
                     seed = 2345,
-                    progress = TRUE,
-                    simulation_progress = FALSE,
+                    progress = !is_testing(),
+                    simulation_progress = !is_testing(),
                     what = "ub")
 expect_identical(tmp2,
                  tmp)
@@ -64,10 +64,10 @@ tmp2b <- x_from_power(tmp,
                     final_nrep = 60,
                     max_trials = 2,
                     seed = 2345,
-                    progress = TRUE,
-                    simulation_progress = FALSE,
+                    progress = !is_testing(),
+                    simulation_progress = !is_testing(),
                     what = "ub")
-expect_no_error(print(summary(tmp)))
+expect_no_error(capture.output(print(summary(tmp))))
 expect_true(abs(tmp$ci_final - .80)[2] < formals(x_from_power)$tolerance)
 
 # Should not run if final_nrep or ci_level changed
@@ -78,8 +78,8 @@ expect_error(x_from_power(tmp,
                     final_nrep = 70,
                     max_trials = 2,
                     seed = 2345,
-                    progress = TRUE,
-                    simulation_progress = FALSE,
+                    progress = !is_testing(),
+                    simulation_progress = !is_testing(),
                     what = "ub"))
 expect_error(x_from_power(tmp,
                     x = "n",
@@ -88,8 +88,8 @@ expect_error(x_from_power(tmp,
                     ci_level = .90,
                     max_trials = 2,
                     seed = 2345,
-                    progress = TRUE,
-                    simulation_progress = FALSE,
+                    progress = !is_testing(),
+                    simulation_progress = !is_testing(),
                     what = "ub"))
 
 
@@ -99,8 +99,8 @@ tmp3 <- x_from_power(tmp$power4test_trials,
                     final_nrep = 60,
                     max_trials = 2,
                     seed = 2345,
-                    progress = TRUE,
-                    simulation_progress = FALSE,
+                    progress = !is_testing(),
+                    simulation_progress = !is_testing(),
                     what = "ub")
 expect_identical(tmp3$x_tried,
                  tmp$x_tried)
@@ -113,10 +113,10 @@ expect_no_error(tmp <- x_from_power(out,
                     final_nrep = 60,
                     max_trials = 2,
                     seed = 2345,
-                    progress = TRUE,
-                    simulation_progress = FALSE,
+                    progress = !is_testing(),
+                    simulation_progress = !is_testing(),
                     what = "lb"))
-expect_no_error(print(summary(tmp)))
+expect_no_error(capture.output(print(summary(tmp))))
 expect_true(is.na(tmp$ci_final))
 
 out <- power4test(nrep = 50,
@@ -128,7 +128,7 @@ out <- power4test(nrep = 50,
                   test_args = list(pars = "y~m"),
                   iseed = 1234,
                   parallel = FALSE,
-                  progress = FALSE)
+                  progress = !is_testing())
 out_power <- rejection_rates(out)
 out_power
 
@@ -138,10 +138,10 @@ expect_no_error(tmp <- x_from_power(out,
                     final_nrep = 60,
                     max_trials = 2,
                     seed = 2345,
-                    progress = TRUE,
-                    simulation_progress = FALSE,
+                    progress = !is_testing(),
+                    simulation_progress = !is_testing(),
                     what = "lb"))
-expect_no_error(print(summary(tmp)))
+expect_no_error(capture.output(print(summary(tmp))))
 expect_true(abs(tmp$ci_final - .80)[1] < formals(x_from_power)$tolerance)
 
 })
