@@ -802,7 +802,7 @@ power4test <- function(object = NULL,
   }
 
   if (update_test) {
-    if (progress) {
+    if (args$progress) {
       cat("Update the test(s):\n")
     }
     # Only update tests. Ignore test arguments
