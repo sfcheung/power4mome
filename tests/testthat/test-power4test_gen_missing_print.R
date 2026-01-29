@@ -49,7 +49,8 @@ power_all_sim_only <- power4test(nrep = 10,
                                  R = 50,
                                  do_the_test = FALSE,
                                  iseed = 1234,
-                                 progress = FALSE)
+                                 parallel = FALSE,
+                                 progress = !is_testing())
 
 expect_output(print(power_all_sim_only, data_long = TRUE),
               "Missing data")
@@ -65,7 +66,8 @@ power_all_sim_only <- power4test(nrep = 10,
                                  R = 50,
                                  do_the_test = FALSE,
                                  iseed = 1234,
-                                 progress = FALSE)
+                                 parallel = FALSE,
+                                 progress = !is_testing())
 
 expect_output(print(power_all_sim_only, data_long = TRUE),
               "Missing data")
@@ -77,7 +79,8 @@ power_all_sim_only <- power4test(nrep = 10,
                                  R = 50,
                                  do_the_test = FALSE,
                                  iseed = 1234,
-                                 progress = FALSE)
+                                 parallel = FALSE,
+                                 progress = !is_testing())
 
 expect_false(any(grepl("Missing Data",
                  capture.output(print(power_all_sim_only, data_long = TRUE)))))

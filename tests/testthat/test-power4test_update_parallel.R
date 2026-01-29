@@ -25,7 +25,7 @@ out <- power4test(
         test_args = list(op = ":="),
         parallel = TRUE,
         ncores = 2,
-        progress = TRUE,
+        progress = !is_testing(),
         iseed = 1234)
 )
 tmp1
@@ -38,6 +38,7 @@ out2 <- power4test(
           test_args = list(x = "x",
                        m = "m",
                        y = "y"),
+          progress = !is_testing()
         )
 )
 expect_true(tmp2["elapsed"] > 2 * tmp2["user.self"])

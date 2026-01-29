@@ -19,11 +19,10 @@ sim_only <- power4test(nrep = 10,
                        fit_model_args = list(fit_function = "lm"),
                        do_the_test = FALSE,
                        iseed = 1234,
-                       progress = FALSE)
+                       progress = !is_testing())
 
 test_out <- power4test(object = sim_only,
-                       test_fun = test_parameters,
-                       progress = FALSE)
+                       test_fun = test_parameters)
 
 chk0 <- rejection_rates(test_out, collapse = "all_sig")
 chk1 <- rejection_rates(test_out, collapse = "at_least_one_sig")

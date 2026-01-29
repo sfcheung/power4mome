@@ -41,6 +41,7 @@ suppressWarnings(
                              y = "y"),
             iseed = 1234,
             parallel = FALSE,
+            progress = !is_testing()
           )
 )
 expect_true(rejection_rates(out_i, all_columns = TRUE)$nvalid < 2)
@@ -62,6 +63,7 @@ suppressWarnings(
                              y = "y"),
             iseed = 1234,
             parallel = FALSE,
+            progress = !is_testing()
           )
 )
 expect_true(rejection_rates(out_i, all_columns = TRUE)$nvalid == 0)

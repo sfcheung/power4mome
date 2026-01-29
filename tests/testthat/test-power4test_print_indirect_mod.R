@@ -26,11 +26,12 @@ power_all_sim_only <- power4test(nrep = 10,
                                  do_the_test = FALSE,
                                  iseed = 1234,
                                  parallel = FALSE,
-                                 progress = FALSE)
+                                 progress = !is_testing())
 
 expect_output(print(power_all_sim_only),
               "w -> m -> y")
-suppressWarnings(tmp <- pop_indirect(power_all_sim_only$sim_all))
+suppressWarnings(tmp <- pop_indirect(power_all_sim_only$sim_all,
+                                     progress = !is_testing()))
 # expect_equal(coef(tmp[[1]])["x -> m -> y"],
 #              .361,
 #              ignore_attr = TRUE)
@@ -45,11 +46,12 @@ power_all_sim_only <- power4test(nrep = 10,
                                  do_the_test = FALSE,
                                  iseed = 1234,
                                  parallel = FALSE,
-                                 progress = FALSE)
+                                 progress = !is_testing())
 
 expect_output(print(power_all_sim_only),
               "w -> m -> y")
-suppressWarnings(tmp <- pop_indirect(power_all_sim_only$sim_all))
+suppressWarnings(tmp <- pop_indirect(power_all_sim_only$sim_all,
+                                     progress = !is_testing()))
 # expect_equal(coef(tmp[[1]])["x -> m -> y"],
 #              .361,
 #              ignore_attr = TRUE)
@@ -79,11 +81,12 @@ power_all_sim_only <- power4test(nrep = 10,
                                  do_the_test = FALSE,
                                  iseed = 1234,
                                  parallel = FALSE,
-                                 progress = FALSE)
+                                 progress = !is_testing())
 
 expect_true(any(grepl("Conditional",
                  capture.output(print(power_all_sim_only)))))
-tmp <- pop_indirect(power_all_sim_only$sim_all)
+tmp <- pop_indirect(power_all_sim_only$sim_all,
+                    progress = !is_testing())
 expect_true(length(tmp) > 0)
 
 
@@ -96,11 +99,12 @@ power_all_sim_only <- power4test(nrep = 10,
                                  do_the_test = FALSE,
                                  iseed = 1234,
                                  parallel = FALSE,
-                                 progress = FALSE)
+                                 progress = !is_testing())
 
 expect_true(any(grepl("Conditional",
                  capture.output(print(power_all_sim_only)))))
-tmp <- pop_indirect(power_all_sim_only$sim_all)
+tmp <- pop_indirect(power_all_sim_only$sim_all,
+                    progress = !is_testing())
 expect_true(length(tmp) > 0)
 
 # Multigroup
@@ -130,13 +134,16 @@ power_all_sim_only <- power4test(nrep = 10,
                                  do_the_test = FALSE,
                                  iseed = 1234,
                                  parallel = FALSE,
-                                 progress = FALSE)
+                                 progress = !is_testing())
 
+if (!is_testing()) {
 print(power_all_sim_only)
+}
 
 expect_output(print(power_all_sim_only),
               "Group1.x -> m -> y")
-tmp <- pop_indirect(power_all_sim_only$sim_all)
+tmp <- pop_indirect(power_all_sim_only$sim_all,
+                    progress = !is_testing())
 expect_equal(coef(tmp[[1]]),
              c(.10 * .30, .30 * .50),
              ignore_attr = TRUE)

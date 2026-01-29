@@ -14,6 +14,7 @@ data_all <- sim_data(nrep = 3,
                      model = mod,
                      pop_es = es,
                      n = 100,
+                     progress = !is_testing(),
                      iseed = 1234)
 fit_all <- fit_model(data_all)
 # mc_all <- gen_mc(fit_all,
@@ -70,7 +71,7 @@ test_all <- do_test(sim_all,
                     test_fun = est_test,
                     test_args = list(par_name = "y~x"),
                     parallel = FALSE,
-                    progress = FALSE)
+                    progress = !is_testing())
 
 expect_equal(test_all[[3]]$test_results["se"],
              parameterEstimates(fit_all[[3]])[3, "se"],
@@ -81,7 +82,7 @@ test_all <- do_test(sim_all,
                     test_args = list(par_name = "y~x",
                                      out_type = "list"),
                     parallel = FALSE,
-                    progress = FALSE)
+                    progress = !is_testing())
 
 expect_equal(test_all[[3]]$test_results$se,
              parameterEstimates(fit_all[[3]])[3, "se"],
@@ -114,7 +115,7 @@ test_all <- do_test(sim_all,
                     results_fun = est_results,
                     results_args = list(par_name = "y~x"),
                     parallel = FALSE,
-                    progress = FALSE)
+                    progress = !is_testing())
 expect_equal(test_all[[3]]$test_results["se"],
              parameterEstimates(fit_all[[3]])[3, "se"],
              ignore_attr = TRUE)
@@ -126,7 +127,7 @@ test_all <- do_test(sim_all,
                     results_args = list(par_name = "y~x",
                                         out_type = "list"),
                     parallel = FALSE,
-                    progress = FALSE)
+                    progress = !is_testing())
 expect_equal(test_all[[3]]$test_results$se,
              parameterEstimates(fit_all[[3]])[3, "se"],
              ignore_attr = TRUE)

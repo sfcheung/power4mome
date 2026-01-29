@@ -21,14 +21,14 @@ data_i <- sim_data(nrep = 3,
                    n = 50,
                    iseed = 1234,
                    parallel = FALSE,
-                   progress = FALSE)
+                   progress = !is_testing())
 
 # Add an error in fit
 data_i[[2]]$model_final <- "y1 ~ x1"
 
 fit_out <- fit_model(data_i,
                      parallel = FALSE,
-                     progress = FALSE)
+                     progress = !is_testing())
 
 mc_out <- gen_mc(fit_out,
                  R = 100,

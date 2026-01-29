@@ -31,6 +31,7 @@ data_all <- sim_data(nrep = 2,
                      model = mod,
                      pop_es = es,
                      n = 100,
+                     progress = !is_testing(),
                      iseed = 1234)
 fit_all <- fit_model(data_all)
 sim_all <- sim_out(data_all = data_all,

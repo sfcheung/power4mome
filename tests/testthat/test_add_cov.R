@@ -43,7 +43,7 @@ out <- power4test(
             n = 100,
             iseed = 1234,
             parallel = FALSE,
-            progress = FALSE)
+            progress = !is_testing())
 
 out_mg <- power4test(
             nrep = 2,
@@ -52,7 +52,7 @@ out_mg <- power4test(
             n = 100,
             iseed = 1234,
             parallel = FALSE,
-            progress = FALSE)
+            progress = !is_testing())
 
 
 

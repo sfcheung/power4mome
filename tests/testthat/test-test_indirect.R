@@ -28,6 +28,7 @@ sim_only <- power4test(nrep = 5,
                        fit_model_args = list(estimator = "ML"),
                        R = 100,
                        do_the_test = FALSE,
+                       progress = !is_testing(),
                        iseed = 1234)
 
 test_ind <- power4test(object = sim_only,
@@ -35,7 +36,8 @@ test_ind <- power4test(object = sim_only,
                        test_args = list(x = "x",
                                         m = "m",
                                         y = "y",
-                                        mc_ci = TRUE))
+                                        mc_ci = TRUE),
+                       progress = !is_testing())
 
 (chk <- test_summary(test_ind))
 expect_true(length(chk) == 1)
@@ -46,7 +48,8 @@ test_indb <- power4test(object = sim_only,
                                         m = "m",
                                         y = "y",
                                         mc_ci = TRUE,
-                                        test_method = "pvalue"))
+                                        test_method = "pvalue"),
+                       progress = !is_testing())
 expect_equal(test_summary(test_ind)[[1]]["sig"],
              test_summary(test_indb)[[1]]["sig"])
 
@@ -54,7 +57,8 @@ test_ind2 <- power4test(object = test_ind,
                        test_fun = test_indirect_effect,
                        test_args = list(x = "x",
                                         y = "m",
-                                        mc_ci = TRUE))
+                                        mc_ci = TRUE),
+                       progress = !is_testing())
 
 (chk <- test_summary(test_ind2))
 expect_true(length(chk) == 2)
@@ -64,7 +68,8 @@ test_ind2b <- power4test(object = test_ind,
                        test_args = list(x = "x",
                                         y = "m",
                                         mc_ci = TRUE,
-                                        test_method = "pvalue"))
+                                        test_method = "pvalue"),
+                       progress = !is_testing())
 expect_equal(test_summary(test_ind2)[[1]]["sig"],
              test_summary(test_ind2b)[[1]]["sig"])
 
@@ -73,7 +78,8 @@ test_ind3 <- power4test(object = test_ind2,
                        test_fun = test_indirect_effect,
                        test_args = list(x = "m",
                                         y = "y",
-                                        mc_ci = TRUE))
+                                        mc_ci = TRUE),
+                       progress = !is_testing())
 
 (chk <- test_summary(test_ind3))
 expect_true(length(chk) == 3)
@@ -83,7 +89,8 @@ test_ind3b <- power4test(object = test_ind2,
                        test_args = list(x = "m",
                                         y = "y",
                                         mc_ci = TRUE,
-                                        test_method = "pvalue"))
+                                        test_method = "pvalue"),
+                       progress = !is_testing())
 expect_equal(test_summary(test_ind3)[[1]]["sig"],
              test_summary(test_ind3b)[[1]]["sig"])
 

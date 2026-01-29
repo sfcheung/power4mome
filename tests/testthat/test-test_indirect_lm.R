@@ -22,6 +22,7 @@ sim_only <- power4test(nrep = 5,
                        ci_type = "boot",
                        fit_model_args = list(fit_function = "lm"),
                        do_the_test = FALSE,
+                       progress = !is_testing(),
                        iseed = 1234)
 
 test_ind <- power4test(object = sim_only,
@@ -30,7 +31,8 @@ test_ind <- power4test(object = sim_only,
                                         m = "m",
                                         y = "y",
                                         boot_ci = TRUE,
-                                        mc_ci = FALSE))
+                                        mc_ci = FALSE),
+                       progress = !is_testing())
 
 (chk <- test_summary(test_ind))
 

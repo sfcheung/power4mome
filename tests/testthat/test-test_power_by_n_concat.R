@@ -22,6 +22,8 @@ sim_only <- power4test(nrep = 3,
                        ci_type = "boot",
                        fit_model_args = list(fit_function = "lm"),
                        do_the_test = FALSE,
+                       progress = !is_testing(),
+                       parallel = FALSE,
                        iseed = 1234)
 
 test_out <- power4test(object = sim_only,
@@ -39,10 +41,12 @@ expect_true(inherits(tmp, "power4test_by_n"))
 
 out1 <- power4test_by_n(test_out,
                         n = c(100, 110),
-                        by_seed = 1234)
+                        by_seed = 1234,
+                        progress = !is_testing())
 out2 <- power4test_by_n(test_out,
                         n = c(130, 120),
-                        by_seed = 1234)
+                        by_seed = 1234,
+                        progress = !is_testing())
 out <- c(out1, out2)
 out_reject <- rejection_rates(out)
 
@@ -50,7 +54,8 @@ tmp <- sapply(out,
               \(x) {attr(x, "args")$iseed})
 out_chk <- power4test_by_n(test_out,
                            n = c(100, 110, 120, 130),
-                           by_seed = tmp)
+                           by_seed = tmp,
+                           progress = !is_testing())
 out_reject_chk <- rejection_rates(out_chk)
 
 expect_identical(out_reject,
@@ -64,7 +69,8 @@ tmp <- sapply(out,
               \(x) {attr(x, "args")$iseed})
 out_chk <- power4test_by_n(test_out,
                            n = c(100, 110, 130, 120),
-                           by_seed = tmp)
+                           by_seed = tmp,
+                           progress = !is_testing())
 out_reject_chk <- rejection_rates(out_chk)
 
 expect_identical(out_reject,
@@ -85,6 +91,8 @@ sim_only2 <- power4test(nrep = 3,
                         ci_type = "boot",
                         fit_model_args = list(fit_function = "lm"),
                         do_the_test = FALSE,
+                        progress = !is_testing(),
+                        parallel = FALSE,
                         iseed = 1234)
 test_out2 <- power4test(object = sim_only2,
                         test_fun = test_indirect_effect,
@@ -94,7 +102,8 @@ test_out2 <- power4test(object = sim_only2,
                                          boot_ci = TRUE,
                                          mc_ci = FALSE))
 out3 <- power4test_by_n(test_out2,
-                        n = c(105, 115))
+                        n = c(105, 115),
+                        progress = !is_testing())
 expect_error(c(out3, out1))
 
 })

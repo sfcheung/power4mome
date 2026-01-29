@@ -28,7 +28,7 @@ out <- power4test(nrep = 5,
                   test_args = list(pars = c("y~m", "y~x")),
                   iseed = 1234,
                   parallel = FALSE,
-                  progress = FALSE)
+                  progress = !is_testing())
 out_power <- rejection_rates(out)
 out_power
 
@@ -38,8 +38,8 @@ expect_error(tmp <- x_from_power(out,
                     final_nrep = 60,
                     max_trials = 2,
                     seed = 2345,
-                    progress = TRUE,
-                    simulation_progress = FALSE,
+                    progress = !is_testing(),
+                    simulation_progress = !is_testing(),
                     algorithm = "power_curve"))
 
 # No error if collapsed to one test
@@ -54,7 +54,7 @@ out <- power4test(nrep = 5,
                                    omnibus = "all_sig"),
                   iseed = 1234,
                   parallel = FALSE,
-                  progress = FALSE)
+                  progress = !is_testing())
 out_power <- rejection_rates(out)
 out_power
 
@@ -64,8 +64,8 @@ expect_no_error(tmp <- x_from_power(out,
                     final_nrep = 60,
                     max_trials = 2,
                     seed = 2345,
-                    progress = TRUE,
-                    simulation_progress = FALSE,
+                    progress = !is_testing(),
+                    simulation_progress = !is_testing(),
                     algorithm = "power_curve"))
 
 })

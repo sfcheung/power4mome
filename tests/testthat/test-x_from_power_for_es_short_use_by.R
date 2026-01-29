@@ -28,14 +28,15 @@ out <- power4test(nrep = 50,
                   test_args = list(pars = "y~m"),
                   iseed = 1234,
                   parallel = FALSE,
-                  progress = FALSE)
+                  progress = !is_testing())
 out_power <- rejection_rates(out)
 out_power
 
 out <- power4test_by_es(out,
                         pop_es_name = "y ~ m",
                         pop_es_values = c(.11, .12),
-                        by_seed = 2345)
+                        by_seed = 2345,
+                        progress = !is_testing())
 
 expect_no_error(tmp <- x_from_power(out,
                     x = "es",
@@ -44,8 +45,8 @@ expect_no_error(tmp <- x_from_power(out,
                     final_nrep = 50,
                     max_trials = 1,
                     seed = 1234,
-                    progress = TRUE,
-                    simulation_progress = FALSE,
+                    progress = !is_testing(),
+                    simulation_progress = !is_testing(),
                     algorithm = "power_curve",))
 expect_true(all(c(.11, .12) %in% tmp$x_tried))
 

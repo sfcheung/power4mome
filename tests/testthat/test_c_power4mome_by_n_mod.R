@@ -22,6 +22,7 @@ out <- power4test(nrep = 2,
                   model = model,
                   pop_es = model_es,
                   n = 50000,
+                  progress = !is_testing(),
                   iseed = 1234)
 
 test_out <- power4test(object = out,
@@ -29,10 +30,12 @@ test_out <- power4test(object = out,
 
 test_n_out1 <- power4test_by_n(
                   test_out,
-                  n = c(100, 110))
+                  n = c(100, 110),
+                  progress = !is_testing())
 test_n_out2 <- power4test_by_n(
                   test_out,
-                  n = c(200, 210))
+                  n = c(200, 210),
+                  progress = !is_testing())
 expect_no_error(c(test_n_out1, test_n_out2))
 
 })

@@ -26,12 +26,12 @@ out <- power4test(nrep = 5,
                                    y = "y",
                                    mc_ci = TRUE),
                   iseed = 1234,
-                  progress = FALSE,
+                  progress = !is_testing(),
                   parallel = FALSE)
 tmp <- power4test_by_es(out,
                         pop_es_name = ".ind.x->m->y",
                         pop_es_values = seq(.75, .90, .05),
                         by_nrep = 10,
-                        progress = FALSE)
+                        progress = !is_testing())
 expect_true(length(tmp) == 2)
 })

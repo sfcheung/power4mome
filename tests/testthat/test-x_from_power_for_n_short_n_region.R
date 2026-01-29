@@ -28,7 +28,7 @@ out <- power4test(nrep = 50,
                   test_args = list(pars = "y~m"),
                   iseed = 1234,
                   parallel = FALSE,
-                  progress = FALSE)
+                  progress = !is_testing())
 out_power <- rejection_rates(out)
 out_power
 
@@ -36,8 +36,8 @@ expect_no_error(tmp2 <- n_region_from_power(out,
                     target_power = .75,
                     final_nrep = 100,
                     seed = 234,
-                    progress = FALSE,
-                    simulation_progress = FALSE))
+                    progress = !is_testing(),
+                    simulation_progress = !is_testing()))
 
 expect_output(print(tmp2), "Approximate region")
 expect_output(print(summary(tmp2)), "Upper Region")

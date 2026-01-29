@@ -28,7 +28,7 @@ out <- power4test(nrep = 50,
                   test_args = list(pars = "y~m"),
                   iseed = 1234,
                   parallel = FALSE,
-                  progress = FALSE)
+                  progress = !is_testing())
 out_power <- rejection_rates(out)
 out_power
 
@@ -39,8 +39,8 @@ expect_no_error(tmp <- x_from_power(out,
                     final_nrep = 50,
                     max_trials = 1,
                     seed = 1234,
-                    progress = TRUE,
-                    simulation_progress = FALSE,
+                    progress = !is_testing(),
+                    simulation_progress = !is_testing(),
                     algorithm = "power_curve"))
 
 expect_error(tmp2 <- x_from_power(tmp,
@@ -50,8 +50,8 @@ expect_error(tmp2 <- x_from_power(tmp,
                     final_nrep = 60,
                     max_trials = 1,
                     seed = 1234,
-                    progress = TRUE,
-                    simulation_progress = FALSE,
+                    progress = !is_testing(),
+                    simulation_progress = !is_testing(),
                     algorithm = "power_curve"))
 
 # expect_true(all(tmp$x_tried %in% tmp2$x_tried))
@@ -63,8 +63,8 @@ expect_error(tmp2 <- x_from_power(tmp,
                     final_nrep = 60,
                     max_trials = 1,
                     seed = 1234,
-                    progress = TRUE,
-                    simulation_progress = FALSE,
+                    progress = !is_testing(),
+                    simulation_progress = !is_testing(),
                     algorithm = "power_curve"),
             "but requested pop_es_name")
 

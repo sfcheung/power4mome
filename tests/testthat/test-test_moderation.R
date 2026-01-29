@@ -19,6 +19,7 @@ sim_only <- power4test(nrep = 5,
                        pop_es = mod_es,
                        n = 100,
                        do_the_test = FALSE,
+                       progress = !is_testing(),
                        iseed = 1234)
 
 test_out <- power4test(object = sim_only,

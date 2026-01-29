@@ -1,5 +1,5 @@
 library(testthat)
-library(lavaan)
+suppressMessages(library(lavaan))
 
 test_that("Multigroup models", {
 
