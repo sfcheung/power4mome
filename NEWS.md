@@ -1,4 +1,4 @@
-# power4mome 0.1.1.32
+# power4mome 0.1.1.33
 
 - Improve the function for extending the
   initial interval before doing a
@@ -152,6 +152,9 @@
 - Updated all tests to disable printout
   when running in a test context.
   (0.1.1.32)
+
+- Added one model to `power_curve()`.
+  (0.1.1.33)
 
 # power4mome 0.1.1
 
