@@ -605,7 +605,7 @@ power_algorithm_search_by_curve <- function(object,
     # TODO:
     # - Make sure that adjusted power is used with close_enough-lb/ub
 
-    fit_i <- power_curve(by_x_1,
+    fit_1 <- power_curve(by_x_1,
                          formula = power_model,
                          start = start,
                          lower_bound = lower_bound,
@@ -613,7 +613,7 @@ power_algorithm_search_by_curve <- function(object,
                          nls_control = nls_control,
                          nls_args = nls_args,
                          verbose = progress,
-                         models = c("glm", "lm"))
+                         models = models)
 
     # ==== Is target power in the range of current power levels? ====
 
@@ -785,13 +785,13 @@ power_algorithm_search_by_curve <- function(object,
                            nls_control = nls_control,
                            nls_args = nls_args,
                            verbose = progress,
-                           models = c("glm", "lm"))
+                           models = models)
 
     }
 
     if (progress) {
       cat("- Power Curve:\n")
-      print(fit_i)
+      print(fit_1)
       cat("\n")
     }
 
@@ -1159,7 +1159,7 @@ power_algorithm_search_by_curve_pre_i <- function(object,
                       nls_control = nls_control,
                       nls_args = nls_args,
                       verbose = progress,
-                      models = c("glm", "lm"))
+                      models = models)
 
   if (progress) {
     cat("- Power Curve:\n")
