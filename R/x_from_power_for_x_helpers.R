@@ -824,8 +824,8 @@ check_rate <- function(
 }
 
 #' @noRd
-#' - Return the adjusted power
-#'   based on what and goal
+# - Return the adjusted power
+#   based on what and goal
 target_power_adjusted <- function(
   target_power = .80,
   goal = c("ci_hit", "close_enough"),
@@ -849,13 +849,13 @@ target_power_adjusted <- function(
                          level = level)[, b] -
         target_power + adj
       }
-      tmp1 <- uniroot(
+      tmp1 <- stats::uniroot(
               f,
               adj = tolerance,
               interval = c(0, nrep)
             )
       out1 <- tmp1$root / nrep
-      tmp2 <- uniroot(
+      tmp2 <- stats::uniroot(
               f,
               adj = -tolerance,
               interval = c(0, nrep)
