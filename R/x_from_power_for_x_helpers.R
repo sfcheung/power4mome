@@ -92,6 +92,13 @@ estimate_x <- function(power_n_fit,
   return(n_target)
 }
 
+#' @noRd
+# Output:
+# - k values of x with levels of power predicted by power_x_fit
+#   The width determined by tolerance.
+# If k == 1 and tolerance == 0,
+# - yield the x with the predicted target_power.
+# WARNING: If k == 1 but tolerance != 0, unexpected results may occur.
 estimate_x_range <- function(power_x_fit,
                              x,
                              target_power = .80,

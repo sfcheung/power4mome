@@ -387,6 +387,11 @@ power_algorithm_search_by_curve <- function(object,
   reject_history <- vector("numeric", max_trials)
   reject_history[] <- NA
 
+  # power_tolerance_in_interval
+  # ci_hit-point: Used in the tolerance of estimate_x_range()
+  # close_enough: Can use ci_hit approach because
+  #               it can help estimate the power curve.
+
   # ==== Start the Loop ====
 
   for (j in seq_len(max_trials)) {
@@ -400,11 +405,10 @@ power_algorithm_search_by_curve <- function(object,
     # ==== Determine values to try ====
 
     # ci_hit-point: OK
-    # close_enough-point: WIP
+    # close_enough-point: OK
     # close_enough-lb/ub: WIP
 
-    # TODO:
-    # - Update this part. Not necessary if goal is close_enough
+    # The ci_hit approach can be used for close_enough
 
     if (ci_hit) {
       # After the first trial,
@@ -428,22 +432,25 @@ power_algorithm_search_by_curve <- function(object,
     # ==== Update x-interval to try ====
 
     # ci_hit-point: OK
-    # close_enough-point: WIP
+    # close_enough-point: OK
     # close_enough-lb/ub: WIP
+
+    # The ci_hit approach can be used for close_enough
 
     # TODO:
     # - Make sure that adjusted power is used with close_enough-lb/ub
-    # - Check tolerance: May depend on goal
 
     if (target_in_range) {
       # ==== Target power in range ====
 
       # ci_hit-point: OK
-      # close_enough-point: WIP
+      # close_enough-point: OK
       # close_enough-lb/ub: WIP
 
+      # The ci_hit approach can be used for close_enough
+
       # TODO:
-      # - Check tolerance: May depend on goal
+      # - Make sure that adjusted power is used with close_enough-lb/ub
 
       # Always include the intersection, if target_in_range
 
@@ -468,11 +475,13 @@ power_algorithm_search_by_curve <- function(object,
         # Call it again to get all k values
 
         # ci_hit-point: OK
-        # close_enough-point: WIP
+        # close_enough-point: OK
         # close_enough-lb/ub: WIP
 
+        # The ci_hit approach can be used for close_enough
+
         # TODO:
-        # - Check tolerance: May depend on goal
+        # - Make sure that adjusted power is used with close_enough-lb/ub
 
         x_j <- estimate_x_range(power_x_fit = fit_1,
                                 x = x,
@@ -489,11 +498,13 @@ power_algorithm_search_by_curve <- function(object,
       # ==== Target power not in range ====
 
       # ci_hit-point: OK
-      # close_enough-point: WIP
+      # close_enough-point: OK
       # close_enough-lb/ub: WIP
 
+      # The ci_hit approach can be used for close_enough
+
       # TODO:
-      # - Check tolerance: May depend on goal
+      # - Make sure that adjusted power is used with close_enough-lb/ub
 
       x_j <- estimate_x_range(power_x_fit = fit_1,
                               x = x,
@@ -510,11 +521,12 @@ power_algorithm_search_by_curve <- function(object,
     # ==== Adjust nrep based on extrapolated power ====
 
     # ci_hit-point: OK
-    # close_enough-point: WIP
+    # close_enough-point: OK
     # close_enough-lb/ub: WIP
 
+    # The ci_hit approach can be used for close_enough
+
     # TODO:
-    # - Check tolerance: May depend on goal
     # - Make sure that adjusted power is used with close_enough-lb/ub
 
     # Adjust the numbers of replication for each value.
