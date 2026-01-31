@@ -45,6 +45,9 @@ tmp <- x_from_power(out,
 tmp
 summary(tmp)
 plot(tmp)
+tmp_pc <- power_curve(tmp$power4test_trials)
+tmp_pc
+plot(tmp_pc)
 plot(tmp,
      lwd = 4,
      col = "green",

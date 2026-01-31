@@ -141,6 +141,7 @@ alg_power_curve <- function(
   upper_bound,
   nls_control,
   nls_args,
+  models,
   final_nrep,
   nrep_steps = 1,
   final_R,
@@ -168,6 +169,10 @@ alg_power_curve <- function(
 
   what <- match.arg(what)
   goal <- match.arg(goal)
+
+  if (is.null(models)) {
+    models <- c("nls", "logistic", "lm")
+  }
 
   # ==== Sanity check ====
 
@@ -247,6 +252,7 @@ alg_power_curve <- function(
     upper_bound = upper_bound,
     nls_control = nls_control,
     nls_args = nls_args,
+    models = models,
     final_nrep = final_nrep,
     nrep_steps = nrep_steps,
     final_R = final_R,
@@ -345,6 +351,7 @@ power_algorithm_search_by_curve <- function(object,
                                             upper_bound,
                                             nls_control,
                                             nls_args,
+                                            models,
                                             save_sim_all,
                                             power_tolerance_in_interval,
                                             power_tolerance_in_final,
@@ -1022,6 +1029,7 @@ power_algorithm_search_by_curve_pre_i <- function(object,
                                                   upper_bound,
                                                   nls_control,
                                                   nls_args,
+                                                  models,
                                                   final_nrep,
                                                   nrep_steps,
                                                   final_R,
