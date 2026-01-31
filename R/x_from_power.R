@@ -613,9 +613,12 @@ x_from_power <- function(object,
   # - ci_hit: Only relevant for what == "point"
   # - close_enough: Can be used for all what.
 
-  a <- abs(stats::qnorm((1 - ci_level) / 2))
-  power_tolerance_in_interval <- a * sqrt(target_power * (1 - target_power) / final_nrep)
-  power_tolerance_in_final <- a * sqrt(target_power * (1 - target_power) / final_nrep)
+  a <- reject_ci_wilson(
+          nreject = ceiling(target_power * final_nrep),
+          nvalid = final_nrep,
+          level  = ci_level)
+  power_tolerance_in_interval <- max(abs(target_power - a))
+  power_tolerance_in_final <- max(abs(target_power - a))
 
   # ==== Sanity checks ====
 
