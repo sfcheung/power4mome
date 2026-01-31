@@ -224,15 +224,6 @@ alg_power_curve <- function(
 
   # ==== Pre-search setup ====
 
-  # goal: ci_hit
-  #   what: point
-  #     - No need to change
-  # goal: close_enough
-  #   what: point
-  #     - TODO: Use distance as the goal
-  #   what: ub, lb
-  #     - TODO: Use adjusted_power from target_power_adjusted()
-
   a_out <- power_algorithm_search_by_curve_pre_i(
     object = object,
     x = x,
@@ -371,6 +362,18 @@ power_algorithm_search_by_curve <- function(object,
                                             goal = "ci_hit",
                                             tol = .02) {
 
+    # goal: ci_hit
+    #   what: point
+    #     - No need to change
+    # goal: close_enough
+    #   what: point
+    #     - TODO: Use distance as the goal
+    #   what: ub, lb
+    #     - TODO: Use adjusted_power from target_power_adjusted()
+
+    # ci_hit does NOT denote solution found
+    # TODO:
+    # - solution_found refers to goal met
     ci_hit <- FALSE
     solution_found <- FALSE
 
@@ -396,6 +399,13 @@ power_algorithm_search_by_curve <- function(object,
 
       # ==== Determine values to try ====
 
+      # ci_hit-point: OK
+      # close_enough-point: WIP
+      # close_enough-lb/ub: WIP
+
+      # TODO:
+      # - Update this part. Not necessary if goal is close_enough
+
       if (ci_hit) {
         # After the first trial,
         # Check whether at least one CI hit the target power.
@@ -415,8 +425,28 @@ power_algorithm_search_by_curve <- function(object,
                                     \(x) {attr(x, "pop_es_value")},
                                     USE.NAMES = FALSE))
 
+      # ==== Update x-interval to try ====
+
+      # ci_hit-point: OK
+      # close_enough-point: WIP
+      # close_enough-lb/ub: WIP
+
+      # TODO:
+      # - Make sure that adjusted power is used with close_enough-lb/ub
+      # - Check tolerance: May depend on goal
+
       if (target_in_range) {
+        # ==== Target power in range ====
+
+        # ci_hit-point: OK
+        # close_enough-point: WIP
+        # close_enough-lb/ub: WIP
+
+        # TODO:
+        # - Check tolerance: May depend on goal
+
         # Always include the intersection, if target_in_range
+
         x_j <- estimate_x_range(power_x_fit = fit_1,
                                 x = x,
                                 target_power = target_power,
@@ -436,6 +466,14 @@ power_algorithm_search_by_curve <- function(object,
         if (length(x_j) < xs_per_trial_seq[1]) {
           # estimate_x_range generated x_between_i
           # Call it again to get all k values
+
+          # ci_hit-point: OK
+          # close_enough-point: WIP
+          # close_enough-lb/ub: WIP
+
+          # TODO:
+          # - Check tolerance: May depend on goal
+
           x_j <- estimate_x_range(power_x_fit = fit_1,
                                   x = x,
                                   target_power = target_power,
@@ -448,6 +486,15 @@ power_algorithm_search_by_curve <- function(object,
                                   x_to_exclude = x_tried)
         }
       } else {
+        # ==== Target power not in range ====
+
+        # ci_hit-point: OK
+        # close_enough-point: WIP
+        # close_enough-lb/ub: WIP
+
+        # TODO:
+        # - Check tolerance: May depend on goal
+
         x_j <- estimate_x_range(power_x_fit = fit_1,
                                 x = x,
                                 target_power = target_power,
@@ -461,6 +508,14 @@ power_algorithm_search_by_curve <- function(object,
       }
 
       # ==== Adjust nrep based on extrapolated power ====
+
+      # ci_hit-point: OK
+      # close_enough-point: WIP
+      # close_enough-lb/ub: WIP
+
+      # TODO:
+      # - Check tolerance: May depend on goal
+      # - Make sure that adjusted power is used with close_enough-lb/ub
 
       # Adjust the numbers of replication for each value.
       # A value with estimated power closer to the
@@ -488,6 +543,10 @@ power_algorithm_search_by_curve <- function(object,
       }
 
       # ==== Do the simulation for each value  ====
+
+      # ci_hit-point: OK
+      # close_enough-point: OK
+      # close_enough-lb/ub: OK
 
       # ** by_x_j **
       # The results for this trial (based on n_j)
@@ -520,6 +579,13 @@ power_algorithm_search_by_curve <- function(object,
 
       # ==== Update the power curve ====
 
+      # ci_hit-point: OK
+      # close_enough-point: WIP
+      # close_enough-lb/ub: WIP
+
+      # TODO:
+      # - Make sure that adjusted power is used with close_enough-lb/ub
+
       fit_i <- power_curve(by_x_1,
                           formula = power_model,
                           start = start,
@@ -531,6 +597,13 @@ power_algorithm_search_by_curve <- function(object,
                           models = c("glm", "lm"))
 
       # ==== Is target power in the range of current power levels? ====
+
+      # ci_hit-point: OK
+      # close_enough-point: WIP
+      # close_enough-lb/ub: WIP
+
+      # TODO:
+      # - Make sure that adjusted power is used with close_enough-lb/ub
 
       # Get the rejection rates of all values tried.
       tmp1 <- rejection_rates_add_ci(by_x_1,
@@ -546,6 +619,13 @@ power_algorithm_search_by_curve <- function(object,
       if (target_in_range) {
 
         # ==== Current solution: x with closest power ====
+
+        # ci_hit-point: OK
+        # close_enough-point: OK
+        # close_enough-lb/ub: WIP
+
+        # TODO:
+        # - Make sure that adjusted power is used with close_enough-lb/ub
 
         # The desired value probably within the range examined
 
@@ -607,6 +687,13 @@ power_algorithm_search_by_curve <- function(object,
       } else {
 
         # ==== Current solution: By power curve ====
+
+        # ci_hit-point: OK
+        # close_enough-point: OK
+        # close_enough-lb/ub: WIP
+
+        # TODO:
+        # - Make sure that adjusted power is used with close_enough-lb/ub
 
         # The desired value may not be within the range examined
         # Use the latest power curve to estimate the desired value.
@@ -692,136 +779,155 @@ power_algorithm_search_by_curve <- function(object,
       x_history[j] <- x_out
       reject_history[j] <- power_out
 
-      # ==== Any CI hits target power? ====
+      # ==== Goal met? ====
 
-      # Check results accumulated so far
+      # ci_hit-point: OK
+      # close_enough-point: WIP
+      # close_enough-lb/ub: WIP
 
-      by_x_ci <- rejection_rates_add_ci(by_x_1,
-                                        level = ci_level)
-      i0 <- (by_x_ci$reject_ci_lo < target_power) &
-            (by_x_ci$reject_ci_hi > target_power)
+      if (goal == "ci_hit") {
 
-      # Is there at least one CI hitting the target power?
-      if (any(i0)) {
+        # ==== Any CI hits target power? ====
 
-        # ==== At least one CI hits target power ====
+        # Check results accumulated so far
 
-        # At least one CI hits the target power
+        by_x_ci <- rejection_rates_add_ci(by_x_1,
+                                          level = ci_level)
+        i0 <- (by_x_ci$reject_ci_lo < target_power) &
+              (by_x_ci$reject_ci_hi > target_power)
 
-        ci_hit <- TRUE
+        # Is there at least one CI hitting the target power?
+        if (any(i0)) {
 
-        i2 <- find_ci_hit(by_x_1,
-                          ci_level = ci_level,
-                          target_power = target_power,
-                          final_nrep = final_nrep)
-        if (!is.na(i2) && !is.null(i2)) {
+          # ==== At least one CI hits target power ====
 
-          # ==== Solution found ====
+          # At least one CI hits the target power
 
-          # ci_hit && final_nrep reached
-
-          solution_found <- TRUE
-
-          # Updated *_out objects
-          by_x_out <- by_x_1[[i2]]
-          x_out <- switch(x,
-                          n = by_x_ci$n[i2],
-                          es = by_x_ci$es[i2])
-          power_out <- by_x_ci$reject[i2]
-          nrep_out <- by_x_ci$nrep[i2]
-          ci_out <- unlist(by_x_ci[i2, c("reject_ci_lo", "reject_ci_hi")])
-        } else {
-
-          # ==== CI hits but final_nrep not reached ====
-
-          # No CI with final_nrep hit
-          # Get the closet solution
+          ci_hit <- TRUE
 
           i2 <- find_ci_hit(by_x_1,
                             ci_level = ci_level,
                             target_power = target_power,
-                            final_nrep = 0)
-          # Updated *_out objects
-          by_x_out <- by_x_1[[i2]]
-          x_out <- switch(x,
-                          n = by_x_ci$n[i2],
-                          es = by_x_ci$es[i2])
-          power_out <- by_x_ci$reject[i2]
-          nrep_out <- by_x_ci$nrep[i2]
-          ci_out <- unlist(by_x_ci[i2, c("reject_ci_lo", "reject_ci_hi")])
+                            final_nrep = final_nrep)
+          if (!is.na(i2) && !is.null(i2)) {
+
+            # ==== Solution found ====
+
+            # ci_hit && final_nrep reached
+
+            solution_found <- TRUE
+
+            # Updated *_out objects
+            by_x_out <- by_x_1[[i2]]
+            x_out <- switch(x,
+                            n = by_x_ci$n[i2],
+                            es = by_x_ci$es[i2])
+            power_out <- by_x_ci$reject[i2]
+            nrep_out <- by_x_ci$nrep[i2]
+            ci_out <- unlist(by_x_ci[i2, c("reject_ci_lo", "reject_ci_hi")])
+          } else {
+
+            # ==== CI hits but final_nrep not reached ====
+
+            # No CI with final_nrep hit
+            # Get the closet solution
+
+            i2 <- find_ci_hit(by_x_1,
+                              ci_level = ci_level,
+                              target_power = target_power,
+                              final_nrep = 0)
+            # Updated *_out objects
+            by_x_out <- by_x_1[[i2]]
+            x_out <- switch(x,
+                            n = by_x_ci$n[i2],
+                            es = by_x_ci$es[i2])
+            power_out <- by_x_ci$reject[i2]
+            nrep_out <- by_x_ci$nrep[i2]
+            ci_out <- unlist(by_x_ci[i2, c("reject_ci_lo", "reject_ci_hi")])
+          }
+
+        } else {
+
+          # ==== No CI hits target power ====
+
+          # No CI hits the target power
+
+          ci_hit <- FALSE
         }
 
-      } else {
+        # ==== CI hits? ====
 
-        # ==== No CI hits target power ====
+        if (ci_hit) {
 
-        # No CI hits the target power
+          # Is the nrep of the candidate already equal to
+          # target nrep for the final solution?
 
-        ci_hit <- FALSE
-      }
+          if (solution_found) {
 
-      # ==== CI hits? ====
+            # ==== CI hits and solution found. Exit the loop ====
 
-      if (ci_hit) {
+            # Desired accuracy (based on nrep) achieved.
+            # Exit the loop and finalize the results.
 
-        # Is the nrep of the candidate already equal to
-        # target nrep for the final solution?
+            if (progress) {
+              cat("- Estimated power's CI include the target power (",
+                  formatC(target_power, digits = 4, format = "f"), "). ",
+                  "(CI: [", paste0(formatC(ci_out, digits = 4, format = "f"), collapse = ","), "])",
+                  "\n",
+                  sep = "")
+            }
 
-        if (solution_found) {
+            status <- power_curve_status_message(0, status)
 
-          # ==== CI hits and solution found. Exit the loop ====
+            break
 
-          # Desired accuracy (based on nrep) achieved.
-          # Exit the loop and finalize the results.
+          } else {
+
+            # ==== CI hits but no solution. Next set of values in _seq ====
+
+            # Move to the next step in the sequences
+            # E.g., increase nrep.
+
+            if (length(nrep_seq) > 1) {
+              nrep_seq <- nrep_seq[-1]
+              final_nrep_seq <- final_nrep_seq[-1]
+
+              if (progress) {
+                cat("- Minimum number of replications changed to",
+                    nrep_seq[1], "\n\n")
+              }
+
+              R_seq <- R_seq[-1]
+              xs_per_trial_seq <- xs_per_trial_seq[-1]
+            }
+          }
+        } else {
+
+          # ==== No CI hits ====
+
+          # No value has CI hitting the target power.
 
           if (progress) {
-            cat("- Estimated power's CI include the target power (",
+            cat("- Estimated power's CI does not include the target power (",
                 formatC(target_power, digits = 4, format = "f"), "). ",
                 "(CI: [", paste0(formatC(ci_out, digits = 4, format = "f"), collapse = ","), "])",
                 "\n",
                 sep = "")
           }
-
-          status <- power_curve_status_message(0, status)
-
-          break
-
-        } else {
-
-          # ==== CI hits but no solution. Next set of values in _seq ====
-
-          # Move to the next step in the sequences
-          # E.g., increase nrep.
-
-          if (length(nrep_seq) > 1) {
-            nrep_seq <- nrep_seq[-1]
-            final_nrep_seq <- final_nrep_seq[-1]
-
-            if (progress) {
-              cat("- Minimum number of replications changed to",
-                  nrep_seq[1], "\n\n")
-            }
-
-            R_seq <- R_seq[-1]
-            xs_per_trial_seq <- xs_per_trial_seq[-1]
-          }
         }
-      } else {
 
-        # ==== No CI hits ====
+      }
 
-        # No value has CI hitting the target power.
-
-        if (progress) {
-          cat("- Estimated power's CI does not include the target power (",
-              formatC(target_power, digits = 4, format = "f"), "). ",
-              "(CI: [", paste0(formatC(ci_out, digits = 4, format = "f"), collapse = ","), "])",
-              "\n",
-              sep = "")
-        }
+      if (goal == "close_enough") {
+        # TODO:
+        # - Add a section for close_enough
       }
 
       # ==== Check changes ====
+
+      # ci_hit-point: OK
+      # close_enough-point: OK
+      # close_enough-lb/ub: OK
 
       changes_ok <- check_changes(
               x_history = x_history,
@@ -838,13 +944,25 @@ power_algorithm_search_by_curve <- function(object,
 
     }
 
-    # ==== End the Loop ====
+  # ==== End the Loop ====
+
+  # ci_hit-point: OK
+  # close_enough-point: OK
+  # close_enough-lb/ub: OK
 
   if (!solution_found) {
     status <- power_curve_status_message(1, status)
   }
 
   # ==== Return the output ====
+
+  # ci_hit-point: OK
+  # close_enough-point: OK
+  # close_enough-lb/ub: WIP
+
+  # TODO:
+  # - Check whether there will be a conflict
+  #   between adjusted power and target power.
 
   out <- list(by_x_1 = by_x_1,
               fit_1 = fit_1,
@@ -905,6 +1023,15 @@ power_algorithm_search_by_curve_pre_i <- function(object,
                                                   goal = "ci_hit",
                                                   ci_level = .95,
                                                   tol = .02) {
+
+  # goal: ci_hit
+  #   what: point
+  #     - No need to change
+  # goal: close_enough
+  #   what: point
+  #     - No need to change. The pre-search setup does not use tolerance.
+  #   what: ub, lb
+  #     - TODO: Use adjusted_power from target_power_adjusted()
 
   if (progress) {
     cat("\n--- Pre-iteration Crude Search ---\n\n")
