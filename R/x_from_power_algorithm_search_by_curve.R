@@ -159,11 +159,15 @@ alg_power_curve <- function(
   power_tolerance_in_final,
   what = c("point", "ub", "lb"),
   goal = c("ci_hit", "close_enough"),
+  tol = .02,
   delta_tol = switch(x,
                    n = 1,
                    es = .001),
   last_k = 3
 ) {
+
+  what <- match.arg(what)
+  goal <- match.arg(goal)
 
   # ==== Sanity check ====
 
@@ -220,6 +224,15 @@ alg_power_curve <- function(
 
   # ==== Pre-search setup ====
 
+  # goal: ci_hit
+  #   what: point
+  #     - No need to change
+  # goal: close_enough
+  #   what: point
+  #     - TODO: Use distance as the goal
+  #   what: ub, lb
+  #     - TODO: Use adjusted_power from target_power_adjusted()
+
   a_out <- power_algorithm_search_by_curve_pre_i(
     object = object,
     x = x,
@@ -252,7 +265,8 @@ alg_power_curve <- function(
     pre_i_R = pre_i_R,
     what = what,
     goal = goal,
-    ci_level = ci_level
+    ci_level = ci_level,
+    tol = tol
   )
 
   # ==== Process output ====
@@ -310,7 +324,8 @@ alg_power_curve <- function(
     delta_tol = delta_tol,
     last_k = last_k,
     what = what,
-    goal = goal)
+    goal = goal,
+    tol = tol)
 
   # ==== Return the output ====
 
@@ -352,8 +367,9 @@ power_algorithm_search_by_curve <- function(object,
                                                                n = 1,
                                                                es = .001),
                                             last_k = 3,
-                                            what = what,
-                                            goal = goal) {
+                                            what = "point",
+                                            goal = "ci_hit",
+                                            tol = .02) {
 
     ci_hit <- FALSE
     solution_found <- FALSE
@@ -885,9 +901,10 @@ power_algorithm_search_by_curve_pre_i <- function(object,
                                                   pre_i_R = ifelse(is.null(R0),
                                                                    NULL,
                                                                    min(200, R0)),
-                                                  what = what,
-                                                  goal = goal,
-                                                  ci_level = ci_level) {
+                                                  what = "point",
+                                                  goal = "ci_hit",
+                                                  ci_level = .95,
+                                                  tol = .02) {
 
   if (progress) {
     cat("\n--- Pre-iteration Crude Search ---\n\n")

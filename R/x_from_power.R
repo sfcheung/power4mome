@@ -926,7 +926,8 @@ x_from_power <- function(object,
         power_tolerance_in_interval = power_tolerance_in_interval,
         power_tolerance_in_final = power_tolerance_in_final,
         what = what,
-        goal = goal),
+        goal = goal,
+        tol = tolerance),
       control))
 
     by_x_1 <- a_out$by_x_1
