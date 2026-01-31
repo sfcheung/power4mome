@@ -966,20 +966,6 @@ power_algorithm_search_by_curve_pre_i <- function(object,
                 skip_checking_models = TRUE)
   } else {
 
-    # tmp <- list(object)
-    # if (x == "n") {
-    #   class(tmp) <- c("power4test_by_n", class(tmp))
-    #   names(tmp) <- as.character(x0)
-    # }
-    # if (x == "es") {
-    #   class(tmp) <- c("power4test_by_es", class(tmp))
-    #   names(tmp) <- paste0(pop_es_name,
-    #                       " = ",
-    #                         as.character(x0))
-    #   attr(tmp[[1]], "pop_es_name") <- pop_es_name
-    #   attr(tmp[[1]], "pop_es_value") <- x0
-    # }
-
     tmp <- switch(x,
             n = as.power4test_by_n(object),
             es = as.power4test_by_es(object,
