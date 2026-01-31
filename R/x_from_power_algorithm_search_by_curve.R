@@ -157,6 +157,8 @@ alg_power_curve <- function(
   extendInt,
   power_tolerance_in_interval,
   power_tolerance_in_final,
+  what = c("point", "ub", "lb"),
+  goal = c("ci_hit", "close_enough"),
   delta_tol = switch(x,
                    n = 1,
                    es = .001),
@@ -247,15 +249,11 @@ alg_power_curve <- function(
     final_xs_per_trial = final_xs_per_trial,
     pre_i_xs = pre_i_xs,
     pre_i_nrep = pre_i_nrep,
-    pre_i_R = pre_i_R
+    pre_i_R = pre_i_R,
+    what = what,
+    goal = goal,
+    ci_level = ci_level
   )
-
-  # TODO:
-  # - Need to take care of duplicated objects
-  # if (is_by_x) {
-  #   by_x_1 <- c(by_x_1,
-  #               object_by_org)
-  # }
 
   # ==== Process output ====
 
@@ -265,6 +263,15 @@ alg_power_curve <- function(
   final_nrep_seq <- a_out$final_nrep_seq
   R_seq <- a_out$R_seq
   xs_per_trial_seq <- a_out$xs_per_trial_seq
+
+  # TODO:
+  # - Check whether it works
+  if (is_by_x) {
+    tmp <- setdiff(names(object_by_org), names(by_x_1))
+    by_x_1 <- c(by_x_1,
+                object_by_org[tmp],
+                skip_checking_models = TRUE)
+  }
 
   rm(a_out)
 
@@ -301,7 +308,9 @@ alg_power_curve <- function(
     R_seq = R_seq,
     final_xs_per_trial = final_xs_per_trial,
     delta_tol = delta_tol,
-    last_k = last_k)
+    last_k = last_k,
+    what = what,
+    goal = goal)
 
   # ==== Return the output ====
 
@@ -342,7 +351,9 @@ power_algorithm_search_by_curve <- function(object,
                                             delta_tol = switch(x,
                                                                n = 1,
                                                                es = .001),
-                                            last_k = 3) {
+                                            last_k = 3,
+                                            what = what,
+                                            goal = goal) {
 
     ci_hit <- FALSE
     solution_found <- FALSE
@@ -873,7 +884,10 @@ power_algorithm_search_by_curve_pre_i <- function(object,
                                                   pre_i_nrep = 50,
                                                   pre_i_R = ifelse(is.null(R0),
                                                                    NULL,
-                                                                   min(200, R0))) {
+                                                                   min(200, R0)),
+                                                  what = what,
+                                                  goal = goal,
+                                                  ci_level = ci_level) {
 
   if (progress) {
     cat("\n--- Pre-iteration Crude Search ---\n\n")
