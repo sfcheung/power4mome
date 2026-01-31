@@ -822,3 +822,49 @@ check_rate <- function(
     return(TRUE)
   }
 }
+
+#' @noRd
+#' - Return the adjusted power
+#'   based on what and goal
+target_power_adjusted <- function(
+  target_power = .80,
+  goal = c("ci_hit", "close_enough"),
+  what = c("point", "ub", "lb"),
+  tolerance = .02,
+  nrep = 100,
+  level = .95
+) {
+  if (goal == "close_enough") {
+    if (what == "point") {
+      return(target_power)
+    }
+    if (what %in% c("ub", "lb")) {
+      # Find the power with ub close enough to target
+      b <- switch(what,
+                  ub = "cihi",
+                  lb = "cilo")
+      f <- function(x, adj) {
+        reject_ci_wilson(nreject = x,
+                         nvalid = nrep,
+                         level = level)[, b] -
+        target_power + adj
+      }
+      tmp1 <- uniroot(
+              f,
+              adj = tolerance,
+              interval = c(0, nrep)
+            )
+      out1 <- tmp1$root / nrep
+      tmp2 <- uniroot(
+              f,
+              adj = -tolerance,
+              interval = c(0, nrep)
+            )
+      out2 <- tmp2$root / nrep
+      return(mean(c(out1, out2)))
+    }
+  }
+  if (goal == "ci_hit") {
+    return(target_power)
+  }
+}
