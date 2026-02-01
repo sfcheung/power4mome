@@ -81,7 +81,7 @@
 #' # Algorithms
 #'
 #' Two algorithms are currently available,
-#' the simple (though inefficient)
+#' the simple (though sometimes inefficient)
 #' bisection method, and a method that
 #' makes use of the estimated crude power
 #' curve.
@@ -130,8 +130,6 @@
 #' as more and more data points are
 #' available.
 #'
-#' This method can be used only with
-#' the goal `"ci_hit"`.
 #' This method is the default method
 #' for `x = "es"` with `goal = "ci_hit"`
 #' because the relation
@@ -142,6 +140,12 @@
 #' taking into account the working
 #' power curve may help finding the
 #' desired value of `x`.
+#'
+#' Before version 0.1.1.33, this
+#' method can be used only with
+#' the goal `"ci_hit"`. Since
+#' version 0.1.1.34, it supports all
+#' goals, like the bisection method.
 #'
 #' The technical internal workflow of
 #' this method implemented in
@@ -553,6 +557,13 @@ x_from_power <- function(object,
   goal <- match.arg(goal,
                     c("ci_hit", "close_enough"))
 
+  internal_args0 <- list(keep_algorithm = TRUE)
+
+  internal_args <- utils::modifyList(
+                      internal_args0,
+                      internal_args
+                    )
+
   # ==== Update the object if x_from_power ====
 
   if (inherits(object, "x_from_power")) {
@@ -602,16 +613,13 @@ x_from_power <- function(object,
   }
 
   changed_to_bisection <- FALSE
-  if ((goal == "close_enough") &&
-      !isTRUE(internal_args$keep_algorithm)) {
-    # Only bisection is supported
-    if (isTRUE((algorithm != "bisection")) &&
-        (!is.null(algorithm))) {
-      # warning("Only bisection is supported when goal is 'close_enough'. ",
-      #         "Switched automatically to bisection.")
-      changed_to_bisection <- TRUE
+  if (goal == "close_enough") {
+    # internal_args$keep_algorithm is now ignored
+    if (is.null(algorithm)) {
+      algorithm <- match.arg(algorithm,
+                             c("bisection",
+                               "power_curve"))
     }
-    algorithm <- "bisection"
   }
 
   # what: The value to be examined.
