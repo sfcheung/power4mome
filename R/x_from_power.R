@@ -656,7 +656,7 @@ x_from_power <- function(object,
     }
     if (x == "es") {
       extendInt <- match.arg(extendInt,
-                             choices = c("yes", "no", "upX", "downX"))
+                             choices = c("no", "yes", "upX", "downX"))
     }
   }
 
@@ -953,7 +953,8 @@ x_from_power <- function(object,
                       x_history = a_out$x_history,
                       reject_history = a_out$reject_history,
                       delta_tol = a_out$delta_tol,
-                      last_k = a_out$last_k)
+                      last_k = a_out$last_k,
+                      tol = a_out$tol)
 
     rm(a_out)
 
