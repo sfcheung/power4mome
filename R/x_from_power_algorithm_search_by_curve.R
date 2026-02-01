@@ -618,7 +618,7 @@ power_algorithm_search_by_curve <- function(object,
     # ==== Is target power in the range of current power levels? ====
 
     # ci_hit-point: OK
-    # close_enough-point: WIP
+    # close_enough-point: OK
     # close_enough-lb/ub: WIP
 
     # TODO:
