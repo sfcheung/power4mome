@@ -789,11 +789,9 @@ power_algorithm_search_by_curve <- function(object,
     x_history[j] <- x_out
     reject_history[j] <- power_out
 
-    # ==== Goal met? ====
+    # ==== Goal met? ci_hit ====
 
     # ci_hit-point: OK
-    # close_enough-point: WIP
-    # close_enough-lb/ub: WIP
 
     if (goal == "ci_hit") {
 
@@ -928,9 +926,88 @@ power_algorithm_search_by_curve <- function(object,
 
     }
 
+    # ==== Goal met? close_enough ====
+
+    # close_enough-point: OK
+    # close_enough-lb/ub: WIP
+
     if (goal == "close_enough") {
-      # TODO:
-      # - Add a section for close_enough
+
+      # ==== Any power levels close enough to the target power? ====
+
+      by_x_ci <- rejection_rates_add_ci(by_x_1,
+                                        level = ci_level)
+      i0 <- find_solution(
+                by_x_1,
+                target_power = target_power,
+                ci_level = ci_level,
+                what = what,
+                tol = tol,
+                goal = goal,
+                final_nrep = final_nrep,
+                closest_ok = FALSE,
+                if_ties = "min")
+
+      if (!is.null(i0)) {
+
+        # ==== Close enough ====
+
+        # close enough && final_nrep reached
+
+        solution_found <- TRUE
+
+        # Updated *_out objects
+        by_x_out <- by_x_1[[i0]]
+        x_out <- switch(x,
+                        n = by_x_ci$n[i0],
+                        es = by_x_ci$es[i0])
+        power_out <- by_x_ci$reject[i0]
+        nrep_out <- by_x_ci$nrep[i0]
+        ci_out <- unlist(by_x_ci[i0, c("reject_ci_lo", "reject_ci_hi")])
+
+        # Exit the loop and finalize the results.
+
+        if (progress) {
+          cat("Solution found. Finalizing the results ...\n")
+        }
+
+        status <- power_curve_status_message(0, status)
+
+        break
+
+      } else {
+
+        # ==== Not close enough ====
+
+        # No power with final_nrep close enough
+        # Get the closet solution
+
+        i0 <- find_solution(
+                  by_x_1,
+                  target_power = target_power,
+                  ci_level = ci_level,
+                  what = what,
+                  tol = tol,
+                  goal = goal,
+                  final_nrep = 0,
+                  closest_ok = TRUE,
+                  if_ties = "min")
+
+        # Updated *_out objects
+        by_x_out <- by_x_1[[i0]]
+        x_out <- switch(x,
+                        n = by_x_ci$n[i0],
+                        es = by_x_ci$es[i0])
+        power_out <- by_x_ci$reject[i0]
+        nrep_out <- by_x_ci$nrep[i0]
+        ci_out <- unlist(by_x_ci[i0, c("reject_ci_lo", "reject_ci_hi")])
+
+        if (progress) {
+          cat("Solution not found. Next trial ...\n")
+        }
+
+      }
+
     }
 
     # ==== Check changes ====
@@ -974,9 +1051,34 @@ power_algorithm_search_by_curve <- function(object,
   # - Check whether there will be a conflict
   #   between adjusted power and target power.
 
+  if (goal == "close_enough") {
+
+    # ==== Prepare the output (close_enough) ====
+
+    if (solution_found) {
+
+      # Store the last results,
+      # regardless of solution
+
+      # Other *_out objects guaranteed to be available
+
+      i2 <- i0
+
+    } else {
+      x_out <- NA
+      power_out <- NA
+      nrep_out <- NA
+      ci_out <- NA
+      by_x_out <- NA
+      i2 <- NA
+    }
+  }
+
   out <- list(by_x_1 = by_x_1,
               fit_1 = fit_1,
-              ci_hit = ci_hit,
+              ci_hit = switch(goal,
+                         ci_hit = ci_hit,
+                         close_enough = NA),
               x_tried = x_tried,
               x_out = x_out,
               power_out = power_out,
@@ -989,10 +1091,11 @@ power_algorithm_search_by_curve <- function(object,
               iteration = j,
               x_history = x_history[!is.na(x_history)],
               reject_history = reject_history[!is.na(reject_history)],
+              tol = tol,
               delta_tol = delta_tol,
               last_k = last_k,
-              what = "point",
-              goal = "ci_hit")
+              what = what,
+              goal = goal)
   out
 }
 
