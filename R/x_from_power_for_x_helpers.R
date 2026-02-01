@@ -411,9 +411,10 @@ find_close_enough <- function(
     }
   }
   if (sum(i0) > 1) {
-    # Find the value with CI hitting the target power
-    # and has the smallest SE.
-    i1 <- rank(by_x_ci$reject_se)
+    # For close_enough,
+    # distance should take precedence,
+    # and so ties will not be considered.
+    i1 <- rank(r_all1 * var_all)
     i1[!i0] <- NA
     # Do not consider those with nrep < final_nrep
     i1[by_x_ci$nrep < final_nrep] <- NA
@@ -424,6 +425,7 @@ find_close_enough <- function(
     i2 <- switch(if_ties,
                  min = which(i1 == min(i1[i0], na.rm = TRUE))[1],
                  max = which(i1 == max(i1[i0], na.rm = TRUE))[1])
+
   } else {
     # Still check nrep
     # To ignore nrep, set nrep to 0.

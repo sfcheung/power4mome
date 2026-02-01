@@ -428,7 +428,7 @@ power_algorithm_search_by_curve <- function(object,
 
     # ci_hit-point: OK
     # close_enough-point: OK
-    # close_enough-lb/ub: WIP
+    # close_enough-lb/ub: OK
 
     # The ci_hit approach can be used for close_enough
 
@@ -455,24 +455,18 @@ power_algorithm_search_by_curve <- function(object,
 
     # ci_hit-point: OK
     # close_enough-point: OK
-    # close_enough-lb/ub: WIP
+    # close_enough-lb/ub: OK
 
     # The ci_hit approach can be used for close_enough
-
-    # TODO:
-    # - Make sure that adjusted power is used with close_enough-lb/ub
 
     if (target_in_range) {
       # ==== Target power in range ====
 
       # ci_hit-point: OK
       # close_enough-point: OK
-      # close_enough-lb/ub: WIP
+      # close_enough-lb/ub: OK
 
       # The ci_hit approach can be used for close_enough
-
-      # TODO:
-      # - Make sure that adjusted power is used with close_enough-lb/ub
 
       # Always include the intersection, if target_in_range
 
@@ -498,12 +492,9 @@ power_algorithm_search_by_curve <- function(object,
 
         # ci_hit-point: OK
         # close_enough-point: OK
-        # close_enough-lb/ub: WIP
+        # close_enough-lb/ub: OK
 
         # The ci_hit approach can be used for close_enough
-
-        # TODO:
-        # - Make sure that adjusted power is used with close_enough-lb/ub
 
         x_j <- estimate_x_range(power_x_fit = fit_1,
                                 x = x,
@@ -521,12 +512,9 @@ power_algorithm_search_by_curve <- function(object,
 
       # ci_hit-point: OK
       # close_enough-point: OK
-      # close_enough-lb/ub: WIP
+      # close_enough-lb/ub: OK
 
       # The ci_hit approach can be used for close_enough
-
-      # TODO:
-      # - Make sure that adjusted power is used with close_enough-lb/ub
 
       x_j <- estimate_x_range(power_x_fit = fit_1,
                               x = x,
@@ -544,12 +532,9 @@ power_algorithm_search_by_curve <- function(object,
 
     # ci_hit-point: OK
     # close_enough-point: OK
-    # close_enough-lb/ub: WIP
+    # close_enough-lb/ub: OK
 
     # The ci_hit approach can be used for close_enough
-
-    # TODO:
-    # - Make sure that adjusted power is used with close_enough-lb/ub
 
     # Adjust the numbers of replication for each value.
     # A value with estimated power closer to the
@@ -615,10 +600,7 @@ power_algorithm_search_by_curve <- function(object,
 
     # ci_hit-point: OK
     # close_enough-point: OK
-    # close_enough-lb/ub: WIP
-
-    # TODO:
-    # - Make sure that adjusted power is used with close_enough-lb/ub
+    # close_enough-lb/ub: OK
 
     fit_1 <- power_curve(by_x_1,
                          formula = power_model,
@@ -634,10 +616,7 @@ power_algorithm_search_by_curve <- function(object,
 
     # ci_hit-point: OK
     # close_enough-point: OK
-    # close_enough-lb/ub: WIP
-
-    # TODO:
-    # - Make sure that adjusted power is used with close_enough-lb/ub
+    # close_enough-lb/ub: OK
 
     # Get the rejection rates of all values tried.
     tmp1 <- rejection_rates_add_ci(by_x_1,
@@ -656,10 +635,7 @@ power_algorithm_search_by_curve <- function(object,
 
       # ci_hit-point: OK
       # close_enough-point: OK
-      # close_enough-lb/ub: WIP
-
-      # TODO:
-      # - Make sure that adjusted power is used with close_enough-lb/ub
+      # close_enough-lb/ub: OK
 
       # The desired value probably within the range examined
 
@@ -672,7 +648,7 @@ power_algorithm_search_by_curve <- function(object,
       x_out_i <- find_solution(
                     object = by_x_1,
                     ci_level = ci_level,
-                    target_power = proxy_power,
+                    target_power = target_power,
                     what = what,
                     tol = tol,
                     goal = goal,
@@ -715,10 +691,7 @@ power_algorithm_search_by_curve <- function(object,
 
       # ci_hit-point: OK
       # close_enough-point: OK
-      # close_enough-lb/ub: WIP
-
-      # TODO:
-      # - Make sure that adjusted power is used with close_enough-lb/ub
+      # close_enough-lb/ub: OK
 
       # The desired value may not be within the range examined
       # Use the latest power curve to estimate the desired value.
@@ -945,7 +918,7 @@ power_algorithm_search_by_curve <- function(object,
     # ==== Goal met? close_enough ====
 
     # close_enough-point: OK
-    # close_enough-lb/ub: WIP
+    # close_enough-lb/ub: OK
 
     if (goal == "close_enough") {
 
@@ -955,7 +928,7 @@ power_algorithm_search_by_curve <- function(object,
                                         level = ci_level)
       i0 <- find_solution(
                 by_x_1,
-                target_power = proxy_power,
+                target_power = target_power,
                 ci_level = ci_level,
                 what = what,
                 tol = tol,
@@ -1000,7 +973,7 @@ power_algorithm_search_by_curve <- function(object,
 
         i0 <- find_solution(
                   by_x_1,
-                  target_power = proxy_power,
+                  target_power = target_power,
                   ci_level = ci_level,
                   what = what,
                   tol = tol,
@@ -1061,11 +1034,7 @@ power_algorithm_search_by_curve <- function(object,
 
   # ci_hit-point: OK
   # close_enough-point: OK
-  # close_enough-lb/ub: WIP
-
-  # TODO:
-  # - Check whether there will be a conflict
-  #   between adjusted power and target power.
+  # close_enough-lb/ub: OK
 
   if (goal == "close_enough") {
 

@@ -858,6 +858,16 @@ x_from_power <- function(object,
         nrep_out <- tmp1$nrep[i2]
         ci_out <- unlist(tmp1[i2, c("reject_ci_lo", "reject_ci_hi")])
         by_x_out <- by_x_1[[i2]]
+
+        # ==== Reconstruct technical ====
+
+        # TODO:
+        # - (Not urgent) Not an ideal solution.
+        #   Other functions should not rely on $technical
+        #   because the search may have been skipped.
+
+        technical <- list(tol = tolerance)
+
       }
     }
   }
