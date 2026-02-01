@@ -227,6 +227,17 @@ alg_power_curve <- function(
     R0 <- ceiling(R0)
   }
 
+  # ==== proxy_power (adjusted power) ====
+
+  proxy_power <- target_power_adjusted(
+                    target_power = target_power,
+                    goal = goal,
+                    what = what,
+                    tolerance = tol,
+                    nrep = final_nrep,
+                    level = ci_level
+                  )
+
   # ==== Pre-search setup ====
 
   a_out <- power_algorithm_search_by_curve_pre_i(
@@ -263,7 +274,8 @@ alg_power_curve <- function(
     what = what,
     goal = goal,
     ci_level = ci_level,
-    tol = tol
+    tol = tol,
+    proxy_power = proxy_power
   )
 
   # ==== Process output ====
@@ -322,7 +334,8 @@ alg_power_curve <- function(
     last_k = last_k,
     what = what,
     goal = goal,
-    tol = tol)
+    tol = tol,
+    proxy_power = proxy_power)
 
   # ==== Return the output ====
 
@@ -367,20 +380,22 @@ power_algorithm_search_by_curve <- function(object,
                                             last_k = 3,
                                             what = "point",
                                             goal = "ci_hit",
-                                            tol = .02) {
+                                            tol = .02,
+                                            proxy_power) {
 
   # goal: ci_hit
   #   what: point
   #     - No need to change
   # goal: close_enough
-  #   what: point
-  #     - TODO: Use distance as the goal
+  #   what: point:
+  #     - Supported
   #   what: ub, lb
-  #     - TODO: Use adjusted_power from target_power_adjusted()
+  #     - TODO: Use proxy_power from target_power_adjusted()
 
-  # ci_hit does NOT denote solution found
-  # TODO:
-  # - solution_found refers to goal met
+  # ci_hit does NOT denote solution found.
+  # - Used only when goal == "ci_hit"
+  # solution_found refers to goal met.
+  # - Used in both "ci_hit" and "close_enough"
   ci_hit <- FALSE
   solution_found <- FALSE
 
@@ -463,7 +478,7 @@ power_algorithm_search_by_curve <- function(object,
 
       x_j <- estimate_x_range(power_x_fit = fit_1,
                               x = x,
-                              target_power = target_power,
+                              target_power = proxy_power,
                               k = max(xs_per_trial_seq[1],
                                       1),
                               tolerance = power_tolerance_in_interval,
@@ -492,7 +507,7 @@ power_algorithm_search_by_curve <- function(object,
 
         x_j <- estimate_x_range(power_x_fit = fit_1,
                                 x = x,
-                                target_power = target_power,
+                                target_power = proxy_power,
                                 k = xs_per_trial_seq[1],
                                 tolerance = power_tolerance_in_interval,
                                 power_min = power_min,
@@ -515,7 +530,7 @@ power_algorithm_search_by_curve <- function(object,
 
       x_j <- estimate_x_range(power_x_fit = fit_1,
                               x = x,
-                              target_power = target_power,
+                              target_power = proxy_power,
                               k = xs_per_trial_seq[1],
                               tolerance = power_tolerance_in_interval,
                               power_min = power_min,
@@ -544,7 +559,7 @@ power_algorithm_search_by_curve <- function(object,
     power_j <- stats::predict(fit_1,
                               newdata = list(x = x_j))
     nrep_j <- nrep_from_power(power_j = power_j,
-                              target_power = target_power,
+                              target_power = proxy_power,
                               tolerance = power_tolerance_in_final,
                               nrep_min = nrep_seq[1],
                               nrep_max = final_nrep_seq[1])
@@ -632,8 +647,8 @@ power_algorithm_search_by_curve <- function(object,
 
     # Is the desired value likely already in the range
     # of values examined, based on the estimated power?
-    target_in_range <- (target_power > tmp2[1]) &&
-                       (target_power < tmp2[2])
+    target_in_range <- (proxy_power > tmp2[1]) &&
+                       (proxy_power < tmp2[2])
 
     if (target_in_range) {
 
@@ -650,14 +665,14 @@ power_algorithm_search_by_curve <- function(object,
 
       x_between_i <- x_from_y_rejection_rates(
                         reject_df = tmp1,
-                        target_power = target_power,
+                        target_power = proxy_power,
                         x = x
                       )
 
       x_out_i <- find_solution(
                     object = by_x_1,
                     ci_level = ci_level,
-                    target_power = target_power,
+                    target_power = proxy_power,
                     what = what,
                     tol = tol,
                     goal = goal,
@@ -718,7 +733,7 @@ power_algorithm_search_by_curve <- function(object,
                                     USE.NAMES = FALSE))
       x_out <- estimate_x_range(power_x_fit = fit_1,
                                 x = x,
-                                target_power = target_power,
+                                target_power = proxy_power,
                                 k = 1,
                                 tolerance = 0,
                                 power_min = power_min,
@@ -791,7 +806,8 @@ power_algorithm_search_by_curve <- function(object,
 
     # ==== Goal met? ci_hit ====
 
-    # ci_hit-point: OK
+    # ci_hit-point: OK.
+    # - No need to use proxy_power
 
     if (goal == "ci_hit") {
 
@@ -939,7 +955,7 @@ power_algorithm_search_by_curve <- function(object,
                                         level = ci_level)
       i0 <- find_solution(
                 by_x_1,
-                target_power = target_power,
+                target_power = proxy_power,
                 ci_level = ci_level,
                 what = what,
                 tol = tol,
@@ -984,7 +1000,7 @@ power_algorithm_search_by_curve <- function(object,
 
         i0 <- find_solution(
                   by_x_1,
-                  target_power = target_power,
+                  target_power = proxy_power,
                   ci_level = ci_level,
                   what = what,
                   tol = tol,
@@ -1074,6 +1090,9 @@ power_algorithm_search_by_curve <- function(object,
     }
   }
 
+  # what %in% c("lb", "ub")
+  # - *_out: Still the output at x
+
   out <- list(by_x_1 = by_x_1,
               fit_1 = fit_1,
               ci_hit = switch(goal,
@@ -1136,7 +1155,8 @@ power_algorithm_search_by_curve_pre_i <- function(object,
                                                   what = "point",
                                                   goal = "ci_hit",
                                                   ci_level = .95,
-                                                  tol = .02) {
+                                                  tol = .02,
+                                                  proxy_power) {
 
   # goal: ci_hit
   #   what: point
@@ -1158,7 +1178,7 @@ power_algorithm_search_by_curve_pre_i <- function(object,
   x_i <- set_x_range(object,
                     x = x,
                     pop_es_name = pop_es_name,
-                    target_power = target_power,
+                    target_power = proxy_power,
                     k = pre_i_xs,
                     x_max = x_max,
                     x_min = x_min)
