@@ -255,9 +255,12 @@ power_curve <- function(object,
                         nls_control = list(),
                         verbose = FALSE,
                         models = c("nls", "logistic", "lm")) {
-
-  models <- match.arg(models,
-                      several.ok = TRUE)
+  if (missing(models)) {
+    models <- eval(formals(power_curve)$models)
+  } else {
+    models <- match.arg(models,
+                        several.ok = TRUE)
+  }
 
   # reject ~ I((x - c0)^e) / (b + I((x - c0)^e))
   # The formula used depends on the nature of the predictors
@@ -273,37 +276,51 @@ power_curve <- function(object,
 
   if (class0 == "power4test_by_n") {
     if (is.null(formula)) {
-      formula <- reject ~ I((x - c0)^e) / (b + I((x - c0)^e))
+      formula <- list(
+                    reject ~ 1 - I(exp((a - x) / b)),
+                    reject ~ I((x - c0)^e) / (b + I((x - c0)^e))
+                  )
     }
     if (is.null(start)) {
-      start <- c(b = 2, c0 = 100, e = 1)
+      start <- list(
+                  c(a = 0, b = 10),
+                  c(b = 2, c0 = 100, e = 1)
+                )
     }
     if (is.null(lower_bound)) {
-      lower_bound <- c(b = 0, c0 = 0, e = 1)
+      lower_bound <- list(
+                        c(a = 0, b = .05),
+                        c(b = 0, c0 = 0, e = 1)
+                      )
     }
     if (is.null(upper_bound)) {
-      upper_bound <- c(b = Inf, c0 = Inf, e = Inf)
+      upper_bound <- list(
+                        c(a = Inf, b = Inf),
+                        c(b = Inf, c0 = Inf, e = Inf)
+                      )
     }
   }
 
   if (class0 == "power4test_by_es") {
     if (is.null(formula)) {
-      formula <- list(reject ~ 1 - 1 / I((1 + (x / d)^a)^b),
+      formula <- list(reject ~ 1 - I(exp((a - x) / b)),
+                      reject ~ 1 - 1 / I((1 + (x / d)^a)^b),
                       reject ~ 1 - exp(x / a) / I((1  + exp(x / a))^b),
                       reject ~ 1 - 2 / (exp(x / d) + exp(-x / d)),
                       reject ~ 1 / (1 + a * exp(-b * x)))
     }
     if (is.null(start)) {
-      start <- list(c(a = 2, b = 4, d = 4),
+      start <- list(c(a = 0, b = 10),
+                    c(a = 2, b = 4, d = 4),
                     c(a = 1, b = 2),
                     c(d = 1),
                     c(a = 1, b = 1))
     }
     if (is.null(lower_bound)) {
-      lower_bound <- list(NULL, NULL, NULL, NULL)
+      lower_bound <- list(NULL, NULL, NULL, NULL, NULL)
     }
     if (is.null(upper_bound)) {
-      upper_bound <- list(NULL, NULL, NULL, NULL)
+      upper_bound <- list(NULL, NULL, NULL, NULL, NULL)
     }
   }
 
@@ -378,7 +395,7 @@ power_curve <- function(object,
 
   # === Logistic ===
 
-  if (!model_found ||
+  if (!model_found &&
       ("logistic" %in% models)) {
     # Do logistic
     fit <- do_logistic(reject_df = reject0)
@@ -394,8 +411,8 @@ power_curve <- function(object,
 
   # === OLS Regression ===
 
-  if (!model_found ||
-      ("ls" %in% models)) {
+  if (!model_found &&
+      ("lm" %in% models)) {
   # Last resort: OLS regression
     fit <- do_lm(reject_df = reject0,
                 weights = reject0$nrep)

@@ -65,7 +65,7 @@ print(out,
 ```
 
 ```{r test_out, results=FALSE}
-out <- power4test(nrep = 50,
+out <- power4test(nrep = 200,
                   model = mod,
                   pop_es = mod_es,
                   n = 100,

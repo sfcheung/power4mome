@@ -1,4 +1,4 @@
-# power4mome 0.1.1.32
+# power4mome 0.1.1.35
 
 - Improve the function for extending the
   initial interval before doing a
@@ -152,6 +152,20 @@
 - Updated all tests to disable printout
   when running in a test context.
   (0.1.1.32)
+
+- Added one model to `power_curve()`.
+  (0.1.1.34)
+
+- Modified the power curve algorithm
+  to support `goal = "close_enough"`
+  and all three types of `what`
+  (`"point"`, `"lb"`, and `"ub"`).
+  (0.1.1.34)
+
+- Fixed a bug in extending intervals
+  in the bisection algorithm, and also
+  improved way intervals are extended.
+  (0.1.1.35)
 
 # power4mome 0.1.1
 
