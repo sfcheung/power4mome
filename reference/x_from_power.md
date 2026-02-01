@@ -33,7 +33,8 @@ x_from_power(
     upper_bound = NULL, nls_control = list(), nls_args = list()),
   save_sim_all = FALSE,
   algorithm = NULL,
-  control = list()
+  control = list(),
+  internal_args = list()
 )
 
 n_from_power(
@@ -261,6 +262,11 @@ arg_x_from_power(object, arg, arg_in = NULL)
   A named list of additional arguments to be passed to the algorithm to
   be used. For advanced users.
 
+- internal_args:
+
+  A named list of internal arguments. For internal testing. Do not use
+  it.
+
 - digits:
 
   The number of digits after the decimal when printing the results.
@@ -427,9 +433,9 @@ The function `arg_x_from_power()` is a helper to set argument values if
 
 ## Algorithms
 
-Two algorithms are currently available, the simple (though inefficient)
-bisection method, and a method that makes use of the estimated crude
-power curve.
+Two algorithms are currently available, the simple (though sometimes
+inefficient) bisection method, and a method that makes use of the
+estimated crude power curve.
 
 Unlike typical root-finding problems, the prediction of the level of
 power is stochastic. Moreover, the computational cost is high when Monte
@@ -457,12 +463,15 @@ suggest the values to examine in the next iteration. The form, not just
 the parameters, of the model can change across iterations, as more and
 more data points are available.
 
-This method can be used only with the goal `"ci_hit"`. This method is
-the default method for `x = "es"` with `goal = "ci_hit"` because the
-relation between the power and the population value of a parameter
-varies across parameters, unlike the relation between power and sample
-size. Therefore, taking into account the working power curve may help
-finding the desired value of `x`.
+This method is the default method for `x = "es"` with `goal = "ci_hit"`
+because the relation between the power and the population value of a
+parameter varies across parameters, unlike the relation between power
+and sample size. Therefore, taking into account the working power curve
+may help finding the desired value of `x`.
+
+Before version 0.1.1.33, this method can be used only with the goal
+`"ci_hit"`. Since version 0.1.1.34, it supports all goals, like the
+bisection method.
 
 The technical internal workflow of this method implemented in
 `x_from_power()` can be found in this page:
@@ -607,7 +616,7 @@ power_vs_n <- x_from_power(test_out,
 #> 
 #> --- Final Stage ---
 #> 
-#> - Start at 2026-01-29 13:46:23 
+#> - Start at 2026-02-01 15:18:10 
 #> - Rejection Rates:
 #> 
 #> [test]: test_parameters: CIs (pars: m~x) 
@@ -681,7 +690,7 @@ summary(power_vs_n)
 #> 
 #> - Algorithm: bisection 
 #> - The range of values explored: 100 to 75 
-#> - Time spent in the search: 0.8698 secs 
+#> - Time spent in the search: 0.9927 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 

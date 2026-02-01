@@ -19,7 +19,7 @@ value."><meta property="og:image" content="https://sfcheung.github.io/power4mome
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.32</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.35</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -118,7 +118,8 @@ value.</p>
 <span>    upper_bound <span class="op">=</span> <span class="cn">NULL</span>, nls_control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>, nls_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  save_sim_all <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  algorithm <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  internal_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">n_from_power</span><span class="op">(</span></span>
@@ -416,6 +417,12 @@ algorithm to be used. For advanced
 users.</p></dd>
 
 
+<dt id="arg-internal-args">internal_args<a class="anchor" aria-label="anchor" href="#arg-internal-args"></a></dt>
+<dd><p>A named list
+of internal arguments. For internal
+testing. Do not use it.</p></dd>
+
+
 <dt id="arg-digits">digits<a class="anchor" aria-label="anchor" href="#arg-digits"></a></dt>
 <dd><p>The number of digits
 after the decimal when printing
@@ -608,7 +615,7 @@ functions.</p>
     <div class="section level2">
     <h2 id="algorithms">Algorithms<a class="anchor" aria-label="anchor" href="#algorithms"></a></h2>
     <p>Two algorithms are currently available,
-the simple (though inefficient)
+the simple (though sometimes inefficient)
 bisection method, and a method that
 makes use of the estimated crude power
 curve.</p>
@@ -658,9 +665,7 @@ just the parameters, of the
 model can change across iterations,
 as more and more data points are
 available.</p>
-<p>This method can be used only with
-the goal <code>"ci_hit"</code>.
-This method is the default method
+<p>This method is the default method
 for <code>x = "es"</code> with <code>goal = "ci_hit"</code>
 because the relation
 between the power and the population
@@ -670,6 +675,11 @@ between power and sample size. Therefore,
 taking into account the working
 power curve may help finding the
 desired value of <code>x</code>.</p>
+<p>Before version 0.1.1.33, this
+method can be used only with
+the goal <code>"ci_hit"</code>. Since
+version 0.1.1.34, it supports all
+goals, like the bisection method.</p>
 <p>The technical internal workflow of
 this method implemented in
 <code>x_from_power()</code> can be found in
@@ -815,7 +825,7 @@ and <code><a href="power4test_by_es.html">power4test_by_es()</a></code>.</p></di
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --- Final Stage ---</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2026-01-29 13:46:23 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2026-02-01 15:18:10 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Rejection Rates:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [test]: test_parameters: CIs (pars: m~x) </span>
@@ -889,7 +899,7 @@ and <code><a href="power4test_by_es.html">power4test_by_es()</a></code>.</p></di
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Algorithm: bisection </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - The range of values explored: 100 to 75 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Time spent in the search: 0.8698 secs </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Time spent in the search: 0.9927 secs </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - The final crude model for the power-predictor relation:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Model Type: Logistic Regression </span>

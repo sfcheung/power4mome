@@ -11,7 +11,7 @@ power_curve()."><meta property="og:image" content="https://sfcheung.github.io/po
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.32</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.35</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -191,20 +191,17 @@ rates.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Predictor: n (Sample Size)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Model:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Nonlinear regression model</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   model: reject ~ 1 - I(exp((a - x)/b))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    data: "(Omitted)"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     a     b </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  19.1 260.3 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  residual sum-of-squares: 0.07498</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Call:  stats::glm(formula = reject ~ x, family = "binomial", data = reject1)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Coefficients:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)            x  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -1.550280     0.004213  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Degrees of Freedom: 39 Total (i.e. Null);  38 Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Null Deviance:	    54.55 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Residual Deviance: 38.37 	AIC: 42.37</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Algorithm "port", convergence message: relative convergence (4)</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">pout1</span>,</span></span>
 <span class="r-in"><span>        newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">150</span>, <span class="fl">250</span>, <span class="fl">500</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         1         2         3 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.2852909 0.3782246 0.6355494 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.3951796 0.5880944 0.8423384</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># By pop_es: Do a test for different population values of a model parameter</span></span></span>
 <span class="r-in"><span></span></span>
@@ -226,20 +223,17 @@ rates.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Predictor: es (Effect Size)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Model:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Nonlinear regression model</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   model: reject ~ 1 - 2/(exp(x/d) + exp(-x/d))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    data: "(Omitted)"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     d </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> -0.13 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  residual sum-of-squares: 0.05021</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Call:  stats::glm(formula = reject ~ x, family = "binomial", data = reject1)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Coefficients:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)            x  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      -3.347       17.231  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Degrees of Freedom: 49 Total (i.e. Null);  48 Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Null Deviance:	    65.34 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Residual Deviance: 25 	AIC: 29</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Algorithm "port", convergence message: relative convergence (4)</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">pout2</span>,</span></span>
 <span class="r-in"><span>        newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.25</span>, <span class="fl">.55</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         1         2 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.7232684 0.9978282 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.7136569 0.9708902</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
