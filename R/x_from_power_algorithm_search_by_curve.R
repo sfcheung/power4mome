@@ -599,7 +599,7 @@ power_algorithm_search_by_curve <- function(object,
     # ==== Update the power curve ====
 
     # ci_hit-point: OK
-    # close_enough-point: WIP
+    # close_enough-point: OK
     # close_enough-lb/ub: WIP
 
     # TODO:
