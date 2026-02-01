@@ -875,3 +875,53 @@ target_power_adjusted <- function(
     return(target_power)
   }
 }
+
+#' @noRd
+# Input:
+# - Rejection rates table
+# - Target power (can be the adjusted power)
+# Output:
+# - The x-value by `x_from_y()`
+x_from_y_rejection_rates <- function(
+  reject_df,
+  target_power,
+  x,
+  weight_by = c("nrep", "se")
+) {
+
+  weight_by <- match.arg(weight_by)
+
+  y_diff <- reject_df$reject - target_power
+  y_dist <- abs(reject_df$reject - target_power)
+
+  reject_df$wt <- switch(
+                    weight_by,
+                    nrep = reject_df$nrep,
+                    se = reject_df$reject_se
+                  )
+
+  # Closest and above
+  y_above <- which(y_diff > 0)
+  x_above_i <- y_above[which.min(y_dist[y_above] *
+                reject_df$wt[y_above]^2)]
+  # Closest and below
+  y_below <- which(y_diff < 0)
+  x_below_i <- y_below[which.min(y_dist[y_below] *
+                reject_df$wt[y_below]^2)]
+
+  x_out_above_i <- switch(x,
+                          n = reject_df$n[x_above_i],
+                          es = reject_df$es[x_above_i])
+  x_out_below_i <- switch(x,
+                          n = reject_df$n[x_below_i],
+                          es = reject_df$es[x_below_i])
+  x_reject_above_i <- reject_df$reject[x_above_i]
+  x_reject_below_i <- reject_df$reject[x_below_i]
+
+  x_between_i <- x_from_y(x1 = x_out_below_i,
+                          y1 = x_reject_below_i,
+                          x2 = x_out_above_i,
+                          y2 = x_reject_above_i,
+                          target = target_power)
+  x_between_i
+}

@@ -648,32 +648,23 @@ power_algorithm_search_by_curve <- function(object,
 
       # The desired value probably within the range examined
 
-      tmp4 <- tmp1$reject - target_power
-      tmp3 <- abs(tmp1$reject - target_power)
+      x_between_i <- x_from_y_rejection_rates(
+                        reject_df = tmp1,
+                        target_power = target_power,
+                        x = x
+                      )
 
-      # Closest and above
-      tmp4a <- which(tmp4 > 0)
-      x_above_i <- tmp4a[which.min(tmp3[tmp4a] * tmp1$reject_se[tmp4a]^2)]
-      # Closest and below
-      tmp4b <- which(tmp4 < 0)
-      x_below_i <- tmp4b[which.min(tmp3[tmp4b] * tmp1$reject_se[tmp4b]^2)]
-
-      x_out_above_i <- switch(x,
-                              n = tmp1$n[x_above_i],
-                              es = tmp1$es[x_above_i])
-      x_out_below_i <- switch(x,
-                              n = tmp1$n[x_below_i],
-                              es = tmp1$es[x_below_i])
-      x_reject_above_i <- tmp1$reject[x_above_i]
-      x_reject_below_i <- tmp1$reject[x_below_i]
-
-      x_between_i <- x_from_y(x1 = x_out_below_i,
-                              y1 = x_reject_below_i,
-                              x2 = x_out_above_i,
-                              y2 = x_reject_above_i,
-                              target = target_power)
-
-      x_out_i <- which.min(tmp3)
+      x_out_i <- find_solution(
+                    object = by_x_1,
+                    ci_level = ci_level,
+                    target_power = target_power,
+                    what = what,
+                    tol = tol,
+                    goal = goal,
+                    final_nrep = 0,
+                    closest_ok = TRUE,
+                    if_ties = "min"
+                  )
 
       # If ties, the smallest value will be used
 
