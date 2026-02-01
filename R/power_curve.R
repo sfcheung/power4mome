@@ -255,9 +255,12 @@ power_curve <- function(object,
                         nls_control = list(),
                         verbose = FALSE,
                         models = c("nls", "logistic", "lm")) {
-
-  models <- match.arg(models,
-                      several.ok = TRUE)
+  if (missing(models)) {
+    models <- eval(formals(power_curve)$models)
+  } else {
+    models <- match.arg(models,
+                        several.ok = TRUE)
+  }
 
   # reject ~ I((x - c0)^e) / (b + I((x - c0)^e))
   # The formula used depends on the nature of the predictors

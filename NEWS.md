@@ -1,4 +1,4 @@
-# power4mome 0.1.1.33
+# power4mome 0.1.1.34
 
 - Improve the function for extending the
   initial interval before doing a
@@ -155,6 +155,12 @@
 
 - Added one model to `power_curve()`.
   (0.1.1.33)
+
+- Modified the power curve algorithm
+  to support `goal = "close_enough"`
+  and all three types of `what`
+  (`"point"`, `"lb"`, and `"ub"`).
+  (0.1.1.34)
 
 # power4mome 0.1.1
 

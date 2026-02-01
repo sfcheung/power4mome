@@ -92,6 +92,13 @@ estimate_x <- function(power_n_fit,
   return(n_target)
 }
 
+#' @noRd
+# Output:
+# - k values of x with levels of power predicted by power_x_fit
+#   The width determined by tolerance.
+# If k == 1 and tolerance == 0,
+# - yield the x with the predicted target_power.
+# WARNING: If k == 1 but tolerance != 0, unexpected results may occur.
 estimate_x_range <- function(power_x_fit,
                              x,
                              target_power = .80,
@@ -404,9 +411,10 @@ find_close_enough <- function(
     }
   }
   if (sum(i0) > 1) {
-    # Find the value with CI hitting the target power
-    # and has the smallest SE.
-    i1 <- rank(by_x_ci$reject_se)
+    # For close_enough,
+    # distance should take precedence,
+    # and so ties will not be considered.
+    i1 <- rank(r_all1 * var_all)
     i1[!i0] <- NA
     # Do not consider those with nrep < final_nrep
     i1[by_x_ci$nrep < final_nrep] <- NA
@@ -417,6 +425,7 @@ find_close_enough <- function(
     i2 <- switch(if_ties,
                  min = which(i1 == min(i1[i0], na.rm = TRUE))[1],
                  max = which(i1 == max(i1[i0], na.rm = TRUE))[1])
+
   } else {
     # Still check nrep
     # To ignore nrep, set nrep to 0.
@@ -867,4 +876,54 @@ target_power_adjusted <- function(
   if (goal == "ci_hit") {
     return(target_power)
   }
+}
+
+#' @noRd
+# Input:
+# - Rejection rates table
+# - Target power (can be the adjusted power)
+# Output:
+# - The x-value by `x_from_y()`
+x_from_y_rejection_rates <- function(
+  reject_df,
+  target_power,
+  x,
+  weight_by = c("nrep", "se")
+) {
+
+  weight_by <- match.arg(weight_by)
+
+  y_diff <- reject_df$reject - target_power
+  y_dist <- abs(reject_df$reject - target_power)
+
+  reject_df$wt <- switch(
+                    weight_by,
+                    nrep = reject_df$nrep,
+                    se = reject_df$reject_se
+                  )
+
+  # Closest and above
+  y_above <- which(y_diff > 0)
+  x_above_i <- y_above[which.min(y_dist[y_above] *
+                reject_df$wt[y_above]^2)]
+  # Closest and below
+  y_below <- which(y_diff < 0)
+  x_below_i <- y_below[which.min(y_dist[y_below] *
+                reject_df$wt[y_below]^2)]
+
+  x_out_above_i <- switch(x,
+                          n = reject_df$n[x_above_i],
+                          es = reject_df$es[x_above_i])
+  x_out_below_i <- switch(x,
+                          n = reject_df$n[x_below_i],
+                          es = reject_df$es[x_below_i])
+  x_reject_above_i <- reject_df$reject[x_above_i]
+  x_reject_below_i <- reject_df$reject[x_below_i]
+
+  x_between_i <- x_from_y(x1 = x_out_below_i,
+                          y1 = x_reject_below_i,
+                          x2 = x_out_above_i,
+                          y2 = x_reject_above_i,
+                          target = target_power)
+  x_between_i
 }

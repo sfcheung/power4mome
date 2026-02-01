@@ -81,7 +81,7 @@
 #' # Algorithms
 #'
 #' Two algorithms are currently available,
-#' the simple (though inefficient)
+#' the simple (though sometimes inefficient)
 #' bisection method, and a method that
 #' makes use of the estimated crude power
 #' curve.
@@ -130,8 +130,6 @@
 #' as more and more data points are
 #' available.
 #'
-#' This method can be used only with
-#' the goal `"ci_hit"`.
 #' This method is the default method
 #' for `x = "es"` with `goal = "ci_hit"`
 #' because the relation
@@ -142,6 +140,12 @@
 #' taking into account the working
 #' power curve may help finding the
 #' desired value of `x`.
+#'
+#' Before version 0.1.1.33, this
+#' method can be used only with
+#' the goal `"ci_hit"`. Since
+#' version 0.1.1.34, it supports all
+#' goals, like the bisection method.
 #'
 #' The technical internal workflow of
 #' this method implemented in
@@ -428,6 +432,10 @@
 #' of the same sign as the population
 #' value in `object` will be used.
 #'
+#' @param internal_args A named list
+#' of internal arguments. For internal
+#' testing. Do not use it.
+#'
 #' @references
 #' Wilson, E. B. (1927). Probable inference, the law of
 #' succession, and statistical inference.
@@ -525,7 +533,8 @@ x_from_power <- function(object,
                                                  nls_args = list()),
                          save_sim_all = FALSE,
                          algorithm = NULL,
-                         control = list()
+                         control = list(),
+                         internal_args = list()
                          ) {
 
   # Inputs
@@ -547,6 +556,13 @@ x_from_power <- function(object,
                     c("point", "ub", "lb"))
   goal <- match.arg(goal,
                     c("ci_hit", "close_enough"))
+
+  internal_args0 <- list(keep_algorithm = TRUE)
+
+  internal_args <- utils::modifyList(
+                      internal_args0,
+                      internal_args
+                    )
 
   # ==== Update the object if x_from_power ====
 
@@ -598,14 +614,12 @@ x_from_power <- function(object,
 
   changed_to_bisection <- FALSE
   if (goal == "close_enough") {
-    # Only bisection is supported
-    if (isTRUE((algorithm != "bisection")) &&
-        (!is.null(algorithm))) {
-      # warning("Only bisection is supported when goal is 'close_enough'. ",
-      #         "Switched automatically to bisection.")
-      changed_to_bisection <- TRUE
+    # internal_args$keep_algorithm is now ignored
+    if (is.null(algorithm)) {
+      algorithm <- match.arg(algorithm,
+                             c("bisection",
+                               "power_curve"))
     }
-    algorithm <- "bisection"
   }
 
   # what: The value to be examined.
@@ -613,9 +627,12 @@ x_from_power <- function(object,
   # - ci_hit: Only relevant for what == "point"
   # - close_enough: Can be used for all what.
 
-  a <- abs(stats::qnorm((1 - ci_level) / 2))
-  power_tolerance_in_interval <- a * sqrt(target_power * (1 - target_power) / final_nrep)
-  power_tolerance_in_final <- a * sqrt(target_power * (1 - target_power) / final_nrep)
+  a <- reject_ci_wilson(
+          nreject = ceiling(target_power * final_nrep),
+          nvalid = final_nrep,
+          level  = ci_level)
+  power_tolerance_in_interval <- max(abs(target_power - a))
+  power_tolerance_in_final <- max(abs(target_power - a))
 
   # ==== Sanity checks ====
 
@@ -647,7 +664,7 @@ x_from_power <- function(object,
     }
     if (x == "es") {
       extendInt <- match.arg(extendInt,
-                             choices = c("yes", "no", "upX", "downX"))
+                             choices = c("no", "yes", "upX", "downX"))
     }
   }
 
@@ -849,6 +866,16 @@ x_from_power <- function(object,
         nrep_out <- tmp1$nrep[i2]
         ci_out <- unlist(tmp1[i2, c("reject_ci_lo", "reject_ci_hi")])
         by_x_out <- by_x_1[[i2]]
+
+        # ==== Reconstruct technical ====
+
+        # TODO:
+        # - (Not urgent) Not an ideal solution.
+        #   Other functions should not rely on $technical
+        #   because the search may have been skipped.
+
+        technical <- list(tol = tolerance)
+
       }
     }
   }
@@ -915,13 +942,17 @@ x_from_power <- function(object,
         upper_bound = power_curve_args$upper_bound,
         nls_control = power_curve_args$nls_control,
         nls_args = power_curve_args$nls_args,
+        models = power_curve_args$models,
         final_nrep = final_nrep,
         final_R = final_R,
         max_trials = max_trials,
         ci_level = ci_level,
         extendInt = extendInt,
         power_tolerance_in_interval = power_tolerance_in_interval,
-        power_tolerance_in_final = power_tolerance_in_final),
+        power_tolerance_in_final = power_tolerance_in_final,
+        what = what,
+        goal = goal,
+        tol = tolerance),
       control))
 
     by_x_1 <- a_out$by_x_1
@@ -940,7 +971,8 @@ x_from_power <- function(object,
                       x_history = a_out$x_history,
                       reject_history = a_out$reject_history,
                       delta_tol = a_out$delta_tol,
-                      last_k = a_out$last_k)
+                      last_k = a_out$last_k,
+                      tol = a_out$tol)
 
     rm(a_out)
 

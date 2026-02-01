@@ -45,6 +45,9 @@ tmp <- x_from_power(out,
 tmp
 summary(tmp)
 plot(tmp)
+tmp_pc <- power_curve(tmp$power4test_trials)
+tmp_pc
+plot(tmp_pc)
 plot(tmp,
      lwd = 4,
      col = "green",
@@ -62,6 +65,33 @@ plot(tmp,
 
 plot(tmp,
      pars_power_curve = list(col = "blue", lwd = 4, type = "o"))
+
+## Close Enough
+
+tmp <- x_from_power(out,
+                    x = "n",
+                    progress = TRUE,
+                    final_nrep = 100,
+                    seed = 1234,
+                    save_sim_all = TRUE,
+                    goal = "close_enough",
+                    what = "point",
+                    algorithm = "power_curve",
+                    internal_args = list(keep_algorithm = TRUE))
+summary(tmp)
+plot(tmp)
+
+tmpb <- x_from_power(out,
+                    x = "n",
+                    progress = TRUE,
+                    final_nrep = 100,
+                    seed = 1234,
+                    save_sim_all = TRUE,
+                    goal = "close_enough",
+                    what = "point",
+                    algorithm = "bisection")
+summary(tmpb)
+plot(tmpb)
 
 # Case 2
 
