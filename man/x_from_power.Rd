@@ -499,7 +499,7 @@ functions.
 }
 \section{Algorithms}{
 Two algorithms are currently available,
-the simple (though inefficient)
+the simple (though sometimes inefficient)
 bisection method, and a method that
 makes use of the estimated crude power
 curve.
@@ -548,8 +548,6 @@ model can change across iterations,
 as more and more data points are
 available.
 
-This method can be used only with
-the goal \code{"ci_hit"}.
 This method is the default method
 for \code{x = "es"} with \code{goal = "ci_hit"}
 because the relation
@@ -560,6 +558,12 @@ between power and sample size. Therefore,
 taking into account the working
 power curve may help finding the
 desired value of \code{x}.
+
+Before version 0.1.1.33, this
+method can be used only with
+the goal \code{"ci_hit"}. Since
+version 0.1.1.34, it supports all
+goals, like the bisection method.
 
 The technical internal workflow of
 this method implemented in
