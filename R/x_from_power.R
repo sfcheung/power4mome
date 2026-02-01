@@ -428,6 +428,10 @@
 #' of the same sign as the population
 #' value in `object` will be used.
 #'
+#' @param internal_args A named list
+#' of internal arguments. For internal
+#' testing. Do not use it.
+#'
 #' @references
 #' Wilson, E. B. (1927). Probable inference, the law of
 #' succession, and statistical inference.
@@ -525,7 +529,8 @@ x_from_power <- function(object,
                                                  nls_args = list()),
                          save_sim_all = FALSE,
                          algorithm = NULL,
-                         control = list()
+                         control = list(),
+                         internal_args = list()
                          ) {
 
   # Inputs
@@ -597,7 +602,8 @@ x_from_power <- function(object,
   }
 
   changed_to_bisection <- FALSE
-  if (goal == "close_enough") {
+  if ((goal == "close_enough") &&
+      !isTRUE(internal_args$keep_algorithm)) {
     # Only bisection is supported
     if (isTRUE((algorithm != "bisection")) &&
         (!is.null(algorithm))) {

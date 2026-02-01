@@ -35,7 +35,8 @@ x_from_power(
     upper_bound = NULL, nls_control = list(), nls_args = list()),
   save_sim_all = FALSE,
   algorithm = NULL,
-  control = list()
+  control = list(),
+  internal_args = list()
 )
 
 n_from_power(
@@ -282,6 +283,10 @@ additional
 arguments to be passed to the
 algorithm to be used. For advanced
 users.}
+
+\item{internal_args}{A named list
+of internal arguments. For internal
+testing. Do not use it.}
 
 \item{digits}{The number of digits
 after the decimal when printing
