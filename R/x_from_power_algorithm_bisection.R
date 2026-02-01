@@ -1212,10 +1212,11 @@ extend_interval <- function(f,
 
     # ==== Loop for extension ====
     i <- 1
-
+    overshoot_i <- overshoot
     while ((i <= extend_maxiter) &&
            ((sign(f.lower) == sign(f.upper)) ||
             (abs(lower - upper) < min_x_diff))) {
+        overshoot_i <- overshoot_i * i
         out_i <- extend_i(
             f = f,
             args = args,
@@ -1232,7 +1233,7 @@ extend_interval <- function(f,
             upper_hard = upper_hard,
             x_type = x_type,
             digits = digits,
-            overshoot = overshoot,
+            overshoot = overshoot_i,
             which = switch(extend_which,
                            extend_down = "lower",
                            extend_up = "upper"),
@@ -1412,7 +1413,7 @@ extend_i <- function(
       f.lower <- f.upper
       # Handle upper == lower
       if (upper == lower) {
-        upper <- 1 + overshoot * upper
+        upper <- (1 + overshoot) * upper
       } else {
         upper <- (1 + overshoot) * -intercept / slope
       }
