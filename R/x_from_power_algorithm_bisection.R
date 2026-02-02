@@ -184,6 +184,31 @@ power_algorithm_bisection <- function(object,
 
   x_type <- x
 
+  # ==== Default for variants ====
+
+  variants0 <- list(use_power_curve_assist = TRUE,
+                    use_power_curve_min_points = 6,
+                    power_curve_args = list(),
+                    muller = FALSE)
+  variants <- utils::modifyList(variants0,
+                                variants)
+
+  if (variants$use_power_curve_assist) {
+    proxy_power <- tryCatch(target_power_adjusted(
+                      target_power = target_power,
+                      goal = goal,
+                      what = what,
+                      tolerance = 0,
+                      nrep = final_nrep,
+                      level = ci_level
+                    ),
+                    error = function(e) e)
+    if (inherits(proxy_power, "error")) {
+      # Failed to find the proxy power. Do not use power_curve
+      variants$use_power_curve_assist <- FALSE
+    }
+  }
+
   # Create the objective function
 
   # Tbe output is:
@@ -799,7 +824,45 @@ power_algorithm_bisection <- function(object,
 
         # ==== Mean as the next start ====
 
-        x_i <- mean(c(lower_i, upper_i))
+        # Use power_curve() to accelerate the search
+
+        power_curve_used <- FALSE
+
+        if (variants$use_power_curve_assist &&
+            (length(by_x_1) >= variants$use_power_curve_assist)) {
+          fit_1 <- tryCatch(do.call(
+                              power_curve,
+                              c(list(object = by_x_1),
+                                variants$power_curve_args)
+                            ),
+                            error = function(e) e)
+          if (inherits(fit_1, "power_curve")) {
+            x_i_0 <- estimate_x_range(
+                        power_x_fit = fit_1,
+                        x = x,
+                        target_power = proxy_power,
+                        k = 1,
+                        tolerance = 0,
+                        power_min = 0,
+                        power_max = 1,
+                        interval = c(lower_i, upper_i),
+                        extendInt = "no",
+                        x_to_exclude = rejection_rates(by_x_1)[, x, drop = TRUE]
+                      )
+            if ((x_i_0 > lower_i) &&
+                (x_i_0 < upper_i)) {
+              power_curve_used <- TRUE
+              x_i <- x_i_0
+            } else {
+              x_i <- mean(c(lower_i, upper_i))
+            }
+          } else {
+            x_i <- mean(c(lower_i, upper_i))
+          }
+        } else {
+          x_i <- mean(c(lower_i, upper_i))
+        }
+
       }
 
       if (x_type == "n") {
@@ -811,6 +874,9 @@ power_algorithm_bisection <- function(object,
                        upper = upper_i,
                        digits = digits,
                        x_type = x_type)
+        if (power_curve_used) {
+          cat("Power curve used to find the next x ...\n")
+        }
         cat("Updated x:", x_i, "\n")
       }
 

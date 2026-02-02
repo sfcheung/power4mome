@@ -1,4 +1,4 @@
-# power4mome 0.1.1.36
+# power4mome 0.1.1.37
 
 - Improve the function for extending the
   initial interval before doing a
@@ -171,6 +171,12 @@
   to configure the use of `nls()`,
   such as when it should not be
   attempted. (0.1.1.36)
+
+- Updated the bisection algorithm to
+  use `power_curve()` to assist finding
+  the solution. If estimated solution
+  inside an interval, use it instead of
+  the mean. (0.1.1.37)
 
 # power4mome 0.1.1
 
