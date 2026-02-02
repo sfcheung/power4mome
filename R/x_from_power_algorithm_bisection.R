@@ -1471,13 +1471,16 @@ extend_i <- function(
     slope <- (as.numeric(f.upper) - as.numeric(f.lower)) / (upper - lower)
     intercept <- -slope * upper +  as.numeric(f.upper)
     if (which == "lower") {
+
+      # ==== Extend the lower bound ====
+
       upper <- lower
       f.upper <- f.lower
       # Handle upper == lower
       if (upper == lower) {
-        lower <- overshoot * lower
+        lower <- ifelse(sign(lower) > 0, overshoot, (1 + overshoot)) * lower
       } else {
-        lower <- overshoot * -intercept / slope
+        lower <- ifelse(sign(lower) > 0, overshoot, (1 + overshoot)) * -intercept / slope
       }
       if (lower > upper) {
         lower <- mean(c(lower_hard, upper))
@@ -1500,13 +1503,16 @@ extend_i <- function(
                           c(list(x_i = lower),
                            args))
     } else {
+
+      # ==== Extend the upper bound ====
+
       lower <- upper
       f.lower <- f.upper
       # Handle upper == lower
       if (upper == lower) {
-        upper <- (1 + overshoot) * upper
+        upper <- ifelse(sign(upper) < 0, overshoot, (1 + overshoot)) * upper
       } else {
-        upper <- (1 + overshoot) * -intercept / slope
+        upper <- ifelse(sign(upper) < 0, overshoot, (1 + overshoot)) * -intercept / slope
       }
       if (upper < lower) {
         upper <- mean(c(lower, upper_hard))
