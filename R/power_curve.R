@@ -79,6 +79,25 @@
 #' but is also used internally by
 #' functions such as [x_from_power()].
 #'
+#' ## 'nls_options'
+#'
+#' These are possible arguments.
+#'
+#' - `min_points`: If the object has
+#'   less than `min_points` rejection
+#'   rates, `nls` will not be used.
+#'
+#' - `regions`: A numeric vector with
+#'   values from 0 to 1. It defines
+#'   regions in which there must be
+#'   at least one rejection rate. If this
+#'   criterion is not met, `nls` will
+#'   not be used. This is to ensure that
+#'   `nls` will not be used when the
+#'   rejection rates are clustered around
+#'   a very narrow region.
+#'
+#'
 #' @return
 #' It returns a list which is a
 #' `power_curve` object, with the
@@ -173,6 +192,12 @@
 #' all three models will be attempted,
 #' in this order.
 #'
+#' @param nls_options A named list of
+#' options to be used by [power_curve()]
+#' to configure the use of `"nls"`. For
+#' advanced use. See 'Details' for
+#' available options.
+#'
 #' @seealso [power4test_by_n()] and [power4test_by_es()]
 #' for the output supported by
 #' [power_curve()], [plot.power_curve()]
@@ -254,7 +279,9 @@ power_curve <- function(object,
                         nls_args = list(),
                         nls_control = list(),
                         verbose = FALSE,
-                        models = c("nls", "logistic", "lm")) {
+                        models = c("nls", "logistic", "lm"),
+                        nls_options = list(min_points = 4,
+                                           regions = c(0, .45, .75, .85, 1))) {
   if (missing(models)) {
     models <- eval(formals(power_curve)$models)
   } else {
@@ -338,7 +365,17 @@ power_curve <- function(object,
 
   fit <- NA
 
-  if ((nrow(reject0) >= 4) &&
+  nls_ok <- 1L
+  if (length(reject0$reject) < nls_options$min_points) {
+    nls_ok <- nls_ok - 1L
+  }
+  if (!isTRUE(check_regions(
+                    reject0$reject,
+                    nls_options$regions))) {
+    nls_ok <- nls_ok - 1L
+  }
+
+  if ((nls_ok == 1L) &&
       ("nls" %in% models)) {
 
     # === nls ===
@@ -631,4 +668,21 @@ fix_nls_args <- function(formula,
 
   return(out)
 
+}
+
+#' @noRd
+check_regions <- function(
+                   x,
+                   regions) {
+  # Determine whether all regions have
+  # at least one point.
+  regions <- unique(c(regions, 0, 1))
+  regions <- regions[(regions <= 1) & (regions >= 0)]
+  regions <- sort(regions)
+  k <- length(regions) - 1
+  tmp <- findInterval(
+            x = x,
+            vec = regions,
+            rightmost.closed = TRUE)
+  setequal(unique(tmp), seq_len(k))
 }
