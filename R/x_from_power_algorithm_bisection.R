@@ -187,9 +187,11 @@ power_algorithm_bisection <- function(object,
   # ==== Default for variants ====
 
   variants0 <- list(use_power_curve_assist = TRUE,
-                    use_power_curve_min_points = 6,
+                    use_power_curve_min_points = 4,
                     power_curve_args = list(),
-                    muller = FALSE)
+                    muller = FALSE,
+                    min_interval_width = c(n = 2,
+                                           es = .001))
   variants <- utils::modifyList(variants0,
                                 variants)
 
@@ -670,6 +672,12 @@ power_algorithm_bisection <- function(object,
               tol = tol
             )
 
+      f_history[i] <- as.numeric(out_i)
+      x_history[i] <- x_i
+      x_interval_history[i, ] <- c(lower_i, upper_i)
+      f_interval_history[i, ] <- c(f.lower_i, f.upper_i)
+      reject_history[i] <- reject_i
+
       if (ok) {
 
         # ==== Yes. Solution found ====
@@ -686,12 +694,6 @@ power_algorithm_bisection <- function(object,
         break
 
       }
-
-      f_history[i] <- as.numeric(out_i)
-      x_history[i] <- x_i
-      x_interval_history[i, ] <- c(lower_i, upper_i)
-      f_interval_history[i, ] <- c(f.lower_i, f.upper_i)
-      reject_history[i] <- reject_i
 
       # ==== Check changes ====
 
@@ -732,9 +734,10 @@ power_algorithm_bisection <- function(object,
         f.upper_i <- out_i
       }
 
-      tmp <- switch(x_type,
-                    n = 2,
-                    es = .05)
+      # tmp <- switch(x_type,
+      #               n = 2,
+      #               es = .05)
+      tmp <- variants$min_interval_width[x_type]
       if (abs(lower_i - upper_i) <= tmp) {
 
         # ==== Interval too narrow. Extend it ====
@@ -829,7 +832,7 @@ power_algorithm_bisection <- function(object,
         power_curve_used <- FALSE
 
         if (variants$use_power_curve_assist &&
-            (length(by_x_1) >= variants$use_power_curve_assist)) {
+            (length(by_x_1) >= variants$use_power_curve_min_points)) {
           fit_1 <- tryCatch(do.call(
                               power_curve,
                               c(list(object = by_x_1),
@@ -1045,7 +1048,7 @@ extend_interval <- function(f,
                             overshoot = .5,
                             min_x_diff = 0) {
   if (trace) {
-    cat("\n\n== Enter extending interval ...\n\n")
+    cat("\n== Enter extending interval ...\n")
   }
   status_msg <- c("Interval OK" = 0,
                   "Interval not OK but extendInd is no" = 1,
@@ -1089,7 +1092,12 @@ extend_interval <- function(f,
 
     # No need to extend
     if (trace) {
-      cat("\n\n== Exit extending interval ...\n\n")
+      print_interval(lower = lower,
+                     upper = upper,
+                     digits = digits,
+                     x_type = x_type,
+                     prefix = "The interval is already valid:")
+      cat("== Exit extending interval ...\n")
     }
     return(list(lower = lower,
                 upper = upper,
@@ -1107,7 +1115,12 @@ extend_interval <- function(f,
     # ==== "No". Exit ====
 
     if (trace) {
-      cat("\n\n== Exit extending interval ...\n\n")
+      print_interval(lower = lower,
+                     upper = upper,
+                     digits = digits,
+                     x_type = x_type,
+                     prefix = "extendInt is 'no'. The interval is not extended:")
+      cat("== Exit extending interval ...\n")
     }
     return(list(lower = lower,
                 upper = upper,
@@ -1229,7 +1242,13 @@ extend_interval <- function(f,
     # ==== Should extend down but not requested. Exist ====
 
     if (trace) {
-      cat("\n\n== Exit extending interval ...\n\n")
+      print_interval(lower = lower,
+                     upper = upper,
+                     digits = digits,
+                     x_type = x_type,
+                     prefix = paste0("Should extend downward but extendInt not 'yes' or 'downX'.\n",
+                                     "The interval is not extended:"))
+      cat("== Exit extending interval ...\n")
     }
     return(list(lower = lower,
                 upper = upper,
@@ -1244,7 +1263,13 @@ extend_interval <- function(f,
     # ==== Should extend up but not requested. Exist ====
 
     if (trace) {
-      cat("\n\n== Exit extending interval ...\n\n")
+      print_interval(lower = lower,
+                     upper = upper,
+                     digits = digits,
+                     x_type = x_type,
+                     prefix = paste0("Should extend upward but extendInt not 'yes' or 'upX'.\n",
+                                     "The interval is not extended:"))
+      cat("== Exit extending interval ...\n")
     }
     return(list(lower = lower,
                 upper = upper,
@@ -1370,7 +1395,7 @@ extend_interval <- function(f,
   }
 
   if (trace) {
-    cat("\n\n== Exit extending interval ...\n\n")
+    cat("== Exit extending interval ...\n")
   }
 
   # ==== Return the extended interval ====
@@ -1687,7 +1712,7 @@ gen_objective <- function(object,
                      paste0(formatC(ci_i, digits = digits, format = "f"),
                             collapse = ","),
                      "]")
-      cat("\nEstimated power at ", x, ": ",
+      cat("\nEstimated power at ", x_i, ": ",
           tmp1,
           ", ", formatC(ci_level*100,
                        digits = max(0, digits - 2),
