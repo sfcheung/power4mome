@@ -194,7 +194,7 @@ power_algorithm_bisection <- function(object,
                                            es = .001))
   variants <- utils::modifyList(variants0,
                                 variants)
-
+  proxy_power <- NULL
   if (variants$use_power_curve_assist) {
     proxy_power <- tryCatch(target_power_adjusted(
                       target_power = target_power,
@@ -438,7 +438,9 @@ power_algorithm_bisection <- function(object,
                                         store_output = TRUE,
                                         overshoot = switch(x,
                                                            n = .5,
-                                                           es = .05))
+                                                           es = .05),
+                                        variants = variants,
+                                        proxy_power = proxy_power)
     by_x_1 <- interval_updated$by_x_1 %||% by_x_1
     ci_hit <- FALSE
     solution_found <- FALSE
@@ -787,7 +789,9 @@ power_algorithm_bisection <- function(object,
               overshoot = switch(x,
                                  n = .9,
                                  es = .90),
-              min_x_diff = tmp * 4
+              min_x_diff = tmp * 4,
+              variants = variants,
+              proxy_power = proxy_power
             )
 
         by_x_1 <- interval_updated_i$by_x_1
@@ -1046,7 +1050,9 @@ extend_interval <- function(f,
                             digits = 3,
                             by_x_1 = NULL,
                             overshoot = .5,
-                            min_x_diff = 0) {
+                            min_x_diff = 0,
+                            variants = list(use_power_curve_assist = FALSE),
+                            proxy_power = NULL) {
   if (trace) {
     cat("\n== Enter extending interval ...\n")
   }
@@ -1328,7 +1334,9 @@ extend_interval <- function(f,
             which = switch(extend_which,
                            extend_down = "lower",
                            extend_up = "upper"),
-            by_x_1 = by_x_1
+            by_x_1 = by_x_1,
+            variants = variants,
+            proxy_power = proxy_power
           )
         lower <- out_i$lower
         upper <- out_i$upper
@@ -1429,7 +1437,9 @@ extend_i <- function(
                   digits,
                   overshoot,
                   which = c("lower", "upper"),
-                  by_x_1 = NULL) {
+                  by_x_1 = NULL,
+                  variants = list(),
+                  proxy_power = NULL) {
   which <- match.arg(which)
   if (((which == "lower") && (lower == lower_hard)) ||
       ((which == "upper") && (upper == upper_hard))) {
@@ -1482,6 +1492,35 @@ extend_i <- function(
       } else {
         lower <- ifelse(sign(lower) > 0, overshoot, (1 + overshoot)) * -intercept / slope
       }
+
+      if (variants$use_power_curve_assist &&
+          (length(by_x_1) >= variants$use_power_curve_min_points)) {
+
+        fit_1 <- tryCatch(do.call(
+                            power_curve,
+                            c(list(object = by_x_1),
+                              variants$power_curve_args)
+                          ),
+                          error = function(e) e)
+        if (inherits(fit_1, "power_curve")) {
+          lower0 <- estimate_x_range(
+                      power_x_fit = fit_1,
+                      x = x_type,
+                      target_power = proxy_power,
+                      k = 1,
+                      tolerance = 0,
+                      power_min = 0,
+                      power_max = 1,
+                      interval = c(lower_hard, upper_hard),
+                      extendInt = "no",
+                      x_to_exclude = rejection_rates(by_x_1)[, x_type, drop = TRUE]
+                    )
+          if (!is.na(lower0) && is.numeric(lower0)) {
+            lower <- lower0
+          }
+        }
+      }
+
       if (lower > upper) {
         lower <- mean(c(lower_hard, upper))
       }
@@ -1514,6 +1553,35 @@ extend_i <- function(
       } else {
         upper <- ifelse(sign(upper) < 0, overshoot, (1 + overshoot)) * -intercept / slope
       }
+
+      if (variants$use_power_curve_assist &&
+          (length(by_x_1) >= variants$use_power_curve_min_points)) {
+
+        fit_1 <- tryCatch(do.call(
+                            power_curve,
+                            c(list(object = by_x_1),
+                              variants$power_curve_args)
+                          ),
+                          error = function(e) e)
+        if (inherits(fit_1, "power_curve")) {
+          upper0 <- estimate_x_range(
+                      power_x_fit = fit_1,
+                      x = x_type,
+                      target_power = proxy_power,
+                      k = 1,
+                      tolerance = 0,
+                      power_min = 0,
+                      power_max = 1,
+                      interval = c(lower_hard, upper_hard),
+                      extendInt = "no",
+                      x_to_exclude = rejection_rates(by_x_1)[, x_type, drop = TRUE]
+                    )
+          if (!is.na(upper0) && is.numeric(upper0)) {
+            upper <- upper0
+          }
+        }
+      }
+
       if (upper < lower) {
         upper <- mean(c(lower, upper_hard))
       }

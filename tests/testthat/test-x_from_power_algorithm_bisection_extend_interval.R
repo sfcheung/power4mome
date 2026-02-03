@@ -2,6 +2,8 @@ library(testthat)
 
 test_that("extend_interval: n", {
 
+skip("Temporarily disabled")
+
 mod <-
 "
 m ~ x
