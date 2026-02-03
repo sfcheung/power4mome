@@ -187,8 +187,9 @@ power_algorithm_bisection <- function(object,
   # ==== Default for variants ====
 
   variants0 <- list(use_power_curve_assist = TRUE,
-                    use_power_curve_min_points = 4,
+                    use_power_curve_min_points = 2,
                     power_curve_args = list(),
+                    use_power_curve_hybrid = TRUE,
                     muller = FALSE,
                     min_interval_width = c(n = 2,
                                            es = .001))
@@ -367,16 +368,7 @@ power_algorithm_bisection <- function(object,
           )
   reject_lower <- tmp$reject
   nrep_lower <- tmp$nrep
-  ok_lower <- check_solution(
-                f_i = reject_lower,
-                target_power = target_power,
-                nrep = nrep_lower,
-                ci_level = ci_level,
-                final_nrep = final_nrep,
-                what = what,
-                goal = goal,
-                tol = tol
-              )
+
   output_upper <- attr(f.upper, "output")
   tmp <- rejection_rates(
             output_upper,
@@ -384,17 +376,56 @@ power_algorithm_bisection <- function(object,
           )
   reject_upper <- tmp$reject
   nrep_upper <- tmp$nrep
-  reject_upper <- rejection_rates(output_upper)$reject
-  ok_upper <- check_solution(
-                f_i = reject_upper,
-                target_power = target_power,
-                nrep = nrep_upper,
-                final_nrep = final_nrep,
-                ci_level = ci_level,
-                what = what,
-                goal = goal,
-                tol = tol
-              )
+
+  tmp <- check_solution_bounds(
+            f.lower = f.lower,
+            f.upper = f.upper,
+            target_power = target_power,
+            final_nrep = final_nrep,
+            ci_level = ci_level,
+            what = what,
+            goal = goal,
+            tol = tol
+          )
+
+  ok_lower <- tmp["ok_lower"]
+  ok_upper <- tmp["ok_upper"]
+
+  # output_lower <- attr(f.lower, "output")
+  # tmp <- rejection_rates(
+  #           output_lower,
+  #           all_columns = TRUE
+  #         )
+  # reject_lower <- tmp$reject
+  # nrep_lower <- tmp$nrep
+  # ok_lower <- check_solution(
+  #               f_i = reject_lower,
+  #               target_power = target_power,
+  #               nrep = nrep_lower,
+  #               ci_level = ci_level,
+  #               final_nrep = final_nrep,
+  #               what = what,
+  #               goal = goal,
+  #               tol = tol
+  #             )
+  # output_upper <- attr(f.upper, "output")
+  # tmp <- rejection_rates(
+  #           output_upper,
+  #           all_columns = TRUE
+  #         )
+  # reject_upper <- tmp$reject
+  # nrep_upper <- tmp$nrep
+  # reject_upper <- rejection_rates(output_upper)$reject
+  # ok_upper <- check_solution(
+  #               f_i = reject_upper,
+  #               target_power = target_power,
+  #               nrep = nrep_upper,
+  #               final_nrep = final_nrep,
+  #               ci_level = ci_level,
+  #               what = what,
+  #               goal = goal,
+  #               tol = tol
+  #             )
 
   if (ok_lower || ok_upper) {
 
@@ -420,6 +451,8 @@ power_algorithm_bisection <- function(object,
                                         nrep = final_nrep,
                                         R = R,
                                         what = what,
+                                        goal = goal,
+                                        tol = tol,
                                         simulation_progress = simulation_progress,
                                         save_sim_all = save_sim_all,
                                         progress = progress,
@@ -517,16 +550,7 @@ power_algorithm_bisection <- function(object,
            )
     reject_lower <- tmp$reject
     nrep_lower <- tmp$nrep
-    ok_lower <- check_solution(
-                  f_i = reject_lower,
-                  target_power = target_power,
-                  nrep = final_nrep,
-                  final_nrep = final_nrep,
-                  ci_level = ci_level,
-                  what = what,
-                  goal = goal,
-                  tol = tol
-                )
+
     output_upper <- attr(f.upper, "output")
     tmp <- rejection_rates(
              output_upper,
@@ -534,16 +558,55 @@ power_algorithm_bisection <- function(object,
            )
     reject_upper <- tmp$reject
     nrep_upper <- tmp$nrep
-    ok_upper <- check_solution(
-                  f_i = reject_upper,
-                  target_power = target_power,
-                  nrep = nrep_upper,
-                  final_nrep = final_nrep,
-                  ci_level = ci_level,
-                  what = what,
-                  goal = goal,
-                  tol = tol
-                )
+
+    tmp <- check_solution_bounds(
+              f.lower = f.lower,
+              f.upper = f.upper,
+              target_power = target_power,
+              final_nrep = final_nrep,
+              ci_level = ci_level,
+              what = what,
+              goal = goal,
+              tol = tol
+            )
+
+    ok_lower <- tmp["ok_lower"]
+    ok_upper <- tmp["ok_upper"]
+
+    # output_lower <- attr(f.lower, "output")
+    # tmp <- rejection_rates(
+    #          output_lower,
+    #          all_columns = TRUE
+    #        )
+    # reject_lower <- tmp$reject
+    # nrep_lower <- tmp$nrep
+    # ok_lower <- check_solution(
+    #               f_i = reject_lower,
+    #               target_power = target_power,
+    #               nrep = final_nrep,
+    #               final_nrep = final_nrep,
+    #               ci_level = ci_level,
+    #               what = what,
+    #               goal = goal,
+    #               tol = tol
+    #             )
+    # output_upper <- attr(f.upper, "output")
+    # tmp <- rejection_rates(
+    #          output_upper,
+    #          all_columns = TRUE
+    #        )
+    # reject_upper <- tmp$reject
+    # nrep_upper <- tmp$nrep
+    # ok_upper <- check_solution(
+    #               f_i = reject_upper,
+    #               target_power = target_power,
+    #               nrep = nrep_upper,
+    #               final_nrep = final_nrep,
+    #               ci_level = ci_level,
+    #               what = what,
+    #               goal = goal,
+    #               tol = tol
+    #             )
 
     if ((interval_updated$extend_status != 0) &&
         (!ok_lower && !ok_upper)) {
@@ -770,6 +833,8 @@ power_algorithm_bisection <- function(object,
               nrep = final_nrep,
               R = R,
               what = what,
+              goal = goal,
+              tol = tol,
               simulation_progress = simulation_progress,
               save_sim_all = save_sim_all,
               progress = progress,
@@ -859,7 +924,12 @@ power_algorithm_bisection <- function(object,
             if ((x_i_0 > lower_i) &&
                 (x_i_0 < upper_i)) {
               power_curve_used <- TRUE
-              x_i <- x_i_0
+              if (variants$use_power_curve_hybrid) {
+                x_i <- mean(c(x_i_0,
+                              mean(c(lower_i, upper_i))))
+              } else {
+                x_i <- x_i_0
+              }
             } else {
               x_i <- mean(c(lower_i, upper_i))
             }
@@ -1062,7 +1132,8 @@ extend_interval <- function(f,
                   "Interval below the solution but extendInd is not yes or upX" = 3,
                   "Interval above the solution but the lower bound hits lower_hard" = 4,
                   "Interval above the solution but the upper bound hits upper_hard" = 5,
-                  "Interval not OK but extend_maxiter reached" = 6)
+                  "Interval not OK but extend_maxiter reached" = 6,
+                  "One of the bounds is a solution" = -1)
   extend_status <- NA
   args <- list(...)
   # x is always supplied
@@ -1310,7 +1381,9 @@ extend_interval <- function(f,
     # ==== Loop for extension ====
     i <- 1
     overshoot_i <- overshoot
+    solution_in_bounds <- FALSE
     while ((i <= extend_maxiter) &&
+           isFALSE(solution_in_bounds) &&
            ((sign(f.lower) == sign(f.upper)) ||
             (abs(lower - upper) < min_x_diff))) {
         overshoot_i <- overshoot_i * i
@@ -1372,6 +1445,34 @@ extend_interval <- function(f,
         extend_up <- (extend_which == "extend_up")
         extend_down <- (extend_which == "extend_down")
         i <- i + 1
+
+        # ==== Is one of the bounds a solution?
+
+        output_lower <- attr(f.lower, "output")
+        tmp <- rejection_rates(
+                  output_lower,
+                  all_columns = TRUE
+                )
+
+        output_upper <- attr(f.upper, "output")
+        tmp <- rejection_rates(
+                  output_upper,
+                  all_columns = TRUE
+                )
+
+        tmp <- check_solution_bounds(
+                  f.lower = f.lower,
+                  f.upper = f.upper,
+                  target_power = args$target_power,
+                  final_nrep = args$nrep,
+                  ci_level = args$ci_level,
+                  what = args$what,
+                  goal = args$goal,
+                  tol = args$tol
+                )
+
+        solution_in_bounds <- any(tmp)
+
       }
     }
 
@@ -1379,18 +1480,26 @@ extend_interval <- function(f,
 
   interval_ok <- (sign(f.lower) != sign(f.upper)) &&
                  (abs(lower - upper) >= min_x_diff)
-  if (!interval_ok) {
-    if (is.na(extend_status)) {
-      # extend_maxiter reached
-      extend_status <- status_msg[status_msg == 6]
+
+  if (solution_in_bounds) {
+    extend_status <- status_msg[status_msg == -1]
+    if (trace) {
+      cat("One of the bounds is a solution.\n")
+    }
+  } else {
+    if (!interval_ok) {
+      if (is.na(extend_status)) {
+        # extend_maxiter reached
+        extend_status <- status_msg[status_msg == 6]
+        if (trace) {
+          cat(names(extend_status), ".\n", sep = "")
+        }
+      }
+    } else {
+      extend_status <- status_msg[status_msg == 0]
       if (trace) {
         cat(names(extend_status), ".\n", sep = "")
       }
-    }
-  } else {
-    extend_status <- status_msg[status_msg == 0]
-    if (trace) {
-      cat(names(extend_status), ".\n", sep = "")
     }
   }
 
@@ -1415,7 +1524,8 @@ extend_interval <- function(f,
               interval_ok = interval_ok,
               extend_status = extend_status,
               extendInt = extendInt,
-              by_x_1 = by_x_1))
+              by_x_1 = by_x_1,
+              solution_in_bounds = solution_in_bounds))
 }
 
 #' @noRd
@@ -1516,7 +1626,7 @@ extend_i <- function(
                       x_to_exclude = rejection_rates(by_x_1)[, x_type, drop = TRUE]
                     )
           if (!is.na(lower0) && is.numeric(lower0)) {
-            lower <- lower0
+            lower <- ifelse(sign(lower0) > 0, overshoot, (1 + overshoot)) * lower0
           }
         }
       }
@@ -1577,7 +1687,7 @@ extend_i <- function(
                       x_to_exclude = rejection_rates(by_x_1)[, x_type, drop = TRUE]
                     )
           if (!is.na(upper0) && is.numeric(upper0)) {
-            upper <- upper0
+            upper <- ifelse(sign(upper0) < 0, overshoot, (1 + overshoot)) * upper0
           }
         }
       }
@@ -1996,4 +2106,53 @@ random_interval <- function(interval_i) {
   tmp_i <- sample.int(length(tmp),
                       size = 1)
   return(tmp[[tmp_i]])
+}
+
+#' @noRd
+check_solution_bounds <- function(
+  f.lower,
+  f.upper,
+  target_power,
+  final_nrep,
+  ci_level,
+  what,
+  goal,
+  tol
+) {
+  output_lower <- attr(f.lower, "output")
+  tmp <- rejection_rates(
+            output_lower,
+            all_columns = TRUE
+          )
+  reject_lower <- tmp$reject
+  nrep_lower <- tmp$nrep
+  ok_lower <- check_solution(
+                f_i = reject_lower,
+                target_power = target_power,
+                nrep = final_nrep,
+                final_nrep = final_nrep,
+                ci_level = ci_level,
+                what = what,
+                goal = goal,
+                tol = tol
+              )
+  output_upper <- attr(f.upper, "output")
+  tmp <- rejection_rates(
+            output_upper,
+            all_columns = TRUE
+          )
+  reject_upper <- tmp$reject
+  nrep_upper <- tmp$nrep
+  ok_upper <- check_solution(
+                f_i = reject_upper,
+                target_power = target_power,
+                nrep = nrep_upper,
+                final_nrep = final_nrep,
+                ci_level = ci_level,
+                what = what,
+                goal = goal,
+                tol = tol
+              )
+  c(ok_lower = ok_lower,
+    ok_upper = ok_upper)
 }
