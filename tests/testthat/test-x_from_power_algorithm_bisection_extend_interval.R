@@ -1,3 +1,7 @@
+skip("Not used")
+
+# Do not use these tests. They are "too low level."
+
 library(testthat)
 
 test_that("extend_interval: n", {

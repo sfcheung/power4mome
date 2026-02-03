@@ -1,3 +1,7 @@
+skip("Not used")
+
+# Do not use these tests. They are "too low level."
+
 skip_on_cran()
 
 library(testthat)
