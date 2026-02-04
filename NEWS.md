@@ -1,4 +1,4 @@
-# power4mome 0.1.1.37
+# power4mome 0.1.1.38
 
 - Improve the function for extending the
   initial interval before doing a
@@ -132,7 +132,7 @@
 
 - Updated all test functions to include
   *p*-values in the output.
-  (0.0.1.30)
+  (0.1.1.30)
 
 - Added the `p_adjust_method` argument
   to some tests, as well as the
@@ -177,6 +177,11 @@
   the solution. If estimated solution
   inside an interval, use it instead of
   the mean. (0.1.1.37)
+
+- More checks for the solution in
+  the bisection algorithm. When extending
+  an interval, the power curve will also
+  be used. (0.1.1.38)
 
 # power4mome 0.1.1
 
