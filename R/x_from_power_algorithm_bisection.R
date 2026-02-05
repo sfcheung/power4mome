@@ -239,6 +239,7 @@ power_algorithm_bisection <- function(object,
 
   # Find f.lower and f.upper
 
+  # - Update to use rejection_rates_args
   by_x_ci <- rejection_rates_add_ci(by_x_1,
                                     level = ci_level)
   x_tried <- get_x_tried(by_x_ci,
@@ -350,6 +351,8 @@ power_algorithm_bisection <- function(object,
                    prefix = "Initial interval:")
     cat("\n")
     cat("- Rejection Rates:\n")
+    # TODO:
+    # - Update to use rejection_rates_args
     tmp <- rejection_rates(by_x_1)
     print(tmp, annotation = FALSE)
     cat("\n")
@@ -362,6 +365,8 @@ power_algorithm_bisection <- function(object,
   # Check whether lower or upper is already a solution
 
   output_lower <- attr(f.lower, "output")
+  # TODO:
+  # - Update to use rejection_rates_args
   tmp <- rejection_rates(
             output_lower,
             all_columns = TRUE
@@ -370,6 +375,8 @@ power_algorithm_bisection <- function(object,
   nrep_lower <- tmp$nrep
 
   output_upper <- attr(f.upper, "output")
+  # TODO:
+  # - Update to use rejection_rates_args
   tmp <- rejection_rates(
             output_upper,
             all_columns = TRUE
@@ -544,6 +551,8 @@ power_algorithm_bisection <- function(object,
     # Check whether the updated lower or upper is already a solution
 
     output_lower <- attr(f.lower, "output")
+    # TODO:
+    # - Update to use rejection_rates_args
     tmp <- rejection_rates(
              output_lower,
              all_columns = TRUE
@@ -552,6 +561,8 @@ power_algorithm_bisection <- function(object,
     nrep_lower <- tmp$nrep
 
     output_upper <- attr(f.upper, "output")
+    # TODO:
+    # - Update to use rejection_rates_args
     tmp <- rejection_rates(
              output_upper,
              all_columns = TRUE
@@ -709,10 +720,14 @@ power_algorithm_bisection <- function(object,
       output_i <- attr(out_i, "output")
       by_x_1 <- c(by_x_1, output_i,
                   skip_checking_models = TRUE)
+      # TODO:
+      # - Update to use rejection_rates_args
       reject_i <- rejection_rates(output_i)$reject
 
       if (progress) {
         cat("- Rejection Rates:\n")
+        # TODO:
+        # - Update to use rejection_rates_args
         tmp <- rejection_rates(by_x_1)
         print(tmp, annotation = FALSE)
         cat("\n")
@@ -909,6 +924,8 @@ power_algorithm_bisection <- function(object,
                             ),
                             error = function(e) e)
           if (inherits(fit_1, "power_curve")) {
+            # TODO:
+            # - Update to use rejection_rates_args
             x_i_0 <- estimate_x_range(
                         power_x_fit = fit_1,
                         x = x,
@@ -1033,12 +1050,16 @@ power_algorithm_bisection <- function(object,
     # regardless of solution
 
     out_i <- as.numeric(out_i)
+    # TODO:
+    # - Update to use rejection_rates_args
     by_ci_i <- rejection_rates_add_ci(output_i,
                                       level = ci_level)
     ci_i <- unlist(by_ci_i[1, c("reject_ci_lo", "reject_ci_hi")])
     x_tried <- get_x_tried(by_x_1,
                            x = x)
     i2 <- match(x_i, x_tried)
+    # TODO:
+    # - Update to use rejection_rates_args
     by_x_ci <- rejection_rates_add_ci(by_x_1,
                                       level = ci_level)
     x_out <- x_i
@@ -1449,12 +1470,16 @@ extend_interval <- function(f,
         # ==== Is one of the bounds a solution?
 
         output_lower <- attr(f.lower, "output")
+        # TODO:
+        # - Update to use rejection_rates_args
         tmp <- rejection_rates(
                   output_lower,
                   all_columns = TRUE
                 )
 
         output_upper <- attr(f.upper, "output")
+        # TODO:
+        # - Update to use rejection_rates_args
         tmp <- rejection_rates(
                   output_upper,
                   all_columns = TRUE
@@ -1613,6 +1638,8 @@ extend_i <- function(
                           ),
                           error = function(e) e)
         if (inherits(fit_1, "power_curve")) {
+          # TODO:
+          # - Update to use rejection_rates_args
           lower0 <- estimate_x_range(
                       power_x_fit = fit_1,
                       x = x_type,
@@ -1860,6 +1887,8 @@ gen_objective <- function(object,
                                             progress = simulation_progress,
                                             by_nrep = nrep,
                                             save_sim_all = save_sim_all))
+      # TODO:
+      # - Update to use rejection_rates_args
       power_i <- rejection_rates(out_i)$reject
     } else {
       if (is.null(power_i)) {
@@ -1867,6 +1896,8 @@ gen_objective <- function(object,
         # ==== Get Power (out_i supplied) ====
 
         # power_i is supplied. Ignore out_i
+        # TODO:
+        # - Update to use rejection_rates_args
         power_i <- rejection_rates(out_i)$reject
         out_i <- NULL
       } else {
@@ -2120,6 +2151,8 @@ check_solution_bounds <- function(
   tol
 ) {
   output_lower <- attr(f.lower, "output")
+  # TODO:
+  # - Update to use rejection_rates_args
   tmp <- rejection_rates(
             output_lower,
             all_columns = TRUE
@@ -2137,6 +2170,8 @@ check_solution_bounds <- function(
                 tol = tol
               )
   output_upper <- attr(f.upper, "output")
+  # TODO:
+  # - Update to use rejection_rates_args
   tmp <- rejection_rates(
             output_upper,
             all_columns = TRUE

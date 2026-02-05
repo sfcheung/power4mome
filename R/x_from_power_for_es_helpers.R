@@ -10,6 +10,8 @@ set_es_range_by_x <- function(
                           goal = NULL,
                           tol = NULL,
                           ci_level = .95) {
+  # TODO:
+  # - Update to use rejection_rates_args
   reject0by <- rejection_rates(object_by_org,
                                level = ci_level,
                                add_se = TRUE,
@@ -72,6 +74,9 @@ set_es_range <- function(object,
                 pop_es_name = pop_es_name)
   es0_sign <- sign(es0)
   es0_abs <- abs(es0)
+  # TODO:
+  # - Update to use rejection_rates_args
+  # - Add other arguments for rejection rates
   reject0 <- rejection_rates(object)
   power0 <- reject0$reject[1]
   if (es0 > es_max) {

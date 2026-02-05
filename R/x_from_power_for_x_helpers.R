@@ -203,6 +203,9 @@ rejection_rates_add_ci <- function(object,
                                    level = .95,
                                    add_reject = TRUE,
                                    add_se = TRUE) {
+  # TODO:
+  # - Update to use rejection_rates_args
+
   if (!is.data.frame(object)) {
     if (inherits(object, "power4test_by_es")) {
       df1 <- rejection_rates(object,
@@ -280,6 +283,8 @@ find_ci_hit <- function(object,
   # If no hit, return NULL
   # If hit, always return one number
   # If closest_ok, accept a trial with closest power level
+  # TODO:
+  # - Update to use rejection_rates_args
   by_x_ci <- rejection_rates_add_ci(object,
                                     level = ci_level)
   i0 <- (by_x_ci$reject_ci_lo < target_power) &
@@ -383,6 +388,8 @@ find_close_enough <- function(
   if_ties <- match.arg(if_ties)
   weight_by <- match.arg(weight_by)
 
+  # TODO:
+  # - Update to use rejection_rates_args
   by_x_ci <- rejection_rates_add_ci(object,
                                     level = ci_level,
                                     add_se = TRUE)
@@ -477,6 +484,8 @@ check_x_from_power_as_input <- function(object,
 # Get the vector of x values already tried
 get_x_tried <- function(object,
                         x) {
+  # TODO:
+  # - Update to use rejection_rates_args
   tmp <- rejection_rates_add_ci(object)
   out <- switch(x,
                 n = tmp$n,
@@ -771,6 +780,8 @@ check_solution_in_by_x <- function(
   if (inherits(object, "rejection_rates_df")) {
     reject_df <- object
   } else {
+    # TODO:
+    # - Update to use rejection_rates_args
     reject_df <- rejection_rates(object,
                                 ci_level = ci_level,
                                 all_columns = TRUE,

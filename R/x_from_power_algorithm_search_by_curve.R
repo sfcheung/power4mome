@@ -590,6 +590,8 @@ power_algorithm_search_by_curve <- function(object,
 
     if (progress) {
       cat("\n- Rejection Rates:\n\n")
+      # TODO:
+      # - Update to use rejection_rates_args
       tmp <- rejection_rates(by_x_1)
       print(tmp,
             annotation = FALSE)
@@ -619,6 +621,8 @@ power_algorithm_search_by_curve <- function(object,
     # close_enough-lb/ub: OK
 
     # Get the rejection rates of all values tried.
+    # TODO:
+    # - Update to use rejection_rates_args
     tmp1 <- rejection_rates_add_ci(by_x_1,
                                    level = ci_level)
     # tmp1$reject <- tmp1$sig
@@ -667,6 +671,8 @@ power_algorithm_search_by_curve <- function(object,
                       es = tmp1$es[x_out_i])
       power_out <- tmp1$reject[x_out_i]
       nrep_out <- tmp1$nrep[x_out_i]
+      # TODO:
+      # - Update to use rejection_rates_args
       by_x_ci <- rejection_rates_add_ci(by_x_1,
                                         level = ci_level)
       ci_out <- unlist(by_x_ci[x_out_i, c("reject_ci_lo", "reject_ci_hi")])
@@ -729,6 +735,8 @@ power_algorithm_search_by_curve <- function(object,
                                                progress = simulation_progress,
                                                save_sim_all = save_sim_all))
       nrep_out <- nrep_seq[1]
+      # TODO:
+      # - Update to use rejection_rates_args
       power_out <- rejection_rates(by_x_out)[1, "reject"]
       by_x_out_ci <- rejection_rates_add_ci(by_x_out,
                                             level = ci_level)
@@ -787,7 +795,8 @@ power_algorithm_search_by_curve <- function(object,
       # ==== Any CI hits target power? ====
 
       # Check results accumulated so far
-
+      # TODO:
+      # - Update to use rejection_rates_args
       by_x_ci <- rejection_rates_add_ci(by_x_1,
                                         level = ci_level)
       i0 <- (by_x_ci$reject_ci_lo < target_power) &
@@ -924,6 +933,8 @@ power_algorithm_search_by_curve <- function(object,
 
       # ==== Any power levels close enough to the target power? ====
 
+      # TODO:
+      # - Update to use rejection_rates_args
       by_x_ci <- rejection_rates_add_ci(by_x_1,
                                         level = ci_level)
       i0 <- find_solution(
@@ -1224,6 +1235,8 @@ power_algorithm_search_by_curve_pre_i <- function(object,
 
   if (progress) {
     cat("\n- Rejection Rates:\n\n")
+    # TODO:
+    # - Update to use rejection_rates_args
     tmp <- rejection_rates(by_x_i)
     print(tmp,
           annotation = FALSE)

@@ -154,6 +154,8 @@ plot.power_curve <- function(x,
 
   what <- match.arg(what, several.ok = TRUE)
 
+  # TODO:
+  # - Update to use rejection_rates_args
   reject_df <- rejection_rates_add_ci(x$reject_df,
                                       level = ci_level)
 
@@ -255,6 +257,8 @@ plot.power4test_by_n <- function(
                              ci_level = .95,
                              ...) {
   what <- match.arg(what, several.ok = TRUE)
+  # TODO:
+  # - Update to use rejection_rates_args
   reject_df <- rejection_rates(x,
                                ci_level = ci_level,
                                all_columns = TRUE)
@@ -322,6 +326,8 @@ plot.power4test_by_es <- function(
                              ci_level = .95,
                              ...) {
   what <- match.arg(what, several.ok = TRUE)
+  # TODO:
+  # - Update to use rejection_rates_args
   reject_df <- rejection_rates(x,
                                ci_level = ci_level,
                                all_columns = TRUE)

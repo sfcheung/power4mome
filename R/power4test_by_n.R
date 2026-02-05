@@ -360,6 +360,8 @@ rejection_rates_by_n <- function(object_by_n,
                                  all_columns = FALSE,
                                  ...) {
   tmpfct <- function(x, n) {
+    # TODO:
+    # - Update to use rejection_rates_args
     out_i <- rejection_rates(x,
                              all_columns = all_columns,
                              ...)
