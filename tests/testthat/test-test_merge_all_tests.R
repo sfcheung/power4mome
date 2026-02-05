@@ -67,4 +67,4 @@ rejection_rates(out,
                 merge_all_tests = TRUE,
                 collapse = "all_sig")
 
-}
+})
