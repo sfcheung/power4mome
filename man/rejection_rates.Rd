@@ -19,11 +19,11 @@ rejection_rates(object, ...)
   ci = TRUE,
   level = 0.95,
   se = FALSE,
-  collapse = c("none", "all_sig", "at_least_one_sig", "at_least_k_sig"),
-  at_least_k = 1,
-  merge_all_tests = FALSE,
-  p_adjust_method = "none",
-  alpha = 0.05,
+  collapse = NULL,
+  at_least_k = NULL,
+  merge_all_tests = NULL,
+  p_adjust_method = NULL,
+  alpha = NULL,
   ...
 )
 
@@ -104,16 +104,22 @@ at least one of the tests is significant.
 If \code{"at_least_k_sig"}, then the set of
 tests is considered significant if
 at least \code{k} tests are significant,
-\code{k} set by the argument \code{at_least_k}.}
+\code{k} set by the argument \code{at_least_k}.
+If \code{NULL}, will use the value stored
+in \code{object} (default is \code{"none"}).}
 
 \item{at_least_k}{Used by \code{collapse},
 the number of tests required to be
 significant for the set of tests to
-be considered significant.}
+be considered significant. If \code{NULL},
+will use the value stored in \code{object}
+(default is 1).}
 
 \item{merge_all_tests}{If \code{TRUE}, all
 the tests in each replication will be
-merged into one test.}
+merged into one test.
+If \code{NULL}, will use the value stored
+in \code{object} (default is \code{FALSE}).}
 
 \item{p_adjust_method}{The method to be
 passed to \code{\link[=p.adjust]{p.adjust()}} to adjust the
@@ -122,14 +128,18 @@ Default is \code{"none"} and the \emph{p}-values
 will not be adjusted. Ignored if some tests
 do not have \emph{p}-values stored.
 NOTE: Use this only if all tests
-can be  conducted using \emph{p}-values.}
+can be  conducted using \emph{p}-values.
+If \code{NULL}, will use the value stored in
+\code{object} (default is \code{"none"}).}
 
 \item{alpha}{The level of significance
 to use when using \code{p_adjust_method}.
 The significance results (the column
 \code{sig}) will be updated using the
 adjusted \emph{p}-values. Used only if
-\code{p_adjust_method} is not \code{"none"}.}
+\code{p_adjust_method} is not \code{"none"}.
+If \code{NULL}, will use the value stored
+in \code{object} (default is .05).}
 
 \item{x}{The \code{rejection_rates_df}
 object to be printed.}

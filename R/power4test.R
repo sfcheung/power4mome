@@ -379,6 +379,12 @@
 #' cores to use if parallel processing
 #' is used.
 #'
+#' @param rejection_rates_args Default
+#' argument values to be used when
+#' [rejection_rates()] is called. Can
+#' be overriden when calling
+#' [rejection_rates()].
+#'
 # @param es1 <- Inherited
 #'
 # @param es2 <- Inherited
@@ -498,7 +504,12 @@ power4test <- function(object = NULL,
                                   "mi",
                                   "li"),
                        n_std = 100000,
-                       std_force_monte_carlo = FALSE) {
+                       std_force_monte_carlo = FALSE,
+                       rejection_rates_args = list(collapse = "none",
+                                                   at_least_k = 1,
+                                                   merge_all_tests = FALSE,
+                                                   p_adjust_method = "none",
+                                                   alpha = .05)) {
 
   # TOOD:
   # - Should allow only limited changes
