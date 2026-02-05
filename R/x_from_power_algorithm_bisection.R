@@ -239,6 +239,7 @@ power_algorithm_bisection <- function(object,
 
   # Find f.lower and f.upper
 
+  # TODO:
   # - Update to use rejection_rates_args
   by_x_ci <- rejection_rates_add_ci(by_x_1,
                                     level = ci_level)
