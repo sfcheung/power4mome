@@ -351,9 +351,8 @@ power_algorithm_bisection <- function(object,
                    prefix = "Initial interval:")
     cat("\n")
     cat("- Rejection Rates:\n")
-    # TODO:
-    # - RJ: Include other arguments, such as level.
-    tmp <- rejection_rates(by_x_1)
+    tmp <- rejection_rates(by_x_1,
+                           level = ci_level)
     print(tmp, annotation = FALSE)
     cat("\n")
   }
@@ -727,9 +726,8 @@ power_algorithm_bisection <- function(object,
       if (progress) {
         cat("- Rejection Rates:\n")
         # Arguments for rejection rates should be retrieved from the object
-        # TODO:
-        # - RJ: Include other arguments, such as level.
-        tmp <- rejection_rates(by_x_1)
+        tmp <- rejection_rates(by_x_1,
+                               level = ci_level)
         print(tmp, annotation = FALSE)
         cat("\n")
       }

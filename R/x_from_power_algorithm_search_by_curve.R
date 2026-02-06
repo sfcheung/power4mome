@@ -590,9 +590,8 @@ power_algorithm_search_by_curve <- function(object,
 
     if (progress) {
       cat("\n- Rejection Rates:\n\n")
-      # TODO:
-      # - RJ: Include other arguments, such as level.
-      tmp <- rejection_rates(by_x_1)
+      tmp <- rejection_rates(by_x_1,
+                             level = ci_level)
       print(tmp,
             annotation = FALSE)
       cat("\n")
@@ -1227,9 +1226,8 @@ power_algorithm_search_by_curve_pre_i <- function(object,
 
   if (progress) {
     cat("\n- Rejection Rates:\n\n")
-    # TODO:
-    # - RJ: Include other arguments, such as level.
-    tmp <- rejection_rates(by_x_i)
+    tmp <- rejection_rates(by_x_i,
+                           level = ci_level)
     print(tmp,
           annotation = FALSE)
     cat("\n")
