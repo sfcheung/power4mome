@@ -156,7 +156,8 @@
 #' [n_region_from_power()].
 #' For the `print` method, these
 #' are optional arguments to
-#' be passed to other print methods
+#' be passed to [rejection_rates()]
+#' as well as other print methods
 #' (see [print.power4test()] and
 #' [print.n_region_from_power()]).
 #' For the `plot` method, these
@@ -421,7 +422,8 @@ print.q_power_mediation <- function(
     cat("\n========== power4test Power ==========\n\n")
     # TODO:
     # - RJ: Update to allow changing arguments to rejection rates
-    print(rejection_rates(x$power4test),
+    print(rejection_rates(x$power4test,
+                          ...),
           ...)
   }
 
