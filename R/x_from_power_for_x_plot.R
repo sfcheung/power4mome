@@ -648,14 +648,6 @@ plot.n_region_from_power <- function(x,
   do.call(plot_power_x,
           args1)
 
-  # do.call(plot_power_x,
-  #         list(object = a,
-  #              predictor = predictor,
-  #              main = main,
-  #              xlab = xlab,
-  #              ylab = ylab,
-  #              ...))
-
   # === Add CIs?
 
   if ("ci" %in% what) {

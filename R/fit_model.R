@@ -221,18 +221,6 @@ fit_model <- function(data_all = NULL,
                  c(list(X = data_all,
                         FUN = fit_model_i),
                    args))
-  # Update
-  # out <- do_FUN(X = data_all,
-  #               FUN = fit_model_i,
-  #               model = model,
-  #               fit_function = fit_function,
-  #               arg_data_name = arg_data_name,
-  #               arg_model_name = arg_model_name,
-  #               arg_group_name = arg_group_name,
-  #               ...,
-  #               parallel = parallel,
-  #               progress = progress,
-  #               ncores = ncores)
   class(out) <- c("fit_out", class(out))
   attr(out, "args") <- args
   return(out)

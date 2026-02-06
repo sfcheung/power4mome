@@ -1466,16 +1466,6 @@ print.x_from_power <- function(x,
   cat("\n")
   solution_found <- !is.na(x$x_final)
   predictor <- x$x
-  # cat("Predictor (x):",
-  #     switch(predictor,
-  #            n = "Sample Size",
-  #            es = "Effect Size"),
-  #     "\n")
-  # if (predictor == "es") {
-  #   cat("Parameter Name (pop_es_name):",
-  #       x$pop_es_name,
-  #       "\n")
-  # }
 
   goal <- x$goal
   what <- x$what
@@ -1513,17 +1503,6 @@ print.x_from_power <- function(x,
 
   print(tmp)
 
-  # cat("goal:", goal, "\n")
-  # cat("what:", what, "\n")
-  # cat("algorithm:", algorithm, "\n")
-
-  # cat("Level of Confidence (ci_level):",
-  #     ci_level_str,
-  #     "\n")
-  # cat("Target Power:",
-  #     formatC(x$target_power, digits = digits, format = "f"),
-  #     "\n")
-
   if (solution_found) {
     x_final_str <- formatC(x$x_final,
                            digits = switch(predictor,
@@ -1549,12 +1528,6 @@ print.x_from_power <- function(x,
         ci_str,
         "\n",
         sep = "")
-    # cat("- Confidence Interval of Power: [",
-    #     formatC(x$ci_final[1], digits = digits, format = "f"),
-    #     ", ",
-    #     formatC(x$ci_final[2], digits = digits, format = "f"),
-    #     "]\n",
-    #     sep = "")
   } else {
     cat("\n- Solution not found.\n")
   }

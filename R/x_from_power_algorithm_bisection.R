@@ -397,42 +397,6 @@ power_algorithm_bisection <- function(object,
   ok_lower <- tmp["ok_lower"]
   ok_upper <- tmp["ok_upper"]
 
-  # output_lower <- attr(f.lower, "output")
-  # tmp <- rejection_rates(
-  #           output_lower,
-  #           all_columns = TRUE
-  #         )
-  # reject_lower <- tmp$reject
-  # nrep_lower <- tmp$nrep
-  # ok_lower <- check_solution(
-  #               f_i = reject_lower,
-  #               target_power = target_power,
-  #               nrep = nrep_lower,
-  #               ci_level = ci_level,
-  #               final_nrep = final_nrep,
-  #               what = what,
-  #               goal = goal,
-  #               tol = tol
-  #             )
-  # output_upper <- attr(f.upper, "output")
-  # tmp <- rejection_rates(
-  #           output_upper,
-  #           all_columns = TRUE
-  #         )
-  # reject_upper <- tmp$reject
-  # nrep_upper <- tmp$nrep
-  # reject_upper <- rejection_rates(output_upper)$reject
-  # ok_upper <- check_solution(
-  #               f_i = reject_upper,
-  #               target_power = target_power,
-  #               nrep = nrep_upper,
-  #               final_nrep = final_nrep,
-  #               ci_level = ci_level,
-  #               what = what,
-  #               goal = goal,
-  #               tol = tol
-  #             )
-
   if (ok_lower || ok_upper) {
 
     # ==== Solution in the interval. Skip the search ====
@@ -582,41 +546,6 @@ power_algorithm_bisection <- function(object,
 
     ok_lower <- tmp["ok_lower"]
     ok_upper <- tmp["ok_upper"]
-
-    # output_lower <- attr(f.lower, "output")
-    # tmp <- rejection_rates(
-    #          output_lower,
-    #          all_columns = TRUE
-    #        )
-    # reject_lower <- tmp$reject
-    # nrep_lower <- tmp$nrep
-    # ok_lower <- check_solution(
-    #               f_i = reject_lower,
-    #               target_power = target_power,
-    #               nrep = final_nrep,
-    #               final_nrep = final_nrep,
-    #               ci_level = ci_level,
-    #               what = what,
-    #               goal = goal,
-    #               tol = tol
-    #             )
-    # output_upper <- attr(f.upper, "output")
-    # tmp <- rejection_rates(
-    #          output_upper,
-    #          all_columns = TRUE
-    #        )
-    # reject_upper <- tmp$reject
-    # nrep_upper <- tmp$nrep
-    # ok_upper <- check_solution(
-    #               f_i = reject_upper,
-    #               target_power = target_power,
-    #               nrep = nrep_upper,
-    #               final_nrep = final_nrep,
-    #               ci_level = ci_level,
-    #               what = what,
-    #               goal = goal,
-    #               tol = tol
-    #             )
 
     if ((interval_updated$extend_status != 0) &&
         (!ok_lower && !ok_upper)) {
@@ -813,9 +742,6 @@ power_algorithm_bisection <- function(object,
         f.upper_i <- out_i
       }
 
-      # tmp <- switch(x_type,
-      #               n = 2,
-      #               es = .05)
       tmp <- variants$min_interval_width[x_type]
       if (abs(lower_i - upper_i) <= tmp) {
 
@@ -1464,22 +1390,6 @@ extend_interval <- function(f,
 
         # ==== Is one of the bounds a solution?
 
-        # TODO:
-        # - Delete: this block. Not used
-        output_lower <- attr(f.lower, "output")
-        tmp <- rejection_rates(
-                  output_lower,
-                  all_columns = TRUE
-                )
-
-        # TODO:
-        # - Delete: this block. Not used
-        output_upper <- attr(f.upper, "output")
-        tmp <- rejection_rates(
-                  output_upper,
-                  all_columns = TRUE
-                )
-
         tmp <- check_solution_bounds(
                   f.lower = f.lower,
                   f.upper = f.upper,
@@ -1903,9 +1813,7 @@ gen_objective <- function(object,
 
     # ==== Compute CI ====
 
-    # a <- abs(stats::qnorm((1 - ci_level) / 2))
     se_i <- sqrt(power_i * (1 - power_i) / nrep)
-    # ci_i <- power_i + c(-a, a) * se_i
     ci_i <- reject_ci(
               nreject = round(power_i * nrep),
               nvalid = nrep,

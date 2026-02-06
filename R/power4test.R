@@ -554,10 +554,6 @@ power4test <- function(object = NULL,
   # It should be used whenever possible,
   # unless we explicitly need the value in this call.
 
-  # if (args$progress) {
-  #   cat("Displaying progress enabled. Set 'progress = FALSE' to hide the progress.\n")
-  # }
-
   if (update_power4test && !is.null(pop_es)) {
     # Population effect size changed
     # Data must be updated
@@ -653,11 +649,6 @@ power4test <- function(object = NULL,
                                    ncores = args$ncores),
                         simplify = FALSE)
 
-    # fit_args0 <- utils::modifyList`(fit_model_args,
-    #                               list(data_all = data_all,
-    #                                     parallel = parallel,
-    #                                     progress = progress,
-    #                                     ncores = ncores))
     if (args$progress) {
       cat("Fit the model(s):\n")
     }
@@ -745,10 +736,6 @@ power4test <- function(object = NULL,
                          mc_all,
                          boot_all))
 
-    # sim_all <- sim_out(data_all = data_all,
-    #                    fit = fit_all,
-    #                    mc_out = mc_all,
-    #                    boot_out = boot_all)
   } else {
     sim_all <- object$sim_all
   }

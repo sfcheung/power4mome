@@ -277,37 +277,6 @@ plot.power4test_by_n <- function(
   invisible(x)
 }
 
-# #' @rdname plot.power_curve
-# #' @export
-# plot.power4test_by_n <- function(
-#                              x,
-#                              main = "Estimated Power vs. Sample Size",
-#                              xlab = "Sample Size",
-#                              ylab = "Estimated Power",
-#                              pars_ci = list(),
-#                              type = "l",
-#                              ylim = c(0, 1),
-#                              ci_level = .95,
-#                              ...) {
-#   reject_df <- rejection_rates(x,
-#                                ci_level = ci_level,
-#                                all_columns = TRUE)
-#   reject_df$x <- reject_df$n
-#   x0 <- list(predictor = "n",
-#              reject_df = reject_df)
-
-#   plot.power_curve(x = x0,
-#                    main = main,
-#                    xlab = xlab,
-#                    ylab = ylab,
-#                    pars_ci = pars_ci,
-#                    type = type,
-#                    ylim = ylim,
-#                    ci_level = ci_level,
-#                    ...)
-#   invisible(x)
-# }
-
 #' @rdname plot.power_curve
 #' @export
 plot.power4test_by_es <- function(

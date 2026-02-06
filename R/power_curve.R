@@ -359,7 +359,6 @@ power_curve <- function(object,
                       power4test_by_n = "n",
                       power4test_by_es = "es")
 
-  #reject0$power <- reject0$reject
   reject0$x <- reject0[[predictor]]
 
   model_found <- FALSE

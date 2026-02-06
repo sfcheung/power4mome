@@ -581,7 +581,6 @@ ptable_pop <- function(model = NULL,
     # Handle labels in the syntax
     tmp <- lavaan::lavParseModelString(model,
                                        as.data.frame. = TRUE)
-    # tmp2 <- paste(tmp$lhs, tmp$op, tmp$rhs)
     tmp$label <- ""
     tmp$mod.idx <- 0
     attr(tmp, "modifiers") <- list()
@@ -1055,7 +1054,6 @@ mm_lm_i <- function(mm) {
   # Handle labels
   tmp <- lavaan::lavParseModelString(model,
                                      as.data.frame. = TRUE)
-  # tmp2 <- paste(tmp$lhs, tmp$op, tmp$rhs)
   tmp$label <- ""
   tmp$mod.idx <- 0
   attr(tmp, "modifiers") <- list()

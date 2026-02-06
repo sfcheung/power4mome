@@ -649,16 +649,6 @@ print.sim_data <- function(x,
                                    progress = TRUE),
                        warning = function(w) w,
                        error = function(e) e)
-  # if (inherits(all_ind, "warning")) {
-  #   if (grepl("moderator", all_ind$message)) {
-  #     has_w <- TRUE
-  #   }
-  #   all_ind <- suppressWarnings(pop_indirect(
-  #                                 x,
-  #                                 pure_x = pure_x,
-  #                                 pure_y = pure_y,
-  #                                 progress = TRUE))
-  # }
   if (!inherits(all_ind, "error")) {
     if (length(all_ind) > 0) {
       cat(header_str("Population Conditional/Indirect Effect(s)",

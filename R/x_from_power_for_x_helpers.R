@@ -237,9 +237,6 @@ rejection_rates_add_ci <- function(object,
     df1$reject <- df1$sig
   }
   df1$reject_se <- sqrt(reject * (1 - reject) / df1$nvalid)
-  # a <- stats::qnorm(1 - (1 - level) / 2)
-  # df1$reject_ci_lo <- reject - a * df1$reject_se
-  # df1$reject_ci_hi <- reject + a * df1$reject_se
   ci_i <- reject_ci(
             nreject = round(reject * df1$nvalid),
             nvalid = df1$nvalid,
@@ -378,7 +375,6 @@ find_close_enough <- function(
   if_ties = c("min", "max"),
   weight_by = c("nrep", "ci_width", "se", "none"),
   debug = FALSE) {
-  # if (debug) browser()
 
   # If no solution, return NULL
   # If solution, always return one number
@@ -641,10 +637,7 @@ check_solution <- function(f_i,
     return(FALSE)
   }
   goal <- match.arg(goal)
-  # a <- abs(stats::qnorm((1 - ci_level) / 2))
   se_i <- sqrt(f_i * (1 - f_i) / nrep)
-  # cilb <- f_i - a * se_i
-  # ciub <- f_i + a * se_i
   ci_i <- reject_ci(
             nreject = round(f_i * nrep),
             nvalid = nrep,
@@ -660,7 +653,6 @@ check_solution <- function(f_i,
       return(FALSE)
     }
   }
-  # goal == "close_enough"
   chk_point <- switch(what,
                       point = f_i,
                       ub = ciub,
