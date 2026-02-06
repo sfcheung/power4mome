@@ -8,8 +8,7 @@ set_n_range_by_x <- function(
                         goal = NULL,
                         tol = NULL,
                         ci_level = .95) {
-  # TODO:
-  # - Update to use rejection_rates_args
+  # No need for other arguments because they will be retrieved from object_by_org
   reject0by <- rejection_rates(object_by_org,
                                level = ci_level,
                                add_se = TRUE,
@@ -67,9 +66,7 @@ set_n_range <- function(object,
                         k = 4,
                         n_max = 1000) {
   n0 <- attr(object, "args")$n
-  # TODO:
-  # - Update to use rejection_rates_args
-  # - Add other arguments for rejection rates
+  # No need for other arguments because only `reject` is used
   reject0 <- rejection_rates(object)
   power0 <- reject0$reject[1]
   if (n0 >= n_max) {

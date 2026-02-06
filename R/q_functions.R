@@ -420,7 +420,7 @@ print.q_power_mediation <- function(
           ...)
     cat("\n========== power4test Power ==========\n\n")
     # TODO:
-    # - Update to use rejection_rates_args
+    # - RJ: Update to allow changing arguments to rejection rates
     print(rejection_rates(x$power4test),
           ...)
   }

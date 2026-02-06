@@ -435,8 +435,7 @@ plot_power_x <- function(object,
                          ylim = c(0, 1),
                          ci_level = .95,
                          ...) {
-  # TODO:
-  # - Update to use rejection_rates_args
+  # No need for other arguments. They should be stored in object.
   reject0 <- rejection_rates_add_ci(object,
                                     level = ci_level)
   x <- switch(predictor,
@@ -460,8 +459,7 @@ plot_power_x_ci <- function(object,
                             col = "grey50",
                             ci_level = .95,
                             ...) {
-  # TODO:
-  # - Update to use rejection_rates_args
+  # No need for other arguments. They should be stored in object.
   reject0 <- rejection_rates_add_ci(object,
                                     level = ci_level)
   x <- switch(predictor,
@@ -499,8 +497,7 @@ plot_power_curve_x <- function(object,
                                ci_level = .95,
                                ...) {
   # power_x_fit is a power_curve object
-  # TODO:
-  # - Update to use rejection_rates_args
+  # No need for other arguments. They should be stored in object.
   reject0 <- rejection_rates_add_ci(object,
                                     level = ci_level)
   x <- switch(predictor,
@@ -597,8 +594,7 @@ plot.n_region_from_power <- function(x,
   # It is intended *not* to use plot.power_curve().
   # It is possible that the fit failed.
 
-  # TODO:
-  # - Update to use rejection_rates_args
+  # No need for other arguments. They should be stored in object.
   a1 <- rejection_rates(
               x$below$power4test_trials,
               all_columns = TRUE

@@ -154,8 +154,7 @@ plot.power_curve <- function(x,
 
   what <- match.arg(what, several.ok = TRUE)
 
-  # TODO:
-  # - Update to use rejection_rates_args
+  # No need for other arguments. They should be stored in object.
   reject_df <- rejection_rates_add_ci(x$reject_df,
                                       level = ci_level)
 
@@ -258,7 +257,8 @@ plot.power4test_by_n <- function(
                              ...) {
   what <- match.arg(what, several.ok = TRUE)
   # TODO:
-  # - Update to use rejection_rates_args
+  # - Typo: should be level = ci_level
+  # No need for other arguments. They should be stored in object.
   reject_df <- rejection_rates(x,
                                ci_level = ci_level,
                                all_columns = TRUE)
@@ -327,7 +327,8 @@ plot.power4test_by_es <- function(
                              ...) {
   what <- match.arg(what, several.ok = TRUE)
   # TODO:
-  # - Update to use rejection_rates_args
+  # - Typo: should be level = ci_level
+  # No need for other arguments. They should be stored in object.
   reject_df <- rejection_rates(x,
                                ci_level = ci_level,
                                all_columns = TRUE)

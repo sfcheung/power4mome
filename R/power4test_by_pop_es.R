@@ -333,8 +333,6 @@ rejection_rates_by_es <- function(object_by_es,
                                   all_columns = FALSE,
                                   ...) {
   tmpfct <- function(x) {
-    # TODO:
-    # - Update to use rejection_rates_args
     out_i <- rejection_rates(x,
                              all_columns = all_columns,
                              ...)

@@ -323,8 +323,6 @@ rejection_rates_i_vector <- function(object_i,
                         row.names = NULL)
   }
   if (se || ci) {
-    # TODO:
-    # - Update to use rejection_rates_args
     out_i <- rejection_rates_add_ci(out_i,
                                     level = level,
                                     add_reject = FALSE,
@@ -376,8 +374,6 @@ rejection_rates_i_data_frame <- function(object_i,
                         row.names = NULL)
   }
   if (se || ci) {
-    # TODO:
-    # - Update to use rejection_rates_args
     out_i <- rejection_rates_add_ci(out_i,
                                     level = level,
                                     add_reject = FALSE,

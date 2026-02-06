@@ -351,8 +351,7 @@ power_curve <- function(object,
     }
   }
 
-  # TODO:
-  # - Update to use rejection_rates_args
+  # No need for other arguments. They should be stored in object.
   reject0 <- rejection_rates(object,
                              all_columns = TRUE)
 
