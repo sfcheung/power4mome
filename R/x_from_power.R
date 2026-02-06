@@ -436,6 +436,23 @@
 #' of internal arguments. For internal
 #' testing. Do not use it.
 #'
+#' @param rejection_rates_args
+#' Argument values to be used when
+#' [rejection_rates()] is called, used
+#' to decide how rejection rates will
+#' be estimated. Only one single test
+#' is supported by [x_from_power()].
+#' Therefore, `merge_all_tests` is
+#' always `TRUE` and cannot be changed.
+#' The argument `collapse` can be
+#' `"all_sig"`, `"at_least_one_sig"`,
+#' or `"at_least_k_sig"` (it cannot be
+#' `"none"`). Please refer to
+#' [rejection_rates()] for other
+#' possible arguments. These values,
+#' if set, will overwrite any stored
+#' settings in `object`.
+#'
 #' @references
 #' Wilson, E. B. (1927). Probable inference, the law of
 #' succession, and statistical inference.
@@ -534,7 +551,11 @@ x_from_power <- function(object,
                          save_sim_all = FALSE,
                          algorithm = NULL,
                          control = list(),
-                         internal_args = list()
+                         internal_args = list(),
+                         rejection_rates_args = list(collapse = "all_sig",
+                                                     at_least_k = 1,
+                                                     p_adjust_method = "none",
+                                                     alpha = .05)
                          ) {
 
   # Inputs
@@ -734,6 +755,9 @@ x_from_power <- function(object,
     is_by_x <- TRUE
     object_by_org <- object
 
+    # TODO:
+    # - RJA: Set rejection_rates_args
+
     # Whether a solution exists will be checked later
 
     i_org <- find_solution(
@@ -750,6 +774,9 @@ x_from_power <- function(object,
   } else {
     object_by_org <- NA
   }
+
+  # TODO:
+  # - RJA: Set rejection_rates_args
 
   # The object to be used below is always a power4test object
 
@@ -1305,7 +1332,12 @@ n_from_power <- function(object,
                                                  nls_args = list()),
                          save_sim_all = FALSE,
                          algorithm = NULL,
-                         control = list()
+                         control = list(),
+                         internal_args = list(),
+                         rejection_rates_args = list(collapse = "all_sig",
+                                                     at_least_k = 1,
+                                                     p_adjust_method = "none",
+                                                     alpha = .05)
                          ) {
   what <- match.arg(eval(what),
                     c("point", "ub", "lb"))
@@ -1371,7 +1403,12 @@ n_region_from_power <- function(
                                                  nls_args = list()),
                          save_sim_all = FALSE,
                          algorithm = NULL,
-                         control = list()
+                         control = list(),
+                         internal_args = list(),
+                         rejection_rates_args = list(collapse = "all_sig",
+                                                     at_least_k = 1,
+                                                     p_adjust_method = "none",
+                                                     alpha = .05)
                          ) {
   my_call <- match.call()
   my_call$final_nrep <- eval(final_nrep)
