@@ -1,6 +1,6 @@
 library(testthat)
 
-test_that("Merging test in by_* functions", {
+test_that("rejection_rates_args", {
 
 model <-
 "
@@ -96,5 +96,18 @@ out <- power4test_by_n(out3,
 
 expect_equal(tmp$est,
              c(NaN, NaN))
+
+(tmp <- rejection_rates(out,
+                        merge_all_tests = FALSE))
+
+expect_equal(nrow(tmp),
+             6)
+
+(tmp <- rejection_rates(out,
+                        collapse = "none",
+                        merge_all_tests = FALSE))
+
+expect_equal(nrow(tmp),
+             8)
 
 })
