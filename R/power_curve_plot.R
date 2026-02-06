@@ -256,11 +256,9 @@ plot.power4test_by_n <- function(
                              ci_level = .95,
                              ...) {
   what <- match.arg(what, several.ok = TRUE)
-  # TODO:
-  # - Typo: should be level = ci_level
   # No need for other arguments. They should be stored in object.
   reject_df <- rejection_rates(x,
-                               ci_level = ci_level,
+                               level = ci_level,
                                all_columns = TRUE)
   reject_df$x <- reject_df$n
   x0 <- list(predictor = "n",
@@ -326,11 +324,9 @@ plot.power4test_by_es <- function(
                              ci_level = .95,
                              ...) {
   what <- match.arg(what, several.ok = TRUE)
-  # TODO:
-  # - Typo: should be level = ci_level
   # No need for other arguments. They should be stored in object.
   reject_df <- rejection_rates(x,
-                               ci_level = ci_level,
+                               level = ci_level,
                                all_columns = TRUE)
   reject_df$x <- reject_df$es
   x0 <- list(predictor = "es",
