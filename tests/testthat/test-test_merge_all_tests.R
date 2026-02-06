@@ -2,8 +2,6 @@ library(testthat)
 
 test_that("Merging test in by_* functions", {
 
-skip("WIP")
-
 model <-
 "
 m ~ x + z + x:z
@@ -41,7 +39,10 @@ out2 <- power4test(
             parallel = FALSE,
             progress = !is_testing())
 
-rejection_rates(out2)
+(tmp <- rejection_rates(out2))
+
+expect_equal(nrow(tmp),
+             3)
 
 out3 <- power4test(
             out2,
@@ -52,19 +53,48 @@ out3 <- power4test(
                              w = "z"),
             iseed = 1234,
             parallel = FALSE,
-            progress = !is_testing())
+            progress = !is_testing(),
+            rejection_rates_args = list(merge_all_tests = TRUE,
+                                        collapse = "all_sig"))
 
-rejection_rates(out3,
-                merge_all_tests = TRUE,
-                collapse = "all_sig")
+(tmp <- rejection_rates(out3))
+
+expect_equal(nrow(tmp),
+             1)
+
+(tmp <- rejection_rates(out3,
+                        merge_all_tests = FALSE))
+
+expect_equal(nrow(tmp),
+             3)
+
+(tmp <- rejection_rates(out3,
+                        collapse = "none"))
+
+expect_equal(nrow(tmp),
+             4)
+
+(tmp <- rejection_rates(out3,
+                        collapse = "none",
+                        merge_all_tests = FALSE))
+
+expect_equal(nrow(tmp),
+             4)
+
+expect_error(out4 <- power4test(
+                        out3,
+                        rejection_rates_args = list(merge_all_tests = FALSE,
+                                                    collapse = "none"))
+            )
 
 out <- power4test_by_n(out3,
                        n = c(100, 110),
                        by_seed = 1234,
                        progress = !is_testing())
 
-rejection_rates(out,
-                merge_all_tests = TRUE,
-                collapse = "all_sig")
+(tmp <- rejection_rates(out))
+
+expect_equal(tmp$est,
+             c(NaN, NaN))
 
 })
