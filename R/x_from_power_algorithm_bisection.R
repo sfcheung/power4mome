@@ -239,6 +239,7 @@ power_algorithm_bisection <- function(object,
 
   # Find f.lower and f.upper
 
+  # Arguments for rejection rates should be retrieved from the object
   by_x_ci <- rejection_rates_add_ci(by_x_1,
                                     level = ci_level)
   x_tried <- get_x_tried(by_x_ci,
@@ -350,7 +351,8 @@ power_algorithm_bisection <- function(object,
                    prefix = "Initial interval:")
     cat("\n")
     cat("- Rejection Rates:\n")
-    tmp <- rejection_rates(by_x_1)
+    tmp <- rejection_rates(by_x_1,
+                           level = ci_level)
     print(tmp, annotation = FALSE)
     cat("\n")
   }
@@ -362,6 +364,8 @@ power_algorithm_bisection <- function(object,
   # Check whether lower or upper is already a solution
 
   output_lower <- attr(f.lower, "output")
+  # Arguments for rejection rates should be retrieved from the object
+  # No need for other arguments. Only `reject` and `nrep` are used.
   tmp <- rejection_rates(
             output_lower,
             all_columns = TRUE
@@ -370,6 +374,8 @@ power_algorithm_bisection <- function(object,
   nrep_lower <- tmp$nrep
 
   output_upper <- attr(f.upper, "output")
+  # Arguments for rejection rates should be retrieved from the object
+  # No need for other arguments. Only `reject` and `nrep` are used.
   tmp <- rejection_rates(
             output_upper,
             all_columns = TRUE
@@ -390,42 +396,6 @@ power_algorithm_bisection <- function(object,
 
   ok_lower <- tmp["ok_lower"]
   ok_upper <- tmp["ok_upper"]
-
-  # output_lower <- attr(f.lower, "output")
-  # tmp <- rejection_rates(
-  #           output_lower,
-  #           all_columns = TRUE
-  #         )
-  # reject_lower <- tmp$reject
-  # nrep_lower <- tmp$nrep
-  # ok_lower <- check_solution(
-  #               f_i = reject_lower,
-  #               target_power = target_power,
-  #               nrep = nrep_lower,
-  #               ci_level = ci_level,
-  #               final_nrep = final_nrep,
-  #               what = what,
-  #               goal = goal,
-  #               tol = tol
-  #             )
-  # output_upper <- attr(f.upper, "output")
-  # tmp <- rejection_rates(
-  #           output_upper,
-  #           all_columns = TRUE
-  #         )
-  # reject_upper <- tmp$reject
-  # nrep_upper <- tmp$nrep
-  # reject_upper <- rejection_rates(output_upper)$reject
-  # ok_upper <- check_solution(
-  #               f_i = reject_upper,
-  #               target_power = target_power,
-  #               nrep = nrep_upper,
-  #               final_nrep = final_nrep,
-  #               ci_level = ci_level,
-  #               what = what,
-  #               goal = goal,
-  #               tol = tol
-  #             )
 
   if (ok_lower || ok_upper) {
 
@@ -544,6 +514,8 @@ power_algorithm_bisection <- function(object,
     # Check whether the updated lower or upper is already a solution
 
     output_lower <- attr(f.lower, "output")
+    # Arguments for rejection rates should be retrieved from the object
+    # No need for other arguments. Only `reject` and `nrep` are used.
     tmp <- rejection_rates(
              output_lower,
              all_columns = TRUE
@@ -552,6 +524,8 @@ power_algorithm_bisection <- function(object,
     nrep_lower <- tmp$nrep
 
     output_upper <- attr(f.upper, "output")
+    # Arguments for rejection rates should be retrieved from the object
+    # No need for other arguments. Only `reject` and `nrep` are used.
     tmp <- rejection_rates(
              output_upper,
              all_columns = TRUE
@@ -572,41 +546,6 @@ power_algorithm_bisection <- function(object,
 
     ok_lower <- tmp["ok_lower"]
     ok_upper <- tmp["ok_upper"]
-
-    # output_lower <- attr(f.lower, "output")
-    # tmp <- rejection_rates(
-    #          output_lower,
-    #          all_columns = TRUE
-    #        )
-    # reject_lower <- tmp$reject
-    # nrep_lower <- tmp$nrep
-    # ok_lower <- check_solution(
-    #               f_i = reject_lower,
-    #               target_power = target_power,
-    #               nrep = final_nrep,
-    #               final_nrep = final_nrep,
-    #               ci_level = ci_level,
-    #               what = what,
-    #               goal = goal,
-    #               tol = tol
-    #             )
-    # output_upper <- attr(f.upper, "output")
-    # tmp <- rejection_rates(
-    #          output_upper,
-    #          all_columns = TRUE
-    #        )
-    # reject_upper <- tmp$reject
-    # nrep_upper <- tmp$nrep
-    # ok_upper <- check_solution(
-    #               f_i = reject_upper,
-    #               target_power = target_power,
-    #               nrep = nrep_upper,
-    #               final_nrep = final_nrep,
-    #               ci_level = ci_level,
-    #               what = what,
-    #               goal = goal,
-    #               tol = tol
-    #             )
 
     if ((interval_updated$extend_status != 0) &&
         (!ok_lower && !ok_upper)) {
@@ -709,11 +648,15 @@ power_algorithm_bisection <- function(object,
       output_i <- attr(out_i, "output")
       by_x_1 <- c(by_x_1, output_i,
                   skip_checking_models = TRUE)
+      # Arguments for rejection rates should be retrieved from the object
+      # No need for other arguments. Only `reject` is used.
       reject_i <- rejection_rates(output_i)$reject
 
       if (progress) {
         cat("- Rejection Rates:\n")
-        tmp <- rejection_rates(by_x_1)
+        # Arguments for rejection rates should be retrieved from the object
+        tmp <- rejection_rates(by_x_1,
+                               level = ci_level)
         print(tmp, annotation = FALSE)
         cat("\n")
       }
@@ -799,9 +742,6 @@ power_algorithm_bisection <- function(object,
         f.upper_i <- out_i
       }
 
-      # tmp <- switch(x_type,
-      #               n = 2,
-      #               es = .05)
       tmp <- variants$min_interval_width[x_type]
       if (abs(lower_i - upper_i) <= tmp) {
 
@@ -909,6 +849,8 @@ power_algorithm_bisection <- function(object,
                             ),
                             error = function(e) e)
           if (inherits(fit_1, "power_curve")) {
+            # Arguments for rejection rates should be retrieved from the object
+            # No need for other arguments because only `x` is used.
             x_i_0 <- estimate_x_range(
                         power_x_fit = fit_1,
                         x = x,
@@ -1448,18 +1390,6 @@ extend_interval <- function(f,
 
         # ==== Is one of the bounds a solution?
 
-        output_lower <- attr(f.lower, "output")
-        tmp <- rejection_rates(
-                  output_lower,
-                  all_columns = TRUE
-                )
-
-        output_upper <- attr(f.upper, "output")
-        tmp <- rejection_rates(
-                  output_upper,
-                  all_columns = TRUE
-                )
-
         tmp <- check_solution_bounds(
                   f.lower = f.lower,
                   f.upper = f.upper,
@@ -1613,6 +1543,7 @@ extend_i <- function(
                           ),
                           error = function(e) e)
         if (inherits(fit_1, "power_curve")) {
+          # Only `x` is used. No need for other arguments
           lower0 <- estimate_x_range(
                       power_x_fit = fit_1,
                       x = x_type,
@@ -1860,6 +1791,7 @@ gen_objective <- function(object,
                                             progress = simulation_progress,
                                             by_nrep = nrep,
                                             save_sim_all = save_sim_all))
+      # No need for other arguments because only `reject` is used
       power_i <- rejection_rates(out_i)$reject
     } else {
       if (is.null(power_i)) {
@@ -1867,6 +1799,7 @@ gen_objective <- function(object,
         # ==== Get Power (out_i supplied) ====
 
         # power_i is supplied. Ignore out_i
+        # No need for other arguments because only `reject` is used
         power_i <- rejection_rates(out_i)$reject
         out_i <- NULL
       } else {
@@ -1880,9 +1813,7 @@ gen_objective <- function(object,
 
     # ==== Compute CI ====
 
-    # a <- abs(stats::qnorm((1 - ci_level) / 2))
     se_i <- sqrt(power_i * (1 - power_i) / nrep)
-    # ci_i <- power_i + c(-a, a) * se_i
     ci_i <- reject_ci(
               nreject = round(power_i * nrep),
               nvalid = nrep,
@@ -2120,6 +2051,7 @@ check_solution_bounds <- function(
   tol
 ) {
   output_lower <- attr(f.lower, "output")
+  # No need for other arguments because only `reject` and `nrep` are used.
   tmp <- rejection_rates(
             output_lower,
             all_columns = TRUE
@@ -2137,6 +2069,7 @@ check_solution_bounds <- function(
                 tol = tol
               )
   output_upper <- attr(f.upper, "output")
+  # No need for other arguments because only `reject` and `nrep` are used.
   tmp <- rejection_rates(
             output_upper,
             all_columns = TRUE

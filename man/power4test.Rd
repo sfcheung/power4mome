@@ -41,7 +41,9 @@ power4test(
   es2 = c(n = 0, nil = 0, s = 0.05, m = 0.1, l = 0.15, sm = 0.075, ml = 0.125),
   es_ind = c("si", "mi", "li"),
   n_std = 1e+05,
-  std_force_monte_carlo = FALSE
+  std_force_monte_carlo = FALSE,
+  rejection_rates_args = list(collapse = "none", at_least_k = 1, merge_all_tests = FALSE,
+    p_adjust_method = "none", alpha = 0.05)
 )
 
 \method{print}{power4test}(
@@ -340,6 +342,12 @@ will be used whether the model has
 product terms or not. Always fall
 back to simulation if
 analytical standardization failed.}
+
+\item{rejection_rates_args}{Default
+argument values to be used when
+\code{\link[=rejection_rates]{rejection_rates()}} is called. Can
+be overriden when calling
+\code{\link[=rejection_rates]{rejection_rates()}}.}
 
 \item{x}{The object
 to be printed.}

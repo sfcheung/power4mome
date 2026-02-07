@@ -436,6 +436,23 @@
 #' of internal arguments. For internal
 #' testing. Do not use it.
 #'
+#' @param rejection_rates_args
+#' Argument values to be used when
+#' [rejection_rates()] is called, used
+#' to decide how rejection rates will
+#' be estimated. Only one single test
+#' is supported by [x_from_power()].
+#' Therefore, `merge_all_tests` is
+#' always `TRUE` and cannot be changed.
+#' The argument `collapse` can be
+#' `"all_sig"`, `"at_least_one_sig"`,
+#' or `"at_least_k_sig"` (it cannot be
+#' `"none"`). Please refer to
+#' [rejection_rates()] for other
+#' possible arguments. These values,
+#' if set, will overwrite any stored
+#' settings in `object`.
+#'
 #' @references
 #' Wilson, E. B. (1927). Probable inference, the law of
 #' succession, and statistical inference.
@@ -534,7 +551,11 @@ x_from_power <- function(object,
                          save_sim_all = FALSE,
                          algorithm = NULL,
                          control = list(),
-                         internal_args = list()
+                         internal_args = list(),
+                         rejection_rates_args = list(collapse = "all_sig",
+                                                     at_least_k = 1,
+                                                     p_adjust_method = "none",
+                                                     alpha = .05)
                          ) {
 
   # Inputs
@@ -599,6 +620,15 @@ x_from_power <- function(object,
                           c("bisection",
                             "power_curve"))
   }
+
+  tmp <- list(collapse = "all_sig",
+              at_least_k = 1,
+              p_adjust_method = "none",
+              alpha = .05)
+  rejection_rates_args <- utils::modifyList(
+                            tmp,
+                            rejection_rates_args
+                          )
 
   # ==== Set default algorithm ====
 
@@ -699,7 +729,8 @@ x_from_power <- function(object,
                                 x = x,
                                 pop_es_name = pop_es_name,
                                 final_nrep = final_nrep,
-                                ci_level = ci_level)
+                                ci_level = ci_level,
+                                rejection_rates_args = rejection_rates_args)
 
     # Check these for compatibility:
 
@@ -734,6 +765,13 @@ x_from_power <- function(object,
     is_by_x <- TRUE
     object_by_org <- object
 
+    # Update rejection_rates_args
+
+    object_by_org <- set_rejection_rates_args_by_x(
+                        object_by_org,
+                        rejection_rates_args = rejection_rates_args
+                      )
+
     # Whether a solution exists will be checked later
 
     i_org <- find_solution(
@@ -750,6 +788,20 @@ x_from_power <- function(object,
   } else {
     object_by_org <- NA
   }
+
+  # ==== Update rejection_rates_args ====
+
+  tmp <-  attr(object, "args")
+  tmp2 <- tmp$rejection_rates_args
+  tmp2 <- utils::modifyList(
+                tmp2,
+                rejection_rates_args,
+                keep.null = TRUE
+              )
+  tmp2$merge_all_tests <- TRUE
+  tmp$rejection_rates_args <- tmp2
+  attr(object, "args") <- tmp
+  rm(tmp)
 
   # The object to be used below is always a power4test object
 
@@ -1266,7 +1318,8 @@ x_from_power <- function(object,
               status = status,
               technical = technical,
               algorithm = algorithm,
-              call = match.call())
+              call = match.call(),
+              rejection_rates_args = rejection_rates_args)
   class(out) <- c("x_from_power", class(out))
   return(out)
 }
@@ -1305,7 +1358,12 @@ n_from_power <- function(object,
                                                  nls_args = list()),
                          save_sim_all = FALSE,
                          algorithm = NULL,
-                         control = list()
+                         control = list(),
+                         internal_args = list(),
+                         rejection_rates_args = list(collapse = "all_sig",
+                                                     at_least_k = 1,
+                                                     p_adjust_method = "none",
+                                                     alpha = .05)
                          ) {
   what <- match.arg(eval(what),
                     c("point", "ub", "lb"))
@@ -1371,7 +1429,12 @@ n_region_from_power <- function(
                                                  nls_args = list()),
                          save_sim_all = FALSE,
                          algorithm = NULL,
-                         control = list()
+                         control = list(),
+                         internal_args = list(),
+                         rejection_rates_args = list(collapse = "all_sig",
+                                                     at_least_k = 1,
+                                                     p_adjust_method = "none",
+                                                     alpha = .05)
                          ) {
   my_call <- match.call()
   my_call$final_nrep <- eval(final_nrep)
@@ -1466,16 +1529,6 @@ print.x_from_power <- function(x,
   cat("\n")
   solution_found <- !is.na(x$x_final)
   predictor <- x$x
-  # cat("Predictor (x):",
-  #     switch(predictor,
-  #            n = "Sample Size",
-  #            es = "Effect Size"),
-  #     "\n")
-  # if (predictor == "es") {
-  #   cat("Parameter Name (pop_es_name):",
-  #       x$pop_es_name,
-  #       "\n")
-  # }
 
   goal <- x$goal
   what <- x$what
@@ -1513,17 +1566,6 @@ print.x_from_power <- function(x,
 
   print(tmp)
 
-  # cat("goal:", goal, "\n")
-  # cat("what:", what, "\n")
-  # cat("algorithm:", algorithm, "\n")
-
-  # cat("Level of Confidence (ci_level):",
-  #     ci_level_str,
-  #     "\n")
-  # cat("Target Power:",
-  #     formatC(x$target_power, digits = digits, format = "f"),
-  #     "\n")
-
   if (solution_found) {
     x_final_str <- formatC(x$x_final,
                            digits = switch(predictor,
@@ -1549,12 +1591,6 @@ print.x_from_power <- function(x,
         ci_str,
         "\n",
         sep = "")
-    # cat("- Confidence Interval of Power: [",
-    #     formatC(x$ci_final[1], digits = digits, format = "f"),
-    #     ", ",
-    #     formatC(x$ci_final[2], digits = digits, format = "f"),
-    #     "]\n",
-    #     sep = "")
   } else {
     cat("\n- Solution not found.\n")
   }

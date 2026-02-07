@@ -232,8 +232,6 @@ power4test_by_es <- function(object,
     attr(out[[p_name]], "pop_es_value") <- x
   }
   class(out) <- c("power4test_by_es", class(out))
-  # attr(out, "pop_es_name") <- pop_es_name
-  # attr(out, "pop_es_values") <- pop_es_values
   out
 }
 
@@ -289,16 +287,12 @@ c.power4test_by_es <- function(...,
   all_pop_es_values <- sapply(out,
                               \(x) {attr(x, "pop_es_value")})
   class(out) <- c("power4test_by_es", class(out))
-  # attr(out, "pop_es_name") <- all_pop_es_name
-  # attr(out, "pop_es_values") <- all_pop_es_values
   if (!sort) {
     return(out)
   }
   i <- order(all_pop_es_values)
   out <- out[i]
   class(out) <- c("power4test_by_es", class(out))
-  # attr(out, "pop_es_name") <- all_pop_es_name
-  # attr(out, "pop_es_values") <- all_pop_es_values[i]
   return(out)
 }
 
@@ -345,8 +339,6 @@ rejection_rates_by_es <- function(object_by_es,
   }
   out <- mapply(tmpfct,
                 x = object_by_es,
-                # pv = attr(object_by_es, "pop_es_values"),
-                # MoreArgs = list(pn = attr(object_by_es, "pop_es_name")),
                 SIMPLIFY = FALSE)
   # Keep common columns
   cnames <- lapply(out,

@@ -172,15 +172,21 @@ rejection_rates.default <- function(object,
 #' tests is considered significant if
 #' at least `k` tests are significant,
 #' `k` set by the argument `at_least_k`.
+#' If `NULL`, will use the value stored
+#' in `object` (default is `"none"`).
 #'
 #' @param at_least_k Used by `collapse`,
 #' the number of tests required to be
 #' significant for the set of tests to
-#' be considered significant.
+#' be considered significant. If `NULL`,
+#' will use the value stored in `object`
+#' (default is 1).
 #'
 #' @param merge_all_tests If `TRUE`, all
 #' the tests in each replication will be
 #' merged into one test.
+#' If `NULL`, will use the value stored
+#' in `object` (default is `FALSE`).
 #'
 #' @param p_adjust_method The method to be
 #' passed to [p.adjust()] to adjust the
@@ -190,6 +196,8 @@ rejection_rates.default <- function(object,
 #' do not have *p*-values stored.
 #' NOTE: Use this only if all tests
 #' can be  conducted using *p*-values.
+#' If `NULL`, will use the value stored in
+#' `object` (default is `"none"`).
 #'
 #' @param alpha The level of significance
 #' to use when using `p_adjust_method`.
@@ -197,6 +205,8 @@ rejection_rates.default <- function(object,
 #' `sig`) will be updated using the
 #' adjusted *p*-values. Used only if
 #' `p_adjust_method` is not `"none"`.
+#' If `NULL`, will use the value stored
+#' in `object` (default is .05).
 #'
 #' @references
 #' Wilson, E. B. (1927). Probable inference, the law of
@@ -211,15 +221,19 @@ rejection_rates.power4test <- function(object,
                                        ci = TRUE,
                                        level = .95,
                                        se = FALSE,
-                                       collapse = c("none",
-                                                    "all_sig",
-                                                    "at_least_one_sig",
-                                                    "at_least_k_sig"),
-                                       at_least_k = 1,
-                                       merge_all_tests = FALSE,
-                                       p_adjust_method = "none",
-                                       alpha = .05,
+                                       collapse = NULL,
+                                       at_least_k = NULL,
+                                       merge_all_tests = NULL,
+                                       p_adjust_method = NULL,
+                                       alpha = NULL,
                                        ...) {
+  stored_args <- attr(object, "args")$rejection_rates_args
+  collapse <- collapse %||% (stored_args$collapse %||% "none")
+  at_least_k <- at_least_k %||% (stored_args$at_least_k %||% 1)
+  merge_all_tests <- merge_all_tests %||% (stored_args$merge_all_tests %||% FALSE)
+  p_adjust_method <- p_adjust_method %||% (stored_args$p_adjust_method %||% "none")
+  alpha <- alpha %||% (stored_args$alpha %||% .05)
+
   out0 <- summarize_tests(object,
                           collapse = collapse,
                           at_least_k = at_least_k,

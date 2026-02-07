@@ -36,7 +36,9 @@ x_from_power(
   save_sim_all = FALSE,
   algorithm = NULL,
   control = list(),
-  internal_args = list()
+  internal_args = list(),
+  rejection_rates_args = list(collapse = "all_sig", at_least_k = 1, p_adjust_method =
+    "none", alpha = 0.05)
 )
 
 n_from_power(
@@ -61,7 +63,10 @@ n_from_power(
     upper_bound = NULL, nls_control = list(), nls_args = list()),
   save_sim_all = FALSE,
   algorithm = NULL,
-  control = list()
+  control = list(),
+  internal_args = list(),
+  rejection_rates_args = list(collapse = "all_sig", at_least_k = 1, p_adjust_method =
+    "none", alpha = 0.05)
 )
 
 n_region_from_power(
@@ -84,7 +89,10 @@ n_region_from_power(
     upper_bound = NULL, nls_control = list(), nls_args = list()),
   save_sim_all = FALSE,
   algorithm = NULL,
-  control = list()
+  control = list(),
+  internal_args = list(),
+  rejection_rates_args = list(collapse = "all_sig", at_least_k = 1, p_adjust_method =
+    "none", alpha = 0.05)
 )
 
 \method{print}{x_from_power}(x, digits = 3, ...)
@@ -287,6 +295,22 @@ users.}
 \item{internal_args}{A named list
 of internal arguments. For internal
 testing. Do not use it.}
+
+\item{rejection_rates_args}{Argument values to be used when
+\code{\link[=rejection_rates]{rejection_rates()}} is called, used
+to decide how rejection rates will
+be estimated. Only one single test
+is supported by \code{\link[=x_from_power]{x_from_power()}}.
+Therefore, \code{merge_all_tests} is
+always \code{TRUE} and cannot be changed.
+The argument \code{collapse} can be
+\code{"all_sig"}, \code{"at_least_one_sig"},
+or \code{"at_least_k_sig"} (it cannot be
+\code{"none"}). Please refer to
+\code{\link[=rejection_rates]{rejection_rates()}} for other
+possible arguments. These values,
+if set, will overwrite any stored
+settings in \code{object}.}
 
 \item{digits}{The number of digits
 after the decimal when printing
