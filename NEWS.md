@@ -1,4 +1,4 @@
-# power4mome 0.1.1.38
+# power4mome 0.1.1.39
 
 - Improve the function for extending the
   initial interval before doing a
@@ -182,6 +182,26 @@
   the bisection algorithm. When extending
   an interval, the power curve will also
   be used. (0.1.1.38)
+
+- Added an argument `rejection_rates_args`
+  to `power4test()`. When calling
+  `power4test()`, users
+  can in advance some settings for
+  rejection rates, such as collapsing
+  all tests into one. They will be used
+  when calling `rejection_rates()`. They
+  will also be stored internally, and used
+  by `power4test_by_n()`, `x_from_power()`,
+  and similar functions that used a
+  `power4test` object as an input.
+  (0.1.1.39)
+
+- Updated `x_from_power()` and related
+  functions to allow users specifying
+  how tests will be collapsed (`"none"`
+  is not allowed), by setting the
+  argument `rejection_rates_args`.
+  (0.1.1.39)
 
 # power4mome 0.1.1
 
