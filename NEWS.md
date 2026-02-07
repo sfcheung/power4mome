@@ -1,4 +1,4 @@
-# power4mome 0.1.1.39
+# power4mome 0.1.1.40
 
 - Improve the function for extending the
   initial interval before doing a
@@ -201,7 +201,7 @@
   how tests will be collapsed (`"none"`
   is not allowed), by setting the
   argument `rejection_rates_args`.
-  (0.1.1.39)
+  (0.1.1.39, 0.1.1.40)
 
 # power4mome 0.1.1
 

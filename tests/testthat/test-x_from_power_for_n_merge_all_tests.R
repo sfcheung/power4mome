@@ -32,6 +32,8 @@ out <- power4test(nrep = 50,
 out_power <- rejection_rates(out)
 out_power
 
+out0 <- out
+
 out <- power4test(out,
                   test_fun = test_parameters,
                   test_args = list(pars = "y~x"),
@@ -90,6 +92,7 @@ expect_error(tmp2 <- x_from_power(tmp,
                                                 at_least_k = 1)),
              "rejection_rates_args")
 
+rejection_rates(out)
 outby <- power4test_by_n(out,
                          n = c(80, 250, 500),
                          progress = !is_testing())
@@ -105,5 +108,19 @@ tmp <- x_from_power(outby,
                     simulation_progress = !is_testing(),
                     algorithm = "bisection")
 expect_true(all(grepl("all_sig", tmp$rejection_rates$test_label)))
+
+# No merging when there is only one test
+
+expect_no_error(tmp <- x_from_power(out0,
+                    x = "n",
+                    target_power = .80,
+                    final_nrep = 60,
+                    max_trials = 2,
+                    seed = 2345,
+                    progress = !is_testing(),
+                    simulation_progress = !is_testing(),
+                    algorithm = "bisection"))
+expect_false(all(grepl("all_sig", tmp$rejection_rates$test_label)))
+
 
 })
