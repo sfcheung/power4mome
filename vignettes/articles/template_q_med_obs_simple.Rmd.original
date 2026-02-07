@@ -153,7 +153,7 @@ out_power <- q_power_mediation_simple(
   b = "m",
   cp = "s",
   target_power = .80,
-  nrep = 400,
+  nrep = 600,
   n = 80,
   R = 1000,
   seed = 1234
@@ -203,7 +203,7 @@ out_region <- q_power_mediation_simple(
   b = "m",
   cp = "s",
   target_power = .80,
-  nrep = 400,
+  nrep = 600,
   n = 80,
   R = 1000,
   seed = 1234,

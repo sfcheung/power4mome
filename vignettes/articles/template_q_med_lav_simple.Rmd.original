@@ -180,8 +180,8 @@ out_power <- q_power_mediation_simple(
                   m = .75,
                   y = .80),
   target_power = .80,
-  nrep = 400,
-  n = 150,
+  nrep = 600,
+  n = 200,
   R = 1000,
   seed = 1234
 )
@@ -252,8 +252,8 @@ out_region <- q_power_mediation_simple(
                   m = .75,
                   y = .80),
   target_power = .80,
-  nrep = 400,
-  n = 150,
+  nrep = 600,
+  n = 200,
   R = 1000,
   seed = 1234,
   mode = "region"

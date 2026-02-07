@@ -239,7 +239,7 @@ out_power <- q_power_mediation_serial(
                   m2 = .70,
                   y = .70),
   target_power = .80,
-  nrep = 400,
+  nrep = 600,
   n = 150,
   R = 1000,
   seed = 1234
@@ -317,7 +317,7 @@ out_region <- q_power_mediation_serial(
                   m2 = .70,
                   y = .70),
   target_power = .80,
-  nrep = 400,
+  nrep = 600,
   n = 150,
   R = 1000,
   seed = 1234,
