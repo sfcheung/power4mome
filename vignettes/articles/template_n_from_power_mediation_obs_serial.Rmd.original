@@ -146,14 +146,14 @@ print(out,
 
 # ====== Estimate the Power ======
 
-# For n = 50,
+# For n = 80,
 # when testing the indirect effect by
 # Monte Carlo confidence interval
 
-out <- power4test(nrep = 400,
+out <- power4test(nrep = 600,
                   model = model,
                   pop_es = model_es,
-                  n = 50,
+                  n = 80,
                   R = 1000,
                   ci_type = "mc",
                   test_fun = test_indirect_effect,
@@ -237,14 +237,14 @@ print(out,
 
 # ====== Try One N and Estimate the Power ======
 
-# For n = 50,
+# For n = 80,
 # when testing the indirect effect by
 # Monte Carlo confidence interval
 
-out <- power4test(nrep = 400,
+out <- power4test(nrep = 600,
                   model = model,
                   pop_es = model_es,
-                  n = 50,
+                  n = 80,
                   R = 1000,
                   ci_type = "mc",
                   test_fun = test_indirect_effect,
@@ -263,8 +263,10 @@ rejection_rates(out)
 # - Set target power: target_power = .80 (Default, can be omitted)
 # - Set the seed for the simulation: Integer. Should always be set.
 # To set desired precision:
-# - Set final number of R: final_R = 1000 (Default, can be omitted)
-# - Set final number of replications: final_nrep = 400 (Default, can be omitted)
+# - Set final number of R: final_R. If omitted,
+#   it is set to 1000 or set to R in the original object.
+# - Set final number of replications: final_nrep. If omitted,
+#   it is set to 400 or set to nrep in the original object.
 
 n_power_region <- n_region_from_power(out,
                                       seed = 1357)

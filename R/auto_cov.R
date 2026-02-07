@@ -233,11 +233,6 @@ m_moderated <- function(object,
     attr(pt0, "modifiers") <- NULL
     pt0 <- as.data.frame(lavaan::lav_partable_complete(pt0))
     pt <- pt0
-    # fit <- lavaan::lavaan(
-    #           pt0,
-    #           do.fit = FALSE
-    #         )
-    # pt <- lavaan::parameterTable(fit)
   }
   int_term <- union(
                 lavaan::lavNames(pt, "ov.interaction"),

@@ -1,4 +1,4 @@
-# power4mome 0.1.1.35
+# power4mome 0.1.1.42
 
 - Improve the function for extending the
   initial interval before doing a
@@ -132,7 +132,7 @@
 
 - Updated all test functions to include
   *p*-values in the output.
-  (0.0.1.30)
+  (0.1.1.30)
 
 - Added the `p_adjust_method` argument
   to some tests, as well as the
@@ -166,6 +166,51 @@
   in the bisection algorithm, and also
   improved way intervals are extended.
   (0.1.1.35)
+
+- Add `nls_options` to `power_curve()`
+  to configure the use of `nls()`,
+  such as when it should not be
+  attempted. (0.1.1.36)
+
+- Updated the bisection algorithm to
+  use `power_curve()` to assist finding
+  the solution. If estimated solution
+  inside an interval, use it instead of
+  the mean. (0.1.1.37)
+
+- More checks for the solution in
+  the bisection algorithm. When extending
+  an interval, the power curve will also
+  be used. (0.1.1.38)
+
+- Added an argument `rejection_rates_args`
+  to `power4test()`. When calling
+  `power4test()`, users
+  can in advance some settings for
+  rejection rates, such as collapsing
+  all tests into one. They will be used
+  when calling `rejection_rates()`. They
+  will also be stored internally, and used
+  by `power4test_by_n()`, `x_from_power()`,
+  and similar functions that used a
+  `power4test` object as an input.
+  (0.1.1.39)
+
+- Updated `x_from_power()` and related
+  functions to allow users specifying
+  how tests will be collapsed (`"none"`
+  is not allowed), by setting the
+  argument `rejection_rates_args`.
+  (0.1.1.39, 0.1.1.41)
+
+- Change the default of `test_long`
+  to `TRUE` for the `print` method
+  of `power4test` and related objects.
+  (0.1.1.41)
+
+- Updated `rejection_rates()` to ignore
+  `merge_all_tests` if there is only one
+  test. (0.1.1.42)
 
 # power4mome 0.1.1
 

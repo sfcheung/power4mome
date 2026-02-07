@@ -1,5 +1,5 @@
 ---
-title: "Sample Size Given Desired Power (Internal)"
+title: "Difficult Cases for Optimization (Internal)"
 date: "`r Sys.Date()`"
 output:
   rmarkdown::html_vignette:
@@ -8,7 +8,7 @@ output:
         depth: 2
       number_sections: true
 vignette: >
-  %\VignetteIndexEntry{Sample Size Given Desired Power (Internal)}
+  %\VignetteIndexEntry{Difficult Cases for Optimization (Internal)}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 bibliography: references.bib
@@ -46,7 +46,7 @@ y ~ m + x
 mod_es <-
 "
 m ~ x: m
-y ~ m: l
+y ~ m: s
 y ~ x: s
 "
 ```
@@ -68,8 +68,8 @@ print(out,
 out <- power4test(nrep = 200,
                   model = mod,
                   pop_es = mod_es,
-                  n = 100,
-                  R = 199,
+                  n = 50,
+                  R = 1000,
                   ci_type = "mc",
                   test_fun = test_indirect_effect,
                   test_args = list(x = "x",
@@ -85,7 +85,7 @@ print(out,
       test_long = TRUE)
 ```
 
-```{r x_out, results=FALSE, message=FALSE}
+```{r x_out}
 out_n <- n_from_power(out,
                       what = "ub",
                       seed = 4567)
@@ -99,11 +99,11 @@ out_n
 summary(out_n)
 ```
 
-```{r x_from_power_for_n_plot_test, fig.cap="The Power Curve", fig.align="center"}
+```{r x_from_power_for_n_known_difficult_cases_1, fig.cap="The Power Curve", fig.align="center"}
 plot(out_n)
 ```
 
-```{r x_out_lb, results=FALSE, message=FALSE}
+```{r x_out_lb}
 out_n_lb <- n_from_power(out,
                          what = "lb",
                          seed = 2345)
@@ -117,7 +117,7 @@ out_n_lb
 summary(out_n_lb)
 ```
 
-```{r x_from_power_for_n_lb_plot_test, fig.cap="The Power Curve", fig.align="center"}
+```{r x_from_power_for_n_known_difficult_cases_2, fig.cap="The Power Curve", fig.align="center"}
 plot(out_n_lb)
 ```
 
@@ -127,7 +127,7 @@ n_power_region <- n_region_from_power(out,
 n_power_region
 ```
 
-```{r region_plot, fig.cap="The Power Curve (Region)", fig.align="center"}
+```{r x_from_power_for_n_known_difficult_cases_3, fig.cap="The Power Curve (Region)", fig.align="center"}
 plot(n_power_region)
 ```
 
@@ -137,7 +137,7 @@ n_power_region2 <- n_region_from_power(out_n_lb,
 n_power_region2
 ```
 
-```{r region_plot2, fig.cap="The Power Curve (Region) Version 2", fig.align="center"}
+```{r x_from_power_for_n_known_difficult_cases_4, fig.cap="The Power Curve (Region) Version 2", fig.align="center"}
 plot(n_power_region2)
 ```
 

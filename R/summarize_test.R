@@ -153,6 +153,10 @@ summarize_tests <- function(object,
   if (inherits(object, "power4test")) {
     object <- object$test_all
   }
+  if (length(object) == 1) {
+    # - merge_all_tests set to FALSE if there is only one test
+    merge_all_tests <- FALSE
+  }
   if (merge_all_tests) {
     object <- list(all_tests_merged = collapse_all_tests(
                       object,
@@ -280,7 +284,7 @@ print.test_summary <- function(x,
 #' @export
 print.test_out_list <- function(x,
                                 digits = 3,
-                                test_long = FALSE,
+                                test_long = TRUE,
                                 ...) {
   # TODO:
   # - Retrieve and print test notes.

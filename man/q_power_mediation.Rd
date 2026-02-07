@@ -225,7 +225,8 @@ be passed to \code{\link[=power4test]{power4test()}} and
 \code{\link[=n_region_from_power]{n_region_from_power()}}.
 For the \code{print} method, these
 are optional arguments to
-be passed to other print methods
+be passed to \code{\link[=rejection_rates]{rejection_rates()}}
+as well as other print methods
 (see \code{\link[=print.power4test]{print.power4test()}} and
 \code{\link[=print.n_region_from_power]{print.n_region_from_power()}}).
 For the \code{plot} method, these

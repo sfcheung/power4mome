@@ -14,7 +14,8 @@ power_curve(
   nls_args = list(),
   nls_control = list(),
   verbose = FALSE,
-  models = c("nls", "logistic", "lm")
+  models = c("nls", "logistic", "lm"),
+  nls_options = list(min_points = 4, regions = c(0, 0.45, 0.75, 0.85, 1))
 )
 
 \method{print}{power_curve}(x, data_used = FALSE, digits = 3, right = FALSE, row.names = FALSE, ...)
@@ -91,6 +92,12 @@ trying different models.}
 \code{"lm"} (fitted by \code{\link[=lm]{lm()}}). By default,
 all three models will be attempted,
 in this order.}
+
+\item{nls_options}{A named list of
+options to be used by \code{\link[=power_curve]{power_curve()}}
+to configure the use of \code{"nls"}. For
+advanced use. See 'Details' for
+available options.}
 
 \item{x}{A \code{power_curve} object.}
 
@@ -212,6 +219,24 @@ of \code{\link[=power_curve]{power_curve()}}.
 This function can be used directly,
 but is also used internally by
 functions such as \code{\link[=x_from_power]{x_from_power()}}.
+\subsection{'nls_options'}{
+
+These are possible arguments.
+\itemize{
+\item \code{min_points}: If the object has
+less than \code{min_points} rejection
+rates, \code{nls} will not be used.
+\item \code{regions}: A numeric vector with
+values from 0 to 1. It defines
+regions in which there must be
+at least one rejection rate. If this
+criterion is not met, \code{nls} will
+not be used. This is to ensure that
+\code{nls} will not be used when the
+rejection rates are clustered around
+a very narrow region.
+}
+}
 }
 \examples{
 

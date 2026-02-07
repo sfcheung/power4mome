@@ -8,6 +8,7 @@ set_n_range_by_x <- function(
                         goal = NULL,
                         tol = NULL,
                         ci_level = .95) {
+  # No need for other arguments because they will be retrieved from object_by_org
   reject0by <- rejection_rates(object_by_org,
                                level = ci_level,
                                add_se = TRUE,
@@ -65,6 +66,7 @@ set_n_range <- function(object,
                         k = 4,
                         n_max = 1000) {
   n0 <- attr(object, "args")$n
+  # No need for other arguments because only `reject` is used
   reject0 <- rejection_rates(object)
   power0 <- reject0$reject[1]
   if (n0 >= n_max) {
@@ -101,107 +103,6 @@ set_n_range <- function(object,
     return(n_out)
   }
 }
-
-# Not Used
-# power_curve_n <- function(object,
-#                           formula = power ~ (n - c0)^e / (b + (n - c0)^e),
-#                           start = c(b = 2, c0 = 100, e = 1),
-#                           lower_bound = c(b = 0, c0 = 0, e = 1),
-#                           nls_args = list(),
-#                           nls_control = list(),
-#                           verbose = TRUE) {
-#   reject0 <- rejection_rates(object,
-#                              all_columns = TRUE)
-#   # reject0$power <- reject0$sig
-#   reject0$power <- reject0$reject
-#   nls_contorl0 <- list(maxiter = 1000)
-#   nls_contorl1 <- utils::modifyList(nls_contorl0,
-#                                     nls_control)
-
-#   nls_args0 <- list(algorithm = "port")
-#   nls_args1 <- utils::modifyList(nls_args0,
-#                                  nls_args)
-#   # Override these arguments
-#   nls_args1 <- utils::modifyList(nls_args1,
-#                                  list(formula = formula,
-#                                       data = reject0,
-#                                       start = start,
-#                                       lower = lower_bound,
-#                                       control = nls_contorl1))
-#   # Do nls
-#   # Try weights
-#   nls_args1b <- utils::modifyList(nls_args1,
-#                                   list(weights = reject0$nrep))
-#   # Do not do nls if too few cases
-#   if (nrow(reject0) >= 4) {
-#     fit <- tryCatch(suppressWarnings(do.call(stats::nls,
-#                                             nls_args1b)),
-#                     error = function(e) e)
-#     if (inherits(fit, "nls")) {
-#       return(fit)
-#     }
-#     # Do not use weights
-#     fit <- tryCatch(suppressWarnings(do.call(stats::nls,
-#                                             nls_args1)),
-#                     error = function(e) e)
-#     if (inherits(fit, "nls")) {
-#       return(fit)
-#     }
-#     if (verbose) {
-#       message("- 'nls()' estimation failed. Switch to logistic regression.")
-#     }
-#   } else {
-#     if (verbose) {
-#       message("- 'nls()' estimation skipped when less than 4 sample sizes examined.")
-#     }
-#   }
-
-#   # Do logistic
-#   # nrep is used and so no need for weight
-#   reject1 <- reject0[, c("n", "power", "nrep")]
-#   reject1$sig <- round(reject1$power * reject1$nrep)
-#   reject1$ns <- reject1$nrep - reject1$sig
-#   tmp <- mapply(function(x, y) {
-#                   c(rep(1, x), rep(0, y - x))
-#                 },
-#                 x = reject1$sig,
-#                 y = reject1$nrep,
-#                 SIMPLIFY = FALSE)
-#   tmp <- unlist(tmp)
-#   reject1 <- data.frame(n = rep(reject1$n, times = reject1$nrep),
-#                         sig = tmp)
-#   fit <- tryCatch(stats::glm(sig ~ n,
-#                               data = reject1,
-#                               family = "binomial"),
-#                   error = function(e) e,
-#                   warning = function(w) w)
-#   # Also catch warning such as
-#   # - "fitted probabilities numerically 0 or 1 occurred>"
-#   if (inherits(fit, "glm")) {
-#     return(fit)
-#   }
-
-#   if (verbose) {
-#     message("- Logistic regression failed. Switch to linear regression.")
-#   }
-#   # Last resort: OLS regression
-#   # Try weights
-#   fit <- tryCatch(stats::lm(power ~ n,
-#                             data = reject0,
-#                             weights = reject0$nrep),
-#                   error = function(e) e)
-#   if (inherits(fit, "lm")) {
-#     return(fit)
-#   }
-#   # Do not use weights
-#   fit <- tryCatch(stats::lm(power ~ n,
-#                             data = reject0),
-#                   error = function(e) e)
-
-#   # TODO:
-#   # - Consider using `splinefun()` as a last resort.
-#   return(NA)
-# }
 
 estimate_n <- function(power_n_fit,
                        target_power = .80,
@@ -324,8 +225,6 @@ check_n <- function(ns,
   i[duplicated(ns)] <- TRUE
 
   i[is.na(ns)] <- TRUE
-
-  # n < hard_min
 
   i[ns < hard_min] <- TRUE
 

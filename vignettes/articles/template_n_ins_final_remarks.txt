@@ -1,5 +1,13 @@
 # Final Remarks
 
+For a moderate to small `nrep`, the
+results may be
+sensitive to the `seed`. It is
+advised to do a final check of the
+sample size to be used using
+`power4test()` and an `nrep` of 1000
+or 2000.
+
 For other options of `power4test()`
 and `n_region_from_power()`, please refer to
 their help pages, as well as the

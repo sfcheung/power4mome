@@ -379,6 +379,12 @@
 #' cores to use if parallel processing
 #' is used.
 #'
+#' @param rejection_rates_args Default
+#' argument values to be used when
+#' [rejection_rates()] is called. Can
+#' be overriden when calling
+#' [rejection_rates()].
+#'
 # @param es1 <- Inherited
 #'
 # @param es2 <- Inherited
@@ -498,7 +504,12 @@ power4test <- function(object = NULL,
                                   "mi",
                                   "li"),
                        n_std = 100000,
-                       std_force_monte_carlo = FALSE) {
+                       std_force_monte_carlo = FALSE,
+                       rejection_rates_args = list(collapse = "none",
+                                                   at_least_k = 1,
+                                                   merge_all_tests = FALSE,
+                                                   p_adjust_method = "none",
+                                                   alpha = .05)) {
 
   # TOOD:
   # - Should allow only limited changes
@@ -542,10 +553,6 @@ power4test <- function(object = NULL,
   # args available in all cases.
   # It should be used whenever possible,
   # unless we explicitly need the value in this call.
-
-  # if (args$progress) {
-  #   cat("Displaying progress enabled. Set 'progress = FALSE' to hide the progress.\n")
-  # }
 
   if (update_power4test && !is.null(pop_es)) {
     # Population effect size changed
@@ -642,11 +649,6 @@ power4test <- function(object = NULL,
                                    ncores = args$ncores),
                         simplify = FALSE)
 
-    # fit_args0 <- utils::modifyList`(fit_model_args,
-    #                               list(data_all = data_all,
-    #                                     parallel = parallel,
-    #                                     progress = progress,
-    #                                     ncores = ncores))
     if (args$progress) {
       cat("Fit the model(s):\n")
     }
@@ -734,10 +736,6 @@ power4test <- function(object = NULL,
                          mc_all,
                          boot_all))
 
-    # sim_all <- sim_out(data_all = data_all,
-    #                    fit = fit_all,
-    #                    mc_out = mc_all,
-    #                    boot_out = boot_all)
   } else {
     sim_all <- object$sim_all
   }
@@ -899,7 +897,7 @@ print.power4test <- function(x,
                              digits = 3,
                              digits_descriptive = 2,
                              data_long = FALSE,
-                             test_long = FALSE,
+                             test_long = TRUE,
                              fit_to_all_args = list(),
                              ...) {
   what <- match.arg(what, several.ok = TRUE)

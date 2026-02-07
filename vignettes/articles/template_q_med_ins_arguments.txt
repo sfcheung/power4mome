@@ -8,7 +8,9 @@
   when estimating the power for a
   sample size. Default is 400.
   Can be omitted if this is the desired
-  number of replications.
+  number of replications. Using 600 or
+  800 increases the time of each iteration,
+  but can lead to more stable results.
 
 - `R`: The number of random samples used
   in forming Monte Carlo or nonparametric
@@ -33,4 +35,11 @@
   to set this seed to an integer, to
   make the results reproducible at least
   on the same machine.
+  For a moderate to small `nrep`, the
+  results may be
+  sensitive to the `seed`. It is
+  advised to do a final check of the
+  sample size to be used using
+  `power4test()` and an `nrep` of 1000
+  or 2000.
 

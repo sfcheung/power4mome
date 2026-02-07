@@ -203,6 +203,8 @@ rejection_rates_add_ci <- function(object,
                                    level = .95,
                                    add_reject = TRUE,
                                    add_se = TRUE) {
+  # No need for additional arguments because they are handled by rejection_rates()
+  # level is handled by this function, not by rejection_rates()
   if (!is.data.frame(object)) {
     if (inherits(object, "power4test_by_es")) {
       df1 <- rejection_rates(object,
@@ -235,9 +237,6 @@ rejection_rates_add_ci <- function(object,
     df1$reject <- df1$sig
   }
   df1$reject_se <- sqrt(reject * (1 - reject) / df1$nvalid)
-  # a <- stats::qnorm(1 - (1 - level) / 2)
-  # df1$reject_ci_lo <- reject - a * df1$reject_se
-  # df1$reject_ci_hi <- reject + a * df1$reject_se
   ci_i <- reject_ci(
             nreject = round(reject * df1$nvalid),
             nvalid = df1$nvalid,
@@ -280,6 +279,8 @@ find_ci_hit <- function(object,
   # If no hit, return NULL
   # If hit, always return one number
   # If closest_ok, accept a trial with closest power level
+  # No need to handle other arguments. They should be
+  #   retrieved from the object by rejection_rates()
   by_x_ci <- rejection_rates_add_ci(object,
                                     level = ci_level)
   i0 <- (by_x_ci$reject_ci_lo < target_power) &
@@ -374,7 +375,6 @@ find_close_enough <- function(
   if_ties = c("min", "max"),
   weight_by = c("nrep", "ci_width", "se", "none"),
   debug = FALSE) {
-  # if (debug) browser()
 
   # If no solution, return NULL
   # If solution, always return one number
@@ -383,6 +383,7 @@ find_close_enough <- function(
   if_ties <- match.arg(if_ties)
   weight_by <- match.arg(weight_by)
 
+  # No need for other arguments because they are stored in object
   by_x_ci <- rejection_rates_add_ci(object,
                                     level = ci_level,
                                     add_se = TRUE)
@@ -445,7 +446,8 @@ check_x_from_power_as_input <- function(object,
                                         x,
                                         pop_es_name,
                                         final_nrep,
-                                        ci_level) {
+                                        ci_level,
+                                        rejection_rates_args) {
   if (!identical(x, object$x)) {
     stop("object's x is ", object$x, " but ",
          "requested x is ", x)
@@ -458,7 +460,7 @@ check_x_from_power_as_input <- function(object,
   }
   if (object$arg$final_nrep != final_nrep) {
     stop("object's final_nrep (",
-         object$final_nrep,
+         object$arg$final_nrep,
          ") is different from the requested final_nrep (",
          final_nrep,
          ").")
@@ -470,6 +472,22 @@ check_x_from_power_as_input <- function(object,
          ci_level,
          ").")
   }
+  # Do not check merge_all_tests because
+  # it should be determined internally.
+  for (x in names(object$rejection_rates_args)) {
+    if (x == "merge_all_tests") next
+    if (object$rejection_rates_args[[x]] != rejection_rates_args[[x]]) {
+      stop("object's rejection_rates_args:",
+           x,
+           " (",
+           object$rejection_rates_args[[x]],
+           ")",
+           " is different from the new value (",
+           rejection_rates_args[[x]],
+           ").")
+    }
+  }
+
   return(TRUE)
 }
 
@@ -477,6 +495,7 @@ check_x_from_power_as_input <- function(object,
 # Get the vector of x values already tried
 get_x_tried <- function(object,
                         x) {
+  # No need for other arguments because only `n` or `es` is used
   tmp <- rejection_rates_add_ci(object)
   out <- switch(x,
                 n = tmp$n,
@@ -635,10 +654,7 @@ check_solution <- function(f_i,
     return(FALSE)
   }
   goal <- match.arg(goal)
-  # a <- abs(stats::qnorm((1 - ci_level) / 2))
   se_i <- sqrt(f_i * (1 - f_i) / nrep)
-  # cilb <- f_i - a * se_i
-  # ciub <- f_i + a * se_i
   ci_i <- reject_ci(
             nreject = round(f_i * nrep),
             nvalid = nrep,
@@ -654,7 +670,6 @@ check_solution <- function(f_i,
       return(FALSE)
     }
   }
-  # goal == "close_enough"
   chk_point <- switch(what,
                       point = f_i,
                       ub = ciub,
@@ -771,6 +786,7 @@ check_solution_in_by_x <- function(
   if (inherits(object, "rejection_rates_df")) {
     reject_df <- object
   } else {
+    # No need for other arguments. Only reject and nrep are used.
     reject_df <- rejection_rates(object,
                                 ci_level = ci_level,
                                 all_columns = TRUE,
@@ -926,4 +942,27 @@ x_from_y_rejection_rates <- function(
                           y2 = x_reject_above_i,
                           target = target_power)
   x_between_i
+}
+
+#' @noRd
+# Modify rejection_rates_args in an by_x objects
+set_rejection_rates_args_by_x <- function(
+  object,
+  rejection_rates_args
+) {
+  for (i in seq_along(object)) {
+    tmp <-  attr(object[[i]], "args")
+    tmp2 <- tmp$rejection_rates_args
+    tmp2 <- utils::modifyList(
+                  tmp2,
+                  rejection_rates_args,
+                  keep.null = TRUE
+                )
+    # merge_all_tests is always TRUE
+    # Ignored by rejection_rates() if there is only one test
+    tmp2$merge_all_tests <- TRUE
+    tmp$rejection_rates_args <- tmp2
+    attr(object[[i]], "args") <- tmp
+  }
+  object
 }

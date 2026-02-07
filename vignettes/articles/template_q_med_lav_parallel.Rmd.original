@@ -215,8 +215,8 @@ out_power <- q_power_mediation_parallel(
                   m2 = .70,
                   y = .70),
   target_power = .80,
-  nrep = 400,
-  n = 300,
+  nrep = 600,
+  n = 200,
   R = 1000,
   seed = 1234
 )
@@ -297,8 +297,8 @@ out_region <- q_power_mediation_parallel(
                   m2 = .70,
                   y = .70),
   target_power = .80,
-  nrep = 400,
-  n = 300,
+  nrep = 600,
+  n = 200,
   R = 1000,
   seed = 1234,
   mode = "region"
