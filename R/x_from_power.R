@@ -798,7 +798,14 @@ x_from_power <- function(object,
                 rejection_rates_args,
                 keep.null = TRUE
               )
-  tmp2$merge_all_tests <- TRUE
+  if ((nrow(rejection_rates(object)) == 1) &&
+      (isFALSE(attr(object, "args")$rejection_rates_args$merge_all_tests))) {
+    # ==== Only one test. Do not merge ====
+    tmp2$merge_all_tests <- FALSE
+  } else {
+    # ==== More than one tests. Merge ====
+    tmp2$merge_all_tests <- TRUE
+  }
   tmp$rejection_rates_args <- tmp2
   attr(object, "args") <- tmp
   rm(tmp)
