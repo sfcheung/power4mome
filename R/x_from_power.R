@@ -621,6 +621,15 @@ x_from_power <- function(object,
                             "power_curve"))
   }
 
+  tmp <- list(collapse = "all_sig",
+              at_least_k = 1,
+              p_adjust_method = "none",
+              alpha = .05)
+  rejection_rates_args <- utils::modifyList(
+                            tmp,
+                            rejection_rates_args
+                          )
+
   # ==== Set default algorithm ====
 
   # what and goal take precedence
@@ -720,7 +729,8 @@ x_from_power <- function(object,
                                 x = x,
                                 pop_es_name = pop_es_name,
                                 final_nrep = final_nrep,
-                                ci_level = ci_level)
+                                ci_level = ci_level,
+                                rejection_rates_args = rejection_rates_args)
 
     # Check these for compatibility:
 
@@ -755,8 +765,12 @@ x_from_power <- function(object,
     is_by_x <- TRUE
     object_by_org <- object
 
-    # TODO:
-    # - RJA: Set rejection_rates_args
+    # Update rejection_rates_args
+
+    object_by_org <- set_rejection_rates_args_by_x(
+                        object_by_org,
+                        rejection_rates_args = rejection_rates_args
+                      )
 
     # Whether a solution exists will be checked later
 
@@ -775,8 +789,19 @@ x_from_power <- function(object,
     object_by_org <- NA
   }
 
-  # TODO:
-  # - RJA: Set rejection_rates_args
+  # ==== Update rejection_rates_args ====
+
+  tmp <-  attr(object, "args")
+  tmp2 <- tmp$rejection_rates_args
+  tmp2 <- utils::modifyList(
+                tmp2,
+                rejection_rates_args,
+                keep.null = TRUE
+              )
+  tmp2$merge_all_tests <- TRUE
+  tmp$rejection_rates_args <- tmp2
+  attr(object, "args") <- tmp
+  rm(tmp)
 
   # The object to be used below is always a power4test object
 
@@ -1293,7 +1318,8 @@ x_from_power <- function(object,
               status = status,
               technical = technical,
               algorithm = algorithm,
-              call = match.call())
+              call = match.call(),
+              rejection_rates_args = rejection_rates_args)
   class(out) <- c("x_from_power", class(out))
   return(out)
 }

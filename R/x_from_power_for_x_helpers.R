@@ -446,7 +446,8 @@ check_x_from_power_as_input <- function(object,
                                         x,
                                         pop_es_name,
                                         final_nrep,
-                                        ci_level) {
+                                        ci_level,
+                                        rejection_rates_args) {
   if (!identical(x, object$x)) {
     stop("object's x is ", object$x, " but ",
          "requested x is ", x)
@@ -459,7 +460,7 @@ check_x_from_power_as_input <- function(object,
   }
   if (object$arg$final_nrep != final_nrep) {
     stop("object's final_nrep (",
-         object$final_nrep,
+         object$arg$final_nrep,
          ") is different from the requested final_nrep (",
          final_nrep,
          ").")
@@ -471,6 +472,19 @@ check_x_from_power_as_input <- function(object,
          ci_level,
          ").")
   }
+  for (x in names(object$rejection_rates_args)) {
+    if (object$rejection_rates_args[[x]] != rejection_rates_args[[x]]) {
+      stop("object's rejection_rates_args:",
+           x,
+           " (",
+           object$rejection_rates_args[[x]],
+           ")",
+           " is different from the new value (",
+           rejection_rates_args[[x]],
+           ").")
+    }
+  }
+
   return(TRUE)
 }
 
@@ -925,4 +939,25 @@ x_from_y_rejection_rates <- function(
                           y2 = x_reject_above_i,
                           target = target_power)
   x_between_i
+}
+
+#' @noRd
+# Modify rejection_rates_args in an by_x objects
+set_rejection_rates_args_by_x <- function(
+  object,
+  rejection_rates_args
+) {
+  for (i in seq_along(object)) {
+    tmp <-  attr(object[[i]], "args")
+    tmp2 <- tmp$rejection_rates_args
+    tmp2 <- utils::modifyList(
+                  tmp2,
+                  rejection_rates_args,
+                  keep.null = TRUE
+                )
+    tmp2$merge_all_tests <- TRUE
+    tmp$rejection_rates_args <- tmp2
+    attr(object[[i]], "args") <- tmp
+  }
+  object
 }
