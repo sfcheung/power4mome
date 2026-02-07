@@ -385,22 +385,14 @@ This is the default printout:
 out
 ```
 
-If `test_long = TRUE` is added when printing
-the output by `print()`, a summary of the
-test will also be printed.
-
-```r
-print(out,
-      test_long = TRUE)
-```
-
 The summary of the test:
 
 ```{r echo=FALSE}
 tmp <- capture.output(print(out, test_long = TRUE))
 tmp2 <- rejection_rates(out, all_columns = TRUE)
 est_mean <- sprintf("%4.3f", tmp2[1, "est"])
-cat(tmp[67:76], sep = "\n")
+i <- grepl("<test_indirect: x->m->y>", tmp)
+cat(tmp[which(i):length(tmp)], sep = "\n")
 ```
 
 The mean of the estimates across all the

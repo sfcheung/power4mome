@@ -20,7 +20,7 @@ summarize_tests(
 
 \method{print}{test_summary}(x, digits = 2, ...)
 
-\method{print}{test_out_list}(x, digits = 3, test_long = FALSE, ...)
+\method{print}{test_out_list}(x, digits = 3, test_long = TRUE, ...)
 }
 \arguments{
 \item{object}{A \code{power4test} object

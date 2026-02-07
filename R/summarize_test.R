@@ -280,7 +280,7 @@ print.test_summary <- function(x,
 #' @export
 print.test_out_list <- function(x,
                                 digits = 3,
-                                test_long = FALSE,
+                                test_long = TRUE,
                                 ...) {
   # TODO:
   # - Retrieve and print test notes.

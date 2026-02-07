@@ -897,7 +897,7 @@ print.power4test <- function(x,
                              digits = 3,
                              digits_descriptive = 2,
                              data_long = FALSE,
-                             test_long = FALSE,
+                             test_long = TRUE,
                              fit_to_all_args = list(),
                              ...) {
   what <- match.arg(what, several.ok = TRUE)
