@@ -1,6 +1,6 @@
 ---
 title: "Quick Template: Parallel Mediation with Observed Variables"
-date: "2025-10-26"
+date: "2026-02-07"
 output:
   html_document:
     fig.align: "center"
@@ -208,14 +208,14 @@ print(out,
 
 # ====== Estimate the Power ======
 
-# For n = 100,
+# For n = 200,
 # when testing all indirect effects by
 # Monte Carlo confidence intervals
 
-out <- power4test(nrep = 400,
+out <- power4test(nrep = 600,
                   model = model,
                   pop_es = model_es,
-                  n = 100,
+                  n = 200,
                   R = 1000,
                   ci_type = "mc",
                   test_fun = test_k_indirect_effects,
@@ -294,21 +294,21 @@ print(out,
 #>  
 #> ======================= Data Information =======================
 #> 
-#> Number of Replications:  400 
-#> Sample Sizes:  100 
+#> Number of Replications:  600 
+#> Sample Sizes:  200 
 #> 
 #> ==== Descriptive Statistics ====
 #> 
-#>    vars     n  mean sd  skew kurtosis   se
-#> m1    1 40000 -0.01  1  0.00     0.01 0.01
-#> m2    2 40000  0.00  1 -0.01     0.01 0.01
-#> m3    3 40000  0.00  1  0.02     0.03 0.01
-#> y     4 40000  0.00  1  0.00     0.00 0.01
-#> x     5 40000 -0.01  1  0.00    -0.03 0.01
+#>    vars      n mean sd  skew kurtosis se
+#> m1    1 120000    0  1 -0.01    -0.01  0
+#> m2    2 120000    0  1 -0.01     0.01  0
+#> m3    3 120000    0  1  0.00     0.01  0
+#> y     4 120000    0  1  0.00    -0.02  0
+#> x     5 120000    0  1  0.00    -0.01  0
 #> 
-#> ==== Parameter Estimates Based on All 400 Samples Combined ====
+#> ==== Parameter Estimates Based on All 600 Samples Combined ====
 #> 
-#> Total Sample Size: 40000 
+#> Total Sample Size: 120000 
 #> 
 #> ==== Standardized Estimates ====
 #> 
@@ -317,16 +317,16 @@ print(out,
 #> Regressions:
 #>                     est.std
 #>   m1 ~                     
-#>     x                 0.306
+#>     x                 0.301
 #>   m2 ~                     
-#>     x                 0.300
+#>     x                 0.296
 #>   m3 ~                     
-#>     x                 0.295
+#>     x                 0.300
 #>   y ~                      
-#>     m1                0.103
-#>     m2                0.296
-#>     m3                0.500
-#>     x                 0.106
+#>     m1                0.102
+#>     m2                0.298
+#>     m3                0.504
+#>     x                 0.098
 #> 
 #> 
 #> ==================== Extra Element(s) Found ====================
@@ -338,19 +338,19 @@ print(out,
 #> 
 #> ============ <fit> ============
 #> 
-#> lavaan 0.6-20 ended normally after 2 iterations
+#> lavaan 0.6-21 ended normally after 1 iteration
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
 #>   Number of model parameters                        11
 #> 
-#>   Number of observations                           100
+#>   Number of observations                           200
 #> 
 #> Model Test User Model:
 #>                                                       
-#>   Test statistic                                 4.950
+#>   Test statistic                                 1.105
 #>   Degrees of freedom                                 3
-#>   P-value (Chi-square)                           0.175
+#>   P-value (Chi-square)                           0.776
 #> 
 #> =========== <mc_out> ===========
 #> 
@@ -360,16 +360,21 @@ print(out,
 #> Number of Monte Carlo replications: 1000 
 #> 
 #> 
-#> ====================== Test(s) Conducted ======================
+#> ============== <test_indirects: x-...->y> ==============
 #> 
-#> - test_indirects: x-...->y
+#> Mean(s) across replication:
+#>           test_label  est cilo cihi pvalue   sig
+#> 1 x-...->y (All sig)  NaN  NaN  NaN  0.173 0.457
 #> 
-#> Call print() and set 'test_long = TRUE' for a detailed report.
+#> - The column 'sig' shows the rejection rates.
+#> - If the null hypothesis is false, the rate is the power.
+#> - Number of valid replications for rejection rate(s): 600 
+#> - Proportion of valid replications for rejection rate(s): 1.000
 rejection_rates(out)
 #> [test]: test_indirects: x-...->y 
 #> [test_label]: x-...->y (All sig) 
 #>    est   p.v reject r.cilo r.cihi
-#> 1  NaN 1.000  0.172  0.139  0.213
+#> 1  NaN 1.000  0.457  0.417  0.497
 #> Notes:
 #> - p.v: The proportion of valid replications.
 #> - est: The mean of the estimates in a test across replications.
@@ -428,8 +433,10 @@ The code:
 # - Set target power: target_power = .80 (Default, can be omitted)
 # - Set the seed for the simulation: Integer. Should always be set.
 # To set desired precision:
-# - Set final number of R: final_R = 1000 (Default, can be omitted)
-# - Set final number of replications: final_nrep = 400 (Default, can be omitted)
+# - Set final number of R: final_R. If omitted,
+#   it is set to 1000 or set to R in the original object.
+# - Set final number of replications: final_nrep. If omitted,
+#   it is set to 400 or set to nrep in the original object.
 
 n_power_region <- n_region_from_power(out,
                                       seed = 1357)
@@ -463,13 +470,13 @@ n_power_region
 #> Solution: 
 #> 
 #> Approximate region of sample sizes with power:
-#> - not significantly different from 0.800: 464 to 516
-#> - significantly lower than 0.800: 464
-#> - significantly higher than 0.800: 516
+#> - not significantly different from 0.800: 445 to 500
+#> - significantly lower than 0.800: 445
+#> - significantly higher than 0.800: 500
 #> 
 #> Confidence intervals of the estimated power:
-#> - for the lower bound (464): [0.724, 0.806]
-#> - for the upper bound (516): [0.806, 0.877]
+#> - for the lower bound (445): [0.743, 0.810]
+#> - for the upper bound (500): [0.793, 0.853]
 #> 
 #> Call `summary()` for detailed results.
 
@@ -488,16 +495,16 @@ plot(n_power_region)
 As shown above, approximately:
 
 - sample sizes lower than
-  464 have
+  445 have
   power significantly lower than .80, and
 
 - sample sizes higher than
-  516 have
+  500 have
   power significantly higher than .80.
 
 In other words, sample sizes between
-464 and
-516 have
+445 and
+500 have
 power not significantly different from
 .80.
 
@@ -515,8 +522,8 @@ summary(n_power_region)
 #> ====== x_from_power Results ======
 #> 
 #> Call:
-#> power4mome::x_from_power(object = out, x = "n", what = "ub", 
-#>     goal = "close_enough", seed = 1357)
+#> x_from_power(object = out, x = "n", what = "ub", goal = "close_enough", 
+#>     final_nrep = 600, final_R = 1000, seed = 1357)
 #> 
 #> Predictor (x): Sample Size 
 #> 
@@ -526,19 +533,19 @@ summary(n_power_region)
 #> 
 #> === Major Results ===
 #> 
-#> - Final Value (Sample Size): 464
+#> - Final Value (Sample Size): 445
 #> 
-#> - Final Estimated Power: 0.767 
-#> - Confidence Interval: [0.724; 0.806]
+#> - Final Estimated Power: 0.778 
+#> - Confidence Interval: [0.743; 0.810]
 #> - Level of confidence: 95.0%
-#> - Based on 400 replications.
+#> - Based on 600 replications.
 #> 
 #> === Technical Information ===
 #> 
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
-#> - The range of values explored: 100 to 464 
-#> - Time spent in the search: 33.31 secs 
+#> - The range of values explored: 200 to 650 
+#> - Time spent in the search: 4.593 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -556,19 +563,23 @@ summary(n_power_region)
 #> 
 #> Coefficients:
 #> (Intercept)            x  
-#>   -2.326875     0.007589  
+#>   -1.289931     0.005615  
 #> 
-#> Degrees of Freedom: 799 Total (i.e. Null);  798 Residual
-#> Null Deviance:	    1106 
-#> Residual Deviance: 801.7 	AIC: 805.7
+#> Degrees of Freedom: 3599 Total (i.e. Null);  3598 Residual
+#> Null Deviance:	    4187 
+#> Residual Deviance: 3814 	AIC: 3818
 #> 
 #> - Detailed Results:
 #> 
 #> [test]: test_indirects: x-...->y 
 #> [test_label]: x-...->y (All sig) 
 #>     n  est   p.v reject r.cilo r.cihi
-#> 1 100  NaN 1.000  0.172  0.139  0.213
-#> 2 464  NaN 1.000  0.767  0.724  0.806
+#> 1 200  NaN 1.000  0.457  0.417  0.497
+#> 2 350  NaN 1.000  0.670  0.631  0.706
+#> 3 440  NaN 1.000  0.747  0.710  0.780
+#> 4 445  NaN 1.000  0.778  0.743  0.810
+#> 5 500  NaN 1.000  0.825  0.793  0.853
+#> 6 650  NaN 1.000  0.913  0.888  0.933
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.
@@ -588,8 +599,8 @@ summary(n_power_region)
 #> ====== x_from_power Results ======
 #> 
 #> Call:
-#> power4mome::x_from_power(object = out, seed = 1357, x = "n", 
-#>     what = "lb", goal = "close_enough")
+#> x_from_power(object = out, seed = 1357, final_nrep = 600, final_R = 1000, 
+#>     x = "n", what = "lb", goal = "close_enough")
 #> 
 #> Predictor (x): Sample Size 
 #> 
@@ -599,27 +610,28 @@ summary(n_power_region)
 #> 
 #> === Major Results ===
 #> 
-#> - Final Value (Sample Size): 516
+#> - Final Value (Sample Size): 500
 #> 
-#> - Final Estimated Power: 0.845 
-#> - Confidence Interval: [0.806; 0.877]
+#> - Final Estimated Power: 0.825 
+#> - Confidence Interval: [0.793; 0.853]
 #> - Level of confidence: 95.0%
-#> - Based on 400 replications.
+#> - Based on 600 replications.
 #> 
 #> === Technical Information ===
 #> 
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
-#> - The range of values explored: 464 to 738 
-#> - Time spent in the search: 2.796 mins 
+#> - The range of values explored: 200 to 650 
+#> - Time spent in the search: 0.8058 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
 #> 
 #> Call:
-#> power_curve(object = by_x_1, formula = power_model, start = power_curve_start, 
-#>     lower_bound = lower_bound, upper_bound = upper_bound, nls_args = nls_args, 
-#>     nls_control = nls_control, verbose = progress)
+#> power_curve(object = by_x_1, formula = power_curve_args$power_model, 
+#>     start = power_curve_args$start, lower_bound = power_curve_args$lower_bound, 
+#>     upper_bound = power_curve_args$upper_bound, nls_args = power_curve_args$nls_args, 
+#>     nls_control = power_curve_args$nls_control, verbose = progress)
 #> 
 #> Predictor: n (Sample Size)
 #> 
@@ -629,23 +641,23 @@ summary(n_power_region)
 #> 
 #> Coefficients:
 #> (Intercept)            x  
-#>   -1.281835     0.005652  
+#>   -1.289931     0.005615  
 #> 
-#> Degrees of Freedom: 2399 Total (i.e. Null);  2398 Residual
-#> Null Deviance:	    1965 
-#> Residual Deviance: 1906 	AIC: 1910
+#> Degrees of Freedom: 3599 Total (i.e. Null);  3598 Residual
+#> Null Deviance:	    4187 
+#> Residual Deviance: 3814 	AIC: 3818
 #> 
 #> - Detailed Results:
 #> 
 #> [test]: test_indirects: x-...->y 
 #> [test_label]: x-...->y (All sig) 
 #>     n  est   p.v reject r.cilo r.cihi
-#> 1 464  NaN 1.000  0.767  0.724  0.806
-#> 2 484  NaN 1.000  0.820  0.779  0.855
-#> 3 516  NaN 1.000  0.845  0.806  0.877
-#> 4 548  NaN 1.000  0.873  0.836  0.902
-#> 5 611  NaN 1.000  0.900  0.867  0.926
-#> 6 738  NaN 1.000  0.940  0.912  0.959
+#> 1 200  NaN 1.000  0.457  0.417  0.497
+#> 2 350  NaN 1.000  0.670  0.631  0.706
+#> 3 440  NaN 1.000  0.747  0.710  0.780
+#> 4 445  NaN 1.000  0.778  0.743  0.810
+#> 5 500  NaN 1.000  0.825  0.793  0.853
+#> 6 650  NaN 1.000  0.913  0.888  0.933
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.
@@ -702,14 +714,14 @@ print(out,
 
 # ====== Try One N and Estimate the Power ======
 
-# For n = 100,
+# For n = 300,
 # when testing all indirect effects by
 # Monte Carlo confidence intervals
 
-out <- power4test(nrep = 400,
+out <- power4test(nrep = 600,
                   model = model,
                   pop_es = model_es,
-                  n = 100,
+                  n = 200,
                   R = 1000,
                   ci_type = "mc",
                   test_fun = test_k_indirect_effects,
@@ -728,8 +740,10 @@ rejection_rates(out)
 # - Set target power: target_power = .80 (Default, can be omitted)
 # - Set the seed for the simulation: Integer. Should always be set.
 # To set desired precision:
-# - Set final number of R: final_R = 1000 (Default, can be omitted)
-# - Set final number of replications: final_nrep = 400 (Default, can be omitted)
+# - Set final number of R: final_R. If omitted,
+#   it is set to 1000 or set to R in the original object.
+# - Set final number of replications: final_nrep. If omitted,
+#   it is set to 400 or set to nrep in the original object.
 
 n_power_region <- n_region_from_power(out,
                                       seed = 1357)
@@ -741,11 +755,19 @@ summary(n_power_region)
 
 # Final Remarks
 
+For a moderate to small `nrep`, the
+results may be
+sensitive to the `seed`. It is
+advised to do a final check of the
+sample size to be used using
+`power4test()` and an `nrep` of 1000
+or 2000.
+
 For other options of `power4test()`
 and `n_region_from_power()`, please refer to
 their help pages, as well as the
-[Get-Started article](https://sfcheung.github.io/power4mome/articles/power4mome.html)
-and this [article](https://sfcheung.github.io/power4mome/articles/x_from_power_for_n.html)
+[Get-Started article](power4mome.html)
+and this [article](x_from_power_for_n.html)
 for `n_from_power()`, which is the
 function to find one of the regions,
 called twice by `n_region_from_power()`.
