@@ -472,7 +472,10 @@ check_x_from_power_as_input <- function(object,
          ci_level,
          ").")
   }
+  # Do not check merge_all_tests because
+  # it should be determined internally.
   for (x in names(object$rejection_rates_args)) {
+    if (x == "merge_all_tests") next
     if (object$rejection_rates_args[[x]] != rejection_rates_args[[x]]) {
       stop("object's rejection_rates_args:",
            x,
@@ -955,6 +958,8 @@ set_rejection_rates_args_by_x <- function(
                   rejection_rates_args,
                   keep.null = TRUE
                 )
+    # merge_all_tests is always TRUE
+    # Ignored by rejection_rates() if there is only one test
     tmp2$merge_all_tests <- TRUE
     tmp$rejection_rates_args <- tmp2
     attr(object[[i]], "args") <- tmp

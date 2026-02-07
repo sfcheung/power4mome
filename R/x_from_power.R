@@ -621,6 +621,8 @@ x_from_power <- function(object,
                             "power_curve"))
   }
 
+  # merge_all_tests is always TRUE
+  # Ignored by rejection_rates() if there is only one test
   tmp <- list(collapse = "all_sig",
               at_least_k = 1,
               p_adjust_method = "none",
@@ -629,6 +631,7 @@ x_from_power <- function(object,
                             tmp,
                             rejection_rates_args
                           )
+  rejection_rates_args$merge_all_tests <- TRUE
 
   # ==== Set default algorithm ====
 
@@ -798,14 +801,6 @@ x_from_power <- function(object,
                 rejection_rates_args,
                 keep.null = TRUE
               )
-  if ((nrow(rejection_rates(object)) == 1) &&
-      (isFALSE(attr(object, "args")$rejection_rates_args$merge_all_tests))) {
-    # ==== Only one test. Do not merge ====
-    tmp2$merge_all_tests <- FALSE
-  } else {
-    # ==== More than one tests. Merge ====
-    tmp2$merge_all_tests <- TRUE
-  }
   tmp$rejection_rates_args <- tmp2
   attr(object, "args") <- tmp
   rm(tmp)
@@ -1105,7 +1100,7 @@ x_from_power <- function(object,
 
 
   if (progress) {
-    cat("\n\n--- Final Stage ---\n\n")
+    cat("\n========== Final Stage ==========\n\n")
     tmp <- format(Sys.time(), "%Y-%m-%d %X")
     cat("- Start at", tmp, "\n")
 
@@ -1453,10 +1448,8 @@ n_region_from_power <- function(
                          "significantly below ",
                          target_power,
                          " ..."))
-    cat("\n")
-    cat("\n--- Phase 1 ---\n\n")
+    cat("\n=========== Phase 1: Upper Bound ===========\n\n")
     cat(tmp, sep = "\n")
-    cat("\n")
   }
   my_call$what <- "ub"
   my_call$goal <- "close_enough"
@@ -1468,10 +1461,8 @@ n_region_from_power <- function(
                          "significantly above ",
                          target_power,
                          " ..."))
-    cat("\n")
-    cat("\n--- Phase 2 ---\n\n")
+    cat("\n=========== Phase 2: Lower Bound ===========\n\n")
     cat(tmp, sep = "\n")
-    cat("\n")
   }
   my_call$what <- "lb"
   my_call$goal <- "close_enough"

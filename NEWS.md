@@ -1,4 +1,4 @@
-# power4mome 0.1.1.41
+# power4mome 0.1.1.42
 
 - Improve the function for extending the
   initial interval before doing a
@@ -207,6 +207,10 @@
   to `TRUE` for the `print` method
   of `power4test` and related objects.
   (0.1.1.41)
+
+- Updated `rejection_rates()` to ignore
+  `merge_all_tests` if there is only one
+  test. (0.1.1.42)
 
 # power4mome 0.1.1
 
