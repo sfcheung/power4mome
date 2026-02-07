@@ -45,8 +45,8 @@ y ~ m + x
 ```{r pop_es}
 mod_es <-
 "
-m ~ x: l
-y ~ m: m
+m ~ x: m
+y ~ m: l
 y ~ x: s
 "
 ```
