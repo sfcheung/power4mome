@@ -152,8 +152,8 @@ out_power <- q_power_mediation_parallel(
                   m2 = .70,
                   y = .70),
   target_power = .80,
-  nrep = 400,
-  n = 300,
+  nrep = 600,
+  n = 200,
   R = 1000,
   seed = 1234
 )
@@ -190,7 +190,8 @@ out_power <- q_power_mediation_parallel(
 
 - `nrep`: The number of replications when estimating the power for a
   sample size. Default is 400. Can be omitted if this is the desired
-  number of replications.
+  number of replications. Using 600 or 800 increases the time of each
+  iteration, but can lead to more stable results.
 
 - `R`: The number of random samples used in forming Monte Carlo or
   nonparametric bootstrapping confidence intervals. Although they should
@@ -205,7 +206,11 @@ out_power <- q_power_mediation_parallel(
   Moreover, changes in the algorithm will also make results not
   reproducible even with the same seed. Nevertheless, it is still
   advised to set this seed to an integer, to make the results
-  reproducible at least on the same machine.
+  reproducible at least on the same machine. For a moderate to small
+  `nrep`, the results may be sensitive to the `seed`. It is advised to
+  do a final check of the sample size to be used using
+  [`power4test()`](https://sfcheung.github.io/power4mome/reference/power4test.md)
+  and an `nrep` of 1000 or 2000.
 
 This is the output:
 
@@ -273,8 +278,8 @@ out_power
 #>  0.661 0.707 0.661 0.661
 #> ======================= Data Information =======================
 #> 
-#> Number of Replications:  400 
-#> Sample Sizes:  300 
+#> Number of Replications:  600 
+#> Sample Sizes:  200 
 #> 
 #> Call print with 'data_long = TRUE' for further information.
 #> 
@@ -287,19 +292,19 @@ out_power
 #> 
 #> ============ <fit> ============
 #> 
-#> lavaan 0.6-21.2434 ended normally after 30 iterations
+#> lavaan 0.6-21 ended normally after 29 iterations
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
 #>   Number of model parameters                        31
 #> 
-#>   Number of observations                           300
+#>   Number of observations                           200
 #> 
 #> Model Test User Model:
 #>                                                       
-#>   Test statistic                                98.780
+#>   Test statistic                                56.717
 #>   Degrees of freedom                                60
-#>   P-value (Chi-square)                           0.001
+#>   P-value (Chi-square)                           0.596
 #> 
 #> =========== <mc_out> ===========
 #> 
@@ -309,18 +314,23 @@ out_power
 #> Number of Monte Carlo replications: 1000 
 #> 
 #> 
-#> ====================== Test(s) Conducted ======================
+#> ============== <test_indirects: x-...->y> ==============
 #> 
-#> - test_indirects: x-...->y
+#> Mean(s) across replication:
+#>           test_label  est cilo cihi pvalue   sig
+#> 1 x-...->y (All sig)  NaN  NaN  NaN  0.021 0.675
 #> 
-#> Call print() and set 'test_long = TRUE' for a detailed report.
+#> - The column 'sig' shows the rejection rates.
+#> - If the null hypothesis is false, the rate is the power.
+#> - Number of valid replications for rejection rate(s): 600 
+#> - Proportion of valid replications for rejection rate(s): 1.000 
 #> 
 #> ========== power4test Power ==========
 #> 
 #> [test]: test_indirects: x-...->y 
 #> [test_label]: x-...->y (All sig) 
 #>    est   p.v reject r.cilo r.cihi
-#> 1  NaN 1.000  0.887  0.853  0.915
+#> 1  NaN 1.000  0.675  0.637  0.711
 #> Notes:
 #> - p.v: The proportion of valid replications.
 #> - est: The mean of the estimates in a test across replications.
@@ -346,7 +356,7 @@ The second section is the output of
 [`rejection_rates()`](https://sfcheung.github.io/power4mome/reference/rejection_rates.md),
 showing the power under the column `reject`.
 
-In this example, the power is about 0.89 for sample size 300.
+In this example, the power is about 0.68 for sample size 200.
 
 ## Find the Region of Sample Sizes
 
@@ -378,8 +388,8 @@ out_region <- q_power_mediation_parallel(
                   m2 = .70,
                   y = .70),
   target_power = .80,
-  nrep = 400,
-  n = 300,
+  nrep = 600,
+  n = 200,
   R = 1000,
   seed = 1234,
   mode = "region"
@@ -406,17 +416,17 @@ This is the printout, showing only the section from the output of
     #> Solution: 
     #> 
     #> Approximate region of sample sizes with power:
-    #> - not significantly different from 0.800: 235 to 263
-    #> - significantly lower than 0.800: 235
-    #> - significantly higher than 0.800: 263
+    #> - not significantly different from 0.800: 237 to 267
+    #> - significantly lower than 0.800: 237
+    #> - significantly higher than 0.800: 267
     #> 
     #> Confidence intervals of the estimated power:
-    #> - for the lower bound (235): [0.708, 0.792]
-    #> - for the upper bound (263): [0.790, 0.864]
+    #> - for the lower bound (237): [0.712, 0.781]
+    #> - for the upper bound (267): [0.809, 0.867]
     #> 
     #> Call `summary()` for detailed results.
 
-In this example, the range of the sample size is 235 to 263.
+In this example, the range of the sample size is 237 to 267.
 
 The results can also be visualized using the
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html) function:

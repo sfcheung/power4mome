@@ -21,7 +21,7 @@ print(x, digits = 3, ...)
 print(x, digits = 2, ...)
 
 # S3 method for class 'test_out_list'
-print(x, digits = 3, test_long = FALSE, ...)
+print(x, digits = 3, test_long = TRUE, ...)
 ```
 
 ## Arguments

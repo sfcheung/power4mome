@@ -43,7 +43,9 @@ power4test(
   es2 = c(n = 0, nil = 0, s = 0.05, m = 0.1, l = 0.15, sm = 0.075, ml = 0.125),
   es_ind = c("si", "mi", "li"),
   n_std = 1e+05,
-  std_force_monte_carlo = FALSE
+  std_force_monte_carlo = FALSE,
+  rejection_rates_args = list(collapse = "none", at_least_k = 1, merge_all_tests = FALSE,
+    p_adjust_method = "none", alpha = 0.05)
 )
 
 # S3 method for class 'power4test'
@@ -53,7 +55,7 @@ print(
   digits = 3,
   digits_descriptive = 2,
   data_long = FALSE,
-  test_long = FALSE,
+  test_long = TRUE,
   fit_to_all_args = list(),
   ...
 )
@@ -307,6 +309,13 @@ print(
   variances equal to one are determined by simulation. If `TRUE`,
   simulation will be used whether the model has product terms or not.
   Always fall back to simulation if analytical standardization failed.
+
+- rejection_rates_args:
+
+  Default argument values to be used when
+  [`rejection_rates()`](https://sfcheung.github.io/power4mome/reference/rejection_rates.md)
+  is called. Can be overriden when calling
+  [`rejection_rates()`](https://sfcheung.github.io/power4mome/reference/rejection_rates.md).
 
 - x:
 

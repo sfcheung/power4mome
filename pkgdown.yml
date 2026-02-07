@@ -25,10 +25,11 @@ articles:
   articles/template_q_med_obs_serial: template_q_med_obs_serial.html
   articles/template_q_med_obs_simple: template_q_med_obs_simple.html
   articles/x_from_power_for_es: x_from_power_for_es.html
+  articles/x_from_power_for_n_known_difficult_cases: x_from_power_for_n_known_difficult_cases.html
   articles/x_from_power_for_n_test_printout: x_from_power_for_n_test_printout.html
   articles/x_from_power_for_n: x_from_power_for_n.html
   articles/x_from_power_workflow: x_from_power_workflow.html
-last_built: 2026-02-01T15:17Z
+last_built: 2026-02-07T11:59Z
 urls:
   reference: https://sfcheung.github.io/power4mome/reference
   article: https://sfcheung.github.io/power4mome/articles

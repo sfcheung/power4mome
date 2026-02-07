@@ -275,7 +275,7 @@ print(out,
 #> 
 #> ============ <fit> ============
 #> 
-#> lavaan 0.6-20 ended normally after 1 iteration
+#> lavaan 0.6-21 ended normally after 1 iteration
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
@@ -446,7 +446,7 @@ print(out,
 #> 
 #> ============ <fit> ============
 #> 
-#> lavaan 0.6-20 ended normally after 1 iteration
+#> lavaan 0.6-21 ended normally after 1 iteration
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
@@ -470,8 +470,8 @@ print(out,
 #> =============== <test_indirect: x->m->y> ===============
 #> 
 #> Mean(s) across replication:
-#>    est  cilo  cihi   sig
-#>  0.167 0.003 0.367 0.520
+#>    est  cilo  cihi   sig pvalue
+#>  0.167 0.003 0.367 0.520  0.141
 #> 
 #> - The value 'sig' is the rejection rate.
 #> - If the null hypothesis is false, this is the power.
@@ -554,7 +554,8 @@ This is the basic output:
 out_n
 #> Call:
 #> power4mome::x_from_power(object = out, x = "n", target_power = 0.8, 
-#>     what = "ub", goal = "close_enough", final_nrep = 400, seed = 4567)
+#>     what = "ub", goal = "close_enough", final_nrep = 400, final_R = 2000, 
+#>     seed = 4567)
 #> 
 #>                           Setting
 #> Predictor(x):         Sample Size
@@ -565,19 +566,19 @@ out_n
 #> Level of confidence:       95.00%
 #> Target Power:               0.800
 #> 
-#> - Final Value of Sample Size (n): 99
+#> - Final Value of Sample Size (n): 94
 #> 
-#> - Final Estimated Power (CI): 0.765 [0.721, 0.804]
+#> - Final Estimated Power (CI): 0.745 [0.700, 0.785]
 #> 
 #> Call `summary()` for detailed results.
 ```
 
-The estimated sample size is 99. The estimated power based on simulation
-is 0.765, with its confidence interval equal to \[0.721, 0.804\]. The
-upper bound, 0.804, is .02 within the target power (.80).
+The estimated sample size is 94. The estimated power based on simulation
+is 0.745, with its confidence interval equal to \[0.700, 0.785\]. The
+upper bound, 0.785, is .02 within the target power (.80).
 
 In other words, with 400 replications, it is estimated that sample sizes
-less than 99 have power significantly less than .80 and should not be
+less than 94 have power significantly less than .80 and should not be
 used if the target power is .80.
 
 To obtain a more detailed results for the search, we can use the
@@ -589,8 +590,9 @@ summary(out_n)
 #> ====== x_from_power Results ======
 #> 
 #> Call:
-#> power4mome::x_from_power(object = out, x = "n", target_power = 0.8, 
-#>     what = "ub", goal = "close_enough", final_nrep = 400, seed = 4567)
+#> x_from_power(object = out, x = "n", target_power = 0.8, what = "ub", 
+#>     goal = "close_enough", final_nrep = 400, final_R = 2000, 
+#>     seed = 4567)
 #> 
 #> Predictor (x): Sample Size 
 #> 
@@ -600,10 +602,10 @@ summary(out_n)
 #> 
 #> === Major Results ===
 #> 
-#> - Final Value (Sample Size): 99
+#> - Final Value (Sample Size): 94
 #> 
-#> - Final Estimated Power: 0.765 
-#> - Confidence Interval: [0.721; 0.804]
+#> - Final Estimated Power: 0.745 
+#> - Confidence Interval: [0.700; 0.785]
 #> - Level of confidence: 95.0%
 #> - Based on 400 replications.
 #> 
@@ -611,8 +613,8 @@ summary(out_n)
 #> 
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
-#> - The range of values explored: 106 to 99 
-#> - Time spent in the search: 2.198 mins 
+#> - The range of values explored: 108 to 97 
+#> - Time spent in the search: 3.051 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -630,11 +632,11 @@ summary(out_n)
 #> 
 #> Coefficients:
 #> (Intercept)            x  
-#>    -0.94206      0.02155  
+#>    -1.22211      0.02536  
 #> 
-#> Degrees of Freedom: 2049 Total (i.e. Null);  2048 Residual
-#> Null Deviance:       2243 
-#> Residual Deviance: 2178  AIC: 2182
+#> Degrees of Freedom: 2449 Total (i.e. Null);  2448 Residual
+#> Null Deviance:       2604 
+#> Residual Deviance: 2512  AIC: 2516
 #> 
 #> - Detailed Results:
 #> 
@@ -644,9 +646,10 @@ summary(out_n)
 #> 1  50 0.167 1.000  0.520  0.385  0.652
 #> 2  77 0.147 1.000  0.685  0.638  0.729
 #> 3  92 0.147 1.000  0.715  0.669  0.757
-#> 4  99 0.148 1.000  0.765  0.721  0.804
-#> 5 106 0.151 1.000  0.810  0.769  0.845
-#> 6 134 0.149 1.000  0.873  0.836  0.902
+#> 4  94 0.144 1.000  0.745  0.700  0.785
+#> 5  97 0.148 1.000  0.797  0.755  0.834
+#> 6 108 0.154 1.000  0.848  0.809  0.879
+#> 7 138 0.151 1.000  0.900  0.867  0.926
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.
@@ -666,7 +669,7 @@ confidence intervals.
 
 It also prints the model, the “power curve”, used to estimate the
 relation between the power and the sample size. Note that this is only a
-crude model intended only for the values of sample size examined (6 in
+crude model intended only for the values of sample size examined (7 in
 the this example). It is not intended to estimate power for sample sizes
 outside the range studied.
 
@@ -721,7 +724,8 @@ This is the output:
 out_n_lb
 #> Call:
 #> power4mome::x_from_power(object = out, x = "n", target_power = 0.8, 
-#>     what = "lb", goal = "close_enough", final_nrep = 400, seed = 2345)
+#>     what = "lb", goal = "close_enough", final_nrep = 400, final_R = 2000, 
+#>     seed = 2345)
 #> 
 #>                           Setting
 #> Predictor(x):         Sample Size
@@ -732,19 +736,19 @@ out_n_lb
 #> Level of confidence:       95.00%
 #> Target Power:               0.800
 #> 
-#> - Final Value of Sample Size (n): 120
+#> - Final Value of Sample Size (n): 115
 #> 
-#> - Final Estimated Power (CI): 0.840 [0.801, 0.873]
+#> - Final Estimated Power (CI): 0.838 [0.798, 0.870]
 #> 
 #> Call `summary()` for detailed results.
 ```
 
-The estimated sample size is 120. The estimated power based on
-simulation is 0.840, with its confidence interval equal to \[0.801,
-0.804\]. The upper bound, 0.801, is .02 within the target power (.80).
+The estimated sample size is 115. The estimated power based on
+simulation is 0.838, with its confidence interval equal to \[0.798,
+0.785\]. The upper bound, 0.798, is .02 within the target power (.80).
 
 With 400 replications, it is estimated that sample sizes greater than
-120 have power significantly greater than .80 and can be used if the
+115 have power significantly greater than .80 and can be used if the
 target power is .80.
 
 This a summary of the results:
@@ -755,8 +759,9 @@ summary(out_n_lb)
 #> ====== x_from_power Results ======
 #> 
 #> Call:
-#> power4mome::x_from_power(object = out, x = "n", target_power = 0.8, 
-#>     what = "lb", goal = "close_enough", final_nrep = 400, seed = 2345)
+#> x_from_power(object = out, x = "n", target_power = 0.8, what = "lb", 
+#>     goal = "close_enough", final_nrep = 400, final_R = 2000, 
+#>     seed = 2345)
 #> 
 #> Predictor (x): Sample Size 
 #> 
@@ -766,10 +771,10 @@ summary(out_n_lb)
 #> 
 #> === Major Results ===
 #> 
-#> - Final Value (Sample Size): 120
+#> - Final Value (Sample Size): 115
 #> 
-#> - Final Estimated Power: 0.840 
-#> - Confidence Interval: [0.801; 0.873]
+#> - Final Estimated Power: 0.838 
+#> - Confidence Interval: [0.798; 0.870]
 #> - Level of confidence: 95.0%
 #> - Based on 400 replications.
 #> 
@@ -777,8 +782,8 @@ summary(out_n_lb)
 #> 
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
-#> - The range of values explored: 120 to 77 
-#> - Time spent in the search: 1.264 mins 
+#> - The range of values explored: 110 to 77 
+#> - Time spent in the search: 2.73 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -796,11 +801,11 @@ summary(out_n_lb)
 #> 
 #> Coefficients:
 #> (Intercept)            x  
-#>    -1.04017      0.02271  
+#>    -1.06688      0.02356  
 #> 
-#> Degrees of Freedom: 1249 Total (i.e. Null);  1248 Residual
-#> Null Deviance:       1237 
-#> Residual Deviance: 1119  AIC: 1123
+#> Degrees of Freedom: 2449 Total (i.e. Null);  2448 Residual
+#> Null Deviance:       2245 
+#> Residual Deviance: 2102  AIC: 2106
 #> 
 #> - Detailed Results:
 #> 
@@ -809,8 +814,11 @@ summary(out_n_lb)
 #>     n   est   p.v reject r.cilo r.cihi
 #> 1  50 0.167 1.000  0.520  0.385  0.652
 #> 2  77 0.151 1.000  0.672  0.625  0.717
-#> 3 120 0.149 1.000  0.840  0.801  0.873
-#> 4 162 0.152 1.000  0.935  0.906  0.955
+#> 3 110 0.153 1.000  0.818  0.777  0.852
+#> 4 115 0.146 1.000  0.838  0.798  0.870
+#> 5 118 0.153 1.000  0.863  0.825  0.893
+#> 6 126 0.148 1.000  0.873  0.836  0.902
+#> 7 174 0.150 1.000  0.948  0.921  0.965
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.
@@ -840,7 +848,7 @@ found above can be used together to estimate the range of sample sizes
 with power not significantly different form the target power.
 
 That is, from the results above, we can conclude that, with 400
-replications, sample sizes from 99 to 120 have power levels not
+replications, sample sizes from 94 to 115 have power levels not
 significantly different from .80.
 
 However, we believe researchers rarely need to find “the” sample with

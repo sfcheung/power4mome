@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.35</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.42</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -97,7 +97,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Power Analysis for Moderation, Mediation, and Moderated Mediation</h1>
             
-            <h4 data-toc-skip class="date">2025-10-26</h4>
+            <h4 data-toc-skip class="date">2026-02-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/sfcheung/power4mome/blob/main/vignettes/power4mome.Rmd" class="external-link"><code>vignettes/power4mome.Rmd</code></a></small>
       <div class="d-none name"><code>power4mome.Rmd</code></div>
@@ -324,7 +324,7 @@ and &lt;code&gt;&lt;a href="https://rdrr.io/r/base/Random.html" class="external-
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ============ &lt;fit&gt; ============</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; lavaan 0.6-20 ended normally after 1 iteration</span></span>
+<span><span class="co">#&gt; lavaan 0.6-21 ended normally after 1 iteration</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Estimator                                         ML</span></span>
 <span><span class="co">#&gt;   Optimization method                           NLMINB</span></span>
@@ -431,7 +431,7 @@ correctly.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ============ &lt;fit&gt; ============</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; lavaan 0.6-20 ended normally after 1 iteration</span></span>
+<span><span class="co">#&gt; lavaan 0.6-21 ended normally after 1 iteration</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Estimator                                         ML</span></span>
 <span><span class="co">#&gt;   Optimization method                           NLMINB</span></span>
@@ -577,7 +577,7 @@ determining whether a sample size has sufficient power.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ============ &lt;fit&gt; ============</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; lavaan 0.6-20 ended normally after 1 iteration</span></span>
+<span><span class="co">#&gt; lavaan 0.6-21 ended normally after 1 iteration</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Estimator                                         ML</span></span>
 <span><span class="co">#&gt;   Optimization method                           NLMINB</span></span>
@@ -598,27 +598,27 @@ determining whether a sample size has sufficient power.</p>
 <span><span class="co">#&gt; Number of Monte Carlo replications: 2000 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ====================== Test(s) Conducted ======================</span></span>
+<span><span class="co">#&gt; =============== &lt;test_indirect: x-&gt;m-&gt;y&gt; ===============</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; - test_indirect: x-&gt;m-&gt;y</span></span>
+<span><span class="co">#&gt; Mean(s) across replication:</span></span>
+<span><span class="co">#&gt;    est   cilo  cihi   sig pvalue</span></span>
+<span><span class="co">#&gt;  0.152 -0.009 0.347 0.468  0.166</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Call print() and set 'test_long = TRUE' for a detailed report.</span></span></code></pre></div>
-<p>If <code>test_long = TRUE</code> is added when printing the output by
-<code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>, a summary of the test will also be printed.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">out</span>,</span>
-<span>      test_long <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="co">#&gt; - The value 'sig' is the rejection rate.</span></span>
+<span><span class="co">#&gt; - If the null hypothesis is false, this is the power.</span></span>
+<span><span class="co">#&gt; - Number of valid replications for rejection rate: 400 </span></span>
+<span><span class="co">#&gt; - Proportion of valid replications for rejection rate: 1.000</span></span></code></pre></div>
 <p>The summary of the test:</p>
-<pre><code><span><span class="co">#&gt;                                                       </span></span>
-<span><span class="co">#&gt;   Test statistic                                 0.000</span></span>
-<span><span class="co">#&gt;   Degrees of freedom                                 0</span></span>
+<pre><code><span><span class="co">#&gt; =============== &lt;test_indirect: x-&gt;m-&gt;y&gt; ===============</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; =========== &lt;mc_out&gt; ===========</span></span>
+<span><span class="co">#&gt; Mean(s) across replication:</span></span>
+<span><span class="co">#&gt;    est   cilo  cihi   sig pvalue</span></span>
+<span><span class="co">#&gt;  0.152 -0.009 0.347 0.468  0.166</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; == A 'mc_out' class object ==</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Number of Monte Carlo replications: 2000</span></span></code></pre>
+<span><span class="co">#&gt; - The value 'sig' is the rejection rate.</span></span>
+<span><span class="co">#&gt; - If the null hypothesis is false, this is the power.</span></span>
+<span><span class="co">#&gt; - Number of valid replications for rejection rate: 400 </span></span>
+<span><span class="co">#&gt; - Proportion of valid replications for rejection rate: 1.000</span></span></code></pre>
 <p>The mean of the estimates across all the replications is 0.152, close
 to the population value.</p>
 </div>
@@ -630,7 +630,7 @@ the <em>rejection</em> <em>rate</em>, because the null hypothesis is
 false. In addition to using <code>test_long = TRUE</code> in
 <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>, the rejection rate can also be retrieved by
 <code><a href="../reference/rejection_rates.html">rejection_rates()</a></code>.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">out_power</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rejection_rates.html">rejection_rates</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span></span>
 <span><span class="va">out_power</span></span>
 <span><span class="co">#&gt; [test]: test_indirect: x-&gt;m-&gt;y </span></span>
@@ -665,7 +665,7 @@ confidence interval is [0.419; 0.516].</p>
 <div class="section level3">
 <h3 id="pop_es_xw">Specify the Population Model and Values<a class="anchor" aria-label="anchor" href="#pop_es_xw"></a>
 </h3>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mod2</span> <span class="op">&lt;-</span></span>
 <span><span class="st">"</span></span>
 <span><span class="st">y ~ x + w + x:w + control</span></span>
@@ -678,7 +678,7 @@ variables. Therefore, we can just add a <em>proxy</em>,
 <code>control</code> to represent the <em>set of control variables</em>
 that may be included.</p>
 <p>This is the syntax for the population values:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mod2_es</span> <span class="op">&lt;-</span></span>
 <span><span class="st">"</span></span>
 <span><span class="st">.beta.: s</span></span>
@@ -708,13 +708,13 @@ convention for product term values is different: <code>l</code> denotes
 <h3 id="call-power4test-to-check-the-model-1">Call <code>power4test()</code> to Check the Model<a class="anchor" aria-label="anchor" href="#call-power4test-to-check-the-model-1"></a>
 </h3>
 <p>We check the model first:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">out2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/power4test.html">power4test</a></span><span class="op">(</span>nrep <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>                   model <span class="op">=</span> <span class="va">mod2</span>,</span>
 <span>                   pop_es <span class="op">=</span> <span class="va">mod2_es</span>,</span>
 <span>                   n <span class="op">=</span> <span class="fl">50000</span>,</span>
 <span>                   iseed <span class="op">=</span> <span class="fl">1234</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">out2</span>,</span>
 <span>      data_long <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -850,7 +850,7 @@ convention for product term values is different: <code>l</code> denotes
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ============ &lt;fit&gt; ============</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; lavaan 0.6-20 ended normally after 1 iteration</span></span>
+<span><span class="co">#&gt; lavaan 0.6-21 ended normally after 1 iteration</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Estimator                                         ML</span></span>
 <span><span class="co">#&gt;   Optimization method                           NLMINB</span></span>
@@ -881,7 +881,7 @@ the test is just a test of the product term, <code>x:w</code>. This
 model can be fitted by linear regression using <code><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm()</a></code>. Let’s
 estimate the power when the sample size is 50 and the model is fitted by
 <code><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm()</a></code>:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">out2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/power4test.html">power4test</a></span><span class="op">(</span>nrep <span class="op">=</span> <span class="fl">400</span>,</span>
 <span>                   model <span class="op">=</span> <span class="va">mod2</span>,</span>
 <span>                   pop_es <span class="op">=</span> <span class="va">mod2_es</span>,</span>
@@ -912,7 +912,7 @@ equivalent to using the &lt;em&gt;t&lt;/em&gt; test when the model is fitted by
 </h3>
 <p>We can ues <code><a href="../reference/rejection_rates.html">rejection_rates()</a></code> again to estimate the
 power:</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">out2_power</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rejection_rates.html">rejection_rates</a></span><span class="op">(</span><span class="va">out2</span><span class="op">)</span></span>
 <span><span class="va">out2_power</span></span>
 <span><span class="co">#&gt; [test]: test_moderation: CIs  </span></span>
@@ -940,7 +940,7 @@ power:</p>
 <div class="section level3">
 <h3 id="specify-the-population-model-and-values">Specify the Population Model and Values<a class="anchor" aria-label="anchor" href="#specify-the-population-model-and-values"></a>
 </h3>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mod3</span> <span class="op">&lt;-</span></span>
 <span><span class="st">"</span></span>
 <span><span class="st">m ~ x + w + x:w</span></span>
@@ -951,7 +951,7 @@ power:</p>
 there is no need to use any label nor define and parameters. This will
 be handled by the test function to be used.</p>
 <p>This is the syntax for the population values:</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mod3_es</span> <span class="op">&lt;-</span></span>
 <span><span class="st">"</span></span>
 <span><span class="st">.beta.: s</span></span>
@@ -966,13 +966,13 @@ setting up this syntax.</p>
 <h3 id="call-power4test-to-check-the-model-2">Call <code>power4test()</code> to Check the Model<a class="anchor" aria-label="anchor" href="#call-power4test-to-check-the-model-2"></a>
 </h3>
 <p>We check the model first:</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">out3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/power4test.html">power4test</a></span><span class="op">(</span>nrep <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>                   model <span class="op">=</span> <span class="va">mod3</span>,</span>
 <span>                   pop_es <span class="op">=</span> <span class="va">mod3_es</span>,</span>
 <span>                   n <span class="op">=</span> <span class="fl">50000</span>,</span>
 <span>                   iseed <span class="op">=</span> <span class="fl">1234</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">out3</span>,</span>
 <span>      data_long <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -1110,7 +1110,7 @@ setting up this syntax.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ============ &lt;fit&gt; ============</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; lavaan 0.6-20 ended normally after 1 iteration</span></span>
+<span><span class="co">#&gt; lavaan 0.6-21 ended normally after 1 iteration</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Estimator                                         ML</span></span>
 <span><span class="co">#&gt;   Optimization method                           NLMINB</span></span>
@@ -1138,7 +1138,7 @@ done by the test function <code><a href="../reference/test_index_of_mome.html">t
 <code>power4mome</code>. Again, Monte Carlo confidence interval is
 used.</p>
 <p>Let’s estimate the power when sample size is 100.</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">out3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/power4test.html">power4test</a></span><span class="op">(</span>nrep <span class="op">=</span> <span class="fl">400</span>,</span>
 <span>                   model <span class="op">=</span> <span class="va">mod3</span>,</span>
 <span>                   pop_es <span class="op">=</span> <span class="va">mod3_es</span>,</span>
@@ -1172,7 +1172,7 @@ mediator, it support any number of mediators along a path.<a class="footnote-ref
 </h3>
 <p>We can ues <code><a href="../reference/rejection_rates.html">rejection_rates()</a></code> again to estimate the
 power:</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">out3_power</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rejection_rates.html">rejection_rates</a></span><span class="op">(</span><span class="va">out3</span><span class="op">)</span></span>
 <span><span class="va">out3_power</span></span>
 <span><span class="co">#&gt; [test]: test_index_of_mome: x-&gt;m-&gt;y, moderated by w </span></span>
@@ -1214,12 +1214,12 @@ and</p></li>
 call <code><a href="../reference/power4test.html">power4test()</a></code> again, set the previous output
 (<code>out2</code> in the example for moderation) as the first argument,
 and set <code>n</code> to a new value (200 in this example):</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">out2_new_n</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/power4test.html">power4test</a></span><span class="op">(</span><span class="va">out2</span>,</span>
 <span>                         n <span class="op">=</span> <span class="fl">200</span><span class="op">)</span></span>
 <span><span class="va">out2_new_n</span></span></code></pre></div>
 <p>This is the estimated power when the sample size is 200.</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">out2_new_n_reject</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rejection_rates.html">rejection_rates</a></span><span class="op">(</span><span class="va">out2_new_n</span><span class="op">)</span></span>
 <span><span class="va">out2_new_n_reject</span></span>
 <span><span class="co">#&gt; [test]: test_moderation: CIs  </span></span>
@@ -1253,7 +1253,7 @@ the desired power.</p>
 the <em>region</em> of sample sizes likely to have the desired power. If
 the default settings are to be used, then it can be called directly on
 the output of <code><a href="../reference/power4test.html">power4test()</a></code>:</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">out2_region</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/x_from_power.html">n_region_from_power</a></span><span class="op">(</span><span class="va">out2</span>,</span>
 <span>                                   seed <span class="op">=</span> <span class="fl">2345</span><span class="op">)</span></span></code></pre></div>
 <p>This is the recommended way for sample size planning, when there is
@@ -1269,7 +1269,7 @@ for common models.</p>
 the power for a sequence of sample sizes. For example, we can estimate
 the power in the moderation model above for these sample sizes: 250,
 300, 350, 400.</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">out2_several_ns</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/power4test_by_n.html">power4test_by_n</a></span><span class="op">(</span><span class="va">out2</span>,</span>
 <span>                                   n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">250</span>, <span class="fl">300</span>, <span class="fl">350</span>, <span class="fl">400</span><span class="op">)</span>,</span>
 <span>                                   by_seed <span class="op">=</span> <span class="fl">4567</span><span class="op">)</span></span></code></pre></div>
@@ -1283,7 +1283,7 @@ the results reproducible.</p>
 calling <code><a href="../reference/power4test.html">power4test()</a></code> once for each sample size.</p>
 <p>The rejection rates for each sample size can be retrieved by
 <code><a href="../reference/rejection_rates.html">rejection_rates()</a></code> too:</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/rejection_rates.html">rejection_rates</a></span><span class="op">(</span><span class="va">out2_several_ns</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [test]: test_moderation: CIs  </span></span>
 <span><span class="co">#&gt; [test_label]: y~x:w </span></span>
@@ -1376,7 +1376,7 @@ using a new population value for a parameter. This can be done by using
 the previous output of <code><a href="../reference/power4test.html">power4test()</a></code> as the first argument,
 and setting only <code>pop_es</code> to a named vector:</p></li>
 </ul>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">out2_new_xw</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/power4test.html">power4test</a></span><span class="op">(</span><span class="va">out2</span>,</span>
 <span>                          pop_es <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"y ~ x:w"</span> <span class="op">=</span> <span class="st">".30"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <ul>

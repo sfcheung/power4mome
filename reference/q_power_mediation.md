@@ -223,7 +223,8 @@ q_power_mediation_parallel(
   and
   [`n_region_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md).
   For the `print` method, these are optional arguments to be passed to
-  other print methods (see
+  [`rejection_rates()`](https://sfcheung.github.io/power4mome/reference/rejection_rates.md)
+  as well as other print methods (see
   [`print.power4test()`](https://sfcheung.github.io/power4mome/reference/power4test.md)
   and
   [`print.n_region_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md)).
@@ -576,11 +577,16 @@ out
 #> Number of Monte Carlo replications: 199 
 #> 
 #> 
-#> ====================== Test(s) Conducted ======================
+#> =============== <test_indirect: x->m->y> ===============
 #> 
-#> - test_indirect: x->m->y
+#> Mean(s) across replication:
+#>    est   cilo  cihi   sig pvalue
+#>  0.071 -0.042 0.219 0.250  0.288
 #> 
-#> Call print() and set 'test_long = TRUE' for a detailed report.
+#> - The value 'sig' is the rejection rate.
+#> - If the null hypothesis is false, this is the power.
+#> - Number of valid replications for rejection rate: 20 
+#> - Proportion of valid replications for rejection rate: 1.000 
 #> 
 #> ========== power4test Power ==========
 #> 

@@ -15,7 +15,7 @@ a model parameter)."><meta property="og:image" content="https://sfcheung.github.
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.35</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.42</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -95,7 +95,8 @@ a model parameter).</p>
 <span>  nls_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  nls_control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  models <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"nls"</span>, <span class="st">"logistic"</span>, <span class="st">"lm"</span><span class="op">)</span></span>
+<span>  models <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"nls"</span>, <span class="st">"logistic"</span>, <span class="st">"lm"</span><span class="op">)</span>,</span>
+<span>  nls_options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>min_points <span class="op">=</span> <span class="fl">4</span>, regions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.45</span>, <span class="fl">0.75</span>, <span class="fl">0.85</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'power_curve'</span></span>
@@ -194,6 +195,14 @@ trying different models.</p></dd>
 <code>"lm"</code> (fitted by <code><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm()</a></code>). By default,
 all three models will be attempted,
 in this order.</p></dd>
+
+
+<dt id="arg-nls-options">nls_options<a class="anchor" aria-label="anchor" href="#arg-nls-options"></a></dt>
+<dd><p>A named list of
+options to be used by <code>power_curve()</code>
+to configure the use of <code>"nls"</code>. For
+advanced use. See 'Details' for
+available options.</p></dd>
 
 
 <dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
@@ -307,7 +316,24 @@ for the output
 of <code>power_curve()</code>.</p>
 <p>This function can be used directly,
 but is also used internally by
-functions such as <code><a href="x_from_power.html">x_from_power()</a></code>.</p>
+functions such as <code><a href="x_from_power.html">x_from_power()</a></code>.</p><div class="section">
+<h3 id="-nls-options-">'nls_options'<a class="anchor" aria-label="anchor" href="#-nls-options-"></a></h3>
+
+
+<p>These are possible arguments.</p><ul><li><p><code>min_points</code>: If the object has
+less than <code>min_points</code> rejection
+rates, <code>nls</code> will not be used.</p></li>
+<li><p><code>regions</code>: A numeric vector with
+values from 0 to 1. It defines
+regions in which there must be
+at least one rejection rate. If this
+criterion is not met, <code>nls</code> will
+not be used. This is to ensure that
+<code>nls</code> will not be used when the
+rejection rates are clustered around
+a very narrow region.</p></li>
+</ul></div>
+
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

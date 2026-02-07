@@ -292,7 +292,7 @@ print(out,
 #> 
 #> ================ <fit> ================
 #> 
-#> lavaan 0.6-20 ended normally after 1 iteration
+#> lavaan 0.6-21 ended normally after 1 iteration
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
@@ -467,7 +467,7 @@ print(out,
 #> 
 #> ================ <fit> ================
 #> 
-#> lavaan 0.6-20 ended normally after 1 iteration
+#> lavaan 0.6-21 ended normally after 1 iteration
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
@@ -491,8 +491,8 @@ print(out,
 #> ====================== <test_indirect: x->m->y> ======================
 #> 
 #> Mean(s) across replication:
-#>    est  cilo  cihi   sig
-#>  0.145 0.036 0.273 0.820
+#>    est  cilo  cihi   sig pvalue
+#>  0.145 0.036 0.273 0.820  0.050
 #> 
 #> - The value 'sig' is the rejection rate.
 #> - If the null hypothesis is false, this is the power.
@@ -575,22 +575,22 @@ out_es_a
 #> Level of confidence:      95.00%
 #> Target Power:              0.800
 #> 
-#> - Final Value of'm~x': 0.494
+#> - Final Value of'm~x': 0.495
 #> 
-#> - Final Estimated Power (CI): 0.802 [0.761, 0.839]
+#> - Final Estimated Power (CI): 0.797 [0.755, 0.834]
 #> 
 #> Call `summary()` for detailed results.
 ```
 
 The estimated value of *a* to have a power close to .80 power to detect
 the indirect effect (*ab*, with *b* equal to .30 in the population) by
-Monte Carlo interval is 0.494. The estimated power based on simulation
-is 0.802.
+Monte Carlo interval is 0.495. The estimated power based on simulation
+is 0.797.
 
 That is, given the model and a sample size of 100, if the population
 value of *b* is medium (.30), the test has an approximate power of .80
-when the population value of *a* is about 0.494. The corresponding
-indirect effect is about 0.148
+when the population value of *a* is about 0.495. The corresponding
+indirect effect is about 0.149
 
 To obtain a more detailed results for the search, we can use the
 [`summary()`](https://rdrr.io/r/base/summary.html) method:
@@ -613,27 +613,26 @@ summary(out_es_a)
 #> 
 #> === Major Results ===
 #> 
-#> - Final Value (m~x): 0.494
+#> - Final Value (m~x): 0.495
 #> 
-#> - Final Estimated Power: 0.802 
-#> - Confidence Interval: [0.761; 0.839]
+#> - Final Estimated Power: 0.797 
+#> - Confidence Interval: [0.755; 0.834]
 #> - Level of confidence: 95.0%
 #> - Based on 400 replications.
 #> 
 #> === Technical Information ===
 #> 
 #> - Algorithm: power_curve 
-#> - The range of values explored: 0.488 to 0.519 
-#> - Time spent in the search: 1.235 mins 
+#> - The range of values explored: 0.469 to 0.520 
+#> - Time spent in the search: 2.136 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
 #> 
 #> Call:
-#> power_curve(object = by_x_i, formula = power_model, start = start, 
+#> power_curve(object = by_x_1, formula = power_model, start = start, 
 #>     lower_bound = lower_bound, upper_bound = upper_bound, nls_args = nls_args, 
-#>     nls_control = nls_control, verbose = progress, models = c("glm", 
-#>         "lm"))
+#>     nls_control = nls_control, verbose = progress, models = models)
 #> 
 #> Predictor: es (Effect Size)
 #> 
@@ -643,27 +642,27 @@ summary(out_es_a)
 #> 
 #> Coefficients:
 #> (Intercept)            x  
-#>      -7.903       18.428  
+#>        9.46       -16.35  
 #> 
-#> Degrees of Freedom: 249 Total (i.e. Null);  248 Residual
-#> Null Deviance:       270.8 
-#> Residual Deviance: 270.6     AIC: 274.6
+#> Degrees of Freedom: 1499 Total (i.e. Null);  1498 Residual
+#> Null Deviance:       1482 
+#> Residual Deviance: 1468  AIC: 1472
 #> 
 #> - Detailed Results:
 #> 
 #> [test]: test_indirect: x->m->y 
 #> [test_label]: Test 
 #>    par    es   est   p.v reject r.cilo r.cihi
-#> 1  m~x 0.488 0.151 1.000  0.760  0.626  0.857
-#> 2  m~x 0.491 0.147 1.000  0.780  0.648  0.872
-#> 3  m~x 0.492 0.150 1.000  0.790  0.700  0.858
-#> 4  m~x 0.494 0.140 1.000  0.720  0.583  0.825
-#> 5  m~x 0.494 0.148 1.000  0.802  0.761  0.839
-#> 6  m~x 0.497 0.150 1.000  0.760  0.626  0.857
-#> 7  m~x 0.500 0.145 1.000  0.820  0.692  0.902
-#> 8  m~x 0.501 0.150 1.000  0.767  0.724  0.806
+#> 1  m~x 0.469 0.148 1.000  0.868  0.831  0.897
+#> 2  m~x 0.488 0.151 1.000  0.760  0.626  0.857
+#> 3  m~x 0.491 0.150 1.000  0.810  0.722  0.875
+#> 4  m~x 0.491 0.147 1.000  0.780  0.648  0.872
+#> 5  m~x 0.494 0.140 1.000  0.720  0.583  0.825
+#> 6  m~x 0.495 0.149 1.000  0.797  0.755  0.834
+#> 7  m~x 0.497 0.150 1.000  0.760  0.626  0.857
+#> 8  m~x 0.500 0.145 1.000  0.820  0.692  0.902
 #> 9  m~x 0.504 0.150 1.000  0.772  0.716  0.820
-#> 10 m~x 0.519 0.155 1.000  0.740  0.646  0.816
+#> 10 m~x 0.520 0.155 1.000  0.750  0.657  0.825
 #> Notes:
 #> - par: The parameter being varied.
 #> - es: The population value of 'par' in a trial.
@@ -677,8 +676,8 @@ summary(out_es_a)
 #> - Refer to the tests for the meanings of other columns.
 ```
 
-It reports the 95% confidence interval of the estimated power, \[0.761;
-0.839\].
+It reports the 95% confidence interval of the estimated power, \[0.755;
+0.834\].
 
 It also reports major technical information regarding the search, such
 as the range of values tried, the time spent, and the table with all the
@@ -728,13 +727,13 @@ out_es_b <- x_from_power(out,
 
 The estimated value of *b* to have a power close to .80 power to detect
 the indirect effect (*ab*, with *a* equal to .30 in the population) by
-Monte Carlo interval is 0.307. The estimated power based on simulation
-is 0.823.
+Monte Carlo interval is 0.296. The estimated power based on simulation
+is 0.790.
 
 That is, given the model and a sample size of 100, if the population
 value of *a* is medium (.30), the test has an approximate power of .80
-when the population value of *b* is about 0.307. The corresponding
-indirect effect is about 0.092, slightly lower than the indirect effect
+when the population value of *b* is about 0.296. The corresponding
+indirect effect is about 0.089, slightly lower than the indirect effect
 when *b* is hold to .30.
 
 These are the detailed results for the search when *b* is varied:
@@ -757,27 +756,26 @@ summary(out_es_b)
 #> 
 #> === Major Results ===
 #> 
-#> - Final Value (y~m): 0.307
+#> - Final Value (y~m): 0.296
 #> 
-#> - Final Estimated Power: 0.823 
-#> - Confidence Interval: [0.782; 0.857]
+#> - Final Estimated Power: 0.790 
+#> - Confidence Interval: [0.747; 0.827]
 #> - Level of confidence: 95.0%
 #> - Based on 400 replications.
 #> 
 #> === Technical Information ===
 #> 
 #> - Algorithm: power_curve 
-#> - The range of values explored: 0.293 to 0.343 
-#> - Time spent in the search: 1.243 mins 
+#> - The range of values explored: 0.293 to 0.344 
+#> - Time spent in the search: 2.135 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
 #> 
 #> Call:
-#> power_curve(object = by_x_i, formula = power_model, start = start, 
+#> power_curve(object = by_x_1, formula = power_model, start = start, 
 #>     lower_bound = lower_bound, upper_bound = upper_bound, nls_args = nls_args, 
-#>     nls_control = nls_control, verbose = progress, models = c("glm", 
-#>         "lm"))
+#>     nls_control = nls_control, verbose = progress, models = models)
 #> 
 #> Predictor: es (Effect Size)
 #> 
@@ -787,11 +785,11 @@ summary(out_es_b)
 #> 
 #> Coefficients:
 #> (Intercept)            x  
-#>      -2.366       11.727  
+#>      -4.666       20.241  
 #> 
-#> Degrees of Freedom: 249 Total (i.e. Null);  248 Residual
-#> Null Deviance:       280.1 
-#> Residual Deviance: 280   AIC: 284
+#> Degrees of Freedom: 1499 Total (i.e. Null);  1498 Residual
+#> Null Deviance:       1414 
+#> Residual Deviance: 1401  AIC: 1405
 #> 
 #> - Detailed Results:
 #> 
@@ -801,13 +799,13 @@ summary(out_es_b)
 #> 1  y~m 0.293 0.151 1.000  0.780  0.648  0.872
 #> 2  y~m 0.295 0.147 1.000  0.760  0.626  0.857
 #> 3  y~m 0.296 0.140 1.000  0.680  0.542  0.792
-#> 4  y~m 0.298 0.150 1.000  0.720  0.583  0.825
-#> 5  y~m 0.300 0.145 1.000  0.820  0.692  0.902
-#> 6  y~m 0.300 0.153 1.000  0.780  0.689  0.850
-#> 7  y~m 0.307 0.153 1.000  0.823  0.782  0.857
-#> 8  y~m 0.317 0.158 1.000  0.820  0.779  0.855
+#> 4  y~m 0.296 0.149 1.000  0.790  0.747  0.827
+#> 5  y~m 0.298 0.150 1.000  0.720  0.583  0.825
+#> 6  y~m 0.299 0.152 1.000  0.800  0.711  0.867
+#> 7  y~m 0.300 0.145 1.000  0.820  0.692  0.902
+#> 8  y~m 0.307 0.162 1.000  0.868  0.831  0.897
 #> 9  y~m 0.320 0.158 1.000  0.836  0.785  0.877
-#> 10 y~m 0.343 0.171 1.000  0.870  0.790  0.922
+#> 10 y~m 0.344 0.172 1.000  0.900  0.826  0.945
 #> Notes:
 #> - par: The parameter being varied.
 #> - es: The population value of 'par' in a trial.
@@ -821,8 +819,8 @@ summary(out_es_b)
 #> - Refer to the tests for the meanings of other columns.
 ```
 
-It reports the 95% confidence interval of the estimated power, \[0.782;
-0.857\].
+It reports the 95% confidence interval of the estimated power, \[0.747;
+0.827\].
 
 ``` r
 plot(out_es_b)

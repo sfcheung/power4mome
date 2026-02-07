@@ -13,7 +13,7 @@ mediation models."><meta property="og:image" content="https://sfcheung.github.io
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.35</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.42</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -340,7 +340,8 @@ be passed to <code><a href="power4test.html">power4test()</a></code> and
 <code><a href="x_from_power.html">n_region_from_power()</a></code>.
 For the <code>print</code> method, these
 are optional arguments to
-be passed to other print methods
+be passed to <code><a href="rejection_rates.html">rejection_rates()</a></code>
+as well as other print methods
 (see <code><a href="power4test.html">print.power4test()</a></code> and
 <code><a href="x_from_power.html">print.n_region_from_power()</a></code>).
 For the <code>plot</code> method, these
@@ -730,11 +731,16 @@ work.</p></div>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Number of Monte Carlo replications: 199 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ====================== Test(s) Conducted ======================</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> =============== &lt;test_indirect: x-&gt;m-&gt;y&gt; ===============</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - test_indirect: x-&gt;m-&gt;y</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mean(s) across replication:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    est   cilo  cihi   sig pvalue</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.071 -0.042 0.219 0.250  0.288</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Call print() and set 'test_long = TRUE' for a detailed report.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - The value 'sig' is the rejection rate.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - If the null hypothesis is false, this is the power.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Number of valid replications for rejection rate: 20 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Proportion of valid replications for rejection rate: 1.000 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ========== power4test Power ==========</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>

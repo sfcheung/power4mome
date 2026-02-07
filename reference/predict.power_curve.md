@@ -100,17 +100,20 @@ pout1
 #> Predictor: n (Sample Size)
 #> 
 #> Model:
-#> Nonlinear regression model
-#>   model: reject ~ 1 - I(exp((a - x)/b))
-#>    data: "(Omitted)"
-#>     a     b 
-#>  19.1 260.3 
-#>  residual sum-of-squares: 0.07498
 #> 
-#> Algorithm "port", convergence message: relative convergence (4)
+#> Call:  stats::glm(formula = reject ~ x, family = "binomial", data = reject1)
+#> 
+#> Coefficients:
+#> (Intercept)            x  
+#>   -1.550280     0.004213  
+#> 
+#> Degrees of Freedom: 39 Total (i.e. Null);  38 Residual
+#> Null Deviance:       54.55 
+#> Residual Deviance: 38.37     AIC: 42.37
 predict(pout1,
         newdata = list(x = c(150, 250, 500)))
-#> [1] 0.3951796 0.5880944 0.8423384
+#>         1         2         3 
+#> 0.2852909 0.3782246 0.6355494 
 
 # By pop_es: Do a test for different population values of a model parameter
 
@@ -132,15 +135,18 @@ pout2
 #> Predictor: es (Effect Size)
 #> 
 #> Model:
-#> Nonlinear regression model
-#>   model: reject ~ 1 - 2/(exp(x/d) + exp(-x/d))
-#>    data: "(Omitted)"
-#>     d 
-#> -0.13 
-#>  residual sum-of-squares: 0.05021
 #> 
-#> Algorithm "port", convergence message: relative convergence (4)
+#> Call:  stats::glm(formula = reject ~ x, family = "binomial", data = reject1)
+#> 
+#> Coefficients:
+#> (Intercept)            x  
+#>      -3.347       17.231  
+#> 
+#> Degrees of Freedom: 49 Total (i.e. Null);  48 Residual
+#> Null Deviance:       65.34 
+#> Residual Deviance: 25    AIC: 29
 predict(pout2,
         newdata = list(x = c(.25, .55)))
-#> [1] 0.7136569 0.9708902
+#>         1         2 
+#> 0.7232684 0.9978282 
 ```

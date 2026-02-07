@@ -15,7 +15,8 @@ power_curve(
   nls_args = list(),
   nls_control = list(),
   verbose = FALSE,
-  models = c("nls", "logistic", "lm")
+  models = c("nls", "logistic", "lm"),
+  nls_options = list(min_points = 4, regions = c(0, 0.45, 0.75, 0.85, 1))
 )
 
 # S3 method for class 'power_curve'
@@ -95,6 +96,11 @@ print(x, data_used = FALSE, digits = 3, right = FALSE, row.names = FALSE, ...)
   [`glm()`](https://rdrr.io/r/stats/glm.html)), and `"lm"` (fitted by
   [`lm()`](https://rdrr.io/r/stats/lm.html)). By default, all three
   models will be attempted, in this order.
+
+- nls_options:
+
+  A named list of options to be used by `power_curve()` to configure the
+  use of `"nls"`. For advanced use. See 'Details' for available options.
 
 - x:
 
@@ -195,6 +201,19 @@ for the output of `power_curve()`.
 This function can be used directly, but is also used internally by
 functions such as
 [`x_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md).
+
+### 'nls_options'
+
+These are possible arguments.
+
+- `min_points`: If the object has less than `min_points` rejection
+  rates, `nls` will not be used.
+
+- `regions`: A numeric vector with values from 0 to 1. It defines
+  regions in which there must be at least one rejection rate. If this
+  criterion is not met, `nls` will not be used. This is to ensure that
+  `nls` will not be used when the rejection rates are clustered around a
+  very narrow region.
 
 ## See also
 

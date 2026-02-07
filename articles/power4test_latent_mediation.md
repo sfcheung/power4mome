@@ -319,7 +319,7 @@ out
 #> 
 #> ============ <fit> ============
 #> 
-#> lavaan 0.6-20 ended normally after 44 iterations
+#> lavaan 0.6-21 ended normally after 44 iterations
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
@@ -602,7 +602,7 @@ out
 #> 
 #> ============ <fit> ============
 #> 
-#> lavaan 0.6-20 ended normally after 38 iterations
+#> lavaan 0.6-21 ended normally after 38 iterations
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
@@ -624,11 +624,16 @@ out
 #> Number of Monte Carlo replications: 2000 
 #> 
 #> 
-#> ====================== Test(s) Conducted ======================
+#> ============= <test_indirect: fx->fm->fy> =============
 #> 
-#> - test_indirect: fx->fm->fy
+#> Mean(s) across replication:
+#>    est   cilo  cihi   sig pvalue
+#>  0.336 -0.056 0.833 0.497  0.100
 #> 
-#> Call print() and set 'test_long = TRUE' for a detailed report.
+#> - The value 'sig' is the rejection rate.
+#> - If the null hypothesis is false, this is the power.
+#> - Number of valid replications for rejection rate: 400 
+#> - Proportion of valid replications for rejection rate: 1.000
 ```
 
 ### Compute the Power
@@ -644,7 +649,7 @@ out_power
 #> [test]: test_indirect: fx->fm->fy 
 #> [test_label]: Test 
 #>     est   p.v reject r.cilo r.cihi
-#> 1 0.336 1.000  0.492  0.444  0.541
+#> 1 0.336 1.000  0.497  0.449  0.546
 #> Notes:
 #> - p.v: The proportion of valid replications.
 #> - est: The mean of the estimates in a test across replications.
@@ -657,7 +662,7 @@ out_power
 ```
 
 In the example above, the estimated power of the test of the indirect
-effect, conducted by Monte Carlo confidence interval, is 0.492, under
+effect, conducted by Monte Carlo confidence interval, is 0.497, under
 the column `reject`.
 
 `p.v` is the proportion of valid results across replications. `1.000`
@@ -665,8 +670,8 @@ means that the test conducted normally in all replications.
 
 By default, the 95% confidence interval of the rejection rate (power)
 based on normal approximation is also printed, under the column `r.cilo`
-and `r.cihi`. In this example, the 95% confidence interval is \[0.444;
-0.541\].
+and `r.cihi`. In this example, the 95% confidence interval is \[0.449;
+0.546\].
 
 ## Repeat a Simulation With A Different Sample Size
 
@@ -829,9 +834,9 @@ rejection_rates(out_several_ns)
 #> [test_label]: Test 
 #>     n   est   p.v reject r.cilo r.cihi
 #> 1 175 0.327 1.000  0.703  0.656  0.745
-#> 2 200 0.329 1.000  0.830  0.790  0.864
+#> 2 200 0.329 1.000  0.825  0.785  0.859
 #> 3 225 0.340 1.000  0.892  0.858  0.919
-#> 4 250 0.330 1.000  0.902  0.869  0.928
+#> 4 250 0.330 1.000  0.907  0.875  0.932
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.

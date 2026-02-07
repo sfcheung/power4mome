@@ -34,7 +34,9 @@ x_from_power(
   save_sim_all = FALSE,
   algorithm = NULL,
   control = list(),
-  internal_args = list()
+  internal_args = list(),
+  rejection_rates_args = list(collapse = "all_sig", at_least_k = 1, p_adjust_method =
+    "none", alpha = 0.05)
 )
 
 n_from_power(
@@ -59,7 +61,10 @@ n_from_power(
     upper_bound = NULL, nls_control = list(), nls_args = list()),
   save_sim_all = FALSE,
   algorithm = NULL,
-  control = list()
+  control = list(),
+  internal_args = list(),
+  rejection_rates_args = list(collapse = "all_sig", at_least_k = 1, p_adjust_method =
+    "none", alpha = 0.05)
 )
 
 n_region_from_power(
@@ -82,7 +87,10 @@ n_region_from_power(
     upper_bound = NULL, nls_control = list(), nls_args = list()),
   save_sim_all = FALSE,
   algorithm = NULL,
-  control = list()
+  control = list(),
+  internal_args = list(),
+  rejection_rates_args = list(collapse = "all_sig", at_least_k = 1, p_adjust_method =
+    "none", alpha = 0.05)
 )
 
 # S3 method for class 'x_from_power'
@@ -266,6 +274,19 @@ arg_x_from_power(object, arg, arg_in = NULL)
 
   A named list of internal arguments. For internal testing. Do not use
   it.
+
+- rejection_rates_args:
+
+  Argument values to be used when
+  [`rejection_rates()`](https://sfcheung.github.io/power4mome/reference/rejection_rates.md)
+  is called, used to decide how rejection rates will be estimated. Only
+  one single test is supported by `x_from_power()`. Therefore,
+  `merge_all_tests` is always `TRUE` and cannot be changed. The argument
+  `collapse` can be `"all_sig"`, `"at_least_one_sig"`, or
+  `"at_least_k_sig"` (it cannot be `"none"`). Please refer to
+  [`rejection_rates()`](https://sfcheung.github.io/power4mome/reference/rejection_rates.md)
+  for other possible arguments. These values, if set, will overwrite any
+  stored settings in `object`.
 
 - digits:
 
@@ -571,7 +592,7 @@ power_vs_n <- x_from_power(test_out,
 #> Update the test(s):
 #> Update test_parameters: CIs (pars: m~x) :
 #> 
-#> Estimated power at n: 0.400, 95.0% confidence interval: [0.118,0.769]
+#> Estimated power at 50: 0.400, 95.0% confidence interval: [0.118,0.769]
 #> 
 #> Initial interval: [50, 100] 
 #> 
@@ -583,13 +604,9 @@ power_vs_n <- x_from_power(test_out,
 #> 2 100 0.298 1.000  0.800  0.376  0.964
 #> 
 #> 
-#> 
 #> == Enter extending interval ...
-#> 
-#> 
-#> 
+#> The interval is already valid: [50, 100] 
 #> == Exit extending interval ...
-#> 
 #> 
 #> Iteration # 1 
 #> 
@@ -601,7 +618,7 @@ power_vs_n <- x_from_power(test_out,
 #> Update the test(s):
 #> Update test_parameters: CIs (pars: m~x) :
 #> 
-#> Estimated power at n: 1.000, 95.0% confidence interval: [0.566,1.000]
+#> Estimated power at 75: 1.000, 95.0% confidence interval: [0.566,1.000]
 #> - Rejection Rates:
 #> [test]: test_parameters: CIs (pars: m~x) 
 #> [test_label]: m~x 
@@ -613,10 +630,9 @@ power_vs_n <- x_from_power(test_out,
 #> - 'nls()' estimation skipped when less than 4 values of predictor examined.
 #> Solution found.
 #> 
+#> ========== Final Stage ==========
 #> 
-#> --- Final Stage ---
-#> 
-#> - Start at 2026-02-01 15:18:10 
+#> - Start at 2026-02-07 12:00:37 
 #> - Rejection Rates:
 #> 
 #> [test]: test_parameters: CIs (pars: m~x) 
@@ -690,7 +706,7 @@ summary(power_vs_n)
 #> 
 #> - Algorithm: bisection 
 #> - The range of values explored: 100 to 75 
-#> - Time spent in the search: 0.9927 secs 
+#> - Time spent in the search: 0.9053 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 

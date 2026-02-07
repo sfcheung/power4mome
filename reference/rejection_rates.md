@@ -18,11 +18,11 @@ rejection_rates(
   ci = TRUE,
   level = 0.95,
   se = FALSE,
-  collapse = c("none", "all_sig", "at_least_one_sig", "at_least_k_sig"),
-  at_least_k = 1,
-  merge_all_tests = FALSE,
-  p_adjust_method = "none",
-  alpha = 0.05,
+  collapse = NULL,
+  at_least_k = NULL,
+  merge_all_tests = NULL,
+  p_adjust_method = NULL,
+  alpha = NULL,
   ...
 )
 
@@ -99,17 +99,20 @@ print(x, digits = 3, annotation = TRUE, abbreviate_col_names = TRUE, ...)
   `"at_least_one_sig"`, then the set of tests is considered significant
   if at least one of the tests is significant. If `"at_least_k_sig"`,
   then the set of tests is considered significant if at least `k` tests
-  are significant, `k` set by the argument `at_least_k`.
+  are significant, `k` set by the argument `at_least_k`. If `NULL`, will
+  use the value stored in `object` (default is `"none"`).
 
 - at_least_k:
 
   Used by `collapse`, the number of tests required to be significant for
-  the set of tests to be considered significant.
+  the set of tests to be considered significant. If `NULL`, will use the
+  value stored in `object` (default is 1).
 
 - merge_all_tests:
 
   If `TRUE`, all the tests in each replication will be merged into one
-  test.
+  test. If `NULL`, will use the value stored in `object` (default is
+  `FALSE`).
 
 - p_adjust_method:
 
@@ -118,13 +121,15 @@ print(x, digits = 3, annotation = TRUE, abbreviate_col_names = TRUE, ...)
   *p*-values when testing the effects. Default is `"none"` and the
   *p*-values will not be adjusted. Ignored if some tests do not have
   *p*-values stored. NOTE: Use this only if all tests can be conducted
-  using *p*-values.
+  using *p*-values. If `NULL`, will use the value stored in `object`
+  (default is `"none"`).
 
 - alpha:
 
   The level of significance to use when using `p_adjust_method`. The
   significance results (the column `sig`) will be updated using the
   adjusted *p*-values. Used only if `p_adjust_method` is not `"none"`.
+  If `NULL`, will use the value stored in `object` (default is .05).
 
 - x:
 

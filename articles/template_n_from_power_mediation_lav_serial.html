@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.35</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.42</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -98,7 +98,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Quick Template: Serial Mediation with Latent Variables</h1>
             
-            <h4 data-toc-skip class="date">2025-10-26</h4>
+            <h4 data-toc-skip class="date">2026-02-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/sfcheung/power4mome/blob/main/vignettes/articles/template_n_from_power_mediation_lav_serial.Rmd" class="external-link"><code>vignettes/articles/template_n_from_power_mediation_lav_serial.Rmd</code></a></small>
       <div class="d-none name"><code>template_n_from_power_mediation_lav_serial.Rmd</code></div>
@@ -249,14 +249,14 @@ on how to set <code>number_of_indicators</code> and
 <span></span>
 <span><span class="co"># ====== Estimate the Power ======</span></span>
 <span></span>
-<span><span class="co"># For n = 150,</span></span>
+<span><span class="co"># For n = 200,</span></span>
 <span><span class="co"># when testing the indirect effect by</span></span>
 <span><span class="co"># Monte Carlo confidence interval</span></span>
 <span></span>
-<span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/power4test.html">power4test</a></span><span class="op">(</span>nrep <span class="op">=</span> <span class="fl">400</span>,</span>
+<span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/power4test.html">power4test</a></span><span class="op">(</span>nrep <span class="op">=</span> <span class="fl">600</span>,</span>
 <span>                  model <span class="op">=</span> <span class="va">model</span>,</span>
 <span>                  pop_es <span class="op">=</span> <span class="va">model_es</span>,</span>
-<span>                  n <span class="op">=</span> <span class="fl">150</span>,</span>
+<span>                  n <span class="op">=</span> <span class="fl">200</span>,</span>
 <span>                  R <span class="op">=</span> <span class="fl">1000</span>,</span>
 <span>                  number_of_indicators <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>                                           m1 <span class="op">=</span> <span class="fl">4</span>,</span>
@@ -362,33 +362,33 @@ on how to set <code>number_of_indicators</code> and
 <span><span class="co">#&gt;  0.756 0.607 0.661 0.607 0.756</span></span>
 <span><span class="co">#&gt; ======================= Data Information =======================</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Number of Replications:  400 </span></span>
-<span><span class="co">#&gt; Sample Sizes:  150 </span></span>
+<span><span class="co">#&gt; Number of Replications:  600 </span></span>
+<span><span class="co">#&gt; Sample Sizes:  200 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ==== Descriptive Statistics ====</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     vars     n  mean   sd  skew kurtosis se</span></span>
-<span><span class="co">#&gt; x1     1 60000  0.00 1.00  0.02     0.01  0</span></span>
-<span><span class="co">#&gt; x2     2 60000 -0.01 1.00 -0.01     0.00  0</span></span>
-<span><span class="co">#&gt; x3     3 60000  0.00 1.00  0.02    -0.01  0</span></span>
-<span><span class="co">#&gt; m11    4 60000  0.00 1.00  0.00    -0.01  0</span></span>
-<span><span class="co">#&gt; m12    5 60000  0.00 1.00 -0.01    -0.01  0</span></span>
-<span><span class="co">#&gt; m13    6 60000 -0.01 1.00  0.01    -0.01  0</span></span>
-<span><span class="co">#&gt; m14    7 60000  0.00 1.00  0.00     0.03  0</span></span>
-<span><span class="co">#&gt; m21    8 60000  0.00 1.00  0.00     0.01  0</span></span>
-<span><span class="co">#&gt; m22    9 60000  0.00 1.00 -0.02     0.02  0</span></span>
-<span><span class="co">#&gt; m23   10 60000  0.00 1.00 -0.02    -0.03  0</span></span>
-<span><span class="co">#&gt; m31   11 60000  0.00 1.00  0.00     0.00  0</span></span>
-<span><span class="co">#&gt; m32   12 60000  0.00 1.00 -0.02    -0.01  0</span></span>
-<span><span class="co">#&gt; m33   13 60000  0.00 1.00 -0.01     0.00  0</span></span>
-<span><span class="co">#&gt; m34   14 60000  0.00 1.00 -0.02    -0.01  0</span></span>
-<span><span class="co">#&gt; y1    15 60000  0.00 1.00  0.00     0.00  0</span></span>
-<span><span class="co">#&gt; y2    16 60000  0.00 1.00  0.00     0.01  0</span></span>
-<span><span class="co">#&gt; y3    17 60000  0.00 0.99 -0.03    -0.01  0</span></span>
+<span><span class="co">#&gt;     vars      n mean sd  skew kurtosis se</span></span>
+<span><span class="co">#&gt; x1     1 120000 0.00  1  0.00    -0.01  0</span></span>
+<span><span class="co">#&gt; x2     2 120000 0.00  1  0.00    -0.02  0</span></span>
+<span><span class="co">#&gt; x3     3 120000 0.00  1  0.01     0.00  0</span></span>
+<span><span class="co">#&gt; m11    4 120000 0.00  1  0.00     0.00  0</span></span>
+<span><span class="co">#&gt; m12    5 120000 0.00  1  0.00     0.00  0</span></span>
+<span><span class="co">#&gt; m13    6 120000 0.00  1 -0.01     0.01  0</span></span>
+<span><span class="co">#&gt; m14    7 120000 0.00  1  0.00    -0.02  0</span></span>
+<span><span class="co">#&gt; m21    8 120000 0.00  1  0.00    -0.04  0</span></span>
+<span><span class="co">#&gt; m22    9 120000 0.00  1 -0.01     0.00  0</span></span>
+<span><span class="co">#&gt; m23   10 120000 0.01  1  0.00     0.01  0</span></span>
+<span><span class="co">#&gt; m31   11 120000 0.00  1  0.00    -0.02  0</span></span>
+<span><span class="co">#&gt; m32   12 120000 0.00  1 -0.01     0.00  0</span></span>
+<span><span class="co">#&gt; m33   13 120000 0.01  1  0.01     0.00  0</span></span>
+<span><span class="co">#&gt; m34   14 120000 0.00  1  0.02     0.01  0</span></span>
+<span><span class="co">#&gt; y1    15 120000 0.00  1  0.01     0.02  0</span></span>
+<span><span class="co">#&gt; y2    16 120000 0.00  1  0.00     0.02  0</span></span>
+<span><span class="co">#&gt; y3    17 120000 0.00  1  0.01     0.00  0</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ==== Parameter Estimates Based on All 400 Samples Combined ====</span></span>
+<span><span class="co">#&gt; ==== Parameter Estimates Based on All 600 Samples Combined ====</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Total Sample Size: 60000 </span></span>
+<span><span class="co">#&gt; Total Sample Size: 120000 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ==== Standardized Estimates ====</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -397,44 +397,44 @@ on how to set <code>number_of_indicators</code> and
 <span><span class="co">#&gt; Latent Variables:</span></span>
 <span><span class="co">#&gt;                     est.std</span></span>
 <span><span class="co">#&gt;   x =~                     </span></span>
-<span><span class="co">#&gt;     x1                0.756</span></span>
-<span><span class="co">#&gt;     x2                0.754</span></span>
-<span><span class="co">#&gt;     x3                0.753</span></span>
+<span><span class="co">#&gt;     x1                0.758</span></span>
+<span><span class="co">#&gt;     x2                0.755</span></span>
+<span><span class="co">#&gt;     x3                0.752</span></span>
 <span><span class="co">#&gt;   m1 =~                    </span></span>
-<span><span class="co">#&gt;     m11               0.608</span></span>
-<span><span class="co">#&gt;     m12               0.607</span></span>
-<span><span class="co">#&gt;     m13               0.612</span></span>
+<span><span class="co">#&gt;     m11               0.607</span></span>
+<span><span class="co">#&gt;     m12               0.606</span></span>
+<span><span class="co">#&gt;     m13               0.609</span></span>
 <span><span class="co">#&gt;     m14               0.608</span></span>
 <span><span class="co">#&gt;   m2 =~                    </span></span>
-<span><span class="co">#&gt;     m21               0.664</span></span>
-<span><span class="co">#&gt;     m22               0.662</span></span>
-<span><span class="co">#&gt;     m23               0.661</span></span>
+<span><span class="co">#&gt;     m21               0.662</span></span>
+<span><span class="co">#&gt;     m22               0.660</span></span>
+<span><span class="co">#&gt;     m23               0.663</span></span>
 <span><span class="co">#&gt;   m3 =~                    </span></span>
-<span><span class="co">#&gt;     m31               0.610</span></span>
-<span><span class="co">#&gt;     m32               0.612</span></span>
-<span><span class="co">#&gt;     m33               0.611</span></span>
+<span><span class="co">#&gt;     m31               0.607</span></span>
+<span><span class="co">#&gt;     m32               0.605</span></span>
+<span><span class="co">#&gt;     m33               0.607</span></span>
 <span><span class="co">#&gt;     m34               0.604</span></span>
 <span><span class="co">#&gt;   y =~                     </span></span>
-<span><span class="co">#&gt;     y1                0.755</span></span>
-<span><span class="co">#&gt;     y2                0.755</span></span>
-<span><span class="co">#&gt;     y3                0.750</span></span>
+<span><span class="co">#&gt;     y1                0.754</span></span>
+<span><span class="co">#&gt;     y2                0.757</span></span>
+<span><span class="co">#&gt;     y3                0.757</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Regressions:</span></span>
 <span><span class="co">#&gt;                     est.std</span></span>
 <span><span class="co">#&gt;   m1 ~                     </span></span>
-<span><span class="co">#&gt;     x                 0.504</span></span>
+<span><span class="co">#&gt;     x                 0.508</span></span>
 <span><span class="co">#&gt;   m2 ~                     </span></span>
-<span><span class="co">#&gt;     m1                0.496</span></span>
-<span><span class="co">#&gt;     x                -0.001</span></span>
+<span><span class="co">#&gt;     m1                0.501</span></span>
+<span><span class="co">#&gt;     x                -0.005</span></span>
 <span><span class="co">#&gt;   m3 ~                     </span></span>
-<span><span class="co">#&gt;     m2                0.492</span></span>
+<span><span class="co">#&gt;     m2                0.499</span></span>
 <span><span class="co">#&gt;     m1               -0.000</span></span>
-<span><span class="co">#&gt;     x                 0.012</span></span>
+<span><span class="co">#&gt;     x                -0.001</span></span>
 <span><span class="co">#&gt;   y ~                      </span></span>
-<span><span class="co">#&gt;     m3                0.301</span></span>
-<span><span class="co">#&gt;     m2                0.006</span></span>
-<span><span class="co">#&gt;     m1                0.003</span></span>
-<span><span class="co">#&gt;     x                 0.089</span></span>
+<span><span class="co">#&gt;     m3                0.300</span></span>
+<span><span class="co">#&gt;     m2               -0.000</span></span>
+<span><span class="co">#&gt;     m1                0.001</span></span>
+<span><span class="co">#&gt;     x                 0.097</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ==================== Extra Element(s) Found ====================</span></span>
@@ -446,19 +446,19 @@ on how to set <code>number_of_indicators</code> and
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ============ &lt;fit&gt; ============</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; lavaan 0.6-20 ended normally after 31 iterations</span></span>
+<span><span class="co">#&gt; lavaan 0.6-21 ended normally after 34 iterations</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Estimator                                         ML</span></span>
 <span><span class="co">#&gt;   Optimization method                           NLMINB</span></span>
 <span><span class="co">#&gt;   Number of model parameters                        44</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Number of observations                           150</span></span>
+<span><span class="co">#&gt;   Number of observations                           200</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Test User Model:</span></span>
 <span><span class="co">#&gt;                                                       </span></span>
-<span><span class="co">#&gt;   Test statistic                               123.231</span></span>
+<span><span class="co">#&gt;   Test statistic                               108.973</span></span>
 <span><span class="co">#&gt;   Degrees of freedom                               109</span></span>
-<span><span class="co">#&gt;   P-value (Chi-square)                           0.166</span></span>
+<span><span class="co">#&gt;   P-value (Chi-square)                           0.483</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; =========== &lt;mc_out&gt; ===========</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -468,16 +468,21 @@ on how to set <code>number_of_indicators</code> and
 <span><span class="co">#&gt; Number of Monte Carlo replications: 1000 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ====================== Test(s) Conducted ======================</span></span>
+<span><span class="co">#&gt; ========== &lt;test_indirect: x-&gt;m1-&gt;m2-&gt;m3-&gt;y&gt; ==========</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; - test_indirect: x-&gt;m1-&gt;m2-&gt;m3-&gt;y</span></span>
+<span><span class="co">#&gt; Mean(s) across replication:</span></span>
+<span><span class="co">#&gt;    est  cilo  cihi   sig pvalue</span></span>
+<span><span class="co">#&gt;  0.040 0.001 0.102 0.627  0.082</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Call print() and set 'test_long = TRUE' for a detailed report.</span></span>
+<span><span class="co">#&gt; - The value 'sig' is the rejection rate.</span></span>
+<span><span class="co">#&gt; - If the null hypothesis is false, this is the power.</span></span>
+<span><span class="co">#&gt; - Number of valid replications for rejection rate: 600 </span></span>
+<span><span class="co">#&gt; - Proportion of valid replications for rejection rate: 1.000</span></span>
 <span><span class="fu"><a href="../reference/rejection_rates.html">rejection_rates</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [test]: test_indirect: x-&gt;m1-&gt;m2-&gt;m3-&gt;y </span></span>
 <span><span class="co">#&gt; [test_label]: Test </span></span>
 <span><span class="co">#&gt;     est   p.v reject r.cilo r.cihi</span></span>
-<span><span class="co">#&gt; 1 0.040 1.000  0.407  0.360  0.456</span></span>
+<span><span class="co">#&gt; 1 0.040 1.000  0.627  0.587  0.664</span></span>
 <span><span class="co">#&gt; Notes:</span></span>
 <span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>
 <span><span class="co">#&gt; - est: The mean of the estimates in a test across replications.</span></span>
@@ -518,8 +523,10 @@ size is too different from the target power.</p>
 <span><span class="co"># - Set target power: target_power = .80 (Default, can be omitted)</span></span>
 <span><span class="co"># - Set the seed for the simulation: Integer. Should always be set.</span></span>
 <span><span class="co"># To set desired precision:</span></span>
-<span><span class="co"># - Set final number of R: final_R = 1000 (Default, can be omitted)</span></span>
-<span><span class="co"># - Set final number of replications: final_nrep = 400 (Default, can be omitted)</span></span>
+<span><span class="co"># - Set final number of R: final_R. If omitted,</span></span>
+<span><span class="co">#   it is set to 1000 or set to R in the original object.</span></span>
+<span><span class="co"># - Set final number of replications: final_nrep. If omitted,</span></span>
+<span><span class="co">#   it is set to 400 or set to nrep in the original object.</span></span>
 <span></span>
 <span><span class="va">n_power_region</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/x_from_power.html">n_region_from_power</a></span><span class="op">(</span><span class="va">out</span>,</span>
 <span>                                      seed <span class="op">=</span> <span class="fl">1357</span><span class="op">)</span></span>
@@ -549,13 +556,13 @@ size is too different from the target power.</p>
 <span><span class="co">#&gt; Solution: </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Approximate region of sample sizes with power:</span></span>
-<span><span class="co">#&gt; - not significantly different from 0.800: 222 to 283</span></span>
-<span><span class="co">#&gt; - significantly lower than 0.800: 222</span></span>
-<span><span class="co">#&gt; - significantly higher than 0.800: 283</span></span>
+<span><span class="co">#&gt; - not significantly different from 0.800: 228 to 269</span></span>
+<span><span class="co">#&gt; - significantly lower than 0.800: 228</span></span>
+<span><span class="co">#&gt; - significantly higher than 0.800: 269</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Confidence intervals of the estimated power:</span></span>
-<span><span class="co">#&gt; - for the lower bound (222): [0.705, 0.790]</span></span>
-<span><span class="co">#&gt; - for the upper bound (283): [0.817, 0.886]</span></span>
+<span><span class="co">#&gt; - for the lower bound (228): [0.714, 0.783]</span></span>
+<span><span class="co">#&gt; - for the upper bound (269): [0.780, 0.842]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call `summary()` for detailed results.</span></span>
 <span></span>
@@ -569,12 +576,12 @@ Power Curve
 </div>
 <p>As shown above, approximately:</p>
 <ul>
-<li><p>sample sizes lower than 222 have power significantly lower than
+<li><p>sample sizes lower than 228 have power significantly lower than
 .80, and</p></li>
-<li><p>sample sizes higher than 283 have power significantly higher than
+<li><p>sample sizes higher than 269 have power significantly higher than
 .80.</p></li>
 </ul>
-<p>In other words, sample sizes between 222 and 283 have power not
+<p>In other words, sample sizes between 228 and 269 have power not
 significantly different from .80.</p>
 <p>If necessary, detailed results can be printed by
 <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code>:</p>
@@ -588,8 +595,8 @@ significantly different from .80.</p>
 <span><span class="co">#&gt; ====== x_from_power Results ======</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call:</span></span>
-<span><span class="co">#&gt; power4mome::x_from_power(object = out, x = "n", what = "ub", </span></span>
-<span><span class="co">#&gt;     goal = "close_enough", seed = 1357)</span></span>
+<span><span class="co">#&gt; x_from_power(object = out, x = "n", what = "ub", goal = "close_enough", </span></span>
+<span><span class="co">#&gt;     final_nrep = 600, final_R = 1000, seed = 1357)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Predictor (x): Sample Size </span></span>
 <span><span class="co">#&gt; </span></span>
@@ -599,19 +606,19 @@ significantly different from .80.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; === Major Results ===</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; - Final Value (Sample Size): 222</span></span>
+<span><span class="co">#&gt; - Final Value (Sample Size): 228</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - Final Estimated Power: 0.750 </span></span>
-<span><span class="co">#&gt; - Confidence Interval: [0.705; 0.790]</span></span>
+<span><span class="co">#&gt; - Confidence Interval: [0.714; 0.783]</span></span>
 <span><span class="co">#&gt; - Level of confidence: 95.0%</span></span>
-<span><span class="co">#&gt; - Based on 400 replications.</span></span>
+<span><span class="co">#&gt; - Based on 600 replications.</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; === Technical Information ===</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - Algorithm: bisection </span></span>
 <span><span class="co">#&gt; - Tolerance for 'close enough': Within 0.02000 of 0.800 </span></span>
-<span><span class="co">#&gt; - The range of values explored: 150 to 294 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 59.16 secs </span></span>
+<span><span class="co">#&gt; - The range of values explored: 200 to 255 </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 1.772 mins </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
@@ -629,20 +636,20 @@ significantly different from .80.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Coefficients:</span></span>
 <span><span class="co">#&gt; (Intercept)            x  </span></span>
-<span><span class="co">#&gt;    -2.74890      0.01639  </span></span>
+<span><span class="co">#&gt;    -2.56230      0.01561  </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Degrees of Freedom: 1199 Total (i.e. Null);  1198 Residual</span></span>
-<span><span class="co">#&gt; Null Deviance:       1513 </span></span>
-<span><span class="co">#&gt; Residual Deviance: 1309  AIC: 1313</span></span>
+<span><span class="co">#&gt; Degrees of Freedom: 1799 Total (i.e. Null);  1798 Residual</span></span>
+<span><span class="co">#&gt; Null Deviance:       2121 </span></span>
+<span><span class="co">#&gt; Residual Deviance: 2078  AIC: 2082</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - Detailed Results:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [test]: test_indirect: x-&gt;m1-&gt;m2-&gt;m3-&gt;y </span></span>
 <span><span class="co">#&gt; [test_label]: Test </span></span>
 <span><span class="co">#&gt;     n   est   p.v reject r.cilo r.cihi</span></span>
-<span><span class="co">#&gt; 1 150 0.040 1.000  0.407  0.360  0.456</span></span>
-<span><span class="co">#&gt; 2 222 0.043 1.000  0.750  0.705  0.790</span></span>
-<span><span class="co">#&gt; 3 294 0.040 1.000  0.868  0.831  0.897</span></span>
+<span><span class="co">#&gt; 1 200 0.040 1.000  0.627  0.587  0.664</span></span>
+<span><span class="co">#&gt; 2 228 0.040 1.000  0.750  0.714  0.783</span></span>
+<span><span class="co">#&gt; 3 255 0.040 1.000  0.795  0.761  0.825</span></span>
 <span><span class="co">#&gt; Notes:</span></span>
 <span><span class="co">#&gt; - n: The sample size in a trial.</span></span>
 <span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>
@@ -662,8 +669,8 @@ significantly different from .80.</p>
 <span><span class="co">#&gt; ====== x_from_power Results ======</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call:</span></span>
-<span><span class="co">#&gt; power4mome::x_from_power(object = out, seed = 1357, x = "n", </span></span>
-<span><span class="co">#&gt;     what = "lb", goal = "close_enough")</span></span>
+<span><span class="co">#&gt; x_from_power(object = out, seed = 1357, final_nrep = 600, final_R = 1000, </span></span>
+<span><span class="co">#&gt;     x = "n", what = "lb", goal = "close_enough")</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Predictor (x): Sample Size </span></span>
 <span><span class="co">#&gt; </span></span>
@@ -673,19 +680,19 @@ significantly different from .80.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; === Major Results ===</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; - Final Value (Sample Size): 283</span></span>
+<span><span class="co">#&gt; - Final Value (Sample Size): 269</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; - Final Estimated Power: 0.855 </span></span>
-<span><span class="co">#&gt; - Confidence Interval: [0.817; 0.886]</span></span>
+<span><span class="co">#&gt; - Final Estimated Power: 0.813 </span></span>
+<span><span class="co">#&gt; - Confidence Interval: [0.780; 0.842]</span></span>
 <span><span class="co">#&gt; - Level of confidence: 95.0%</span></span>
-<span><span class="co">#&gt; - Based on 400 replications.</span></span>
+<span><span class="co">#&gt; - Based on 600 replications.</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; === Technical Information ===</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - Algorithm: bisection </span></span>
 <span><span class="co">#&gt; - Tolerance for 'close enough': Within 0.02000 of 0.800 </span></span>
-<span><span class="co">#&gt; - The range of values explored: 271 to 294 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 51.52 secs </span></span>
+<span><span class="co">#&gt; - The range of values explored: 200 to 269 </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 55.42 secs </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
@@ -703,20 +710,21 @@ significantly different from .80.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Coefficients:</span></span>
 <span><span class="co">#&gt; (Intercept)            x  </span></span>
-<span><span class="co">#&gt;    -4.59795      0.02221  </span></span>
+<span><span class="co">#&gt;    -2.20931      0.01395  </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Degrees of Freedom: 1199 Total (i.e. Null);  1198 Residual</span></span>
-<span><span class="co">#&gt; Null Deviance:       1052 </span></span>
-<span><span class="co">#&gt; Residual Deviance: 1045  AIC: 1049</span></span>
+<span><span class="co">#&gt; Degrees of Freedom: 2399 Total (i.e. Null);  2398 Residual</span></span>
+<span><span class="co">#&gt; Null Deviance:       2719 </span></span>
+<span><span class="co">#&gt; Residual Deviance: 2657  AIC: 2661</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - Detailed Results:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [test]: test_indirect: x-&gt;m1-&gt;m2-&gt;m3-&gt;y </span></span>
 <span><span class="co">#&gt; [test_label]: Test </span></span>
 <span><span class="co">#&gt;     n   est   p.v reject r.cilo r.cihi</span></span>
-<span><span class="co">#&gt; 1 271 0.038 1.000  0.800  0.758  0.836</span></span>
-<span><span class="co">#&gt; 2 283 0.039 1.000  0.855  0.817  0.886</span></span>
-<span><span class="co">#&gt; 3 294 0.040 1.000  0.868  0.831  0.897</span></span>
+<span><span class="co">#&gt; 1 200 0.040 1.000  0.627  0.587  0.664</span></span>
+<span><span class="co">#&gt; 2 228 0.040 1.000  0.750  0.714  0.783</span></span>
+<span><span class="co">#&gt; 3 255 0.040 1.000  0.795  0.761  0.825</span></span>
+<span><span class="co">#&gt; 4 269 0.040 1.000  0.813  0.780  0.842</span></span>
 <span><span class="co">#&gt; Notes:</span></span>
 <span><span class="co">#&gt; - n: The sample size in a trial.</span></span>
 <span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>
@@ -779,14 +787,14 @@ significantly different from .80.</p>
 <span></span>
 <span><span class="co"># ====== Try One N and Estimate the Power ======</span></span>
 <span></span>
-<span><span class="co"># For n = 150,</span></span>
+<span><span class="co"># For n = 200,</span></span>
 <span><span class="co"># when testing the indirect effect by</span></span>
 <span><span class="co"># Monte Carlo confidence interval</span></span>
 <span></span>
-<span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/power4test.html">power4test</a></span><span class="op">(</span>nrep <span class="op">=</span> <span class="fl">400</span>,</span>
+<span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/power4test.html">power4test</a></span><span class="op">(</span>nrep <span class="op">=</span> <span class="fl">600</span>,</span>
 <span>                  model <span class="op">=</span> <span class="va">model</span>,</span>
 <span>                  pop_es <span class="op">=</span> <span class="va">model_es</span>,</span>
-<span>                  n <span class="op">=</span> <span class="fl">150</span>,</span>
+<span>                  n <span class="op">=</span> <span class="fl">200</span>,</span>
 <span>                  R <span class="op">=</span> <span class="fl">1000</span>,</span>
 <span>                  number_of_indicators <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>                                           m1 <span class="op">=</span> <span class="fl">4</span>,</span>
@@ -815,8 +823,10 @@ significantly different from .80.</p>
 <span><span class="co"># - Set target power: target_power = .80 (Default, can be omitted)</span></span>
 <span><span class="co"># - Set the seed for the simulation: Integer. Should always be set.</span></span>
 <span><span class="co"># To set desired precision:</span></span>
-<span><span class="co"># - Set final number of R: final_R = 1000 (Default, can be omitted)</span></span>
-<span><span class="co"># - Set final number of replications: final_nrep = 400 (Default, can be omitted)</span></span>
+<span><span class="co"># - Set final number of R: final_R. If omitted,</span></span>
+<span><span class="co">#   it is set to 1000 or set to R in the original object.</span></span>
+<span><span class="co"># - Set final number of replications: final_nrep. If omitted,</span></span>
+<span><span class="co">#   it is set to 400 or set to nrep in the original object.</span></span>
 <span></span>
 <span><span class="va">n_power_region</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/x_from_power.html">n_region_from_power</a></span><span class="op">(</span><span class="va">out</span>,</span>
 <span>                                      seed <span class="op">=</span> <span class="fl">1357</span><span class="op">)</span></span>
@@ -827,12 +837,16 @@ significantly different from .80.</p>
 <div class="section level2">
 <h2 id="final-remarks">Final Remarks<a class="anchor" aria-label="anchor" href="#final-remarks"></a>
 </h2>
+<p>For a moderate to small <code>nrep</code>, the results may be
+sensitive to the <code>seed</code>. It is advised to do a final check of
+the sample size to be used using <code><a href="../reference/power4test.html">power4test()</a></code> and an
+<code>nrep</code> of 1000 or 2000.</p>
 <p>For other options of <code><a href="../reference/power4test.html">power4test()</a></code> and
 <code><a href="../reference/x_from_power.html">n_region_from_power()</a></code>, please refer to their help pages, as
-well as the <a href="https://sfcheung.github.io/power4mome/articles/power4mome.html">Get-Started
-article</a> and this <a href="https://sfcheung.github.io/power4mome/articles/x_from_power_for_n.html">article</a>
-for <code><a href="../reference/x_from_power.html">n_from_power()</a></code>, which is the function to find one of
-the regions, called twice by <code><a href="../reference/x_from_power.html">n_region_from_power()</a></code>.</p>
+well as the <a href="power4mome.html">Get-Started article</a> and this
+<a href="x_from_power_for_n.html">article</a> for
+<code><a href="../reference/x_from_power.html">n_from_power()</a></code>, which is the function to find one of the
+regions, called twice by <code><a href="../reference/x_from_power.html">n_region_from_power()</a></code>.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

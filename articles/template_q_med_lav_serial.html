@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.35</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.42</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -97,7 +97,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Quick Function: Serial Mediation with Latent Variables</h1>
             
-            <h4 data-toc-skip class="date">2025-12-15</h4>
+            <h4 data-toc-skip class="date">2026-02-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/sfcheung/power4mome/blob/main/vignettes/articles/template_q_med_lav_serial.Rmd" class="external-link"><code>vignettes/articles/template_q_med_lav_serial.Rmd</code></a></small>
       <div class="d-none name"><code>template_q_med_lav_serial.Rmd</code></div>
@@ -253,7 +253,7 @@ reliability).</p>
 <span>                  m2 <span class="op">=</span> <span class="fl">.70</span>,</span>
 <span>                  y <span class="op">=</span> <span class="fl">.70</span><span class="op">)</span>,</span>
 <span>  target_power <span class="op">=</span> <span class="fl">.80</span>,</span>
-<span>  nrep <span class="op">=</span> <span class="fl">400</span>,</span>
+<span>  nrep <span class="op">=</span> <span class="fl">600</span>,</span>
 <span>  n <span class="op">=</span> <span class="fl">150</span>,</span>
 <span>  R <span class="op">=</span> <span class="fl">1000</span>,</span>
 <span>  seed <span class="op">=</span> <span class="fl">1234</span></span>
@@ -289,7 +289,8 @@ reliability.</p></li>
 .80, and can be omitted if this is the desired level of power</p></li>
 <li><p><code>nrep</code>: The number of replications when estimating the
 power for a sample size. Default is 400. Can be omitted if this is the
-desired number of replications.</p></li>
+desired number of replications. Using 600 or 800 increases the time of
+each iteration, but can lead to more stable results.</p></li>
 <li><p><code>R</code>: The number of random samples used in forming
 Monte Carlo or nonparametric bootstrapping confidence intervals.
 Although they should be large when testing an effect in one single
@@ -302,7 +303,11 @@ results are reproducible <em>only</em> if the configuration is exactly
 identical. Moreover, changes in the algorithm will also make results not
 reproducible even with the same seed. Nevertheless, it is still advised
 to set this seed to an integer, to make the results reproducible at
-least on the same machine.</p></li>
+least on the same machine. For a moderate to small <code>nrep</code>,
+the results may be sensitive to the <code>seed</code>. It is advised to
+do a final check of the sample size to be used using
+<code><a href="../reference/power4test.html">power4test()</a></code> and an <code>nrep</code> of 1000 or
+2000.</p></li>
 </ul>
 <p>This is the output:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
@@ -371,7 +376,7 @@ least on the same machine.</p></li>
 <span><span class="co">#&gt;  0.661 0.707 0.661 0.661</span></span>
 <span><span class="co">#&gt; ======================= Data Information =======================</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Number of Replications:  400 </span></span>
+<span><span class="co">#&gt; Number of Replications:  600 </span></span>
 <span><span class="co">#&gt; Sample Sizes:  150 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call print with 'data_long = TRUE' for further information.</span></span>
@@ -385,7 +390,7 @@ least on the same machine.</p></li>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ============ &lt;fit&gt; ============</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; lavaan 0.6-21.2434 ended normally after 33 iterations</span></span>
+<span><span class="co">#&gt; lavaan 0.6-21 ended normally after 33 iterations</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Estimator                                         ML</span></span>
 <span><span class="co">#&gt;   Optimization method                           NLMINB</span></span>
@@ -407,18 +412,23 @@ least on the same machine.</p></li>
 <span><span class="co">#&gt; Number of Monte Carlo replications: 1000 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ====================== Test(s) Conducted ======================</span></span>
+<span><span class="co">#&gt; ============ &lt;test_indirect: x-&gt;m1-&gt;m2-&gt;y&gt; ============</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; - test_indirect: x-&gt;m1-&gt;m2-&gt;y</span></span>
+<span><span class="co">#&gt; Mean(s) across replication:</span></span>
+<span><span class="co">#&gt;    est   cilo  cihi   sig pvalue</span></span>
+<span><span class="co">#&gt;  0.043 -0.003 0.113 0.463  0.121</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Call print() and set 'test_long = TRUE' for a detailed report.</span></span>
+<span><span class="co">#&gt; - The value 'sig' is the rejection rate.</span></span>
+<span><span class="co">#&gt; - If the null hypothesis is false, this is the power.</span></span>
+<span><span class="co">#&gt; - Number of valid replications for rejection rate: 600 </span></span>
+<span><span class="co">#&gt; - Proportion of valid replications for rejection rate: 1.000 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ========== power4test Power ==========</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [test]: test_indirect: x-&gt;m1-&gt;m2-&gt;y </span></span>
 <span><span class="co">#&gt; [test_label]: Test </span></span>
 <span><span class="co">#&gt;     est   p.v reject r.cilo r.cihi</span></span>
-<span><span class="co">#&gt; 1 0.042 1.000  0.440  0.392  0.489</span></span>
+<span><span class="co">#&gt; 1 0.043 1.000  0.463  0.424  0.503</span></span>
 <span><span class="co">#&gt; Notes:</span></span>
 <span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>
 <span><span class="co">#&gt; - est: The mean of the estimates in a test across replications.</span></span>
@@ -439,7 +449,7 @@ specified. It also automatically computes the population standardized
 indirect effect(s).</p>
 <p>The second section is the output of <code><a href="../reference/rejection_rates.html">rejection_rates()</a></code>,
 showing the power under the column <code>reject</code>.</p>
-<p>In this example, the power is about 0.44 for sample size 150.</p>
+<p>In this example, the power is about 0.46 for sample size 150.</p>
 </div>
 <div class="section level2">
 <h2 id="find-the-region-of-sample-sizes">Find the Region of Sample Sizes<a class="anchor" aria-label="anchor" href="#find-the-region-of-sample-sizes"></a>
@@ -469,7 +479,7 @@ argument <code>mode = "region"</code> added:</p>
 <span>                  m2 <span class="op">=</span> <span class="fl">.70</span>,</span>
 <span>                  y <span class="op">=</span> <span class="fl">.70</span><span class="op">)</span>,</span>
 <span>  target_power <span class="op">=</span> <span class="fl">.80</span>,</span>
-<span>  nrep <span class="op">=</span> <span class="fl">400</span>,</span>
+<span>  nrep <span class="op">=</span> <span class="fl">600</span>,</span>
 <span>  n <span class="op">=</span> <span class="fl">150</span>,</span>
 <span>  R <span class="op">=</span> <span class="fl">1000</span>,</span>
 <span>  seed <span class="op">=</span> <span class="fl">1234</span>,</span>
@@ -494,16 +504,16 @@ argument <code>mode = "region"</code> added:</p>
 <span><span class="co">#&gt; Solution: </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Approximate region of sample sizes with power:</span></span>
-<span><span class="co">#&gt; - not significantly different from 0.800: 212 to 243</span></span>
-<span><span class="co">#&gt; - significantly lower than 0.800: 212</span></span>
-<span><span class="co">#&gt; - significantly higher than 0.800: 243</span></span>
+<span><span class="co">#&gt; - not significantly different from 0.800: 227 to 248</span></span>
+<span><span class="co">#&gt; - significantly lower than 0.800: 227</span></span>
+<span><span class="co">#&gt; - significantly higher than 0.800: 248</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Confidence intervals of the estimated power:</span></span>
-<span><span class="co">#&gt; - for the lower bound (212): [0.726, 0.809]</span></span>
-<span><span class="co">#&gt; - for the upper bound (243): [0.817, 0.886]</span></span>
+<span><span class="co">#&gt; - for the lower bound (227): [0.745, 0.811]</span></span>
+<span><span class="co">#&gt; - for the upper bound (248): [0.791, 0.852]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call `summary()` for detailed results.</span></span></code></pre>
-<p>In this example, the range of the sample size is 212 to 243.</p>
+<p>In this example, the range of the sample size is 227 to 248.</p>
 <p>The results can also be visualized using the <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>
 function:</p>
 <div class="figure" style="text-align: center">

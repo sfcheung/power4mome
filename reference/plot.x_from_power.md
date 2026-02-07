@@ -283,7 +283,7 @@ power_vs_n <- x_from_power(test_out,
 #> Update the test(s):
 #> Update test_parameters: CIs (pars: m~x) :
 #> 
-#> Estimated power at n: 0.700, 95.0% confidence interval: [0.397,0.892]
+#> Estimated power at 50: 0.700, 95.0% confidence interval: [0.397,0.892]
 #> 
 #> Initial interval: [50, 100] 
 #> 
@@ -299,10 +299,9 @@ power_vs_n <- x_from_power(test_out,
 #> - 'nls()' estimation skipped when less than 4 values of predictor examined.
 #> Solution found.
 #> 
+#> ========== Final Stage ==========
 #> 
-#> --- Final Stage ---
-#> 
-#> - Start at 2026-02-01 15:17:24 
+#> - Start at 2026-02-07 11:59:54 
 #> - Rejection Rates:
 #> 
 #> [test]: test_parameters: CIs (pars: m~x) 

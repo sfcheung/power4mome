@@ -15,7 +15,7 @@ results."><meta property="og:image" content="https://sfcheung.github.io/power4mo
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.35</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.42</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -122,7 +122,9 @@ results.</p>
 <span>  es2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">0</span>, nil <span class="op">=</span> <span class="fl">0</span>, s <span class="op">=</span> <span class="fl">0.05</span>, m <span class="op">=</span> <span class="fl">0.1</span>, l <span class="op">=</span> <span class="fl">0.15</span>, sm <span class="op">=</span> <span class="fl">0.075</span>, ml <span class="op">=</span> <span class="fl">0.125</span><span class="op">)</span>,</span>
 <span>  es_ind <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"si"</span>, <span class="st">"mi"</span>, <span class="st">"li"</span><span class="op">)</span>,</span>
 <span>  n_std <span class="op">=</span> <span class="fl">1e+05</span>,</span>
-<span>  std_force_monte_carlo <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  std_force_monte_carlo <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  rejection_rates_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>collapse <span class="op">=</span> <span class="st">"none"</span>, at_least_k <span class="op">=</span> <span class="fl">1</span>, merge_all_tests <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>    p_adjust_method <span class="op">=</span> <span class="st">"none"</span>, alpha <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'power4test'</span></span>
@@ -132,7 +134,7 @@ results.</p>
 <span>  digits <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>  digits_descriptive <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>  data_long <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  test_long <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  test_long <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  fit_to_all_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -495,6 +497,14 @@ will be used whether the model has
 product terms or not. Always fall
 back to simulation if
 analytical standardization failed.</p></dd>
+
+
+<dt id="arg-rejection-rates-args">rejection_rates_args<a class="anchor" aria-label="anchor" href="#arg-rejection-rates-args"></a></dt>
+<dd><p>Default
+argument values to be used when
+<code><a href="rejection_rates.html">rejection_rates()</a></code> is called. Can
+be overriden when calling
+<code><a href="rejection_rates.html">rejection_rates()</a></code>.</p></dd>
 
 
 <dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>

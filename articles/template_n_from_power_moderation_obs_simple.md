@@ -136,15 +136,15 @@ print(out,
 
 # ====== Estimate the Power ======
 
-# For n = 50.
+# For n = 200.
 # Test the coefficient of the product term
 # x:w in the regression results of lm().
 # The test by CI is equivalent to the two-tailed t-test.
 
-out <- power4test(nrep = 400,
+out <- power4test(nrep = 600,
                   model = model,
                   pop_es = model_es,
-                  n = 50,
+                  n = 200,
                   fit_model_args = list(fit_function = "lm"),
                   test_fun = test_parameters,
                   test_args = list(pars = "y~x:w"),
@@ -230,20 +230,20 @@ print(out,
 #> 
 #> ======================= Data Information =======================
 #> 
-#> Number of Replications:  400 
-#> Sample Sizes:  50 
+#> Number of Replications:  600 
+#> Sample Sizes:  200 
 #> 
 #> ==== Descriptive Statistics ====
 #> 
-#>     vars     n  mean   sd  skew kurtosis   se
-#> y      1 20000 -0.01 1.00  0.03     0.02 0.01
-#> x      2 20000 -0.01 1.00  0.04    -0.01 0.01
-#> w      3 20000  0.00 1.01 -0.02     0.02 0.01
-#> x:w    4 20000 -0.01 1.01 -0.01     5.04 0.01
+#>     vars      n mean sd  skew kurtosis se
+#> y      1 120000    0  1  0.02     0.01  0
+#> x      2 120000    0  1 -0.01     0.00  0
+#> w      3 120000    0  1  0.00     0.00  0
+#> x:w    4 120000    0  1  0.00     5.75  0
 #> 
-#> ==== Parameter Estimates Based on All 400 Samples Combined ====
+#> ==== Parameter Estimates Based on All 600 Samples Combined ====
 #> 
-#> Total Sample Size: 20000 
+#> Total Sample Size: 120000 
 #> 
 #> ==== Standardized Estimates ====
 #> 
@@ -252,17 +252,17 @@ print(out,
 #> Regressions:
 #>                     est.std
 #>   y ~                      
-#>     x                 0.296
-#>     w                 0.091
-#>     x:w               0.153
+#>     x                 0.302
+#>     w                 0.100
+#>     x:w               0.143
 #> 
 #> Covariances:
 #>                     est.std
 #>   x ~~                     
-#>     w                -0.011
-#>     x:w               0.000
+#>     w                 0.003
+#>     x:w              -0.003
 #>   w ~~                     
-#>     x:w              -0.014
+#>     x:w              -0.006
 #> 
 #> 
 #> ==================== Extra Element(s) Found ====================
@@ -276,19 +276,24 @@ print(out,
 #> 
 #> The models:
 #> y ~ x + w + x:w
-#> <environment: 0x0000020858857e40>
+#> <environment: 0x0000022588d29b28>
 #> 
 #> 
-#> ====================== Test(s) Conducted ======================
+#> ========= <test_parameters: CIs (pars: y~x:w)> =========
 #> 
-#> - test_parameters: CIs (pars: y~x:w)
+#> Mean(s) across replication:
+#>   test_label lhs op rhs   est    se pvalue  cilo  cihi   sig
+#> 1      y~x:w   y  ~ x:w 0.142 0.068  0.122 0.007 0.277 0.533
 #> 
-#> Call print() and set 'test_long = TRUE' for a detailed report.
+#> - The column 'sig' shows the rejection rates.
+#> - If the null hypothesis is false, the rate is the power.
+#> - Number of valid replications for rejection rate(s): 600 
+#> - Proportion of valid replications for rejection rate(s): 1.000
 rejection_rates(out)
 #> [test]: test_parameters: CIs (pars: y~x:w) 
 #> [test_label]: y~x:w 
 #>     est   p.v reject r.cilo r.cihi
-#> 1 0.146 1.000  0.172  0.139  0.213
+#> 1 0.142 1.000  0.533  0.493  0.573
 #> Notes:
 #> - p.v: The proportion of valid replications.
 #> - est: The mean of the estimates in a test across replications.
@@ -334,8 +339,10 @@ The code:
 # - Set target power: target_power = .80 (Default, can be omitted)
 # - Set the seed for the simulation: Integer. Should always be set.
 # To set desired precision:
-# - Set final number of R: final_R = 1000 (Default, can be omitted)
-# - Set final number of replications: final_nrep = 400 (Default, can be omitted)
+# - Set final number of R: final_R. If omitted,
+#   it is set to 1000 or set to R in the original object.
+# - Set final number of replications: final_nrep. If omitted,
+#   it is set to 400 or set to nrep in the original object.
 
 n_power_region <- n_region_from_power(out,
                                       seed = 1357)
@@ -368,13 +375,13 @@ n_power_region
 #> Solution: 
 #> 
 #> Approximate region of sample sizes with power:
-#> - not significantly different from 0.800: 303 to 336
-#> - significantly lower than 0.800: 303
-#> - significantly higher than 0.800: 336
+#> - not significantly different from 0.800: 284 to 342
+#> - significantly lower than 0.800: 284
+#> - significantly higher than 0.800: 342
 #> 
 #> Confidence intervals of the estimated power:
-#> - for the lower bound (303): [0.716, 0.799]
-#> - for the upper bound (336): [0.809, 0.879]
+#> - for the lower bound (284): [0.714, 0.783]
+#> - for the upper bound (342): [0.785, 0.847]
 #> 
 #> Call `summary()` for detailed results.
 
@@ -389,12 +396,12 @@ Power Curve
 
 As shown above, approximately:
 
-- sample sizes lower than 303 have power significantly lower than .80,
+- sample sizes lower than 284 have power significantly lower than .80,
   and
 
-- sample sizes higher than 336 have power significantly higher than .80.
+- sample sizes higher than 342 have power significantly higher than .80.
 
-In other words, sample sizes between 303 and 336 have power not
+In other words, sample sizes between 284 and 342 have power not
 significantly different from .80.
 
 If necessary, detailed results can be printed by
@@ -410,8 +417,8 @@ summary(n_power_region)
 #> ====== x_from_power Results ======
 #> 
 #> Call:
-#> power4mome::x_from_power(object = out, x = "n", what = "ub", 
-#>     goal = "close_enough", seed = 1357)
+#> x_from_power(object = out, x = "n", what = "ub", goal = "close_enough", 
+#>     final_nrep = 600, final_R = 1000, seed = 1357)
 #> 
 #> Predictor (x): Sample Size 
 #> 
@@ -421,19 +428,19 @@ summary(n_power_region)
 #> 
 #> === Major Results ===
 #> 
-#> - Final Value (Sample Size): 303
+#> - Final Value (Sample Size): 284
 #> 
-#> - Final Estimated Power: 0.760 
-#> - Confidence Interval: [0.716; 0.799]
+#> - Final Estimated Power: 0.750 
+#> - Confidence Interval: [0.714; 0.783]
 #> - Level of confidence: 95.0%
-#> - Based on 400 replications.
+#> - Based on 600 replications.
 #> 
 #> === Technical Information ===
 #> 
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
-#> - The range of values explored: 232 to 50 
-#> - Time spent in the search: 21.68 secs 
+#> - The range of values explored: 200 to 300 
+#> - Time spent in the search: 36.62 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -451,21 +458,21 @@ summary(n_power_region)
 #> 
 #> Coefficients:
 #> (Intercept)            x  
-#>     -1.9878       0.0111  
+#>    -2.33812      0.01232  
 #> 
-#> Degrees of Freedom: 1599 Total (i.e. Null);  1598 Residual
-#> Null Deviance:       2104 
-#> Residual Deviance: 1582  AIC: 1586
+#> Degrees of Freedom: 2399 Total (i.e. Null);  2398 Residual
+#> Null Deviance:       2967 
+#> Residual Deviance: 2852  AIC: 2856
 #> 
 #> - Detailed Results:
 #> 
 #> [test]: test_parameters: CIs (pars: y~x:w) 
 #> [test_label]: y~x:w 
 #>     n   est   p.v reject r.cilo r.cihi
-#> 1  50 0.146 1.000  0.172  0.139  0.213
-#> 2 232 0.154 1.000  0.708  0.661  0.750
-#> 3 303 0.148 1.000  0.760  0.716  0.799
-#> 4 374 0.156 1.000  0.890  0.856  0.917
+#> 1 200 0.142 1.000  0.533  0.493  0.573
+#> 2 250 0.148 1.000  0.677  0.638  0.713
+#> 3 284 0.151 1.000  0.750  0.714  0.783
+#> 4 300 0.151 1.000  0.805  0.771  0.835
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.
@@ -485,8 +492,8 @@ summary(n_power_region)
 #> ====== x_from_power Results ======
 #> 
 #> Call:
-#> power4mome::x_from_power(object = out, seed = 1357, x = "n", 
-#>     what = "lb", goal = "close_enough")
+#> x_from_power(object = out, seed = 1357, final_nrep = 600, final_R = 1000, 
+#>     x = "n", what = "lb", goal = "close_enough")
 #> 
 #> Predictor (x): Sample Size 
 #> 
@@ -496,19 +503,19 @@ summary(n_power_region)
 #> 
 #> === Major Results ===
 #> 
-#> - Final Value (Sample Size): 336
+#> - Final Value (Sample Size): 342
 #> 
-#> - Final Estimated Power: 0.848 
-#> - Confidence Interval: [0.809; 0.879]
+#> - Final Estimated Power: 0.818 
+#> - Confidence Interval: [0.785; 0.847]
 #> - Level of confidence: 95.0%
-#> - Based on 400 replications.
+#> - Based on 600 replications.
 #> 
 #> === Technical Information ===
 #> 
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
-#> - The range of values explored: 336 to 374 
-#> - Time spent in the search: 6.833 secs 
+#> - The range of values explored: 163 to 668 
+#> - Time spent in the search: 1.064 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -526,19 +533,26 @@ summary(n_power_region)
 #> 
 #> Coefficients:
 #> (Intercept)            x  
-#>   -1.606100     0.009885  
+#>   -1.510089     0.009041  
 #> 
-#> Degrees of Freedom: 799 Total (i.e. Null);  798 Residual
-#> Null Deviance:       622 
-#> Residual Deviance: 618.8     AIC: 622.8
+#> Degrees of Freedom: 5399 Total (i.e. Null);  5398 Residual
+#> Null Deviance:       6214 
+#> Residual Deviance: 5611  AIC: 5615
 #> 
 #> - Detailed Results:
 #> 
 #> [test]: test_parameters: CIs (pars: y~x:w) 
 #> [test_label]: y~x:w 
 #>     n   est   p.v reject r.cilo r.cihi
-#> 1 336 0.154 1.000  0.848  0.809  0.879
-#> 2 374 0.156 1.000  0.890  0.856  0.917
+#> 1 163 0.149 1.000  0.510  0.470  0.550
+#> 2 200 0.142 1.000  0.533  0.493  0.573
+#> 3 250 0.148 1.000  0.677  0.638  0.713
+#> 4 284 0.151 1.000  0.750  0.714  0.783
+#> 5 300 0.151 1.000  0.805  0.771  0.835
+#> 6 306 0.148 1.000  0.767  0.731  0.799
+#> 7 312 0.149 1.000  0.793  0.759  0.824
+#> 8 342 0.149 1.000  0.818  0.785  0.847
+#> 9 668 0.151 1.000  0.987  0.974  0.993
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.
@@ -587,15 +601,15 @@ print(out,
 
 # ====== Try One N and Estimate the Power ======
 
-# For n = 50.
+# For n = 200.
 # Test the coefficient of the product term
 # x:w in the regression results of lm().
 # The test by CI is equivalent to the two-tailed t-test.
 
-out <- power4test(nrep = 400,
+out <- power4test(nrep = 600,
                   model = model,
                   pop_es = model_es,
-                  n = 50,
+                  n = 200,
                   fit_model_args = list(fit_function = "lm"),
                   test_fun = test_parameters,
                   test_args = list(pars = "y~x:w"),
@@ -610,8 +624,10 @@ rejection_rates(out)
 # - Set target power: target_power = .80 (Default, can be omitted)
 # - Set the seed for the simulation: Integer. Should always be set.
 # To set desired precision:
-# - Set final number of R: final_R = 1000 (Default, can be omitted)
-# - Set final number of replications: final_nrep = 400 (Default, can be omitted)
+# - Set final number of R: final_R. If omitted,
+#   it is set to 1000 or set to R in the original object.
+# - Set final number of replications: final_nrep. If omitted,
+#   it is set to 400 or set to nrep in the original object.
 
 n_power_region <- n_region_from_power(out,
                                       seed = 1357)
@@ -622,14 +638,20 @@ summary(n_power_region)
 
 ## Final Remarks
 
+For a moderate to small `nrep`, the results may be sensitive to the
+`seed`. It is advised to do a final check of the sample size to be used
+using
+[`power4test()`](https://sfcheung.github.io/power4mome/reference/power4test.md)
+and an `nrep` of 1000 or 2000.
+
 For other options of
 [`power4test()`](https://sfcheung.github.io/power4mome/reference/power4test.md)
 and
 [`n_region_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md),
 please refer to their help pages, as well as the [Get-Started
-article](https://sfcheung.github.io/power4mome/articles/power4mome.html)
+article](https://sfcheung.github.io/power4mome/articles/power4mome.md)
 and this
-[article](https://sfcheung.github.io/power4mome/articles/x_from_power_for_n.html)
+[article](https://sfcheung.github.io/power4mome/articles/x_from_power_for_n.md)
 for
 [`n_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md),
 which is the function to find one of the regions, called twice by

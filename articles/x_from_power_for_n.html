@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.35</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.42</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -97,7 +97,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Sample Size Given Desired Power</h1>
             
-            <h4 data-toc-skip class="date">2025-10-26</h4>
+            <h4 data-toc-skip class="date">2026-02-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/sfcheung/power4mome/blob/main/vignettes/articles/x_from_power_for_n.Rmd" class="external-link"><code>vignettes/articles/x_from_power_for_n.Rmd</code></a></small>
       <div class="d-none name"><code>x_from_power_for_n.Rmd</code></div>
@@ -359,7 +359,7 @@ and &lt;code&gt;&lt;a href="https://rdrr.io/r/base/Random.html" class="external-
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ============ &lt;fit&gt; ============</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; lavaan 0.6-20 ended normally after 1 iteration</span></span>
+<span><span class="co">#&gt; lavaan 0.6-21 ended normally after 1 iteration</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Estimator                                         ML</span></span>
 <span><span class="co">#&gt;   Optimization method                           NLMINB</span></span>
@@ -515,7 +515,7 @@ printed when run in an interactive session.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ============ &lt;fit&gt; ============</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; lavaan 0.6-20 ended normally after 1 iteration</span></span>
+<span><span class="co">#&gt; lavaan 0.6-21 ended normally after 1 iteration</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Estimator                                         ML</span></span>
 <span><span class="co">#&gt;   Optimization method                           NLMINB</span></span>
@@ -539,8 +539,8 @@ printed when run in an interactive session.</p>
 <span><span class="co">#&gt; =============== &lt;test_indirect: x-&gt;m-&gt;y&gt; ===============</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Mean(s) across replication:</span></span>
-<span><span class="co">#&gt;    est  cilo  cihi   sig</span></span>
-<span><span class="co">#&gt;  0.167 0.003 0.367 0.520</span></span>
+<span><span class="co">#&gt;    est  cilo  cihi   sig pvalue</span></span>
+<span><span class="co">#&gt;  0.167 0.003 0.367 0.520  0.141</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - The value 'sig' is the rejection rate.</span></span>
 <span><span class="co">#&gt; - If the null hypothesis is false, this is the power.</span></span>
@@ -615,7 +615,8 @@ approximation.</p>
 <code class="sourceCode R"><span><span class="va">out_n</span></span>
 <span><span class="co">#&gt; Call:</span></span>
 <span><span class="co">#&gt; power4mome::x_from_power(object = out, x = "n", target_power = 0.8, </span></span>
-<span><span class="co">#&gt;     what = "ub", goal = "close_enough", final_nrep = 400, seed = 4567)</span></span>
+<span><span class="co">#&gt;     what = "ub", goal = "close_enough", final_nrep = 400, final_R = 2000, </span></span>
+<span><span class="co">#&gt;     seed = 4567)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;                           Setting</span></span>
 <span><span class="co">#&gt; Predictor(x):         Sample Size</span></span>
@@ -626,17 +627,17 @@ approximation.</p>
 <span><span class="co">#&gt; Level of confidence:       95.00%</span></span>
 <span><span class="co">#&gt; Target Power:               0.800</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; - Final Value of Sample Size (n): 99</span></span>
+<span><span class="co">#&gt; - Final Value of Sample Size (n): 94</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; - Final Estimated Power (CI): 0.765 [0.721, 0.804]</span></span>
+<span><span class="co">#&gt; - Final Estimated Power (CI): 0.745 [0.700, 0.785]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call `summary()` for detailed results.</span></span></code></pre></div>
-<p>The estimated sample size is 99. The estimated power based on
-simulation is 0.765, with its confidence interval equal to [0.721,
-0.804]. The upper bound, 0.804, is .02 within the target power
+<p>The estimated sample size is 94. The estimated power based on
+simulation is 0.745, with its confidence interval equal to [0.700,
+0.785]. The upper bound, 0.785, is .02 within the target power
 (.80).</p>
 <p>In other words, with 400 replications, it is estimated that sample
-sizes less than 99 have power significantly less than .80 and should not
+sizes less than 94 have power significantly less than .80 and should not
 be used if the target power is .80.</p>
 <p>To obtain a more detailed results for the search, we can use the
 <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> method:</p>
@@ -646,8 +647,9 @@ be used if the target power is .80.</p>
 <span><span class="co">#&gt; ====== x_from_power Results ======</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call:</span></span>
-<span><span class="co">#&gt; power4mome::x_from_power(object = out, x = "n", target_power = 0.8, </span></span>
-<span><span class="co">#&gt;     what = "ub", goal = "close_enough", final_nrep = 400, seed = 4567)</span></span>
+<span><span class="co">#&gt; x_from_power(object = out, x = "n", target_power = 0.8, what = "ub", </span></span>
+<span><span class="co">#&gt;     goal = "close_enough", final_nrep = 400, final_R = 2000, </span></span>
+<span><span class="co">#&gt;     seed = 4567)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Predictor (x): Sample Size </span></span>
 <span><span class="co">#&gt; </span></span>
@@ -657,10 +659,10 @@ be used if the target power is .80.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; === Major Results ===</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; - Final Value (Sample Size): 99</span></span>
+<span><span class="co">#&gt; - Final Value (Sample Size): 94</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; - Final Estimated Power: 0.765 </span></span>
-<span><span class="co">#&gt; - Confidence Interval: [0.721; 0.804]</span></span>
+<span><span class="co">#&gt; - Final Estimated Power: 0.745 </span></span>
+<span><span class="co">#&gt; - Confidence Interval: [0.700; 0.785]</span></span>
 <span><span class="co">#&gt; - Level of confidence: 95.0%</span></span>
 <span><span class="co">#&gt; - Based on 400 replications.</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -668,8 +670,8 @@ be used if the target power is .80.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - Algorithm: bisection </span></span>
 <span><span class="co">#&gt; - Tolerance for 'close enough': Within 0.02000 of 0.800 </span></span>
-<span><span class="co">#&gt; - The range of values explored: 106 to 99 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 2.198 mins </span></span>
+<span><span class="co">#&gt; - The range of values explored: 108 to 97 </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 3.051 mins </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
@@ -687,11 +689,11 @@ be used if the target power is .80.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Coefficients:</span></span>
 <span><span class="co">#&gt; (Intercept)            x  </span></span>
-<span><span class="co">#&gt;    -0.94206      0.02155  </span></span>
+<span><span class="co">#&gt;    -1.22211      0.02536  </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Degrees of Freedom: 2049 Total (i.e. Null);  2048 Residual</span></span>
-<span><span class="co">#&gt; Null Deviance:       2243 </span></span>
-<span><span class="co">#&gt; Residual Deviance: 2178  AIC: 2182</span></span>
+<span><span class="co">#&gt; Degrees of Freedom: 2449 Total (i.e. Null);  2448 Residual</span></span>
+<span><span class="co">#&gt; Null Deviance:       2604 </span></span>
+<span><span class="co">#&gt; Residual Deviance: 2512  AIC: 2516</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - Detailed Results:</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -701,9 +703,10 @@ be used if the target power is .80.</p>
 <span><span class="co">#&gt; 1  50 0.167 1.000  0.520  0.385  0.652</span></span>
 <span><span class="co">#&gt; 2  77 0.147 1.000  0.685  0.638  0.729</span></span>
 <span><span class="co">#&gt; 3  92 0.147 1.000  0.715  0.669  0.757</span></span>
-<span><span class="co">#&gt; 4  99 0.148 1.000  0.765  0.721  0.804</span></span>
-<span><span class="co">#&gt; 5 106 0.151 1.000  0.810  0.769  0.845</span></span>
-<span><span class="co">#&gt; 6 134 0.149 1.000  0.873  0.836  0.902</span></span>
+<span><span class="co">#&gt; 4  94 0.144 1.000  0.745  0.700  0.785</span></span>
+<span><span class="co">#&gt; 5  97 0.148 1.000  0.797  0.755  0.834</span></span>
+<span><span class="co">#&gt; 6 108 0.154 1.000  0.848  0.809  0.879</span></span>
+<span><span class="co">#&gt; 7 138 0.151 1.000  0.900  0.867  0.926</span></span>
 <span><span class="co">#&gt; Notes:</span></span>
 <span><span class="co">#&gt; - n: The sample size in a trial.</span></span>
 <span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>
@@ -720,7 +723,7 @@ with all the sample sizes examined, along with the estimated power
 levels and confidence intervals.</p>
 <p>It also prints the model, the “power curve”, used to estimate the
 relation between the power and the sample size. Note that this is only a
-crude model intended only for the values of sample size examined (6 in
+crude model intended only for the values of sample size examined (7 in
 the this example). It is not intended to estimate power for sample sizes
 outside the range studied.</p>
 <p>Even though the model is a crude one, it can still give a rough idea
@@ -765,7 +768,8 @@ approximation.</p>
 <code class="sourceCode R"><span><span class="va">out_n_lb</span></span>
 <span><span class="co">#&gt; Call:</span></span>
 <span><span class="co">#&gt; power4mome::x_from_power(object = out, x = "n", target_power = 0.8, </span></span>
-<span><span class="co">#&gt;     what = "lb", goal = "close_enough", final_nrep = 400, seed = 2345)</span></span>
+<span><span class="co">#&gt;     what = "lb", goal = "close_enough", final_nrep = 400, final_R = 2000, </span></span>
+<span><span class="co">#&gt;     seed = 2345)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;                           Setting</span></span>
 <span><span class="co">#&gt; Predictor(x):         Sample Size</span></span>
@@ -776,17 +780,17 @@ approximation.</p>
 <span><span class="co">#&gt; Level of confidence:       95.00%</span></span>
 <span><span class="co">#&gt; Target Power:               0.800</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; - Final Value of Sample Size (n): 120</span></span>
+<span><span class="co">#&gt; - Final Value of Sample Size (n): 115</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; - Final Estimated Power (CI): 0.840 [0.801, 0.873]</span></span>
+<span><span class="co">#&gt; - Final Estimated Power (CI): 0.838 [0.798, 0.870]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call `summary()` for detailed results.</span></span></code></pre></div>
-<p>The estimated sample size is 120. The estimated power based on
-simulation is 0.840, with its confidence interval equal to [0.801,
-0.804]. The upper bound, 0.801, is .02 within the target power
+<p>The estimated sample size is 115. The estimated power based on
+simulation is 0.838, with its confidence interval equal to [0.798,
+0.785]. The upper bound, 0.798, is .02 within the target power
 (.80).</p>
 <p>With 400 replications, it is estimated that sample sizes greater than
-120 have power significantly greater than .80 and can be used if the
+115 have power significantly greater than .80 and can be used if the
 target power is .80.</p>
 <p>This a summary of the results:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
@@ -795,8 +799,9 @@ target power is .80.</p>
 <span><span class="co">#&gt; ====== x_from_power Results ======</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call:</span></span>
-<span><span class="co">#&gt; power4mome::x_from_power(object = out, x = "n", target_power = 0.8, </span></span>
-<span><span class="co">#&gt;     what = "lb", goal = "close_enough", final_nrep = 400, seed = 2345)</span></span>
+<span><span class="co">#&gt; x_from_power(object = out, x = "n", target_power = 0.8, what = "lb", </span></span>
+<span><span class="co">#&gt;     goal = "close_enough", final_nrep = 400, final_R = 2000, </span></span>
+<span><span class="co">#&gt;     seed = 2345)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Predictor (x): Sample Size </span></span>
 <span><span class="co">#&gt; </span></span>
@@ -806,10 +811,10 @@ target power is .80.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; === Major Results ===</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; - Final Value (Sample Size): 120</span></span>
+<span><span class="co">#&gt; - Final Value (Sample Size): 115</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; - Final Estimated Power: 0.840 </span></span>
-<span><span class="co">#&gt; - Confidence Interval: [0.801; 0.873]</span></span>
+<span><span class="co">#&gt; - Final Estimated Power: 0.838 </span></span>
+<span><span class="co">#&gt; - Confidence Interval: [0.798; 0.870]</span></span>
 <span><span class="co">#&gt; - Level of confidence: 95.0%</span></span>
 <span><span class="co">#&gt; - Based on 400 replications.</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -817,8 +822,8 @@ target power is .80.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - Algorithm: bisection </span></span>
 <span><span class="co">#&gt; - Tolerance for 'close enough': Within 0.02000 of 0.800 </span></span>
-<span><span class="co">#&gt; - The range of values explored: 120 to 77 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 1.264 mins </span></span>
+<span><span class="co">#&gt; - The range of values explored: 110 to 77 </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 2.73 mins </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
@@ -836,11 +841,11 @@ target power is .80.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Coefficients:</span></span>
 <span><span class="co">#&gt; (Intercept)            x  </span></span>
-<span><span class="co">#&gt;    -1.04017      0.02271  </span></span>
+<span><span class="co">#&gt;    -1.06688      0.02356  </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Degrees of Freedom: 1249 Total (i.e. Null);  1248 Residual</span></span>
-<span><span class="co">#&gt; Null Deviance:       1237 </span></span>
-<span><span class="co">#&gt; Residual Deviance: 1119  AIC: 1123</span></span>
+<span><span class="co">#&gt; Degrees of Freedom: 2449 Total (i.e. Null);  2448 Residual</span></span>
+<span><span class="co">#&gt; Null Deviance:       2245 </span></span>
+<span><span class="co">#&gt; Residual Deviance: 2102  AIC: 2106</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - Detailed Results:</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -849,8 +854,11 @@ target power is .80.</p>
 <span><span class="co">#&gt;     n   est   p.v reject r.cilo r.cihi</span></span>
 <span><span class="co">#&gt; 1  50 0.167 1.000  0.520  0.385  0.652</span></span>
 <span><span class="co">#&gt; 2  77 0.151 1.000  0.672  0.625  0.717</span></span>
-<span><span class="co">#&gt; 3 120 0.149 1.000  0.840  0.801  0.873</span></span>
-<span><span class="co">#&gt; 4 162 0.152 1.000  0.935  0.906  0.955</span></span>
+<span><span class="co">#&gt; 3 110 0.153 1.000  0.818  0.777  0.852</span></span>
+<span><span class="co">#&gt; 4 115 0.146 1.000  0.838  0.798  0.870</span></span>
+<span><span class="co">#&gt; 5 118 0.153 1.000  0.863  0.825  0.893</span></span>
+<span><span class="co">#&gt; 6 126 0.148 1.000  0.873  0.836  0.902</span></span>
+<span><span class="co">#&gt; 7 174 0.150 1.000  0.948  0.921  0.965</span></span>
 <span><span class="co">#&gt; Notes:</span></span>
 <span><span class="co">#&gt; - n: The sample size in a trial.</span></span>
 <span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>
@@ -878,7 +886,7 @@ The Power Curve
 sizes found above can be used together to estimate the range of sample
 sizes with power not significantly different form the target power.</p>
 <p>That is, from the results above, we can conclude that, with 400
-replications, sample sizes from 99 to 120 have power levels not
+replications, sample sizes from 94 to 115 have power levels not
 significantly different from .80.</p>
 <p>However, we believe researchers rarely need to find “the” sample with
 exactly “the” target power and doing sample size planning.</p>

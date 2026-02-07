@@ -144,7 +144,7 @@ power_vs_n <- x_from_power(test_out,
 #> Update the test(s):
 #> Update test_parameters: CIs (pars: m~x) :
 #> 
-#> Estimated power at n: 0.400, 95.0% confidence interval: [0.118,0.769]
+#> Estimated power at 50: 0.400, 95.0% confidence interval: [0.118,0.769]
 #> 
 #> Initial interval: [50, 100] 
 #> 
@@ -156,13 +156,9 @@ power_vs_n <- x_from_power(test_out,
 #> 2 100 0.298 1.000  0.800  0.376  0.964
 #> 
 #> 
-#> 
 #> == Enter extending interval ...
-#> 
-#> 
-#> 
+#> The interval is already valid: [50, 100] 
 #> == Exit extending interval ...
-#> 
 #> 
 #> Iteration # 1 
 #> 
@@ -174,7 +170,7 @@ power_vs_n <- x_from_power(test_out,
 #> Update the test(s):
 #> Update test_parameters: CIs (pars: m~x) :
 #> 
-#> Estimated power at n: 1.000, 95.0% confidence interval: [0.566,1.000]
+#> Estimated power at 75: 1.000, 95.0% confidence interval: [0.566,1.000]
 #> - Rejection Rates:
 #> [test]: test_parameters: CIs (pars: m~x) 
 #> [test_label]: m~x 
@@ -186,10 +182,9 @@ power_vs_n <- x_from_power(test_out,
 #> - 'nls()' estimation skipped when less than 4 values of predictor examined.
 #> Solution found.
 #> 
+#> ========== Final Stage ==========
 #> 
-#> --- Final Stage ---
-#> 
-#> - Start at 2026-02-01 15:17:54 
+#> - Start at 2026-02-07 12:00:22 
 #> - Rejection Rates:
 #> 
 #> [test]: test_parameters: CIs (pars: m~x) 
@@ -263,7 +258,7 @@ summary(power_vs_n)
 #> 
 #> - Algorithm: bisection 
 #> - The range of values explored: 100 to 75 
-#> - Time spent in the search: 0.9416 secs 
+#> - Time spent in the search: 0.8536 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 

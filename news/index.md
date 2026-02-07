@@ -1,6 +1,6 @@
 # Changelog
 
-## power4mome 0.1.1.35
+## power4mome 0.1.1.42
 
 - Improve the function for extending the initial interval before doing a
   bisection search. (0.1.1.1)
@@ -105,7 +105,7 @@
   adding a new test to a `power4test` object. (0.1.1.29)
 
 - Updated all test functions to include *p*-values in the output.
-  (0.0.1.30)
+  (0.1.1.30)
 
 - Added the `p_adjust_method` argument to some tests, as well as the
   `rejection_rates` method and
@@ -132,6 +132,45 @@
 
 - Fixed a bug in extending intervals in the bisection algorithm, and
   also improved way intervals are extended. (0.1.1.35)
+
+- Add `nls_options` to
+  [`power_curve()`](https://sfcheung.github.io/power4mome/reference/power_curve.md)
+  to configure the use of [`nls()`](https://rdrr.io/r/stats/nls.html),
+  such as when it should not be attempted. (0.1.1.36)
+
+- Updated the bisection algorithm to use
+  [`power_curve()`](https://sfcheung.github.io/power4mome/reference/power_curve.md)
+  to assist finding the solution. If estimated solution inside an
+  interval, use it instead of the mean. (0.1.1.37)
+
+- More checks for the solution in the bisection algorithm. When
+  extending an interval, the power curve will also be used. (0.1.1.38)
+
+- Added an argument `rejection_rates_args` to
+  [`power4test()`](https://sfcheung.github.io/power4mome/reference/power4test.md).
+  When calling
+  [`power4test()`](https://sfcheung.github.io/power4mome/reference/power4test.md),
+  users can in advance some settings for rejection rates, such as
+  collapsing all tests into one. They will be used when calling
+  [`rejection_rates()`](https://sfcheung.github.io/power4mome/reference/rejection_rates.md).
+  They will also be stored internally, and used by
+  [`power4test_by_n()`](https://sfcheung.github.io/power4mome/reference/power4test_by_n.md),
+  [`x_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md),
+  and similar functions that used a `power4test` object as an input.
+  (0.1.1.39)
+
+- Updated
+  [`x_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md)
+  and related functions to allow users specifying how tests will be
+  collapsed (`"none"` is not allowed), by setting the argument
+  `rejection_rates_args`. (0.1.1.39, 0.1.1.41)
+
+- Change the default of `test_long` to `TRUE` for the `print` method of
+  `power4test` and related objects. (0.1.1.41)
+
+- Updated
+  [`rejection_rates()`](https://sfcheung.github.io/power4mome/reference/rejection_rates.md)
+  to ignore `merge_all_tests` if there is only one test. (0.1.1.42)
 
 ## power4mome 0.1.1
 

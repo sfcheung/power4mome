@@ -228,7 +228,7 @@ out
 #> 
 #> ============ <fit> ============
 #> 
-#> lavaan 0.6-20 ended normally after 1 iteration
+#> lavaan 0.6-21 ended normally after 1 iteration
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
@@ -339,7 +339,7 @@ print(out,
 #> 
 #> ============ <fit> ============
 #> 
-#> lavaan 0.6-20 ended normally after 1 iteration
+#> lavaan 0.6-21 ended normally after 1 iteration
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
@@ -494,7 +494,7 @@ out
 #> 
 #> ============ <fit> ============
 #> 
-#> lavaan 0.6-20 ended normally after 1 iteration
+#> lavaan 0.6-21 ended normally after 1 iteration
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
@@ -515,34 +515,30 @@ out
 #> Number of Monte Carlo replications: 2000 
 #> 
 #> 
-#> ====================== Test(s) Conducted ======================
+#> =============== <test_indirect: x->m->y> ===============
 #> 
-#> - test_indirect: x->m->y
+#> Mean(s) across replication:
+#>    est   cilo  cihi   sig pvalue
+#>  0.152 -0.009 0.347 0.468  0.166
 #> 
-#> Call print() and set 'test_long = TRUE' for a detailed report.
-```
-
-If `test_long = TRUE` is added when printing the output by
-[`print()`](https://rdrr.io/r/base/print.html), a summary of the test
-will also be printed.
-
-``` r
-print(out,
-      test_long = TRUE)
+#> - The value 'sig' is the rejection rate.
+#> - If the null hypothesis is false, this is the power.
+#> - Number of valid replications for rejection rate: 400 
+#> - Proportion of valid replications for rejection rate: 1.000
 ```
 
 The summary of the test:
 
-    #>                                                       
-    #>   Test statistic                                 0.000
-    #>   Degrees of freedom                                 0
+    #> =============== <test_indirect: x->m->y> ===============
     #> 
-    #> =========== <mc_out> ===========
+    #> Mean(s) across replication:
+    #>    est   cilo  cihi   sig pvalue
+    #>  0.152 -0.009 0.347 0.468  0.166
     #> 
-    #> 
-    #> == A 'mc_out' class object ==
-    #> 
-    #> Number of Monte Carlo replications: 2000
+    #> - The value 'sig' is the rejection rate.
+    #> - If the null hypothesis is false, this is the power.
+    #> - Number of valid replications for rejection rate: 400 
+    #> - Proportion of valid replications for rejection rate: 1.000
 
 The mean of the estimates across all the replications is 0.152, close to
 the population value.
@@ -783,7 +779,7 @@ print(out2,
 #> 
 #> ============ <fit> ============
 #> 
-#> lavaan 0.6-20 ended normally after 1 iteration
+#> lavaan 0.6-21 ended normally after 1 iteration
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
@@ -1053,7 +1049,7 @@ print(out3,
 #> 
 #> ============ <fit> ============
 #> 
-#> lavaan 0.6-20 ended normally after 1 iteration
+#> lavaan 0.6-21 ended normally after 1 iteration
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
