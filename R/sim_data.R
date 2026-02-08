@@ -340,15 +340,16 @@
 #' @param process_data If not `NULL`, it
 #' must be a named list with these
 #' elements: `fun` (required), the function
-#' to further processing the simulated
+#' to further process the simulated
 #' data, such as generating missing data using
 #' functions such as [mice::ampute()]; `args` (optional), a
 #' named list of arguments to be passed
 #' to `fun`, except the one for the
-#' source data; `sim_data_name` (required) the
+#' source data; `sim_data_name` (optional) the
 #' name of the argument to receive the
-#' simulated data (e.g., `data` for
-#' [mice::ampute()]); `processed_data_name`
+#' simulated data (e.g., `"data"` for
+#' [mice::ampute()]), default to
+#' `"data"` if it is not set; `processed_data_name`
 #' (optional), the name of the data frame
 #' after being processed by `fun`,
 #' such as the data frame
@@ -971,9 +972,25 @@ sim_data_i <- function(repid = 1,
   model_original <- model
   # add_indicator_syntax() already supports
   # a model syntax with "x:z ~~ y:w"
-  model <- add_indicator_syntax(model,
-                                number_of_indicators = number_of_indicators[[1]],
-                                reliability = reliability[[1]])
+
+  # ==== Check scale scores ====
+
+  tmp <- sapply(mm_lm_dat_out,
+                FUN = colnames,
+                simplify = FALSE)
+  tmp <- unique(unlist(tmp))
+  v_with_indicators <- setdiff(vnames, tmp)
+
+  # ==== Add indicator syntax of for factors replaced by indicators ====
+
+  if (length(v_with_indicators) > 0) {
+    tmp1 <- number_of_indicators[[1]][v_with_indicators]
+    tmp2 <- reliability[[1]][v_with_indicators]
+    model <- add_indicator_syntax(model,
+                                  number_of_indicators = tmp1,
+                                  reliability = tmp2)
+  }
+
   if (!is.null(attr(ptable, "model_fixed"))) {
     if (utils::packageVersion("lavaan") <= "0.6.19") {
       # lavaan 0.6.20+ should support "x:w ~~ y:z"
