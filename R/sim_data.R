@@ -971,9 +971,25 @@ sim_data_i <- function(repid = 1,
   model_original <- model
   # add_indicator_syntax() already supports
   # a model syntax with "x:z ~~ y:w"
-  model <- add_indicator_syntax(model,
-                                number_of_indicators = number_of_indicators[[1]],
-                                reliability = reliability[[1]])
+
+  # ==== Check scale scores ====
+
+  tmp <- sapply(mm_lm_dat_out,
+                FUN = colnames,
+                simplify = FALSE)
+  tmp <- unique(unlist(tmp))
+  v_with_indicators <- setdiff(vnames, tmp)
+
+  # ==== Add indicator syntax of for factors replaced by indicators ====
+
+  if (length(v_with_indicators) > 0) {
+    tmp1 <- number_of_indicators[[1]][v_with_indicators]
+    tmp2 <- reliability[[1]][v_with_indicators]
+    model <- add_indicator_syntax(model,
+                                  number_of_indicators = tmp1,
+                                  reliability = tmp2)
+  }
+
   if (!is.null(attr(ptable, "model_fixed"))) {
     if (utils::packageVersion("lavaan") <= "0.6.19") {
       # lavaan 0.6.20+ should support "x:w ~~ y:z"
