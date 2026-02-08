@@ -340,15 +340,16 @@
 #' @param process_data If not `NULL`, it
 #' must be a named list with these
 #' elements: `fun` (required), the function
-#' to further processing the simulated
+#' to further process the simulated
 #' data, such as generating missing data using
 #' functions such as [mice::ampute()]; `args` (optional), a
 #' named list of arguments to be passed
 #' to `fun`, except the one for the
-#' source data; `sim_data_name` (required) the
+#' source data; `sim_data_name` (optional) the
 #' name of the argument to receive the
-#' simulated data (e.g., `data` for
-#' [mice::ampute()]); `processed_data_name`
+#' simulated data (e.g., `"data"` for
+#' [mice::ampute()]), default to
+#' `"data"` if it is not set; `processed_data_name`
 #' (optional), the name of the data frame
 #' after being processed by `fun`,
 #' such as the data frame

@@ -122,15 +122,16 @@ argument.}
 \item{process_data}{If not \code{NULL}, it
 must be a named list with these
 elements: \code{fun} (required), the function
-to further processing the simulated
+to further process the simulated
 data, such as generating missing data using
 functions such as \code{\link[mice:ampute]{mice::ampute()}}; \code{args} (optional), a
 named list of arguments to be passed
 to \code{fun}, except the one for the
-source data; \code{sim_data_name} (required) the
+source data; \code{sim_data_name} (optional) the
 name of the argument to receive the
-simulated data (e.g., \code{data} for
-\code{\link[mice:ampute]{mice::ampute()}}); \code{processed_data_name}
+simulated data (e.g., \code{"data"} for
+\code{\link[mice:ampute]{mice::ampute()}}), default to
+\code{"data"} if it is not set; \code{processed_data_name}
 (optional), the name of the data frame
 after being processed by \code{fun},
 such as the data frame

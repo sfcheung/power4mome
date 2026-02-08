@@ -127,6 +127,14 @@ reference:
   - test_moderation
   - test_index_of_mome
   - test_parameters
+- title: Data Processors
+  desc:  >
+    Built-in functions for processing
+    generated data before fitting a
+    model, such as converting indicator
+    scores to scale scores.
+- contents:
+  - scale_scores
 - title: Advanced Functions
   desc:  >
     For advanced users to
