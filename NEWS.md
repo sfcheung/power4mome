@@ -1,4 +1,4 @@
-# power4mome 0.1.1.43
+# power4mome 0.1.1.44
 
 - Improve the function for extending the
   initial interval before doing a
@@ -233,6 +233,16 @@
   will be added to the generated data
   before passing to `process_data`.
   (0.1.1.43)
+
+- Add `n_ratio` to `power4test()` and
+  related functions to supporting
+  controlling the sample sizes of
+  multigroup models using one single
+  value for `n`. This allows functions
+  such as `n_from_power()` and
+  `n_region_from_power()` to support
+  multigroup models.
+  (0.1.1.44)
 
 # power4mome 0.1.1
 

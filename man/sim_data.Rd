@@ -21,7 +21,8 @@ sim_data(
   process_data = NULL,
   parallel = FALSE,
   progress = FALSE,
-  ncores = max(1, parallel::detectCores(logical = FALSE) - 1)
+  ncores = max(1, parallel::detectCores(logical = FALSE) - 1),
+  n_ratio = 1
 )
 
 \method{print}{sim_data}(
@@ -151,6 +152,18 @@ Default is `FALSE.}
 \item{ncores}{The number of CPU
 cores to use if parallel processing
 is used.}
+
+\item{n_ratio}{If the model is a
+multigroup model, and \code{n} is a single
+number, this should be a numeric
+vector used to determine the sample
+size for each group. For example,
+for a two-group model, if \code{n} is 100
+and \code{n_ratio} is \code{c(1, 0.5)}, then
+the sample sizes for the two groups
+are 100 and 50, respectively. If
+equal to 1, then all groups have the
+same sample size.}
 
 \item{x}{The \code{sim_data} object
 to be printed.}

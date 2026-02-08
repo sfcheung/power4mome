@@ -385,6 +385,8 @@
 #' be overriden when calling
 #' [rejection_rates()].
 #'
+# @param n_ratio <- Inherited
+#'
 # @param es1 <- Inherited
 #'
 # @param es2 <- Inherited
@@ -509,7 +511,8 @@ power4test <- function(object = NULL,
                                                    at_least_k = 1,
                                                    merge_all_tests = FALSE,
                                                    p_adjust_method = "none",
-                                                   alpha = .05)) {
+                                                   alpha = .05),
+                       n_ratio = 1) {
 
   # TOOD:
   # - Should allow only limited changes
@@ -608,7 +611,8 @@ power4test <- function(object = NULL,
                             iseed = args$iseed,
                             parallel = args$parallel,
                             progress = args$progress,
-                            ncores = args$ncores)
+                            ncores = args$ncores,
+                            n_ratio = args$n_ratio)
 
       fit_model_args <- args$fit_model_args
     } else {
@@ -635,7 +639,8 @@ power4test <- function(object = NULL,
                             iseed = args$iseed,
                             parallel = args$parallel,
                             progress = args$progress,
-                            ncores = args$ncores)
+                            ncores = args$ncores,
+                            n_ratio = args$n_ratio)
     }
     data_all <- do.call(sim_data,
                         sim_data_args)

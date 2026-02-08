@@ -143,7 +143,10 @@ power4test_by_n <- function(object,
     object <- object[[1]]
   }
   if (!is.null(object$sim_all[[1]]$group_name)) {
-    stop("Does not support multigroup models for now.")
+    # Support multigroup models only if `n` has one value
+    if (length(attr(object, "args")$n) != 1) {
+      stop("For multigroup models, n_ratio must be used to specify sample sizes.")
+    }
   }
   out <- list()
 
@@ -172,8 +175,7 @@ power4test_by_n <- function(object,
     }
   }
   # TODO
-  # - Think about to handle MG models,
-  #   for which n is a vector.
+  # - MG: Think about to handle MG models, for which n is a vector.
   for (i in seq_along(n)) {
     x <- n[i]
     if (progress) {
