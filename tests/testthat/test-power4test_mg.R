@@ -96,11 +96,16 @@ dat4 <- pool_sim_data(out4)
 expect_true(all.equal(as.vector(table(dat4$group)),
                       c(100, 200)))
 
-# outby <- power4test_by_n(
-#             out,
-#             n = c(150, 200),
-#             seed = 4567
-#           )
+outby <- power4test_by_n(
+            out2,
+            n = c(150, 200),
+            by_seed = 4567
+          )
+
+expect_equal(as.vector(table(pool_sim_data(outby[[1]])$group)),
+             c(300, 150))
+expect_equal(as.vector(table(pool_sim_data(outby[[2]])$group)),
+             c(400, 200))
 
 })
 
