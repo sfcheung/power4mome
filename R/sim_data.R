@@ -370,6 +370,18 @@
 #' cores to use if parallel processing
 #' is used.
 #'
+#' @param n_ratio If the model is a
+#' multigroup model, and `n` is a single
+#' number, this should be a numeric
+#' vector used to determine the sample
+#' size for each group. For example,
+#' for a two-group model, if `n` is 100
+#' and `n_ratio` is `c(1, 0.5)`, then
+#' the sample sizes for the two groups
+#' are 100 and 50, respectively. If
+#' equal to 1, then all groups have the
+#' same sample size.
+#'
 #' @return
 #' The function [sim_out()] returns
 #' a list of the class `sim_data`,
@@ -456,7 +468,8 @@ sim_data <- function(nrep = 10,
                      process_data = NULL,
                      parallel = FALSE,
                      progress = FALSE,
-                     ncores = max(1, parallel::detectCores(logical = FALSE) - 1)) {
+                     ncores = max(1, parallel::detectCores(logical = FALSE) - 1),
+                     n_ratio = 1) {
 
   if (is.null(ptable)) {
     if (is.null(model) || is.null(pop_es)) {
@@ -500,7 +513,8 @@ sim_data <- function(nrep = 10,
                 iseed = iseed,
                 parallel = parallel,
                 progress = progress,
-                ncores = ncores)
+                ncores = ncores,
+                n_ratio = n_ratio)
   class(out) <- c("sim_data", class(out))
   return(out)
 }
@@ -906,7 +920,8 @@ sim_data_i <- function(repid = 1,
                        fit_external = NULL,
                        seed = NULL,
                        drop_list_single_group = TRUE,
-                       merge_groups = TRUE) {
+                       merge_groups = TRUE,
+                       n_ratio = 1) {
   if (!is.null(seed)) set.seed(seed)
   if (is.null(ptable)) {
     ptable <- ptable_pop(model = model,
@@ -925,8 +940,31 @@ sim_data_i <- function(repid = 1,
   }
 
   ngroups <- max(ptable$group)
-  if (length(n) == 1) {
-    n <- rep(n, ngroups)
+  if (ngroups > 1) {
+
+    # ==== Set sample sizes for multigroup models ====
+
+    if (length(n) == 1) {
+
+      # ==== Use n_ratio ====
+
+      if ((length(n_ratio) != ngroups)) {
+        if (length(n_ratio) == 1) {
+          n_ratio <- rep(n_ratio, ngroups)
+        } else {
+          stop("The length of n_ratio is not equal to the number of groups.")
+        }
+      }
+      n <- round(n_ratio * n)
+    } else {
+
+      # ==== n is a vector ====
+
+      if (length(n) != ngroups) {
+        stop("The length of n is not equal to the number of groups.")
+      }
+      # n is used directly
+    }
   }
 
   vnames <- lavaan::lavNames(ptable,
