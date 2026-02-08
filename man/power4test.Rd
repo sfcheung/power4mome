@@ -43,7 +43,8 @@ power4test(
   n_std = 1e+05,
   std_force_monte_carlo = FALSE,
   rejection_rates_args = list(collapse = "none", at_least_k = 1, merge_all_tests = FALSE,
-    p_adjust_method = "none", alpha = 0.05)
+    p_adjust_method = "none", alpha = 0.05),
+  n_ratio = 1
 )
 
 \method{print}{power4test}(
@@ -155,15 +156,16 @@ argument.}
 \item{process_data}{If not \code{NULL}, it
 must be a named list with these
 elements: \code{fun} (required), the function
-to further processing the simulated
+to further process the simulated
 data, such as generating missing data using
 functions such as \code{\link[mice:ampute]{mice::ampute()}}; \code{args} (optional), a
 named list of arguments to be passed
 to \code{fun}, except the one for the
-source data; \code{sim_data_name} (required) the
+source data; \code{sim_data_name} (optional) the
 name of the argument to receive the
-simulated data (e.g., \code{data} for
-\code{\link[mice:ampute]{mice::ampute()}}); \code{processed_data_name}
+simulated data (e.g., \code{"data"} for
+\code{\link[mice:ampute]{mice::ampute()}}), default to
+\code{"data"} if it is not set; \code{processed_data_name}
 (optional), the name of the data frame
 after being processed by \code{fun},
 such as the data frame
@@ -348,6 +350,18 @@ argument values to be used when
 \code{\link[=rejection_rates]{rejection_rates()}} is called. Can
 be overriden when calling
 \code{\link[=rejection_rates]{rejection_rates()}}.}
+
+\item{n_ratio}{If the model is a
+multigroup model, and \code{n} is a single
+number, this should be a numeric
+vector used to determine the sample
+size for each group. For example,
+for a two-group model, if \code{n} is 100
+and \code{n_ratio} is \code{c(1, 0.5)}, then
+the sample sizes for the two groups
+are 100 and 50, respectively. If
+equal to 1, then all groups have the
+same sample size.}
 
 \item{x}{The object
 to be printed.}

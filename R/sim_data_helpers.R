@@ -78,8 +78,9 @@ mm_lm_data <- function(object,
   dat_all <- as.data.frame(dat_all)
   if (is.list(process_data)) {
     process_data_fun <- match.fun(process_data$fun)
+    attr(dat_all, "number_of_indicators") <- number_of_indicators
     tmp <- list(dat_all)
-    names(tmp) <- process_data$sim_data_name
+    names(tmp) <- process_data$sim_data_name %||% "data"
     if (is.null(process_data$args)) {
       process_data$args <- list()
     }

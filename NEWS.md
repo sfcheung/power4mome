@@ -1,4 +1,4 @@
-# power4mome 0.1.1.42
+# power4mome 0.1.1.44
 
 - Improve the function for extending the
   initial interval before doing a
@@ -211,6 +211,38 @@
 - Updated `rejection_rates()` to ignore
   `merge_all_tests` if there is only one
   test. (0.1.1.42)
+
+- Added a data processor: `scale_scores()`.
+  It replaces the indicator scores by
+  the corresponding scale scores
+  before fitting a model. To be used
+  in the `process_data` argument.
+  (0.1.1.43)
+
+- Updated `sim_data()`. Lines for
+  the indicators will not be added to
+  the model syntax if scale scores are
+  used. (0.1.1.43)
+
+- The argument `sim_data_name` of
+  `process_data` is now default to
+  `"data"`. It is not a required
+  argument. (0.1.1.43)
+
+- The attribute `number_of_indicators`
+  will be added to the generated data
+  before passing to `process_data`.
+  (0.1.1.43)
+
+- Add `n_ratio` to `power4test()` and
+  related functions to supporting
+  controlling the sample sizes of
+  multigroup models using one single
+  value for `n`. This allows functions
+  such as `n_from_power()` and
+  `n_region_from_power()` to support
+  multigroup models.
+  (0.1.1.44)
 
 # power4mome 0.1.1
 
