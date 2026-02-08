@@ -80,6 +80,14 @@ and model parameters.
   [`find_par_names()`](https://sfcheung.github.io/power4mome/reference/test_parameters.md)
   : Test All Free Parameters
 
+## Data Processors
+
+Built-in functions for processing generated data before fitting a model,
+such as converting indicator scores to scale scores.
+
+- [`scale_scores()`](https://sfcheung.github.io/power4mome/reference/scale_scores.md)
+  : Process Data by Computing Scale Scores
+
 ## Advanced Functions
 
 For advanced users to do the power analysis step-by-step or build a

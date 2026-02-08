@@ -23,7 +23,8 @@ sim_data(
   process_data = NULL,
   parallel = FALSE,
   progress = FALSE,
-  ncores = max(1, parallel::detectCores(logical = FALSE) - 1)
+  ncores = max(1, parallel::detectCores(logical = FALSE) - 1),
+  n_ratio = 1
 )
 
 # S3 method for class 'sim_data'
@@ -122,16 +123,16 @@ pool_sim_data(object, as_list = FALSE)
 - process_data:
 
   If not `NULL`, it must be a named list with these elements: `fun`
-  (required), the function to further processing the simulated data,
-  such as generating missing data using functions such as
-  `mice::ampute()`; `args` (optional), a named list of arguments to be
-  passed to `fun`, except the one for the source data; `sim_data_name`
-  (required) the name of the argument to receive the simulated data
-  (e.g., `data` for `mice::ampute()`); `processed_data_name` (optional),
-  the name of the data frame after being processed by `fun`, such as the
-  data frame with missing data in the output of `fun` (e.g., `"amp"` for
-  `mice::ampute()`), if omitted, the output of `fun` should be the data
-  frame with missing data.
+  (required), the function to further process the simulated data, such
+  as generating missing data using functions such as `mice::ampute()`;
+  `args` (optional), a named list of arguments to be passed to `fun`,
+  except the one for the source data; `sim_data_name` (optional) the
+  name of the argument to receive the simulated data (e.g., `"data"` for
+  `mice::ampute()`), default to `"data"` if it is not set;
+  `processed_data_name` (optional), the name of the data frame after
+  being processed by `fun`, such as the data frame with missing data in
+  the output of `fun` (e.g., `"amp"` for `mice::ampute()`), if omitted,
+  the output of `fun` should be the data frame with missing data.
 
 - parallel:
 
@@ -146,6 +147,15 @@ pool_sim_data(object, as_list = FALSE)
 - ncores:
 
   The number of CPU cores to use if parallel processing is used.
+
+- n_ratio:
+
+  If the model is a multigroup model, and `n` is a single number, this
+  should be a numeric vector used to determine the sample size for each
+  group. For example, for a two-group model, if `n` is 100 and `n_ratio`
+  is `c(1, 0.5)`, then the sample sizes for the two groups are 100 and
+  50, respectively. If equal to 1, then all groups have the same sample
+  size.
 
 - x:
 

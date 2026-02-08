@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.42</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.44</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -68,7 +68,7 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.1.1.42" id="power4mome-01142">power4mome 0.1.1.42<a class="anchor" aria-label="anchor" href="#power4mome-01142"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.1.1.44" id="power4mome-01144">power4mome 0.1.1.44<a class="anchor" aria-label="anchor" href="#power4mome-01144"></a></h2>
 <ul><li><p>Improve the function for extending the initial interval before doing a bisection search. (0.1.1.1)</p></li>
 <li><p>Changed the default method for rejection rate confidence intervals to Wilson’s (1927) method. For backward compatibility, use <code>options(power4mome.ci_method = "norm")</code> to set the default method to normal approximation. (0.1.1.2)</p></li>
 <li><p>Added the <code>test_method</code> argument for tests of indirect effects and their variants to use asymmetric <em>p</em>-values to do the tests. (0.1.1.3)</p></li>
@@ -108,6 +108,11 @@
 <li><p>Updated <code><a href="../reference/x_from_power.html">x_from_power()</a></code> and related functions to allow users specifying how tests will be collapsed (<code>"none"</code> is not allowed), by setting the argument <code>rejection_rates_args</code>. (0.1.1.39, 0.1.1.41)</p></li>
 <li><p>Change the default of <code>test_long</code> to <code>TRUE</code> for the <code>print</code> method of <code>power4test</code> and related objects. (0.1.1.41)</p></li>
 <li><p>Updated <code><a href="../reference/rejection_rates.html">rejection_rates()</a></code> to ignore <code>merge_all_tests</code> if there is only one test. (0.1.1.42)</p></li>
+<li><p>Added a data processor: <code><a href="../reference/scale_scores.html">scale_scores()</a></code>. It replaces the indicator scores by the corresponding scale scores before fitting a model. To be used in the <code>process_data</code> argument. (0.1.1.43)</p></li>
+<li><p>Updated <code><a href="../reference/sim_data.html">sim_data()</a></code>. Lines for the indicators will not be added to the model syntax if scale scores are used. (0.1.1.43)</p></li>
+<li><p>The argument <code>sim_data_name</code> of <code>process_data</code> is now default to <code>"data"</code>. It is not a required argument. (0.1.1.43)</p></li>
+<li><p>The attribute <code>number_of_indicators</code> will be added to the generated data before passing to <code>process_data</code>. (0.1.1.43)</p></li>
+<li><p>Add <code>n_ratio</code> to <code><a href="../reference/power4test.html">power4test()</a></code> and related functions to supporting controlling the sample sizes of multigroup models using one single value for <code>n</code>. This allows functions such as <code><a href="../reference/x_from_power.html">n_from_power()</a></code> and <code><a href="../reference/x_from_power.html">n_region_from_power()</a></code> to support multigroup models. (0.1.1.44)</p></li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.1" id="power4mome-011">power4mome 0.1.1<a class="anchor" aria-label="anchor" href="#power4mome-011"></a></h2><p class="text-muted">CRAN release: 2025-09-21</p>

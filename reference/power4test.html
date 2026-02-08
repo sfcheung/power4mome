@@ -15,7 +15,7 @@ results."><meta property="og:image" content="https://sfcheung.github.io/power4mo
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.42</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.44</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -124,7 +124,8 @@ results.</p>
 <span>  n_std <span class="op">=</span> <span class="fl">1e+05</span>,</span>
 <span>  std_force_monte_carlo <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  rejection_rates_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>collapse <span class="op">=</span> <span class="st">"none"</span>, at_least_k <span class="op">=</span> <span class="fl">1</span>, merge_all_tests <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>    p_adjust_method <span class="op">=</span> <span class="st">"none"</span>, alpha <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span></span>
+<span>    p_adjust_method <span class="op">=</span> <span class="st">"none"</span>, alpha <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span>,</span>
+<span>  n_ratio <span class="op">=</span> <span class="fl">1</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'power4test'</span></span>
@@ -264,15 +265,16 @@ argument.</p></dd>
 <dd><p>If not <code>NULL</code>, it
 must be a named list with these
 elements: <code>fun</code> (required), the function
-to further processing the simulated
+to further process the simulated
 data, such as generating missing data using
 functions such as <code>mice::ampute()</code>; <code>args</code> (optional), a
 named list of arguments to be passed
 to <code>fun</code>, except the one for the
-source data; <code>sim_data_name</code> (required) the
+source data; <code>sim_data_name</code> (optional) the
 name of the argument to receive the
-simulated data (e.g., <code>data</code> for
-<code>mice::ampute()</code>); <code>processed_data_name</code>
+simulated data (e.g., <code>"data"</code> for
+<code>mice::ampute()</code>), default to
+<code>"data"</code> if it is not set; <code>processed_data_name</code>
 (optional), the name of the data frame
 after being processed by <code>fun</code>,
 such as the data frame
@@ -505,6 +507,20 @@ argument values to be used when
 <code><a href="rejection_rates.html">rejection_rates()</a></code> is called. Can
 be overriden when calling
 <code><a href="rejection_rates.html">rejection_rates()</a></code>.</p></dd>
+
+
+<dt id="arg-n-ratio">n_ratio<a class="anchor" aria-label="anchor" href="#arg-n-ratio"></a></dt>
+<dd><p>If the model is a
+multigroup model, and <code>n</code> is a single
+number, this should be a numeric
+vector used to determine the sample
+size for each group. For example,
+for a two-group model, if <code>n</code> is 100
+and <code>n_ratio</code> is <code>c(1, 0.5)</code>, then
+the sample sizes for the two groups
+are 100 and 50, respectively. If
+equal to 1, then all groups have the
+same sample size.</p></dd>
 
 
 <dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
