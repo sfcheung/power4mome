@@ -165,7 +165,8 @@ test_cond_indirect <- function(fit = fit,
     return(map_names)
   }
   if (get_test_name) {
-    tmp_w <- cond_name(wvalues)
+    tmp_w <- cond_name(wvalues,
+                       ...)
     tmp <- paste0(c(x, m, y),
                   collapse = "->")
     tmp <- paste0(tmp,
@@ -190,8 +191,10 @@ test_cond_indirect <- function(fit = fit,
     fit_ok <- lavaan::lavInspect(fit, "converged") &&
               (suppressWarnings(lavaan::lavInspect(fit, "post.check") ||
                !check_post_check))
+    ngroups <- lavaan::lavInspect(fit, "ngroups")
   } else {
     fit_ok <- TRUE
+    ngroups <- 1
   }
   if (fit_ok) {
     out <- tryCatch(manymome::cond_indirect(
@@ -278,10 +281,22 @@ test_cond_indirect <- function(fit = fit,
 
 #' @noRd
 
-cond_name <- function(wvalues) {
-  w1 <- names(wvalues)
-  out <- paste0(w1, " = ", wvalues)
-  out <- paste(out,
-               collapse = "; ")
-  return(out)
+cond_name <- function(wvalues,
+                      ...) {
+  if (!is.null(wvalues)) {
+    w1 <- names(wvalues)
+    out <- paste0(w1, " = ", wvalues)
+    out <- paste(out,
+                 collapse = "; ")
+  } else {
+    out <- character(0)
+  }
+  args <- list(...)
+  if (!is.null(args$group)) {
+    out2 <- args$group
+  } else {
+    out2 <- character(0)
+  }
+  out3 <- paste0(out, out2, collapse = ";")
+  return(out3)
 }
