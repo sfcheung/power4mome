@@ -210,27 +210,57 @@ test_cond_indirect_effects <- function(fit = fit,
   }
   if (boot_ci) mc_ci <- FALSE
   if (inherits(fit, "lavaan")) {
+    ngroups <- lavaan::lavInspect(fit, "ngroups")
     fit_ok <- lavaan::lavInspect(fit, "converged") &&
               (suppressWarnings(lavaan::lavInspect(fit, "post.check") ||
                !check_post_check))
   } else {
+    ngroups <- 1
     fit_ok <- TRUE
   }
+
+  # ==== Compute conditional indirect effects ====
+
   if (fit_ok) {
-    out <- tryCatch(manymome::cond_indirect_effects(
-                                         x = x,
-                                         y = y,
-                                         m = m,
-                                         wlevels = wlevels,
-                                         fit = fit,
-                                         mc_ci = mc_ci,
-                                         mc_out = mc_out,
-                                         boot_ci = boot_ci,
-                                         boot_out = boot_out,
-                                         progress = FALSE,
-                                         ...,
-                                         internal_options = internal_options),
-                   error = function(e) e)
+    if (is.null(wlevels)) {
+
+      # ==== wlevels is NULL: Multigroup? ====
+
+      if (ngroups == 1) {
+        stop("wlevels not supplied but the model is not a multigroup model.")
+      }
+      out <- tryCatch(manymome::cond_indirect_effects(
+                                          x = x,
+                                          y = y,
+                                          m = m,
+                                          fit = fit,
+                                          mc_ci = mc_ci,
+                                          mc_out = mc_out,
+                                          boot_ci = boot_ci,
+                                          boot_out = boot_out,
+                                          progress = FALSE,
+                                          ...,
+                                          internal_options = internal_options),
+                    error = function(e) e)
+    } else {
+
+      # ==== wlevels is not NULL ====
+
+      out <- tryCatch(manymome::cond_indirect_effects(
+                                          x = x,
+                                          y = y,
+                                          m = m,
+                                          wlevels = wlevels,
+                                          fit = fit,
+                                          mc_ci = mc_ci,
+                                          mc_out = mc_out,
+                                          boot_ci = boot_ci,
+                                          boot_out = boot_out,
+                                          progress = FALSE,
+                                          ...,
+                                          internal_options = internal_options),
+                    error = function(e) e)
+    }
   } else {
     out <- NA
   }
@@ -245,14 +275,36 @@ test_cond_indirect_effects <- function(fit = fit,
             )
     return(out2)
   }
-  tmp <- rownames(attr(out, "wlevels"))
-  tmp2 <- paste0(c(x, m, y),
-                 collapse = "->")
-  test_label <- paste(tmp2, "|", tmp)
-  out2 <- as.data.frame(out,
-                        check.names = FALSE)
-  out2 <- cbind(test_label = test_label,
-                out2)
+  # TODO:
+  # - Update to support multigroup model with moderation in the future
+
+  # ==== Prepare the output ====
+
+  if (ngroups > 1) {
+
+    # ==== Multigroup model ====
+
+    tmp <- out$Group
+    tmp2 <- paste0(c(x, m, y),
+                   collapse = "->")
+    test_label <- paste(tmp2, "|", tmp)
+    out2 <- as.data.frame(out,
+                          check.names = FALSE)
+    out2 <- cbind(test_label = test_label,
+                  out2)
+  } else {
+
+    # ==== Single-group model ====
+
+    tmp <- rownames(attr(out, "wlevels"))
+    tmp2 <- paste0(c(x, m, y),
+                   collapse = "->")
+    test_label <- paste(tmp2, "|", tmp)
+    out2 <- as.data.frame(out,
+                          check.names = FALSE)
+    out2 <- cbind(test_label = test_label,
+                  out2)
+  }
 
   # Add pvalues
   tmpfct <- function(x) {
