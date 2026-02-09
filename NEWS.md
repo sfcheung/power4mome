@@ -1,4 +1,4 @@
-# power4mome 0.1.1.44
+# power4mome 0.1.1.45
 
 - Improve the function for extending the
   initial interval before doing a
@@ -234,7 +234,7 @@
   before passing to `process_data`.
   (0.1.1.43)
 
-- Add `n_ratio` to `power4test()` and
+- Added `n_ratio` to `power4test()` and
   related functions to supporting
   controlling the sample sizes of
   multigroup models using one single
@@ -243,6 +243,16 @@
   `n_region_from_power()` to support
   multigroup models.
   (0.1.1.44)
+
+- `test_cond_indirect()` and
+  `test_cond_indirect_effects()` now
+  support multigroup models, although
+  `test_cond_indirect_effects()` only
+  support either a path with moderators
+  (`wlevels`) or a path between groups,
+  but not both.
+  (0.1.1.45)
+
 
 # power4mome 0.1.1
 
