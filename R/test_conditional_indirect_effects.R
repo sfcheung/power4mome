@@ -96,6 +96,12 @@
 #'
 # @param boot_out <- Inherited
 #'
+#' @param compare_groups If the model
+#' is a multigroup model, compute and
+#' test group differences for all pairwise
+#' combinations of the groups. Ignored
+#' if the model is a single-group model.
+#'
 #' @param ... Additional arguments to
 #' be passed to [manymome::cond_indirect_effects()].
 #'
@@ -164,6 +170,7 @@ test_cond_indirect_effects <- function(fit = fit,
                                        boot_out = NULL,
                                        check_post_check = TRUE,
                                        test_method = c("ci", "pvalue"),
+                                       compare_groups = FALSE,
                                        ...,
                                        fit_name = "fit",
                                        get_map_names = FALSE,
@@ -284,6 +291,17 @@ test_cond_indirect_effects <- function(fit = fit,
 
     # ==== Multigroup model ====
 
+    if (compare_groups) {
+
+      # ==== Compare groups ====
+
+      level <- attr(out, "full_output")[[1]]$level
+      out_org <- out
+      out <- all_cond_diff(
+                  out_org,
+                  level = level
+                )
+    }
     tmp <- out$Group
     tmp2 <- paste0(c(x, m, y),
                    collapse = "->")
@@ -305,7 +323,6 @@ test_cond_indirect_effects <- function(fit = fit,
     out2 <- cbind(test_label = test_label,
                   out2)
   }
-
   # Add pvalues
   tmpfct <- function(x) {
     x$mc_p %||% (x$boot_p %||% as.numeric(NA))
@@ -391,4 +408,109 @@ test_cond_indirect_effects <- function(fit = fit,
   rownames(out2) <- NULL
   attr(out2, "test_label") <- "test_label"
   return(out2)
+}
+
+#' @noRd
+# Input:
+# - A cond_indirect_effects object
+# Output:
+# - A data frame of pairwise comparison
+all_cond_diff <- function(
+  out,
+  level
+) {
+  k <- nrow(out)
+  all_ij <- utils::combn(
+              seq_len(k),
+              m = 2,
+              simplify = FALSE
+            )
+  outa <- lapply(
+              all_ij,
+              \(xx) {
+                ij_cond_diff(
+                  out,
+                  from = xx[1],
+                  to = xx[2],
+                  level = level
+                )
+              }
+            )
+  full_output <- lapply(
+                    outa,
+                    \(x) attr(x, "full_output")
+                  )
+  outz <- do.call(
+            rbind,
+            outa
+          )
+  attr(outz, "full_output") <- full_output
+  outz
+}
+
+#' @noRd
+# Input:
+# - A cond_indirect_effects object
+# Output:
+# - A vector with results from a cond_indirect_diff object
+ij_cond_diff <- function(
+  out,
+  from,
+  to,
+  level
+) {
+  outa <- manymome::cond_indirect_diff(
+              out,
+              from = from,
+              to = to,
+              level = level
+            )
+  # Need these
+  # - est: index
+  # - ci: cilo, cihi
+  # - pvalue
+  # - sig
+  # - test_label
+  ind <- outa$index
+  CI.lo <- outa$ci[1]
+  CI.hi <- outa$ci[2]
+  if (!identical(outa$mc_diff, NA)) {
+    boot_diff <- outa$mc_diff
+  } else if (!identical(outa$boot_diff, NA)) {
+    boot_diff <- outa$boot_diff
+  } else {
+    boot_diff <- NULL
+  }
+  pvalue <- est2p(
+              boot_diff,
+              min_size = -Inf
+            )
+  Sig <- ifelse((CI.lo > 0) | (CI.hi < 0),
+                yes = "Sig",
+                "")
+  label <- paste0(
+              out$Group[to],
+              " - ",
+              out$Group[from]
+            )
+  fake_out <- list()
+  if (outa$ci_type == "mc") {
+    fake_out$mc_indirect <- outa$mc_diff
+    fake_out$mc_p <- pvalue
+  } else if (outa$ci_type == "boot") {
+    fake_out$boot_indirect <- outa$boot_diff
+    fake_out$boot_p <- pvalue
+  }
+  fake_out$level <- level
+  outb <- data.frame(
+              Group = label,
+              ind = ind,
+              CI.lo = CI.lo,
+              CI.hi = CI.hi,
+              Sig = Sig,
+              check.names = FALSE
+            )
+  row.names(outb) <- NULL
+  attr(outb, "full_output") <- fake_out
+  outb
 }
