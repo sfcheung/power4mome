@@ -16,6 +16,7 @@ test_cond_indirect_effects(
   boot_out = NULL,
   check_post_check = TRUE,
   test_method = c("ci", "pvalue"),
+  compare_groups = FALSE,
   ...,
   fit_name = "fit",
   get_map_names = FALSE,
@@ -111,6 +112,12 @@ by Asparouhov & Muthén (2021) will
 be used to do the test, and the
 confidence interval will not be
 computed.}
+
+\item{compare_groups}{If the model
+is a multigroup model, compute and
+test group differences for all pairwise
+combinations of the groups. Ignored
+if the model is a single-group model.}
 
 \item{...}{Additional arguments to
 be passed to \code{\link[manymome:cond_indirect]{manymome::cond_indirect_effects()}}.}

@@ -1,4 +1,4 @@
-# power4mome 0.1.1.45
+# power4mome 0.1.1.46
 
 - Improve the function for extending the
   initial interval before doing a
@@ -252,6 +252,12 @@
   (`wlevels`) or a path between groups,
   but not both.
   (0.1.1.45)
+
+- Updated `test_cond_indirect_effects()`
+  to support computing and testing
+  group differences in indirect effects
+  for multigroup models.
+  (0.1.1.46)
 
 
 # power4mome 0.1.1
