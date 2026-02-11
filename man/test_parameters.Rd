@@ -12,6 +12,7 @@ test_parameters(
   op = NULL,
   remove.nonfree = TRUE,
   check_post_check = TRUE,
+  exclude_var = FALSE,
   ...,
   omnibus = c("no", "all_sig", "at_least_one_sig", "at_least_k_sig"),
   at_least_k = 1,
@@ -62,6 +63,10 @@ will be conducted only if the model
 passes the \code{post.check} conducted
 by \code{\link[lavaan:lavInspect]{lavaan::lavInspect()}} (with
 \code{what = "post.check"}).}
+
+\item{exclude_var}{Logical. If \code{TRUE},
+exclude variances and error variances
+from the test.}
 
 \item{...}{Additional arguments to
 be passed to \code{\link[lavaan:parameterEstimates]{lavaan::parameterEstimates()}},

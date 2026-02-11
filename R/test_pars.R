@@ -102,6 +102,10 @@
 #' are specified, only parameters meeting
 #' *both* requirements will be returned.
 #'
+#' @param exclude_var Logical. If `TRUE`,
+#' exclude variances and error variances
+#' from the test.
+#'
 #' @param remove.nonfree Logical. If
 #' `TRUE`, the default, only free
 #' parameters will be returned. Ignored
@@ -178,6 +182,7 @@ test_parameters <- function(fit = fit,
                             op = NULL,
                             remove.nonfree = TRUE,
                             check_post_check = TRUE,
+                            exclude_var = FALSE,
                             ...,
                             omnibus = c("no", "all_sig", "at_least_one_sig", "at_least_k_sig"),
                             at_least_k = 1,
@@ -343,6 +348,13 @@ test_parameters <- function(fit = fit,
   test_label <- lavaan::lav_partable_labels(est)
   out <- cbind(test_label = test_label,
                est)
+
+  # ==== Exclude variances and error variances? ====
+
+  if (exclude_var) {
+    i <- (out$lhs == out$rhs) & out$op == "~~"
+    out <- out[!i, ]
+  }
 
   # ==== Find parameters using `op` ====
 
