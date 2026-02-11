@@ -13,6 +13,7 @@ test_parameters(
   remove.nonfree = TRUE,
   check_post_check = TRUE,
   exclude_var = FALSE,
+  compare_groups = FALSE,
   ...,
   omnibus = c("no", "all_sig", "at_least_one_sig", "at_least_k_sig"),
   at_least_k = 1,
@@ -67,6 +68,14 @@ by \code{\link[lavaan:lavInspect]{lavaan::lavInspect()}} (with
 \item{exclude_var}{Logical. If \code{TRUE},
 exclude variances and error variances
 from the test.}
+
+\item{compare_groups}{Logical. If \code{TRUE},
+the likelihood ratio test (by \code{\link[lavaan:lavTestLRT]{lavaan::lavTestLRT()}})
+will be used to test the pairwise-equality
+constraints for all selected free
+parameters that appear in all groups.
+These tests will be reported instead of
+the tests for individual parameters.}
 
 \item{...}{Additional arguments to
 be passed to \code{\link[lavaan:parameterEstimates]{lavaan::parameterEstimates()}},
