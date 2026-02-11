@@ -1,4 +1,4 @@
-# power4mome 0.1.1.46
+# power4mome 0.1.1.47
 
 - Improve the function for extending the
   initial interval before doing a
@@ -258,6 +258,18 @@
   group differences in indirect effects
   for multigroup models.
   (0.1.1.46)
+
+- Updated `test_parameters()` to support
+  doing likelihood ratio tests to
+  test constraining pairs of parameters
+  in multigroup models, by using the
+  argument `compare_groups`.
+  (0.1.1.47)
+
+- Added the argument `exclude_var` to
+  `test_parameters()` to exclude
+  variances and error variances.
+  (0.1.1.47)
 
 
 # power4mome 0.1.1
