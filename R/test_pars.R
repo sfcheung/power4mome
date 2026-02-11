@@ -189,9 +189,15 @@ test_parameters <- function(fit = fit,
   map_names <- c(fit = fit_name)
   args <- list(...)
   if (get_map_names) {
+
+    # ==== Return map_names ====
+
     return(map_names)
   }
   if (get_test_name) {
+
+    # ==== Prepare test_name ====
+
     tmp <- character(0)
     if (!is.null(pars)) {
       tmp0 <- paste0("pars: ",
@@ -215,12 +221,17 @@ test_parameters <- function(fit = fit,
     } else {
       tmp <- character(0)
     }
+
+    # ==== Return test_name ====
+
     if (standardized) {
       return(paste("test_parameters: CIs (standardized)", tmp))
     } else {
       return(paste("test_parameters: CIs", tmp))
     }
   }
+
+  # ==== Check the type of fit ====
 
   if (inherits(fit, "lm_list")) {
     fit_type <- "lm_list"
@@ -236,6 +247,8 @@ test_parameters <- function(fit = fit,
     }
   }
 
+  # ==== Is the lavaan fit OK? ====
+
   if (inherits(fit, "lavaan")) {
     fit_ok <- lavaan::lavInspect(fit, "converged") &&
               (suppressWarnings(lavaan::lavInspect(fit, "post.check") ||
@@ -244,6 +257,9 @@ test_parameters <- function(fit = fit,
     fit_ok <- TRUE
   }
   if (standardized) {
+
+    # ==== Standardized solution ====
+
     if (fit_type != "lavaan") {
       stop('Standardized solution supported only for `lavaan` output.')
     }
@@ -258,7 +274,13 @@ test_parameters <- function(fit = fit,
       est$se <- as.numeric(NA)
     }
   } else {
+
+    # ==== Raw solution ====
+
     if (fit_type == "lm_list") {
+
+       # ==== lm_list ====
+
       # TODO:
       # - Find a better way to handle level
       if (!is.null(args$level)) {
@@ -272,6 +294,9 @@ test_parameters <- function(fit = fit,
       est <- est[, c("lhs", "op", "rhs", "est", "se", "pvalue",
                      "ci.lower", "ci.upper")]
     } else {
+
+       # ==== lavaan ====
+
       est <- lavaan::parameterEstimates(object = fit,
                                         pvalue = TRUE,
                                         ci = TRUE,
@@ -286,6 +311,9 @@ test_parameters <- function(fit = fit,
       }
     }
   }
+
+  # ==== Fix the column names ====
+
   enames <- colnames(est)
   enames <- gsub("ci.lower",
                  "cilo",
@@ -303,6 +331,8 @@ test_parameters <- function(fit = fit,
   }
   colnames(est) <- enames
 
+  # ==== Handle sig based on fit_ok ====
+
   if (!fit_ok) {
     est$sig <- as.numeric(NA)
   } else {
@@ -313,6 +343,9 @@ test_parameters <- function(fit = fit,
   test_label <- lavaan::lav_partable_labels(est)
   out <- cbind(test_label = test_label,
                est)
+
+  # ==== Find parameters using `op` ====
+
   if (!is.null(op)) {
     j <- which(out$op %in% op)
     if (!isTRUE(length(j) > 0)) {
@@ -320,6 +353,9 @@ test_parameters <- function(fit = fit,
     }
     out <- out[j, ]
   }
+
+  # ==== Find parameters using `pars` ====
+
   if (!is.null(pars)) {
     j <- out$test_label %in% pars
     if (!is.null(out$label)) {
@@ -331,18 +367,34 @@ test_parameters <- function(fit = fit,
     }
     out <- out[j, ]
   }
+
+  # ==== Adjust p-values? ====
+
   if (p_adjust_method != "none") {
+
     out$pvalue_org <- out$pvalue
     out$pvalue <- stats::p.adjust(
                         out$pvalue_org,
                         method = p_adjust_method
                       )
   }
+
+  # ==== Omnibus test? ====
+
   if (omnibus == "no") {
+
+    # ==== No omnibus test ====
+
     attr(out, "test_label") <- "test_label"
+
+    # ==== Prepare the output ====
+
     class(out) <- class(est)
     return(out)
   } else {
+
+    # ==== Handle omnibus ====
+
     out2 <- out[1, ]
     out2[1, ] <- as.numeric(NA)
     tmp <- switch(omnibus,
@@ -359,6 +411,9 @@ test_parameters <- function(fit = fit,
     if (any(is.na(out2$sig))) {
       out2$sig <- as.numeric(NA)
     }
+
+    # ==== Prepare the output ====
+
     attr(out2, "test_label") <- "test_label"
     return(out2)
   }
