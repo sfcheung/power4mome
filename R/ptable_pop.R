@@ -756,11 +756,13 @@ update_ptable_pop <- function(object,
   if (is.data.frame(old_par_pop)) {
     old_par_pop <- split_par_pop(old_par_pop)
   }
+  ngroups <- length(old_par_pop)
   new_par_pop <- pop_es2par_pop(new_pop_es,
                                 es1 = es1,
                                 es2 = es2,
                                 model = model,
-                                es_ind = es_ind)
+                                es_ind = es_ind,
+                                ngroups = ngroups)
   updated_par_pop <- update_par_pop(add = new_par_pop,
                                     par_pop = old_par_pop)
   updated_par_pop <- par_pop_to_one_table(updated_par_pop)
@@ -907,6 +909,10 @@ update_par_pop <- function(add,
   for (i in seq_len(ngroups)) {
     # Can ignore group because
     # each group has its own table
+    if (is.null(add[[i]])) {
+      # No change for the i-th group
+      next
+    }
     tmp <- merge(out[[i]],
                  add[[i]],
                  by = c("lhs", "op", "rhs"),
@@ -936,16 +942,50 @@ pop_es2par_pop <- function(pop_es,
                            es2,
                            model,
                            to_one_table = FALSE,
-                           es_ind) {
+                           es_ind,
+                           ngroups = 1) {
   # Always process par_pop as a list until existing
   if (is.character(pop_es) || is.numeric(pop_es)) {
-    pop_es <- fix_par_es(pop_es,
-                         model = model)
-    par_pop <- set_pop(pop_es,
-                       es1 = es1,
-                       es2 = es2,
-                       es_ind = es_ind)
-    par_pop <- list(par_pop)
+
+    if (ngroups > 1) {
+
+      # ==== Multigroup model ====
+
+      if (length(pop_es) > 1) {
+        stop("For multigroup models, only support changing one parameter.")
+      }
+
+      gp_id0 <- get_gp_id(
+                    pop_es = pop_es,
+                    ngroups = ngroups
+                  )
+      gp_id <- gp_id0$gp_id
+      names(pop_es) <- gp_id0$new_name
+      par_pop0 <- vector(
+                      mode = "list",
+                      length = ngroups
+                    )
+      pop_es <- fix_par_es(pop_es,
+                           model = model)
+      par_pop <- set_pop(pop_es,
+                         es1 = es1,
+                         es2 = es2,
+                         es_ind = es_ind)
+      par_pop0[[gp_id]] <- par_pop
+      par_pop <- par_pop0
+
+    } else {
+
+      # ==== Single-group model ====
+
+      pop_es <- fix_par_es(pop_es,
+                           model = model)
+      par_pop <- set_pop(pop_es,
+                         es1 = es1,
+                         es2 = es2,
+                         es_ind = es_ind)
+      par_pop <- list(par_pop)
+    }
   } else if (is.list(pop_es)) {
     if (is.data.frame(pop_es)) {
       # A one-table par_pop
@@ -1114,4 +1154,30 @@ dup_cov <- function(ptable) {
     rownames(ptable) <- NULL
   }
   ptable
+}
+
+#' @noRd
+# Find group ID from the name
+get_gp_id <- function(pop_es,
+                  ngroups) {
+  gp_id0 <- strsplit(
+                names(pop_es),
+                split = ".",
+                fixed = TRUE)[[1]]
+  if (length(gp_id0) == 1) {
+    # Assume to be group 1
+    gp_id <- 1
+    new_name <- names(pop_es)
+  } else {
+    gp_id1 <- gp_id0[length(gp_id0)]
+    gp_id <- as.numeric(gsub("g", "", gp_id1, fixed = TRUE))
+    if (!(gp_id %in% seq_len(ngroups))) {
+      stop("Group ID not valid: ", gp_id1)
+    }
+    new_name <- gsub(paste0(".", gp_id1), "",
+                     names(pop_es),
+                     fixed = TRUE)
+  }
+  return(list(gp_id = gp_id,
+              new_name = new_name))
 }
