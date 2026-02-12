@@ -174,8 +174,6 @@ power4test_by_n <- function(object,
       new_nrep <- NULL
     }
   }
-  # TODO
-  # - MG: Think about to handle MG models, for which n is a vector.
   for (i in seq_along(n)) {
     x <- n[i]
     if (progress) {

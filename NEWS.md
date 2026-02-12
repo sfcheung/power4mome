@@ -1,4 +1,4 @@
-# power4mome 0.1.1.47
+# power4mome 0.1.1.48
 
 - Improve the function for extending the
   initial interval before doing a
@@ -271,6 +271,17 @@
   variances and error variances.
   (0.1.1.47)
 
+- Updated `power4test()` to support
+  updating a parameter in one group
+  when the population model is a
+  multigroup model. Use `"y ~ x.g2"`
+  to denote `"y ~ x"` in Group 2.
+  If the suffix is omitted, the parameter
+  is assumed to be in Group 1.
+  The function `power4test_by_es()` now
+  also support multigroup models due to
+  this change.
+  (0.1.1.48)
 
 # power4mome 0.1.1
 
