@@ -1,4 +1,4 @@
-# power4mome 0.1.1.48
+# power4mome 0.1.1.49
 
 - Improve the function for extending the
   initial interval before doing a
@@ -282,6 +282,10 @@
   also support multigroup models due to
   this change.
   (0.1.1.48)
+
+- Added `test_group_equal()` for testing
+  equality constraints between groups.
+  (0.1.1.49)
 
 # power4mome 0.1.1
 
