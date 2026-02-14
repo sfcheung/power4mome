@@ -211,8 +211,8 @@ a_out <- power_algorithm_prob_bisection(
                                   by_x_1 = by_x_1,
                                   what = "ub",
                                   goal = "close_enough",
-                                  max_trials = 100,
-                                  trial_nrep = 50,
+                                  max_trials = 50,
+                                  trial_nrep = 100,
                                   final_nrep = 2000,
                                   tol = .005,
                                   variants = list(npoints = 200))

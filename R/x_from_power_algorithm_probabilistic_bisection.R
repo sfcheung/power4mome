@@ -153,7 +153,7 @@ power_algorithm_prob_bisection <- function(object,
                                       extend_maxiter = 3,
                                       what = c("point", "ub", "lb"),
                                       goal = c("ci_hit", "close_enough"),
-                                      tol = .02,
+                                      tol = .005,
                                       delta_tol = switch(x,
                                                       n = 1,
                                                       es = .001),
@@ -197,7 +197,7 @@ power_algorithm_prob_bisection <- function(object,
                     muller = FALSE,
                     min_interval_width = c(n = 2,
                                            es = .001),
-                    npoints = 100,
+                    npoints = 200,
                     p = .60)
   variants <- utils::modifyList(variants0,
                                 variants)
@@ -638,6 +638,10 @@ power_algorithm_prob_bisection <- function(object,
                   prob = .50
                 )
 
+    if (x_type == "n") {
+      x_i <- ceiling(x_i)
+    }
+
     # Do the probabilistic bisection search
 
     # if (x_type == "n") {
@@ -788,11 +792,12 @@ power_algorithm_prob_bisection <- function(object,
                 prob = .50
               )
 
-      # TODO:
-      # - Handle x tried before
+      if (x_type == "n") {
+        x_i <- ceiling(x_i)
+      }
 
       # TODO:
-      # - Handle interpolation
+      # - Handle x tried before
 
       if (progress) {
         print_interval(lower = lower_i,
@@ -1194,9 +1199,16 @@ q_dfun <- function(
   dfun,
   prob = .50
 ) {
-  # TODO:
-  # - Handle interpolation
   qfun <- cumsum(dfun[, "prob"])
-  i <- which.min(abs(qfun - prob))
-  unname(dfun[i, "x"])
+  tmp <- prob - qfun
+  tmp[tmp < 0] <- NA
+  i <- which.min(tmp)
+  # Do interpolation
+  j0 <- qfun[i]
+  j1 <- qfun[i + 1]
+  yd <- (prob - j0) / (j1 - j0)
+  x0 <- dfun[i, "x"]
+  x1 <- dfun[i + 1, "x"]
+  out <- x0 + yd * (x1 - x0)
+  unname(out)
 }
