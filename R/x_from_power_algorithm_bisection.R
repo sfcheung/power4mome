@@ -1731,7 +1731,8 @@ gen_objective <- function(object,
                           what = c("point", "ub", "lb"),
                           simulation_progress,
                           save_sim_all,
-                          store_output) {
+                          store_output,
+                          target_nrep) {
   what <- match.arg(what)
   # Create the objective function
   f <- function(x_i,
@@ -1749,7 +1750,11 @@ gen_objective <- function(object,
                 save_sim_all = FALSE,
                 store_output = TRUE,
                 out_i = NULL,
-                power_i = NULL) {
+                power_i = NULL,
+                target_nrep = NA) {
+    if (is.na(target_nrep)) {
+      target_nrep <- nrep
+    }
     if (x == "n") {
       x_i <- ceiling(x_i)
     }
@@ -1813,10 +1818,10 @@ gen_objective <- function(object,
 
     # ==== Compute CI ====
 
-    se_i <- sqrt(power_i * (1 - power_i) / nrep)
+    se_i <- sqrt(power_i * (1 - power_i) / target_nrep)
     ci_i <- reject_ci(
-              nreject = round(power_i * nrep),
-              nvalid = nrep,
+              nreject = round(power_i * target_nrep),
+              nvalid = target_nrep,
               level = ci_level,
               method = getOption("power4mome.ci_method", default = "wilson"))
     ci_i <- as.vector(ci_i)
@@ -1869,6 +1874,7 @@ gen_objective <- function(object,
   formals(f)$simulation_progress <- simulation_progress
   formals(f)$save_sim_all <- save_sim_all
   formals(f)$store_output <- store_output
+  formals(f)$target_nrep <- NA
 
   f
 }
