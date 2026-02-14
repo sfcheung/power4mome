@@ -37,18 +37,18 @@ set.seed(1234)
 a_out <- power_algorithm_prob_bisection(object = out,
                                    x = "n",
                                    by_x_1 = by_x_1,
-                                   max_trials = 100,
-                                   trial_nrep = 50,
-                                   final_nrep = 2000)
+                                   max_trials = 50,
+                                   final_nrep = 2000,
+                                   variants = list(trial_nrep = 20))
 rejection_rates(a_out$by_x_1)
 plot(a_out$fit_1)
 abline(h = .80)
 plot(a_out$dfun_out, type = "l")
-q_dfun(a_out$dfun_out, prob = .50)
+(x_tmp <- ceiling(q_dfun(a_out$dfun_out, prob = .50)))
 
 tmp_out <- power4test(
               out,
-              n = 718,
+              n = x_tmp,
               nrep = 2000,
               iseed = 2345)
 rejection_rates(tmp_out)
@@ -56,29 +56,32 @@ rejection_rates(tmp_out)
 # Close enough
 
 set.seed(1234)
-a_out <- power_algorithm_bisection(object = out,
-                                   x = "n",
-                                   by_x_1 = by_x_1,
-                                   x_interval = c(600, 700),
-                                   goal = "close_enough",
-                                   tol = .05)
-a_out$solution_found
+a_out <- power_algorithm_prob_bisection(
+                                  object = out,
+                                  x = "n",
+                                  by_x_1 = by_x_1,
+                                  x_interval = c(200, 2000),
+                                  goal = "close_enough",
+                                  max_trials = 100,
+                                  final_nrep = 2000,
+                                  variants = list(nrep_step = 0,
+                                                  last_k = 5))
 rejection_rates(a_out$by_x_1)
 plot(a_out$fit_1)
 abline(h = .80)
+plot(a_out$x_history, type = "l")
+abline(h = q_dfun(a_out$dfun_out))
+plot(a_out$dfun_out, type = "l")
+q_dfun(a_out$dfun_out, .10)
+q_dfun(a_out$dfun_out, .90)
+(x_tmp <- ceiling(q_dfun(a_out$dfun_out, prob = .50)))
 
-set.seed(1234)
-a_out <- power_algorithm_bisection(object = out,
-                                   x = "n",
-                                   by_x_1 = by_x_1,
-                                   x_interval = c(600, 700),
-                                   extendInt = "yes",
-                                   goal = "close_enough",
-                                   tol = .05)
-rejection_rates(a_out$by_x_1)
-plot(a_out$fit_1)
-abline(h = .80)
-
+tmp_out <- power4test(
+              out,
+              n = x_tmp,
+              nrep = 2000,
+              iseed = 2345)
+rejection_rates(tmp_out)
 
 # ub
 
@@ -89,17 +92,21 @@ a_out <- power_algorithm_prob_bisection(
                                   by_x_1 = by_x_1,
                                   what = "ub",
                                   goal = "close_enough",
-                                  max_trials = 20,
-                                  trial_nrep = 50,
+                                  max_trials = 100,
                                   final_nrep = 2000)
 rejection_rates(a_out$by_x_1)
 plot(a_out$fit_1)
 abline(h = .80)
+plot(a_out$x_history, type = "l")
+abline(h = q_dfun(a_out$dfun_out))
 plot(a_out$dfun_out, type = "l")
-(tmp_x <- q_dfun(a_out$dfun_out, prob = .50))
+q_dfun(a_out$dfun_out, .10)
+q_dfun(a_out$dfun_out, .90)
+(x_tmp <- ceiling(q_dfun(a_out$dfun_out, prob = .50)))
+
 tmp_out <- power4test(
               out,
-              n = tmp_x,
+              n = x_tmp,
               nrep = 2000,
               iseed = 2345)
 rejection_rates(tmp_out)
@@ -113,17 +120,21 @@ a_out <- power_algorithm_prob_bisection(
                                   by_x_1 = by_x_1,
                                   what = "lb",
                                   goal = "close_enough",
-                                  max_trials = 20,
-                                  trial_nrep = 50,
+                                  max_trials = 100,
                                   final_nrep = 2000)
 rejection_rates(a_out$by_x_1)
 plot(a_out$fit_1)
 abline(h = .80)
+plot(a_out$x_history, type = "l")
+abline(h = q_dfun(a_out$dfun_out))
 plot(a_out$dfun_out, type = "l")
-(tmp_x <- q_dfun(a_out$dfun_out, prob = .50))
+q_dfun(a_out$dfun_out, .10)
+q_dfun(a_out$dfun_out, .90)
+(x_tmp <- ceiling(q_dfun(a_out$dfun_out, prob = .50)))
+
 tmp_out <- power4test(
               out,
-              n = tmp_x,
+              n = x_tmp,
               nrep = 2000,
               iseed = 2345)
 rejection_rates(tmp_out)

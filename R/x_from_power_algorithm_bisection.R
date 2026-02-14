@@ -2020,7 +2020,8 @@ bisection_status_message <- function(x,
   status_msgs <- c(
         "Solution found." = 0,
         "Maximum iteration (max_trials) reached." = 1,
-        "Changes in the two iterations less than 'delta_tol'." = 2
+        "Changes in the last_k iterations less than 'delta_tol'." = 2,
+        "Search terminated. Changes in the last_k iterations less than 'delta_tol'." = 3
       )
   status_msgs[status_msgs == x]
 }

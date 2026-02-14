@@ -18,7 +18,6 @@ alg_prob_bisection <- function(
     save_sim_all,
     is_by_x,
     object_by_org,
-    trial_nrep,
     final_nrep,
     final_R,
     ci_level = .95,
@@ -31,13 +30,23 @@ alg_prob_bisection <- function(
     extend_maxiter = 5,
     what = c("point", "ub", "lb"),
     goal = c("ci_hit", "close_enough"),
-    tol = .02,
+    tol = .005,
     delta_tol = switch(x,
-                    n = 1,
-                    es = .001),
+                    n = 10,
+                    es = .005),
     last_k = 3,
     variants = list()
 ) {
+
+  # Termination Criteria
+  # - Number of trials: max_trials
+  # - The range of x in the last_k trials is within delta_tol
+  # TODO:
+  # - Add time allowed?
+
+  # Solution found
+  # - Close enough (use tol)
+  # - CI hits (use ci)
 
   # ==== Pre-search setup ====
 
@@ -55,7 +64,6 @@ alg_prob_bisection <- function(
     save_sim_all = save_sim_all,
     is_by_x = is_by_x,
     object_by_org = object_by_org,
-    trial_nrep = trial_nrep,
     final_nrep = final_nrep,
     final_R = final_R,
     what = what,
@@ -97,7 +105,6 @@ alg_prob_bisection <- function(
     progress = progress,
     simulation_progress = simulation_progress,
     max_trials = max_trials,
-    trial_nrep = trial_nrep,
     final_nrep = final_nrep,
     R = R,
     save_sim_all = save_sim_all,
@@ -121,19 +128,19 @@ alg_prob_bisection <- function(
 }
 
 #' @noRd
-power_algorithm_prob_bisection <- function(object,
+power_algorithm_prob_bisection <- function(
+                                      object,
                                       x,
                                       pop_es_name = NULL,
                                       ...,
                                       target_power = .80,
                                       ci_level = .95,
-                                      x_interval = switch(x, n = c(100, 1000),
-                                                             es = c(.10, .50)),
+                                      x_interval = switch(x, n = c(50, 2000),
+                                                             es = c(.00, .70)),
                                       extendInt = c("no", "yes", "downX", "upX"),
                                       progress = TRUE,
                                       simulation_progress = TRUE,
-                                      max_trials = 10,
-                                      trial_nrep = 50,
+                                      max_trials = 100,
                                       final_nrep = 400,
                                       R = NULL,
                                       power_model = NULL,
@@ -155,8 +162,8 @@ power_algorithm_prob_bisection <- function(object,
                                       goal = c("ci_hit", "close_enough"),
                                       tol = .005,
                                       delta_tol = switch(x,
-                                                      n = 1,
-                                                      es = .001),
+                                                      n = 10,
+                                                      es = .005),
                                       last_k = 3,
                                       variants = list()) {
   extendInt <- match.arg(extendInt)
@@ -194,15 +201,21 @@ power_algorithm_prob_bisection <- function(object,
                     use_power_curve_min_points = 2,
                     power_curve_args = list(),
                     use_power_curve_hybrid = TRUE,
-                    muller = FALSE,
-                    min_interval_width = c(n = 2,
-                                           es = .001),
+                    total_nrep = 5000,
+                    initial_nrep = 50,
+                    nrep_step = 50,
+                    trial_nrep = NULL,
                     npoints = 200,
                     p = .60)
   variants <- utils::modifyList(variants0,
                                 variants)
+  if (is.null(variants$trial_nrep)) {
+    variants$trial_nrep <- ceiling(variants$total_nrep / max_trials)
+  }
   proxy_power <- NULL
   if (variants$use_power_curve_assist) {
+    # TODO:
+    # - Can keep for now because we may use power_curve.
     proxy_power <- tryCatch(target_power_adjusted(
                       target_power = target_power,
                       goal = goal,
@@ -234,7 +247,7 @@ power_algorithm_prob_bisection <- function(object,
                      ci_level = ci_level,
                      progress = progress,
                      digits = digits,
-                     nrep = trial_nrep,
+                     nrep = variants$trial_nrep,
                      R = R,
                      what = what,
                      simulation_progress = simulation_progress,
@@ -298,7 +311,7 @@ power_algorithm_prob_bisection <- function(object,
                  ci_level = ci_level,
                  progress = progress,
                  digits = digits,
-                 nrep = trial_nrep,
+                 nrep = variants$trial_nrep,
                  R = R,
                  what = what,
                  simulation_progress = simulation_progress,
@@ -340,7 +353,7 @@ power_algorithm_prob_bisection <- function(object,
                  ci_level = ci_level,
                  progress = progress,
                  digits = digits,
-                 nrep = trial_nrep,
+                 nrep = variants$trial_nrep,
                  R = R,
                  what = what,
                  simulation_progress = simulation_progress,
@@ -427,7 +440,7 @@ power_algorithm_prob_bisection <- function(object,
                                         pop_es_name = pop_es_name,
                                         target_power = target_power,
                                         ci_level = ci_level,
-                                        nrep = trial_nrep,
+                                        nrep = variants$trial_nrep,
                                         target_nrep = final_nrep,
                                         R = R,
                                         what = what,
@@ -642,24 +655,39 @@ power_algorithm_prob_bisection <- function(object,
       x_i <- ceiling(x_i)
     }
 
-    # Do the probabilistic bisection search
-
-    # if (x_type == "n") {
-    #   x_i <- ceiling(x_i)
-    # }
-
     # ==== Start the loop ====
 
     i <- 1
+    nreps_total <- 0
+    nrep_i <- variants$initial_nrep
+    step_up_factor <- 4
 
-    while (i <= max_trials) {
+    while ((i <= max_trials) ||
+           (nreps_total > variants$total_nrep)) {
 
       # TODO:
       # - Add termination criteria
 
+      step_up <- !check_changes(
+              x_history = x_history,
+              delta_tol = delta_tol * step_up_factor,
+              last_k = last_k
+            )
+
+      if (step_up) {
+        nrep_i <- min(final_nrep,
+                      nrep_i + variants$nrep_step)
+        step_up_factor <- max(1, step_up_factor - 1)
+      }
+
       if (progress) {
         cat("\nIteration #", i, "\n")
+        cat("\nTotal replications accumulated: ", nreps_total)
+        cat("\nNumber of replications for this iteration: ", nrep_i)
+        cat("\n")
       }
+
+      nreps_total <- nreps_total + nrep_i
 
       # ==== Compute f(x) ====
 
@@ -670,7 +698,7 @@ power_algorithm_prob_bisection <- function(object,
                  ci_level = ci_level,
                  progress = progress,
                  digits = digits,
-                 nrep = trial_nrep,
+                 nrep = nrep_i,
                  R = R,
                  what = what,
                  simulation_progress = simulation_progress,
@@ -694,75 +722,56 @@ power_algorithm_prob_bisection <- function(object,
         cat("\n")
       }
 
-      # TODO:
-      # - Check NA, error, etc.
-      # Convergence?
-      # final_nrep and nrep are always the same
-      # for now for bisection
-
-      # ==== Is x a solution? ====
-
-      # TDOO:
-      # - Decide whether we need to check here
-
-      # ok <- check_solution(
-      #         f_i = reject_i,
-      #         target_power = target_power,
-      #         nrep = final_nrep,
-      #         final_nrep = final_nrep,
-      #         ci_level = ci_level,
-      #         what = what,
-      #         goal = goal,
-      #         tol = tol
-      #       )
-      ok <- FALSE
+      # ==== Record the history ====
 
       f_history[i] <- as.numeric(out_i)
       x_history[i] <- x_i
-      x_interval_history[i, ] <- c(lower_i, upper_i)
-      f_interval_history[i, ] <- c(f.lower_i, f.upper_i)
+      # f_interval_history[i, ] <- c(f.lower_i, f.upper_i)
       reject_history[i] <- reject_i
 
-      if (ok) {
+      # ==== Is x a solution?
+      #
+      # No need to check during the iteration because the
+      # nrep will not be the final nrep.
+      # The solution will be checked again after the search.
 
-        # ==== Yes. Solution found ====
+      # ==== Check changes in the last_k iterations ====
 
-        # Solution found
+      # For PBA, changes_ok FALSE is a termination criterion,
+      # not a problem.
 
-        ci_hit <- switch(goal,
-                         ci_hit = TRUE,
-                         close_enough = NA)
-        solution_found <- TRUE
+      changes_ok <- check_changes(
+              x_history = x_history,
+              delta_tol = delta_tol,
+              last_k = last_k
+            )
 
-        status <- bisection_status_message(0, status)
+      if (progress && (i >= last_k)) {
+        tmp <- x_history[(i - last_k + 1):i]
+        tmp <- diff(range(tmp))
+        cat("The range of changes in the last",
+            last_k,
+            "iteration:",
+            switch(x_type,
+                   n = tmp,
+                   es = formatC(tmp,
+                                digits = digits)),
+            "\n")
+      }
 
+      if (!changes_ok) {
+
+        status <- bisection_status_message(3, status)
+
+        cat("** Search ended **: The range of changes in the last ",
+            last_k,
+            " iterations is less than ",
+            delta_tol,
+            ".\n",
+            sep = "")
         break
 
       }
-
-      # ==== Check changes ====
-
-      # TODO:
-      # - Update this criterion
-
-      # changes_ok <- check_changes(
-      #         x_history = x_history,
-      #         delta_tol = delta_tol,
-      #         last_k = last_k
-      #       )
-
-      # if (!changes_ok) {
-
-      #   status <- bisection_status_message(2, status)
-      #   break
-
-      # }
-
-      # ==== No solution. Update the probabilities ====
-
-      # if (x_type == "n") {
-      #   x_i <- ceiling(x_i)
-      # }
 
       if (sign(out_i) == sign(f.lower_i)) {
 
@@ -796,14 +805,28 @@ power_algorithm_prob_bisection <- function(object,
         x_i <- ceiling(x_i)
       }
 
-      # TODO:
-      # - Handle x tried before
+      crlo <- q_dfun(
+                  dfun_i,
+                  prob = .10
+                )
+      crhi <- q_dfun(
+                  dfun_i,
+                  prob = .90
+                )
+
+      # ==== Record the history ====
+
+      x_interval_history[i, ] <- c(crlo, crhi)
+
+      # No need to reuse results if x has tried.
+      # A new draw gives new information.
 
       if (progress) {
-        print_interval(lower = lower_i,
-                       upper = upper_i,
+        print_interval(lower = crlo,
+                       upper = crhi,
                        digits = digits,
-                       x_type = x_type)
+                       x_type = x_type,
+                       prefix = "80% interval for the posterior distribution:")
         cat("Updated x:", x_i, "\n")
       }
 
@@ -813,11 +836,26 @@ power_algorithm_prob_bisection <- function(object,
 
     # ==== End the loop ====
 
+    if (i == max_trials) {
+      if (progress) {
+        cat("\n** Search ended **: Maximum number of trials reached.\n")
+      }
+    }
+
+    if (nreps_total > variants$total_nrep) {
+      if (progress) {
+        cat("\n** Search ended **: Total number of replications reached.\n")
+      }
+    }
+
   } else {
 
     # No iteration
 
   }
+
+  # TODO:
+  # - Run one more time using final_nrep
 
   # Prepare the output
 
@@ -938,7 +976,7 @@ power_algorithm_prob_bisection <- function(object,
   # final x_i is a solution.
 
   # Not used in probabilistic bisection
-  x_interval_history[] <- NA
+  # x_interval_history[] <- NA
   f_interval_history[] <- NA
 
   out <- list(by_x_1 = by_x_1,
@@ -991,7 +1029,6 @@ power_algorithm_prob_bisection_pre_i <- function(object,
                                             upper_bound,
                                             nls_control,
                                             nls_args,
-                                            trial_nrep,
                                             final_nrep,
                                             final_R,
                                             what,
@@ -1166,7 +1203,8 @@ update_dfun <- function(
   dfun,
   x_i,
   p,
-  z_i) {
+  z_i
+) {
   j <- which.min(abs(dfun[, "x"] - x_i))
   cd_i <- cumsum(dfun[, "prob"])[j]
   gamma_i <- (1 - cd_i) * p +
@@ -1211,4 +1249,20 @@ q_dfun <- function(
   x1 <- dfun[i + 1, "x"]
   out <- x0 + yd * (x1 - x0)
   unname(out)
+}
+
+#' @noRd
+gen_nreps <- function(
+  total_nrep = 10000,
+  max_trials = 100,
+  initial_nrep = 50
+) {
+  # TODO:
+  # - Handle incompatible settings
+  a <- total_nrep - initial_nrep * max_trials
+  b <- max_trials - 1
+  d <- seq(1, b)
+  e <- a / sum(d)
+  out <- c(initial_nrep, initial_nrep + d * e)
+  out <- round(out)
 }
