@@ -64,8 +64,9 @@ a_out <- power_algorithm_prob_bisection(
                                   goal = "close_enough",
                                   max_trials = 100,
                                   final_nrep = 2000,
-                                  variants = list(nrep_step = 0,
-                                                  last_k = 5))
+                                  last_k = 5,
+                                  delta_tol = 5,
+                                  variants = list(nrep_step = 0))
 rejection_rates(a_out$by_x_1)
 plot(a_out$fit_1)
 abline(h = .80)
@@ -93,7 +94,10 @@ a_out <- power_algorithm_prob_bisection(
                                   what = "ub",
                                   goal = "close_enough",
                                   max_trials = 100,
-                                  final_nrep = 2000)
+                                  final_nrep = 2000,
+                                  last_k = 5,
+                                  delta_tol = 5,
+                                  variants = list(nrep_step = 0))
 rejection_rates(a_out$by_x_1)
 plot(a_out$fit_1)
 abline(h = .80)
@@ -121,7 +125,10 @@ a_out <- power_algorithm_prob_bisection(
                                   what = "lb",
                                   goal = "close_enough",
                                   max_trials = 100,
-                                  final_nrep = 2000)
+                                  final_nrep = 2000,
+                                  last_k = 5,
+                                  delta_tol = 5,
+                                  variants = list(nrep_step = 0))
 rejection_rates(a_out$by_x_1)
 plot(a_out$fit_1)
 abline(h = .80)
