@@ -240,11 +240,13 @@ a_out <- power_algorithm_prob_bisection(
                                   R = 79,
                                   by_x_1 = by_x_1,
                                   x_interval = c(.00, .90),
+                                  simulation_progress = FALSE,
                                   max_trials = 100,
                                   final_nrep = 2000,
                                   last_k = 5,
-                                  delta_tol = .005,
-                                  variants = list(nrep_step = 0))
+                                  delta_tol = .001,
+                                  variants = list(nrep_step = 0,
+                                                  npoints = 1000))
 rejection_rates(a_out$by_x_1)
 (x_tmp <- q_dfun(a_out$dfun_out, prob = .50))
 plot(a_out$fit_1)
@@ -269,7 +271,7 @@ rejection_rates(tmp_out)
 
 # Close enough
 
-set.seed(1234)
+set.seed(12345)
 a_out <- power_algorithm_prob_bisection(
                                   object = out,
                                   x = "es",
@@ -279,11 +281,13 @@ a_out <- power_algorithm_prob_bisection(
                                   goal = "close_enough",
                                   tol = .005,
                                   x_interval = c(.00, .90),
+                                  simulation_progress = FALSE,
                                   max_trials = 100,
                                   final_nrep = 2000,
                                   last_k = 5,
-                                  delta_tol = .005,
-                                  variants = list(nrep_step = 0))
+                                  delta_tol = .001,
+                                  variants = list(nrep_step = 0,
+                                                  npoints = 1000))
 rejection_rates(a_out$by_x_1)
 (x_tmp <- q_dfun(a_out$dfun_out, prob = .50))
 plot(a_out$fit_1)
@@ -306,19 +310,6 @@ tmp_out <- power4test(
               parallel = TRUE)
 rejection_rates(tmp_out)
 
-
-
-set.seed(1234)
-a_out <- power_algorithm_bisection(object = out,
-                                   x = "es",
-                                   pop_es_name = "m~x",
-                                   by_x_1 = by_x_1,
-                                   goal = "close_enough",
-                                   tol = .30)
-rejection_rates(a_out$by_x_1)
-plot(a_out$fit_1)
-abline(h = .80)
-
 # ub
 
 set.seed(1234)
@@ -332,11 +323,13 @@ a_out <- power_algorithm_prob_bisection(
                                   goal = "close_enough",
                                   tol = .005,
                                   x_interval = c(.00, .90),
+                                  simulation_progress = FALSE,
                                   max_trials = 100,
                                   final_nrep = 2000,
                                   last_k = 5,
-                                  delta_tol = .005,
-                                  variants = list(nrep_step = 0))
+                                  delta_tol = .001,
+                                  variants = list(nrep_step = 0,
+                                                  npoints = 1000))
 rejection_rates(a_out$by_x_1)
 (x_tmp <- q_dfun(a_out$dfun_out, prob = .50))
 plot(a_out$fit_1)
@@ -374,11 +367,13 @@ a_out <- power_algorithm_prob_bisection(
                                   goal = "close_enough",
                                   tol = .005,
                                   x_interval = c(.00, .90),
+                                  simulation_progress = FALSE,
                                   max_trials = 100,
                                   final_nrep = 2000,
                                   last_k = 5,
-                                  delta_tol = .005,
-                                  variants = list(nrep_step = 0))
+                                  delta_tol = .001,
+                                  variants = list(nrep_step = 0,
+                                                  npoints = 1000))
 rejection_rates(a_out$by_x_1)
 (x_tmp <- q_dfun(a_out$dfun_out, prob = .50))
 plot(a_out$fit_1)
