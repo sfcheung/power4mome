@@ -1732,7 +1732,8 @@ gen_objective <- function(object,
                           simulation_progress,
                           save_sim_all,
                           store_output,
-                          target_nrep) {
+                          target_nrep,
+                          progress_type = c("cat", "cli")) {
   what <- match.arg(what)
   # Create the objective function
   f <- function(x_i,
@@ -1751,7 +1752,9 @@ gen_objective <- function(object,
                 store_output = TRUE,
                 out_i = NULL,
                 power_i = NULL,
-                target_nrep = NA) {
+                target_nrep = NA,
+                progress_type,
+                pb_id) {
     if (is.na(target_nrep)) {
       target_nrep <- nrep
     }
@@ -1765,9 +1768,17 @@ gen_objective <- function(object,
       tmp <- switch(x,
                     n = as.character(x_i),
                     es = formatC(x_i,
-                                 digits = digits,
-                                 format = "f"))
-      cat("\nTry x =", tmp, "\n")
+                                  digits = digits,
+                                  format = "f"))
+      if (progress_type == "cat") {
+        cat("\nTry x =", tmp, "\n")
+      }
+      if (progress_type == "cli") {
+        msg <- paste0("Try ", x, ":", tmp)
+        # TODO:
+        # - Fix this progress status
+        # cli::cli_progress_update(id = pb_id)
+      }
     }
 
     # If out_i is supplied
@@ -1827,19 +1838,38 @@ gen_objective <- function(object,
     ci_i <- as.vector(ci_i)
 
     if (progress) {
-      tmp1 <- formatC(power_i, digits = digits, format = "f")
-      tmp2 <- paste0("[",
-                     paste0(formatC(ci_i, digits = digits, format = "f"),
-                            collapse = ","),
-                     "]")
-      cat("\nEstimated power at ", x_i, ": ",
-          tmp1,
-          ", ", formatC(ci_level*100,
-                       digits = max(0, digits - 2),
-                       format = "f"), "% confidence interval: ",
-          tmp2,
-          "\n",
-          sep = "")
+      if (progress_type == "cat") {
+        tmp1 <- formatC(power_i, digits = digits, format = "f")
+        tmp2 <- paste0("[",
+                       paste0(formatC(ci_i, digits = digits, format = "f"),
+                              collapse = ","),
+                      "]")
+        cat("\nEstimated power at ", x_i, ": ",
+            tmp1,
+            ", ", formatC(ci_level*100,
+                          digits = max(0, digits - 2),
+                          format = "f"), "% confidence interval: ",
+            tmp2,
+            "\n",
+            sep = "")
+      }
+      if (progress_type == "cli") {
+        tmp1 <- formatC(power_i, digits = digits, format = "f")
+        tmp2 <- paste0("[",
+                       paste0(formatC(ci_i, digits = digits, format = "f"),
+                              collapse = ","),
+                       "]")
+        msg <- paste0("Estimated power at ",
+                      x_i, ": ",
+                      tmp1, " ",
+                      formatC(ci_level * 100,
+                              digits = max(0, digits - 2),
+                              format = "f"), "% CI ",
+                      tmp2)
+        # TODO:
+        # - Fix this progress status
+        # cli::cli_progress_update(id = pb_id)
+      }
     }
 
     # ==== Return function value ====
@@ -1875,6 +1905,7 @@ gen_objective <- function(object,
   formals(f)$save_sim_all <- save_sim_all
   formals(f)$store_output <- store_output
   formals(f)$target_nrep <- NA
+  formals(f)$progress_type <- "cat"
 
   f
 }

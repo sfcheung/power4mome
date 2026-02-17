@@ -37,9 +37,10 @@ set.seed(1234)
 a_out <- power_algorithm_prob_bisection(object = out,
                                    x = "n",
                                    by_x_1 = by_x_1,
-                                   max_trials = 50,
+                                   max_trials = 100,
                                    final_nrep = 2000,
-                                   variants = list(trial_nrep = 20))
+                                   last_k = 5,
+                                   delta_tol = 5)
 rejection_rates(a_out$by_x_1)
 plot(a_out$fit_1)
 abline(h = .80)

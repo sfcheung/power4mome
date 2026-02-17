@@ -9,6 +9,7 @@ alg_prob_bisection <- function(
     x_max,
     x_min,
     progress,
+    progress_type = c("cat", "cli"),
     x_include_interval,
     x_interval = switch(
                   x,
@@ -48,6 +49,8 @@ alg_prob_bisection <- function(
   # - Close enough (use tol)
   # - CI hits (use ci)
 
+  progress_type <- match.arg(progress_type)
+
   # ==== Pre-search setup ====
 
   a_out <- power_algorithm_prob_bisection_pre_i(
@@ -58,6 +61,7 @@ alg_prob_bisection <- function(
     x_max = x_max,
     x_min = x_min,
     progress = progress,
+    progress_type = progress_type,
     x_include_interval = x_include_interval,
     x_interval = x_interval,
     simulation_progress = simulation_progress,
@@ -103,6 +107,7 @@ alg_prob_bisection <- function(
     x_interval = x_interval_updated,
     extendInt = extendInt,
     progress = progress,
+    progress_type = progress_type,
     simulation_progress = simulation_progress,
     max_trials = max_trials,
     final_nrep = final_nrep,
@@ -139,7 +144,8 @@ power_algorithm_prob_bisection <- function(
                                                              es = c(.00, .70)),
                                       extendInt = c("no", "yes", "downX", "upX"),
                                       progress = TRUE,
-                                      simulation_progress = TRUE,
+                                      progress_type = c("cli", "cat"),
+                                      simulation_progress = FALSE,
                                       max_trials = 100,
                                       final_nrep = 400,
                                       R = NULL,
@@ -169,6 +175,7 @@ power_algorithm_prob_bisection <- function(
   extendInt <- match.arg(extendInt)
   what <- match.arg(what)
   goal <- match.arg(goal)
+  progress_type <- match.arg(progress_type)
   status <- NULL
   changes_ok <- TRUE
   f_history <- vector("numeric", max_trials)
@@ -203,7 +210,7 @@ power_algorithm_prob_bisection <- function(
                     use_power_curve_hybrid = TRUE,
                     total_nrep = 5000,
                     initial_nrep = 50,
-                    nrep_step = 50,
+                    nrep_step = 0,
                     trial_nrep = NULL,
                     npoints = 200,
                     p = .60)
@@ -253,7 +260,8 @@ power_algorithm_prob_bisection <- function(
                      simulation_progress = simulation_progress,
                      save_sim_all = save_sim_all,
                      store_output = TRUE,
-                     target_nrep = final_nrep)
+                     target_nrep = final_nrep,
+                     progress_type = progress_type)
 
   # ==== Get the initial interval ====
 
@@ -275,7 +283,6 @@ power_algorithm_prob_bisection <- function(
                    digits = digits,
                    x_type = x_type,
                    prefix = "Initial interval:")
-    cat("\n")
   }
 
   # Compute f.lower and f.upper if not available
@@ -299,7 +306,12 @@ power_algorithm_prob_bisection <- function(
     attr(f.lower, "output") <- output_tmp
   } else {
     if (progress) {
-      cat("\nDo the simulation for the lower bound:\n")
+      if (progress_type == "cat") {
+        cat("\nDo the simulation for the lower bound:\n")
+      }
+      if (progress_type == "cli") {
+        cat("\nDo the simulation for the lower bound:\n")
+      }
     }
 
     # ==== Estimate f for the lower bound  ====
@@ -310,6 +322,7 @@ power_algorithm_prob_bisection <- function(
                  target_power = target_power,
                  ci_level = ci_level,
                  progress = progress,
+                 progress_type = "cat",
                  digits = digits,
                  nrep = variants$trial_nrep,
                  R = R,
@@ -341,7 +354,12 @@ power_algorithm_prob_bisection <- function(
     attr(f.upper, "output") <- output_tmp
   } else {
     if (progress) {
-      cat("\nDo the simulation for the upper bound:\n")
+      if (progress_type == "cat") {
+        cat("\nDo the simulation for the upper bound:\n")
+      }
+      if (progress_type == "cli") {
+        cat("\nDo the simulation for the upper bound:\n")
+      }
     }
 
     # ==== Estimate f for the upper bound  ====
@@ -352,6 +370,7 @@ power_algorithm_prob_bisection <- function(
                  target_power = target_power,
                  ci_level = ci_level,
                  progress = progress,
+                 progress_type = "cat",
                  digits = digits,
                  nrep = variants$trial_nrep,
                  R = R,
@@ -365,18 +384,20 @@ power_algorithm_prob_bisection <- function(
   }
 
   if (progress) {
-    cat("\n")
-    print_interval(lower = lower,
-                   upper = upper,
-                   digits = digits,
-                   x_type = x_type,
-                   prefix = "Initial interval:")
-    cat("\n")
-    cat("- Rejection Rates:\n")
-    tmp <- rejection_rates(by_x_1,
-                           level = ci_level)
-    print(tmp, annotation = FALSE)
-    cat("\n")
+    if (progress_type == "cat") {
+      cat("\n")
+      print_interval(lower = lower,
+                     upper = upper,
+                     digits = digits,
+                     x_type = x_type,
+                     prefix = "Initial interval:")
+      cat("\n")
+      cat("- Rejection Rates:\n")
+      tmp <- rejection_rates(by_x_1,
+                            level = ci_level)
+      print(tmp, annotation = FALSE)
+      cat("\n")
+    }
   }
 
   do_search <- TRUE
@@ -662,6 +683,29 @@ power_algorithm_prob_bisection <- function(
     nrep_i <- variants$initial_nrep
     step_up_factor <- 4
 
+    time_start <- Sys.time()
+
+    if (progress_type == "cli") {
+      # The progress message for the loop
+      cat("Progress note:",
+          " #: Iteration number",
+          " TP: Time passed",
+          paste0(" ETA: Estimated time to do all ",
+                 variants$total_nrep,
+                 " replications"),
+          " Rep: The number of replications used out of the total number of replications",
+          paste0(" Dx: The range of changes in the ", last_k, " iterations"),
+          sep = "\n")
+      changes_last_k <- character(0)
+      time_passed <- character(0)
+      eta <- character(0)
+      pb_id <- cli::cli_progress_message(
+          " #:{i}{time_passed}{eta}|Rep:{nreps_total}/{variants$total_nrep}{changes_last_k}"
+        )
+    } else {
+      pb_id <- NA
+    }
+
     while ((i <= max_trials) ||
            (nreps_total > variants$total_nrep)) {
 
@@ -680,14 +724,39 @@ power_algorithm_prob_bisection <- function(
         step_up_factor <- max(1, step_up_factor - 1)
       }
 
-      if (progress) {
-        cat("\nIteration #", i, "\n")
-        cat("\nTotal replications accumulated: ", nreps_total)
-        cat("\nNumber of replications for this iteration: ", nrep_i)
-        cat("\n")
-      }
-
       nreps_total <- nreps_total + nrep_i
+
+      if (progress) {
+        if (progress_type == "cat") {
+          cat("\nIteration #", i, "\n")
+          cat("\nTotal replications accumulated: ", nreps_total)
+          cat("\nNumber of replications for this iteration: ", nrep_i)
+          cat("\n")
+        }
+        if (progress_type == "cli") {
+          time_passed0 <- difftime(
+                            Sys.time(),
+                            time_start
+                          )
+          time_passed <- paste0("|TP:",
+                                format(time_passed0, digits = 4),
+                                "")
+          if (i >= 2) {
+            tmp <- (variants$total_nrep - nreps_total) * time_passed0 / nreps_total
+            tmp2 <- tmp
+            units(tmp2) <- "secs"
+            if (as.numeric(tmp2) > 60 * 60) {
+              units(tmp) <- "hours"
+            } else if (as.numeric(tmp2) > 60) {
+              units(tmp) <- "mins"
+            }
+            eta <- paste0("|ETA:",
+                          format(tmp, digits = 4),
+                          "")
+          }
+          cli::cli_progress_update(id = pb_id)
+        }
+      }
 
       # ==== Compute f(x) ====
 
@@ -697,6 +766,7 @@ power_algorithm_prob_bisection <- function(
                  target_power = target_power,
                  ci_level = ci_level,
                  progress = progress,
+                 progress_type = progress_type,
                  digits = digits,
                  nrep = nrep_i,
                  R = R,
@@ -704,7 +774,8 @@ power_algorithm_prob_bisection <- function(
                  simulation_progress = simulation_progress,
                  save_sim_all = save_sim_all,
                  store_output = TRUE,
-                 target_nrep = final_nrep)
+                 target_nrep = final_nrep,
+                 pb_id = pb_id)
 
       output_i <- attr(out_i, "output")
       by_x_1 <- c(by_x_1, output_i,
@@ -714,12 +785,14 @@ power_algorithm_prob_bisection <- function(
       reject_i <- rejection_rates(output_i)$reject
 
       if (progress) {
-        cat("- Rejection Rates:\n")
-        # Arguments for rejection rates should be retrieved from the object
-        tmp <- rejection_rates(by_x_1,
-                               level = ci_level)
-        print(tmp, annotation = FALSE)
-        cat("\n")
+        if (progress_type == "cat") {
+          cat("- Rejection Rates:\n")
+          # Arguments for rejection rates should be retrieved from the object
+          tmp <- rejection_rates(by_x_1,
+                                 level = ci_level)
+          print(tmp, annotation = FALSE)
+          cat("\n")
+        }
       }
 
       # ==== Record the history ====
@@ -749,14 +822,32 @@ power_algorithm_prob_bisection <- function(
       if (progress && (i >= last_k)) {
         tmp <- x_history[(i - last_k + 1):i]
         tmp <- diff(range(tmp))
-        cat("The range of changes in the last",
-            last_k,
-            "iteration:",
-            switch(x_type,
-                   n = tmp,
-                   es = formatC(tmp,
-                                digits = digits)),
-            "\n")
+        tmp_str <- switch(x_type,
+                          n = tmp,
+                          es = formatC(tmp,
+                                       digits = digits))
+        if (progress_type == "cat") {
+          cat("The range of changes in the last",
+              last_k,
+              "iteration:",
+              tmp_str,
+              "\n")
+        }
+        if (progress_type == "cli") {
+          changes_last_k <- paste0("|",
+                                   "Dx:",
+                                   tmp_str)
+          time_passed <- difftime(
+                            Sys.time(),
+                            time_start
+                          )
+          time_passed <- paste0("|TP:",
+                                format(time_passed, digits = 4),
+                                "")
+          cli::cli_progress_update(
+              id = pb_id
+            )
+        }
       }
 
       if (!changes_ok) {
@@ -822,12 +913,16 @@ power_algorithm_prob_bisection <- function(
       # A new draw gives new information.
 
       if (progress) {
-        print_interval(lower = crlo,
-                       upper = crhi,
-                       digits = digits,
-                       x_type = x_type,
-                       prefix = "80% interval for the posterior distribution:")
-        cat("Updated x:", x_i, "\n")
+        # # TODO:
+        # # - Decide whether print this.
+        # if (progress_type == "cat") {
+        #   print_interval(lower = crlo,
+        #                  upper = crhi,
+        #                  digits = digits,
+        #                  x_type = x_type,
+        #                  prefix = "80% interval for the posterior distribution:")
+        #   cat("Updated x:", x_i, "\n")
+        # }
       }
 
       i <- i + 1
@@ -836,13 +931,17 @@ power_algorithm_prob_bisection <- function(
 
     # ==== End the loop ====
 
+    if (progress_type == "cli") {
+      cat("\n")
+    }
+
     if (i == max_trials) {
       if (progress) {
         cat("\n** Search ended **: Maximum number of trials reached.\n")
       }
     }
 
-    if (nreps_total > variants$total_nrep) {
+    if (nreps_total >= variants$total_nrep) {
       if (progress) {
         cat("\n** Search ended **: Total number of replications reached.\n")
       }
@@ -1017,6 +1116,7 @@ power_algorithm_prob_bisection_pre_i <- function(object,
                                             x_max,
                                             x_min,
                                             progress,
+                                            progress_type = c("cat", "cli"),
                                             x_include_interval,
                                             x_interval,
                                             simulation_progress,
@@ -1036,6 +1136,8 @@ power_algorithm_prob_bisection_pre_i <- function(object,
                                             tol,
                                             ci_level
                                             ) {
+
+  progress_type <- match.arg(progress_type)
 
   # ==== Initial values ====
 
