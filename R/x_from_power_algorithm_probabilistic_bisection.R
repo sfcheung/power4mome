@@ -193,6 +193,8 @@ power_algorithm_prob_bisection <- function(
   reject_history <- vector("numeric", max_trials)
   reject_history[] <- NA
 
+  dfun_history <- vector("list", max_trials)
+
   i <- NA
 
   # what: The value to be examined.
@@ -922,6 +924,8 @@ power_algorithm_prob_bisection <- function(
                   z_i = z_i
                 )
 
+      dfun_history[[i]] <- dfun_i
+
       x_i <- q_dfun(
                 dfun = dfun_i,
                 prob = .50
@@ -1143,6 +1147,7 @@ power_algorithm_prob_bisection <- function(
               f_interval_history = f_interval_history[seq_len(i - 1), ],
               reject_history = reject_history[!is.na(reject_history)],
               f_history = f_history[!is.na(f_history)],
+              dfun_history = dfun_history[seq_along(x_history)],
               tol = tol,
               delta_tol = delta_tol,
               last_k = last_k,
