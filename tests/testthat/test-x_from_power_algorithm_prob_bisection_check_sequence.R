@@ -36,23 +36,24 @@ by_x_1 <- power4test_by_n(out,
 
 # Close enough
 
-set.seed(1234)
+set.seed(12345)
 a_out <- power_algorithm_prob_bisection(
                                   object = out,
                                   x = "n",
                                   by_x_1 = by_x_1,
                                   final_nrep = 2000,
-                                  max_trials = 10,
-                                  variants = list(total_nrep = 10 * 50))
+                                  max_trials = 100,
+                                  variants = list(total_nrep = 100 * 50))
 x_history <- a_out$x_history
 f_history <- a_out$f_history
-dfun_history <- a_out$dfun_history
+dfun_history <- a_out$dfun_history[seq_along(f_history)]
 
 i <- seq_along(x_history)
 i <- sample.int(length(x_history))
 x_tmp <- x_history[i]
 f_tmp <- f_history[i]
 p <- .60
+all_equal_history <- vector("logical", length(i))
 dfun_i <- gen_dfun(
               interval = c(50, 2000),
               npoints = (2000 - 50 + 1)
@@ -63,6 +64,7 @@ for (i in seq_along(f_tmp)) {
   } else {
     z_i <- -1
   }
+
   dfun_i <- update_dfun(
               dfun = dfun_i,
               x_i = x_tmp[i],
@@ -71,8 +73,12 @@ for (i in seq_along(f_tmp)) {
             )
   plot(dfun_i, type = "l", col = "blue")
   plot(dfun_history[[i]], type = "l", col = "red")
-  all.equal(dfun_i, dfun_history[[i]])
+  all_equal_history[i] <- isTRUE(all.equal(
+                              dfun_i,
+                              dfun_history[[i]])
+                            )
 }
+all_equal_history
 all.equal(dfun_i,
           dfun_history[[i]])
 ylim <- range(c(dfun_i[, "prob"],
@@ -87,6 +93,11 @@ points(dfun_history[[i]],
 plot(dfun_i[, "prob"],
      dfun_history[[i]][, "prob"])
 
+# Confirmed that the final posterior distribution
+# does not depend on the order of the iterations.
+
+dfun_out <- a_out$dfun_out
+
 dfun_history_last <- dfun_history[[length(dfun_history)]]
 all.equal(dfun_out,
           dfun_history_last)
@@ -100,23 +111,5 @@ points(dfun_history_last,
        type = "l",
        col = "red")
 
-
-rejection_rates(a_out$by_x_1)
-(x_tmp <- ceiling(q_dfun(a_out$dfun_out, prob = .50)))
-plot(a_out$fit_1)
-abline(h = .80)
-abline(v = x_tmp)
-plot(a_out$x_history, type = "l")
-abline(h = q_dfun(a_out$dfun_out))
-plot(a_out$dfun_out, type = "l")
-q_dfun(a_out$dfun_out, .10)
-q_dfun(a_out$dfun_out, .90)
-
-tmp_out <- power4test(
-              out,
-              n = x_tmp,
-              nrep = 2000,
-              iseed = 2345)
-rejection_rates(tmp_out)
 
 })
