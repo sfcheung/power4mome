@@ -125,16 +125,18 @@ a_out <- power_algorithm_prob_bisection(
                                   x = "n",
                                   by_x_1 = by_x_1,
                                   what = "lb",
-                                  goal = "close_enough")
+                                  goal = "close_enough",
+                                  variants = list(use_estimated_p = TRUE))
 rejection_rates(a_out$by_x_1)
+(x_tmp <- ceiling(q_dfun(a_out$dfun_out, prob = .50)))
 plot(a_out$fit_1)
 abline(h = .80)
+abline(v = x_tmp)
 plot(a_out$x_history, type = "l")
 abline(h = q_dfun(a_out$dfun_out))
 plot(a_out$dfun_out, type = "l")
 q_dfun(a_out$dfun_out, .10)
 q_dfun(a_out$dfun_out, .90)
-(x_tmp <- ceiling(q_dfun(a_out$dfun_out, prob = .50)))
 
 tmp_out <- power4test(
               out,

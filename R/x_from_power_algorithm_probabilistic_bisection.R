@@ -195,6 +195,9 @@ power_algorithm_prob_bisection <- function(
 
   dfun_history <- vector("list", max_trials)
 
+  p_c_history <- vector("numeric", max_trials)
+  p_c_history[] <- NA
+
   i <- NA
 
   # what: The value to be examined.
@@ -215,7 +218,8 @@ power_algorithm_prob_bisection <- function(
                     nrep_step = 0,
                     trial_nrep = NULL,
                     npoints = 200,
-                    p = .60)
+                    p = .60,
+                    use_estimated_p = TRUE)
   variants <- utils::modifyList(variants0,
                                 variants)
 
@@ -904,12 +908,31 @@ power_algorithm_prob_bisection <- function(
 
       # ==== Update the density function ====
 
-      dfun_i <- update_dfun(
-                  dfun = dfun_i,
-                  x_i = x_i,
-                  p = p,
-                  z_i = z_i
-                )
+      if (variants$use_estimated_p) {
+        p_c_i <- p_c(
+                    target_power = target_power,
+                    power_i = reject_i,
+                    goal = goal,
+                    what = what,
+                    trial_nrep = nrep_i,
+                    level = ci_level,
+                    final_nrep = final_nrep
+                  )
+        p_c_history[i] <- p_c_i
+        dfun_i <- update_dfun(
+                    dfun = dfun_i,
+                    x_i = x_i,
+                    p = p_c_i,
+                    z_i = z_i
+                  )
+      } else {
+        dfun_i <- update_dfun(
+                    dfun = dfun_i,
+                    x_i = x_i,
+                    p = p,
+                    z_i = z_i
+                  )
+      }
 
       dfun_history[[i]] <- dfun_i
 
@@ -1151,6 +1174,7 @@ power_algorithm_prob_bisection <- function(
               reject_history = reject_history[i_tmp],
               f_history = f_history[i_tmp],
               dfun_history = dfun_history[i_tmp],
+              p_c_history = p_c_history[i_tmp],
               tol = tol,
               delta_tol = delta_tol,
               last_k = last_k,
