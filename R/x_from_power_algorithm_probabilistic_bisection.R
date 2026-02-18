@@ -738,9 +738,10 @@ power_algorithm_prob_bisection <- function(
         # The progress message for the loop
         cat("Search Progress Note:",
             "- #: Iteration number",
+            "- n/es: The value to try",
             "- TE: Time elapsed",
-            paste0(" ETA: Estimated time to do all ",
-                  variants$total_nrep,
+            paste0("- ETA: Estimated time to do all ",
+                   variants$total_nrep,
                   " replications"),
             "- Rep: The number of replications used out of the total number of replications",
             paste0("- Dx: The range of changes in the last ", last_k, " iterations"),
@@ -887,20 +888,6 @@ power_algorithm_prob_bisection <- function(
         }
       }
 
-      if (!changes_ok) {
-
-        status <- bisection_status_message(3, status)
-
-        cat("** Search ended **: The range of changes in the last ",
-            last_k,
-            " iterations is less than ",
-            delta_tol,
-            ".\n",
-            sep = "")
-        break
-
-      }
-
       if (sign(out_i) == sign(f.lower_i)) {
 
         # ==== Solution on the right ====
@@ -962,6 +949,20 @@ power_algorithm_prob_bisection <- function(
         #                  prefix = "80% interval for the posterior distribution:")
         #   cat("Updated x:", x_i, "\n")
         # }
+      }
+
+      if (!changes_ok) {
+
+        status <- bisection_status_message(3, status)
+
+        cat("** Search ended **: The range of changes in the last ",
+            last_k,
+            " iterations is less than ",
+            delta_tol,
+            ".\n",
+            sep = "")
+        break
+
       }
 
       i <- i + 1
@@ -1129,6 +1130,8 @@ power_algorithm_prob_bisection <- function(
   # x_interval_history[] <- NA
   f_interval_history[] <- NA
 
+  i_tmp <- !is.na(x_history)
+
   out <- list(by_x_1 = by_x_1,
               fit_1 = fit_1,
               ci_hit = ci_hit,
@@ -1142,12 +1145,12 @@ power_algorithm_prob_bisection <- function(
               solution_found = solution_found,
               status = status,
               iteration = i,
-              x_history = x_history[!is.na(x_history)],
-              x_interval_history = x_interval_history[seq_len(i - 1), ],
-              f_interval_history = f_interval_history[seq_len(i - 1), ],
-              reject_history = reject_history[!is.na(reject_history)],
-              f_history = f_history[!is.na(f_history)],
-              dfun_history = dfun_history[seq_along(x_history)],
+              x_history = x_history[i_tmp],
+              x_interval_history = x_interval_history[i_tmp, ],
+              f_interval_history = f_interval_history[i_tmp, ],
+              reject_history = reject_history[i_tmp],
+              f_history = f_history[i_tmp],
+              dfun_history = dfun_history[i_tmp],
               tol = tol,
               delta_tol = delta_tol,
               last_k = last_k,
