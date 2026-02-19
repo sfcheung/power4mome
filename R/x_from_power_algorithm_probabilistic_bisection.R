@@ -731,6 +731,8 @@ power_algorithm_prob_bisection <- function(
     while ((i <= max_trials) &&
            (nreps_total < variants$total_nrep)) {
 
+      # ==== Progress: Set up cli ====
+
       x_i_str <- switch(
                     x,
                     n = paste0("|n:", as.character(x_i)),
@@ -765,8 +767,7 @@ power_algorithm_prob_bisection <- function(
           )
       }
 
-      # TODO:
-      # - Add termination criteria
+      # ==== Progress: Show iteration progress ====
 
       if (progress) {
         if (progress_type == "cat") {
@@ -837,7 +838,7 @@ power_algorithm_prob_bisection <- function(
         }
       }
 
-      # ==== Record the history ====
+      # ==== Histories ====
 
       f_history[i] <- as.numeric(out_i)
       x_history[i] <- x_i
@@ -850,7 +851,7 @@ power_algorithm_prob_bisection <- function(
       # nrep will not be the final nrep.
       # The solution will be checked again after the search.
 
-      # ==== Check changes in the last_k iterations ====
+      # ==== Check and display changes in the last_k iterations ====
 
       # For PBA, changes_ok FALSE is a termination criterion,
       # not a problem.
@@ -918,6 +919,8 @@ power_algorithm_prob_bisection <- function(
         }
       }
 
+      # ==== Where the solution may be ====
+
       if (sign(out_i) == sign(f.lower_i)) {
 
         # ==== Solution on the right ====
@@ -982,7 +985,7 @@ power_algorithm_prob_bisection <- function(
                   prob = .90
                 )
 
-      # ==== Record the history ====
+      # ==== Histories ====
 
       x_interval_history[i, ] <- c(crlo, crhi)
 
@@ -1001,6 +1004,8 @@ power_algorithm_prob_bisection <- function(
         #   cat("Updated x:", x_i, "\n")
         # }
       }
+
+      # ==== Termination: last_k changes ====
 
       if (!changes_ok && !changes_ok_f) {
 
@@ -1021,6 +1026,8 @@ power_algorithm_prob_bisection <- function(
         break
 
       }
+
+      # ==== Next i: Set nrep ====
 
       step_up <- !check_changes(
               x_history = x_history,
@@ -1049,7 +1056,11 @@ power_algorithm_prob_bisection <- function(
         # }
       }
 
+      # ==== Next i: Update nreps_total ====
+
       nreps_total <- nreps_total + nrep_i
+
+      # ==== Next i ====
 
       i <- i + 1
 
