@@ -28,7 +28,7 @@ out <- power4test(nrep = 20,
                   fit_model_args = list(fit_function = "lm"),
                   test_fun = test_parameters,
                   test_args = list(par = "m~x"),
-                  parallel = TRUE,
+                  parallel = FALSE,
                   iseed = 1234)
 
 by_x_1 <- power4test_by_n(out,
@@ -36,22 +36,35 @@ by_x_1 <- power4test_by_n(out,
 
 # Close enough
 
-set.seed(1234)
+set.seed(24680)
 a_out <- power_algorithm_prob_bisection(
                                   object = out,
                                   x = "n",
                                   by_x_1 = by_x_1,
+                                  x_interval = c(50, 2000),
                                   final_nrep = 2000)
 rejection_rates(a_out$by_x_1)
 (x_tmp <- ceiling(q_dfun(a_out$dfun_out, prob = .50)))
+(x_lo <- q_dfun(a_out$dfun_out, .05))
+(x_hi <- q_dfun(a_out$dfun_out, .95))
 plot(a_out$fit_1)
-abline(h = .80)
-abline(v = x_tmp)
+abline(h = .80, col = "blue", lwd = 4)
+abline(v = x_tmp, col = "red", lwd = 4)
+abline(v = c(x_lo, x_hi), col = "black", lwd = 1, lty = "dotted")
 plot(a_out$x_history, type = "l")
-abline(h = q_dfun(a_out$dfun_out))
+abline(h = x_tmp, col = "blue", lwd = 4)
+abline(h = c(x_lo, x_hi), col = "black", lwd = 1, lty = "dotted")
+plot(a_out$f_history, type = "l")
+abline(h = 0, col = "blue", lwd = 4)
 plot(a_out$dfun_out, type = "l")
-q_dfun(a_out$dfun_out, .10)
-q_dfun(a_out$dfun_out, .90)
+abline(v = x_tmp, col = "red", lwd = 4)
+abline(v = c(x_lo, x_hi), col = "black", lwd = 1, lty = "dotted")
+plot(a_out$fit_1,
+     xlim = c(x_lo * .9, x_hi * 1.1))
+abline(h = .80, col = "blue", lwd = 4)
+abline(v = x_tmp, col = "red", lwd = 4)
+abline(v = c(x_lo, x_hi), col = "black", lwd = 1, lty = "dotted")
+
 
 tmp_out <- power4test(
               out,
@@ -62,7 +75,7 @@ rejection_rates(tmp_out)
 
 # Close enough
 
-set.seed(1234)
+set.seed(1432)
 a_out <- power_algorithm_prob_bisection(
                                   object = out,
                                   x = "n",
@@ -72,43 +85,65 @@ a_out <- power_algorithm_prob_bisection(
                                   final_nrep = 2000)
 rejection_rates(a_out$by_x_1)
 (x_tmp <- ceiling(q_dfun(a_out$dfun_out, prob = .50)))
+(x_lo <- q_dfun(a_out$dfun_out, .05))
+(x_hi <- q_dfun(a_out$dfun_out, .95))
 plot(a_out$fit_1)
-abline(h = .80)
-abline(v = x_tmp)
+abline(h = .80, col = "blue", lwd = 4)
+abline(v = x_tmp, col = "red", lwd = 4)
+abline(v = c(x_lo, x_hi), col = "black", lwd = 1, lty = "dotted")
 plot(a_out$x_history, type = "l")
-abline(h = q_dfun(a_out$dfun_out))
+abline(h = x_tmp, col = "blue", lwd = 4)
+abline(h = c(x_lo, x_hi), col = "black", lwd = 1, lty = "dotted")
+plot(a_out$f_history, type = "l")
+abline(h = 0, col = "blue", lwd = 4)
 plot(a_out$dfun_out, type = "l")
-q_dfun(a_out$dfun_out, .10)
-q_dfun(a_out$dfun_out, .90)
-
+abline(v = x_tmp, col = "red", lwd = 4)
+abline(v = c(x_lo, x_hi), col = "black", lwd = 1, lty = "dotted")
+plot(a_out$fit_1,
+     xlim = c(x_lo * .9, x_hi * 1.1))
+abline(h = .80, col = "blue", lwd = 4)
+abline(v = x_tmp, col = "red", lwd = 4)
+abline(v = c(x_lo, x_hi), col = "black", lwd = 1, lty = "dotted")
 
 tmp_out <- power4test(
               out,
               n = x_tmp,
               nrep = 2000,
-              iseed = 2345)
+              iseed = 1479)
 rejection_rates(tmp_out)
 
 # ub
 
-set.seed(13579)
+set.seed(147258)
 a_out <- power_algorithm_prob_bisection(
                                   object = out,
                                   x = "n",
                                   by_x_1 = by_x_1,
                                   x_interval = c(50, 2000),
                                   what = "ub",
-                                  goal = "close_enough")
+                                  goal = "close_enough",
+                                  variants = list(nrep_step = 0))
 rejection_rates(a_out$by_x_1)
 (x_tmp <- ceiling(q_dfun(a_out$dfun_out, prob = .50)))
+(x_lo <- q_dfun(a_out$dfun_out, .05))
+(x_hi <- q_dfun(a_out$dfun_out, .95))
 plot(a_out$fit_1)
-abline(h = .80)
-abline(v = x_tmp)
+abline(h = .80, col = "blue", lwd = 4)
+abline(v = x_tmp, col = "red", lwd = 4)
+abline(v = c(x_lo, x_hi), col = "black", lwd = 1, lty = "dotted")
 plot(a_out$x_history, type = "l")
-abline(h = q_dfun(a_out$dfun_out))
+abline(h = x_tmp, col = "blue", lwd = 4)
+abline(h = c(x_lo, x_hi), col = "black", lwd = 1, lty = "dotted")
+plot(a_out$f_history, type = "l")
+abline(h = 0, col = "blue", lwd = 4)
 plot(a_out$dfun_out, type = "l")
-q_dfun(a_out$dfun_out, .10)
-q_dfun(a_out$dfun_out, .90)
+abline(v = x_tmp, col = "red", lwd = 4)
+abline(v = c(x_lo, x_hi), col = "black", lwd = 1, lty = "dotted")
+plot(a_out$fit_1,
+     xlim = c(x_lo * .9, x_hi * 1.1))
+abline(h = .80, col = "blue", lwd = 4)
+abline(v = x_tmp, col = "red", lwd = 4)
+abline(v = c(x_lo, x_hi), col = "black", lwd = 1, lty = "dotted")
 
 tmp_out <- power4test(
               out,
@@ -119,24 +154,35 @@ rejection_rates(tmp_out)
 
 # lb
 
-set.seed(12345)
+set.seed(258)
 a_out <- power_algorithm_prob_bisection(
                                   object = out,
                                   x = "n",
                                   by_x_1 = by_x_1,
                                   what = "lb",
                                   goal = "close_enough",
-                                  variants = list(use_estimated_p = TRUE))
+                                  variants = list(nrep_step = 0))
 rejection_rates(a_out$by_x_1)
 (x_tmp <- ceiling(q_dfun(a_out$dfun_out, prob = .50)))
+(x_lo <- q_dfun(a_out$dfun_out, .05))
+(x_hi <- q_dfun(a_out$dfun_out, .95))
 plot(a_out$fit_1)
-abline(h = .80)
-abline(v = x_tmp)
+abline(h = .80, col = "blue", lwd = 4)
+abline(v = x_tmp, col = "red", lwd = 4)
+abline(v = c(x_lo, x_hi), col = "black", lwd = 1, lty = "dotted")
 plot(a_out$x_history, type = "l")
-abline(h = q_dfun(a_out$dfun_out))
+abline(h = x_tmp, col = "blue", lwd = 4)
+abline(h = c(x_lo, x_hi), col = "black", lwd = 1, lty = "dotted")
+plot(a_out$f_history, type = "l")
+abline(h = 0, col = "blue", lwd = 4)
 plot(a_out$dfun_out, type = "l")
-q_dfun(a_out$dfun_out, .10)
-q_dfun(a_out$dfun_out, .90)
+abline(v = x_tmp, col = "red", lwd = 4)
+abline(v = c(x_lo, x_hi), col = "black", lwd = 1, lty = "dotted")
+plot(a_out$fit_1,
+     xlim = c(x_lo * .9, x_hi * 1.1))
+abline(h = .80, col = "blue", lwd = 4)
+abline(v = x_tmp, col = "red", lwd = 4)
+abline(v = c(x_lo, x_hi), col = "black", lwd = 1, lty = "dotted")
 
 tmp_out <- power4test(
               out,
@@ -188,16 +234,29 @@ a_out <- power_algorithm_prob_bisection(
                                   x = "es",
                                   pop_es_name = "m~x",
                                   by_x_1 = by_x_1,
-                                  max_trails = 20,
-                                  trial_nrep = 50,
-                                  final_nrep = 2000)
-
+                                  variants = list(nrep_step = 0))
 rejection_rates(a_out$by_x_1)
+(x_tmp <- ceiling(q_dfun(a_out$dfun_out, prob = .50)))
+(x_lo <- q_dfun(a_out$dfun_out, .05))
+(x_hi <- q_dfun(a_out$dfun_out, .95))
 plot(a_out$fit_1)
-abline(h = .80)
+abline(h = .80, col = "blue", lwd = 4)
+abline(v = x_tmp, col = "red", lwd = 4)
+abline(v = c(x_lo, x_hi), col = "black", lwd = 1, lty = "dotted")
+plot(a_out$x_history, type = "l")
+abline(h = x_tmp, col = "blue", lwd = 4)
+abline(h = c(x_lo, x_hi), col = "black", lwd = 1, lty = "dotted")
+plot(a_out$f_history, type = "l")
+abline(h = 0, col = "blue", lwd = 4)
 plot(a_out$dfun_out, type = "l")
-(tmp_x <- q_dfun(a_out$dfun_out, prob = .50))
-(tmp_es <- setNames(tmp_x, "m~x"))
+abline(v = x_tmp, col = "red", lwd = 4)
+abline(v = c(x_lo, x_hi), col = "black", lwd = 1, lty = "dotted")
+plot(a_out$fit_1,
+     xlim = c(x_lo * .9, x_hi * 1.1))
+abline(h = .80, col = "blue", lwd = 4)
+abline(v = x_tmp, col = "red", lwd = 4)
+abline(v = c(x_lo, x_hi), col = "black", lwd = 1, lty = "dotted")
+
 tmp_out <- power4test(
               out,
               pop_es = tmp_es,
@@ -234,11 +293,27 @@ a_out <- power_algorithm_prob_bisection(
                                   tol = .005,
                                   variants = list(npoints = 200))
 rejection_rates(a_out$by_x_1)
+(x_tmp <- ceiling(q_dfun(a_out$dfun_out, prob = .50)))
+(x_lo <- q_dfun(a_out$dfun_out, .05))
+(x_hi <- q_dfun(a_out$dfun_out, .95))
 plot(a_out$fit_1)
-abline(h = .80)
+abline(h = .80, col = "blue", lwd = 4)
+abline(v = x_tmp, col = "red", lwd = 4)
+abline(v = c(x_lo, x_hi), col = "black", lwd = 1, lty = "dotted")
+plot(a_out$x_history, type = "l")
+abline(h = x_tmp, col = "blue", lwd = 4)
+abline(h = c(x_lo, x_hi), col = "black", lwd = 1, lty = "dotted")
+plot(a_out$f_history, type = "l")
+abline(h = 0, col = "blue", lwd = 4)
 plot(a_out$dfun_out, type = "l")
-(tmp_x <- q_dfun(a_out$dfun_out, prob = .50))
-(tmp_es <- setNames(tmp_x, "m~x"))
+abline(v = x_tmp, col = "red", lwd = 4)
+abline(v = c(x_lo, x_hi), col = "black", lwd = 1, lty = "dotted")
+plot(a_out$fit_1,
+     xlim = c(x_lo * .9, x_hi * 1.1))
+abline(h = .80, col = "blue", lwd = 4)
+abline(v = x_tmp, col = "red", lwd = 4)
+abline(v = c(x_lo, x_hi), col = "black", lwd = 1, lty = "dotted")
+
 tmp_out <- power4test(
               out,
               pop_es = tmp_es,
@@ -263,11 +338,27 @@ a_out <- power_algorithm_prob_bisection(
                                   tol = .005,
                                   variants = list(npoints = 200))
 rejection_rates(a_out$by_x_1)
+(x_tmp <- ceiling(q_dfun(a_out$dfun_out, prob = .50)))
+(x_lo <- q_dfun(a_out$dfun_out, .05))
+(x_hi <- q_dfun(a_out$dfun_out, .95))
 plot(a_out$fit_1)
-abline(h = .80)
+abline(h = .80, col = "blue", lwd = 4)
+abline(v = x_tmp, col = "red", lwd = 4)
+abline(v = c(x_lo, x_hi), col = "black", lwd = 1, lty = "dotted")
+plot(a_out$x_history, type = "l")
+abline(h = x_tmp, col = "blue", lwd = 4)
+abline(h = c(x_lo, x_hi), col = "black", lwd = 1, lty = "dotted")
+plot(a_out$f_history, type = "l")
+abline(h = 0, col = "blue", lwd = 4)
 plot(a_out$dfun_out, type = "l")
-(tmp_x <- q_dfun(a_out$dfun_out, prob = .50))
-(tmp_es <- setNames(tmp_x, "m~x"))
+abline(v = x_tmp, col = "red", lwd = 4)
+abline(v = c(x_lo, x_hi), col = "black", lwd = 1, lty = "dotted")
+plot(a_out$fit_1,
+     xlim = c(x_lo * .9, x_hi * 1.1))
+abline(h = .80, col = "blue", lwd = 4)
+abline(v = x_tmp, col = "red", lwd = 4)
+abline(v = c(x_lo, x_hi), col = "black", lwd = 1, lty = "dotted")
+
 tmp_out <- power4test(
               out,
               pop_es = tmp_es,
