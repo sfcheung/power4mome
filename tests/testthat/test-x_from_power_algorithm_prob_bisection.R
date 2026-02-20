@@ -36,7 +36,7 @@ by_x_1 <- power4test_by_n(out,
 
 # Close enough
 
-set.seed(24680)
+set.seed(258)
 a_out <- power_algorithm_prob_bisection(
                                   object = out,
                                   x = "n",
@@ -64,7 +64,13 @@ plot(a_out$fit_1,
 abline(h = .80, col = "blue", lwd = 4)
 abline(v = x_tmp, col = "red", lwd = 4)
 abline(v = c(x_lo, x_hi), col = "black", lwd = 1, lty = "dotted")
-
+hdi_h <- a_out$hdi_power_history
+tmp <- sapply(hdi_h,
+           \(x) ifelse(length(x) == 1,
+                       diff(x[[1]]),
+                       NA)
+          )
+tmp <= .04
 
 tmp_out <- power4test(
               out,
@@ -114,15 +120,14 @@ rejection_rates(tmp_out)
 
 # ub
 
-set.seed(147258)
+set.seed(369)
 a_out <- power_algorithm_prob_bisection(
                                   object = out,
                                   x = "n",
                                   by_x_1 = by_x_1,
                                   x_interval = c(50, 2000),
                                   what = "ub",
-                                  goal = "close_enough",
-                                  variants = list(nrep_step = 0))
+                                  goal = "close_enough")
 rejection_rates(a_out$by_x_1)
 (x_tmp <- ceiling(q_dfun(a_out$dfun_out, prob = .50)))
 (x_lo <- q_dfun(a_out$dfun_out, .05))
@@ -144,6 +149,13 @@ plot(a_out$fit_1,
 abline(h = .80, col = "blue", lwd = 4)
 abline(v = x_tmp, col = "red", lwd = 4)
 abline(v = c(x_lo, x_hi), col = "black", lwd = 1, lty = "dotted")
+hdi_h <- a_out$hdi_power_history
+tmp <- sapply(hdi_h,
+           \(x) ifelse(length(x) == 1,
+                       diff(x[[1]]),
+                       NA)
+          )
+tmp <= .04
 
 tmp_out <- power4test(
               out,
@@ -154,14 +166,13 @@ rejection_rates(tmp_out)
 
 # lb
 
-set.seed(258)
+set.seed(271828)
 a_out <- power_algorithm_prob_bisection(
                                   object = out,
                                   x = "n",
                                   by_x_1 = by_x_1,
                                   what = "lb",
-                                  goal = "close_enough",
-                                  variants = list(nrep_step = 0))
+                                  goal = "close_enough")
 rejection_rates(a_out$by_x_1)
 (x_tmp <- ceiling(q_dfun(a_out$dfun_out, prob = .50)))
 (x_lo <- q_dfun(a_out$dfun_out, .05))
@@ -183,6 +194,13 @@ plot(a_out$fit_1,
 abline(h = .80, col = "blue", lwd = 4)
 abline(v = x_tmp, col = "red", lwd = 4)
 abline(v = c(x_lo, x_hi), col = "black", lwd = 1, lty = "dotted")
+hdi_h <- a_out$hdi_power_history
+tmp <- sapply(hdi_h,
+           \(x) ifelse(length(x) == 1,
+                       diff(x[[1]]),
+                       NA)
+          )
+tmp <= .04
 
 tmp_out <- power4test(
               out,

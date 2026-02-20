@@ -170,10 +170,8 @@ power_algorithm_prob_bisection <- function(
                                       what = c("point", "ub", "lb"),
                                       goal = c("close_enough", "ci_hit"),
                                       tol = .005,
-                                      delta_tol = switch(x,
-                                                      n = 5,
-                                                      es = .005),
-                                      delta_tol_f = .01,
+                                      delta_tol = -Inf,
+                                      delta_tol_f = -Inf,
                                       last_k = 5,
                                       variants = list()) {
   extendInt <- match.arg(extendInt)
@@ -202,6 +200,9 @@ power_algorithm_prob_bisection <- function(
   p_c_history <- vector("numeric", max_trials)
   p_c_history[] <- NA
 
+  hdi_x_history <- vector("list", max_trials)
+  hdi_power_history <- vector("list", max_trials)
+
   i <- NA
 
   # what: The value to be examined.
@@ -226,7 +227,9 @@ power_algorithm_prob_bisection <- function(
                     npoints = 200,
                     p = .60,
                     use_estimated_p = TRUE,
-                    adjust_p_c = .90)
+                    adjust_p_c = .90,
+                    hdi_prob = .80,
+                    hdi_power_tol = .04)
   variants <- utils::modifyList(variants0,
                                 variants)
 
@@ -757,13 +760,15 @@ power_algorithm_prob_bisection <- function(
             "- Rep: The number of replications used out of the total number of replications",
             paste0("- Dx: The range of changes of x in the last ", last_k, " iterations"),
             paste0("- Df: The range of changes of f in the last ", last_k, " iterations"),
+            paste0("- PP: The range(s) of probable power"),
             sep = "\n")
         changes_last_k <- character(0)
         changes_last_k_f <- character(0)
         time_passed <- character(0)
         eta <- character(0)
+        hdi_f_str <- character(0)
         pb_id <- cli::cli_progress_message(
-            " #:{i}|nrep:{nrep_i}{x_i_str}{time_passed}{eta}|Rep:{nreps_total}/{variants$total_nrep}{changes_last_k}{changes_last_k_f}"
+            " #:{i}|nrep:{nrep_i}{x_i_str}{time_passed}{eta}|Rep:{nreps_total}/{variants$total_nrep}{changes_last_k}{changes_last_k_f}{hdi_f_str}"
           )
       }
 
@@ -1027,6 +1032,67 @@ power_algorithm_prob_bisection <- function(
 
       }
 
+      # ==== Termination: f interval ====
+
+      hdi_x <- hdi(
+                  dfun = dfun_i,
+                  prob = variants$hdi_prob
+                )
+      # TODO:
+      # - Check the argument values
+      fit_tmp <- tryCatch(do.call(
+                          power_curve,
+                          c(list(object = by_x_1),
+                            variants$power_curve_args)
+                        ),
+                        error = function(e) e)
+      if (inherits(fit_tmp, "power_curve")) {
+        hdi_power <- lapply(
+                        hdi_x,
+                        \(x) {
+                          stats::predict(
+                              fit_tmp,
+                              newdata = list(x = x)
+                            )
+                        }
+                      )
+      } else {
+        hdi_power <- lapply(
+                        hdi_x,
+                        \(x) c(NA, NA)
+                      )
+      }
+      hdi_x_history[[i]] <- hdi_x
+      hdi_power_history[[i]] <- hdi_power
+
+      if (progress &&
+          (progress_type == "cli")) {
+          tmp1 <- sapply(
+                    hdi_power,
+                    \(x) sprintf("[%1$4.3f,%2$4.3f]", x[1], x[2])
+                  )
+          tmp2 <- paste0(tmp1, collapse = ";")
+          hdi_f_str <- paste0("|PP:", tmp2)
+          cli::cli_progress_update(id = pb_id)
+      }
+
+      if ((length(hdi_power) == 1) &&
+          isFALSE(all(is.na(hdi_power[[1]]))) &&
+          (diff(hdi_power[[1]]) <= variants$hdi_power_tol) &&
+          (proxy_power >= hdi_power[[1]][1]) &&
+          (proxy_power <= hdi_power[[1]][2])) {
+        # TODO:
+        # - Add a status
+        cli::cli_process_done(id = pb_id)
+        cat("\n** Search ended **: The range of probable power is less than ",
+            formatC(variants$hdi_power_tol,
+                    digits = 4,
+                    format = "f"),
+            ".\n",
+            sep = "")
+        break
+      }
+
       # ==== Next i: Set nrep ====
 
       step_up <- !check_changes(
@@ -1254,6 +1320,8 @@ power_algorithm_prob_bisection <- function(
               f_history = f_history[i_tmp],
               dfun_history = dfun_history[i_tmp],
               p_c_history = p_c_history[i_tmp],
+              hdi_x_history = hdi_x_history[i_tmp],
+              hdi_power_history = hdi_power_history[i_tmp],
               tol = tol,
               delta_tol = delta_tol,
               last_k = last_k,
