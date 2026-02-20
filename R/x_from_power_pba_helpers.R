@@ -65,3 +65,45 @@ p_c <- function(
     )
   out
 }
+
+#' @noRd
+# Form a high-density interval(s)
+hdi <- function(
+  dfun,
+  prob = .80
+) {
+  x <- dfun[, "x", drop = TRUE]
+  pbi <- dfun[, "prob", drop = TRUE]
+  po <- order(pbi)
+  for (i in po) {
+    pbi <- pbi - pbi[i]
+    if (sum(pbi) <= prob) break
+  }
+  a <- pbi > 0
+  # TODO:
+  # - There should be an easier way to do this
+  d0 <- vector("numeric", length = length(a))
+  for (i in seq_along(a)) {
+    if (i == 1) {
+      d0[i] <- 1
+    } else {
+      if (isTRUE(xor(a[i], a[i - 1]))) {
+        d0[i] <- d0[i - 1] + 1
+      } else {
+        d0[i] <- d0[i - 1]
+      }
+    }
+  }
+  h1 <- tapply(
+          x,
+          INDEX = d0,
+          FUN = range
+        )
+  h2 <- tapply(
+          a,
+          INDEX = d0,
+          FUN = \(x) isTRUE(x[1])
+        )
+  out <- unname(h1[h2])
+  out
+}

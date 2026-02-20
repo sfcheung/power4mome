@@ -1,3 +1,5 @@
+library(testthat)
+
 test_that("p_c", {
 
 tmp1 <- p_c0(
@@ -160,6 +162,58 @@ expect_equal(
           unname(tmp2[, "cihi"]),
           tmp3,
           tolerance = 1e-2)
+
+
+})
+
+# ==== HDI ====
+
+test_that("HDI", {
+
+# set.seed(1234)
+# x <- rnorm(10000, mean = 500, sd = 10)
+# x <- round(x)
+# x <- table(x)
+# plot(x)
+
+x <- 10:2000
+d1 <- dnorm(x, mean = 500, sd = 100)
+d2 <- dnorm(x, mean = 1000, sd = 20)
+range(d1)
+range(d2)
+d <- d1 + d2
+range(d)
+d <- d / sum(d)
+range(d)
+dfun1 <- cbind(x = x,
+               prob = d)
+# plot(dfun1)
+
+x <- 10:2000
+d1 <- dnorm(x, mean = 500, sd = 100)
+range(d1)
+d <- d1 / sum(d1)
+range(d)
+dfun2 <- cbind(x = x,
+               prob = d)
+# plot(dfun2)
+
+out1 <- hdi(dfun1, prob = .8)
+out2 <- hdi(dfun1, prob = .7)
+
+expect_true(length(out1) == 2)
+expect_true(length(out2) == 2)
+
+expect_true(diff(out1[[1]]) > diff(out2[[1]]))
+expect_true(diff(out1[[2]]) > diff(out2[[2]]))
+
+out1 <- hdi(dfun2, prob = .8)
+out2 <- hdi(dfun2, prob = .7)
+
+expect_true(length(out1) == 1)
+expect_true(length(out2) == 1)
+
+expect_true(diff(out1[[1]]) > diff(out2[[1]]))
 
 
 })
