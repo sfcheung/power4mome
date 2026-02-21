@@ -200,8 +200,8 @@ power_algorithm_prob_bisection <- function(
   p_c_history <- vector("numeric", max_trials)
   p_c_history[] <- NA
 
-  hdi_x_history <- vector("list", max_trials)
-  hdi_power_history <- vector("list", max_trials)
+  hdr_x_history <- vector("list", max_trials)
+  hdr_power_history <- vector("list", max_trials)
 
   i <- NA
 
@@ -228,8 +228,8 @@ power_algorithm_prob_bisection <- function(
                     p = .60,
                     use_estimated_p = TRUE,
                     adjust_p_c = .90,
-                    hdi_prob = .80,
-                    hdi_power_tol = .04)
+                    hdr_prob = .80,
+                    hdr_power_tol = .03)
   variants <- utils::modifyList(variants0,
                                 variants)
 
@@ -251,25 +251,18 @@ power_algorithm_prob_bisection <- function(
 
   # ==== Set proxy_power for power_curve_assist ====
 
-  proxy_power <- NULL
-  if (variants$use_power_curve_assist) {
-    # TODO:
-    # - Can keep for now because we may use power_curve.
-    proxy_power <- tryCatch(target_power_adjusted(
-                      target_power = target_power,
-                      goal = goal,
-                      what = what,
-                      tolerance = 0,
-                      nrep = final_nrep,
-                      level = ci_level
-                    ),
-                    error = function(e) e)
-    if (inherits(proxy_power, "error")) {
-      # Failed to find the proxy power. Do not use power_curve
-      variants$use_power_curve_assist <- FALSE
-    }
+  proxy_power <- tryCatch(target_power_adjusted(
+                    target_power = target_power,
+                    goal = goal,
+                    what = what,
+                    tolerance = 0,
+                    nrep = final_nrep,
+                    level = ci_level
+                  ),
+                  error = function(e) e)
+  if (inherits(proxy_power, "error")) {
+    proxy_power <- NA
   }
-
   # Create the objective function
 
   # Tbe output is:
@@ -279,16 +272,29 @@ power_algorithm_prob_bisection <- function(
 
   # ==== Generate the objective function ====
 
+  if (!is.na(proxy_power)) {
+    # If proxy power can be computed,
+    # use it as the target for close_enough
+    f_power <- proxy_power
+    f_what <- "point"
+    f_goal <- "close_enough"
+  } else {
+    # If proxy power cannot be computed,
+    # use the confidence bound as the goal
+    f_power <- target_power
+    f_what <- what
+    f_goal <- "close_enough"
+  }
   f <- gen_objective(object = object,
                      x = x,
                      pop_es_name = pop_es_name,
-                     target_power = target_power,
+                     target_power = f_power,
                      ci_level = ci_level,
                      progress = progress,
                      digits = digits,
                      nrep = variants$trial_nrep,
                      R = R,
-                     what = what,
+                     what = f_what,
                      simulation_progress = simulation_progress,
                      save_sim_all = save_sim_all,
                      store_output = TRUE,
@@ -353,14 +359,14 @@ power_algorithm_prob_bisection <- function(
     f.lower <- f(x_i = lower,
                  x = x,
                  pop_es_name = pop_es_name,
-                 target_power = target_power,
+                 target_power = f_power,
                  ci_level = ci_level,
                  progress = ifelse(progress_type == "cat", progress, FALSE),
                  progress_type = "cat",
                  digits = digits,
                  nrep = variants$trial_nrep,
                  R = R,
-                 what = what,
+                 what = f_what,
                  simulation_progress = simulation_progress,
                  save_sim_all = save_sim_all,
                  store_output = TRUE,
@@ -403,14 +409,14 @@ power_algorithm_prob_bisection <- function(
     f.upper <- f(x_i = upper,
                  x = x,
                  pop_es_name = pop_es_name,
-                 target_power = target_power,
+                 target_power = f_power,
                  ci_level = ci_level,
                  progress = ifelse(progress_type == "cat", progress, FALSE),
                  progress_type = "cat",
                  digits = digits,
                  nrep = variants$trial_nrep,
                  R = R,
-                 what = what,
+                 what = f_what,
                  simulation_progress = simulation_progress,
                  save_sim_all = save_sim_all,
                  store_output = TRUE,
@@ -504,13 +510,13 @@ power_algorithm_prob_bisection <- function(
     interval_updated <- extend_interval(f = f,
                                         x = x,
                                         pop_es_name = pop_es_name,
-                                        target_power = target_power,
+                                        target_power = f_power,
                                         ci_level = ci_level,
                                         nrep = variants$trial_nrep,
                                         target_nrep = final_nrep,
                                         R = R,
-                                        what = what,
-                                        goal = goal,
+                                        what = f_what,
+                                        goal = f_goal,
                                         tol = tol,
                                         simulation_progress = simulation_progress,
                                         save_sim_all = save_sim_all,
@@ -766,9 +772,9 @@ power_algorithm_prob_bisection <- function(
         changes_last_k_f <- character(0)
         time_passed <- character(0)
         eta <- character(0)
-        hdi_f_str <- character(0)
+        hdr_f_str <- character(0)
         pb_id <- cli::cli_progress_message(
-            " #:{i}|nrep:{nrep_i}{x_i_str}{time_passed}{eta}|Rep:{nreps_total}/{variants$total_nrep}{changes_last_k}{changes_last_k_f}{hdi_f_str}"
+            " #:{i}|nrep:{nrep_i}{x_i_str}{time_passed}{eta}|Rep:{nreps_total}/{variants$total_nrep}{changes_last_k}{changes_last_k_f}{hdr_f_str}"
           )
       }
 
@@ -802,23 +808,23 @@ power_algorithm_prob_bisection <- function(
                           format(tmp, digits = 3),
                           "")
           }
-          cli::cli_progress_update(id = pb_id)
+          cli::cli_progress_update(id = pb_id,
+                                   force = TRUE)
         }
       }
 
       # ==== Compute f(x) ====
-
       out_i <- f(x_i = x_i,
                  x = x,
                  pop_es_name = pop_es_name,
-                 target_power = target_power,
+                 target_power = f_power,
                  ci_level = ci_level,
                  progress = progress,
                  progress_type = progress_type,
                  digits = digits,
                  nrep = nrep_i,
                  R = R,
-                 what = what,
+                 what = f_what,
                  simulation_progress = simulation_progress,
                  save_sim_all = save_sim_all,
                  store_output = TRUE,
@@ -919,7 +925,8 @@ power_algorithm_prob_bisection <- function(
                                   "Df:",
                                   last_k_f_str)
           cli::cli_progress_update(
-              id = pb_id
+              id = pb_id,
+              force = TRUE
             )
         }
       }
@@ -1038,9 +1045,9 @@ power_algorithm_prob_bisection <- function(
 
       # ==== Termination: f interval ====
 
-      hdi_x <- hdi(
+      hdr_x <- hdr(
                   dfun = dfun_i,
-                  prob = variants$hdi_prob
+                  prob = variants$hdr_prob
                 )
       # TODO:
       # - Check the argument values
@@ -1051,8 +1058,8 @@ power_algorithm_prob_bisection <- function(
                         ),
                         error = function(e) e)
       if (inherits(fit_tmp, "power_curve")) {
-        hdi_power <- lapply(
-                        hdi_x,
+        hdr_power <- lapply(
+                        hdr_x,
                         \(x) {
                           stats::predict(
                               fit_tmp,
@@ -1061,35 +1068,48 @@ power_algorithm_prob_bisection <- function(
                         }
                       )
       } else {
-        hdi_power <- lapply(
-                        hdi_x,
+        hdr_power <- lapply(
+                        hdr_x,
                         \(x) c(NA, NA)
                       )
       }
-      hdi_x_history[[i]] <- hdi_x
-      hdi_power_history[[i]] <- hdi_power
+      hdr_x_history[[i]] <- hdr_x
+      hdr_power_history[[i]] <- hdr_power
 
       if (progress &&
           (progress_type == "cli")) {
           tmp1 <- sapply(
-                    hdi_power,
+                    hdr_power,
                     \(x) sprintf("[%1$4.3f,%2$4.3f]", x[1], x[2])
                   )
           tmp2 <- paste0(tmp1, collapse = ";")
-          hdi_f_str <- paste0("|PP:", tmp2)
-          cli::cli_progress_update(id = pb_id)
+          hdr_f_str <- paste0("|PP:", tmp2)
+          cli::cli_progress_update(id = pb_id, force = TRUE)
       }
-
-      if ((length(hdi_power) == 1) &&
-          isFALSE(all(is.na(hdi_power[[1]]))) &&
-          (diff(hdi_power[[1]]) <= variants$hdi_power_tol) &&
-          (proxy_power >= hdi_power[[1]][1]) &&
-          (proxy_power <= hdi_power[[1]][2])) {
+      if (length(hdr_power) > 1) {
+        hdr_power_pb <- sapply(
+                            hdr_power,
+                            attr,
+                            which = "pb",
+                            USE.NAMES = FALSE
+                          )
+        hdr_power_pb <- hdr_power_pb / sum(hdr_power_pb)
+        hdr_power_dominant <- hdr_power_pb > .80
+        hdr_power_dominant_i <- which(hdr_power_dominant)
+      } else {
+        hdr_power_dominant <- TRUE
+        hdr_power_dominant_i <- 1
+      }
+      if (any(hdr_power_dominant) &&
+          isFALSE(all(is.na(hdr_power[[hdr_power_dominant_i]]))) &&
+          (diff(hdr_power[[hdr_power_dominant_i]]) <= variants$hdr_power_tol) &&
+          (proxy_power >= hdr_power[[hdr_power_dominant_i]][1]) &&
+          (proxy_power <= hdr_power[[hdr_power_dominant_i]][2])) {
         # TODO:
         # - Add a status
         cli::cli_process_done(id = pb_id)
         cat("\n** Search ended **: The range of probable power is less than ",
-            formatC(variants$hdi_power_tol,
+            formatC(variants$hdr_power_tol,
                     digits = 4,
                     format = "f"),
             ".\n",
@@ -1324,15 +1344,19 @@ power_algorithm_prob_bisection <- function(
               f_history = f_history[i_tmp],
               dfun_history = dfun_history[i_tmp],
               p_c_history = p_c_history[i_tmp],
-              hdi_x_history = hdi_x_history[i_tmp],
-              hdi_power_history = hdi_power_history[i_tmp],
+              hdr_x_history = hdr_x_history[i_tmp],
+              hdr_power_history = hdr_power_history[i_tmp],
               tol = tol,
               delta_tol = delta_tol,
               last_k = last_k,
               what = what,
               goal = goal,
               ci_level = ci_level,
-              dfun_out = dfun_out)
+              dfun_out = dfun_out,
+              proxy_power = proxy_power,
+              f_power = f_power,
+              f_what = f_what,
+              f_goal = f_goal)
   out
 
 }
@@ -1571,8 +1595,7 @@ q_dfun <- function(
 ) {
   qfun <- cumsum(dfun[, "prob"])
   tmp <- prob - qfun
-  tmp[tmp < 0] <- NA
-  i <- which.min(tmp)
+  i <- length(tmp[tmp > 0])
   # Do interpolation
   j0 <- qfun[i]
   j1 <- qfun[i + 1]
