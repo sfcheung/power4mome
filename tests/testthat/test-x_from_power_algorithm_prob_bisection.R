@@ -83,7 +83,7 @@ diag(a_out)
 
 tmp_out <- power4test(
               out,
-              n = x_tmp,
+              n = ceiling(q_dfun(a_out$dfun_out)),
               nrep = 2000,
               iseed = 2345)
 rejection_rates(tmp_out)
