@@ -67,8 +67,8 @@ p_c <- function(
 }
 
 #' @noRd
-# Form a high-density interval(s)
-hdi <- function(
+# Form a highest-density region(s)
+hdr <- function(
   dfun,
   prob = .80
 ) {
@@ -104,6 +104,19 @@ hdi <- function(
           INDEX = d0,
           FUN = \(x) isTRUE(x[1])
         )
+  h3 <- tapply(
+          pbi,
+          INDEX = d0,
+          FUN = sum
+        )
   out <- unname(h1[h2])
-  out
+  out <- .mapply(
+            \(x, y) {
+              attr(x, "pb") <- y
+              x
+            },
+            list(x = out,
+                y = h3[h2]),
+            MoreArgs = NULL
+          )
 }
