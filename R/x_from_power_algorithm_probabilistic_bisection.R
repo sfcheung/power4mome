@@ -943,7 +943,7 @@ power_algorithm_prob_bisection <- function(
       # ==== Update the density function ====
 
       if (variants$use_estimated_p) {
-        p_c_i <- p_c(
+        p_c_i <- tryCatch(p_c(
                     target_power = target_power,
                     power_i = reject_i,
                     goal = goal,
@@ -951,9 +951,13 @@ power_algorithm_prob_bisection <- function(
                     trial_nrep = nrep_i,
                     level = ci_level,
                     final_nrep = final_nrep
-                  )
-        p_c_i <- max(variants$adjust_p_c * p_c_i,
-                     variants$p)
+                  ), error = function(e) e)
+        if (!inherits(p_c_i, "error")) {
+          p_c_i <- max(variants$adjust_p_c * p_c_i,
+                      variants$p)
+        } else {
+          p_c_i <- variants$p
+        }
         p_c_history[i] <- p_c_i
         dfun_i <- update_dfun(
                     dfun = dfun_i,
