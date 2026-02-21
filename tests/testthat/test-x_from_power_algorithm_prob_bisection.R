@@ -19,7 +19,7 @@ y ~ m: m
 y ~ x: s
 "
 
-####### n
+# ==== n ====
 
 out <- power4test(nrep = 20,
                   model = mod,
@@ -34,7 +34,7 @@ out <- power4test(nrep = 20,
 by_x_1 <- power4test_by_n(out,
                           n = 90)
 
-# Close enough
+## ==== Default ====
 
 set.seed(258)
 a_out <- power_algorithm_prob_bisection(
@@ -79,7 +79,7 @@ tmp_out <- power4test(
               iseed = 2345)
 rejection_rates(tmp_out)
 
-# Close enough
+## ==== Close enough ====
 
 set.seed(1432)
 a_out <- power_algorithm_prob_bisection(
@@ -110,6 +110,13 @@ plot(a_out$fit_1,
 abline(h = .80, col = "blue", lwd = 4)
 abline(v = x_tmp, col = "red", lwd = 4)
 abline(v = c(x_lo, x_hi), col = "black", lwd = 1, lty = "dotted")
+hdi_h <- a_out$hdi_power_history
+tmp <- sapply(hdi_h,
+           \(x) ifelse(length(x) == 1,
+                       diff(x[[1]]),
+                       NA)
+          )
+tmp <= .04
 
 tmp_out <- power4test(
               out,
@@ -118,9 +125,9 @@ tmp_out <- power4test(
               iseed = 1479)
 rejection_rates(tmp_out)
 
-# ub
+## ==== ub ====
 
-set.seed(369)
+set.seed(369147)
 a_out <- power_algorithm_prob_bisection(
                                   object = out,
                                   x = "n",
@@ -164,7 +171,7 @@ tmp_out <- power4test(
               iseed = 2345)
 rejection_rates(tmp_out)
 
-# lb
+## ==== lb ====
 
 set.seed(271828)
 a_out <- power_algorithm_prob_bisection(
@@ -231,7 +238,7 @@ plot(a_out$fit_1)
 abline(h = .80)
 
 
-####### es
+# ==== es ====
 
 out <- power4test(nrep = 20,
                   model = mod,
@@ -245,6 +252,8 @@ out <- power4test(nrep = 20,
 by_x_1 <- power4test_by_es(out,
                            pop_es_name = "m~x",
                            pop_es_values = c(.10))
+
+## ==== Default ====
 
 set.seed(12345)
 a_out <- power_algorithm_prob_bisection(
@@ -290,7 +299,7 @@ tmp_out <- power4test(
               iseed = 2345)
 rejection_rates(tmp_out)
 
-# Close enough
+## ==== Close enough ====
 
 set.seed(1234)
 a_out <- power_algorithm_bisection(object = out,
@@ -303,7 +312,7 @@ rejection_rates(a_out$by_x_1)
 plot(a_out$fit_1)
 abline(h = .80)
 
-# ub
+## ==== ub ====
 
 set.seed(248)
 a_out <- power_algorithm_prob_bisection(
@@ -351,8 +360,7 @@ tmp_out <- power4test(
               iseed = 2345)
 rejection_rates(tmp_out)
 
-
-# lb
+## ==== lb ====
 
 set.seed(123456)
 a_out <- power_algorithm_prob_bisection(
