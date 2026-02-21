@@ -36,7 +36,7 @@ by_x_1 <- power4test_by_n(out,
 
 ## ==== Default ====
 
-set.seed(258)
+set.seed(1357)
 a_out <- power_algorithm_prob_bisection(
                                   object = out,
                                   x = "n",
