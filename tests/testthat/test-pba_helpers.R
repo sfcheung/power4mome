@@ -166,9 +166,9 @@ expect_equal(
 
 })
 
-# ==== HDI ====
+# ==== HDR ====
 
-test_that("HDI", {
+test_that("HDR", {
 
 # set.seed(1234)
 # x <- rnorm(10000, mean = 500, sd = 10)
@@ -198,8 +198,8 @@ dfun2 <- cbind(x = x,
                prob = d)
 # plot(dfun2)
 
-out1 <- hdi(dfun1, prob = .8)
-out2 <- hdi(dfun1, prob = .7)
+out1 <- hdr(dfun1, prob = .8)
+out2 <- hdr(dfun1, prob = .7)
 
 expect_true(length(out1) == 2)
 expect_true(length(out2) == 2)
@@ -207,8 +207,8 @@ expect_true(length(out2) == 2)
 expect_true(diff(out1[[1]]) > diff(out2[[1]]))
 expect_true(diff(out1[[2]]) > diff(out2[[2]]))
 
-out1 <- hdi(dfun2, prob = .8)
-out2 <- hdi(dfun2, prob = .7)
+out1 <- hdr(dfun2, prob = .8)
+out2 <- hdr(dfun2, prob = .7)
 
 expect_true(length(out1) == 1)
 expect_true(length(out2) == 1)
