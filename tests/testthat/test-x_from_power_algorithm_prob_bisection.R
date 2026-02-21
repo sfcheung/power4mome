@@ -246,15 +246,15 @@ by_x_1 <- power4test_by_es(out,
                            pop_es_name = "m~x",
                            pop_es_values = c(.10))
 
-set.seed(1234)
+set.seed(12345)
 a_out <- power_algorithm_prob_bisection(
                                   object = out,
                                   x = "es",
                                   pop_es_name = "m~x",
-                                  by_x_1 = by_x_1,
-                                  variants = list(nrep_step = 0))
+                                  x_interval = c(.10, .70),
+                                  by_x_1 = by_x_1)
 rejection_rates(a_out$by_x_1)
-(x_tmp <- ceiling(q_dfun(a_out$dfun_out, prob = .50)))
+(x_tmp <- q_dfun(a_out$dfun_out, prob = .50))
 (x_lo <- q_dfun(a_out$dfun_out, .05))
 (x_hi <- q_dfun(a_out$dfun_out, .95))
 plot(a_out$fit_1)
@@ -274,7 +274,15 @@ plot(a_out$fit_1,
 abline(h = .80, col = "blue", lwd = 4)
 abline(v = x_tmp, col = "red", lwd = 4)
 abline(v = c(x_lo, x_hi), col = "black", lwd = 1, lty = "dotted")
+hdi_h <- a_out$hdi_power_history
+tmp <- sapply(hdi_h,
+           \(x) ifelse(length(x) == 1,
+                       diff(x[[1]]),
+                       NA)
+          )
+tmp <= .04
 
+(tmp_es <- setNames(x_tmp, "m~x"))
 tmp_out <- power4test(
               out,
               pop_es = tmp_es,
@@ -297,21 +305,17 @@ abline(h = .80)
 
 # ub
 
-set.seed(12345)
+set.seed(248)
 a_out <- power_algorithm_prob_bisection(
                                   object = out,
                                   x = "es",
                                   pop_es_name = "m~x",
                                   by_x_1 = by_x_1,
+                                  x_interval = c(.10, .50),
                                   what = "ub",
-                                  goal = "close_enough",
-                                  max_trials = 50,
-                                  trial_nrep = 100,
-                                  final_nrep = 2000,
-                                  tol = .005,
-                                  variants = list(npoints = 200))
+                                  goal = "close_enough")
 rejection_rates(a_out$by_x_1)
-(x_tmp <- ceiling(q_dfun(a_out$dfun_out, prob = .50)))
+(x_tmp <- q_dfun(a_out$dfun_out, prob = .50))
 (x_lo <- q_dfun(a_out$dfun_out, .05))
 (x_hi <- q_dfun(a_out$dfun_out, .95))
 plot(a_out$fit_1)
@@ -331,7 +335,15 @@ plot(a_out$fit_1,
 abline(h = .80, col = "blue", lwd = 4)
 abline(v = x_tmp, col = "red", lwd = 4)
 abline(v = c(x_lo, x_hi), col = "black", lwd = 1, lty = "dotted")
+hdi_h <- a_out$hdi_power_history
+tmp <- sapply(hdi_h,
+           \(x) ifelse(length(x) == 1,
+                       diff(x[[1]]),
+                       NA)
+          )
+tmp <= .04
 
+(tmp_es <- setNames(x_tmp, "m~x"))
 tmp_out <- power4test(
               out,
               pop_es = tmp_es,
