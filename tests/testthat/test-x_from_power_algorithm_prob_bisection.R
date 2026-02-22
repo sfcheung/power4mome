@@ -45,7 +45,7 @@ a_out <- power_algorithm_prob_bisection(
                                   goal = "close_enough",
                                   final_nrep = 2000)
 rejection_rates(a_out$by_x_1)
-diag(a_out)
+pba_diag(a_out)
 
 tmp_out <- power4test(
               out,
@@ -66,7 +66,7 @@ a_out <- power_algorithm_prob_bisection(
                                   goal = "close_enough",
                                   final_nrep = 2000)
 rejection_rates(a_out$by_x_1)
-diag(a_out)
+pba_diag(a_out)
 
 tmp_out <- power4test(
               out,
@@ -89,7 +89,7 @@ a_out <- power_algorithm_prob_bisection(
                                   goal = "close_enough",
                                   final_nrep = 2000)
 rejection_rates(a_out$by_x_1)
-diag(a_out)
+pba_diag(a_out)
 
 tmp_out <- power4test(
               out,
@@ -163,7 +163,7 @@ a_out <- power_algorithm_prob_bisection(object = out,
                                    x_interval = c(.10, .40),
                                    final_nrep = 2000)
 rejection_rates(a_out$by_x_1)
-diag(a_out)
+pba_diag(a_out)
 
 (tmp_es <- setNames(a_out$x_out, "m~x"))
 tmp_out <- power4test(
@@ -188,7 +188,7 @@ a_out <- power_algorithm_prob_bisection(
                                   goal = "close_enough",
                                   final_nrep = 2000)
 rejection_rates(a_out$by_x_1)
-diag(a_out)
+pba_diag(a_out)
 
 (tmp_es <- setNames(a_out$x_out, "m~x"))
 tmp_out <- power4test(
@@ -214,7 +214,7 @@ a_out <- power_algorithm_prob_bisection(
                                   goal = "close_enough",
                                   final_nrep = 2000)
 rejection_rates(a_out$by_x_1)
-diag(a_out)
+pba_diag(a_out)
 
 (tmp_es <- setNames(a_out$x_out, "m~x"))
 tmp_out <- power4test(

@@ -1,6 +1,6 @@
 # ==== Diagnostic function ====
 
-diag <- function(a_out) {
+pba_diag <- function(a_out) {
   (x_tmp <- ceiling(q_dfun(a_out$dfun_out, prob = .50)))
   (x_lo <- q_dfun(a_out$dfun_out, .05))
   (x_hi <- q_dfun(a_out$dfun_out, .95))
