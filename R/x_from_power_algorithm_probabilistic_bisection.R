@@ -169,7 +169,7 @@ power_algorithm_prob_bisection <- function(
                                       extend_maxiter = 3,
                                       what = c("point", "ub", "lb"),
                                       goal = c("close_enough", "ci_hit"),
-                                      tol = .005,
+                                      tol = NULL,
                                       delta_tol = switch(x, n = 1, es = .001),
                                       delta_tol_f = NULL,
                                       last_k = 5,
@@ -183,31 +183,34 @@ power_algorithm_prob_bisection <- function(
 
   # ==== Initialize histories holders ====
 
-  f_history <- vector("numeric", max_trials)
+  f_history <- vector("numeric", max_trials + 1)
   f_history[] <- NA
-  x_history <- vector("numeric", max_trials)
+  x_history <- vector("numeric", max_trials + 1)
   x_history[] <- NA
   x_interval_history <- matrix(NA,
-                               nrow = max_trials,
+                               nrow = max_trials + 1,
                                ncol = 2)
   colnames(x_interval_history) <- c("lower", "upper")
   f_interval_history <- matrix(NA,
-                               nrow = max_trials,
+                               nrow = max_trials + 1,
                                ncol = 2)
   colnames(f_interval_history) <- c("lower", "upper")
-  reject_history <- vector("numeric", max_trials)
+  reject_history <- vector("numeric", max_trials + 1)
   reject_history[] <- NA
 
-  reject_by_power_curve_history <- vector("numeric", max_trials)
+  reject_by_power_curve_history <- vector("numeric", max_trials + 1)
   reject_by_power_curve_history[] <- NA
 
-  dfun_history <- vector("list", max_trials)
+  dfun_history <- vector("list", max_trials + 1)
 
-  p_c_history <- vector("numeric", max_trials)
+  p_c_history <- vector("numeric", max_trials + 1)
   p_c_history[] <- NA
 
-  hdr_x_history <- vector("list", max_trials)
-  hdr_power_history <- vector("list", max_trials)
+  hdr_x_history <- vector("list", max_trials + 1)
+  hdr_power_history <- vector("list", max_trials + 1)
+
+  final_check_history <- vector("logical", max_trials + 1)
+  final_check_history[] <- FALSE
 
   i <- NA
 
@@ -231,13 +234,15 @@ power_algorithm_prob_bisection <- function(
                     step_up_factor_f = 4,
                     trial_nrep = NULL,
                     npoints = 200,
-                    p = .60,
+                    p = .51,
                     use_estimated_p = TRUE,
                     adjust_p_c = .90,
                     hdr_prob = NULL,
                     hdr_power_tol = NULL,
                     hdr_prob_ci_level_ratio = .90,
-                    perturbation_times = 2)
+                    perturbation_times = 2,
+                    max_final_checks = 3,
+                    final_check_cooldown = last_k)
   variants <- utils::modifyList(variants0,
                                 variants)
   if (is.null(variants$hdr_prob)) {
@@ -253,10 +258,8 @@ power_algorithm_prob_bisection <- function(
   }
   if (is.null(variants$initial_nrep)) {
     variants$initial_nrep <- variants$trial_nrep
-    # variants$nrep_step <- 0
   } else if (variants$initial_nrep > variants$trial_nrep) {
     variants$initial_nrep <- variants$trial_nrep
-    # variants$nrep_step <- 0
   }
   if (is.null(variants$nrep_step)) {
     variants$nrep_step <- variants$initial_nrep
@@ -274,7 +277,25 @@ power_algorithm_prob_bisection <- function(
                   ),
                   error = function(e) e)
   if (inherits(proxy_power, "error")) {
+    stop("The goal is not possible given the final_nrep and target power. Please try other values.")
     proxy_power <- NA
+  }
+
+  # ==== Set default for tol ====
+
+  if (is.null(tol)) {
+    tmp0 <- ifelse(
+                inherits(proxy_power, "error"),
+                yes = target_power,
+                no = proxy_power
+              )
+    tmp1 <- reject_ci_wilson(
+              nreject = ceiling(tmp0 * final_nrep),
+              nvalid = final_nrep,
+              level = ci_level
+            )
+    tmp3 <- min(abs(tmp1[1, ] - tmp0)) * .90
+    tol <- tmp3
   }
 
   # ==== Set default for hdr_power_tol ====
@@ -740,8 +761,6 @@ power_algorithm_prob_bisection <- function(
       output_i <- output_upper
       reject_i <- reject_upper
     }
-    # by_x_1 <- c(by_x_1, output_i)
-    # No need. lower and upper always in by_x_1
   }
 
   # ==== Do the search ====
@@ -756,6 +775,7 @@ power_algorithm_prob_bisection <- function(
     upper_i <- upper
     status <- 0
     perturbation_count <- variants$perturbation_times
+    final_checks_available <- variants$max_final_checks
 
     dfun_i <- gen_dfun(
                   interval = c(lower_i, upper_i),
@@ -782,9 +802,20 @@ power_algorithm_prob_bisection <- function(
     step_up_factor_f <- variants$step_up_factor_f
     time_start <- Sys.time()
     pb_id <- NA
+    terminate_hdr_power_tol <- FALSE
+    terminate_change_ok_x <- FALSE
+    terminate_change_ok_f <- FALSE
+    nrep_i_old <- NA
+    do_final_check <- FALSE
+    ok <- FALSE
+    final_check_cooldown_i <- 0
+    time_passed_i_total <- NA
+    nrep_final_check_total <- 0
 
-    while ((i <= max_trials) &&
-           (nreps_total < variants$total_nrep)) {
+    # Always do a final check, even if max_trials is reached.
+    while (((i <= max_trials) &&
+            (nreps_total < variants$total_nrep)) ||
+           do_final_check) {
 
       # ==== Progress: Set up cli ====
 
@@ -803,12 +834,12 @@ power_algorithm_prob_bisection <- function(
         # The progress message for the loop
         cat("Search Progress Note:",
             "- #: Iteration number",
-            "- nrep: Number of replications",
+            "- nrep: The number of replications",
             "- n/es: The value to try",
             "- TE: Time elapsed",
             paste0("- ETA: Estimated time to do all ",
                    variants$total_nrep,
-                  " replications"),
+                  " replications and one final check"),
             "- Rep: The number of replications used out of the total number of replications",
             paste0("- Dx: The range of changes of x in the last ", last_k, " iterations"),
             paste0("- Df: The range of changes of f in the last ", last_k, " iterations"),
@@ -826,6 +857,10 @@ power_algorithm_prob_bisection <- function(
 
       # ==== Progress: Show iteration progress ====
 
+      time_passed0 <- difftime(
+                        Sys.time(),
+                        time_start
+                      )
       if (progress) {
         if (progress_type == "cat") {
           cat("\nIteration #", i, "\n")
@@ -834,15 +869,12 @@ power_algorithm_prob_bisection <- function(
           cat("\n")
         }
         if (progress_type == "cli") {
-          time_passed0 <- difftime(
-                            Sys.time(),
-                            time_start
-                          )
           time_passed <- paste0("|TE:",
                                 format(time_passed0, digits = 3),
                                 "")
           if (i >= 2) {
-            tmp <- (variants$total_nrep - nreps_total) * time_passed0 / nreps_total
+            tmp <- (variants$total_nrep - nreps_total + final_nrep) *
+                   time_passed_i_total / (nreps_total + nrep_final_check_total)
             tmp2 <- tmp
             units(tmp2) <- "secs"
             if (as.numeric(tmp2) > 60 * 60) {
@@ -860,6 +892,9 @@ power_algorithm_prob_bisection <- function(
       }
 
       # ==== Compute f(x) ====
+
+      time_start_i <- Sys.time()
+
       out_i <- f(x_i = x_i,
                  x = x,
                  pop_es_name = pop_es_name,
@@ -876,6 +911,17 @@ power_algorithm_prob_bisection <- function(
                  store_output = TRUE,
                  target_nrep = final_nrep,
                  pb_id = pb_id)
+
+      time_passed_i <- difftime(
+                        Sys.time(),
+                        time_start_i
+                      )
+
+      if (is.na(time_passed_i_total)) {
+        time_passed_i_total <- time_passed_i
+      } else {
+        time_passed_i_total <- time_passed_i_total + time_passed_i
+      }
 
       output_i <- attr(out_i, "output")
       by_x_1 <- c(by_x_1, output_i,
@@ -899,14 +945,26 @@ power_algorithm_prob_bisection <- function(
 
       f_history[i] <- as.numeric(out_i)
       x_history[i] <- x_i
-      # f_interval_history[i, ] <- c(f.lower_i, f.upper_i)
       reject_history[i] <- reject_i
 
-      # ==== Is x a solution?
-      #
-      # No need to check during the iteration because the
-      # nrep will not be the final nrep.
-      # The solution will be checked again after the search.
+      # ==== Is x a solution? =====
+
+      if (do_final_check) {
+        final_check_history[i] <- TRUE
+        ok <- check_solution(
+                f_i = reject_i,
+                target_power = target_power,
+                nrep = final_nrep,
+                final_nrep = final_nrep,
+                ci_level = ci_level,
+                what = what,
+                goal = goal,
+                tol = tol
+              )
+      }
+
+      # Some steps will be conducted even if this iteration
+      # is a final check, because x_i may not be a solution.
 
       # ==== Check and display changes in the last_k iterations ====
 
@@ -924,7 +982,7 @@ power_algorithm_prob_bisection <- function(
               last_k = last_k
             )
 
-      if (progress && (i >= last_k)) {
+      if (progress && (i >= last_k) && !ok) {
         tmp <- x_history[(i - last_k + 1):i]
         tmp <- diff(range(tmp))
         last_k_str <- switch(x_type,
@@ -1014,10 +1072,32 @@ power_algorithm_prob_bisection <- function(
 
       dfun_history[[i]] <- dfun_i
 
-      x_i <- q_dfun(
-                dfun = dfun_i,
-                prob = .50
-              )
+      # ==== Update x_i? ====
+
+      if (do_final_check) {
+
+        # ==== A final check ====
+
+        if (ok) {
+          # No need to update. x_i is a solution.
+          # This is the final iteration.
+        } else {
+          # Need to continue the search
+          x_i <- q_dfun(
+                    dfun = dfun_i,
+                    prob = .50
+                  )
+        }
+
+      } else {
+
+        # ==== A PBA iteration ====
+
+        x_i <- q_dfun(
+                  dfun = dfun_i,
+                  prob = .50
+                )
+      }
 
       if (x_type == "n") {
         x_i <- ceiling(x_i)
@@ -1039,31 +1119,18 @@ power_algorithm_prob_bisection <- function(
       # No need to reuse results if x has tried.
       # A new draw gives new information.
 
-      if (progress) {
-        # # TODO:
-        # # - Decide whether print this.
-        # if (progress_type == "cat") {
-        #   print_interval(lower = crlo,
-        #                  upper = crhi,
-        #                  digits = digits,
-        #                  x_type = x_type,
-        #                  prefix = "80% interval for the posterior distribution:")
-        #   cat("Updated x:", x_i, "\n")
-        # }
-      }
-
       # ==== Termination: f interval ====
+
+      cat_newline <- FALSE
+
+      # Do this check even if doing a final check
 
       hdr_x <- hdr(
                   dfun = dfun_i,
                   prob = variants$hdr_prob
                 )
-      # TODO:
-      # - Check the argument values
-      # tmp <- range(unlist(hdr_x)) * c(.9, 1.1)
-      # tmp2 <- as.numeric(names(by_x_1))
-      # by_x_1_tmp <- by_x_1[(tmp2 >= tmp[1]) & (tmp2 <= tmp[2])]
-      # class(by_x_1_tmp) <- class(by_x_1)
+      # Search is unstable if only a narrow range is used.
+      # Therefore, use the full range of x.
       fit_tmp <- tryCatch(do.call(
                           power_curve,
                           c(list(object = by_x_1),
@@ -1124,53 +1191,26 @@ power_algorithm_prob_bisection <- function(
           (diff(hdr_power[[hdr_power_dominant_i]]) <= variants$hdr_power_tol) &&
           (proxy_power >= hdr_power[[hdr_power_dominant_i]][1]) &&
           (proxy_power <= hdr_power[[hdr_power_dominant_i]][2])) {
-        # TODO:
-        # - Add a status
-        cli::cli_process_done(id = pb_id)
-        cat("\n** Search ended **: The width of the dominant range of probable power is ",
-            formatC(variants$hdr_power_tol,
-                    digits = 4,
-                    format = "f"),
-            " or less.\n",
-            sep = "")
-        break
+        terminate_hdr_power_tol <- TRUE
       }
 
       # ==== Termination: last_k changes ====
 
+      # Do this check even if doing a final check
+
       if ((!changes_ok || !changes_ok_f) &&
-          perturbation_count == 0) {
+          (perturbation_count == 0)) {
 
         status <- bisection_status_message(3, status)
 
-        if (progress) {
-          if (progress_type == "cli") {
-            cli::cli_process_done(id = pb_id)
-          }
-          if (!changes_ok) {
-            cat("\n** Search ended **: The range of changes of x in the last ",
-                last_k,
-                " iterations is less than ",
-                delta_tol,
-                ".\n",
-                sep = "")
-          }
-          if (!changes_ok_f) {
-            cat("\n** Search ended **: The range of changes of f in the last ",
-                last_k,
-                " iterations is less than ",
-                delta_tol_f,
-                ".\n",
-                sep = "")
-          }
-        }
+        terminate_change_ok_x <- !changes_ok
+        terminate_change_ok_f <- !changes_ok_f
 
-        break
-
-      } else if (!changes_ok || !changes_ok_f) {
+      } else if ((!changes_ok || !changes_ok_f) && !ok) {
+        # If not a solution, then the next iteration is a PBA iteration
         perturbation_count <- perturbation_count - 1
         x_i <- q_dfun(dfun_i,
-                      prob = runif(1, -.025, .025) +
+                      prob = runif(1, -.05, .05) +
                              sample(c(.40, .60), size = 1))
         x_i <- switch(
                   x_type,
@@ -1181,36 +1221,235 @@ power_algorithm_prob_bisection <- function(
 
       # ==== Next i: Set nrep ====
 
-      step_up <- !check_changes(
-              x_history = x_history,
-              delta_tol = delta_tol * step_up_factor,
-              last_k = last_k
-            )
-      # delta_tol_f is dynamically determined.
-      # No need for step_up_factor_f
-      step_up_factor_f <- min(step_up_factor, .5)
-      step_up_f <- !check_changes(
-              x_history = f_history,
-              delta_tol = delta_tol_f * step_up_factor_f,
-              last_k = last_k
-            )
-      if (step_up || step_up_f) {
-        tmp <- variants$initial_nrep +
-               variants$step_up_factor * variants$nrep_step
-        nrep_i <- min(final_nrep,
-                      nrep_i + variants$nrep_step,
-                      tmp)
-        if (step_up) {
-          step_up_factor <- max(0, step_up_factor - 1)
+      any_terminate <-  terminate_hdr_power_tol ||
+                        terminate_change_ok_x ||
+                        terminate_change_ok_f
+
+      if (do_final_check) {
+
+        # ==== A final_check iteration ====
+
+        nrep_final_check_total <- nrep_final_check_total + final_nrep
+
+        if (ok) {
+
+          # ==== Solution found ====
+
+          if (progress) {
+            if (progress_type == "cli") {
+              cli::cli_process_done(id = pb_id)
+            }
+            cat("\n** Search ended **: Solution found.")
+          }
+
+        } else {
+
+          # ==== Solution not found ====
+
+          # The next iteration is a PBA iteration
+
+          last_final_check <- (final_checks_available == 0)
+          do_final_check <- FALSE
+          nrep_i <- nrep_i_old
+          final_check_cooldown_i <- variants$final_check_cooldown
+
+          if (progress) {
+            if (progress_type == "cli") {
+              cli::cli_progress_update(id = pb_id,
+                                       force = TRUE)
+            }
+            if (last_final_check) {
+              cat("\nSolution not found in Iteration ",
+                  i,
+                  ".",
+                  sep = "")
+            } else {
+              cat("\nSolution not found in Iteration ",
+                  i,
+                  ". Continue the search.",
+                  sep = "")
+            }
+            cat_newline <- TRUE
+          }
+
         }
-        # if (step_up_f) {
-        #   step_up_factor_f <- max(0, step_up_factor - 1)
-        # }
+
+      } else {
+
+        # ==== A PBA iteration ====
+
+        if (any_terminate) {
+
+          # ==== At least one criterion met ====
+
+          if (final_checks_available > 0) {
+
+            if (final_check_cooldown_i == 0) {
+
+              # ==== Do a final check next ====
+
+              do_final_check <- TRUE
+              final_checks_available <- final_checks_available - 1
+
+              nrep_i_old <- nrep_i
+              nrep_i <- final_nrep
+
+            } else {
+
+              # ==== In cooldown stage ====
+
+              final_check_cooldown_i <- final_check_cooldown_i - 1
+
+            }
+
+          } else {
+
+            # ==== Terminate anyway ====
+
+          }
+
+        } else {
+
+          # ==== Increase nrep_i? ====
+
+          if (!is.na(nrep_i_old)) {
+            nrep_i <- nrep_i_old
+          }
+
+          step_up <- !check_changes(
+                  x_history = x_history,
+                  delta_tol = delta_tol * step_up_factor,
+                  last_k = last_k
+                )
+          # delta_tol_f is dynamically determined.
+          # No need for step_up_factor_f
+          step_up_factor_f <- min(step_up_factor, .5)
+          step_up_f <- !check_changes(
+                  x_history = f_history,
+                  delta_tol = delta_tol_f * step_up_factor_f,
+                  last_k = last_k
+                )
+          if (step_up || step_up_f) {
+            tmp <- variants$initial_nrep +
+                  variants$step_up_factor * variants$nrep_step
+            nrep_i <- min(final_nrep,
+                          nrep_i + variants$nrep_step,
+                          tmp)
+            if (step_up) {
+              step_up_factor <- max(0, step_up_factor - 1)
+            }
+          }
+
+          ## ==== Update nreps_total ====
+
+          nreps_total <- nreps_total + nrep_i
+
+        }
+
       }
 
-      # ==== Next i: Update nreps_total ====
+      # ==== Terminate? ====
 
-      nreps_total <- nreps_total + nrep_i
+      if (ok) {
+
+        # ==== Solution found ====
+
+        solution_found <- TRUE
+
+        break
+
+      } else if (any_terminate &&
+                 (final_checks_available == 0) &&
+                 !do_final_check) {
+
+        # ==== No more final checks ====
+
+        if (progress) {
+          if (progress_type == "cli") {
+            cli::cli_process_done(id = pb_id)
+          }
+          if (!changes_ok) {
+            cat("\n** Search ended **: The range of changes of x in the last ",
+                last_k,
+                " iterations is less than ",
+                delta_tol,
+                ".",
+                sep = "")
+          }
+          if (!changes_ok_f) {
+            cat("\n** Search ended **: The range of changes of f in the last ",
+                last_k,
+                " iterations is less than ",
+                delta_tol_f,
+                ".",
+                sep = "")
+          }
+          if (terminate_hdr_power_tol) {
+            cat("\n** Search ended **: The width of the dominant region of probable power is ",
+                formatC(variants$hdr_power_tol,
+                        digits = 4,
+                        format = "f"),
+                " or less.",
+                sep = "")
+          }
+        }
+
+        if (cat_newline) {
+          cat("\n")
+        }
+
+        break
+
+      }
+
+      # ==== Progress: Before the next iteration ====
+
+      if (do_final_check) {
+        if (progress) {
+          # if (progress_type == "cli") {
+          #   cli::cli_progress_update(id = pb_id,
+          #                            force = TRUE)
+          # }
+          tmp <- variants$max_final_checks - final_checks_available
+          if (terminate_hdr_power_tol) {
+            cat("\nDo final check ",
+                tmp,
+                ": The width of the dominant region of probable power is ",
+                formatC(variants$hdr_power_tol,
+                        digits = 4,
+                        format = "f"),
+                " or less.",
+                sep = "")
+            cat_newline <- TRUE
+          }
+          if (terminate_change_ok_x) {
+            cat("\nDo final check ",
+                tmp,
+                ": The range of changes of x in the last ",
+                last_k,
+                " iterations is less than ",
+                delta_tol,
+                ".",
+                sep = "")
+            cat_newline <- TRUE
+          }
+          if (terminate_change_ok_f) {
+            cat("\nDo final check ",
+                tmp,
+                ": The range of changes of f in the last ",
+                last_k,
+                " iterations is less than ",
+                delta_tol_f,
+                ".",
+                sep = "")
+            cat_newline <- TRUE
+          }
+        }
+      }
+
+      if (cat_newline) {
+        cat("\n")
+      }
 
       # ==== Next i ====
 
@@ -1220,24 +1459,32 @@ power_algorithm_prob_bisection <- function(
 
     # ==== End the loop ====
 
+    # Actual time passed
+    time_passed0 <- difftime(
+                  Sys.time(),
+                  time_start
+                )
+
     if (progress_type == "cli") {
-      cat("\n")
+      tryCatch(cli::cli_process_done(id = pb_id),
+               error = function(e) e)
     }
 
     if (i == max_trials) {
       if (progress) {
-        cat("\n** Search ended **: Maximum number of trials reached.\n")
+        cat("\n** Search ended **: Maximum number of trials reached.")
       }
     }
 
-    if (nreps_total >= variants$total_nrep) {
+    if ((nreps_total >= variants$total_nrep) &&
+        (i != max_trials)) {
       if (progress) {
-        cat("\n** Search ended **: Total number of replications reached.\n")
+        cat("\n** Search ended **: Total number of replications reached.")
       }
     }
 
     if (progress) {
-      cat("Summary:\n")
+      cat("\nSummary:\n")
       cat("- Number of iterations:", i, "\n")
       cat("- Number of replications:", nreps_total, "\n")
       cat("- Time elapsed:", format(time_passed0, digits = 4), "\n")
@@ -1258,9 +1505,6 @@ power_algorithm_prob_bisection <- function(
     # No iteration
 
   }
-
-  # TODO:
-  # - Run one more time using final_nrep
 
   # Prepare the output
 
@@ -1326,9 +1570,6 @@ power_algorithm_prob_bisection <- function(
 
     # ==== Solution found. Store it ====
 
-    # TODO:
-    # - Check solutions
-
     # Store the last results,
     # regardless of solution
 
@@ -1381,7 +1622,6 @@ power_algorithm_prob_bisection <- function(
   # final x_i is a solution.
 
   # Not used in probabilistic bisection
-  # x_interval_history[] <- NA
   f_interval_history[] <- NA
 
   i_tmp <- !is.na(x_history)
@@ -1409,6 +1649,7 @@ power_algorithm_prob_bisection <- function(
               p_c_history = p_c_history[i_tmp],
               hdr_x_history = hdr_x_history[i_tmp],
               hdr_power_history = hdr_power_history[i_tmp],
+              final_check_history = final_check_history[i_tmp],
               tol = tol,
               delta_tol = delta_tol,
               last_k = last_k,
@@ -1538,11 +1779,8 @@ power_algorithm_prob_bisection_pre_i <- function(object,
   # The latest power curve
   # To be updated whenever by_x_1 is updated.
   # Used after the end of the loop.
-  # fit_1 <- fit_i
+  # Not used in PBA
   fit_1 <- NULL
-
-  # TODO:
-  # - How about adaptive nrep for bisection?
 
   # ==== Return the output ====
 
