@@ -170,8 +170,8 @@ power_algorithm_prob_bisection <- function(
                                       what = c("point", "ub", "lb"),
                                       goal = c("close_enough", "ci_hit"),
                                       tol = .005,
-                                      delta_tol = -Inf,
-                                      delta_tol_f = -Inf,
+                                      delta_tol = switch(x, n = 1, es = .001),
+                                      delta_tol_f = NULL,
                                       last_k = 5,
                                       variants = list()) {
   extendInt <- match.arg(extendInt)
@@ -236,7 +236,8 @@ power_algorithm_prob_bisection <- function(
                     adjust_p_c = .90,
                     hdr_prob = NULL,
                     hdr_power_tol = NULL,
-                    hdr_prob_ci_level_ratio = .90)
+                    hdr_prob_ci_level_ratio = .90,
+                    perturbation_times = 2)
   variants <- utils::modifyList(variants0,
                                 variants)
   if (is.null(variants$hdr_prob)) {
@@ -276,7 +277,7 @@ power_algorithm_prob_bisection <- function(
     proxy_power <- NA
   }
 
-  # Set default for hdr_power_tol
+  # ==== Set default for hdr_power_tol ====
 
   if (is.null(variants$hdr_power_tol)) {
     tmp0 <- ifelse(
@@ -290,6 +291,21 @@ power_algorithm_prob_bisection <- function(
               level = ci_level
             )
     variants$hdr_power_tol <- diff(tmp1[1, ])
+  }
+
+  # ==== Set default for delta_tol_f ====
+
+  if (is.null(delta_tol_f)) {
+    if (!is.na(proxy_power)) {
+      tmp1 <- reject_ci_wilson(
+                nreject = ceiling(tmp0 * final_nrep),
+                nvalid = final_nrep,
+                level = .95
+              )
+      delta_tol_f <- diff(range(tmp1[1, ])) / 2
+    } else {
+      delta_tol_f <- .001
+    }
   }
 
   # Create the objective function
@@ -739,6 +755,7 @@ power_algorithm_prob_bisection <- function(
     lower_i <- lower
     upper_i <- upper
     status <- 0
+    perturbation_count <- variants$perturbation_times
 
     dfun_i <- gen_dfun(
                   interval = c(lower_i, upper_i),
@@ -795,7 +812,7 @@ power_algorithm_prob_bisection <- function(
             "- Rep: The number of replications used out of the total number of replications",
             paste0("- Dx: The range of changes of x in the last ", last_k, " iterations"),
             paste0("- Df: The range of changes of f in the last ", last_k, " iterations"),
-            paste0("- PP: The range(s) of probable power"),
+            paste0("- PP: The region(s) of probable power"),
             sep = "\n")
         changes_last_k <- character(0)
         changes_last_k_f <- character(0)
@@ -895,21 +912,6 @@ power_algorithm_prob_bisection <- function(
 
       # For PBA, changes_ok FALSE is a termination criterion,
       # not a problem.
-
-      tmp0 <- target_power_adjusted(
-                target_power = target_power,
-                goal = goal,
-                what = what,
-                tolerance = .001,
-                nrep = nrep_i,
-                level = ci_level
-              )
-      tmp1 <- reject_ci_wilson(
-                nreject = ceiling(tmp0 * nrep_i),
-                nvalid = nrep_i,
-                level = .95
-              )
-      delta_tol_f <- diff(range(tmp1[1, ]))
 
       changes_ok <- check_changes(
               x_history = x_history,
@@ -1050,28 +1052,6 @@ power_algorithm_prob_bisection <- function(
         # }
       }
 
-      # ==== Termination: last_k changes ====
-
-      if (!changes_ok && !changes_ok_f) {
-
-        status <- bisection_status_message(3, status)
-
-        cat("** Search ended **: The range of changes of x in the last ",
-            last_k,
-            " iterations is less than ",
-            delta_tol,
-            ".\n",
-            sep = "")
-        cat("** Search ended **: The range of changes of f in the last ",
-            last_k,
-            " iterations is less than ",
-            delta_tol_f,
-            ".\n",
-            sep = "")
-        break
-
-      }
-
       # ==== Termination: f interval ====
 
       hdr_x <- hdr(
@@ -1154,6 +1134,49 @@ power_algorithm_prob_bisection <- function(
             " or less.\n",
             sep = "")
         break
+      }
+
+      # ==== Termination: last_k changes ====
+
+      if ((!changes_ok || !changes_ok_f) &&
+          perturbation_count == 0) {
+
+        status <- bisection_status_message(3, status)
+
+        if (progress) {
+          if (progress_type == "cli") {
+            cli::cli_process_done(id = pb_id)
+          }
+          if (!changes_ok) {
+            cat("\n** Search ended **: The range of changes of x in the last ",
+                last_k,
+                " iterations is less than ",
+                delta_tol,
+                ".\n",
+                sep = "")
+          }
+          if (!changes_ok_f) {
+            cat("\n** Search ended **: The range of changes of f in the last ",
+                last_k,
+                " iterations is less than ",
+                delta_tol_f,
+                ".\n",
+                sep = "")
+          }
+        }
+
+        break
+
+      } else if (!changes_ok || !changes_ok_f) {
+        perturbation_count <- perturbation_count - 1
+        x_i <- q_dfun(dfun_i,
+                      prob = runif(1, -.025, .025) +
+                             sample(c(.40, .60), size = 1))
+        x_i <- switch(
+                  x_type,
+                  n = ceiling(x_i),
+                  es = x_i
+                )
       }
 
       # ==== Next i: Set nrep ====
