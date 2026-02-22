@@ -50,6 +50,8 @@ diag <- function(a_out) {
         )
     }
   }
+  tmp <- which(a_out$final_check_history)
+  abline(v = tmp, col = "red")
   par(parold)
   hdr_h <- a_out$hdr_power_history
   tmp <- sapply(hdr_h,
