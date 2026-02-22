@@ -74,6 +74,7 @@ diag <- function(a_out) {
   print(tmp <= a_out$hdr_power_tol)
 }
 
+# ==== n ====
 
 mod <-
 "
@@ -87,8 +88,6 @@ m ~ x: s
 y ~ m: m
 y ~ x: s
 "
-
-# ==== n ====
 
 out <- power4test(nrep = 20,
                   model = mod,
@@ -194,6 +193,19 @@ abline(h = .80)
 
 
 # ==== es ====
+
+mod <-
+"
+m ~ x
+y ~ m + x
+"
+
+mod_es <-
+"
+m ~ x: s
+y ~ m: m
+y ~ x: s
+"
 
 out <- power4test(nrep = 20,
                   model = mod,
