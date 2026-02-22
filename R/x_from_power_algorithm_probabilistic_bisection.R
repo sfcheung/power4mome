@@ -180,6 +180,9 @@ power_algorithm_prob_bisection <- function(
   progress_type <- match.arg(progress_type)
   status <- NULL
   changes_ok <- TRUE
+
+  # ==== Initialize histories holders ====
+
   f_history <- vector("numeric", max_trials)
   f_history[] <- NA
   x_history <- vector("numeric", max_trials)
@@ -194,6 +197,9 @@ power_algorithm_prob_bisection <- function(
   colnames(f_interval_history) <- c("lower", "upper")
   reject_history <- vector("numeric", max_trials)
   reject_history[] <- NA
+
+  reject_by_power_curve_history <- vector("numeric", max_trials)
+  reject_by_power_curve_history[] <- NA
 
   dfun_history <- vector("list", max_trials)
 
@@ -228,10 +234,16 @@ power_algorithm_prob_bisection <- function(
                     p = .60,
                     use_estimated_p = TRUE,
                     adjust_p_c = .90,
-                    hdr_prob = .80,
-                    hdr_power_tol = .03)
+                    hdr_prob = NULL,
+                    hdr_power_tol = NULL,
+                    hdr_prob_ci_level_ratio = .90)
   variants <- utils::modifyList(variants0,
                                 variants)
+  if (is.null(variants$hdr_prob)) {
+    variants$hdr_prob <- ci_level * variants$hdr_prob_ci_level_ratio
+  }
+
+  # Default for hdr_power_tol to be set later
 
   # ==== Set trial_nrep, initial_nrep, and nrep_step
 
@@ -263,6 +275,23 @@ power_algorithm_prob_bisection <- function(
   if (inherits(proxy_power, "error")) {
     proxy_power <- NA
   }
+
+  # Set default for hdr_power_tol
+
+  if (is.null(variants$hdr_power_tol)) {
+    tmp0 <- ifelse(
+                inherits(proxy_power, "error"),
+                yes = target_power,
+                no = proxy_power
+              )
+    tmp1 <- reject_ci_wilson(
+              nreject = ceiling(tmp0 * final_nrep),
+              nvalid = final_nrep,
+              level = ci_level
+            )
+    variants$hdr_power_tol <- diff(tmp1[1, ])
+  }
+
   # Create the objective function
 
   # Tbe output is:
@@ -1051,6 +1080,10 @@ power_algorithm_prob_bisection <- function(
                 )
       # TODO:
       # - Check the argument values
+      # tmp <- range(unlist(hdr_x)) * c(.9, 1.1)
+      # tmp2 <- as.numeric(names(by_x_1))
+      # by_x_1_tmp <- by_x_1[(tmp2 >= tmp[1]) & (tmp2 <= tmp[2])]
+      # class(by_x_1_tmp) <- class(by_x_1)
       fit_tmp <- tryCatch(do.call(
                           power_curve,
                           c(list(object = by_x_1),
@@ -1067,11 +1100,17 @@ power_algorithm_prob_bisection <- function(
                             )
                         }
                       )
+        reject_by_power_curve_history[i] <-
+                          stats::predict(
+                              fit_tmp,
+                              newdata = list(x = x_i)
+                            )
       } else {
         hdr_power <- lapply(
                         hdr_x,
                         \(x) c(NA, NA)
                       )
+        reject_by_power_curve_history[i] <- NA
       }
       hdr_x_history[[i]] <- hdr_x
       hdr_power_history[[i]] <- hdr_power
@@ -1088,7 +1127,7 @@ power_algorithm_prob_bisection <- function(
       }
       if (length(hdr_power) > 1) {
         hdr_power_pb <- sapply(
-                            hdr_power,
+                            hdr_x,
                             attr,
                             which = "pb",
                             USE.NAMES = FALSE
@@ -1108,11 +1147,11 @@ power_algorithm_prob_bisection <- function(
         # TODO:
         # - Add a status
         cli::cli_process_done(id = pb_id)
-        cat("\n** Search ended **: The range of probable power is less than ",
+        cat("\n** Search ended **: The width of the dominant range of probable power is ",
             formatC(variants$hdr_power_tol,
                     digits = 4,
                     format = "f"),
-            ".\n",
+            " or less.\n",
             sep = "")
         break
       }
@@ -1341,6 +1380,7 @@ power_algorithm_prob_bisection <- function(
               x_interval_history = x_interval_history[i_tmp, ],
               f_interval_history = f_interval_history[i_tmp, ],
               reject_history = reject_history[i_tmp],
+              reject_by_power_curve_history = reject_by_power_curve_history[i_tmp],
               f_history = f_history[i_tmp],
               dfun_history = dfun_history[i_tmp],
               p_c_history = p_c_history[i_tmp],
@@ -1356,7 +1396,8 @@ power_algorithm_prob_bisection <- function(
               proxy_power = proxy_power,
               f_power = f_power,
               f_what = f_what,
-              f_goal = f_goal)
+              f_goal = f_goal,
+              hdr_power_tol = variants$hdr_power_tol)
   out
 
 }
