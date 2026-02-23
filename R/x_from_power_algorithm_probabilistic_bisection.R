@@ -212,6 +212,9 @@ power_algorithm_prob_bisection <- function(
   final_check_history <- vector("logical", max_trials + 1)
   final_check_history[] <- FALSE
 
+  seed_history <- vector("numeric", max_trials + 1)
+  seed_history[] <- NA
+
   i <- NA
 
   # what: The value to be examined.
@@ -926,6 +929,7 @@ power_algorithm_prob_bisection <- function(
       output_i <- attr(out_i, "output")
       by_x_1 <- c(by_x_1, output_i,
                   skip_checking_models = TRUE)
+      seed_history[i] <- attr(output_i[[1]], "args")$iseed
       # Arguments for rejection rates should be retrieved from the object
       # No need for other arguments. Only `reject` is used.
       reject_i <- rejection_rates(output_i)$reject
@@ -1650,6 +1654,7 @@ power_algorithm_prob_bisection <- function(
               hdr_x_history = hdr_x_history[i_tmp],
               hdr_power_history = hdr_power_history[i_tmp],
               final_check_history = final_check_history[i_tmp],
+              seed_history = seed_history[i_tmp],
               tol = tol,
               delta_tol = delta_tol,
               last_k = last_k,
