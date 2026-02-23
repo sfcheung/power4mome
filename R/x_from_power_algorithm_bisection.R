@@ -2099,7 +2099,7 @@ check_solution_bounds <- function(
   ok_lower <- check_solution(
                 f_i = reject_lower,
                 target_power = target_power,
-                nrep = final_nrep,
+                nrep = nrep_lower,
                 final_nrep = final_nrep,
                 ci_level = ci_level,
                 what = what,
