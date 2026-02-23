@@ -1421,7 +1421,7 @@ power_algorithm_prob_bisection <- function(
           # }
           tmp <- variants$max_final_checks - final_checks_available
           if (terminate_hdr_power_tol) {
-            cat("\nDo final check ",
+            cat("\nDo Final Check ",
                 tmp,
                 ": The width of the dominant region of probable power is ",
                 formatC(variants$hdr_power_tol,
@@ -1432,7 +1432,7 @@ power_algorithm_prob_bisection <- function(
             cat_newline <- TRUE
           }
           if (terminate_change_ok_x) {
-            cat("\nDo final check ",
+            cat("\nDo Final Check ",
                 tmp,
                 ": The range of changes of x in the last ",
                 last_k,
@@ -1443,7 +1443,7 @@ power_algorithm_prob_bisection <- function(
             cat_newline <- TRUE
           }
           if (terminate_change_ok_f) {
-            cat("\nDo final check ",
+            cat("\nDo Final Check ",
                 tmp,
                 ": The range of changes of f in the last ",
                 last_k,
