@@ -518,7 +518,7 @@ power_algorithm_prob_bisection <- function(
 
   # This should nearly never happen because initial_nrep
   # should be less than final_nrep.
-  # The code is kept, just in case.
+  # Keep the code, just in case.
 
   output_lower <- attr(f.lower, "output")
   # Arguments for rejection rates should be retrieved from the object
@@ -680,6 +680,10 @@ power_algorithm_prob_bisection <- function(
 
     # Check whether the updated lower or upper is already a solution
 
+    # This should nearly never happen because initial_nrep
+    # should be less than final_nrep.
+    # Keep the code, just in case.
+
     output_lower <- attr(f.lower, "output")
     # Arguments for rejection rates should be retrieved from the object
     # No need for other arguments. Only `reject` and `nrep` are used.
@@ -737,6 +741,10 @@ power_algorithm_prob_bisection <- function(
   }
 
   # ==== Is one of the bounds a solution? ====
+
+  # This should nearly never happen because initial_nrep
+  # should be less than final_nrep.
+  # Keep the code, just in case.
 
   if (ok_lower || ok_upper) {
 
