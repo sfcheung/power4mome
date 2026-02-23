@@ -361,7 +361,7 @@ power_algorithm_prob_bisection <- function(
                      ci_level = ci_level,
                      progress = progress,
                      digits = digits,
-                     nrep = variants$trial_nrep,
+                     nrep = variants$initial_nrep,
                      R = R,
                      what = f_what,
                      simulation_progress = simulation_progress,
@@ -384,7 +384,6 @@ power_algorithm_prob_bisection <- function(
   upper <- max(x_interval)
 
   if (progress) {
-    cat("\n")
     print_interval(lower = lower,
                    upper = upper,
                    digits = digits,
@@ -433,7 +432,7 @@ power_algorithm_prob_bisection <- function(
                  progress = ifelse(progress_type == "cat", progress, FALSE),
                  progress_type = "cat",
                  digits = digits,
-                 nrep = variants$trial_nrep,
+                 nrep = variants$initial_nrep,
                  R = R,
                  what = f_what,
                  simulation_progress = simulation_progress,
@@ -483,7 +482,7 @@ power_algorithm_prob_bisection <- function(
                  progress = ifelse(progress_type == "cat", progress, FALSE),
                  progress_type = "cat",
                  digits = digits,
-                 nrep = variants$trial_nrep,
+                 nrep = variants$initial_nrep,
                  R = R,
                  what = f_what,
                  simulation_progress = simulation_progress,
@@ -516,6 +515,10 @@ power_algorithm_prob_bisection <- function(
   # ==== Is one of the bound a solution?  ====
 
   # Check whether lower or upper is already a solution
+
+  # This should nearly never happen because initial_nrep
+  # should be less than final_nrep.
+  # The code is kept, just in case.
 
   output_lower <- attr(f.lower, "output")
   # Arguments for rejection rates should be retrieved from the object
@@ -581,7 +584,7 @@ power_algorithm_prob_bisection <- function(
                                         pop_es_name = pop_es_name,
                                         target_power = f_power,
                                         ci_level = ci_level,
-                                        nrep = variants$trial_nrep,
+                                        nrep = variants$initial_nrep,
                                         target_nrep = final_nrep,
                                         R = R,
                                         what = f_what,
