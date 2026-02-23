@@ -46,7 +46,7 @@ pba_diag <- function(a_out) {
           lty = "dotted",
           code = 3,
           angle = 90,
-          length = .05
+          length = ifelse(y[1] == y[2], 0, .05)
         )
     }
   }
