@@ -245,7 +245,10 @@ power_algorithm_prob_bisection <- function(
                     hdr_prob_ci_level_ratio = .90,
                     perturbation_times = 2,
                     max_final_checks = 3,
-                    final_check_cooldown = last_k)
+                    final_check_cooldown = last_k,
+                    dfun_integer = switch(x,
+                                          n = TRUE,
+                                          NULL))
   variants <- utils::modifyList(variants0,
                                 variants)
   if (is.null(variants$hdr_prob)) {
@@ -794,9 +797,7 @@ power_algorithm_prob_bisection <- function(
     dfun_i <- gen_dfun(
                   interval = c(lower_i, upper_i),
                   npoints = variants$npoints,
-                  integer = switch(x_type,
-                                   n = TRUE,
-                                   NULL)
+                  integer = variants$dfun_integer
                 )
 
     p <- variants$p
