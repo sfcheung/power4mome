@@ -120,3 +120,59 @@ hdr <- function(
             MoreArgs = NULL
           )
 }
+
+#' @noRd
+# Check whether a value of x has already been tried
+in_x_tried_advanced <- function(
+                      test_x,
+                      object,
+                      x,
+                      nrep = NULL,
+                      seed_exclude = NULL) {
+  # If yes, return the index
+  # Otherwise, return NA
+  x_tried <- get_x_tried(object = object,
+                         x = x)
+  reject_ci <- rejection_rates_add_ci(
+                    object,
+                    add_se = FALSE,
+                    add_reject = FALSE)
+  nrep_tried <- reject_ci$nrep
+  seed_tried <- sapply(object,
+                  \(x) attr(x, "args")$iseed)
+
+  i1 <- which(x_tried %in% test_x)
+
+  if (length(i1) == 0) {
+    return(NA)
+  }
+
+  # ==== Exclude xs used (seeds in seed_exclude)
+
+  if (!is.null(seed_exclude)) {
+    seed_exclude <- seed_exclude[!is.na(seed_exclude)]
+    if (length(seed_exclude) > 0) {
+      i2 <- which(!(seed_tried %in% seed_exclude))
+      i1 <- intersect(i1, i2)
+    }
+  }
+
+  # ==== Keep only xs with the required nrep ====
+
+  if (!is.null(nrep)) {
+    i3 <- which(nrep_tried %in% nrep)
+    i1 <- intersect(i1, i3)
+  }
+
+  # If multiple matches, select the first.
+  # This is OK because it will have the
+  # required nrep but has not been used.
+
+  if (length(i1) > 0) {
+    return(i1[1])
+  } else {
+    return(NA)
+  }
+
+  return(NA)
+}
