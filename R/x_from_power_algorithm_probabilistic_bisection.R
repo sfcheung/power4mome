@@ -215,6 +215,9 @@ power_algorithm_prob_bisection <- function(
   seed_history <- vector("numeric", max_trials + 1)
   seed_history[] <- NA
 
+  time_passed_history <- vector("numeric", max_trials + 1)
+  time_passed_history[] <- NA
+
   i <- NA
 
   # what: The value to be examined.
@@ -967,27 +970,53 @@ power_algorithm_prob_bisection <- function(
 
       time_start_i <- Sys.time()
 
-      out_i <- f(x_i = x_i,
-                 x = x,
-                 pop_es_name = pop_es_name,
-                 target_power = f_power,
-                 ci_level = ci_level,
-                 progress = progress,
-                 progress_type = progress_type,
-                 digits = digits,
-                 nrep = nrep_i,
-                 R = R,
-                 what = f_what,
-                 simulation_progress = simulation_progress,
-                 save_sim_all = save_sim_all,
-                 store_output = TRUE,
-                 target_nrep = final_nrep,
-                 pb_id = pb_id)
+      tmp <- in_x_tried_advanced(
+                test_x = x_i,
+                object = by_x_1,
+                x = x_type,
+                nrep = nrep_i,
+                seed_exclude = seed_history)
+
+      if (is.na(tmp)) {
+        # ==== New output ====
+        out_i <- f(
+                  x_i = x_i,
+                  x = x,
+                  pop_es_name = pop_es_name,
+                  target_power = f_power,
+                  ci_level = ci_level,
+                  progress = progress,
+                  progress_type = progress_type,
+                  digits = digits,
+                  nrep = nrep_i,
+                  R = R,
+                  what = f_what,
+                  simulation_progress = simulation_progress,
+                  save_sim_all = save_sim_all,
+                  store_output = TRUE,
+                  target_nrep = final_nrep,
+                  pb_id = pb_id
+                )
+        use_existing_out <- FALSE
+      } else {
+        # ==== Retrieve existing output ===
+        output_tmp <- by_x_1[tmp]
+        class(output_tmp) <- class(by_x_1)
+        out_i <- f(
+                  x_i = upper,
+                  power_i = rejection_rates(output_tmp)$reject,
+                  progress = FALSE
+                )
+        attr(out_i, "output") <- output_tmp
+        use_existing_out <- TRUE
+      }
 
       time_passed_i <- difftime(
                         Sys.time(),
                         time_start_i
                       )
+
+      time_passed_history[i] <- time_passed_i
 
       if (is.na(time_passed_i_total)) {
         time_passed_i_total <- time_passed_i
@@ -996,8 +1025,12 @@ power_algorithm_prob_bisection <- function(
       }
 
       output_i <- attr(out_i, "output")
-      by_x_1 <- c(by_x_1, output_i,
-                  skip_checking_models = TRUE)
+
+      if (!use_existing_out) {
+        by_x_1 <- c(by_x_1, output_i,
+                    skip_checking_models = TRUE)
+      }
+
       seed_history[i] <- attr(output_i[[1]], "args")$iseed
       # Arguments for rejection rates should be retrieved from the object
       # No need for other arguments. Only `reject` is used.
@@ -1235,16 +1268,6 @@ power_algorithm_prob_bisection <- function(
       hdr_x_history[[i]] <- hdr_x
       hdr_power_history[[i]] <- hdr_power
 
-      if (progress &&
-          (progress_type == "cli")) {
-          tmp1 <- sapply(
-                    hdr_power,
-                    \(x) sprintf("[%1$4.3f,%2$4.3f]", x[1], x[2])
-                  )
-          tmp2 <- paste0(tmp1, collapse = ";")
-          hdr_f_str <- paste0("|PP:", tmp2)
-          cli::cli_progress_update(id = pb_id, force = TRUE)
-      }
       if (length(hdr_power) > 1) {
         hdr_power_pb <- sapply(
                             hdr_x,
@@ -1267,6 +1290,22 @@ power_algorithm_prob_bisection <- function(
         terminate_hdr_power_tol <- TRUE
       }
 
+      if (progress &&
+          (progress_type == "cli")) {
+          if (any(hdr_power_dominant)) {
+            tmp0 <- hdr_power[hdr_power_dominant_i]
+          } else {
+            tmp0 <- hdr_power
+          }
+          tmp1 <- sapply(
+                    tmp0,
+                    \(x) sprintf("[%1$4.3f,%2$4.3f]", x[1], x[2])
+                  )
+          tmp2 <- paste0(tmp1, collapse = ";")
+          hdr_f_str <- paste0("|PP:", tmp2)
+          cli::cli_progress_update(id = pb_id, force = TRUE)
+      }
+
       # ==== Termination: last_k changes ====
 
       # Do this check even if doing a final check
@@ -1282,9 +1321,11 @@ power_algorithm_prob_bisection <- function(
       } else if ((!changes_ok || !changes_ok_f) && !ok) {
         # If not a solution, then the next iteration is a PBA iteration
         perturbation_count <- perturbation_count - 1
-        x_i <- q_dfun(dfun_i,
-                      prob = runif(1, -.05, .05) +
-                             sample(c(.40, .60), size = 1))
+        x_i <- x_i + delta_tol * 50 * z_i
+        x_i <- min(max(lower_i, x_i), upper_i)
+        # x_i <- q_dfun(dfun_i,
+        #               prob = runif(1, -.10, .10) +
+        #                      sample(c(.30, .70), size = 1))
         x_i <- switch(
                   x_type,
                   n = ceiling(x_i),
@@ -1327,10 +1368,10 @@ power_algorithm_prob_bisection <- function(
           final_check_cooldown_i <- variants$final_check_cooldown
 
           if (progress) {
-            if (progress_type == "cli") {
-              cli::cli_progress_update(id = pb_id,
-                                       force = TRUE)
-            }
+            # if (progress_type == "cli") {
+            #   cli::cli_progress_update(id = pb_id,
+            #                            force = TRUE)
+            # }
             if (last_final_check) {
               cat("\nSolution not found in Iteration ",
                   i,
@@ -1413,10 +1454,12 @@ power_algorithm_prob_bisection <- function(
             }
           }
 
-          ## ==== Update nreps_total ====
+        }
 
+        ## ==== Update nreps_total ====
+
+        if (!do_final_check) {
           nreps_total <- nreps_total + nrep_i
-
         }
 
       }
@@ -1738,6 +1781,7 @@ power_algorithm_prob_bisection <- function(
               hdr_power_history = hdr_power_history[i_tmp],
               final_check_history = final_check_history[i_tmp],
               seed_history = seed_history[i_tmp],
+              time_passed_history = time_passed_history[i_tmp],
               tol = tol,
               delta_tol = delta_tol,
               last_k = last_k,
