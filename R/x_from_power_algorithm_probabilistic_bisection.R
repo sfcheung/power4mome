@@ -402,7 +402,25 @@ power_algorithm_prob_bisection <- function(
 
   tmp <- in_x_tried(lower,
                     object = by_x_ci,
-                    x = x)
+                    x = x,
+                    multiple_matches = TRUE)
+
+  # Ensure the nrep is the same
+  # Do not extract those with nrep == final_nrep
+  # This should be the job of x_from_power().
+
+  if (!any(is.na(tmp))) {
+    tmp_nrep <- by_x_ci$nrep[tmp]
+    tmp_nrep_i <- tmp_nrep %in% variants$initial_nrep
+    if (any(tmp_nrep_i)) {
+      tmp <- tmp[which(tmp_nrep_i)[1]]
+    } else {
+      tmp <- NA
+    }
+  }
+
+  lower_in_by_x_1 <- tmp
+
   if (!is.na(tmp)) {
 
     # ==== Extract from by_x_1  ====
@@ -452,7 +470,25 @@ power_algorithm_prob_bisection <- function(
 
   tmp <- in_x_tried(upper,
                     object = by_x_ci,
-                    x = x)
+                    x = x,
+                    multiple_matches = TRUE)
+
+  # Ensure the nrep is the same
+  # Do not extract those with nrep == final_nrep
+  # This should be the job of x_from_power().
+
+  if (!any(is.na(tmp))) {
+    tmp_nrep <- by_x_ci$nrep[tmp]
+    tmp_nrep_i <- tmp_nrep %in% variants$initial_nrep
+    if (any(tmp_nrep_i)) {
+      tmp <- tmp[which(tmp_nrep_i)[1]]
+    } else {
+      tmp <- NA
+    }
+  }
+
+  upper_in_by_x_1 <- tmp
+
   if (!is.na(tmp)) {
 
     # ==== Extract from by_x_1  ====
@@ -629,9 +665,14 @@ power_algorithm_prob_bisection <- function(
 
     f.lower <- interval_updated$f.lower
     if (is.null(attr(f.lower, "output"))) {
-      tmp <- in_x_tried(test_x = lower,
-                        object = by_x_1,
-                        x = x)
+      if (!is.na(lower_in_by_x_1)) {
+        # Need to do this because a value may have been attempted more than once
+        tmp <- lower_in_by_x_1
+      } else {
+        tmp <- in_x_tried(test_x = lower,
+                          object = by_x_1,
+                          x = x)
+      }
       tmp <- by_x_1[tmp]
       class(tmp) <- class(by_x_1)
       attr(f.lower, "output") <- tmp
@@ -641,9 +682,14 @@ power_algorithm_prob_bisection <- function(
 
     f.upper <- interval_updated$f.upper
     if (is.null(attr(f.upper, "output"))) {
-      tmp <- in_x_tried(test_x = upper,
-                        object = by_x_1,
-                        x = x)
+      if (!is.na(upper_in_by_x_1)) {
+        # Need to do this because a value may have been attempted more than once
+        tmp <- upper_in_by_x_1
+      } else {
+        tmp <- in_x_tried(test_x = lower,
+                          object = by_x_1,
+                          x = x)
+      }
       tmp <- by_x_1[tmp]
       class(tmp) <- class(by_x_1)
       attr(f.upper, "output") <- tmp
@@ -652,6 +698,8 @@ power_algorithm_prob_bisection <- function(
     # ==== Fix the start value, if necessary ====
 
     # Fix the start value if it is outside the new interval
+
+    # Not used in PBA
 
     if ((start <= lower) || (start >= upper)) {
       start <- mean(c(lower, upper))
@@ -665,6 +713,8 @@ power_algorithm_prob_bisection <- function(
                       object = by_x_1,
                       x = x)
     if (is.na(tmp)) {
+      # No need to check for multiple matches,
+      # because this is done only if no match.
       by_x_1 <- c(by_x_1, attr(interval_updated$f.lower, "output"),
                   skip_checking_models = TRUE)
     }
@@ -675,6 +725,8 @@ power_algorithm_prob_bisection <- function(
                       object = by_x_1,
                       x = x)
     if (is.na(tmp)) {
+      # No need to check for multiple matches,
+      # because this is done only if no match.
       by_x_1 <- c(by_x_1, attr(interval_updated$f.upper, "output"),
                   skip_checking_models = TRUE)
     }
@@ -1604,7 +1656,17 @@ power_algorithm_prob_bisection <- function(
     ci_i <- unlist(by_ci_i[1, c("reject_ci_lo", "reject_ci_hi")])
     x_tried <- get_x_tried(by_x_1,
                            x = x)
-    i2 <- match(x_i, x_tried)
+    # An x may have been tried more than once.
+    # Need to match by seed.
+    # It may not be a solution. Therefore, no need to match by nrep.
+    x_tried_seed <- seed_history[i]
+    seed_tried <- sapply(
+                    by_x_1,
+                    \(x) attr(x, "args")$iseed
+                  )
+    i2a <- which(seed_tried %in% x_tried_seed)
+    i2b <- which(x_tried %in% x_i)
+    i2 <- intersect(i2a, i2b)
     by_x_ci <- rejection_rates_add_ci(by_x_1,
                                       level = ci_level)
     x_out <- x_i
