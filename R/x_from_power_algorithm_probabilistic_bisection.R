@@ -793,7 +793,10 @@ power_algorithm_prob_bisection <- function(
 
     dfun_i <- gen_dfun(
                   interval = c(lower_i, upper_i),
-                  npoints = variants$npoints
+                  npoints = variants$npoints,
+                  integer = switch(x_type,
+                                   n = TRUE,
+                                   NULL)
                 )
 
     p <- variants$p
