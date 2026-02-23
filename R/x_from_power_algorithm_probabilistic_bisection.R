@@ -814,6 +814,8 @@ power_algorithm_prob_bisection <- function(
     final_check_cooldown_i <- 0
     time_passed_i_total <- NA
     nrep_final_check_total <- 0
+    last_k_str <- character(0)
+    last_k_f_str <- character(0)
 
     # Always do a final check, even if max_trials is reached.
     while (((i <= max_trials) &&
@@ -1492,16 +1494,20 @@ power_algorithm_prob_bisection <- function(
       cat("- Number of iterations:", i, "\n")
       cat("- Number of replications:", nreps_total, "\n")
       cat("- Time elapsed:", format(time_passed0, digits = 4), "\n")
-      cat("- The range of changes x in the last",
-          last_k,
-          "iteration:",
-          last_k_str,
-          "\n")
-      cat("- The range of changes f in the last",
-          last_k,
-          "iteration:",
-          last_k_f_str,
-          "\n")
+      if (length(last_k_str) > 0) {
+        cat("- The range of changes x in the last",
+            last_k,
+            "iteration:",
+            last_k_str,
+            "\n")
+      }
+      if (length(last_k_f_str)) {
+        cat("- The range of changes f in the last",
+            last_k,
+            "iteration:",
+            last_k_f_str,
+            "\n")
+      }
     }
 
   } else {
