@@ -507,12 +507,21 @@ get_x_tried <- function(object,
 # Check whether a value of x has already been tried
 in_x_tried <- function(test_x,
                        object,
-                       x) {
+                       x,
+                       multiple_matches = FALSE) {
   # If yes, return the index
   # Otherwise, return NA
   x_tried <- get_x_tried(object = object,
                          x = x)
-  match(test_x, x_tried)
+  if (multiple_matches) {
+    out <- which(x_tried %in% test_x)
+    if (length(out) == 0) {
+      out <- NA
+    }
+  } else {
+    out <- match(test_x, x_tried)
+  }
+  out
 }
 
 #' @noRd
