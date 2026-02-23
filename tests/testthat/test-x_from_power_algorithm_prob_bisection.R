@@ -103,12 +103,16 @@ a_out$f_goal
 
 # Solution already in interval
 
+# This should nearly never happen because
+# initial_nrep should be less than final_nrep.
+
 set.seed(1234)
 a_out <- power_algorithm_prob_bisection(
                                   object = out,
                                   x = "n",
                                   by_x_1 = by_x_1,
-                                  x_interval = c(775, 800))
+                                  x_interval = c(795, 800),
+                                  final_nrep = 2000)
 rejection_rates(a_out$by_x_1)
 plot(a_out$fit_1)
 abline(h = .80)
