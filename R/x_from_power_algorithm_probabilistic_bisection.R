@@ -789,10 +789,11 @@ power_algorithm_prob_bisection <- function(
         cat("... and none of the bounds are solution.\n")
         cat("Try another interval.\n\n")
 
-        # Should quit
-
-        do_search <- FALSE
       }
+
+      # Should quit
+
+      do_search <- FALSE
 
     }
 
@@ -905,7 +906,9 @@ power_algorithm_prob_bisection <- function(
                                 ))
                   )
 
-      if ((progress_type == "cli") && (is.na(pb_id))) {
+      if (progress &&
+          (progress_type == "cli") &&
+          is.na(pb_id)) {
         # The progress message for the loop
         cat("Search Progress Note:",
             "- #: Iteration number",
@@ -1088,7 +1091,7 @@ power_algorithm_prob_bisection <- function(
               last_k = last_k
             )
 
-      if (progress && (i >= last_k) && !ok) {
+      if ((i >= last_k) && !ok) {
         tmp <- x_history[(i - last_k + 1):i]
         tmp <- diff(range(tmp))
         last_k_str <- switch(x_type,
@@ -1103,6 +1106,9 @@ power_algorithm_prob_bisection <- function(
                             digits = digits,
                             format = "f"
                           )
+      }
+
+      if (progress && (i >= last_k) && !ok) {
         if (progress_type == "cat") {
           cat("The range of changes in the last",
               last_k,
