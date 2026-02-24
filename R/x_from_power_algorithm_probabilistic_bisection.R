@@ -294,6 +294,15 @@ power_algorithm_prob_bisection <- function(
     proxy_power <- NA
   }
 
+  # ==== Emulate ci_hit by close_enough ====
+
+  if (goal == "ci_hit") {
+    goal <- "close_enough"
+    what <- "point"
+    # Force tol to be determined by final_nrep
+    tol <- NULL
+  }
+
   # ==== Set default for tol ====
 
   if (is.null(tol)) {
