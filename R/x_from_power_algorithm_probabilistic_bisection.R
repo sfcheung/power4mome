@@ -255,11 +255,19 @@ power_algorithm_prob_bisection <- function(
                     dfun_integer = switch(x,
                                           n = TRUE,
                                           NULL),
-                    rollback = TRUE)
+                    rollback = TRUE,
+                    bz = TRUE)
   variants <- utils::modifyList(variants0,
                                 variants)
   if (is.null(variants$hdr_prob)) {
     variants$hdr_prob <- ci_level * variants$hdr_prob_ci_level_ratio
+  }
+
+  # ==== Default to Boos-Zhang ====
+
+  if (variants$bz) {
+    bz_old <- options(power4mome.bz = TRUE)
+    on.exit(options(bz_old))
   }
 
   # Default for hdr_power_tol to be set later

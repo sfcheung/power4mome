@@ -6,8 +6,6 @@ library(testthat)
 
 test_that("probabilistic bisection: n, indirect", {
 
-options(power4mome.bz = TRUE)
-
 mod <-
 "
 m ~ x
