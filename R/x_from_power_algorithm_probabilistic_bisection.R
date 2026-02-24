@@ -239,7 +239,7 @@ power_algorithm_prob_bisection <- function(
                     step_up_factor = 4,
                     step_up_factor_f = 4,
                     trial_nrep = NULL,
-                    npoints = 200,
+                    npoints = 1000,
                     p = .51,
                     use_estimated_p = TRUE,
                     adjust_p_c = .90,
@@ -1954,14 +1954,19 @@ gen_dfun <- function(interval = c(50, 2000),
   if (integer) {
     x <- seq(from = interval[1],
              to = interval[2])
+    out <- cbind(x = x,
+                 prob = 1 / length(x))
   } else {
-    x <- seq(from = interval[1],
+    x0 <- seq(from = interval[1],
              to = interval[2],
              length = npoints + 1)
-    x <- x[-length(x)] + diff(x) / 2
+    x <- x0[-length(x0)] + diff(x0) / 2
+    out <- cbind(x = x,
+                 prob = 1 / (length(x)),
+                 xlo = x0[-length(x0)],
+                 xhi = x0[-1])
   }
-  out <- cbind(x = x,
-               prob = 1 / length(x))
+  attr(out, "integer") <- integer
   out
 }
 
@@ -1975,6 +1980,7 @@ dfun_prob <- function(
 }
 
 #' @noRd
+# Not used
 update_dfun_prob <- function(
   dfun,
   x,
@@ -2001,7 +2007,32 @@ update_dfun <- function(
   p,
   z_i
 ) {
-  j <- which.min(abs(dfun[, "x"] - x_i))
+  if (isTRUE(attr(dfun, "integer"))) {
+    out <- update_dfun_integer(
+              dfun = dfun,
+              x_i = x_i,
+              p = p,
+              z_i = z_i)
+  } else {
+    out <- update_dfun_continuous(
+              dfun = dfun,
+              x_i = x_i,
+              p = p,
+              z_i = z_i)
+  }
+  out
+}
+
+#' @noRd
+# Update the density function
+update_dfun_integer <- function(
+  dfun,
+  x_i,
+  p,
+  z_i
+) {
+  # j <- which.min(abs(dfun[, "x"] - x_i))
+  j <- match(ceiling(x_i), dfun[, "x"])
   cd_i <- cumsum(dfun[, "prob"])[j]
   gamma_i <- (1 - cd_i) * p +
              cd_i * (1 - p)
@@ -2025,6 +2056,44 @@ update_dfun <- function(
   dfun_new <- dfun
   dfun_new[, "prob"] <- d_new
   dfun_new <- normalize_dfun(dfun_new)
+  attr(dfun_new, "integer") <- attr(dfun, "integer")
+  dfun_new
+}
+
+#' @noRd
+# Update the density function
+update_dfun_continuous <- function(
+  dfun,
+  x_i,
+  p,
+  z_i
+) {
+  # j <- which.min(abs(dfun[, "x"] - x_i))
+  j <- findInterval(x_i, c(dfun[1, "xlo"], dfun[, "xhi"]))
+  cd_i <- cumsum(dfun[, "prob"])[j]
+  gamma_i <- (1 - cd_i) * p +
+             cd_i * (1 - p)
+  if (z_i > 0) {
+    d_new <- dfun[, "prob"] / gamma_i
+    p_i <- ifelse(
+              seq_along(d_new) >= j,
+              yes = p,
+              no = (1 - p)
+            )
+    d_new <- d_new * p_i
+  } else {
+    d_new <- dfun[, "prob"] / (1 - gamma_i)
+    p_i <- ifelse(
+              seq_along(d_new) >= j,
+              yes = (1 - p),
+              no = p
+            )
+    d_new <- d_new * p_i
+  }
+  dfun_new <- dfun
+  dfun_new[, "prob"] <- d_new
+  dfun_new <- normalize_dfun(dfun_new)
+  attr(dfun_new, "integer") <- attr(dfun, "integer")
   dfun_new
 }
 
@@ -2033,15 +2102,50 @@ q_dfun <- function(
   dfun,
   prob = .50
 ) {
+  if (attr(dfun, "integer")) {
+    out <- q_dfun_integer(
+              dfun = dfun,
+              prob = prob
+            )
+  } else {
+    out <- q_dfun_continuous(
+              dfun = dfun,
+              prob = prob
+            )
+  }
+  out
+}
+
+#' @noRd
+q_dfun_integer <- function(
+  dfun,
+  prob = .50
+) {
   qfun <- cumsum(dfun[, "prob"])
-  tmp <- prob - qfun
-  i <- length(tmp[tmp > 0])
+  # i <- length(tmp[tmp > 0])
+  # i <- which.min(abs(tmp))
+  i <- findInterval(prob,
+                    c(0, qfun),
+                    rightmost.closed = TRUE)
+  # No need for interpolation in integer mode
+  out <- dfun[i, "x"]
+  unname(out)
+}
+
+#' @noRd
+q_dfun_continuous <- function(
+  dfun,
+  prob = .50
+) {
+  qfun <- cumsum(dfun[, "prob"])
+  qfun0 <- c(0, qfun[-length(qfun)])
+  i <- findInterval(prob,
+                    c(0, qfun),
+                    rightmost.closed = TRUE)
   # Do interpolation
-  j0 <- qfun[i]
-  j1 <- qfun[i + 1]
-  yd <- (prob - j0) / (j1 - j0)
-  x0 <- dfun[i, "x"]
-  x1 <- dfun[i + 1, "x"]
+  yd <- (prob - qfun0[i]) / (qfun[i] - qfun0[i])
+  x0 <- dfun[i, "xlo"]
+  x1 <- dfun[i, "xhi"]
   out <- x0 + yd * (x1 - x0)
   unname(out)
 }
