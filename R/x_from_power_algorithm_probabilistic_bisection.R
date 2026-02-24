@@ -206,6 +206,9 @@ power_algorithm_prob_bisection <- function(
   p_c_history <- vector("numeric", max_trials + 1)
   p_c_history[] <- NA
 
+  z_history <- vector("numeric", max_trials + 1)
+  z_history[] <- NA
+
   hdr_x_history <- vector("list", max_trials + 1)
   hdr_power_history <- vector("list", max_trials + 1)
 
@@ -239,7 +242,7 @@ power_algorithm_prob_bisection <- function(
                     step_up_factor = 4,
                     step_up_factor_f = 4,
                     trial_nrep = NULL,
-                    npoints = 1000,
+                    npoints = 2000,
                     p = .51,
                     use_estimated_p = TRUE,
                     adjust_p_c = .90,
@@ -251,7 +254,8 @@ power_algorithm_prob_bisection <- function(
                     final_check_cooldown = last_k,
                     dfun_integer = switch(x,
                                           n = TRUE,
-                                          NULL))
+                                          NULL),
+                    rollback = TRUE)
   variants <- utils::modifyList(variants0,
                                 variants)
   if (is.null(variants$hdr_prob)) {
@@ -1174,6 +1178,7 @@ power_algorithm_prob_bisection <- function(
                     z_i = z_i
                   )
       } else {
+        p_c_history[i] <- p
         dfun_i <- update_dfun(
                     dfun = dfun_i,
                     x_i = x_i,
@@ -1183,6 +1188,7 @@ power_algorithm_prob_bisection <- function(
       }
 
       dfun_history[[i]] <- dfun_i
+      z_history[i] <- z_i
 
       # ==== Update x_i? ====
 
@@ -1288,6 +1294,7 @@ power_algorithm_prob_bisection <- function(
         hdr_power_dominant <- TRUE
         hdr_power_dominant_i <- 1
       }
+      terminate_hdr_power_tol <- FALSE
       if (any(hdr_power_dominant) &&
           isFALSE(all(is.na(hdr_power[[hdr_power_dominant_i]]))) &&
           (diff(hdr_power[[hdr_power_dominant_i]]) <= variants$hdr_power_tol) &&
@@ -1324,7 +1331,9 @@ power_algorithm_prob_bisection <- function(
         terminate_change_ok_x <- !changes_ok
         terminate_change_ok_f <- !changes_ok_f
 
-      } else if ((!changes_ok || !changes_ok_f) && !ok) {
+      } else if ((!changes_ok || !changes_ok_f) &&
+                 !ok &&
+                 do_final_check) {
         # If not a solution, then the next iteration is a PBA iteration
         perturbation_count <- perturbation_count - 1
         x_i <- x_i + delta_tol * 50 * z_i
@@ -1397,6 +1406,69 @@ power_algorithm_prob_bisection <- function(
       } else {
 
         # ==== A PBA iteration ====
+
+        if (any_terminate &&
+            any(final_check_history) &&
+            (final_check_cooldown_i == 0)) {
+
+          # ==== Rollback if x_i too close to the previous candidate ====
+
+          x_tried_solution <- x_history[final_check_history]
+          if ((abs(min(x_i - x_tried_solution)) < tol / 4) &&
+              variants$rollback) {
+
+            # ==== Rollback ====
+
+            i1 <- (abs(x_i - x_history) > tol / 4) & !final_check_history
+            i3 <- (apply(x_interval_history, MARGIN = 1, diff) / diff(x_interval)) > .10
+            i2 <- i1 & i3
+            if (all(is.na(i2))) {
+              i2 <- 1
+            } else {
+              i2 <- sample(which(i2), size = 1)
+            }
+
+            # Start again from i2
+
+            if (progress) {
+              if (progress_type == "cli") {
+                cli::cli_progress_update(id = pb_id,
+                                         force = TRUE)
+              }
+              cat("\nCandidate solution too close to the previous candidate(s).\n",
+                  "Restart from the state in Iteration ", i2, " again.",
+                  sep = "")
+              cat_newline <- TRUE
+            }
+
+            any_terminate <- FALSE
+            final_check_cooldown_i <- variants$final_check_cooldown
+
+            # Use failed final check(s) because they are informative
+
+            i3 <- which(final_check_history)
+
+            x_i <- x_history[i2]
+            dfun_i <- dfun_history[[i2]]
+
+            for (ii in i3) {
+              dfun_i <- update_dfun(
+                          dfun = dfun_i,
+                          x_i = x_history[ii],
+                          p = p_c_history[ii],
+                          z_i = z_history[ii]
+                        )
+            }
+            x_i <- q_dfun(
+                      dfun = dfun_i,
+                      prob = .50
+                    )
+            if (x_type == "n") {
+              x_i <- ceiling(x_i)
+            }
+          }
+        }
+
 
         if (any_terminate) {
 
