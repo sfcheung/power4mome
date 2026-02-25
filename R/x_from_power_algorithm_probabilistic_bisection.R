@@ -1030,6 +1030,11 @@ power_algorithm_prob_bisection <- function(
 
       if (is.na(tmp)) {
         # ==== New output ====
+        if (do_final_check) {
+          tmp_R <- final_R
+        } else {
+          tmp_R <- R
+        }
         out_i <- f(
                   x_i = x_i,
                   x = x,
@@ -1040,9 +1045,7 @@ power_algorithm_prob_bisection <- function(
                   progress_type = progress_type,
                   digits = digits,
                   nrep = nrep_i,
-                  R = ifelse(do_final_check,
-                             yes = final_R,
-                             no = R),
+                  R = tmp_R,
                   what = f_what,
                   simulation_progress = simulation_progress,
                   save_sim_all = save_sim_all,
