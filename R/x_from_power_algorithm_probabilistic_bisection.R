@@ -35,7 +35,6 @@ alg_prob_bisection <- function(
     delta_tol = switch(x,
                     n = 5,
                     es = .005),
-    delta_tol_f = .01,
     last_k = 5,
     variants = list()
 ) {
@@ -171,7 +170,6 @@ power_algorithm_prob_bisection <- function(
                                       goal = c("close_enough", "ci_hit"),
                                       tol = NULL,
                                       delta_tol = switch(x, n = 1, es = .001),
-                                      delta_tol_f = NULL,
                                       last_k = 5,
                                       variants = list()) {
   extendInt <- match.arg(extendInt)
@@ -232,7 +230,8 @@ power_algorithm_prob_bisection <- function(
 
   # ==== Default for variants ====
 
-  variants0 <- list(use_power_curve_assist = TRUE,
+  variants0 <- list(delta_tol_f = NULL,
+                    use_power_curve_assist = TRUE,
                     use_power_curve_min_points = 2,
                     power_curve_args = list(),
                     use_power_curve_hybrid = TRUE,
@@ -346,7 +345,7 @@ power_algorithm_prob_bisection <- function(
 
   # ==== Set default for delta_tol_f ====
 
-  if (is.null(delta_tol_f)) {
+  if (is.null(variants$delta_tol_f)) {
     if (!is.na(proxy_power)) {
       tmp1 <- reject_ci_wilson(
                 nreject = ceiling(tmp0 * final_nrep),
@@ -357,6 +356,8 @@ power_algorithm_prob_bisection <- function(
     } else {
       delta_tol_f <- .001
     }
+  } else {
+    delta_tol_f <- variants$delta_tol_f
   }
 
   # Create the objective function
