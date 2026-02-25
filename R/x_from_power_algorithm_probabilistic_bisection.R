@@ -124,7 +124,6 @@ alg_prob_bisection <- function(
     goal = goal,
     tol = tol,
     delta_tol = delta_tol,
-    delta_tol_f = delta_tol_f,
     last_k = last_k,
     variants = variants
   )

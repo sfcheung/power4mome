@@ -48,7 +48,8 @@ Imports:
     psych,
     yaml,
     graphics,
-    methods
+    methods,
+    cli
 Config/Needs/website: rmarkdown
 LazyData: true
 VignetteBuilder: knitr
