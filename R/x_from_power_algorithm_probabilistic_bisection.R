@@ -1,4 +1,5 @@
 #' @noRd
+# Most arguments should have default values
 # Probabilistic Bisection
 alg_prob_bisection <- function(
     object,
@@ -6,21 +7,29 @@ alg_prob_bisection <- function(
     pop_es_name,
     ...,
     target_power = .80,
-    x_max,
-    x_min,
-    progress,
+    x_min = switch(
+              x,
+              n = c(50),
+              es = c(.00)
+            ),
+    x_max = switch(
+              x,
+              n = c(2000),
+              es = c(.70)
+            ),
+    progress = TRUE,
     progress_type = c("cli", "cat"),
-    x_include_interval,
-    x_interval = switch(
-                  x,
-                  n = c(100, 1000),
-                  es = c(.10, .50)),
-    simulation_progress,
-    save_sim_all,
-    is_by_x,
+    x_include_interval = FALSE,
+    x_interval = switch(x,
+                    n = c(50, 2000),
+                    es = c(.00, .70)
+                  ),
+    simulation_progress = FALSE,
+    save_sim_all = FALSE,
+    is_by_x = FALSE,
     object_by_org,
-    final_nrep,
-    final_R,
+    final_nrep = 2000,
+    final_R = NULL,
     ci_level = .95,
     extendInt = c("no", "yes", "downX", "upX"),
     max_trials = 10,
@@ -31,10 +40,12 @@ alg_prob_bisection <- function(
     extend_maxiter = 5,
     what = c("point", "ub", "lb"),
     goal = c("close_enough", "ci_hit"),
-    tol = .005,
-    delta_tol = switch(x,
-                    n = 5,
-                    es = .005),
+    tol = NULL,
+    delta_tol = switch(
+                  x,
+                  n = 1,
+                  es = .001
+                ),
     last_k = 5,
     variants = list()
 ) {
@@ -43,12 +54,13 @@ alg_prob_bisection <- function(
   # - Number of trials: max_trials
   # - The range of x in the last_k trials is within delta_tol
   # - The range of f in the last_k trials is within delta_tol_f
+  # - The width of the dominant highest-density region
   # TODO:
   # - Add time allowed?
 
   # Solution found
-  # - Close enough (use tol)
-  # - CI hits (use ci)
+  # - Close enough (use tol, determined by final_nrep)
+  # - CI hits (use ci, determined by final_nrep)
 
   progress_type <- match.arg(progress_type)
 
@@ -112,7 +124,6 @@ alg_prob_bisection <- function(
     simulation_progress = simulation_progress,
     max_trials = max_trials,
     final_nrep = final_nrep,
-    R = R,
     save_sim_all = save_sim_all,
     by_x_1 = by_x_1,
     fit_1 = fit_1,
@@ -125,6 +136,12 @@ alg_prob_bisection <- function(
     tol = tol,
     delta_tol = delta_tol,
     last_k = last_k,
+    power_model = variants$power_model,
+    power_curve_start = variants$power_curve_start,
+    lower_bound = variants$lower_bound,
+    upper_bound = variants$upper_bound,
+    nls_control = variants$nls_control %||% list(),
+    nls_args = variants$nls_args %||% list(),
     variants = variants
   )
 
@@ -240,7 +257,7 @@ power_algorithm_prob_bisection <- function(
                     step_up_factor = 4,
                     step_up_factor_f = 4,
                     trial_nrep = NULL,
-                    npoints = 2000,
+                    npoints = 5000,
                     p = .51,
                     use_estimated_p = TRUE,
                     adjust_p_c = .90,
@@ -1903,18 +1920,12 @@ power_algorithm_prob_bisection_pre_i <- function(object,
                                             x_min,
                                             progress,
                                             progress_type = c("cat", "cli"),
-                                            x_include_interval,
+                                            x_include_interval = FALSE,
                                             x_interval,
                                             simulation_progress,
                                             save_sim_all,
                                             is_by_x,
                                             object_by_org,
-                                            power_model,
-                                            start,
-                                            lower_bound,
-                                            upper_bound,
-                                            nls_control,
-                                            nls_args,
                                             final_nrep,
                                             final_R,
                                             what,
@@ -2000,25 +2011,17 @@ power_algorithm_prob_bisection_pre_i <- function(object,
   # The collection of all values tried and their results
   # to be updated when new value is tried.
   # Used after the end of the loop.
-  by_x_1 <- by_x_i
 
   # ** fit_1 **
   # The latest power curve
   # To be updated whenever by_x_1 is updated.
   # Used after the end of the loop.
   # Not used in PBA
-  fit_1 <- NULL
 
   # ==== Return the output ====
 
-  out <- list(x_i = NULL,
-              by_x_i = NULL,
-              fit_i = NULL,
-              by_x_1 = by_x_1,
-              fit_1 = fit_1,
-              nrep_seq = NULL,
-              final_nrep_seq = NULL,
-              R_seq = NULL,
+  out <- list(by_x_1 = by_x_i,
+              fit_1 = NULL,
               x_interval_updated = x_i)
 
   return(out)
