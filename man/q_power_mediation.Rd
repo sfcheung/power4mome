@@ -212,12 +212,16 @@ to \code{\link[=power4test]{power4test()}}, \code{\link[=power4test_by_n]{power4
 or \code{\link[=power4test_by_es]{power4test_by_es()}}
 is shown. To be passed to
 the \code{progress} argument of these
-functions.}
+functions.
+If \code{NULL}, set automatically based
+on the algorithm used.}
 
 \item{max_trials}{The maximum number
 of trials in searching the value
 with the target power. Rounded
-up if not an integer.}
+up if not an integer.
+If \code{NULL}, set automatically based
+on the algorithm used.}
 
 \item{...}{For \verb{q_power_mediation_*},
 these are optional arguments to

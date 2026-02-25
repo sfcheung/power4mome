@@ -507,12 +507,21 @@ get_x_tried <- function(object,
 # Check whether a value of x has already been tried
 in_x_tried <- function(test_x,
                        object,
-                       x) {
+                       x,
+                       multiple_matches = FALSE) {
   # If yes, return the index
   # Otherwise, return NA
   x_tried <- get_x_tried(object = object,
                          x = x)
-  match(test_x, x_tried)
+  if (multiple_matches) {
+    out <- which(x_tried %in% test_x)
+    if (length(out) == 0) {
+      out <- NA
+    }
+  } else {
+    out <- match(test_x, x_tried)
+  }
+  out
 }
 
 #' @noRd
@@ -819,7 +828,7 @@ check_changes <- function(
   p <- length(x)
   if (p < last_k) return(TRUE)
   x_test <- rev(x_history[!is.na(x_history)])
-  x_range <- range(x_test,
+  x_range <- range(x_test[1:last_k],
                    na.rm = TRUE)
   if (abs(x_range[2] - x_range[1]) < delta_tol) {
     return(FALSE)
@@ -965,4 +974,82 @@ set_rejection_rates_args_by_x <- function(
     attr(object[[i]], "args") <- tmp
   }
   object
+}
+
+#' @noRd
+# Determine the tolerance based on the algorithms
+set_tolerance <- function(
+  algorithm,
+  ...
+) {
+  fun <- match.fun(paste0("set_tolerance_", algorithm))
+  do.call(fun,
+          list(...))
+}
+
+#' @noRd
+set_tolerance_bisection <- function(...) {
+  .02
+}
+
+#' @noRd
+set_tolerance_power_curve <- function(...) {
+  .02
+}
+
+#' @noRd
+set_tolerance_probabilistic_bisection <- function(...) {
+  args <- list(...)
+
+  proxy_power <- tryCatch(target_power_adjusted(
+                    target_power = args$target_power,
+                    goal = args$goal,
+                    what = args$what,
+                    tolerance = 0,
+                    nrep = args$final_nrep,
+                    level = args$ci_level
+                  ),
+                  error = function(e) e)
+  if (inherits(proxy_power, "error")) {
+    stop("The goal is not possible given the final_nrep and target power. Please try other values.")
+  }
+
+  tmp0 <- ifelse(
+              inherits(proxy_power, "error"),
+              yes = args$target_power,
+              no = proxy_power
+            )
+  tmp1 <- reject_ci_wilson(
+            nreject = ceiling(tmp0 * args$final_nrep),
+            nvalid = args$final_nrep,
+            level = args$ci_level
+          )
+  out <- min(abs(tmp1[1, ] - tmp0)) * .90
+  out
+}
+
+#' @noRd
+# Determine the tolerance based on the algorithms
+set_max_trials <- function(
+  algorithm,
+  ...
+) {
+  fun <- match.fun(paste0("set_max_trials_", algorithm))
+  do.call(fun,
+          list(...))
+}
+
+#' @noRd
+set_max_trials_bisection <- function(...) {
+  10
+}
+
+#' @noRd
+set_max_trials_power_curve <- function(...) {
+  10
+}
+
+#' @noRd
+set_max_trials_probabilistic_bisection <- function(...) {
+  100
 }

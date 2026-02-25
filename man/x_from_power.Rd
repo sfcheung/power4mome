@@ -20,12 +20,12 @@ x_from_power(
     = "close_enough", lb = "close_enough")
  },
   ci_level = 0.95,
-  tolerance = 0.02,
+  tolerance = NULL,
   x_interval = switch(x, n = c(50, 2000), es = NULL),
   extendInt = NULL,
   progress = TRUE,
-  simulation_progress = TRUE,
-  max_trials = 10,
+  simulation_progress = NULL,
+  max_trials = NULL,
   final_nrep = attr(object, "args")$nrep \%||\% (object$nrep_final \%||\% 400),
   final_R = attr(object, "args")$R \%||\% (object$args$final_R \%||\% 1000),
   seed = NULL,
@@ -48,12 +48,12 @@ n_from_power(
   what = formals(x_from_power)$what,
   goal = formals(x_from_power)$goal,
   ci_level = 0.95,
-  tolerance = 0.02,
+  tolerance = NULL,
   x_interval = c(50, 2000),
   extendInt = NULL,
   progress = TRUE,
-  simulation_progress = TRUE,
-  max_trials = 10,
+  simulation_progress = NULL,
+  max_trials = NULL,
   final_nrep = formals(x_from_power)$final_nrep,
   final_R = formals(x_from_power)$final_R,
   seed = NULL,
@@ -74,12 +74,12 @@ n_region_from_power(
   pop_es_name = NULL,
   target_power = 0.8,
   ci_level = 0.95,
-  tolerance = 0.02,
+  tolerance = NULL,
   x_interval = c(50, 2000),
   extendInt = NULL,
   progress = TRUE,
-  simulation_progress = TRUE,
-  max_trials = 10,
+  simulation_progress = NULL,
+  max_trials = NULL,
   final_nrep = formals(x_from_power)$final_nrep,
   final_R = formals(x_from_power)$final_R,
   seed = NULL,
@@ -164,7 +164,9 @@ for the estimated power. Default is
 .95, denoting 95\%.}
 
 \item{tolerance}{Used when the goal
-is \code{"close_enough"}.}
+is \code{"close_enough"}.
+If \code{NULL}, set automatically based
+on the algorithm used.}
 
 \item{x_interval}{A vector of
 two values, the minimum value
@@ -198,12 +200,16 @@ to \code{\link[=power4test]{power4test()}}, \code{\link[=power4test_by_n]{power4
 or \code{\link[=power4test_by_es]{power4test_by_es()}}
 is shown. To be passed to
 the \code{progress} argument of these
-functions.}
+functions.
+If \code{NULL}, set automatically based
+on the algorithm used.}
 
 \item{max_trials}{The maximum number
 of trials in searching the value
 with the target power. Rounded
-up if not an integer.}
+up if not an integer.
+If \code{NULL}, set automatically based
+on the algorithm used.}
 
 \item{final_nrep}{The number of
 replications in the final stage,
@@ -234,7 +240,7 @@ precision in one single replication.
 If \code{object}
 is an output of \code{\link[=power4test]{power4test()}}
 or \code{\link[=x_from_power]{x_from_power()}} and
-this argument is not set, \code{finalR}
+this argument is not set, \code{final_R}
 will be set to \code{R} or \code{final_R}
 stored in
 \code{object}.}
@@ -282,8 +288,9 @@ If set to \code{TRUE}, the size of the
 output can be very large in size.}
 
 \item{algorithm}{The algorithm for
-finding \code{x}. Can be \code{"power_curve"}
-or \code{"bisection"}. The default algorithm
+finding \code{x}. Can be \code{"power_curve"},
+\code{"bisection"}, or
+\code{"probabilistic_bisection"}. The default algorithm
 depends on \code{x}.}
 
 \item{control}{A named list of
