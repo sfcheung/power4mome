@@ -146,7 +146,7 @@ out_es_a <- x_from_power(out,
                          seed = 2345,
                          what = "ub",
                          goal = "close_enough",
-                         control = list(variants = list(muller = TRUE)))
+                         control = list(muller = TRUE))
 
 summary(out_es_a)
 plot(out_es_a)
@@ -173,7 +173,7 @@ out_es_b <- x_from_power(out,
                          seed = 4567,
                          what = "lb",
                          goal = "close_enough",
-                         control = list(variants = list(muller = TRUE)))
+                         control = list(muller = TRUE))
 
 
 summary(out_es_b)
@@ -220,7 +220,7 @@ out_es_b <- x_from_power(out,
                          seed = 4567,
                          what = "lb",
                          goal = "close_enough",
-                         control = list(variants = list(muller = TRUE)))
+                         control = list(muller = TRUE))
 
 out_es_b <- x_from_power(out,
                          x = "n",

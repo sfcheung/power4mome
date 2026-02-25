@@ -1,4 +1,4 @@
-# power4mome 0.1.1.49
+# power4mome 0.1.1.50
 
 - Improve the function for extending the
   initial interval before doing a
@@ -286,6 +286,13 @@
 - Added `test_group_equal()` for testing
   equality constraints between groups.
   (0.1.1.49)
+
+- The arguments in `control` is now
+  passed directly to the entry point
+  of the algorithms. Potential conflicts
+  due to partial matching should be
+  prevented inside these algorithms
+  (0.1.1.50)
 
 # power4mome 0.1.1
 
