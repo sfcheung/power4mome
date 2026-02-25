@@ -42,7 +42,7 @@ expect_no_error(tmp <- x_from_power(out,
                     simulation_progress = !is_testing(),
                     what = "ub"))
 expect_no_error(capture.output(print(summary(tmp))))
-expect_true(abs(tmp$ci_final - .80)[2] < formals(x_from_power)$tolerance)
+expect_true(abs(tmp$ci_final - .80)[2] < set_tolerance(tmp$algorithm))
 
 # Use x_from_power object as input
 
@@ -68,7 +68,7 @@ tmp2b <- x_from_power(tmp,
                     simulation_progress = !is_testing(),
                     what = "ub")
 expect_no_error(capture.output(print(summary(tmp))))
-expect_true(abs(tmp$ci_final - .80)[2] < formals(x_from_power)$tolerance)
+expect_true(abs(tmp$ci_final - .80)[2] < set_tolerance(tmp$algorithm))
 
 # Should not run if final_nrep or ci_level changed
 
@@ -142,6 +142,6 @@ expect_no_error(tmp <- x_from_power(out,
                     simulation_progress = !is_testing(),
                     what = "lb"))
 expect_no_error(capture.output(print(summary(tmp))))
-expect_true(abs(tmp$ci_final - .80)[1] < formals(x_from_power)$tolerance)
+expect_true(abs(tmp$ci_final - .80)[1] < set_tolerance(tmp$algorithm))
 
 })
