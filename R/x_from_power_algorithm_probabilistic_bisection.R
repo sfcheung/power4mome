@@ -1475,6 +1475,8 @@ power_algorithm_prob_bisection <- function(
               cat_newline <- TRUE
             }
 
+            # Reset the cooldown
+
             any_terminate <- FALSE
             final_check_cooldown_i <- variants$final_check_cooldown
 
@@ -1524,8 +1526,6 @@ power_algorithm_prob_bisection <- function(
 
               # ==== In cooldown stage ====
 
-              final_check_cooldown_i <- final_check_cooldown_i - 1
-
             }
 
           } else {
@@ -1568,11 +1568,17 @@ power_algorithm_prob_bisection <- function(
 
         }
 
+        # Reduce the counter in all cases
+
+        final_check_cooldown_i <- max(final_check_cooldown_i - 1, 0)
+
         ## ==== Update nreps_total ====
 
         if (!do_final_check) {
           nreps_total <- nreps_total + nrep_i
         }
+
+
 
       }
 
