@@ -33,7 +33,7 @@ alg_prob_bisection <- function(
     ci_level = .95,
     extendInt = c("no", "yes", "downX", "upX"),
     max_trials = 10,
-    R = NULL,
+    R = final_R,
     digits = 3,
     lower_hard = switch(x, n = 10, es = 0),
     upper_hard = switch(x, n = 10000, es = .999),
@@ -63,6 +63,13 @@ alg_prob_bisection <- function(
   # - CI hits (use ci, determined by final_nrep)
 
   progress_type <- match.arg(progress_type)
+
+  # ==== Default to Boos-Zhang ====
+
+  if (is.null(variants$bz)) {
+    bz_old <- options(power4mome.bz = TRUE)
+    on.exit(options(bz_old))
+  }
 
   # ==== Pre-search setup ====
 
@@ -124,6 +131,8 @@ alg_prob_bisection <- function(
     simulation_progress = simulation_progress,
     max_trials = max_trials,
     final_nrep = final_nrep,
+    final_R = final_R,
+    R = R,
     save_sim_all = save_sim_all,
     by_x_1 = by_x_1,
     fit_1 = fit_1,
@@ -166,6 +175,7 @@ power_algorithm_prob_bisection <- function(
                                       simulation_progress = FALSE,
                                       max_trials = 100,
                                       final_nrep = 400,
+                                      final_R = NULL,
                                       R = NULL,
                                       power_model = NULL,
                                       power_curve_start = NULL,
@@ -1030,7 +1040,9 @@ power_algorithm_prob_bisection <- function(
                   progress_type = progress_type,
                   digits = digits,
                   nrep = nrep_i,
-                  R = R,
+                  R = ifelse(do_final_check,
+                             yes = final_R,
+                             no = R),
                   what = f_what,
                   simulation_progress = simulation_progress,
                   save_sim_all = save_sim_all,
