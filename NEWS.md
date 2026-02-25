@@ -1,4 +1,4 @@
-# power4mome 0.1.1.50
+# power4mome 0.1.1.51
 
 - Improve the function for extending the
   initial interval before doing a
@@ -293,6 +293,11 @@
   due to partial matching should be
   prevented inside these algorithms
   (0.1.1.50)
+
+- Added the algorithm
+  `"probabilistic_bisection"` for
+  `x_from_power()` and friends.
+  (0.1.1.51)
 
 # power4mome 0.1.1
 

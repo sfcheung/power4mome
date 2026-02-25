@@ -1,6 +1,6 @@
 Package: power4mome
 Title: Power Analysis for Moderation and Mediation
-Version: 0.1.1.50
+Version: 0.1.1.51
 Authors@R:
     c(person(given = "Shu Fai",
            family = "Cheung",
