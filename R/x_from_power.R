@@ -976,7 +976,7 @@ x_from_power <- function(object,
   if ((algorithm == "power_curve") && !solution_found) {
 
     a_out <- do.call(alg_power_curve,
-      c(list(
+      list(
         object = object,
         x = x,
         pop_es_name = pop_es_name,
@@ -1006,8 +1006,9 @@ x_from_power <- function(object,
         power_tolerance_in_final = power_tolerance_in_final,
         what = what,
         goal = goal,
-        tol = tolerance),
-      control))
+        tol = tolerance,
+        variants = control
+      ))
 
     by_x_1 <- a_out$by_x_1
     fit_1 <- a_out$fit_1
@@ -1035,7 +1036,7 @@ x_from_power <- function(object,
   if ((algorithm == "bisection") && !solution_found) {
 
     a_out <- do.call(alg_bisection,
-      c(list(
+      list(
           object = object,
           x = x,
           pop_es_name = pop_es_name,
@@ -1058,9 +1059,9 @@ x_from_power <- function(object,
           digits = 3,
           what = what,
           goal = goal,
-          tol = tolerance
-        ),
-      control))
+          tol = tolerance,
+          variants = control
+        ))
 
     by_x_1 <- a_out$by_x_1
     fit_1 <- a_out$fit_1
