@@ -1,4 +1,4 @@
-# power4mome 0.1.1.51
+# power4mome 0.1.1.52
 
 - Improve the function for extending the
   initial interval before doing a
@@ -298,6 +298,12 @@
   `"probabilistic_bisection"` for
   `x_from_power()` and friends.
   (0.1.1.51)
+
+- Adjust the `initial_nrep` in
+  probabilistic bisection such that
+  the rejection rate will not be exactly
+  equal to the target power.
+  (0.1.1.52)
 
 # power4mome 0.1.1
 

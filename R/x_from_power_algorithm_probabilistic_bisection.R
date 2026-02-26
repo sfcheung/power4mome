@@ -408,6 +408,11 @@ power_algorithm_prob_bisection <- function(
     f_what <- what
     f_goal <- "close_enough"
   }
+
+  if (((variants$initial_nrep * f_power) %% 1) == 0) {
+    variants$initial_nrep <- variants$initial_nrep + 1
+  }
+
   f <- gen_objective(object = object,
                      x = x,
                      pop_es_name = pop_es_name,
