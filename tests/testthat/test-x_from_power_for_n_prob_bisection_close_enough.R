@@ -19,8 +19,6 @@ y ~ m: m
 y ~ x: s
 "
 
-options(power4mome.bz = TRUE)
-
 out <- power4test(nrep = 20,
                   model = mod,
                   pop_es = mod_es,
@@ -31,8 +29,7 @@ out <- power4test(nrep = 20,
                   test_args = list(x = "x",
                                    m = "m",
                                    y = "y",
-                                   mc_ci = TRUE,
-                                   test_method = "pvalue"),
+                                   mc_ci = TRUE),
                   iseed = 1234,
                   parallel = TRUE)
 out_power <- rejection_rates(out)
@@ -43,7 +40,7 @@ tmp2 <- x_from_power(out,
                      x = "n",
                      progress = TRUE,
                      final_nrep = 1000,
-                     final_R = 1000,
+                     final_R = 199,
                      seed = 1234,
                      save_sim_all = FALSE,
                      algorithm = "probabilistic_bisection",
@@ -63,7 +60,6 @@ tmp3 <- x_from_power(out,
                      x = "n",
                      progress = TRUE,
                      final_nrep = 1000,
-                     final_R = 1000,
                      seed = 1234,
                      save_sim_all = FALSE,
                      algorithm = "probabilistic_bisection",

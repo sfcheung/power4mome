@@ -1,4 +1,4 @@
-# power4mome 0.1.1.52
+# power4mome 0.1.1.53
 
 - Improve the function for extending the
   initial interval before doing a
@@ -304,6 +304,12 @@
   the rejection rate will not be exactly
   equal to the target power.
   (0.1.1.52)
+
+- Test functions using `manymome` will
+  automatically use `"pvalues"` as the
+  test method if `R` is a value supported
+  by the Boos-Zhang method.
+  (0.1.1.53)
 
 # power4mome 0.1.1
 

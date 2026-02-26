@@ -31,8 +31,7 @@ out <- power4test(nrep = 50,
                   test_args = list(x = "x",
                                    m = "m",
                                    y = "y",
-                                   mc_ci = TRUE,
-                                   test_method = "pvalue"),
+                                   mc_ci = TRUE),
                   iseed = 1234,
                   parallel = TRUE)
 rejection_rates(out)

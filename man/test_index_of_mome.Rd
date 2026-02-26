@@ -15,7 +15,7 @@ test_index_of_mome(
   boot_ci = FALSE,
   boot_out = NULL,
   check_post_check = TRUE,
-  test_method = c("ci", "pvalue"),
+  test_method = NULL,
   ...,
   fit_name = "fit",
   get_map_names = FALSE,
@@ -83,7 +83,12 @@ do the test. If
 by Asparouhov & Muthén (2021) will
 be used to do the test, and the
 confidence interval will not be
-computed.}
+computed. If \code{NULL}, its value will
+be set to \code{"pvalue"} if the number of
+simulated/bootstrap samples (\code{R}) is
+a value that is supported by the
+method by Boos and Zhang (2000), and
+set to \code{"ci"} otherwise.}
 
 \item{...}{Additional arguments to
 be passed to \code{\link[manymome:index_of_mome]{manymome::index_of_mome()}}.}

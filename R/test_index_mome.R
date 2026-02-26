@@ -104,12 +104,36 @@ test_index_of_mome <- function(fit = fit,
                       boot_ci = FALSE,
                       boot_out = NULL,
                       check_post_check = TRUE,
-                      test_method = c("ci", "pvalue"),
+                      test_method = NULL,
                       ...,
                       fit_name = "fit",
                       get_map_names = FALSE,
                       get_test_name = FALSE) {
-  test_method <- match.arg(test_method)
+
+  # ==== Enable pvalue? ====
+
+  args <- list(...)
+  if (!is.null(mc_out)) {
+    R <- length(mc_out)
+  } else if (!is.null(boot_out)) {
+    R <- length(boot_out)
+  } else {
+    R <- NULL
+  }
+  R <- args$R %||% formals(manymome::index_of_mome)$R
+  ci_level <- args$level %||% formals(manymome::index_of_mome)$level
+  R_bz_ok <- isTRUE(R %in% R_extrapolate(alpha = 1 - ci_level))
+  bz_not_FALSE <- !isFALSE(options("power4mome.bz"))
+  test_method_NULL <- is.null(test_method)
+  if (R_bz_ok &&
+      bz_not_FALSE &&
+      test_method_NULL) {
+    test_method <- "pvalue"
+  } else {
+    test_method <- match.arg(test_method,
+                             c("ci", "pvalue"))
+  }
+
   internal_options <- list()
   if (test_method == "pvalue") {
     internal_options <- utils::modifyList(internal_options,

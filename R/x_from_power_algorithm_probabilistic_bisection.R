@@ -204,6 +204,7 @@ power_algorithm_prob_bisection <- function(
   progress_type <- match.arg(progress_type)
   status <- NULL
   changes_ok <- TRUE
+  final_R <- final_R %||% R
 
   # ==== Initialize histories holders ====
 
