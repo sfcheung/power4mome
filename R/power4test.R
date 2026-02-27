@@ -557,6 +557,26 @@ power4test <- function(object = NULL,
   # It should be used whenever possible,
   # unless we explicitly need the value in this call.
 
+  # ==== If parallel, make a cluster ====
+
+  if (!isTRUE(args$ncores > 0)) {
+    args$parallel <- FALSE
+  }
+  if (args$parallel) {
+
+    # ==== Make a cluster ====
+
+    cl <- parallel::makeCluster(ncores)
+    on.exit(try(parallel::stopCluster(cl), silent = TRUE))
+
+  } else {
+
+    # ==== Serial ====
+
+    cl <- NULL
+
+  }
+
   if (update_power4test && !is.null(pop_es)) {
     # Population effect size changed
     # Data must be updated
@@ -612,7 +632,8 @@ power4test <- function(object = NULL,
                             parallel = args$parallel,
                             progress = args$progress,
                             ncores = args$ncores,
-                            n_ratio = args$n_ratio)
+                            n_ratio = args$n_ratio,
+                            cl = cl)
 
       fit_model_args <- args$fit_model_args
     } else {
@@ -640,7 +661,8 @@ power4test <- function(object = NULL,
                             parallel = args$parallel,
                             progress = args$progress,
                             ncores = args$ncores,
-                            n_ratio = args$n_ratio)
+                            n_ratio = args$n_ratio,
+                            cl = cl)
     }
     data_all <- do.call(sim_data,
                         sim_data_args)
@@ -651,7 +673,8 @@ power4test <- function(object = NULL,
                         utils::modifyList,
                         val = list(parallel = args$parallel,
                                    progress = args$progress,
-                                   ncores = args$ncores),
+                                   ncores = args$ncores,
+                                   cl = cl),
                         simplify = FALSE)
 
     if (args$progress) {
@@ -676,7 +699,8 @@ power4test <- function(object = NULL,
                                         parallel = args$parallel,
                                         progress = args$progress,
                                         ncores = args$ncores,
-                                        iseed = args$iseed))
+                                        iseed = args$iseed,
+                                        cl = cl))
       if (args$progress) {
         cat("Generate Monte Carlo estimates:\n")
       }
@@ -709,7 +733,8 @@ power4test <- function(object = NULL,
                                            parallel = args$parallel,
                                            progress = args$progress,
                                            ncores = args$ncores,
-                                           iseed = args$iseed))
+                                           iseed = args$iseed,
+                                           cl = cl))
       if (args$progress) {
         cat("Generate bootstrap estimates:\n")
       }
@@ -797,7 +822,8 @@ power4test <- function(object = NULL,
                         results_args = results_args,
                         parallel = args$parallel,
                         progress = args$progress,
-                        ncores = args$ncores)
+                        ncores = args$ncores,
+                        cl = cl)
     attr(test_all, "test_note") <- test_note
     attr(test_all, "test_name") <- test_name
     test_all <- list(test_all)
@@ -824,6 +850,7 @@ power4test <- function(object = NULL,
                        parallel = args$parallel,
                        progress = args$progress,
                        ncores = args$ncores,
+                       cl = cl,
                        simplify = FALSE,
                        USE.NAMES = TRUE)
 
@@ -930,7 +957,8 @@ update_test_i <- function(test_i,
                           sim_all,
                           parallel = FALSE,
                           progress = FALSE,
-                          ncores = max(1, parallel::detectCores(logical = FALSE) - 1)) {
+                          ncores = max(1, parallel::detectCores(logical = FALSE) - 1),
+                          cl = NULL) {
   test_fun <- attr(test_i, "test_fun")
   test_args <- attr(test_i, "test_args")
   map_names <- attr(test_i, "map_names")
@@ -951,7 +979,8 @@ update_test_i <- function(test_i,
                       results_args = results_args,
                       parallel = parallel,
                       progress = progress,
-                      ncores = ncores)
+                      ncores = ncores,
+                      cl = cl)
   attr(test_new, "test_note") <- test_note
   attr(test_new, "test_name") <- test_name
 

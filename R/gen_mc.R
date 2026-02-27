@@ -65,6 +65,14 @@
 #' in each Monte Carlo replication. Usually
 #' not needed and so default to `FALSE`.
 #'
+#' @param cl A cluster, such as one created
+#' by [parallel::makeCluster()]. If `NULL`,
+#' a cluster will be created, but will be
+#' stopped on exit. If set to an existing
+#' cluster, it will not be stopped when
+#' the function exits; users need to
+#' stop it manually.
+#'
 #' @return
 #' An `mc_list` object, which is a list
 #' of the output of [manymome::do_mc()].
@@ -115,7 +123,8 @@ gen_mc <- function(fit_all,
                    parallel = FALSE,
                    progress = FALSE,
                    ncores = max(1, parallel::detectCores(logical = FALSE) - 1),
-                   compute_implied_stats = FALSE) {
+                   compute_implied_stats = FALSE,
+                   cl = NULL) {
   # This check can be removed after manymome is updated on CRAN.
   # The version requirement should be added to DESCRIPTION later.
   manymome_implied <- (utils::packageVersion("manymome") >= "0.2.7.1")
@@ -132,7 +141,8 @@ gen_mc <- function(fit_all,
                 iseed = iseed,
                 parallel = parallel,
                 progress = progress,
-                ncores = ncores)
+                ncores = ncores,
+                cl = cl)
   class(out) <- c("mc_list", class(out))
   return(out)
 }
