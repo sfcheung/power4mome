@@ -107,6 +107,14 @@
 #' cores to use if parallel processing
 #' is used.
 #'
+#' @param cl A cluster, such as one created
+#' by [parallel::makeCluster()]. If `NULL`,
+#' a cluster will be created, but will be
+#' stopped on exit. If set to an existing
+#' cluster, it will not be stopped when
+#' the function exits; users need to
+#' stop it manually.
+#'
 #' @examples
 #'
 #' # Specify the population model
@@ -166,7 +174,8 @@ fit_model <- function(data_all = NULL,
                       fit_out = NULL,
                       parallel = FALSE,
                       progress = FALSE,
-                      ncores = max(1, parallel::detectCores(logical = FALSE) - 1)) {
+                      ncores = max(1, parallel::detectCores(logical = FALSE) - 1),
+                      cl = NULL) {
   # Store the arguments such the
   # it can be updated with new data.
   # It is intentional not to store the call.
@@ -217,6 +226,8 @@ fit_model <- function(data_all = NULL,
   # args available in all cases.
   # It should be used whenever possible,
   # unless we explicitly need the value in this call.
+  # TODO:
+  # - Check why parallel is not used.
   out <- do.call(do_FUN,
                  c(list(X = data_all,
                         FUN = fit_model_i),
