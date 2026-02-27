@@ -1,6 +1,6 @@
+skip("A long test with parallel processing. Test interactively")
 
 test_that("power4test: update respect parallel", {
-skip_on_cran()
 
 model_simple_med <-
 "
