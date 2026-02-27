@@ -1,4 +1,4 @@
-# power4mome 0.1.1.54
+# power4mome 0.1.1.55
 
 - Improve the function for extending the
   initial interval before doing a
@@ -315,6 +315,10 @@
   model syntax with a regression model
   spanning more than one line and fitted
   by `lm()`. (0.1.1.54)
+
+- Updated `power4test()` to make one
+  cluster that will be used in all stages.
+  (0.1.1.55)
 
 # power4mome 0.1.1
 
