@@ -226,8 +226,8 @@ fit_model <- function(data_all = NULL,
   # args available in all cases.
   # It should be used whenever possible,
   # unless we explicitly need the value in this call.
-  # TODO:
-  # - Check why parallel is not used.
+  # Parallel *will* be used, though
+  # specified by args.
   out <- do.call(do_FUN,
                  c(list(X = data_all,
                         FUN = fit_model_i),
