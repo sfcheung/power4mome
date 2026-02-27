@@ -1,4 +1,4 @@
-# power4mome 0.1.1.53
+# power4mome 0.1.1.54
 
 - Improve the function for extending the
   initial interval before doing a
@@ -310,6 +310,11 @@
   test method if `R` is a value supported
   by the Boos-Zhang method.
   (0.1.1.53)
+
+- Fixed `fix_many_lm_model()` to handle
+  model syntax with a regression model
+  spanning more than one line and fitted
+  by `lm()`. (0.1.1.54)
 
 # power4mome 0.1.1
 
