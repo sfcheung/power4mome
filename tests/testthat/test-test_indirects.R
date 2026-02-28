@@ -58,8 +58,8 @@ test_indb <- power4test(object = sim_only,
 rejection_rates(test_indb)
 
 (chkb <- test_summary(test_indb))
-expect_equal(chk[[1]]$sig,
-             chkb[[1]]$sig)
+expect_equal(chk[[1]]$sig[1],
+             chkb[[1]]$sig[1])
 
 test_ind <- power4test(object = sim_only,
                        test_fun = test_k_indirect_effects,

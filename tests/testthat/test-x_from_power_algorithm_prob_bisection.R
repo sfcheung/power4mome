@@ -1,5 +1,3 @@
-skip("WIP")
-
 skip("A long test with parallel processing. Test interactively.")
 
 library(testthat)
