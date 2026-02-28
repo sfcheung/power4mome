@@ -18,6 +18,7 @@ setwd(paste0(base_dir, "/vignettes/articles/"))
 
 
 knitr::knit("x_from_power_for_n_known_difficult_cases.Rmd.original", output = "x_from_power_for_n_known_difficult_cases.Rmd", envir = new.env())
+knitr::knit("x_from_power_for_n_known_difficult_cases_pba.Rmd.original", output = "x_from_power_for_n_known_difficult_cases_pba.Rmd", envir = new.env())
 knitr::knit("x_from_power_for_n_test_printout.Rmd.original", output = "x_from_power_for_n_test_printout.Rmd", envir = new.env())
 # file:///C:/GitHub/power4mome/docs/articles/x_from_power_for_n_test_printout.html
 

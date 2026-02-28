@@ -1,0 +1,152 @@
+---
+title: "Difficult Cases for Optimization (Internal)"
+date: "`r Sys.Date()`"
+output:
+  rmarkdown::html_vignette:
+    options:
+      toc:
+        depth: 2
+      number_sections: true
+vignette: >
+  %\VignetteIndexEntry{Difficult Cases for Optimization (Internal)}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+bibliography: references.bib
+csl: apa.csl
+---
+
+```{r setup_doc, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = ""
+)
+```
+
+# NOTE
+
+This article is for internal testing
+of the printout.
+
+```{r load_packages}
+library(power4mome)
+options(power4mome.bz = TRUE)
+```
+
+```{r model}
+mod <-
+"
+m ~ x
+y ~ m + x
+"
+```
+
+
+```{r pop_es}
+mod_es <-
+"
+m ~ x: m
+y ~ m: s
+y ~ x: s
+"
+```
+
+```{r sim_out, results=FALSE}
+out <- power4test(nrep = 2,
+                  model = mod,
+                  pop_es = mod_es,
+                  n = 50000,
+                  iseed = 1234)
+```
+
+```{r sim_out_print}
+print(out,
+      data_long = TRUE)
+```
+
+```{r test_out, results=FALSE}
+out <- power4test(nrep = 200,
+                  model = mod,
+                  pop_es = mod_es,
+                  n = 50,
+                  R = 199,
+                  ci_type = "mc",
+                  test_fun = test_indirect_effect,
+                  test_args = list(x = "x",
+                                   m = "m",
+                                   y = "y",
+                                   mc_ci = TRUE),
+                  iseed = 2345,
+                  parallel = TRUE)
+```
+
+```{r test_out_print}
+print(out,
+      test_long = TRUE)
+```
+
+```{r x_out}
+out_n <- n_from_power(out,
+                      what = "ub",
+                      seed = 4567,
+                      final_nrep = 2000,
+                      algorithm = "probabilistic_bisection")
+```
+
+```{r x_out_print}
+out_n
+```
+
+```{r x_out_summary}
+summary(out_n)
+```
+
+```{r x_from_power_for_n_known_difficult_cases_pba_1, fig.cap="The Power Curve", fig.align="center"}
+plot(out_n)
+```
+
+```{r x_out_lb}
+out_n_lb <- n_from_power(out,
+                         what = "lb",
+                         seed = 2345,
+                         final_nrep = 2000,
+                         algorithm = "probabilistic_bisection")
+```
+
+```{r x_out_lb_print}
+out_n_lb
+```
+
+```{r x_out_lb_summary}
+summary(out_n_lb)
+```
+
+```{r x_from_power_for_n_known_difficult_cases_pba_2, fig.cap="The Power Curve", fig.align="center"}
+plot(out_n_lb)
+```
+
+```{r region}
+n_power_region <- n_region_from_power(out,
+                                      seed = 2468,
+                                      final_nrep = 2000,
+                                      algorithm = "probabilistic_bisection")
+n_power_region
+```
+
+```{r x_from_power_for_n_known_difficult_cases_pba_3, fig.cap="The Power Curve (Region)", fig.align="center"}
+plot(n_power_region)
+```
+
+```{r region2}
+n_power_region2 <- n_region_from_power(out_n_lb,
+                                       seed = 24680,
+                                       final_nrep = 2000,
+                                       algorithm = "probabilistic_bisection")
+n_power_region2
+```
+
+```{r x_from_power_for_n_known_difficult_cases_pba_4, fig.cap="The Power Curve (Region) Version 2", fig.align="center"}
+plot(n_power_region2)
+```
+
+
