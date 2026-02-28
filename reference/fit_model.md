@@ -18,7 +18,8 @@ fit_model(
   fit_out = NULL,
   parallel = FALSE,
   progress = FALSE,
-  ncores = max(1, parallel::detectCores(logical = FALSE) - 1)
+  ncores = max(1, parallel::detectCores(logical = FALSE) - 1),
+  cl = NULL
 )
 ```
 
@@ -85,6 +86,14 @@ fit_model(
 - ncores:
 
   The number of CPU cores to use if parallel processing is used.
+
+- cl:
+
+  A cluster, such as one created by
+  [`parallel::makeCluster()`](https://rdrr.io/r/parallel/makeCluster.html).
+  If `NULL`, a cluster will be created, but will be stopped on exit. If
+  set to an existing cluster, it will not be stopped when the function
+  exits; users need to stop it manually.
 
 ## Value
 

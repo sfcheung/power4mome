@@ -343,17 +343,17 @@ This is the printout, showing only the section from the output of
     #> Solution: 
     #> 
     #> Approximate region of sample sizes with power:
-    #> - not significantly different from 0.800: 109 to 121
-    #> - significantly lower than 0.800: 109
+    #> - not significantly different from 0.800: 111 to 121
+    #> - significantly lower than 0.800: 111
     #> - significantly higher than 0.800: 121
     #> 
     #> Confidence intervals of the estimated power:
-    #> - for the lower bound (109): [0.754, 0.819]
+    #> - for the lower bound (111): [0.752, 0.818]
     #> - for the upper bound (121): [0.782, 0.844]
     #> 
     #> Call `summary()` for detailed results.
 
-In this example, the range of the sample size is 109 to 121.
+In this example, the range of the sample size is 111 to 121.
 
 The results can also be visualized using the
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html) function:

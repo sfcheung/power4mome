@@ -265,8 +265,8 @@ out
 #> fy ~ fm + fx
 #> 
 #> fm =~ fm1 + fm2 + fm3
-#> fx =~ fx1 + fx2 + fx3 + fx4
 #> fy =~ fy1 + fy2 + fy3 + fy4 + fy5
+#> fx =~ fx1 + fx2 + fx3 + fx4
 #> ====== Population Values ======
 #> 
 #> Regressions:
@@ -345,8 +345,8 @@ see the automatically generated measurement part syntax in the section
 `Model on Variables/Indicators`:
 
     #> fm =~ fm1 + fm2 + fm3
-    #> fx =~ fx1 + fx2 + fx3 + fx4
     #> fy =~ fy1 + fy2 + fy3 + fy4 + fy5
+    #> fx =~ fx1 + fx2 + fx3 + fx4
 
 It confirmed that we specified the measurement part correctly.
 
@@ -433,17 +433,17 @@ This is the second one:
     #>     fm1               0.578
     #>     fm2               0.579
     #>     fm3               0.578
-    #>   fx =~                    
-    #>     fx1               0.445
-    #>     fx2               0.443
-    #>     fx3               0.445
-    #>     fx4               0.445
     #>   fy =~                    
     #>     fy1               0.559
     #>     fy2               0.560
     #>     fy3               0.563
     #>     fy4               0.565
     #>     fy5               0.569
+    #>   fx =~                    
+    #>     fx1               0.445
+    #>     fx2               0.443
+    #>     fx3               0.445
+    #>     fx4               0.445
     #> 
     #> Regressions:
     #>                     est.std
@@ -527,7 +527,8 @@ These are the new arguments used:
 
 For `nrep = 400`, the 95% confidence limits for a power of .80 are about
 .04 below and above .80. This should be precise enough for determining
-whether a sample size has sufficient power.
+whether a sample size has sufficient power. If a higher precision is
+desired, set `nrep` to 1000 or 2000 for the sample size to be used.
 
 This is the default printout:
 
@@ -547,8 +548,8 @@ out
 #> fy ~ fm + fx
 #> 
 #> fm =~ fm1 + fm2 + fm3
-#> fx =~ fx1 + fx2 + fx3 + fx4
 #> fy =~ fy1 + fy2 + fy3 + fy4 + fy5
+#> fx =~ fx1 + fx2 + fx3 + fx4
 #> ====== Population Values ======
 #> 
 #> Regressions:
@@ -628,7 +629,7 @@ out
 #> 
 #> Mean(s) across replication:
 #>    est   cilo  cihi   sig pvalue
-#>  0.336 -0.056 0.833 0.497  0.100
+#>  0.336 -0.057 0.833 0.495  0.099
 #> 
 #> - The value 'sig' is the rejection rate.
 #> - If the null hypothesis is false, this is the power.
@@ -649,7 +650,7 @@ out_power
 #> [test]: test_indirect: fx->fm->fy 
 #> [test_label]: Test 
 #>     est   p.v reject r.cilo r.cihi
-#> 1 0.336 1.000  0.497  0.449  0.546
+#> 1 0.336 1.000  0.495  0.446  0.544
 #> Notes:
 #> - p.v: The proportion of valid replications.
 #> - est: The mean of the estimates in a test across replications.
@@ -662,7 +663,7 @@ out_power
 ```
 
 In the example above, the estimated power of the test of the indirect
-effect, conducted by Monte Carlo confidence interval, is 0.497, under
+effect, conducted by Monte Carlo confidence interval, is 0.495, under
 the column `reject`.
 
 `p.v` is the proportion of valid results across replications. `1.000`
@@ -670,8 +671,8 @@ means that the test conducted normally in all replications.
 
 By default, the 95% confidence interval of the rejection rate (power)
 based on normal approximation is also printed, under the column `r.cilo`
-and `r.cihi`. In this example, the 95% confidence interval is \[0.449;
-0.546\].
+and `r.cihi`. In this example, the 95% confidence interval is \[0.446;
+0.544\].
 
 ## Repeat a Simulation With A Different Sample Size
 
@@ -704,7 +705,7 @@ out_new_n_reject
 #> [test]: test_indirect: fx->fm->fy 
 #> [test_label]: Test 
 #>     est   p.v reject r.cilo r.cihi
-#> 1 0.352 1.000  0.815  0.774  0.850
+#> 1 0.352 1.000  0.810  0.769  0.845
 #> Notes:
 #> - p.v: The proportion of valid replications.
 #> - est: The mean of the estimates in a test across replications.
@@ -716,7 +717,7 @@ out_new_n_reject
 #> - Refer to the tests for the meanings of other columns.
 ```
 
-The estimated power is 0.815, 95% confidence interval \[0.774; 0.850\],
+The estimated power is 0.810, 95% confidence interval \[0.769; 0.845\],
 when the sample size is 200.
 
 This technique can be repeated to find the required sample size for a
@@ -773,6 +774,10 @@ desired power.
 
 ### Using `n_region_from_power()`
 
+This is the recommended way for sample size planning, when there is no
+predetermined range of sample sizes, and time is not a concern in
+searching for the sample size with the target level of power.
+
 The function
 [`n_region_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md)
 can be used to find the *region* of sample sizes likely to have the
@@ -785,15 +790,16 @@ out2_region <- n_region_from_power(out2,
                                    seed = 2345)
 ```
 
-This is the recommended way for sample size planning, when there is no
-predetermined range of sample sizes.
-
 See [the templates](https://sfcheung.github.io/power4mome/articles/) for
 examples on using
 [`n_region_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md)
 for common models.
 
 ### Using `power4test_by_n()`
+
+This approach is used when the range of sample sizes has already been
+decided and the levels of power are needed to determine the final sample
+size.
 
 First, the function
 [`power4test_by_n()`](https://sfcheung.github.io/power4mome/reference/power4test_by_n.md)
@@ -817,8 +823,10 @@ each `n`, `nrep` datasets will be generated. Although there is no limit
 on the number of sample sizes to try, it is recommended to restrict the
 number of sample sizes to 5 or less.
 
-The argument `by_seed`, if set to an integer, try to make the results
-reproducible.
+The argument `by_seed`, if set to an integer, tries to make the results
+reproducible. Note that reproducibility is always possible due to
+parallel processing. Use a larger `nrep` to ensure stability of the
+results if necessary.
 
 The call will take some time to run because it is equivalent to calling
 [`power4test()`](https://sfcheung.github.io/power4mome/reference/power4test.md)
@@ -833,10 +841,10 @@ rejection_rates(out_several_ns)
 #> [test]: test_indirect: fx->fm->fy 
 #> [test_label]: Test 
 #>     n   est   p.v reject r.cilo r.cihi
-#> 1 175 0.327 1.000  0.703  0.656  0.745
-#> 2 200 0.329 1.000  0.825  0.785  0.859
-#> 3 225 0.340 1.000  0.892  0.858  0.919
-#> 4 250 0.330 1.000  0.907  0.875  0.932
+#> 1 175 0.327 1.000  0.700  0.653  0.743
+#> 2 200 0.329 1.000  0.835  0.795  0.868
+#> 3 225 0.340 1.000  0.897  0.864  0.924
+#> 4 250 0.330 1.000  0.905  0.872  0.930
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.
@@ -849,12 +857,19 @@ rejection_rates(out_several_ns)
 #> - Refer to the tests for the meanings of other columns.
 ```
 
+The method [`plot()`](https://rdrr.io/r/graphics/plot.default.html) can
+also be used to plot the results:
+
+``` r
+plot(out_several_ns)
+```
+
+![Power by Sample Size](power4test_latent_mediation_plot-1.png)
+
+Power by Sample Size
+
 The results show that, to have a power of about .800 to detect the
 mediation effect, a sample size of about 200 is needed.
-
-This approach is used when the range of sample sizes has already been
-decided and the levels of power are needed to determine the final sample
-size.
 
 Please refer to the help page of
 [`power4test_by_n()`](https://sfcheung.github.io/power4mome/reference/power4test_by_n.md)
@@ -887,7 +902,7 @@ refer to
 
 ## References
 
-Cheung, S. F., & Cheung, S.-H. (2024). *Manymome*: An R package for
+Cheung, S. F., & Cheung, S.-H. (2024). *manymome*: An R package for
 computing the indirect effects, conditional effects, and conditional
 indirect effects, standardized or unstandardized, and their bootstrap
 confidence intervals, in many (though not all) models. *Behavior

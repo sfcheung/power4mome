@@ -7,8 +7,10 @@
 
 ### Given Power, Find x
 
-- [Sample Size Given Desired
-  Power](https://sfcheung.github.io/power4mome/articles/x_from_power_for_n.md):
+- [Sample Size Given Desired Power (Probabilistic
+  Bisection)](https://sfcheung.github.io/power4mome/articles/x_from_power_for_n_pb.md):
+- [Sample Size Given Desired Power (Informal
+  Bisection)](https://sfcheung.github.io/power4mome/articles/x_from_power_for_n.md):
 
 ### Common Mediation Models
 

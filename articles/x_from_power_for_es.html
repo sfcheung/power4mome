@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.44</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.55</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -46,7 +46,8 @@
     <li><a class="dropdown-item" href="../articles/power4test_latent_mediation.html">Power Analysis for Latent Variable Mediation</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Given Power, Find x</h6></li>
-    <li><a class="dropdown-item" href="../articles/x_from_power_for_n.html">Sample Size Given Desired Power</a></li>
+    <li><a class="dropdown-item" href="../articles/x_from_power_for_n_pb.html">Sample Size Given Desired Power (Probabilistic Bisection)</a></li>
+    <li><a class="dropdown-item" href="../articles/x_from_power_for_n.html">Sample Size Given Desired Power (Informal Bisection)</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Common Mediation Models</h6></li>
     <li><a class="dropdown-item" href="../articles/template_q_med_obs_simple.html">Quick Function: Simple Mediation with Observed Variables</a></li>
@@ -97,7 +98,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Effect Size Given Desired Power</h1>
             
-            <h4 data-toc-skip class="date">2026-02-07</h4>
+            <h4 data-toc-skip class="date">2026-02-28</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/sfcheung/power4mome/blob/main/vignettes/articles/x_from_power_for_es.Rmd" class="external-link"><code>vignettes/articles/x_from_power_for_es.Rmd</code></a></small>
       <div class="d-none name"><code>x_from_power_for_es.Rmd</code></div>
@@ -682,7 +683,7 @@ corresponding indirect effect is about 0.149</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - Algorithm: power_curve </span></span>
 <span><span class="co">#&gt; - The range of values explored: 0.469 to 0.520 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 2.136 mins </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 1.049 mins </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
@@ -813,7 +814,7 @@ varied:</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - Algorithm: power_curve </span></span>
 <span><span class="co">#&gt; - The range of values explored: 0.293 to 0.344 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 2.135 mins </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 1.031 mins </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
@@ -890,12 +891,12 @@ options.</p>
 </h2>
 <div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0" line-spacing="2">
 <div id="ref-cheung_manymome_2024" class="csl-entry">
-Cheung, S. F., &amp; Cheung, S.-H. (2024). <em>Manymome</em>:
-<span>An</span> <span>R</span> package for computing the indirect
-effects, conditional effects, and conditional indirect effects,
-standardized or unstandardized, and their bootstrap confidence
-intervals, in many (though not all) models. <em>Behavior Research
-Methods</em>, <em>56</em>(5), 4862–4882. <a href="https://doi.org/10.3758/s13428-023-02224-z" class="external-link">https://doi.org/10.3758/s13428-023-02224-z</a>
+Cheung, S. F., &amp; Cheung, S.-H. (2024).
+<span><em>manymome</em></span>: <span>An</span> <span>R</span> package
+for computing the indirect effects, conditional effects, and conditional
+indirect effects, standardized or unstandardized, and their bootstrap
+confidence intervals, in many (though not all) models. <em>Behavior
+Research Methods</em>, <em>56</em>(5), 4862–4882. <a href="https://doi.org/10.3758/s13428-023-02224-z" class="external-link">https://doi.org/10.3758/s13428-023-02224-z</a>
 </div>
 <div id="ref-kenny_power_2014" class="csl-entry">
 Kenny, D. A., &amp; Judd, C. M. (2014). Power <span>Anomalies</span> in

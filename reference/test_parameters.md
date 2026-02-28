@@ -13,6 +13,8 @@ test_parameters(
   op = NULL,
   remove.nonfree = TRUE,
   check_post_check = TRUE,
+  exclude_var = FALSE,
+  compare_groups = FALSE,
   ...,
   omnibus = c("no", "all_sig", "at_least_one_sig", "at_least_k_sig"),
   at_least_k = 1,
@@ -67,6 +69,19 @@ find_par_names(object, fit_name = "fit")
   conducted by
   [`lavaan::lavInspect()`](https://rdrr.io/pkg/lavaan/man/lavInspect.html)
   (with `what = "post.check"`).
+
+- exclude_var:
+
+  Logical. If `TRUE`, exclude variances and error variances from the
+  test.
+
+- compare_groups:
+
+  Logical. If `TRUE`, the likelihood ratio test (by
+  [`lavaan::lavTestLRT()`](https://rdrr.io/pkg/lavaan/man/lavTestLRT.html))
+  will be used to test the pairwise-equality constraints for all
+  selected free parameters that appear in all groups. These tests will
+  be reported instead of the tests for individual parameters.
 
 - ...:
 

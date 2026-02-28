@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.44</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.55</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -46,7 +46,8 @@
     <li><a class="dropdown-item" href="../articles/power4test_latent_mediation.html">Power Analysis for Latent Variable Mediation</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Given Power, Find x</h6></li>
-    <li><a class="dropdown-item" href="../articles/x_from_power_for_n.html">Sample Size Given Desired Power</a></li>
+    <li><a class="dropdown-item" href="../articles/x_from_power_for_n_pb.html">Sample Size Given Desired Power (Probabilistic Bisection)</a></li>
+    <li><a class="dropdown-item" href="../articles/x_from_power_for_n.html">Sample Size Given Desired Power (Informal Bisection)</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Common Mediation Models</h6></li>
     <li><a class="dropdown-item" href="../articles/template_q_med_obs_simple.html">Quick Function: Simple Mediation with Observed Variables</a></li>
@@ -97,7 +98,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Power Analysis for Latent Variable Mediation</h1>
             
-            <h4 data-toc-skip class="date">2026-02-07</h4>
+            <h4 data-toc-skip class="date">2026-02-28</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/sfcheung/power4mome/blob/main/vignettes/power4test_latent_mediation.Rmd" class="external-link"><code>vignettes/power4test_latent_mediation.Rmd</code></a></small>
       <div class="d-none name"><code>power4test_latent_mediation.Rmd</code></div>
@@ -346,8 +347,8 @@ and &lt;code&gt;&lt;a href="https://rdrr.io/r/base/Random.html" class="external-
 <span><span class="co">#&gt; fy ~ fm + fx</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; fm =~ fm1 + fm2 + fm3</span></span>
-<span><span class="co">#&gt; fx =~ fx1 + fx2 + fx3 + fx4</span></span>
 <span><span class="co">#&gt; fy =~ fy1 + fy2 + fy3 + fy4 + fy5</span></span>
+<span><span class="co">#&gt; fx =~ fx1 + fx2 + fx3 + fx4</span></span>
 <span><span class="co">#&gt; ====== Population Values ======</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Regressions:</span></span>
@@ -422,8 +423,8 @@ population model fitted, the chance of significant is close to .05).</p>
 see the automatically generated measurement part syntax in the section
 <code>Model on Variables/Indicators</code>:</p>
 <pre><code><span><span class="co">#&gt; fm =~ fm1 + fm2 + fm3</span></span>
-<span><span class="co">#&gt; fx =~ fx1 + fx2 + fx3 + fx4</span></span>
-<span><span class="co">#&gt; fy =~ fy1 + fy2 + fy3 + fy4 + fy5</span></span></code></pre>
+<span><span class="co">#&gt; fy =~ fy1 + fy2 + fy3 + fy4 + fy5</span></span>
+<span><span class="co">#&gt; fx =~ fx1 + fx2 + fx3 + fx4</span></span></code></pre>
 <p>It confirmed that we specified the measurement part correctly.</p>
 <p>We then check the section <code>Population Values</code> to see
 whether the values are what we expected.</p>
@@ -499,17 +500,17 @@ standardized model.</p>
 <span><span class="co">#&gt;     fm1               0.578</span></span>
 <span><span class="co">#&gt;     fm2               0.579</span></span>
 <span><span class="co">#&gt;     fm3               0.578</span></span>
-<span><span class="co">#&gt;   fx =~                    </span></span>
-<span><span class="co">#&gt;     fx1               0.445</span></span>
-<span><span class="co">#&gt;     fx2               0.443</span></span>
-<span><span class="co">#&gt;     fx3               0.445</span></span>
-<span><span class="co">#&gt;     fx4               0.445</span></span>
 <span><span class="co">#&gt;   fy =~                    </span></span>
 <span><span class="co">#&gt;     fy1               0.559</span></span>
 <span><span class="co">#&gt;     fy2               0.560</span></span>
 <span><span class="co">#&gt;     fy3               0.563</span></span>
 <span><span class="co">#&gt;     fy4               0.565</span></span>
 <span><span class="co">#&gt;     fy5               0.569</span></span>
+<span><span class="co">#&gt;   fx =~                    </span></span>
+<span><span class="co">#&gt;     fx1               0.445</span></span>
+<span><span class="co">#&gt;     fx2               0.443</span></span>
+<span><span class="co">#&gt;     fx3               0.445</span></span>
+<span><span class="co">#&gt;     fx4               0.445</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Regressions:</span></span>
 <span><span class="co">#&gt;                     est.std</span></span>
@@ -588,7 +589,9 @@ be set directly by the &lt;code&gt;ncores&lt;/code&gt; argument.&lt;/p&gt;"><sup
 </ul>
 <p>For <code>nrep = 400</code>, the 95% confidence limits for a power of
 .80 are about .04 below and above .80. This should be precise enough for
-determining whether a sample size has sufficient power.</p>
+determining whether a sample size has sufficient power. If a higher
+precision is desired, set <code>nrep</code> to 1000 or 2000 for the
+sample size to be used.</p>
 <p>This is the default printout:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">out</span></span>
@@ -606,8 +609,8 @@ determining whether a sample size has sufficient power.</p>
 <span><span class="co">#&gt; fy ~ fm + fx</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; fm =~ fm1 + fm2 + fm3</span></span>
-<span><span class="co">#&gt; fx =~ fx1 + fx2 + fx3 + fx4</span></span>
 <span><span class="co">#&gt; fy =~ fy1 + fy2 + fy3 + fy4 + fy5</span></span>
+<span><span class="co">#&gt; fx =~ fx1 + fx2 + fx3 + fx4</span></span>
 <span><span class="co">#&gt; ====== Population Values ======</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Regressions:</span></span>
@@ -687,7 +690,7 @@ determining whether a sample size has sufficient power.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Mean(s) across replication:</span></span>
 <span><span class="co">#&gt;    est   cilo  cihi   sig pvalue</span></span>
-<span><span class="co">#&gt;  0.336 -0.056 0.833 0.497  0.100</span></span>
+<span><span class="co">#&gt;  0.336 -0.057 0.833 0.495  0.099</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - The value 'sig' is the rejection rate.</span></span>
 <span><span class="co">#&gt; - If the null hypothesis is false, this is the power.</span></span>
@@ -707,7 +710,7 @@ false. The rejection rate can be retrieved by
 <span><span class="co">#&gt; [test]: test_indirect: fx-&gt;fm-&gt;fy </span></span>
 <span><span class="co">#&gt; [test_label]: Test </span></span>
 <span><span class="co">#&gt;     est   p.v reject r.cilo r.cihi</span></span>
-<span><span class="co">#&gt; 1 0.336 1.000  0.497  0.449  0.546</span></span>
+<span><span class="co">#&gt; 1 0.336 1.000  0.495  0.446  0.544</span></span>
 <span><span class="co">#&gt; Notes:</span></span>
 <span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>
 <span><span class="co">#&gt; - est: The mean of the estimates in a test across replications.</span></span>
@@ -718,7 +721,7 @@ false. The rejection rate can be retrieved by
 <span><span class="co">#&gt;   on Wilson's (1927) method.</span></span>
 <span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span></code></pre></div>
 <p>In the example above, the estimated power of the test of the indirect
-effect, conducted by Monte Carlo confidence interval, is 0.497, under
+effect, conducted by Monte Carlo confidence interval, is 0.495, under
 the column <code>reject</code>.</p>
 <p><code>p.v</code> is the proportion of valid results across
 replications. <code>1.000</code> means that the test conducted normally
@@ -726,7 +729,7 @@ in all replications.</p>
 <p>By default, the 95% confidence interval of the rejection rate (power)
 based on normal approximation is also printed, under the column
 <code>r.cilo</code> and <code>r.cihi</code>. In this example, the 95%
-confidence interval is [0.449; 0.546].</p>
+confidence interval is [0.446; 0.544].</p>
 </div>
 </div>
 <div class="section level2">
@@ -756,7 +759,7 @@ effect, but for a smaller sample size of 200. We simply call
 <span><span class="co">#&gt; [test]: test_indirect: fx-&gt;fm-&gt;fy </span></span>
 <span><span class="co">#&gt; [test_label]: Test </span></span>
 <span><span class="co">#&gt;     est   p.v reject r.cilo r.cihi</span></span>
-<span><span class="co">#&gt; 1 0.352 1.000  0.815  0.774  0.850</span></span>
+<span><span class="co">#&gt; 1 0.352 1.000  0.810  0.769  0.845</span></span>
 <span><span class="co">#&gt; Notes:</span></span>
 <span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>
 <span><span class="co">#&gt; - est: The mean of the estimates in a test across replications.</span></span>
@@ -766,7 +769,7 @@ effect, but for a smaller sample size of 200. We simply call
 <span><span class="co">#&gt; - r.cilo,r.cihi: The confidence interval of the rejection rate, based</span></span>
 <span><span class="co">#&gt;   on Wilson's (1927) method.</span></span>
 <span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span></code></pre></div>
-<p>The estimated power is 0.815, 95% confidence interval [0.774; 0.850],
+<p>The estimated power is 0.810, 95% confidence interval [0.769; 0.845],
 when the sample size is 200.</p>
 <p>This technique can be repeated to find the required sample size for a
 target power.</p>
@@ -817,6 +820,9 @@ the desired power.</p>
 <div class="section level3">
 <h3 id="using-n_region_from_power">Using <code>n_region_from_power()</code><a class="anchor" aria-label="anchor" href="#using-n_region_from_power"></a>
 </h3>
+<p>This is the recommended way for sample size planning, when there is
+no predetermined range of sample sizes, and time is not a concern in
+searching for the sample size with the target level of power.</p>
 <p>The function <code><a href="../reference/x_from_power.html">n_region_from_power()</a></code> can be used to find
 the <em>region</em> of sample sizes likely to have the desired power. If
 the default settings are to be used, then it can be called directly on
@@ -824,8 +830,6 @@ the output of <code><a href="../reference/power4test.html">power4test()</a></cod
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">out2_region</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/x_from_power.html">n_region_from_power</a></span><span class="op">(</span><span class="va">out2</span>,</span>
 <span>                                   seed <span class="op">=</span> <span class="fl">2345</span><span class="op">)</span></span></code></pre></div>
-<p>This is the recommended way for sample size planning, when there is
-no predetermined range of sample sizes.</p>
 <p>See <a href="https://sfcheung.github.io/power4mome/articles/">the
 templates</a> for examples on using <code><a href="../reference/x_from_power.html">n_region_from_power()</a></code>
 for common models.</p>
@@ -833,6 +837,9 @@ for common models.</p>
 <div class="section level3">
 <h3 id="using-power4test_by_n">Using <code>power4test_by_n()</code><a class="anchor" aria-label="anchor" href="#using-power4test_by_n"></a>
 </h3>
+<p>This approach is used when the range of sample sizes has already been
+decided and the levels of power are needed to determine the final sample
+size.</p>
 <p>First, the function <code><a href="../reference/power4test_by_n.html">power4test_by_n()</a></code> can be used To
 estimate the power for a sequence of sample sizes. For example, suppose
 we do not know that the power is about .80 with a sample size of 200. We
@@ -849,8 +856,10 @@ examine. For each <code>n</code>, <code>nrep</code> datasets will be
 generated. Although there is no limit on the number of sample sizes to
 try, it is recommended to restrict the number of sample sizes to 5 or
 less.</p>
-<p>The argument <code>by_seed</code>, if set to an integer, try to make
-the results reproducible.</p>
+<p>The argument <code>by_seed</code>, if set to an integer, tries to
+make the results reproducible. Note that reproducibility is always
+possible due to parallel processing. Use a larger <code>nrep</code> to
+ensure stability of the results if necessary.</p>
 <p>The call will take some time to run because it is equivalent to
 calling <code><a href="../reference/power4test.html">power4test()</a></code> once for each sample size.</p>
 <p>The rejection rates for each sample size can be retrieved by
@@ -860,10 +869,10 @@ calling <code><a href="../reference/power4test.html">power4test()</a></code> onc
 <span><span class="co">#&gt; [test]: test_indirect: fx-&gt;fm-&gt;fy </span></span>
 <span><span class="co">#&gt; [test_label]: Test </span></span>
 <span><span class="co">#&gt;     n   est   p.v reject r.cilo r.cihi</span></span>
-<span><span class="co">#&gt; 1 175 0.327 1.000  0.703  0.656  0.745</span></span>
-<span><span class="co">#&gt; 2 200 0.329 1.000  0.825  0.785  0.859</span></span>
-<span><span class="co">#&gt; 3 225 0.340 1.000  0.892  0.858  0.919</span></span>
-<span><span class="co">#&gt; 4 250 0.330 1.000  0.907  0.875  0.932</span></span>
+<span><span class="co">#&gt; 1 175 0.327 1.000  0.700  0.653  0.743</span></span>
+<span><span class="co">#&gt; 2 200 0.329 1.000  0.835  0.795  0.868</span></span>
+<span><span class="co">#&gt; 3 225 0.340 1.000  0.897  0.864  0.924</span></span>
+<span><span class="co">#&gt; 4 250 0.330 1.000  0.905  0.872  0.930</span></span>
 <span><span class="co">#&gt; Notes:</span></span>
 <span><span class="co">#&gt; - n: The sample size in a trial.</span></span>
 <span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>
@@ -874,11 +883,17 @@ calling <code><a href="../reference/power4test.html">power4test()</a></code> onc
 <span><span class="co">#&gt; - r.cilo,r.cihi: The confidence interval of the rejection rate, based</span></span>
 <span><span class="co">#&gt;   on Wilson's (1927) method.</span></span>
 <span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span></code></pre></div>
+<p>The method <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> can also be used to plot the
+results:</p>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">out_several_ns</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="power4test_latent_mediation_plot-1.png" alt="Power by Sample Size"><p class="caption">
+Power by Sample Size
+</p>
+</div>
 <p>The results show that, to have a power of about .800 to detect the
 mediation effect, a sample size of about 200 is needed.</p>
-<p>This approach is used when the range of sample sizes has already been
-decided and the levels of power are needed to determine the final sample
-size.</p>
 <p>Please refer to the help page of <code><a href="../reference/power4test_by_n.html">power4test_by_n()</a></code> for
 other examples.</p>
 </div>
@@ -909,12 +924,12 @@ please refer to <code><a href="../articles/power4mome.html">vignette("power4mome
 </h2>
 <div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0" line-spacing="2">
 <div id="ref-cheung_manymome_2024" class="csl-entry">
-Cheung, S. F., &amp; Cheung, S.-H. (2024). <em>Manymome</em>:
-<span>An</span> <span>R</span> package for computing the indirect
-effects, conditional effects, and conditional indirect effects,
-standardized or unstandardized, and their bootstrap confidence
-intervals, in many (though not all) models. <em>Behavior Research
-Methods</em>, <em>56</em>(5), 4862–4882. <a href="https://doi.org/10.3758/s13428-023-02224-z" class="external-link">https://doi.org/10.3758/s13428-023-02224-z</a>
+Cheung, S. F., &amp; Cheung, S.-H. (2024).
+<span><em>manymome</em></span>: <span>An</span> <span>R</span> package
+for computing the indirect effects, conditional effects, and conditional
+indirect effects, standardized or unstandardized, and their bootstrap
+confidence intervals, in many (though not all) models. <em>Behavior
+Research Methods</em>, <em>56</em>(5), 4862–4882. <a href="https://doi.org/10.3758/s13428-023-02224-z" class="external-link">https://doi.org/10.3758/s13428-023-02224-z</a>
 </div>
 </div>
 </div>

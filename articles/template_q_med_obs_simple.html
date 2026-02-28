@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.44</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.55</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -46,7 +46,8 @@
     <li><a class="dropdown-item" href="../articles/power4test_latent_mediation.html">Power Analysis for Latent Variable Mediation</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Given Power, Find x</h6></li>
-    <li><a class="dropdown-item" href="../articles/x_from_power_for_n.html">Sample Size Given Desired Power</a></li>
+    <li><a class="dropdown-item" href="../articles/x_from_power_for_n_pb.html">Sample Size Given Desired Power (Probabilistic Bisection)</a></li>
+    <li><a class="dropdown-item" href="../articles/x_from_power_for_n.html">Sample Size Given Desired Power (Informal Bisection)</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Common Mediation Models</h6></li>
     <li><a class="dropdown-item" href="../articles/template_q_med_obs_simple.html">Quick Function: Simple Mediation with Observed Variables</a></li>
@@ -97,7 +98,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Quick Function: Simple Mediation with Observed Variables</h1>
             
-            <h4 data-toc-skip class="date">2026-02-07</h4>
+            <h4 data-toc-skip class="date">2026-02-28</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/sfcheung/power4mome/blob/main/vignettes/articles/template_q_med_obs_simple.Rmd" class="external-link"><code>vignettes/articles/template_q_med_obs_simple.Rmd</code></a></small>
       <div class="d-none name"><code>template_q_med_obs_simple.Rmd</code></div>
@@ -429,16 +430,16 @@ argument <code>mode = "region"</code> added:</p>
 <span><span class="co">#&gt; Solution: </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Approximate region of sample sizes with power:</span></span>
-<span><span class="co">#&gt; - not significantly different from 0.800: 109 to 121</span></span>
-<span><span class="co">#&gt; - significantly lower than 0.800: 109</span></span>
+<span><span class="co">#&gt; - not significantly different from 0.800: 111 to 121</span></span>
+<span><span class="co">#&gt; - significantly lower than 0.800: 111</span></span>
 <span><span class="co">#&gt; - significantly higher than 0.800: 121</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Confidence intervals of the estimated power:</span></span>
-<span><span class="co">#&gt; - for the lower bound (109): [0.754, 0.819]</span></span>
+<span><span class="co">#&gt; - for the lower bound (111): [0.752, 0.818]</span></span>
 <span><span class="co">#&gt; - for the upper bound (121): [0.782, 0.844]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call `summary()` for detailed results.</span></span></code></pre>
-<p>In this example, the range of the sample size is 109 to 121.</p>
+<p>In this example, the range of the sample size is 111 to 121.</p>
 <p>The results can also be visualized using the <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>
 function:</p>
 <div class="figure" style="text-align: center">

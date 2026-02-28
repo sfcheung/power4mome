@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.44</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.55</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -46,7 +46,8 @@
     <li><a class="dropdown-item" href="../articles/power4test_latent_mediation.html">Power Analysis for Latent Variable Mediation</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Given Power, Find x</h6></li>
-    <li><a class="dropdown-item" href="../articles/x_from_power_for_n.html">Sample Size Given Desired Power</a></li>
+    <li><a class="dropdown-item" href="../articles/x_from_power_for_n_pb.html">Sample Size Given Desired Power (Probabilistic Bisection)</a></li>
+    <li><a class="dropdown-item" href="../articles/x_from_power_for_n.html">Sample Size Given Desired Power (Informal Bisection)</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Common Mediation Models</h6></li>
     <li><a class="dropdown-item" href="../articles/template_q_med_obs_simple.html">Quick Function: Simple Mediation with Observed Variables</a></li>
@@ -98,7 +99,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Quick Template: Simple Moderated Mediation with Observed Variables: b-Path Moderated</h1>
             
-            <h4 data-toc-skip class="date">2026-02-07</h4>
+            <h4 data-toc-skip class="date">2026-02-28</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/sfcheung/power4mome/blob/main/vignettes/articles/template_n_from_power_mome_obs_b.Rmd" class="external-link"><code>vignettes/articles/template_n_from_power_mome_obs_b.Rmd</code></a></small>
       <div class="d-none name"><code>template_n_from_power_mome_obs_b.Rmd</code></div>
@@ -524,13 +525,13 @@ size is too different from the target power.</p>
 <span><span class="co">#&gt; Solution: </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Approximate region of sample sizes with power:</span></span>
-<span><span class="co">#&gt; - not significantly different from 0.800: 300 to 343</span></span>
+<span><span class="co">#&gt; - not significantly different from 0.800: 300 to 334</span></span>
 <span><span class="co">#&gt; - significantly lower than 0.800: 300</span></span>
-<span><span class="co">#&gt; - significantly higher than 0.800: 343</span></span>
+<span><span class="co">#&gt; - significantly higher than 0.800: 334</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Confidence intervals of the estimated power:</span></span>
 <span><span class="co">#&gt; - for the lower bound (300): [0.726, 0.794]</span></span>
-<span><span class="co">#&gt; - for the upper bound (343): [0.798, 0.858]</span></span>
+<span><span class="co">#&gt; - for the upper bound (334): [0.809, 0.867]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call `summary()` for detailed results.</span></span>
 <span></span>
@@ -546,10 +547,10 @@ Power Curve
 <ul>
 <li><p>sample sizes lower than 300 have power significantly lower than
 .80, and</p></li>
-<li><p>sample sizes higher than 343 have power significantly higher than
+<li><p>sample sizes higher than 334 have power significantly higher than
 .80.</p></li>
 </ul>
-<p>In other words, sample sizes between 300 and 343 have power not
+<p>In other words, sample sizes between 300 and 334 have power not
 significantly different from .80.</p>
 <p>If necessary, detailed results can be printed by
 <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code>:</p>
@@ -586,7 +587,7 @@ significantly different from .80.</p>
 <span><span class="co">#&gt; - Algorithm: bisection </span></span>
 <span><span class="co">#&gt; - Tolerance for 'close enough': Within 0.02000 of 0.800 </span></span>
 <span><span class="co">#&gt; - The range of values explored: 200 to 400 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 1.89 mins </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 1.699 mins </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
@@ -648,10 +649,10 @@ significantly different from .80.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; === Major Results ===</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; - Final Value (Sample Size): 343</span></span>
+<span><span class="co">#&gt; - Final Value (Sample Size): 334</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; - Final Estimated Power: 0.830 </span></span>
-<span><span class="co">#&gt; - Confidence Interval: [0.798; 0.858]</span></span>
+<span><span class="co">#&gt; - Final Estimated Power: 0.840 </span></span>
+<span><span class="co">#&gt; - Confidence Interval: [0.809; 0.867]</span></span>
 <span><span class="co">#&gt; - Level of confidence: 95.0%</span></span>
 <span><span class="co">#&gt; - Based on 600 replications.</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -660,7 +661,7 @@ significantly different from .80.</p>
 <span><span class="co">#&gt; - Algorithm: bisection </span></span>
 <span><span class="co">#&gt; - Tolerance for 'close enough': Within 0.02000 of 0.800 </span></span>
 <span><span class="co">#&gt; - The range of values explored: 200 to 400 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 2.833 mins </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 2.584 mins </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
@@ -678,11 +679,11 @@ significantly different from .80.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Coefficients:</span></span>
 <span><span class="co">#&gt; (Intercept)            x  </span></span>
-<span><span class="co">#&gt;   -1.021018     0.007634  </span></span>
+<span><span class="co">#&gt;   -1.073288     0.007904  </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Degrees of Freedom: 3599 Total (i.e. Null);  3598 Residual</span></span>
-<span><span class="co">#&gt; Null Deviance:       3693 </span></span>
-<span><span class="co">#&gt; Residual Deviance: 3551  AIC: 3555</span></span>
+<span><span class="co">#&gt; Null Deviance:       3668 </span></span>
+<span><span class="co">#&gt; Residual Deviance: 3523  AIC: 3527</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - Detailed Results:</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -692,8 +693,8 @@ significantly different from .80.</p>
 <span><span class="co">#&gt; 1 200 0.046 1.000  0.625  0.586  0.663</span></span>
 <span><span class="co">#&gt; 2 300 0.044 1.000  0.762  0.726  0.794</span></span>
 <span><span class="co">#&gt; 3 300 0.044 1.000  0.785  0.750  0.816</span></span>
-<span><span class="co">#&gt; 4 343 0.045 1.000  0.830  0.798  0.858</span></span>
-<span><span class="co">#&gt; 5 355 0.046 1.000  0.873  0.844  0.898</span></span>
+<span><span class="co">#&gt; 4 334 0.046 1.000  0.840  0.809  0.867</span></span>
+<span><span class="co">#&gt; 5 353 0.045 1.000  0.878  0.850  0.902</span></span>
 <span><span class="co">#&gt; 6 400 0.044 1.000  0.870  0.841  0.895</span></span>
 <span><span class="co">#&gt; Notes:</span></span>
 <span><span class="co">#&gt; - n: The sample size in a trial.</span></span>

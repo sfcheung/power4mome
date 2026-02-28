@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.44</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.55</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -46,7 +46,8 @@
     <li><a class="dropdown-item" href="../articles/power4test_latent_mediation.html">Power Analysis for Latent Variable Mediation</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Given Power, Find x</h6></li>
-    <li><a class="dropdown-item" href="../articles/x_from_power_for_n.html">Sample Size Given Desired Power</a></li>
+    <li><a class="dropdown-item" href="../articles/x_from_power_for_n_pb.html">Sample Size Given Desired Power (Probabilistic Bisection)</a></li>
+    <li><a class="dropdown-item" href="../articles/x_from_power_for_n.html">Sample Size Given Desired Power (Informal Bisection)</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Common Mediation Models</h6></li>
     <li><a class="dropdown-item" href="../articles/template_q_med_obs_simple.html">Quick Function: Simple Mediation with Observed Variables</a></li>
@@ -97,7 +98,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Difficult Cases for Optimization (Internal)</h1>
             
-            <h4 data-toc-skip class="date">2026-02-04</h4>
+            <h4 data-toc-skip class="date">2026-02-28</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/sfcheung/power4mome/blob/main/vignettes/articles/x_from_power_for_n_known_difficult_cases.Rmd" class="external-link"><code>vignettes/articles/x_from_power_for_n_known_difficult_cases.Rmd</code></a></small>
       <div class="d-none name"><code>x_from_power_for_n_known_difficult_cases.Rmd</code></div>
@@ -212,7 +213,7 @@
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ============ &lt;fit&gt; ============</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; lavaan 0.6-21.2434 ended normally after 1 iteration</span></span>
+<span><span class="co">#&gt; lavaan 0.6-21 ended normally after 1 iteration</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Estimator                                         ML</span></span>
 <span><span class="co">#&gt;   Optimization method                           NLMINB</span></span>
@@ -298,7 +299,7 @@
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ============ &lt;fit&gt; ============</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; lavaan 0.6-21.2434 ended normally after 1 iteration</span></span>
+<span><span class="co">#&gt; lavaan 0.6-21 ended normally after 1 iteration</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Estimator                                         ML</span></span>
 <span><span class="co">#&gt;   Optimization method                           NLMINB</span></span>
@@ -580,10 +581,9 @@
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Solution found.</span></span>
 <span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ========== Final Stage ==========</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; --- Final Stage ---</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; - Start at 2026-02-04 07:47:30 </span></span>
+<span><span class="co">#&gt; - Start at 2026-02-28 10:45:49 </span></span>
 <span><span class="co">#&gt; - Rejection Rates:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [test]: test_indirect: x-&gt;m-&gt;y </span></span>
@@ -685,7 +685,7 @@
 <span><span class="co">#&gt; - Algorithm: bisection </span></span>
 <span><span class="co">#&gt; - Tolerance for 'close enough': Within 0.02000 of 0.800 </span></span>
 <span><span class="co">#&gt; - The range of values explored: 100 to 894 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 2.221 mins </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 1.053 mins </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Nonlinear Regression Model </span></span>
@@ -854,10 +854,9 @@ The Power Curve
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Solution found.</span></span>
 <span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ========== Final Stage ==========</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; --- Final Stage ---</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; - Start at 2026-02-04 07:48:29 </span></span>
+<span><span class="co">#&gt; - Start at 2026-02-28 10:46:17 </span></span>
 <span><span class="co">#&gt; - Rejection Rates:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [test]: test_indirect: x-&gt;m-&gt;y </span></span>
@@ -954,7 +953,7 @@ The Power Curve
 <span><span class="co">#&gt; - Algorithm: bisection </span></span>
 <span><span class="co">#&gt; - Tolerance for 'close enough': Within 0.02000 of 0.800 </span></span>
 <span><span class="co">#&gt; - The range of values explored: 100 to 903 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 59.24 secs </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 27.94 secs </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Nonlinear Regression Model </span></span>
@@ -1007,11 +1006,9 @@ The Power Curve
 <code class="sourceCode R"><span><span class="va">n_power_region</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/x_from_power.html">n_region_from_power</a></span><span class="op">(</span><span class="va">out</span>,</span>
 <span>                                      seed <span class="op">=</span> <span class="fl">2468</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; --- Phase 1 ---</span></span>
+<span><span class="co">#&gt; =========== Phase 1: Upper Bound ===========</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Find the approximate region with power significantly below 0.8 ...</span></span>
-<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; --- Setting ---</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -1198,10 +1195,9 @@ The Power Curve
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Solution found.</span></span>
 <span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ========== Final Stage ==========</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; --- Final Stage ---</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; - Start at 2026-02-04 07:50:25 </span></span>
+<span><span class="co">#&gt; - Start at 2026-02-28 10:47:08 </span></span>
 <span><span class="co">#&gt; - Rejection Rates:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [test]: test_indirect: x-&gt;m-&gt;y </span></span>
@@ -1252,11 +1248,9 @@ The Power Curve
 <span><span class="co">#&gt; - Confidence Interval: [0.6910; 0.8094]</span></span>
 <span><span class="co">#&gt; - CI Level: 95.00%</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; --- Phase 2 ---</span></span>
+<span><span class="co">#&gt; =========== Phase 2: Lower Bound ===========</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Find the approximate region with power significantly above 0.8 ...</span></span>
-<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; --- Setting ---</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -1384,10 +1378,9 @@ The Power Curve
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Solution found.</span></span>
 <span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ========== Final Stage ==========</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; --- Final Stage ---</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; - Start at 2026-02-04 07:51:13 </span></span>
+<span><span class="co">#&gt; - Start at 2026-02-28 10:47:29 </span></span>
 <span><span class="co">#&gt; - Rejection Rates:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [test]: test_indirect: x-&gt;m-&gt;y </span></span>
@@ -1474,11 +1467,9 @@ The Power Curve (Region)
 <code class="sourceCode R"><span><span class="va">n_power_region2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/x_from_power.html">n_region_from_power</a></span><span class="op">(</span><span class="va">out_n_lb</span>,</span>
 <span>                                      seed <span class="op">=</span> <span class="fl">24680</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; --- Phase 1 ---</span></span>
+<span><span class="co">#&gt; =========== Phase 1: Upper Bound ===========</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Find the approximate region with power significantly below 0.8 ...</span></span>
-<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; --- Setting ---</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -1537,10 +1528,9 @@ The Power Curve (Region)
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Solution found.</span></span>
 <span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ========== Final Stage ==========</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; --- Final Stage ---</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; - Start at 2026-02-04 07:51:29 </span></span>
+<span><span class="co">#&gt; - Start at 2026-02-28 10:47:36 </span></span>
 <span><span class="co">#&gt; - Rejection Rates:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [test]: test_indirect: x-&gt;m-&gt;y </span></span>
@@ -1589,11 +1579,9 @@ The Power Curve (Region)
 <span><span class="co">#&gt; - Confidence Interval: [0.6857; 0.8049]</span></span>
 <span><span class="co">#&gt; - CI Level: 95.00%</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; --- Phase 2 ---</span></span>
+<span><span class="co">#&gt; =========== Phase 2: Lower Bound ===========</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Find the approximate region with power significantly above 0.8 ...</span></span>
-<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; --- Setting ---</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -1611,10 +1599,9 @@ The Power Curve (Region)
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Solution already found in the object. Search will be skipped.</span></span>
 <span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ========== Final Stage ==========</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; --- Final Stage ---</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; - Start at 2026-02-04 07:51:29 </span></span>
+<span><span class="co">#&gt; - Start at 2026-02-28 10:47:36 </span></span>
 <span><span class="co">#&gt; - Rejection Rates:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [test]: test_indirect: x-&gt;m-&gt;y </span></span>

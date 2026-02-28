@@ -230,10 +230,10 @@ out_power
 #> m1 ~ x
 #> m2 ~ x
 #> y ~ m1 + m2 + x
-#> x =~ x1 + x2 + x3
 #> m1 =~ m11 + m12 + m13 + m14
 #> m2 =~ m21 + m22 + m23
 #> y =~ y1 + y2 + y3
+#> x =~ x1 + x2 + x3
 #> ====== Population Values ======
 #> 
 #> Regressions:
@@ -318,7 +318,7 @@ out_power
 #> 
 #> Mean(s) across replication:
 #>           test_label  est cilo cihi pvalue   sig
-#> 1 x-...->y (All sig)  NaN  NaN  NaN  0.021 0.675
+#> 1 x-...->y (All sig)  NaN  NaN  NaN  0.021 0.672
 #> 
 #> - The column 'sig' shows the rejection rates.
 #> - If the null hypothesis is false, the rate is the power.
@@ -330,7 +330,7 @@ out_power
 #> [test]: test_indirects: x-...->y 
 #> [test_label]: x-...->y (All sig) 
 #>    est   p.v reject r.cilo r.cihi
-#> 1  NaN 1.000  0.675  0.637  0.711
+#> 1  NaN 1.000  0.672  0.633  0.708
 #> Notes:
 #> - p.v: The proportion of valid replications.
 #> - est: The mean of the estimates in a test across replications.
@@ -356,7 +356,7 @@ The second section is the output of
 [`rejection_rates()`](https://sfcheung.github.io/power4mome/reference/rejection_rates.md),
 showing the power under the column `reject`.
 
-In this example, the power is about 0.68 for sample size 200.
+In this example, the power is about 0.67 for sample size 200.
 
 ## Find the Region of Sample Sizes
 
@@ -416,17 +416,17 @@ This is the printout, showing only the section from the output of
     #> Solution: 
     #> 
     #> Approximate region of sample sizes with power:
-    #> - not significantly different from 0.800: 237 to 267
-    #> - significantly lower than 0.800: 237
-    #> - significantly higher than 0.800: 267
+    #> - not significantly different from 0.800: 238 to 270
+    #> - significantly lower than 0.800: 238
+    #> - significantly higher than 0.800: 270
     #> 
     #> Confidence intervals of the estimated power:
-    #> - for the lower bound (237): [0.712, 0.781]
-    #> - for the upper bound (267): [0.809, 0.867]
+    #> - for the lower bound (238): [0.723, 0.791]
+    #> - for the upper bound (270): [0.807, 0.866]
     #> 
     #> Call `summary()` for detailed results.
 
-In this example, the range of the sample size is 237 to 267.
+In this example, the range of the sample size is 238 to 270.
 
 The results can also be visualized using the
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html) function:

@@ -18,12 +18,12 @@ x_from_power(
     = "close_enough", lb = "close_enough")
  },
   ci_level = 0.95,
-  tolerance = 0.02,
+  tolerance = NULL,
   x_interval = switch(x, n = c(50, 2000), es = NULL),
   extendInt = NULL,
   progress = TRUE,
-  simulation_progress = TRUE,
-  max_trials = 10,
+  simulation_progress = NULL,
+  max_trials = NULL,
   final_nrep = attr(object, "args")$nrep %||% (object$nrep_final %||% 400),
   final_R = attr(object, "args")$R %||% (object$args$final_R %||% 1000),
   seed = NULL,
@@ -46,12 +46,12 @@ n_from_power(
   what = formals(x_from_power)$what,
   goal = formals(x_from_power)$goal,
   ci_level = 0.95,
-  tolerance = 0.02,
+  tolerance = NULL,
   x_interval = c(50, 2000),
   extendInt = NULL,
   progress = TRUE,
-  simulation_progress = TRUE,
-  max_trials = 10,
+  simulation_progress = NULL,
+  max_trials = NULL,
   final_nrep = formals(x_from_power)$final_nrep,
   final_R = formals(x_from_power)$final_R,
   seed = NULL,
@@ -72,12 +72,12 @@ n_region_from_power(
   pop_es_name = NULL,
   target_power = 0.8,
   ci_level = 0.95,
-  tolerance = 0.02,
+  tolerance = NULL,
   x_interval = c(50, 2000),
   extendInt = NULL,
   progress = TRUE,
-  simulation_progress = TRUE,
-  max_trials = 10,
+  simulation_progress = NULL,
+  max_trials = NULL,
   final_nrep = formals(x_from_power)$final_nrep,
   final_R = formals(x_from_power)$final_R,
   seed = NULL,
@@ -158,7 +158,8 @@ arg_x_from_power(object, arg, arg_in = NULL)
 
 - tolerance:
 
-  Used when the goal is `"close_enough"`.
+  Used when the goal is `"close_enough"`. If `NULL`, set automatically
+  based on the algorithm used.
 
 - x_interval:
 
@@ -189,11 +190,13 @@ arg_x_from_power(object, arg, arg_in = NULL)
   or
   [`power4test_by_es()`](https://sfcheung.github.io/power4mome/reference/power4test_by_es.md)
   is shown. To be passed to the `progress` argument of these functions.
+  If `NULL`, set automatically based on the algorithm used.
 
 - max_trials:
 
   The maximum number of trials in searching the value with the target
-  power. Rounded up if not an integer.
+  power. Rounded up if not an integer. If `NULL`, set automatically
+  based on the algorithm used.
 
 - final_nrep:
 
@@ -221,8 +224,8 @@ arg_x_from_power(object, arg, arg_in = NULL)
   replications, not for high precision in one single replication. If
   `object` is an output of
   [`power4test()`](https://sfcheung.github.io/power4mome/reference/power4test.md)
-  or `x_from_power()` and this argument is not set, `finalR` will be set
-  to `R` or `final_R` stored in `object`.
+  or `x_from_power()` and this argument is not set, `final_R` will be
+  set to `R` or `final_R` stored in `object`.
 
 - seed:
 
@@ -262,8 +265,8 @@ arg_x_from_power(object, arg, arg_in = NULL)
 
 - algorithm:
 
-  The algorithm for finding `x`. Can be `"power_curve"` or
-  `"bisection"`. The default algorithm depends on `x`.
+  The algorithm for finding `x`. Can be `"power_curve"`, `"bisection"`,
+  or `"probabilistic_bisection"`. The default algorithm depends on `x`.
 
 - control:
 
@@ -632,7 +635,7 @@ power_vs_n <- x_from_power(test_out,
 #> 
 #> ========== Final Stage ==========
 #> 
-#> - Start at 2026-02-08 14:02:31 
+#> - Start at 2026-02-28 14:54:30 
 #> - Rejection Rates:
 #> 
 #> [test]: test_parameters: CIs (pars: m~x) 
@@ -705,8 +708,8 @@ summary(power_vs_n)
 #> === Technical Information ===
 #> 
 #> - Algorithm: bisection 
-#> - The range of values explored: 100 to 75 
-#> - Time spent in the search: 0.968 secs 
+#> - The range of values explored: 50 to 100 
+#> - Time spent in the search: 1.052 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 

@@ -115,7 +115,7 @@ print(out,
 #> 
 #> ============ <fit> ============
 #> 
-#> lavaan 0.6-21.2434 ended normally after 1 iteration
+#> lavaan 0.6-21 ended normally after 1 iteration
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
@@ -205,7 +205,7 @@ print(out,
 #> 
 #> ============ <fit> ============
 #> 
-#> lavaan 0.6-21.2434 ended normally after 1 iteration
+#> lavaan 0.6-21 ended normally after 1 iteration
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
@@ -489,10 +489,9 @@ out_n <- n_from_power(out,
 #> 
 #> Solution found.
 #> 
+#> ========== Final Stage ==========
 #> 
-#> --- Final Stage ---
-#> 
-#> - Start at 2026-02-04 07:47:30 
+#> - Start at 2026-02-28 10:45:49 
 #> - Rejection Rates:
 #> 
 #> [test]: test_indirect: x->m->y 
@@ -598,7 +597,7 @@ summary(out_n)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 100 to 894 
-#> - Time spent in the search: 2.221 mins 
+#> - Time spent in the search: 1.053 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Nonlinear Regression Model 
@@ -770,10 +769,9 @@ out_n_lb <- n_from_power(out,
 #> 
 #> Solution found.
 #> 
+#> ========== Final Stage ==========
 #> 
-#> --- Final Stage ---
-#> 
-#> - Start at 2026-02-04 07:48:29 
+#> - Start at 2026-02-28 10:46:17 
 #> - Rejection Rates:
 #> 
 #> [test]: test_indirect: x->m->y 
@@ -874,7 +872,7 @@ summary(out_n_lb)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 100 to 903 
-#> - Time spent in the search: 59.24 secs 
+#> - Time spent in the search: 27.94 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Nonlinear Regression Model 
@@ -930,11 +928,9 @@ The Power Curve
 n_power_region <- n_region_from_power(out,
                                       seed = 2468)
 #> 
-#> 
-#> --- Phase 1 ---
+#> =========== Phase 1: Upper Bound ===========
 #> 
 #> Find the approximate region with power significantly below 0.8 ...
-#> 
 #> 
 #> --- Setting ---
 #> 
@@ -1121,10 +1117,9 @@ n_power_region <- n_region_from_power(out,
 #> 
 #> Solution found.
 #> 
+#> ========== Final Stage ==========
 #> 
-#> --- Final Stage ---
-#> 
-#> - Start at 2026-02-04 07:50:25 
+#> - Start at 2026-02-28 10:47:08 
 #> - Rejection Rates:
 #> 
 #> [test]: test_indirect: x->m->y 
@@ -1175,11 +1170,9 @@ n_power_region <- n_region_from_power(out,
 #> - Confidence Interval: [0.6910; 0.8094]
 #> - CI Level: 95.00%
 #> 
-#> 
-#> --- Phase 2 ---
+#> =========== Phase 2: Lower Bound ===========
 #> 
 #> Find the approximate region with power significantly above 0.8 ...
-#> 
 #> 
 #> --- Setting ---
 #> 
@@ -1307,10 +1300,9 @@ n_power_region <- n_region_from_power(out,
 #> 
 #> Solution found.
 #> 
+#> ========== Final Stage ==========
 #> 
-#> --- Final Stage ---
-#> 
-#> - Start at 2026-02-04 07:51:13 
+#> - Start at 2026-02-28 10:47:29 
 #> - Rejection Rates:
 #> 
 #> [test]: test_indirect: x->m->y 
@@ -1401,11 +1393,9 @@ The Power Curve (Region)
 n_power_region2 <- n_region_from_power(out_n_lb,
                                       seed = 24680)
 #> 
-#> 
-#> --- Phase 1 ---
+#> =========== Phase 1: Upper Bound ===========
 #> 
 #> Find the approximate region with power significantly below 0.8 ...
-#> 
 #> 
 #> --- Setting ---
 #> 
@@ -1464,10 +1454,9 @@ n_power_region2 <- n_region_from_power(out_n_lb,
 #> 
 #> Solution found.
 #> 
+#> ========== Final Stage ==========
 #> 
-#> --- Final Stage ---
-#> 
-#> - Start at 2026-02-04 07:51:29 
+#> - Start at 2026-02-28 10:47:36 
 #> - Rejection Rates:
 #> 
 #> [test]: test_indirect: x->m->y 
@@ -1516,11 +1505,9 @@ n_power_region2 <- n_region_from_power(out_n_lb,
 #> - Confidence Interval: [0.6857; 0.8049]
 #> - CI Level: 95.00%
 #> 
-#> 
-#> --- Phase 2 ---
+#> =========== Phase 2: Lower Bound ===========
 #> 
 #> Find the approximate region with power significantly above 0.8 ...
-#> 
 #> 
 #> --- Setting ---
 #> 
@@ -1538,10 +1525,9 @@ n_power_region2 <- n_region_from_power(out_n_lb,
 #> 
 #> Solution already found in the object. Search will be skipped.
 #> 
+#> ========== Final Stage ==========
 #> 
-#> --- Final Stage ---
-#> 
-#> - Start at 2026-02-04 07:51:29 
+#> - Start at 2026-02-28 10:47:36 
 #> - Rejection Rates:
 #> 
 #> [test]: test_indirect: x->m->y 

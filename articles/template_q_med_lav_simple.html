@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.44</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.55</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -46,7 +46,8 @@
     <li><a class="dropdown-item" href="../articles/power4test_latent_mediation.html">Power Analysis for Latent Variable Mediation</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Given Power, Find x</h6></li>
-    <li><a class="dropdown-item" href="../articles/x_from_power_for_n.html">Sample Size Given Desired Power</a></li>
+    <li><a class="dropdown-item" href="../articles/x_from_power_for_n_pb.html">Sample Size Given Desired Power (Probabilistic Bisection)</a></li>
+    <li><a class="dropdown-item" href="../articles/x_from_power_for_n.html">Sample Size Given Desired Power (Informal Bisection)</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Common Mediation Models</h6></li>
     <li><a class="dropdown-item" href="../articles/template_q_med_obs_simple.html">Quick Function: Simple Mediation with Observed Variables</a></li>
@@ -97,7 +98,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Quick Function: Simple Mediation with Latent Variables</h1>
             
-            <h4 data-toc-skip class="date">2026-02-07</h4>
+            <h4 data-toc-skip class="date">2026-02-28</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/sfcheung/power4mome/blob/main/vignettes/articles/template_q_med_lav_simple.Rmd" class="external-link"><code>vignettes/articles/template_q_med_lav_simple.Rmd</code></a></small>
       <div class="d-none name"><code>template_q_med_lav_simple.Rmd</code></div>
@@ -312,9 +313,9 @@ do a final check of the sample size to be used using
 <span><span class="co">#&gt; m ~ x</span></span>
 <span><span class="co">#&gt; y ~ m + x</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; x =~ x1 + x2 + x3</span></span>
 <span><span class="co">#&gt; m =~ m1 + m2 + m3 + m4</span></span>
 <span><span class="co">#&gt; y =~ y1 + y2 + y3 + y4 + y5</span></span>
+<span><span class="co">#&gt; x =~ x1 + x2 + x3</span></span>
 <span><span class="co">#&gt; ====== Population Values ======</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Regressions:</span></span>
@@ -394,7 +395,7 @@ do a final check of the sample size to be used using
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Mean(s) across replication:</span></span>
 <span><span class="co">#&gt;    est  cilo  cihi   sig pvalue</span></span>
-<span><span class="co">#&gt;  0.091 0.013 0.191 0.733  0.058</span></span>
+<span><span class="co">#&gt;  0.091 0.013 0.191 0.732  0.058</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - The value 'sig' is the rejection rate.</span></span>
 <span><span class="co">#&gt; - If the null hypothesis is false, this is the power.</span></span>
@@ -406,7 +407,7 @@ do a final check of the sample size to be used using
 <span><span class="co">#&gt; [test]: test_indirect: x-&gt;m-&gt;y </span></span>
 <span><span class="co">#&gt; [test_label]: Test </span></span>
 <span><span class="co">#&gt;     est   p.v reject r.cilo r.cihi</span></span>
-<span><span class="co">#&gt; 1 0.091 1.000  0.733  0.697  0.767</span></span>
+<span><span class="co">#&gt; 1 0.091 1.000  0.732  0.695  0.766</span></span>
 <span><span class="co">#&gt; Notes:</span></span>
 <span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>
 <span><span class="co">#&gt; - est: The mean of the estimates in a test across replications.</span></span>
@@ -480,16 +481,16 @@ argument <code>mode = "region"</code> added:</p>
 <span><span class="co">#&gt; Solution: </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Approximate region of sample sizes with power:</span></span>
-<span><span class="co">#&gt; - not significantly different from 0.800: 218 to 247</span></span>
-<span><span class="co">#&gt; - significantly lower than 0.800: 218</span></span>
-<span><span class="co">#&gt; - significantly higher than 0.800: 247</span></span>
+<span><span class="co">#&gt; - not significantly different from 0.800: 219 to 240</span></span>
+<span><span class="co">#&gt; - significantly lower than 0.800: 219</span></span>
+<span><span class="co">#&gt; - significantly higher than 0.800: 240</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Confidence intervals of the estimated power:</span></span>
-<span><span class="co">#&gt; - for the lower bound (218): [0.724, 0.792]</span></span>
-<span><span class="co">#&gt; - for the upper bound (247): [0.801, 0.861]</span></span>
+<span><span class="co">#&gt; - for the lower bound (219): [0.733, 0.800]</span></span>
+<span><span class="co">#&gt; - for the upper bound (240): [0.807, 0.866]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call `summary()` for detailed results.</span></span></code></pre>
-<p>In this example, the range of the sample size is 218 to 247.</p>
+<p>In this example, the range of the sample size is 219 to 240.</p>
 <p>The results can also be visualized using the <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>
 function:</p>
 <div class="figure" style="text-align: center">

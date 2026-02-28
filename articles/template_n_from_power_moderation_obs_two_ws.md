@@ -328,7 +328,7 @@ print(out,
 #> 
 #> The models:
 #> y ~ x + w1 + w2 + x:w1 + x:w2
-#> <environment: 0x00000226b7872428>
+#> <environment: 0x00000187d575a620>
 #> 
 #> 
 #> ===== <test_parameters: CIs (pars: y~x:w1,y~x:w2)> =====
@@ -427,13 +427,13 @@ n_power_region
 #> Solution: 
 #> 
 #> Approximate region of sample sizes with power:
-#> - not significantly different from 0.800: 703 to 782
-#> - significantly lower than 0.800: 703
-#> - significantly higher than 0.800: 782
+#> - not significantly different from 0.800: 715 to 796
+#> - significantly lower than 0.800: 715
+#> - significantly higher than 0.800: 796
 #> 
 #> Confidence intervals of the estimated power:
-#> - for the lower bound (703): [0.745, 0.811]
-#> - for the upper bound (782): [0.782, 0.844]
+#> - for the lower bound (715): [0.714, 0.783]
+#> - for the upper bound (796): [0.793, 0.853]
 #> 
 #> Call `summary()` for detailed results.
 
@@ -448,12 +448,12 @@ Power Curve
 
 As shown above, approximately:
 
-- sample sizes lower than 703 have power significantly lower than .80,
+- sample sizes lower than 715 have power significantly lower than .80,
   and
 
-- sample sizes higher than 782 have power significantly higher than .80.
+- sample sizes higher than 796 have power significantly higher than .80.
 
-In other words, sample sizes between 703 and 782 have power not
+In other words, sample sizes between 715 and 796 have power not
 significantly different from .80.
 
 If necessary, detailed results can be printed by
@@ -480,10 +480,10 @@ summary(n_power_region)
 #> 
 #> === Major Results ===
 #> 
-#> - Final Value (Sample Size): 703
+#> - Final Value (Sample Size): 715
 #> 
-#> - Final Estimated Power: 0.780 
-#> - Confidence Interval: [0.745; 0.811]
+#> - Final Estimated Power: 0.750 
+#> - Confidence Interval: [0.714; 0.783]
 #> - Level of confidence: 95.0%
 #> - Based on 600 replications.
 #> 
@@ -492,7 +492,7 @@ summary(n_power_region)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 200 to 857 
-#> - Time spent in the search: 1.481 mins 
+#> - Time spent in the search: 31.89 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -510,11 +510,11 @@ summary(n_power_region)
 #> 
 #> Coefficients:
 #> (Intercept)            x  
-#>   -2.191888     0.004842  
+#>   -2.176872     0.004802  
 #> 
-#> Degrees of Freedom: 4199 Total (i.e. Null);  4198 Residual
-#> Null Deviance:       5451 
-#> Residual Deviance: 4613  AIC: 4617
+#> Degrees of Freedom: 2999 Total (i.e. Null);  2998 Residual
+#> Null Deviance:       4030 
+#> Residual Deviance: 3290  AIC: 3294
 #> 
 #> - Detailed Results:
 #> 
@@ -524,10 +524,8 @@ summary(n_power_region)
 #> 1 200  NaN 1.000  0.187  0.158  0.220
 #> 2 400  NaN 1.000  0.492  0.452  0.532
 #> 3 629  NaN 1.000  0.727  0.690  0.761
-#> 4 687  NaN 1.000  0.742  0.705  0.775
-#> 5 696  NaN 1.000  0.745  0.709  0.778
-#> 6 703  NaN 1.000  0.780  0.745  0.811
-#> 7 857  NaN 1.000  0.862  0.832  0.887
+#> 4 715  NaN 1.000  0.750  0.714  0.783
+#> 5 857  NaN 1.000  0.862  0.832  0.887
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.
@@ -558,10 +556,10 @@ summary(n_power_region)
 #> 
 #> === Major Results ===
 #> 
-#> - Final Value (Sample Size): 782
+#> - Final Value (Sample Size): 796
 #> 
-#> - Final Estimated Power: 0.815 
-#> - Confidence Interval: [0.782; 0.844]
+#> - Final Estimated Power: 0.825 
+#> - Confidence Interval: [0.793; 0.853]
 #> - Level of confidence: 95.0%
 #> - Based on 600 replications.
 #> 
@@ -570,7 +568,7 @@ summary(n_power_region)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 200 to 857 
-#> - Time spent in the search: 32.98 secs 
+#> - Time spent in the search: 26.87 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -588,11 +586,11 @@ summary(n_power_region)
 #> 
 #> Coefficients:
 #> (Intercept)            x  
-#>   -2.159859     0.004778  
+#>   -2.121993     0.004671  
 #> 
-#> Degrees of Freedom: 5399 Total (i.e. Null);  5398 Residual
-#> Null Deviance:       6918 
-#> Residual Deviance: 5997  AIC: 6001
+#> Degrees of Freedom: 4799 Total (i.e. Null);  4798 Residual
+#> Null Deviance:       6207 
+#> Residual Deviance: 5302  AIC: 5306
 #> 
 #> - Detailed Results:
 #> 
@@ -603,11 +601,10 @@ summary(n_power_region)
 #> 2 400  NaN 1.000  0.492  0.452  0.532
 #> 3 529  NaN 1.000  0.598  0.559  0.637
 #> 4 629  NaN 1.000  0.727  0.690  0.761
-#> 5 687  NaN 1.000  0.742  0.705  0.775
-#> 6 696  NaN 1.000  0.745  0.709  0.778
-#> 7 703  NaN 1.000  0.780  0.745  0.811
-#> 8 782  NaN 1.000  0.815  0.782  0.844
-#> 9 857  NaN 1.000  0.862  0.832  0.887
+#> 5 715  NaN 1.000  0.750  0.714  0.783
+#> 6 739  NaN 1.000  0.772  0.736  0.803
+#> 7 796  NaN 1.000  0.825  0.793  0.853
+#> 8 857  NaN 1.000  0.862  0.832  0.887
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.

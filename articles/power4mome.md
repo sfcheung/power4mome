@@ -1385,7 +1385,7 @@ Bohrnstedt, G. W., & Goldberger, A. S. (1969). On the exact covariance
 of products of random variables. *Journal of the American Statistical
 Association*, *64*(328), 1439–1442. <https://doi.org/10.2307/2286081>
 
-Cheung, S. F., & Cheung, S.-H. (2024). *Manymome*: An R package for
+Cheung, S. F., & Cheung, S.-H. (2024). *manymome*: An R package for
 computing the indirect effects, conditional effects, and conditional
 indirect effects, standardized or unstandardized, and their bootstrap
 confidence intervals, in many (though not all) models. *Behavior

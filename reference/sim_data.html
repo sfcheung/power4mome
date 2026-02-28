@@ -15,7 +15,7 @@ The function"><meta property="og:image" content="https://sfcheung.github.io/powe
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.44</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.55</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,7 +31,8 @@ The function"><meta property="og:image" content="https://sfcheung.github.io/powe
     <li><a class="dropdown-item" href="../articles/power4test_latent_mediation.html">Power Analysis for Latent Variable Mediation</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Given Power, Find x</h6></li>
-    <li><a class="dropdown-item" href="../articles/x_from_power_for_n.html">Sample Size Given Desired Power</a></li>
+    <li><a class="dropdown-item" href="../articles/x_from_power_for_n_pb.html">Sample Size Given Desired Power (Probabilistic Bisection)</a></li>
+    <li><a class="dropdown-item" href="../articles/x_from_power_for_n.html">Sample Size Given Desired Power (Informal Bisection)</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Common Mediation Models</h6></li>
     <li><a class="dropdown-item" href="../articles/template_q_med_obs_simple.html">Quick Function: Simple Mediation with Observed Variables</a></li>
@@ -102,7 +103,8 @@ along with other information.</p>
 <span>  parallel <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  progress <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  ncores <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fu">parallel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">detectCores</a></span><span class="op">(</span>logical <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span>,</span>
-<span>  n_ratio <span class="op">=</span> <span class="fl">1</span></span>
+<span>  n_ratio <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  cl <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'sim_data'</span></span>
@@ -280,6 +282,16 @@ the sample sizes for the two groups
 are 100 and 50, respectively. If
 equal to 1, then all groups have the
 same sample size.</p></dd>
+
+
+<dt id="arg-cl">cl<a class="anchor" aria-label="anchor" href="#arg-cl"></a></dt>
+<dd><p>A cluster, such as one created
+by <code><a href="https://rdrr.io/r/parallel/makeCluster.html" class="external-link">parallel::makeCluster()</a></code>. If <code>NULL</code>,
+a cluster will be created, but will be
+stopped on exit. If set to an existing
+cluster, it will not be stopped when
+the function exits; users need to
+stop it manually.</p></dd>
 
 
 <dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>

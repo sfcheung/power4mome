@@ -1,6 +1,6 @@
 # power4mome
 
-(Version 0.1.1.44, updated on 2026-02-08, [release
+(Version 0.1.1.55, updated on 2026-02-27, [release
 history](https://sfcheung.github.io/power4mome/news/index.html))
 
 This package is for power analysis and sample size determination for
@@ -286,8 +286,10 @@ Miscellaneous functions
 
 ### Given Power, Find x
 
-- [Sample Size Given Desired
-  Power](https://sfcheung.github.io/power4mome/articles/x_from_power_for_n.md):
+- [Sample Size Given Desired Power (Probabilistic
+  Bisection)](https://sfcheung.github.io/power4mome/articles/x_from_power_for_n_pb.md):
+- [Sample Size Given Desired Power (Informal
+  Bisection)](https://sfcheung.github.io/power4mome/articles/x_from_power_for_n.md):
 
 ### Common Mediation Models
 

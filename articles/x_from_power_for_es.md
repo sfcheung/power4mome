@@ -624,7 +624,7 @@ summary(out_es_a)
 #> 
 #> - Algorithm: power_curve 
 #> - The range of values explored: 0.469 to 0.520 
-#> - Time spent in the search: 2.136 mins 
+#> - Time spent in the search: 1.049 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -767,7 +767,7 @@ summary(out_es_b)
 #> 
 #> - Algorithm: power_curve 
 #> - The range of values explored: 0.293 to 0.344 
-#> - Time spent in the search: 2.135 mins 
+#> - Time spent in the search: 1.031 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -843,7 +843,7 @@ for these and other options.
 
 ## References
 
-Cheung, S. F., & Cheung, S.-H. (2024). *Manymome*: An R package for
+Cheung, S. F., & Cheung, S.-H. (2024). *manymome*: An R package for
 computing the indirect effects, conditional effects, and conditional
 indirect effects, standardized or unstandardized, and their bootstrap
 confidence intervals, in many (though not all) models. *Behavior

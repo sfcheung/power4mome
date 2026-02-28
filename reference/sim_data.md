@@ -24,7 +24,8 @@ sim_data(
   parallel = FALSE,
   progress = FALSE,
   ncores = max(1, parallel::detectCores(logical = FALSE) - 1),
-  n_ratio = 1
+  n_ratio = 1,
+  cl = NULL
 )
 
 # S3 method for class 'sim_data'
@@ -156,6 +157,14 @@ pool_sim_data(object, as_list = FALSE)
   is `c(1, 0.5)`, then the sample sizes for the two groups are 100 and
   50, respectively. If equal to 1, then all groups have the same sample
   size.
+
+- cl:
+
+  A cluster, such as one created by
+  [`parallel::makeCluster()`](https://rdrr.io/r/parallel/makeCluster.html).
+  If `NULL`, a cluster will be created, but will be stopped on exit. If
+  set to an existing cluster, it will not be stopped when the function
+  exits; users need to stop it manually.
 
 - x:
 

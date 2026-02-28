@@ -419,13 +419,13 @@ n_power_region
 #> Solution: 
 #> 
 #> Approximate region of sample sizes with power:
-#> - not significantly different from 0.800: 300 to 343
+#> - not significantly different from 0.800: 300 to 347
 #> - significantly lower than 0.800: 300
-#> - significantly higher than 0.800: 343
+#> - significantly higher than 0.800: 347
 #> 
 #> Confidence intervals of the estimated power:
 #> - for the lower bound (300): [0.735, 0.802]
-#> - for the upper bound (343): [0.793, 0.853]
+#> - for the upper bound (347): [0.789, 0.850]
 #> 
 #> Call `summary()` for detailed results.
 
@@ -443,9 +443,9 @@ As shown above, approximately:
 - sample sizes lower than 300 have power significantly lower than .80,
   and
 
-- sample sizes higher than 343 have power significantly higher than .80.
+- sample sizes higher than 347 have power significantly higher than .80.
 
-In other words, sample sizes between 300 and 343 have power not
+In other words, sample sizes between 300 and 347 have power not
 significantly different from .80.
 
 If necessary, detailed results can be printed by
@@ -484,7 +484,7 @@ summary(n_power_region)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 200 to 400 
-#> - Time spent in the search: 1.857 mins 
+#> - Time spent in the search: 1.681 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -546,10 +546,10 @@ summary(n_power_region)
 #> 
 #> === Major Results ===
 #> 
-#> - Final Value (Sample Size): 343
+#> - Final Value (Sample Size): 347
 #> 
-#> - Final Estimated Power: 0.825 
-#> - Confidence Interval: [0.793; 0.853]
+#> - Final Estimated Power: 0.822 
+#> - Confidence Interval: [0.789; 0.850]
 #> - Level of confidence: 95.0%
 #> - Based on 600 replications.
 #> 
@@ -558,7 +558,7 @@ summary(n_power_region)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 200 to 400 
-#> - Time spent in the search: 1.839 mins 
+#> - Time spent in the search: 1.667 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -576,11 +576,11 @@ summary(n_power_region)
 #> 
 #> Coefficients:
 #> (Intercept)            x  
-#>   -0.925474     0.007317  
+#>     -0.9005       0.0072  
 #> 
 #> Degrees of Freedom: 2999 Total (i.e. Null);  2998 Residual
-#> Null Deviance:       3156 
-#> Residual Deviance: 3038  AIC: 3042
+#> Null Deviance:       3161 
+#> Residual Deviance: 3045  AIC: 3049
 #> 
 #> - Detailed Results:
 #> 
@@ -590,7 +590,7 @@ summary(n_power_region)
 #> 1 200 0.075 1.000  0.627  0.587  0.664
 #> 2 300 0.075 1.000  0.770  0.735  0.802
 #> 3 300 0.076 1.000  0.803  0.770  0.833
-#> 4 343 0.075 1.000  0.825  0.793  0.853
+#> 4 347 0.074 1.000  0.822  0.789  0.850
 #> 5 400 0.076 1.000  0.878  0.850  0.902
 #> Notes:
 #> - n: The sample size in a trial.

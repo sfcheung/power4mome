@@ -16,7 +16,8 @@ gen_boot(
   parallel = FALSE,
   progress = FALSE,
   ncores = max(1, parallel::detectCores(logical = FALSE) - 1),
-  compute_implied_stats = FALSE
+  compute_implied_stats = FALSE,
+  cl = NULL
 )
 ```
 
@@ -61,6 +62,14 @@ gen_boot(
 
   Whether implied statistics are computed in each bootstrap samples.
   Usually not needed and so default to `FALSE`
+
+- cl:
+
+  A cluster, such as one created by
+  [`parallel::makeCluster()`](https://rdrr.io/r/parallel/makeCluster.html).
+  If `NULL`, a cluster will be created, but will be stopped on exit. If
+  set to an existing cluster, it will not be stopped when the function
+  exits; users need to stop it manually.
 
 ## Value
 

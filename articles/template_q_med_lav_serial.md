@@ -229,10 +229,10 @@ out_power
 #> m1 ~ x
 #> m2 ~ m1 + x
 #> y ~ m1 + m2 + x
-#> x =~ x1 + x2 + x3
 #> m1 =~ m11 + m12 + m13 + m14
 #> m2 =~ m21 + m22 + m23
 #> y =~ y1 + y2 + y3
+#> x =~ x1 + x2 + x3
 #> ====== Population Values ======
 #> 
 #> Regressions:
@@ -417,17 +417,17 @@ This is the printout, showing only the section from the output of
     #> Solution: 
     #> 
     #> Approximate region of sample sizes with power:
-    #> - not significantly different from 0.800: 227 to 248
-    #> - significantly lower than 0.800: 227
-    #> - significantly higher than 0.800: 248
+    #> - not significantly different from 0.800: 223 to 259
+    #> - significantly lower than 0.800: 223
+    #> - significantly higher than 0.800: 259
     #> 
     #> Confidence intervals of the estimated power:
-    #> - for the lower bound (227): [0.745, 0.811]
-    #> - for the upper bound (248): [0.791, 0.852]
+    #> - for the lower bound (223): [0.747, 0.813]
+    #> - for the upper bound (259): [0.814, 0.872]
     #> 
     #> Call `summary()` for detailed results.
 
-In this example, the range of the sample size is 227 to 248.
+In this example, the range of the sample size is 223 to 259.
 
 The results can also be visualized using the
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html) function:

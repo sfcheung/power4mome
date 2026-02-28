@@ -11,7 +11,7 @@ for a power4test object."><meta property="og:image" content="https://sfcheung.gi
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.44</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.55</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -27,7 +27,8 @@ for a power4test object."><meta property="og:image" content="https://sfcheung.gi
     <li><a class="dropdown-item" href="../articles/power4test_latent_mediation.html">Power Analysis for Latent Variable Mediation</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Given Power, Find x</h6></li>
-    <li><a class="dropdown-item" href="../articles/x_from_power_for_n.html">Sample Size Given Desired Power</a></li>
+    <li><a class="dropdown-item" href="../articles/x_from_power_for_n_pb.html">Sample Size Given Desired Power (Probabilistic Bisection)</a></li>
+    <li><a class="dropdown-item" href="../articles/x_from_power_for_n.html">Sample Size Given Desired Power (Informal Bisection)</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Common Mediation Models</h6></li>
     <li><a class="dropdown-item" href="../articles/template_q_med_obs_simple.html">Quick Function: Simple Mediation with Observed Variables</a></li>
@@ -87,6 +88,8 @@ for a <code>power4test</code> object.</p>
 <span>  op <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  remove.nonfree <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  check_post_check <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  exclude_var <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  compare_groups <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">...</span>,</span>
 <span>  omnibus <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"no"</span>, <span class="st">"all_sig"</span>, <span class="st">"at_least_one_sig"</span>, <span class="st">"at_least_k_sig"</span><span class="op">)</span>,</span>
 <span>  at_least_k <span class="op">=</span> <span class="fl">1</span>,</span>
@@ -152,6 +155,22 @@ will be conducted only if the model
 passes the <code>post.check</code> conducted
 by <code><a href="https://rdrr.io/pkg/lavaan/man/lavInspect.html" class="external-link">lavaan::lavInspect()</a></code> (with
 <code>what = "post.check"</code>).</p></dd>
+
+
+<dt id="arg-exclude-var">exclude_var<a class="anchor" aria-label="anchor" href="#arg-exclude-var"></a></dt>
+<dd><p>Logical. If <code>TRUE</code>,
+exclude variances and error variances
+from the test.</p></dd>
+
+
+<dt id="arg-compare-groups">compare_groups<a class="anchor" aria-label="anchor" href="#arg-compare-groups"></a></dt>
+<dd><p>Logical. If <code>TRUE</code>,
+the likelihood ratio test (by <code><a href="https://rdrr.io/pkg/lavaan/man/lavTestLRT.html" class="external-link">lavaan::lavTestLRT()</a></code>)
+will be used to test the pairwise-equality
+constraints for all selected free
+parameters that appear in all groups.
+These tests will be reported instead of
+the tests for individual parameters.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>

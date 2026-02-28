@@ -15,7 +15,7 @@ test_indirect_effect(
   boot_ci = FALSE,
   boot_out = NULL,
   check_post_check = TRUE,
-  test_method = c("ci", "pvalue"),
+  test_method = NULL,
   ...,
   fit_name = "fit",
   get_map_names = FALSE,
@@ -87,7 +87,9 @@ test_indirect_effect(
   (e.g., bootstrap confidence interval) will be used to do the test. If
   `"pvalue"`, then asymmetric *p*-value by Asparouhov & Muthén (2021)
   will be used to do the test, and the confidence interval will not be
-  computed.
+  computed. If `NULL`, its value will be set to `"pvalue"` if the number
+  of simulated/bootstrap samples (`R`) is a value that is supported by
+  the method by Boos and Zhang (2000), and set to `"ci"` otherwise.
 
 - ...:
 

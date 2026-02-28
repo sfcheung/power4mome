@@ -447,8 +447,8 @@ summary(n_power_region)
 #> 
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
-#> - The range of values explored: 103 to 80 
-#> - Time spent in the search: 38.43 secs 
+#> - The range of values explored: 80 to 103 
+#> - Time spent in the search: 30.51 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -520,8 +520,8 @@ summary(n_power_region)
 #> 
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
-#> - The range of values explored: 103 to 80 
-#> - Time spent in the search: 37.72 secs 
+#> - The range of values explored: 80 to 111 
+#> - Time spent in the search: 31.07 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 

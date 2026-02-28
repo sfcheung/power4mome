@@ -182,10 +182,10 @@ print(out,
 #> m2 ~ x
 #> y ~ m1 + m2 + x
 #> 
-#> x =~ x1 + x2 + x3
 #> m1 =~ m11 + m12 + m13 + m14
 #> m2 =~ m21 + m22 + m23
 #> y =~ y1 + y2 + y3
+#> x =~ x1 + x2 + x3
 #> ====== Population Values ======
 #> 
 #> Regressions:
@@ -260,10 +260,6 @@ print(out,
 #> 
 #> Latent Variables:
 #>                     est.std
-#>   x =~                     
-#>     x1                0.753
-#>     x2                0.754
-#>     x3                0.761
 #>   m1 =~                    
 #>     m11               0.605
 #>     m12               0.612
@@ -277,6 +273,10 @@ print(out,
 #>     y1                0.756
 #>     y2                0.753
 #>     y3                0.754
+#>   x =~                     
+#>     x1                0.753
+#>     x2                0.754
+#>     x3                0.761
 #> 
 #> Regressions:
 #>                     est.std
@@ -325,7 +325,7 @@ print(out,
 #> 
 #> Mean(s) across replication:
 #>           test_label  est cilo cihi pvalue   sig
-#> 1 x-...->y (All sig)  NaN  NaN  NaN  0.047 0.620
+#> 1 x-...->y (All sig)  NaN  NaN  NaN  0.047 0.608
 #> 
 #> - The column 'sig' shows the rejection rates.
 #> - If the null hypothesis is false, the rate is the power.
@@ -335,7 +335,7 @@ rejection_rates(out)
 #> [test]: test_indirects: x-...->y 
 #> [test_label]: x-...->y (All sig) 
 #>    est   p.v reject r.cilo r.cihi
-#> 1  NaN 1.000  0.620  0.581  0.658
+#> 1  NaN 1.000  0.608  0.569  0.647
 #> Notes:
 #> - p.v: The proportion of valid replications.
 #> - est: The mean of the estimates in a test across replications.
@@ -420,13 +420,13 @@ n_power_region
 #> Solution: 
 #> 
 #> Approximate region of sample sizes with power:
-#> - not significantly different from 0.800: 194 to 212
-#> - significantly lower than 0.800: 194
-#> - significantly higher than 0.800: 212
+#> - not significantly different from 0.800: 197 to 210
+#> - significantly lower than 0.800: 197
+#> - significantly higher than 0.800: 210
 #> 
 #> Confidence intervals of the estimated power:
-#> - for the lower bound (194): [0.733, 0.800]
-#> - for the upper bound (212): [0.807, 0.866]
+#> - for the lower bound (197): [0.754, 0.819]
+#> - for the upper bound (210): [0.794, 0.855]
 #> 
 #> Call `summary()` for detailed results.
 
@@ -441,12 +441,12 @@ Power Curve
 
 As shown above, approximately:
 
-- sample sizes lower than 194 have power significantly lower than .80,
+- sample sizes lower than 197 have power significantly lower than .80,
   and
 
-- sample sizes higher than 212 have power significantly higher than .80.
+- sample sizes higher than 210 have power significantly higher than .80.
 
-In other words, sample sizes between 194 and 212 have power not
+In other words, sample sizes between 197 and 210 have power not
 significantly different from .80.
 
 If necessary, detailed results can be printed by
@@ -473,10 +473,10 @@ summary(n_power_region)
 #> 
 #> === Major Results ===
 #> 
-#> - Final Value (Sample Size): 194
+#> - Final Value (Sample Size): 197
 #> 
-#> - Final Estimated Power: 0.768 
-#> - Confidence Interval: [0.733; 0.800]
+#> - Final Estimated Power: 0.788 
+#> - Confidence Interval: [0.754; 0.819]
 #> - Level of confidence: 95.0%
 #> - Based on 600 replications.
 #> 
@@ -484,8 +484,8 @@ summary(n_power_region)
 #> 
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
-#> - The range of values explored: 150 to 194 
-#> - Time spent in the search: 52.05 secs 
+#> - The range of values explored: 150 to 197 
+#> - Time spent in the search: 41.38 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -503,19 +503,19 @@ summary(n_power_region)
 #> 
 #> Coefficients:
 #> (Intercept)            x  
-#>    -1.92878      0.01612  
+#>    -2.35095      0.01861  
 #> 
 #> Degrees of Freedom: 1199 Total (i.e. Null);  1198 Residual
-#> Null Deviance:       1478 
-#> Residual Deviance: 1446  AIC: 1450
+#> Null Deviance:       1469 
+#> Residual Deviance: 1423  AIC: 1427
 #> 
 #> - Detailed Results:
 #> 
 #> [test]: test_indirects: x-...->y 
 #> [test_label]: x-...->y (All sig) 
 #>     n  est   p.v reject r.cilo r.cihi
-#> 1 150  NaN 1.000  0.620  0.581  0.658
-#> 2 194  NaN 1.000  0.768  0.733  0.800
+#> 1 150  NaN 1.000  0.608  0.569  0.647
+#> 2 197  NaN 1.000  0.788  0.754  0.819
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.
@@ -546,10 +546,10 @@ summary(n_power_region)
 #> 
 #> === Major Results ===
 #> 
-#> - Final Value (Sample Size): 212
+#> - Final Value (Sample Size): 210
 #> 
-#> - Final Estimated Power: 0.838 
-#> - Confidence Interval: [0.807; 0.866]
+#> - Final Estimated Power: 0.827 
+#> - Confidence Interval: [0.794; 0.855]
 #> - Level of confidence: 95.0%
 #> - Based on 600 replications.
 #> 
@@ -557,8 +557,8 @@ summary(n_power_region)
 #> 
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
-#> - The range of values explored: 150 to 212 
-#> - Time spent in the search: 53.19 secs 
+#> - The range of values explored: 150 to 210 
+#> - Time spent in the search: 41.34 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -576,20 +576,20 @@ summary(n_power_region)
 #> 
 #> Coefficients:
 #> (Intercept)            x  
-#>    -2.21401      0.01793  
+#>    -2.36017      0.01867  
 #> 
 #> Degrees of Freedom: 1799 Total (i.e. Null);  1798 Residual
-#> Null Deviance:       2055 
-#> Residual Deviance: 1978  AIC: 1982
+#> Null Deviance:       2059 
+#> Residual Deviance: 1976  AIC: 1980
 #> 
 #> - Detailed Results:
 #> 
 #> [test]: test_indirects: x-...->y 
 #> [test_label]: x-...->y (All sig) 
 #>     n  est   p.v reject r.cilo r.cihi
-#> 1 150  NaN 1.000  0.620  0.581  0.658
-#> 2 194  NaN 1.000  0.768  0.733  0.800
-#> 3 212  NaN 1.000  0.838  0.807  0.866
+#> 1 150  NaN 1.000  0.608  0.569  0.647
+#> 2 197  NaN 1.000  0.788  0.754  0.819
+#> 3 210  NaN 1.000  0.827  0.794  0.855
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.

@@ -209,11 +209,13 @@ q_power_mediation_parallel(
   or
   [`power4test_by_es()`](https://sfcheung.github.io/power4mome/reference/power4test_by_es.md)
   is shown. To be passed to the `progress` argument of these functions.
+  If `NULL`, set automatically based on the algorithm used.
 
 - max_trials:
 
   The maximum number of trials in searching the value with the target
-  power. Rounded up if not an integer.
+  power. Rounded up if not an integer. If `NULL`, set automatically
+  based on the algorithm used.
 
 - ...:
 
@@ -580,8 +582,10 @@ out
 #> =============== <test_indirect: x->m->y> ===============
 #> 
 #> Mean(s) across replication:
-#>    est   cilo  cihi   sig pvalue
-#>  0.071 -0.042 0.219 0.250  0.288
+#>    est cilo cihi   sig pvalue       R   nlt0 alpha bz_39 bz_79 bz_119 bz_159
+#>  0.071  NaN  NaN 0.281  0.288 199.000 34.850 0.050 0.202 0.234  0.261  0.276
+#>  bz_199
+#>   0.250
 #> 
 #> - The value 'sig' is the rejection rate.
 #> - If the null hypothesis is false, this is the power.
@@ -593,15 +597,20 @@ out
 #> [test]: test_indirect: x->m->y 
 #> [test_label]: Test 
 #>     est   p.v reject r.cilo r.cihi
-#> 1 0.071 1.000  0.250  0.112  0.469
+#> 1 0.071 1.000  0.281  0.145  0.519
 #> Notes:
 #> - p.v: The proportion of valid replications.
 #> - est: The mean of the estimates in a test across replications.
 #> - reject: The proportion of 'significant' replications, that is, the
 #>   rejection rate. If the null hypothesis is true, this is the Type I
 #>   error rate. If the null hypothesis is false, this is the power.
+#> - Some or all values in 'reject' are estimated using the extrapolation
+#>   method by Boos and Zhang (2000).
 #> - r.cilo,r.cihi: The confidence interval of the rejection rate, based
 #>   on Wilson's (1927) method.
+#> - Wilson's (1927) method is used to approximate the confidence
+#>   intervals of the rejection rates estimated by the method of Boos and
+#>   Zhang (2000).
 #> - Refer to the tests for the meanings of other columns.
 #> 
 #> ========== n_region_from_power Results ==========
