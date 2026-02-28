@@ -628,12 +628,6 @@ x_from_power <- function(object,
                             "probabilistic_bisection"))
   }
 
-  if (algorithm == "probabilistic_bisection") {
-    # PBA does not support ci_hit separately.
-    # Instead, close_enough is used to emulated ci_hit
-    goal <- "close_enough"
-  }
-
   # merge_all_tests is always TRUE
   # Ignored by rejection_rates() if there is only one test
   tmp <- list(collapse = "all_sig",
@@ -668,6 +662,13 @@ x_from_power <- function(object,
                                "power_curve"))
     }
   }
+
+  if (algorithm == "probabilistic_bisection") {
+    # PBA does not support ci_hit separately.
+    # Instead, close_enough is used to emulated ci_hit
+    goal <- "close_enough"
+  }
+
 
   # what: The value to be examined.
   # goal:
