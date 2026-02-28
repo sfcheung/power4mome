@@ -403,7 +403,7 @@ print(out,
 #> 
 #> The models:
 #> y ~ x + w1 + w2 + x:w1 + x:w2
-#> <environment: 0x0000025c62dc0ba0>
+#> <environment: 0x00000187d575a620>
 #> 
 #> 
 #> ===== <test_parameters: CIs (pars: y~x:w1,y~x:w2)> =====
@@ -587,7 +587,7 @@ summary(n_power_region)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 200 to 857 
-#> - Time spent in the search: 30.31 secs 
+#> - Time spent in the search: 31.89 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -663,7 +663,7 @@ summary(n_power_region)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 200 to 857 
-#> - Time spent in the search: 25.4 secs 
+#> - Time spent in the search: 26.87 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
