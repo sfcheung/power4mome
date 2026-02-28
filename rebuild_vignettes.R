@@ -25,6 +25,8 @@ knitr::knit("x_from_power_for_n_test_printout.Rmd.original", output = "x_from_po
 knitr::knit("x_from_power_for_n.Rmd.original", output = "x_from_power_for_n.Rmd", envir = new.env())
 knitr::knit("x_from_power_for_es.Rmd.original", output = "x_from_power_for_es.Rmd", envir = new.env())
 
+knitr::knit("x_from_power_for_n_pb.Rmd.original", output = "x_from_power_for_n_pb.Rmd", envir = new.env())
+
 knitr::knit("template_q_med_obs_simple.Rmd.original", output = "template_q_med_obs_simple.Rmd", envir = new.env())
 knitr::knit("template_q_med_obs_serial.Rmd.original", output = "template_q_med_obs_serial.Rmd", envir = new.env())
 knitr::knit("template_q_med_obs_parallel.Rmd.original", output = "template_q_med_obs_parallel.Rmd", envir = new.env())

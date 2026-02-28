@@ -38,6 +38,7 @@ articles:
 - title: Given Power, Find x
   navbar: Given Power, Find x
   contents:
+  - articles/x_from_power_for_n_pb
   - articles/x_from_power_for_n
 
 - title: Common Mediation Models

@@ -1,5 +1,5 @@
 ---
-title: "Sample Size Given Desired Power (Informal Bisection)"
+title: "Sample Size Given Desired Power (Probabilistic Bisection)"
 date: "`r Sys.Date()`"
 output:
   rmarkdown::html_vignette:
@@ -8,7 +8,7 @@ output:
         depth: 2
       number_sections: true
 vignette: >
-  %\VignetteIndexEntry{Sample Size Given Desired Power (Informal Bisection)}
+  %\VignetteIndexEntry{Sample Size Given Desired Power (Probabilistic Bisection)}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 bibliography: references.bib
@@ -43,17 +43,17 @@ supported by `power4test()`.
 NOTE: This is one version of two nearly-identical
 articles.
 This version introduces how to use
-the (informal) bisection
-algorithm [see @chalmers_solving_2024 for a review of this method]
-to identify the approximate sample size
-with a limited number of replications.
-The
-[other version](./x_from_power_for_n_pb.html)
-uses the probabilistic bisection algorithm
+the probabilistic bisection algorithm
 [@waeber_bisection_2013], which sometimes
 takes longer to run but can be used for a
 higher level of precision using a larger
 number of replications.
+The
+[other version](./x_from_power_for_n.html)
+uses the (informal) bisection
+algorithm [see @chalmers_solving_2024 for a review of this method]
+to identify the approximate sample size
+with a limited number of replications.
 
 # Prerequisite
 
@@ -334,7 +334,7 @@ out <- power4test(nrep = 50,
                   model = mod,
                   pop_es = mod_es,
                   n = 50,
-                  R = 2000,
+                  R = 199,
                   ci_type = "mc",
                   test_fun = test_indirect_effect,
                   test_args = list(x = "x",
@@ -359,7 +359,14 @@ These are the new arguments used:
 
 - `R`: The number of replications used
   to generate the Monte Carlo simulated
-  estimates, 2000 in this example.
+  estimates, 199 in this example. This
+  may look small, but this value is
+  acceptable because the goal is not to
+  have a stable result in *one* replication,
+  but to estimate the power *across*
+  replications. The method proposed by
+  @boos_monte_2000, detailed below, will
+  be used to estimate the power.
 
 - `ci_type`: The method used to
   generate estimates. Support Monte
@@ -406,6 +413,28 @@ These are the new arguments used:
   automatically but can be set directly
   by the `ncores` argument.]
 
+In power analysis involving resampling
+methods such as Monte Carlo confidence
+interval and bootstrapping, the processing
+time can be very long. @boos_monte_2000
+proposed a method to extrapolate the
+rejection rates of these methods using
+a limited number of (re)sampling. This
+method requires specific numbers of
+`R`, determined by the level of significance
+(1 minus the level of confidence, for
+confidence interval methods). For a
+level of significance of .05, the default,
+these are the first few supported values
+of `R`:
+
+```{r R_bz, echo = FALSE}
+power4mome:::R_extrapolate(alpha = .05)
+```
+
+In our experience, an `R` of 199 is large
+enough for the search.
+
 Note that the simulation can take some
 time to run.
 Progress will be printed when run in an
@@ -414,14 +443,16 @@ interactive session.
 This is the default printout:
 
 ```{r test_out_print}
-print(out,
-      test_long = TRUE)
+print(out)
 ```
 
-The argument `test_long = TRUE` is added
-to verify the test we set up.
-
 As shown above, the settings are correct.
+The columns after `R` (e.g., `nlt0` and `bz_39`)
+are for the method by @boos_monte_2000.
+The presence of these columns confirms
+that the method by @boos_monte_2000 is
+used.
+
 We can now call `n_from_power()` to
 do the search.
 
@@ -429,40 +460,33 @@ do the search.
 
 This is a simplified description of
 how `n_from_power()` works when our goal
-is to find a sample size with the 95% confidence
-interval of its power just below the
-target power. That is, the sample size with the upper bound
-of the 95% confidence interval of its power
-just below the
-target power.
+is to find a sample size with its power
+*close to* the
+target power, with a desired level of
+precision determined by the number of
+replications (`nrep`).
 
-In practice, we rarely need a precise estimate
-because the goal is for sample size _planning_.
-Therefore, having a sample size with the
-upper bound of the 95% confidence interval of
-its power "close enough" to the target
-power is sufficient.
-
-For now, the bisection method will be used.
-This method is slow. However, in our experience,
-if the goal is to have an approximation,
-a "close enough" solution, this method
-is usually sufficient.
-
-Last, the bisection method *may* fail to
-find the solution when we do not know the
-form of the function and simulation is
-used. However, this simple method is usually
-good enough for finding an approximation.
+The probabilistic bisection algorithm
+[@waeber_bisection_2013] will be used.
+It takes some time to run, sometimes
+ten minutes or more, but it is
+particularly suitable for determining
+the sample size given a target power
+with a high level of precision, which
+requires a large number of replications.
+See @chalmers_solving_2024 for an
+illustration of this method in power
+analysis.
 
 This is the function call:
 
 ```{r x_out, results=FALSE, message=FALSE}
 out_n <- n_from_power(out,
                       target_power = .80,
-                      final_nrep = 400,
-                      what = "ub",
-                      seed = 4567)
+                      final_nrep = 2000,
+                      final_R = 2000,
+                      seed = 1234,
+                      algorithm = "probabilistic_bisection")
 ```
 
 The argument used above:
@@ -471,45 +495,66 @@ The argument used above:
   Default is .80.
 
 - `final_nrep`: The number of replications
-  desired in the solution, when using
-  the normal approximation to form the
-  95% confidence interval for a sample
-  proportion (power in this case). For
-  `nrep = 400`, the 95% confidence limits
-  for a power of .80 are about .04 below
-  and above .80. This should be precise
+  desired in the solution. For
+  `nrep = 2000`, the width of the
+  95% confidence limits
+  based on normal approximation
+  for a power of .80 is about .035.
+  This should be precise
   enough for estimating the sample size
-  required. If a higher precision is desired
-  and computation power is available,
-  this number can be increased to, say,
-  500 or 1000.
+  required. Increase or decrease `nrep`
+  to get the desired level of precision.
 
-- `what`: If our goal is to find the sample
-  size with the upper bound of the confidence
-  interval of its power close enough to
-  the target power, set `what` to `"ub"`.
+- `final_R`: It is preferable to use
+  the method by @boos_monte_2000 with a
+  small `R` during the search. Nevertheless,
+  if a larger number of `R` is desired
+  during the final check, we can set `final_R`
+  to this value. If omitted, the `R` in
+  the object from `power4test()` will be
+  used.
 
 - `seed`: To make the search reproducible,
   if possible, set this seed to an
   integer.
 
-- `goal`: To get the "close enough" solution,
-  set `goal` to `"close_enough"`
-  (`goal = "close_enough"`). However,
-  because the only goal for lower and upper
-  bounds (`what = "ub"` and `what = "lb"`)
-  is `"close_enough"`, this argument can be
-  omitted.
+By default, the progress of the search will
+be displayed on screen (add `progress = FALSE`
+to hide the progress). Each iteration
+only uses a small number of replications (`nrep`),
+but the information will be accumulated across iterations
+to determine the sample size.
+When a potential
+solution (the sample size with the desired power)
+is found, a final check will be conducted
+using `final_nrep` replications and `final_R`
+(if set). If the estimated power of this
+solution is "close enough" to the target power,
+the search will stop. If not, the search
+will continue. These steps will be
+continued until some termination criteria are met.
+(Details to be described in another article).
 
-By default,
-being "close enough" is defined as "within .02
-of the target power". (This can be controlled
-by the argument `tolerance`).
+### What if the Search Fails
+
+The search is probabilistic. Therefore,
+it is possible that a search may fail
+given the termination criteria (such as
+the maximum number of iterations). If a
+search fails, try another value for `seed`.
 
 ## Examine the Output
 
-The example above needs a few attempts
-to arrive at the approximation.
+The example above will take several
+minutes to run, depending on factors
+such as whether `parallel` is `TRUE`
+and the
+number of CPU cores used
+when calling `power4test()`, as well as
+the target number of replications (`final_nrep`).
+The larger the `final_nrep` is, the
+higher the precision of the solution, but
+the longer the search.
 
 This is the basic output:
 
@@ -523,14 +568,6 @@ based on simulation is
 `r sprintf("%4.3f", out_n$power_final)`,
 with its confidence interval equal to
 `r sprintf("[%1$4.3f, %2$4.3f]", out_n$ci_final[1], out_n$ci_final[2])`.
-The upper bound, `r sprintf("%4.3f", out_n$ci_final[2])`,
-is .02 within the target power (.80).
-
-In other words, with 400 replications,
-it is estimated that sample sizes
-less than `r out_n$x_final` have power
-significantly less than .80 and should not
-be used if the target power is .80.
 
 To obtain a more detailed results for
 the search, we can use the `summary()`
@@ -548,130 +585,30 @@ and the table with all the sample sizes
 examined, along with the estimated
 power levels and confidence intervals.
 
+Note that it is normal for the probabilistic
+bisection method to try the same value
+(same sample size) several times. Each
+trial is independent of other trials, and
+provides unique information to the search.
+
 It also prints the model, the "power curve",
 used to estimate
 the relation between the power and the
 sample size. Note that this is only
 a crude model intended only for the
 values of sample size examined
-(`r length(out_n$x_tried)` in the this example).
+(`r length(out_n$x_tried)` in this example).
 It is
 not intended to estimate power for
 sample sizes outside the range studied.
 
-Even though the model is a crude one,
-it can still give a rough idea about
-the relation. A simple plot can be
-requested by `plot()`:
-
-```{r x_from_power_for_n_plot, fig.cap="The Power Curve", fig.align="center"}
-plot(out_n)
-```
-
-The black line is the plot of the
-sample sizes studied, along with the
-estimated power levels and the 95%
-confidence intervals. The intervals
-may vary in width if the numbers of replications
-are not the same for the sample sizes examined.
-
-The red line is the plot based on the
-model (a logistic model in this case),
-along the range of sample sizes examined.
-
-The area to the left of the solution is
-the region for which the power is estimated
-to be significantly less than the target power.
-
-## Case 2
-
-Let's consider Case 2, finding the sample
-size with the 95% confidence interval of
-its power approximately above the target
-power. That is, the *lower* *bound* of
-the confidence interval is close enough
-to the target power.
-
-This is the function call:
-
-```{r x_out_lb, results=FALSE, message=FALSE}
-out_n_lb <- n_from_power(out,
-                         target_power = .80,
-                         final_nrep = 400,
-                         what = "lb",
-                         seed = 2345)
-```
-
-The only change is `what`, which is set
-to `"lb"` (lower bound).
-
-The example above only needs a few attempts
-to arrive at the approximation.
-
-This is the output:
-
-```{r x_out_lb_print}
-out_n_lb
-```
-
-The estimated sample size is
-`r out_n_lb$x_final`. The estimated power
-based on simulation is
-`r sprintf("%4.3f", out_n_lb$power_final)`,
-with its confidence interval equal to
-`r sprintf("[%1$4.3f, %2$4.3f]", out_n_lb$ci_final[1], out_n$ci_final[2])`.
-The upper bound, `r sprintf("%4.3f", out_n_lb$ci_final[1])`,
-is .02 within the target power (.80).
-
-With 400 replications,
-it is estimated that sample sizes
-greater than `r out_n_lb$x_final` have power
-significantly greater than .80 and can
-be used if the target power is .80.
-
-This a summary of the results:
-
-```{r x_out_lb_summary}
-summary(out_n_lb)
-```
-
-This is a plot of the search:
-
-```{r x_from_power_for_n_lb_plot, fig.cap="The Power Curve", fig.align="center"}
-plot(out_n_lb)
-```
-
-# Case 1, Case 2, or Both?
-
-Similar to the Johnson-Neyman method in
-moderation, the two sample sizes found above
-can be used together to estimate the range
-of sample sizes with power not significantly
-different form the target power.
-
-That is, from the results above,
-we can conclude that, with 400 replications,
-sample sizes from
-`r out_n$x_final` to `r out_n_lb$x_final`
-have power levels
-not significantly different from .80.
-
-However, we believe researchers rarely need
-to find "the" sample with exactly "the"
-target power and doing sample size planning.
-
-Therefore, if resource is a concern and so
-it is more important not to have a sample size
-with power too low, then Case 1 is sufficient
-for knowing the range of sample sizes that
-should definitely not used.
-
-If having sufficient power is more important
-and the associated resource is available,
-the Case 2 is appropriate because it can
-find the minimum sample size that will
-have power significantly higher than
-the target power.
+Unlike the (informal) bisection method,
+the final solution is usually validated by
+a large number of replications (`final_nrep`)
+when probabilistic bisection is used.
+Therefore, it is not necessary to use
+the search process or the power curve to
+evaluate the final solution.
 
 # Advanced Features
 
@@ -681,8 +618,10 @@ There are other ways to customize the
 search, such as the range of sample
 sizes to examine,
 the level of confidence for the
-confidence interval, and the number of
-trials (10 by default). Please refer
+confidence interval, and the termination
+criteria (e.g., the maximum number of
+trials, 100 by default for
+probabilistic bisection). Please refer
 to the help page of `x_from_power()`,
 which `n_from_power()` calls,
 for these and other options.
