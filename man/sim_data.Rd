@@ -22,7 +22,8 @@ sim_data(
   parallel = FALSE,
   progress = FALSE,
   ncores = max(1, parallel::detectCores(logical = FALSE) - 1),
-  n_ratio = 1
+  n_ratio = 1,
+  cl = NULL
 )
 
 \method{print}{sim_data}(
@@ -164,6 +165,14 @@ the sample sizes for the two groups
 are 100 and 50, respectively. If
 equal to 1, then all groups have the
 same sample size.}
+
+\item{cl}{A cluster, such as one created
+by \code{\link[parallel:makeCluster]{parallel::makeCluster()}}. If \code{NULL},
+a cluster will be created, but will be
+stopped on exit. If set to an existing
+cluster, it will not be stopped when
+the function exits; users need to
+stop it manually.}
 
 \item{x}{The \code{sim_data} object
 to be printed.}

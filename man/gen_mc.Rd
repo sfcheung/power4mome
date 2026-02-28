@@ -12,7 +12,8 @@ gen_mc(
   parallel = FALSE,
   progress = FALSE,
   ncores = max(1, parallel::detectCores(logical = FALSE) - 1),
-  compute_implied_stats = FALSE
+  compute_implied_stats = FALSE,
+  cl = NULL
 )
 }
 \arguments{
@@ -49,6 +50,14 @@ is used.}
 implied statistics are computed
 in each Monte Carlo replication. Usually
 not needed and so default to \code{FALSE}.}
+
+\item{cl}{A cluster, such as one created
+by \code{\link[parallel:makeCluster]{parallel::makeCluster()}}. If \code{NULL},
+a cluster will be created, but will be
+stopped on exit. If set to an existing
+cluster, it will not be stopped when
+the function exits; users need to
+stop it manually.}
 }
 \value{
 An \code{mc_list} object, which is a list

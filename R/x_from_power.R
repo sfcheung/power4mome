@@ -299,6 +299,8 @@
 #'
 #' @param tolerance Used when the goal
 #' is `"close_enough"`.
+#' If `NULL`, set automatically based
+#' on the algorithm used.
 #'
 #' @param ci_level The level of confidence
 #' of the confidence intervals computed
@@ -338,11 +340,15 @@
 #' is shown. To be passed to
 #' the `progress` argument of these
 #' functions.
+#' If `NULL`, set automatically based
+#' on the algorithm used.
 #'
 #' @param max_trials The maximum number
 #' of trials in searching the value
 #' with the target power. Rounded
 #' up if not an integer.
+#' If `NULL`, set automatically based
+#' on the algorithm used.
 #'
 #' @param final_nrep The number of
 #' replications in the final stage,
@@ -373,11 +379,10 @@
 #' If `object`
 #' is an output of [power4test()]
 #' or [x_from_power()] and
-#' this argument is not set, `finalR`
+#' this argument is not set, `final_R`
 #' will be set to `R` or `final_R`
 #' stored in
 #' `object`.
-
 #'
 #' @param seed If not `NULL`, [set.seed()]
 #' will be used to make the process
@@ -411,8 +416,9 @@
 #' output can be very large in size.
 #'
 #' @param algorithm The algorithm for
-#' finding `x`. Can be `"power_curve"`
-#' or `"bisection"`. The default algorithm
+#' finding `x`. Can be `"power_curve"`,
+#' `"bisection"`, or
+#' `"probabilistic_bisection"`. The default algorithm
 #' depends on `x`.
 #'
 #' @param control A named list of
@@ -529,14 +535,14 @@ x_from_power <- function(object,
                                        ub = "close_enough",
                                        lb = "close_enough")},
                          ci_level = .95,
-                         tolerance = .02,
+                         tolerance = NULL,
                          x_interval = switch(x,
                                              n = c(50, 2000),
                                              es = NULL),
                          extendInt = NULL,
                          progress = TRUE,
-                         simulation_progress = TRUE,
-                         max_trials = 10,
+                         simulation_progress = NULL,
+                         max_trials = NULL,
                          final_nrep = attr(object, "args")$nrep %||% (object$nrep_final %||% 400),
                          final_R = attr(object, "args")$R %||% (object$args$final_R %||% 1000),
                          seed = NULL,
@@ -618,7 +624,8 @@ x_from_power <- function(object,
   if (!is.null(algorithm)) {
     algorithm <- match.arg(algorithm,
                           c("bisection",
-                            "power_curve"))
+                            "power_curve",
+                            "probabilistic_bisection"))
   }
 
   # merge_all_tests is always TRUE
@@ -651,9 +658,17 @@ x_from_power <- function(object,
     if (is.null(algorithm)) {
       algorithm <- match.arg(algorithm,
                              c("bisection",
+                               "probabilistic_bisection",
                                "power_curve"))
     }
   }
+
+  if (algorithm == "probabilistic_bisection") {
+    # PBA does not support ci_hit separately.
+    # Instead, close_enough is used to emulated ci_hit
+    goal <- "close_enough"
+  }
+
 
   # what: The value to be examined.
   # goal:
@@ -701,9 +716,42 @@ x_from_power <- function(object,
     }
   }
 
-  max_trials <- ceiling(max_trials)
-  if (max_trials < 1) {
-    stop("'max_trials' must be at least 1 (after rounding, if necessary).")
+  if (!is.null(max_trials)) {
+    max_trials <- ceiling(max_trials)
+    if (max_trials < 1) {
+      stop("'max_trials' must be at least 1 (after rounding, if necessary).")
+    }
+  }
+
+  # ==== Set tolerance if NULL ====
+
+  if (is.null(tolerance)) {
+    tolerance <- set_tolerance(
+                    algorithm = algorithm,
+                    target_power = target_power,
+                    goal = goal,
+                    what = what,
+                    final_nrep = final_nrep,
+                    ci_level = ci_level
+                  )
+  }
+
+  # ==== Set max_trials if NULL ====
+
+  if (is.null(max_trials)) {
+    max_trials <- set_max_trials(
+                    algorithm = algorithm
+                  )
+  }
+
+  # ==== Set max_trials if NULL ====
+
+  if (is.null(simulation_progress)) {
+    simulation_progress <- switch(
+      algorithm,
+      probabilistic_bisection = FALSE,
+      TRUE
+    )
   }
 
   if (!is.null(seed)) {
@@ -976,7 +1024,7 @@ x_from_power <- function(object,
   if ((algorithm == "power_curve") && !solution_found) {
 
     a_out <- do.call(alg_power_curve,
-      c(list(
+      list(
         object = object,
         x = x,
         pop_es_name = pop_es_name,
@@ -1006,8 +1054,9 @@ x_from_power <- function(object,
         power_tolerance_in_final = power_tolerance_in_final,
         what = what,
         goal = goal,
-        tol = tolerance),
-      control))
+        tol = tolerance,
+        variants = control
+      ))
 
     by_x_1 <- a_out$by_x_1
     fit_1 <- a_out$fit_1
@@ -1032,10 +1081,10 @@ x_from_power <- function(object,
 
   }
 
-  if ((algorithm == "bisection") && !solution_found) {
+  if ((algorithm == "probabilistic_bisection") && !solution_found) {
 
-    a_out <- do.call(alg_bisection,
-      c(list(
+    a_out <- do.call(alg_prob_bisection,
+      list(
           object = object,
           x = x,
           pop_es_name = pop_es_name,
@@ -1058,9 +1107,77 @@ x_from_power <- function(object,
           digits = 3,
           what = what,
           goal = goal,
-          tol = tolerance
-        ),
-      control))
+          tol = tolerance,
+          variants = control
+        ))
+
+    by_x_1 <- a_out$by_x_1
+    fit_1 <- a_out$fit_1
+    ci_hit <- a_out$ci_hit
+    x_tried <- a_out$x_tried
+    x_out <- a_out$x_out
+    power_out <- a_out$power_out
+    nrep_out <- a_out$nrep_out
+    ci_out <- a_out$ci_out
+    by_x_out <- a_out$by_x_out
+    i2 <- a_out$i2
+    solution_found <- a_out$solution_found
+    status <- a_out$status
+    technical <- list(iteration = a_out$iteration,
+                      x_history = a_out$x_history,
+                      x_interval_history = a_out$x_interval_history,
+                      f_interval_history = a_out$f_interval_history,
+                      reject_history = a_out$reject_history,
+                      reject_by_power_curve_history = a_out$reject_by_power_curve_history,
+                      f_history = a_out$f_history,
+                      dfun_history = a_out$dfun_history,
+                      p_c_history = a_out$p_c_history,
+                      hdr_x_history = a_out$hdr_x_history,
+                      hdr_power_history = a_out$hdr_power_history,
+                      final_check_history = a_out$final_check_history,
+                      seed_history = a_out$seed_history,
+                      time_passed_history = a_out$time_passed_history,
+                      delta_tol = a_out$delta_tol,
+                      last_k = a_out$last_k,
+                      tol = a_out$tol,
+                      f_power = a_out$f_power,
+                      f_goal = a_out$f_goal,
+                      hdr_power_tol = a_out$hdr_power_tol)
+
+    rm(a_out)
+
+  }
+
+
+  if ((algorithm == "bisection") && !solution_found) {
+
+    a_out <- do.call(alg_bisection,
+      list(
+          object = object,
+          x = x,
+          pop_es_name = pop_es_name,
+          target_power = target_power,
+          x_max = x_max,
+          x_min = x_min,
+          progress = progress,
+          x_include_interval = x_include_interval,
+          x_interval = x_interval,
+          simulation_progress = simulation_progress,
+          save_sim_all = save_sim_all,
+          is_by_x = is_by_x,
+          object_by_org = object_by_org,
+          final_nrep = final_nrep,
+          final_R = final_R,
+          ci_level = ci_level,
+          extendInt = extendInt,
+          max_trials = max_trials,
+          R = attr(object, "args")$R,
+          digits = 3,
+          what = what,
+          goal = goal,
+          tol = tolerance,
+          variants = control
+        ))
 
     by_x_1 <- a_out$by_x_1
     fit_1 <- a_out$fit_1
@@ -1341,12 +1458,12 @@ n_from_power <- function(object,
                          what = formals(x_from_power)$what,
                          goal = formals(x_from_power)$goal,
                          ci_level = .95,
-                         tolerance = .02,
+                         tolerance = NULL,
                          x_interval = c(50, 2000),
                          extendInt = NULL,
                          progress = TRUE,
-                         simulation_progress = TRUE,
-                         max_trials = 10,
+                         simulation_progress = NULL,
+                         max_trials = NULL,
                          final_nrep = formals(x_from_power)$final_nrep,
                          final_R = formals(x_from_power)$final_R,
                          seed = NULL,
@@ -1412,12 +1529,12 @@ n_region_from_power <- function(
                          pop_es_name = NULL,
                          target_power = .80,
                          ci_level = .95,
-                         tolerance = .02,
+                         tolerance = NULL,
                          x_interval = c(50, 2000),
                          extendInt = NULL,
                          progress = TRUE,
-                         simulation_progress = TRUE,
-                         max_trials = 10,
+                         simulation_progress = NULL,
+                         max_trials = NULL,
                          final_nrep = formals(x_from_power)$final_nrep,
                          final_R = formals(x_from_power)$final_R,
                          seed = NULL,

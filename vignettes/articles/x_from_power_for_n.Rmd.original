@@ -1,5 +1,5 @@
 ---
-title: "Sample Size Given Desired Power"
+title: "Sample Size Given Desired Power (Informal Bisection)"
 date: "`r Sys.Date()`"
 output:
   rmarkdown::html_vignette:
@@ -8,7 +8,7 @@ output:
         depth: 2
       number_sections: true
 vignette: >
-  %\VignetteIndexEntry{Sample Size Given Desired Power}
+  %\VignetteIndexEntry{Sample Size Given Desired Power (Informal Bisection)}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 bibliography: references.bib
@@ -39,6 +39,21 @@ effect tested by Monte Carlo confidence
 interval as an example, though the
 procedure is similar for other tests
 supported by `power4test()`.
+
+NOTE: This is one version of two nearly-identical
+articles.
+This version introduces how to use
+the (informal) bisection
+algorithm [see @chalmers_solving_2024 for a review of this method]
+to identify the approximate sample size
+with a limited number of replications.
+The
+[other version](./x_from_power_for_n_pb.html)
+uses the probabilistic bisection algorithm
+[@waeber_bisection_2013], which sometimes
+takes longer to run but can be used for a
+higher level of precision using a larger
+number of replications.
 
 # Prerequisite
 

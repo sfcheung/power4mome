@@ -239,13 +239,13 @@ print.summary.x_from_power <- function(x,
   tmp0 <- switch(x$x,
                  n = ceiling(x$x_tried),
                  es = x$x_tried)
-  tmp <- formatC(sort(tmp0),
+  tmp <- formatC(range(tmp0),
                   digits = switch(x$x,
                                   n = 0,
                                   es = digits),
                   format = "f")
   cat("- The range of values explored:",
-      paste(range(tmp), collapse = " to "), "\n")
+      paste(tmp, collapse = " to "), "\n")
   cat("- Time spent in the search:",
       format(x$time_spent, digits = 4),
       "\n")

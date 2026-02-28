@@ -382,6 +382,14 @@
 #' equal to 1, then all groups have the
 #' same sample size.
 #'
+#' @param cl A cluster, such as one created
+#' by [parallel::makeCluster()]. If `NULL`,
+#' a cluster will be created, but will be
+#' stopped on exit. If set to an existing
+#' cluster, it will not be stopped when
+#' the function exits; users need to
+#' stop it manually.
+#'
 #' @return
 #' The function [sim_out()] returns
 #' a list of the class `sim_data`,
@@ -469,7 +477,8 @@ sim_data <- function(nrep = 10,
                      parallel = FALSE,
                      progress = FALSE,
                      ncores = max(1, parallel::detectCores(logical = FALSE) - 1),
-                     n_ratio = 1) {
+                     n_ratio = 1,
+                     cl = NULL) {
 
   if (is.null(ptable)) {
     if (is.null(model) || is.null(pop_es)) {
@@ -514,7 +523,8 @@ sim_data <- function(nrep = 10,
                 parallel = parallel,
                 progress = progress,
                 ncores = ncores,
-                n_ratio = n_ratio)
+                n_ratio = n_ratio,
+                cl = cl)
   class(out) <- c("sim_data", class(out))
   return(out)
 }

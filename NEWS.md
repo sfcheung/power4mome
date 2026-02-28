@@ -1,4 +1,4 @@
-# power4mome 0.1.1.44
+# power4mome 0.1.1.55
 
 - Improve the function for extending the
   initial interval before doing a
@@ -234,7 +234,7 @@
   before passing to `process_data`.
   (0.1.1.43)
 
-- Add `n_ratio` to `power4test()` and
+- Added `n_ratio` to `power4test()` and
   related functions to supporting
   controlling the sample sizes of
   multigroup models using one single
@@ -243,6 +243,82 @@
   `n_region_from_power()` to support
   multigroup models.
   (0.1.1.44)
+
+- `test_cond_indirect()` and
+  `test_cond_indirect_effects()` now
+  support multigroup models, although
+  `test_cond_indirect_effects()` only
+  support either a path with moderators
+  (`wlevels`) or a path between groups,
+  but not both.
+  (0.1.1.45)
+
+- Updated `test_cond_indirect_effects()`
+  to support computing and testing
+  group differences in indirect effects
+  for multigroup models.
+  (0.1.1.46)
+
+- Updated `test_parameters()` to support
+  doing likelihood ratio tests to
+  test constraining pairs of parameters
+  in multigroup models, by using the
+  argument `compare_groups`.
+  (0.1.1.47)
+
+- Added the argument `exclude_var` to
+  `test_parameters()` to exclude
+  variances and error variances.
+  (0.1.1.47)
+
+- Updated `power4test()` to support
+  updating a parameter in one group
+  when the population model is a
+  multigroup model. Use `"y ~ x.g2"`
+  to denote `"y ~ x"` in Group 2.
+  If the suffix is omitted, the parameter
+  is assumed to be in Group 1.
+  The function `power4test_by_es()` now
+  also support multigroup models due to
+  this change.
+  (0.1.1.48)
+
+- Added `test_group_equal()` for testing
+  equality constraints between groups.
+  (0.1.1.49)
+
+- The arguments in `control` is now
+  passed directly to the entry point
+  of the algorithms. Potential conflicts
+  due to partial matching should be
+  prevented inside these algorithms
+  (0.1.1.50)
+
+- Added the algorithm
+  `"probabilistic_bisection"` for
+  `x_from_power()` and friends.
+  (0.1.1.51)
+
+- Adjust the `initial_nrep` in
+  probabilistic bisection such that
+  the rejection rate will not be exactly
+  equal to the target power.
+  (0.1.1.52)
+
+- Test functions using `manymome` will
+  automatically use `"pvalues"` as the
+  test method if `R` is a value supported
+  by the Boos-Zhang method.
+  (0.1.1.53)
+
+- Fixed `fix_many_lm_model()` to handle
+  model syntax with a regression model
+  spanning more than one line and fitted
+  by `lm()`. (0.1.1.54)
+
+- Updated `power4test()` to make one
+  cluster that will be used in all stages.
+  (0.1.1.55)
 
 # power4mome 0.1.1
 

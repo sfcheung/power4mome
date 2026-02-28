@@ -356,7 +356,8 @@ syntax in the section `Model on Variables/Indicators`:
 ```{r show_mea, echo=FALSE}
 i1 <- which(grepl("fm =~", out_str))
 i2 <- which(grepl("fy =~", out_str))
-cat(out_str[i1:i2], sep = "\n")
+i3 <- which(grepl("fx =~", out_str))
+cat(out_str[c(i1, i2, i3)], sep = "\n")
 ```
 
 It confirmed that we specified the
@@ -549,7 +550,10 @@ limits
 for a power of .80 are about .04 below
 and above .80. This should be precise
 enough for determining whether a
-sample size has sufficient power.
+sample size has sufficient power. If
+a higher precision is desired, set
+`nrep` to 1000 or 2000 for the sample
+size to be used.
 
 This is the default printout:
 
@@ -719,6 +723,12 @@ find the sample size with the desired power.
 
 ## Using `n_region_from_power()`
 
+This is the recommended way for sample
+size planning, when there is no predetermined
+range of sample sizes, and time is not
+a concern in searching for the sample size
+with the target level of power.
+
 The function `n_region_from_power()`
 can be used to find the *region* of
 sample sizes likely to have the desired
@@ -731,16 +741,17 @@ out2_region <- n_region_from_power(out2,
                                    seed = 2345)
 ```
 
-This is the recommended way for sample
-size planning, when there is no predetermined
-range of sample sizes.
-
 See
 [the templates](https://sfcheung.github.io/power4mome/articles/)
 for examples on using `n_region_from_power()`
 for common models.
 
 ## Using `power4test_by_n()`
+
+This approach is used when the range of
+sample sizes has already been decided and
+the levels of power are needed to determine
+the final sample size.
 
 First, the function
 `power4test_by_n()` can be used To
@@ -769,7 +780,11 @@ to try, it is recommended to restrict the number
 of sample sizes to 5 or less.
 
 The argument `by_seed`, if set to an integer,
-try to make the results reproducible.
+tries to make the results reproducible.
+Note that reproducibility is always possible
+due to parallel processing. Use a larger
+`nrep` to ensure stability of the results
+if necessary.
 
 The call will take some time to run because
 it is equivalent to calling `power4test()`
@@ -783,14 +798,16 @@ too:
 rejection_rates(out_several_ns)
 ```
 
+The method `plot()` can also be used
+to plot the results:
+
+```{r power4test_latent_mediation_plot, fig.cap="Power by Sample Size", fig.align="center"}
+plot(out_several_ns)
+```
+
 The results show that, to have a power of
 about .800 to detect the mediation effect,
 a sample size of about 200 is needed.
-
-This approach is used when the range of
-sample sizes has already been decided and
-the levels of power are needed to determine
-the final sample size.
 
 Please refer to the
 help page of `power4test_by_n()`

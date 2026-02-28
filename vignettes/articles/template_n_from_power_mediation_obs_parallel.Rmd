@@ -1,6 +1,6 @@
 ---
 title: "Quick Template: Parallel Mediation with Observed Variables"
-date: "2026-02-07"
+date: "2026-02-28"
 output:
   html_document:
     fig.align: "center"
@@ -470,12 +470,12 @@ n_power_region
 #> Solution: 
 #> 
 #> Approximate region of sample sizes with power:
-#> - not significantly different from 0.800: 445 to 500
-#> - significantly lower than 0.800: 445
+#> - not significantly different from 0.800: 433 to 500
+#> - significantly lower than 0.800: 433
 #> - significantly higher than 0.800: 500
 #> 
 #> Confidence intervals of the estimated power:
-#> - for the lower bound (445): [0.743, 0.810]
+#> - for the lower bound (433): [0.750, 0.816]
 #> - for the upper bound (500): [0.793, 0.853]
 #> 
 #> Call `summary()` for detailed results.
@@ -495,7 +495,7 @@ plot(n_power_region)
 As shown above, approximately:
 
 - sample sizes lower than
-  445 have
+  433 have
   power significantly lower than .80, and
 
 - sample sizes higher than
@@ -503,7 +503,7 @@ As shown above, approximately:
   power significantly higher than .80.
 
 In other words, sample sizes between
-445 and
+433 and
 500 have
 power not significantly different from
 .80.
@@ -533,10 +533,10 @@ summary(n_power_region)
 #> 
 #> === Major Results ===
 #> 
-#> - Final Value (Sample Size): 445
+#> - Final Value (Sample Size): 433
 #> 
-#> - Final Estimated Power: 0.778 
-#> - Confidence Interval: [0.743; 0.810]
+#> - Final Estimated Power: 0.785 
+#> - Confidence Interval: [0.750; 0.816]
 #> - Level of confidence: 95.0%
 #> - Based on 600 replications.
 #> 
@@ -545,7 +545,7 @@ summary(n_power_region)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 200 to 650 
-#> - Time spent in the search: 4.593 mins 
+#> - Time spent in the search: 3.402 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -563,11 +563,11 @@ summary(n_power_region)
 #> 
 #> Coefficients:
 #> (Intercept)            x  
-#>   -1.289931     0.005615  
+#>   -1.296889     0.005747  
 #> 
-#> Degrees of Freedom: 3599 Total (i.e. Null);  3598 Residual
-#> Null Deviance:	    4187 
-#> Residual Deviance: 3814 	AIC: 3818
+#> Degrees of Freedom: 2999 Total (i.e. Null);  2998 Residual
+#> Null Deviance:	    3500 
+#> Residual Deviance: 3125 	AIC: 3129
 #> 
 #> - Detailed Results:
 #> 
@@ -576,10 +576,9 @@ summary(n_power_region)
 #>     n  est   p.v reject r.cilo r.cihi
 #> 1 200  NaN 1.000  0.457  0.417  0.497
 #> 2 350  NaN 1.000  0.670  0.631  0.706
-#> 3 440  NaN 1.000  0.747  0.710  0.780
-#> 4 445  NaN 1.000  0.778  0.743  0.810
-#> 5 500  NaN 1.000  0.825  0.793  0.853
-#> 6 650  NaN 1.000  0.913  0.888  0.933
+#> 3 433  NaN 1.000  0.785  0.750  0.816
+#> 4 500  NaN 1.000  0.825  0.793  0.853
+#> 5 650  NaN 1.000  0.913  0.888  0.933
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.
@@ -622,7 +621,7 @@ summary(n_power_region)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 200 to 650 
-#> - Time spent in the search: 0.8058 secs 
+#> - Time spent in the search: 0.5518 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -641,11 +640,11 @@ summary(n_power_region)
 #> 
 #> Coefficients:
 #> (Intercept)            x  
-#>   -1.289931     0.005615  
+#>   -1.296889     0.005747  
 #> 
-#> Degrees of Freedom: 3599 Total (i.e. Null);  3598 Residual
-#> Null Deviance:	    4187 
-#> Residual Deviance: 3814 	AIC: 3818
+#> Degrees of Freedom: 2999 Total (i.e. Null);  2998 Residual
+#> Null Deviance:	    3500 
+#> Residual Deviance: 3125 	AIC: 3129
 #> 
 #> - Detailed Results:
 #> 
@@ -654,10 +653,9 @@ summary(n_power_region)
 #>     n  est   p.v reject r.cilo r.cihi
 #> 1 200  NaN 1.000  0.457  0.417  0.497
 #> 2 350  NaN 1.000  0.670  0.631  0.706
-#> 3 440  NaN 1.000  0.747  0.710  0.780
-#> 4 445  NaN 1.000  0.778  0.743  0.810
-#> 5 500  NaN 1.000  0.825  0.793  0.853
-#> 6 650  NaN 1.000  0.913  0.888  0.933
+#> 3 433  NaN 1.000  0.785  0.750  0.816
+#> 4 500  NaN 1.000  0.825  0.793  0.853
+#> 5 650  NaN 1.000  0.913  0.888  0.933
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.

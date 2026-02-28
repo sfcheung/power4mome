@@ -259,5 +259,5 @@ R_extrapolate <- function(
   alpha2 <- alpha / 2
   tmp1 <- seq(1, Rmax)
   tmp2 <- (tmp1 + 1) * alpha2
-  tmp1[round(tmp2) == tmp2]
+  tmp1[round(tmp2) == round(tmp2, 8)]
 }

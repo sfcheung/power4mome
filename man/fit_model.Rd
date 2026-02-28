@@ -15,7 +15,8 @@ fit_model(
   fit_out = NULL,
   parallel = FALSE,
   progress = FALSE,
-  ncores = max(1, parallel::detectCores(logical = FALSE) - 1)
+  ncores = max(1, parallel::detectCores(logical = FALSE) - 1),
+  cl = NULL
 )
 }
 \arguments{
@@ -77,6 +78,14 @@ Default is `FALSE.}
 \item{ncores}{The number of CPU
 cores to use if parallel processing
 is used.}
+
+\item{cl}{A cluster, such as one created
+by \code{\link[parallel:makeCluster]{parallel::makeCluster()}}. If \code{NULL},
+a cluster will be created, but will be
+stopped on exit. If set to an existing
+cluster, it will not be stopped when
+the function exits; users need to
+stop it manually.}
 }
 \value{
 An object of the class \code{fit_out},

@@ -1,6 +1,6 @@
 ---
 title: "Quick Function: Simple Mediation with Latent Variables"
-date: "2026-02-07"
+date: "2026-02-28"
 output:
   html_document:
     fig.align: "center"
@@ -308,9 +308,9 @@ out_power
 #> m ~ x
 #> y ~ m + x
 #> 
-#> x =~ x1 + x2 + x3
 #> m =~ m1 + m2 + m3 + m4
 #> y =~ y1 + y2 + y3 + y4 + y5
+#> x =~ x1 + x2 + x3
 #> ====== Population Values ======
 #> 
 #> Regressions:
@@ -390,7 +390,7 @@ out_power
 #> 
 #> Mean(s) across replication:
 #>    est  cilo  cihi   sig pvalue
-#>  0.091 0.013 0.191 0.733  0.058
+#>  0.091 0.013 0.191 0.732  0.058
 #> 
 #> - The value 'sig' is the rejection rate.
 #> - If the null hypothesis is false, this is the power.
@@ -402,7 +402,7 @@ out_power
 #> [test]: test_indirect: x->m->y 
 #> [test_label]: Test 
 #>     est   p.v reject r.cilo r.cihi
-#> 1 0.091 1.000  0.733  0.697  0.767
+#> 1 0.091 1.000  0.732  0.695  0.766
 #> Notes:
 #> - p.v: The proportion of valid replications.
 #> - est: The mean of the estimates in a test across replications.
@@ -513,19 +513,19 @@ section from the output of `n_region_from_power()`:
 #> Solution: 
 #> 
 #> Approximate region of sample sizes with power:
-#> - not significantly different from 0.800: 218 to 247
-#> - significantly lower than 0.800: 218
-#> - significantly higher than 0.800: 247
+#> - not significantly different from 0.800: 219 to 240
+#> - significantly lower than 0.800: 219
+#> - significantly higher than 0.800: 240
 #> 
 #> Confidence intervals of the estimated power:
-#> - for the lower bound (218): [0.724, 0.792]
-#> - for the upper bound (247): [0.801, 0.861]
+#> - for the lower bound (219): [0.733, 0.800]
+#> - for the upper bound (240): [0.807, 0.866]
 #> 
 #> Call `summary()` for detailed results.
 ```
 
 In this example, the range of the sample
-size is 218 to 247.
+size is 219 to 240.
 
 The results can also be visualized using
 the `plot()` function:

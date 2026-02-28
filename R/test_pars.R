@@ -102,6 +102,18 @@
 #' are specified, only parameters meeting
 #' *both* requirements will be returned.
 #'
+#' @param exclude_var Logical. If `TRUE`,
+#' exclude variances and error variances
+#' from the test.
+#'
+#' @param compare_groups Logical. If `TRUE`,
+#' the likelihood ratio test (by [lavaan::lavTestLRT()])
+#' will be used to test the pairwise-equality
+#' constraints for all selected free
+#' parameters that appear in all groups.
+#' These tests will be reported instead of
+#' the tests for individual parameters.
+#'
 #' @param remove.nonfree Logical. If
 #' `TRUE`, the default, only free
 #' parameters will be returned. Ignored
@@ -178,6 +190,8 @@ test_parameters <- function(fit = fit,
                             op = NULL,
                             remove.nonfree = TRUE,
                             check_post_check = TRUE,
+                            exclude_var = FALSE,
+                            compare_groups = FALSE,
                             ...,
                             omnibus = c("no", "all_sig", "at_least_one_sig", "at_least_k_sig"),
                             at_least_k = 1,
@@ -189,9 +203,15 @@ test_parameters <- function(fit = fit,
   map_names <- c(fit = fit_name)
   args <- list(...)
   if (get_map_names) {
+
+    # ==== Return map_names ====
+
     return(map_names)
   }
   if (get_test_name) {
+
+    # ==== Prepare test_name ====
+
     tmp <- character(0)
     if (!is.null(pars)) {
       tmp0 <- paste0("pars: ",
@@ -215,12 +235,17 @@ test_parameters <- function(fit = fit,
     } else {
       tmp <- character(0)
     }
+
+    # ==== Return test_name ====
+
     if (standardized) {
       return(paste("test_parameters: CIs (standardized)", tmp))
     } else {
       return(paste("test_parameters: CIs", tmp))
     }
   }
+
+  # ==== Check the type of fit ====
 
   if (inherits(fit, "lm_list")) {
     fit_type <- "lm_list"
@@ -236,6 +261,8 @@ test_parameters <- function(fit = fit,
     }
   }
 
+  # ==== Is the lavaan fit OK? ====
+
   if (inherits(fit, "lavaan")) {
     fit_ok <- lavaan::lavInspect(fit, "converged") &&
               (suppressWarnings(lavaan::lavInspect(fit, "post.check") ||
@@ -244,6 +271,9 @@ test_parameters <- function(fit = fit,
     fit_ok <- TRUE
   }
   if (standardized) {
+
+    # ==== Standardized solution ====
+
     if (fit_type != "lavaan") {
       stop('Standardized solution supported only for `lavaan` output.')
     }
@@ -258,7 +288,13 @@ test_parameters <- function(fit = fit,
       est$se <- as.numeric(NA)
     }
   } else {
+
+    # ==== Raw solution ====
+
     if (fit_type == "lm_list") {
+
+       # ==== lm_list ====
+
       # TODO:
       # - Find a better way to handle level
       if (!is.null(args$level)) {
@@ -272,6 +308,9 @@ test_parameters <- function(fit = fit,
       est <- est[, c("lhs", "op", "rhs", "est", "se", "pvalue",
                      "ci.lower", "ci.upper")]
     } else {
+
+       # ==== lavaan ====
+
       est <- lavaan::parameterEstimates(object = fit,
                                         pvalue = TRUE,
                                         ci = TRUE,
@@ -286,6 +325,9 @@ test_parameters <- function(fit = fit,
       }
     }
   }
+
+  # ==== Fix the column names ====
+
   enames <- colnames(est)
   enames <- gsub("ci.lower",
                  "cilo",
@@ -303,6 +345,8 @@ test_parameters <- function(fit = fit,
   }
   colnames(est) <- enames
 
+  # ==== Handle sig based on fit_ok ====
+
   if (!fit_ok) {
     est$sig <- as.numeric(NA)
   } else {
@@ -313,6 +357,16 @@ test_parameters <- function(fit = fit,
   test_label <- lavaan::lav_partable_labels(est)
   out <- cbind(test_label = test_label,
                est)
+
+  # ==== Exclude variances and error variances? ====
+
+  if (exclude_var) {
+    i <- (out$lhs == out$rhs) & out$op == "~~"
+    out <- out[!i, ]
+  }
+
+  # ==== Find parameters using `op` ====
+
   if (!is.null(op)) {
     j <- which(out$op %in% op)
     if (!isTRUE(length(j) > 0)) {
@@ -320,6 +374,9 @@ test_parameters <- function(fit = fit,
     }
     out <- out[j, ]
   }
+
+  # ==== Find parameters using `pars` ====
+
   if (!is.null(pars)) {
     j <- out$test_label %in% pars
     if (!is.null(out$label)) {
@@ -331,18 +388,57 @@ test_parameters <- function(fit = fit,
     }
     out <- out[j, ]
   }
+
+  # ==== Compare groups? ====
+
+  if (compare_groups && (fit_type == "lavaan")) {
+    out <- constrain_all_parameters(
+              fit = fit,
+              est = out
+            )
+    if (!fit_ok) {
+      out$sig <- as.numeric(NA)
+    } else {
+      tmp_level <- args$level %||% formals(lavaan::parameterEstimates)$level
+      out$sig <- ifelse(out$pvalue < (1 - tmp_level),
+                        yes = 1,
+                        no = 0)
+    }
+    out$cilo <- NA
+    out$cihi <- NA
+    out <- cbind(test_label = paste0(lavaan::lav_partable_labels(out),
+                                     " (", out$gps, ")"),
+                 out)
+    out$gps <- NULL
+  }
+
+  # ==== Adjust p-values? ====
+
   if (p_adjust_method != "none") {
+
     out$pvalue_org <- out$pvalue
     out$pvalue <- stats::p.adjust(
                         out$pvalue_org,
                         method = p_adjust_method
                       )
   }
+
+  # ==== Omnibus test? ====
+
   if (omnibus == "no") {
+
+    # ==== No omnibus test ====
+
     attr(out, "test_label") <- "test_label"
+
+    # ==== Prepare the output ====
+
     class(out) <- class(est)
     return(out)
   } else {
+
+    # ==== Handle omnibus ====
+
     out2 <- out[1, ]
     out2[1, ] <- as.numeric(NA)
     tmp <- switch(omnibus,
@@ -359,6 +455,9 @@ test_parameters <- function(fit = fit,
     if (any(is.na(out2$sig))) {
       out2$sig <- as.numeric(NA)
     }
+
+    # ==== Prepare the output ====
+
     attr(out2, "test_label") <- "test_label"
     return(out2)
   }
@@ -391,4 +490,121 @@ find_par_names <- function(object,
     stop("Error in getting the coefficients.")
   }
   names(out)
+}
+
+#' @noRd
+# Find parameters that appear in all groups
+pars_to_compare <- function(est) {
+  est$pars_id <- seq_len(nrow(est))
+  # It is intentional not to use lavaan parameter labels
+  est$lor <- paste0(est$lhs, est$op, est$rhs)
+  pars_gp1 <- est$pars_id[est$group == 1]
+  pars_gp2 <- est$pars_id[est$group == 2]
+  pars_mg <- intersect(
+                est$lor[pars_gp1],
+                est$lor[pars_gp2]
+              )
+  pars_mg
+}
+
+#' @noRd
+# Test constraining lor to be equal across groups
+test_par_eq <- function(
+                  fit,
+                  lor,
+                  gpa,
+                  gpb) {
+  pt <- lavaan::parameterTable(fit)
+
+  # Need to fit locally because update() may not work
+  slot_opt <- fit@Options
+  slot_dat <- fit@Data
+
+  pt$lor <- paste0(pt$lhs, pt$op, pt$rhs)
+  i_a <- which((pt$lor == lor) & (pt$group == gpa))
+  i_b <- which((pt$lor == lor) & (pt$group == gpb))
+  plabel_i_a <- pt$plabel[i_a]
+  plabel_i_b <- pt$plabel[i_b]
+
+  pt0 <- lavaan::lav_partable_complete(
+            list(lhs = plabel_i_a,
+                 op = "==",
+                 rhs = plabel_i_b))
+  pt0 <- as.data.frame(pt0)
+  pt0$id <- max(pt$id) + 1
+  pt0$user <- 2
+  pt0$block <- 0
+  pt0$group <- 0
+  pt0$free <- 0
+
+  names_add <- setdiff(colnames(pt),
+                       colnames(pt0))
+  for (xx in names_add) {
+    pt0[, xx] <- NA
+  }
+  pt1 <- rbind(pt, pt0[, colnames(pt)])
+  pt1$lor <- NULL
+  pt1[pt0$id, "plabel"] <- ""
+
+  slot_opt$se = "none"
+
+  suppressWarnings(
+    fit_update <- lavaan::lavaan(
+            model = pt1,
+            slotOptions = slot_opt,
+            slotData = slot_dat
+          )
+  )
+
+  if (lavaan::lavInspect(fit, "converged") &&
+      (suppressWarnings(lavaan::lavInspect(fit, "post.check")))) {
+    suppressWarnings(
+      out <- lavaan::lavTestLRT(fit_update, fit)
+    )
+    est <- out[2, "Chisq diff"]
+    pvalue <- out[2, "Pr(>Chisq)"]
+  } else {
+    pvalue <- NA
+  }
+  out1 <- data.frame(lhs = pt$lhs[i_a],
+                     op = pt$op[i_a],
+                     rhs = pt$rhs[i_a],
+                     gps = paste0(gpa, "==", gpb),
+                     est = est,
+                     pvalue = pvalue)
+  out1
+}
+
+#' @noRd
+constrain_all_parameters <- function(
+  fit,
+  est
+) {
+  if (missing(est)) {
+    est <- lavaan::parameterEstimates(fit,
+                                      se = FALSE,
+                                      remove.nonfree = TRUE)
+  }
+  pars0 <- pars_to_compare(est)
+  ngroups <- lavaan::lavInspect(fit, "ngroups")
+  gp_all <- utils::combn(ngroups,
+                         m = 2,
+                         simplify = FALSE)
+  f <- function(gp_i,
+                fit,
+                pars0) {
+    out <- lapply(pars0,
+                  test_par_eq,
+                  fit = fit,
+                  gpa = gp_i[1],
+                  gpb = gp_i[2])
+    do.call(rbind,
+            out)
+  }
+  out <- lapply(gp_all,
+                f,
+                fit = fit,
+                pars0 = pars0)
+  do.call(rbind,
+          out)
 }

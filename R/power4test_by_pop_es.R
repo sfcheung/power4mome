@@ -143,9 +143,9 @@ power4test_by_es <- function(object,
   if (inherits(object, "power4test_by_es")) {
     object <- object[[1]]
   }
-  if (!is.null(object$sim_all[[1]]$group_name)) {
-    stop("Does not support multigroup models for now.")
-  }
+  # if (!is.null(object$sim_all[[1]]$group_name)) {
+  #   stop("Does not support multigroup models for now.")
+  # }
   if (is.null(pop_es_name) || is.null(pop_es_values)) {
     stop("Both 'pop_es_name' and 'pop_es_values' must be set.")
   }

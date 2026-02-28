@@ -18,11 +18,14 @@ setwd(paste0(base_dir, "/vignettes/articles/"))
 
 
 knitr::knit("x_from_power_for_n_known_difficult_cases.Rmd.original", output = "x_from_power_for_n_known_difficult_cases.Rmd", envir = new.env())
+knitr::knit("x_from_power_for_n_known_difficult_cases_pba.Rmd.original", output = "x_from_power_for_n_known_difficult_cases_pba.Rmd", envir = new.env())
 knitr::knit("x_from_power_for_n_test_printout.Rmd.original", output = "x_from_power_for_n_test_printout.Rmd", envir = new.env())
 # file:///C:/GitHub/power4mome/docs/articles/x_from_power_for_n_test_printout.html
 
 knitr::knit("x_from_power_for_n.Rmd.original", output = "x_from_power_for_n.Rmd", envir = new.env())
 knitr::knit("x_from_power_for_es.Rmd.original", output = "x_from_power_for_es.Rmd", envir = new.env())
+
+knitr::knit("x_from_power_for_n_pb.Rmd.original", output = "x_from_power_for_n_pb.Rmd", envir = new.env())
 
 knitr::knit("template_q_med_obs_simple.Rmd.original", output = "template_q_med_obs_simple.Rmd", envir = new.env())
 knitr::knit("template_q_med_obs_serial.Rmd.original", output = "template_q_med_obs_serial.Rmd", envir = new.env())

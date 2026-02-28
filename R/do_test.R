@@ -260,6 +260,14 @@
 #' cores to use if parallel processing
 #' is used.
 #'
+#' @param cl A cluster, such as one created
+#' by [parallel::makeCluster()]. If `NULL`,
+#' a cluster will be created, but will be
+#' stopped on exit. If set to an existing
+#' cluster, it will not be stopped when
+#' the function exits; users need to
+#' stop it manually.
+#'
 #' @examples
 #'
 #' # Specify the population model
@@ -329,7 +337,8 @@ do_test <- function(sim_all,
                     results_args = list(),
                     parallel = FALSE,
                     progress = FALSE,
-                    ncores = max(1, parallel::detectCores(logical = FALSE) - 1)) {
+                    ncores = max(1, parallel::detectCores(logical = FALSE) - 1),
+                    cl = NULL) {
   out <- do_FUN(X = sim_all,
                 FUN = do_test_i,
                 test_fun = test_fun,
@@ -339,7 +348,8 @@ do_test <- function(sim_all,
                 results_args = results_args,
                 parallel = parallel,
                 progress = progress,
-                ncores = ncores)
+                ncores = ncores,
+                cl = cl)
 
   attr(out, "test_fun") <- test_fun
   attr(out, "test_args") <- test_args
