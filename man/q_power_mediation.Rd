@@ -29,10 +29,10 @@ q_power_mediation(
   simulation_progress = NULL,
   max_trials = NULL,
   ...,
-  mode = c("power", "region", "target_power")
+  mode = c("power", "region", "n")
 )
 
-\method{print}{q_power_mediation}(x, mode = c("all", "region", "power"), ...)
+\method{print}{q_power_mediation}(x, mode = c("all", "region", "n", "power"), ...)
 
 \method{plot}{q_power_mediation}(x, ...)
 
@@ -57,7 +57,7 @@ q_power_mediation_simple(
   simulation_progress = NULL,
   max_trials = NULL,
   ...,
-  mode = c("power", "region", "target_power")
+  mode = c("power", "region", "n")
 )
 
 q_power_mediation_serial(
@@ -79,7 +79,7 @@ q_power_mediation_serial(
   simulation_progress = NULL,
   max_trials = NULL,
   ...,
-  mode = c("power", "region", "target_power")
+  mode = c("power", "region", "n")
 )
 
 q_power_mediation_parallel(
@@ -103,7 +103,7 @@ q_power_mediation_parallel(
   simulation_progress = NULL,
   max_trials = NULL,
   ...,
-  mode = c("power", "region", "target_power")
+  mode = c("power", "region", "n")
 )
 }
 \arguments{
@@ -243,10 +243,14 @@ be passed to \code{\link[=summary.n_region_from_power]{summary.n_region_from_pow
 \item{mode}{What to print. If \code{"region"}
 and the output of \code{\link[=n_region_from_power]{n_region_from_power()}}
 is available, it will print the results
-of \code{\link[=n_region_from_power]{n_region_from_power()}}.
+of \code{\link[=n_region_from_power]{n_region_from_power()}} if available.
+If \code{"n"}, then the output of
+\code{\link[=n_from_power]{n_from_power()}} will be printed if
+available.
 If \code{"power"}, then the output of
-\code{\link[=power4test]{power4test()}} will be printed. If
-\code{"all"}, then all available output
+\code{\link[=power4test]{power4test()}} will be printed.
+If
+\code{"all"}, then all available outputs
 will be printed.}
 
 \item{x}{The object
@@ -319,11 +323,16 @@ significant. Used when
 \code{omnibus} is \code{"at_least_k_sig"}.}
 }
 \value{
+A named list of outputs.
 If \code{mode} is \code{power}, then a
-\code{power4test} object is returned.
+\code{power4test} object is set to the
+element \code{power4test}.
 If \code{mode} is \code{region}, then a
 \code{n_region_from_power} object is
-returned.
+set of the element \code{n_region_from_power}.
+If \code{mode} is \code{n_from_power}, then a
+\code{n_from_power} object is
+set to the \code{n_from_power} element.
 
 The \code{print} method of \code{q_power_mediation}
 returns \code{x} invisibly. Called for
