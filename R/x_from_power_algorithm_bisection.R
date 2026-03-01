@@ -1177,7 +1177,8 @@ extend_interval <- function(f,
       lower <- max(lower_hard,
                    ifelse(x_type == "n",
                           floor(lower * tmp),
-                          lower * tmp))
+                          lower * tmp),
+                   na.rm = TRUE)
       lower <- force_new_x(
                     lower,
                     x_tried = c(get_x_tried(object = by_x_1,
@@ -1197,7 +1198,8 @@ extend_interval <- function(f,
       upper <- min(upper_hard,
                    ifelse(x_type == "n",
                           floor(upper * tmp),
-                          upper * tmp))
+                          upper * tmp),
+                   na.rm = TRUE)
       upper <- force_new_x(
                     upper,
                     x_tried = c(get_x_tried(object = by_x_1,
@@ -1218,11 +1220,13 @@ extend_interval <- function(f,
       upper <- min(upper_hard,
                    ifelse(x_type == "n",
                           floor(upper * tmp_upper),
-                          upper * tmp_upper))
+                          upper * tmp_upper),
+                   na.rm = TRUE)
       lower <- max(lower_hard,
                    ifelse(x_type == "n",
                           floor(lower * tmp_lower),
-                          lower * tmp_lower))
+                          lower * tmp_lower),
+                   na.rm = TRUE)
       upper <- force_new_x(
                     upper,
                     x_tried = c(get_x_tried(object = by_x_1,
