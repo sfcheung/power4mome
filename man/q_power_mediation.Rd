@@ -26,10 +26,10 @@ q_power_mediation(
   iseed = NULL,
   parallel = TRUE,
   progress = TRUE,
-  simulation_progress = TRUE,
-  max_trials = 10,
+  simulation_progress = NULL,
+  max_trials = NULL,
   ...,
-  mode = c("power", "region")
+  mode = c("power", "region", "target_power")
 )
 
 \method{print}{q_power_mediation}(x, mode = c("all", "region", "power"), ...)
@@ -54,10 +54,10 @@ q_power_mediation_simple(
   iseed = NULL,
   parallel = TRUE,
   progress = TRUE,
-  simulation_progress = TRUE,
-  max_trials = 10,
+  simulation_progress = NULL,
+  max_trials = NULL,
   ...,
-  mode = c("power", "region")
+  mode = c("power", "region", "target_power")
 )
 
 q_power_mediation_serial(
@@ -76,10 +76,10 @@ q_power_mediation_serial(
   iseed = NULL,
   parallel = TRUE,
   progress = TRUE,
-  simulation_progress = TRUE,
-  max_trials = 10,
+  simulation_progress = NULL,
+  max_trials = NULL,
   ...,
-  mode = c("power", "region")
+  mode = c("power", "region", "target_power")
 )
 
 q_power_mediation_parallel(
@@ -100,10 +100,10 @@ q_power_mediation_parallel(
   iseed = NULL,
   parallel = TRUE,
   progress = TRUE,
-  simulation_progress = TRUE,
-  max_trials = 10,
+  simulation_progress = NULL,
+  max_trials = NULL,
   ...,
-  mode = c("power", "region")
+  mode = c("power", "region", "target_power")
 )
 }
 \arguments{

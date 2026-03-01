@@ -115,11 +115,17 @@
 #' need to set `test_args` correctly
 #'
 #' @return
+#' A named list of outputs.
 #' If `mode` is `power`, then a
-#' `power4test` object is returned.
+#' `power4test` object is set to the
+#' element `power4test`.
 #' If `mode` is `region`, then a
 #' `n_region_from_power` object is
-#' returned.
+#' set of the element `n_region_from_power`.
+#' If `mode` is `n_from_power`, then a
+#' `n_from_power` object is
+#' set to the `n_from_power` element.
+
 #'
 #' @inheritParams power4test
 #' @inheritParams n_region_from_power
@@ -248,10 +254,10 @@ q_power_mediation <- function(
   iseed = NULL,
   parallel = TRUE,
   progress = TRUE,
-  simulation_progress = TRUE,
-  max_trials = 10,
+  simulation_progress = NULL,
+  max_trials = NULL,
   ...,
-  mode = c("power", "region")
+  mode = c("power", "region", "n")
 ) {
   # A general quick functions for other
   # wrappers.
@@ -266,6 +272,10 @@ q_power_mediation <- function(
                             "will be estimated."),
               region = paste("The region of sample sizes",
                              "for a power of",
+                              sprintf("%3.2f", target_power),
+                             "will be searched."),
+              n = paste("A sample size",
+                             "with estimated power close to",
                               sprintf("%3.2f", target_power),
                              "will be searched.")
     )
@@ -304,6 +314,9 @@ q_power_mediation <- function(
 
   n_region_from_power_args <- names(formals(n_region_from_power))
   ddd_n_from_region <- ddd[names(ddd) %in% n_region_from_power_args]
+
+  n_from_power_args <- names(formals(n_from_power))
+  ddd_n_from_power <- ddd[names(ddd) %in% n_from_power_args]
 
   # No need. This is the new default behavior of n_from_region
   # if (is.null(ddd_n_from_region$final_nrep)) {
@@ -380,8 +393,34 @@ q_power_mediation <- function(
     out2 <- NULL
   }
 
+  # ==== Find the n ====
+
+  if (mode == "n") {
+
+    n_args <- list(
+              object = out,
+              target_power = target_power,
+              progress = progress,
+              simulation_progress = simulation_progress,
+              max_trials = max_trials,
+              seed = seed
+            )
+
+    n_args <- utils::modifyList(
+                  n_args,
+                  ddd_n_from_power
+                )
+    out3 <- do.call(
+              n_from_power,
+              n_args
+            )
+  } else {
+    out3 <- NULL
+  }
+
   outz <- list(power4test = out,
-               n_region_from_power = out2)
+               n_region_from_power = out2,
+               n_from_power = out3)
   class(outz) <- c("q_power_mediation",
                    class(outz))
   outz
@@ -393,10 +432,14 @@ q_power_mediation <- function(
 #' @param mode What to print. If `"region"`
 #' and the output of [n_region_from_power()]
 #' is available, it will print the results
-#' of [n_region_from_power()].
+#' of [n_region_from_power()] if available.
+#' If `"n"`, then the output of
+#' [n_from_power()] will be printed if
+#' available.
 #' If `"power"`, then the output of
-#' [power4test()] will be printed. If
-#' `"all"`, then all available output
+#' [power4test()] will be printed.
+#' If
+#' `"all"`, then all available outputs
 #' will be printed.
 #'
 #' @return
@@ -408,7 +451,7 @@ q_power_mediation <- function(
 #' @export
 print.q_power_mediation <- function(
   x,
-  mode = c("all", "region", "power"),
+  mode = c("all", "region", "n", "power"),
   ...
 ) {
   mode <- match.arg(mode)
@@ -428,11 +471,24 @@ print.q_power_mediation <- function(
   # ==== Print n_region_from_power ====
 
   if (mode %in% c("region", "all")) {
-    cat("\n========== n_region_from_power Results ==========\n\n")
     if (is.null(x$n_region_from_power)) {
-      cat("\n'mode' is not 'region' and results not available.\n\n")
+      # cat("\n'mode' is not 'region' and results not available.\n\n")
     } else {
+      cat("\n========== n_region_from_power Results ==========\n\n")
       print(x$n_region_from_power,
+            ...)
+    }
+  }
+
+  # ==== Print n_from_power ====
+
+  if (mode %in% c("n", "all")) {
+    if (is.null(x$n_from_power)) {
+      # cat("\n'mode' is not 'n_from_power' and results not available.\n\n")
+    } else {
+      cat("\n========== n_from_power Results ==========\n\n")
+      print(x$n_from_power,
+            call = FALSE,
             ...)
     }
   }
@@ -475,12 +531,18 @@ plot.q_power_mediation <- function(
 summary.q_power_mediation <- function(
                                 object,
                                 ...) {
-  if (is.null(object$n_region_from_power)) {
-    stop("'mode' is not 'region' and summary cannot be generated.")
+  if (!is.null(object$n_region_from_power)) {
+    # stop("'mode' is not 'region' and summary cannot be generated.")
+    out <- summary(object$n_region_from_power,
+                  ...)
+    out
   }
-  out <- summary(object$n_region_from_power,
-                 ...)
-  out
+  if (!is.null(object$n_from_power)) {
+    # stop("'mode' is not 'region' and summary cannot be generated.")
+    out <- summary(object$n_from_power,
+                   ...)
+    out
+  }
 }
 
 #' @param a For a simple mediation
@@ -541,10 +603,10 @@ q_power_mediation_simple <- function(
   iseed = NULL,
   parallel = TRUE,
   progress = TRUE,
-  simulation_progress = TRUE,
-  max_trials = 10,
+  simulation_progress = NULL,
+  max_trials = NULL,
   ...,
-  mode = c("power", "region")
+  mode = c("power", "region", "n")
 ) {
 
   # ==== Setup the model =====
@@ -690,10 +752,10 @@ q_power_mediation_serial <- function(
   iseed = NULL,
   parallel = TRUE,
   progress = TRUE,
-  simulation_progress = TRUE,
-  max_trials = 10,
+  simulation_progress = NULL,
+  max_trials = NULL,
   ...,
-  mode = c("power", "region")
+  mode = c("power", "region", "n")
 ) {
 
   # ==== Setup the model =====
@@ -908,10 +970,10 @@ q_power_mediation_parallel <- function(
   iseed = NULL,
   parallel = TRUE,
   progress = TRUE,
-  simulation_progress = TRUE,
-  max_trials = 10,
+  simulation_progress = NULL,
+  max_trials = NULL,
   ...,
-  mode = c("power", "region")
+  mode = c("power", "region", "n")
 ) {
 
   omnibus <- match.arg(omnibus)
