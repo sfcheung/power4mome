@@ -830,7 +830,7 @@ power_algorithm_prob_bisection <- function(
     ok_lower <- tmp["ok_lower"]
     ok_upper <- tmp["ok_upper"]
 
-    if ((interval_updated$extend_status != 0) &&
+    if ((interval_updated$extend_status > 0) &&
         (!ok_lower && !ok_upper)) {
 
       # ==== No solution and interval invalid. Skip the search ====
