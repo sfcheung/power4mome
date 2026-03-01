@@ -282,7 +282,9 @@ power_algorithm_prob_bisection <- function(
                                           n = TRUE,
                                           NULL),
                     rollback = TRUE,
-                    bz = TRUE)
+                    bz = TRUE,
+                    min_interval_width = c(n = 100,
+                                           es = .20))
   variants <- utils::modifyList(variants0,
                                 variants)
   if (is.null(variants$hdr_prob)) {
@@ -685,7 +687,7 @@ power_algorithm_prob_bisection <- function(
                                         R = R,
                                         what = f_what,
                                         goal = f_goal,
-                                        tol = tol,
+                                        tol = -Inf,
                                         simulation_progress = simulation_progress,
                                         save_sim_all = save_sim_all,
                                         progress = extend_progress,
@@ -703,10 +705,12 @@ power_algorithm_prob_bisection <- function(
                                         digits = digits,
                                         store_output = TRUE,
                                         overshoot = switch(x,
-                                                           n = .5,
-                                                           es = .05),
+                                                           n = 1,
+                                                           es = .10),
                                         variants = variants,
-                                        proxy_power = proxy_power)
+                                        proxy_power = proxy_power,
+                                        extend_only = TRUE
+                                        )
     by_x_1 <- interval_updated$by_x_1 %||% by_x_1
     ci_hit <- FALSE
     solution_found <- FALSE
@@ -1038,8 +1042,10 @@ power_algorithm_prob_bisection <- function(
         # ==== New output ====
         if (do_final_check) {
           tmp_R <- final_R
+          tmp_sim_progress <- progress
         } else {
           tmp_R <- R
+          tmp_sim_progress <- simulation_progress
         }
         out_i <- f(
                   x_i = x_i,
@@ -1053,7 +1059,7 @@ power_algorithm_prob_bisection <- function(
                   nrep = nrep_i,
                   R = tmp_R,
                   what = f_what,
-                  simulation_progress = simulation_progress,
+                  simulation_progress = tmp_sim_progress,
                   save_sim_all = save_sim_all,
                   store_output = TRUE,
                   target_nrep = final_nrep,
@@ -1345,9 +1351,11 @@ power_algorithm_prob_bisection <- function(
         hdr_power_pb <- hdr_power_pb / sum(hdr_power_pb)
         hdr_power_dominant <- hdr_power_pb > .80
         hdr_power_dominant_i <- which(hdr_power_dominant)
-      } else {
+      } else if (length(hdr_power) == 1) {
         hdr_power_dominant <- TRUE
         hdr_power_dominant_i <- 1
+      } else {
+        hdr_power_dominant <- FALSE
       }
       terminate_hdr_power_tol <- FALSE
       if (any(hdr_power_dominant) &&
@@ -1376,32 +1384,61 @@ power_algorithm_prob_bisection <- function(
 
       # ==== Termination: last_k changes ====
 
+      terminate_change_ok_x <- FALSE
+      terminate_change_ok_f <- FALSE
+
       # Do this check even if doing a final check
-
-      if ((!changes_ok || !changes_ok_f) &&
-          (perturbation_count == 0)) {
-
-        status <- bisection_status_message(3, status)
-
+      # Not much change
+      # - A final check but not a solution? -> Perturbation
+      # - A final check and solution found? -> change_ok ignored
+      # - A PBA iteration -> Do a final check next
+      if (do_final_check) {
+        if (!ok) {
+          if (!changes_ok || !changes_ok_f) {
+            if (perturbation_count > 0) {
+              perturbation_count <- perturbation_count - 1
+              x_i <- x_i + delta_tol * 50 * z_i
+              x_i <- min(max(lower_i, x_i), upper_i)
+              x_i <- switch(
+                        x_type,
+                        n = ceiling(x_i),
+                        es = x_i
+                      )
+            } else {
+              status <- bisection_status_message(3, status)
+              terminate_change_ok_x <- !changes_ok
+              terminate_change_ok_f <- !changes_ok_f
+            }
+          }
+        }
+      } else {
         terminate_change_ok_x <- !changes_ok
         terminate_change_ok_f <- !changes_ok_f
-
-      } else if ((!changes_ok || !changes_ok_f) &&
-                 !ok &&
-                 do_final_check) {
-        # If not a solution, then the next iteration is a PBA iteration
-        perturbation_count <- perturbation_count - 1
-        x_i <- x_i + delta_tol * 50 * z_i
-        x_i <- min(max(lower_i, x_i), upper_i)
-        # x_i <- q_dfun(dfun_i,
-        #               prob = runif(1, -.10, .10) +
-        #                      sample(c(.30, .70), size = 1))
-        x_i <- switch(
-                  x_type,
-                  n = ceiling(x_i),
-                  es = x_i
-                )
       }
+      # if ((!changes_ok || !changes_ok_f) &&
+      #     (perturbation_count == 0)) {
+
+      #   status <- bisection_status_message(3, status)
+
+      #   terminate_change_ok_x <- !changes_ok
+      #   terminate_change_ok_f <- !changes_ok_f
+
+      # } else if ((!changes_ok || !changes_ok_f) &&
+      #            !ok &&
+      #            do_final_check) {
+      #   # If not a solution, then the next iteration is a PBA iteration
+      #   perturbation_count <- perturbation_count - 1
+      #   x_i <- x_i + delta_tol * 50 * z_i
+      #   x_i <- min(max(lower_i, x_i), upper_i)
+      #   # x_i <- q_dfun(dfun_i,
+      #   #               prob = runif(1, -.10, .10) +
+      #   #                      sample(c(.30, .70), size = 1))
+      #   x_i <- switch(
+      #             x_type,
+      #             n = ceiling(x_i),
+      #             es = x_i
+      #           )
+      # }
 
       # ==== Next i: Set nrep ====
 
