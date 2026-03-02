@@ -2000,68 +2000,74 @@ power_algorithm_prob_bisection_pre_i <- function(object,
 
   progress_type <- match.arg(progress_type)
 
-  # ==== Initial values ====
+  # PBA does not extend the range dynamically (for now).
+  # Moreover, the initial nrep is usually very small.
+  # Therefore, use x_interval as-is. Do not try a narrower interval.
 
-  # This method only needs an initial interval
-  if (inherits(object_by_org, "power4test_by_n") ||
-      inherits(object_by_org, "power4test_by_es")) {
-    x_i <- set_x_range_by_x(
-                      object,
-                      x = x,
-                      pop_es_name = pop_es_name,
-                      target_power = target_power,
-                      k = 2,
-                      x_max = x_max,
-                      x_min = x_min,
-                      object_by_org = object_by_org,
-                      what = what,
-                      goal = goal,
-                      tol = tol,
-                      ci_level = ci_level)
-  } else {
-    x_i <- set_x_range(object,
-                      x = x,
-                      pop_es_name = pop_es_name,
-                      target_power = target_power,
-                      k = 2,
-                      x_max = x_max,
-                      x_min = x_min)
-  }
+  x_i <- x_interval
 
-  # For bisection, no need to exclude the value in the input objects
-  # Exclude the value in the input object
+  # # ==== Initial values ====
 
-  # For bisection, only two initial values are needed
+  # # Inherited from bisection. Not used for now.
 
-  # ==== Set x_interval ====
+  # # This method only needs an initial interval
+  # if (inherits(object_by_org, "power4test_by_n") ||
+  #     inherits(object_by_org, "power4test_by_es")) {
+  #   x_i <- set_x_range_by_x(
+  #                     object,
+  #                     x = x,
+  #                     pop_es_name = pop_es_name,
+  #                     target_power = target_power,
+  #                     k = 2,
+  #                     x_max = x_max,
+  #                     x_min = x_min,
+  #                     object_by_org = object_by_org,
+  #                     what = what,
+  #                     goal = goal,
+  #                     tol = tol,
+  #                     ci_level = ci_level)
+  # } else {
+  #   x_i <- set_x_range(object,
+  #                     x = x,
+  #                     pop_es_name = pop_es_name,
+  #                     target_power = target_power,
+  #                     k = 2,
+  #                     x_max = x_max,
+  #                     x_min = x_min)
+  # }
 
-  if (x_include_interval) {
-    # For bisection, should exclude them initially,
-    # and let extend_interval() to do the job
-    x_i <- sort(c(x_interval, x_i))
-  }
-  x_i <- sort(unique(x_i))
-  if (length(x_i) == 1) {
-    x_interval_min <- min(x_interval)
-    x_interval_max <- max(x_interval)
-    if ((x_i < x_interval_min) ||
-        (x_i > x_interval_max)) {
-      x_i <- x_interval
-    } else {
-      tmp <- mean(x_interval)
-      if (x_i < tmp) {
-        x_i <- c(x_i, x_interval_max)
-      } else if (x_i > tmp) {
-        x_i <- c(x_i, x_interval_min)
-      } else {
-        x_i <- c(mean(c(x_i, x_interval_min)),
-                 mean(c(x_i, x_interval_max)))
-        x_i <- range(x_i)
-      }
-    }
-  } else {
-    x_i <- range(x_i)
-  }
+  # # For bisection, no need to exclude the value in the input objects
+  # # Exclude the value in the input object
+
+  # # ==== Set x_interval ====
+
+  # if (x_include_interval) {
+  #   # For bisection, should exclude them initially,
+  #   # and let extend_interval() to do the job
+  #   x_i <- sort(c(x_interval, x_i))
+  # }
+  # x_i <- sort(unique(x_i))
+  # if (length(x_i) == 1) {
+  #   x_interval_min <- min(x_interval)
+  #   x_interval_max <- max(x_interval)
+  #   if ((x_i < x_interval_min) ||
+  #       (x_i > x_interval_max)) {
+  #     x_i <- x_interval
+  #   } else {
+  #     tmp <- mean(x_interval)
+  #     if (x_i < tmp) {
+  #       x_i <- c(x_i, x_interval_max)
+  #     } else if (x_i > tmp) {
+  #       x_i <- c(x_i, x_interval_min)
+  #     } else {
+  #       x_i <- c(mean(c(x_i, x_interval_min)),
+  #                mean(c(x_i, x_interval_max)))
+  #       x_i <- range(x_i)
+  #     }
+  #   }
+  # } else {
+  #   x_i <- range(x_i)
+  # }
 
   # ==== Update by_x (by_x_i) ====
 
