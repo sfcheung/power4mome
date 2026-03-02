@@ -156,6 +156,14 @@
 #' processing will be used when calling
 #' other functions, if appropriate.
 #'
+#' @param algorithm The algorithm to be
+#' used in mode `"region"` and `"n"`.
+#' If `NULL`, then it will be determined
+#' internally based on the `mode`. (The
+#' default may be different from that
+#' of [n_region_from_power()] and
+#' [n_from_power()])
+#'
 #' @param ... For `q_power_mediation_*`,
 #' these are optional arguments to
 #' be passed to [power4test()] and
@@ -256,6 +264,7 @@ q_power_mediation <- function(
   progress = TRUE,
   simulation_progress = NULL,
   max_trials = NULL,
+  algorithm = NULL,
   ...,
   mode = c("power", "region", "n")
 ) {
@@ -367,6 +376,11 @@ q_power_mediation <- function(
 
   if (mode == "region") {
 
+    if (is.null(algorithm)) {
+      # Do not override the default, for now
+      algorithm <- NULL
+    }
+
     # Do this only if mode is not "power",
     # i.e., "region"
 
@@ -376,6 +390,7 @@ q_power_mediation <- function(
               progress = progress,
               simulation_progress = simulation_progress,
               max_trials = max_trials,
+              algorithm = algorithm,
               seed = seed
             )
 
@@ -397,12 +412,18 @@ q_power_mediation <- function(
 
   if (mode == "n") {
 
+    if (is.null(algorithm)) {
+      # Do not override the default, for now
+      algorithm <- "probabilistic_bisection"
+    }
+
     n_args <- list(
               object = out,
               target_power = target_power,
               progress = progress,
               simulation_progress = simulation_progress,
               max_trials = max_trials,
+              algorithm = algorithm,
               seed = seed
             )
 
@@ -605,6 +626,7 @@ q_power_mediation_simple <- function(
   progress = TRUE,
   simulation_progress = NULL,
   max_trials = NULL,
+  algorithm = NULL,
   ...,
   mode = c("power", "region", "n")
 ) {
@@ -688,6 +710,7 @@ q_power_mediation_simple <- function(
     progress = progress,
     simulation_progress = simulation_progress,
     max_trials = max_trials,
+    algorithm = algorithm,
     ...,
     mode = mode
   )
@@ -754,6 +777,7 @@ q_power_mediation_serial <- function(
   progress = TRUE,
   simulation_progress = NULL,
   max_trials = NULL,
+  algorithm = NULL,
   ...,
   mode = c("power", "region", "n")
 ) {
@@ -879,6 +903,7 @@ q_power_mediation_serial <- function(
     progress = progress,
     simulation_progress = simulation_progress,
     max_trials = max_trials,
+    algorithm = algorithm,
     ...,
     mode = mode
   )
@@ -972,6 +997,7 @@ q_power_mediation_parallel <- function(
   progress = TRUE,
   simulation_progress = NULL,
   max_trials = NULL,
+  algorithm = NULL,
   ...,
   mode = c("power", "region", "n")
 ) {
@@ -1078,6 +1104,7 @@ q_power_mediation_parallel <- function(
     progress = progress,
     simulation_progress = simulation_progress,
     max_trials = max_trials,
+    algorithm = algorithm,
     ...,
     mode = mode
   )

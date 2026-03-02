@@ -17,8 +17,7 @@ outp <- q_power_mediation_parallel(
     seed = 2345,
     mode = "n",
     progress = progress0,
-    parallel = TRUE,
-    algorithm = "probabilistic_bisection"
+    parallel = TRUE
   )
 )
 # plot(outp)

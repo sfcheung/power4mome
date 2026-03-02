@@ -28,6 +28,7 @@ q_power_mediation(
   progress = TRUE,
   simulation_progress = NULL,
   max_trials = NULL,
+  algorithm = NULL,
   ...,
   mode = c("power", "region", "n")
 )
@@ -56,6 +57,7 @@ q_power_mediation_simple(
   progress = TRUE,
   simulation_progress = NULL,
   max_trials = NULL,
+  algorithm = NULL,
   ...,
   mode = c("power", "region", "n")
 )
@@ -78,6 +80,7 @@ q_power_mediation_serial(
   progress = TRUE,
   simulation_progress = NULL,
   max_trials = NULL,
+  algorithm = NULL,
   ...,
   mode = c("power", "region", "n")
 )
@@ -102,6 +105,7 @@ q_power_mediation_parallel(
   progress = TRUE,
   simulation_progress = NULL,
   max_trials = NULL,
+  algorithm = NULL,
   ...,
   mode = c("power", "region", "n")
 )
@@ -222,6 +226,14 @@ with the target power. Rounded
 up if not an integer.
 If \code{NULL}, set automatically based
 on the algorithm used.}
+
+\item{algorithm}{The algorithm to be
+used in mode \code{"region"} and \code{"n"}.
+If \code{NULL}, then it will be determined
+internally based on the \code{mode}. (The
+default may be different from that
+of \code{\link[=n_region_from_power]{n_region_from_power()}} and
+\code{\link[=n_from_power]{n_from_power()}})}
 
 \item{...}{For \verb{q_power_mediation_*},
 these are optional arguments to

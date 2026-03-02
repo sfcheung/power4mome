@@ -17,8 +17,7 @@ out <- q_power_mediation_simple(
     seed = 1234,
     mode = "n",
     progress = progress0,
-    parallel = TRUE,
-    algorithm = "probabilistic_bisection"
+    parallel = TRUE
   )
 )
 expect_no_error(capture.output(print(out)))
