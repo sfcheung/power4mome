@@ -95,7 +95,7 @@ n_region_from_power(
     "none", alpha = 0.05)
 )
 
-\method{print}{x_from_power}(x, digits = 3, ...)
+\method{print}{x_from_power}(x, digits = 3, call = TRUE, ...)
 
 \method{print}{n_region_from_power}(x, digits = 3, ...)
 
@@ -322,6 +322,9 @@ settings in \code{object}.}
 \item{digits}{The number of digits
 after the decimal when printing
 the results.}
+
+\item{call}{Logical. Whether the
+call is printed.}
 
 \item{...}{Optional arguments.
 Not used for now.}

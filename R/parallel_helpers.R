@@ -49,10 +49,26 @@ do_FUN <- function(X,
                              cl = cl)
   } else {
     if (parallel) {
-      out <- parallel::parLapplyLB(cl = cl,
+
+      use_lb <- getOption("power4mome.use_lb", FALSE)
+
+      if (use_lb) {
+        # ==== load balancing ====
+        out <- parallel::parLapplyLB(cl = cl,
+                                     X = X,
+                                     fun = FUN,
+                                     ...)
+      } else {
+        # ==== No load balancing ====
+        out <- parallel::parLapply(cl = cl,
                                    X = X,
                                    fun = FUN,
                                    ...)
+      }
+      # out <- parallel::parLapplyLB(cl = cl,
+      #                              X = X,
+      #                              fun = FUN,
+      #                              ...)
     } else {
       out <- lapply(X = X,
                     FUN = FUN,

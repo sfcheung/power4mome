@@ -1612,6 +1612,9 @@ n_region_from_power <- function(
 #' after the decimal when printing
 #' the results.
 #'
+#' @param call Logical. Whether the
+#' call is printed.
+#'
 #' @param ... Optional arguments.
 #' Not used for now.
 #'
@@ -1631,10 +1634,13 @@ n_region_from_power <- function(
 #' @export
 print.x_from_power <- function(x,
                                digits = 3,
+                               call = TRUE,
                                ...) {
   my_call <- x$call
-  cat("Call:\n")
-  print(my_call)
+  if (call) {
+    cat("Call:\n")
+    print(my_call)
+  }
   if (!is.symbol(my_call$object)) {
     my_call$object <- as.symbol("<hidden>")
   }

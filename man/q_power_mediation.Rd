@@ -26,13 +26,14 @@ q_power_mediation(
   iseed = NULL,
   parallel = TRUE,
   progress = TRUE,
-  simulation_progress = TRUE,
-  max_trials = 10,
+  simulation_progress = NULL,
+  max_trials = NULL,
+  algorithm = NULL,
   ...,
-  mode = c("power", "region")
+  mode = c("power", "region", "n")
 )
 
-\method{print}{q_power_mediation}(x, mode = c("all", "region", "power"), ...)
+\method{print}{q_power_mediation}(x, mode = c("all", "region", "n", "power"), ...)
 
 \method{plot}{q_power_mediation}(x, ...)
 
@@ -54,10 +55,11 @@ q_power_mediation_simple(
   iseed = NULL,
   parallel = TRUE,
   progress = TRUE,
-  simulation_progress = TRUE,
-  max_trials = 10,
+  simulation_progress = NULL,
+  max_trials = NULL,
+  algorithm = NULL,
   ...,
-  mode = c("power", "region")
+  mode = c("power", "region", "n")
 )
 
 q_power_mediation_serial(
@@ -76,10 +78,11 @@ q_power_mediation_serial(
   iseed = NULL,
   parallel = TRUE,
   progress = TRUE,
-  simulation_progress = TRUE,
-  max_trials = 10,
+  simulation_progress = NULL,
+  max_trials = NULL,
+  algorithm = NULL,
   ...,
-  mode = c("power", "region")
+  mode = c("power", "region", "n")
 )
 
 q_power_mediation_parallel(
@@ -100,10 +103,11 @@ q_power_mediation_parallel(
   iseed = NULL,
   parallel = TRUE,
   progress = TRUE,
-  simulation_progress = TRUE,
-  max_trials = 10,
+  simulation_progress = NULL,
+  max_trials = NULL,
+  algorithm = NULL,
   ...,
-  mode = c("power", "region")
+  mode = c("power", "region", "n")
 )
 }
 \arguments{
@@ -223,6 +227,14 @@ up if not an integer.
 If \code{NULL}, set automatically based
 on the algorithm used.}
 
+\item{algorithm}{The algorithm to be
+used in mode \code{"region"} and \code{"n"}.
+If \code{NULL}, then it will be determined
+internally based on the \code{mode}. (The
+default may be different from that
+of \code{\link[=n_region_from_power]{n_region_from_power()}} and
+\code{\link[=n_from_power]{n_from_power()}})}
+
 \item{...}{For \verb{q_power_mediation_*},
 these are optional arguments to
 be passed to \code{\link[=power4test]{power4test()}} and
@@ -243,10 +255,14 @@ be passed to \code{\link[=summary.n_region_from_power]{summary.n_region_from_pow
 \item{mode}{What to print. If \code{"region"}
 and the output of \code{\link[=n_region_from_power]{n_region_from_power()}}
 is available, it will print the results
-of \code{\link[=n_region_from_power]{n_region_from_power()}}.
+of \code{\link[=n_region_from_power]{n_region_from_power()}} if available.
+If \code{"n"}, then the output of
+\code{\link[=n_from_power]{n_from_power()}} will be printed if
+available.
 If \code{"power"}, then the output of
-\code{\link[=power4test]{power4test()}} will be printed. If
-\code{"all"}, then all available output
+\code{\link[=power4test]{power4test()}} will be printed.
+If
+\code{"all"}, then all available outputs
 will be printed.}
 
 \item{x}{The object
@@ -319,26 +335,39 @@ significant. Used when
 \code{omnibus} is \code{"at_least_k_sig"}.}
 }
 \value{
+A named list of outputs.
 If \code{mode} is \code{power}, then a
-\code{power4test} object is returned.
+\code{power4test} object is set to the
+element \code{power4test}.
 If \code{mode} is \code{region}, then a
 \code{n_region_from_power} object is
-returned.
+set of the element \code{n_region_from_power}.
+If \code{mode} is \code{n_from_power}, then a
+\code{n_from_power} object is
+set to the \code{n_from_power} element.
 
 The \code{print} method of \code{q_power_mediation}
 returns \code{x} invisibly. Called for
 its side effect.
 
 The \code{plot}-method of \code{q_power_mediation}
-returns \code{x} invisibly.
-It is called for its side effect.
+returns \code{NULL}.
+It will plot either the output of
+\code{\link[=n_region_from_power]{n_region_from_power()}}
+(mode \code{"region"}) or the output of
+\code{\link[=n_from_power]{n_from_power()}} (mode \code{"n"}).
+If no output from
+either of these functions is available,
+nothing wil be plotted.
 
 The \code{summary} method for
 \code{q_power_mediation} objects returns
-the output of \code{\link[=summary.n_region_from_power]{summary.n_region_from_power()}}.
-An error is raised if the output
-of \code{\link[=n_region_from_power]{n_region_from_power()}} is not
-available.
+the output of \code{\link[=summary]{summary()}} for
+either the output of \code{\link[=n_region_from_power]{n_region_from_power()}}
+(mode \code{"region"}) or the output of
+\code{\link[=n_from_power]{n_from_power()}} (mode \code{"n"}).
+Return \code{NULL} if no output from
+either of these functions is available.
 }
 \description{
 All-in-one functions for
