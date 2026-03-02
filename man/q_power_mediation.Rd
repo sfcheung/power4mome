@@ -351,15 +351,23 @@ returns \code{x} invisibly. Called for
 its side effect.
 
 The \code{plot}-method of \code{q_power_mediation}
-returns \code{x} invisibly.
-It is called for its side effect.
+returns \code{NULL}.
+It will plot either the output of
+\code{\link[=n_region_from_power]{n_region_from_power()}}
+(mode \code{"region"}) or the output of
+\code{\link[=n_from_power]{n_from_power()}} (mode \code{"n"}).
+If no output from
+either of these functions is available,
+nothing wil be plotted.
 
 The \code{summary} method for
 \code{q_power_mediation} objects returns
-the output of \code{\link[=summary.n_region_from_power]{summary.n_region_from_power()}}.
-An error is raised if the output
-of \code{\link[=n_region_from_power]{n_region_from_power()}} is not
-available.
+the output of \code{\link[=summary]{summary()}} for
+either the output of \code{\link[=n_region_from_power]{n_region_from_power()}}
+(mode \code{"region"}) or the output of
+\code{\link[=n_from_power]{n_from_power()}} (mode \code{"n"}).
+Return \code{NULL} if no output from
+either of these functions is available.
 }
 \description{
 All-in-one functions for

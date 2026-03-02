@@ -519,8 +519,14 @@ print.q_power_mediation <- function(
 
 #' @return
 #' The `plot`-method of `q_power_mediation`
-#' returns `x` invisibly.
-#' It is called for its side effect.
+#' returns `NULL`.
+#' It will plot either the output of
+#' [n_region_from_power()]
+#' (mode `"region"`) or the output of
+#' [n_from_power()] (mode `"n"`).
+#' If no output from
+#' either of these functions is available,
+#' nothing wil be plotted.
 #'
 #' @rdname q_power_mediation
 #' @export
@@ -528,11 +534,16 @@ plot.q_power_mediation <- function(
   x,
   ...
 ) {
-  if (is.null(x$n_region_from_power)) {
-    stop("'mode' is not 'region' and nothing to plot.")
+  # x will have only one of the followings
+  if (!is.null(x$n_region_from_power)) {
+    plot(x$n_region_from_power,
+         ...)
   }
-  plot(x$n_region_from_power,
-       ...)
+  if (!is.null(x$n_from_power)) {
+    plot(x$n_from_power,
+         ...)
+  }
+  NULL
 }
 
 #' @param object For the `summary`
@@ -542,10 +553,12 @@ plot.q_power_mediation <- function(
 #' @return
 #' The `summary` method for
 #' `q_power_mediation` objects returns
-#' the output of [summary.n_region_from_power()].
-#' An error is raised if the output
-#' of [n_region_from_power()] is not
-#' available.
+#' the output of [summary()] for
+#' either the output of [n_region_from_power()]
+#' (mode `"region"`) or the output of
+#' [n_from_power()] (mode `"n"`).
+#' Return `NULL` if no output from
+#' either of these functions is available.
 #'
 #' @rdname q_power_mediation
 #' @export
@@ -555,15 +568,16 @@ summary.q_power_mediation <- function(
   if (!is.null(object$n_region_from_power)) {
     # stop("'mode' is not 'region' and summary cannot be generated.")
     out <- summary(object$n_region_from_power,
-                  ...)
-    out
+                   ...)
+    return(out)
   }
   if (!is.null(object$n_from_power)) {
     # stop("'mode' is not 'region' and summary cannot be generated.")
     out <- summary(object$n_from_power,
                    ...)
-    out
+    return(out)
   }
+  NULL
 }
 
 #' @param a For a simple mediation
