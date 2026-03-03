@@ -24,6 +24,7 @@ rejection_rates(object, ...)
   merge_all_tests = NULL,
   p_adjust_method = NULL,
   alpha = NULL,
+  keep_nrep = FALSE,
   ...
 )
 
@@ -33,6 +34,7 @@ rejection_rates(object, ...)
   ci = TRUE,
   level = 0.95,
   se = FALSE,
+  nrep_if_diff = TRUE,
   ...
 )
 
@@ -42,6 +44,7 @@ rejection_rates(object, ...)
   ci = TRUE,
   level = 0.95,
   se = FALSE,
+  nrep_if_diff = TRUE,
   ...
 )
 
@@ -140,6 +143,16 @@ adjusted \emph{p}-values. Used only if
 \code{p_adjust_method} is not \code{"none"}.
 If \code{NULL}, will use the value stored
 in \code{object} (default is .05).}
+
+\item{keep_nrep}{If \code{TRUE}, the column
+\code{nrep} will be kept.}
+
+\item{nrep_if_diff}{If \code{TRUE} and
+the numbers of replications across
+rows are different, \code{nrep} will be
+included in the output. If \code{FALSE},
+\code{nrep} will not be included unless
+\code{all_columns} is \code{TRUE}.}
 
 \item{x}{The \code{rejection_rates_df}
 object to be printed.}

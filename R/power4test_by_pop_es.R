@@ -330,6 +330,7 @@ rejection_rates_by_es <- function(object_by_es,
   tmpfct <- function(x) {
     out_i <- rejection_rates(x,
                              all_columns = all_columns,
+                             keep_nrep = nrep_if_diff,
                              ...)
     pn <- attr(x, "pop_es_name")
     pv <- attr(x, "pop_es_value")
@@ -355,7 +356,7 @@ rejection_rates_by_es <- function(object_by_es,
   if (nrep_if_diff &&
       !all_columns) {
     nrep_range <- try(suppressWarnings(diff(range(out$nrep, na.rm = TRUE))), silent = TRUE)
-    if (isTRUE(nrep_range == 0)) {
+    if (isFALSE(nrep_range > 1)) {
       out$nrep <- NULL
     }
   }

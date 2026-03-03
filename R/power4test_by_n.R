@@ -363,6 +363,7 @@ rejection_rates_by_n <- function(object_by_n,
   tmpfct <- function(x, n) {
     out_i <- rejection_rates(x,
                              all_columns = all_columns,
+                             keep_nrep = nrep_if_diff,
                              ...)
     out_i <- data.frame(n = n,
                         out_i)
@@ -386,7 +387,7 @@ rejection_rates_by_n <- function(object_by_n,
   if (nrep_if_diff &&
       !all_columns) {
     nrep_range <- try(suppressWarnings(diff(range(out$nrep, na.rm = TRUE))), silent = TRUE)
-    if (isTRUE(nrep_range == 0)) {
+    if (isFALSE(nrep_range > 1)) {
       out$nrep <- NULL
     }
   }

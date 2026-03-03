@@ -215,6 +215,9 @@ rejection_rates.default <- function(object,
 #' `nrep` will not be included unless
 #' `all_columns` is `TRUE`.
 #'
+#' @param keep_nrep If `TRUE`, the column
+#' `nrep` will be kept.
+#'
 #' @references
 #' Wilson, E. B. (1927). Probable inference, the law of
 #' succession, and statistical inference.
@@ -233,6 +236,7 @@ rejection_rates.power4test <- function(object,
                                        merge_all_tests = NULL,
                                        p_adjust_method = NULL,
                                        alpha = NULL,
+                                       keep_nrep = FALSE,
                                        ...) {
   stored_args <- attr(object, "args")$rejection_rates_args
   collapse <- collapse %||% (stored_args$collapse %||% "none")
@@ -261,7 +265,8 @@ rejection_rates.power4test <- function(object,
     out2 <- do.call(rbind,
                     out1)
   }
-  if (!all_columns) {
+  if (!all_columns &&
+      !keep_nrep) {
     out2$nrep <- NULL
   }
   rownames(out2) <- NULL
