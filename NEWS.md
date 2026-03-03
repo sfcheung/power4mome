@@ -1,4 +1,4 @@
-# power4mome 0.1.1.57
+# power4mome 0.1.1.58
 
 - Improve the function for extending the
   initial interval before doing a
@@ -354,6 +354,11 @@
 - The default values of `n` of q-functions
   now depends on the `mode` and `algorithm`.
   (0.1.1.57)
+
+- Added `pba_diagnosis()` to generate
+  plots related to the search history
+  of probabilistic bisection algorithm.
+  (0.1.1.58)
 
 # power4mome 0.1.1
 

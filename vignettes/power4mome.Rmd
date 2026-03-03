@@ -1,6 +1,6 @@
 ---
 title: "Power Analysis for Moderation, Mediation, and Moderated Mediation"
-date: "2026-02-28"
+date: "2026-03-03"
 output:
   rmarkdown::html_vignette:
     options:

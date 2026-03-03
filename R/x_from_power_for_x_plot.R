@@ -251,11 +251,14 @@ plot.x_from_power <- function(x,
 
   if (is.null(main)) {
     if (x$algorithm == "probabilistic_bisection") {
-      main <- paste0("Search History",
+      is_pba <- TRUE
+      main <- paste0("Search History ",
                      "(Target Power: ",
                      formatC(x$target_power, digits = digits, format = "f"),
                      ")")
    } else {
+      is_pba <- FALSE
+      override_for_pba <- FALSE
       main <- paste0("Power Curve ",
                      "(Target Power: ",
                      formatC(x$target_power, digits = digits, format = "f"),
@@ -263,13 +266,14 @@ plot.x_from_power <- function(x,
    }
   }
 
-  if ((x$algorithm == "probabilistic_bisection") &&
+  if (is_pba &&
       override_for_pba) {
     prop_of_trials <- prop_of_trials %||% .95
     min_trials_for_prop <- min_trials_for_prop %||% 20
   }
 
-  if (override_for_pba) {
+  if (is_pba &&
+      override_for_pba) {
     what <- setdiff(what, c("power_curve"))
   }
 
@@ -325,7 +329,8 @@ plot.x_from_power <- function(x,
   }
 
   if (is.null(args$lwd) &&
-      override_for_pba) {
+      override_for_pba &&
+      is_pba) {
     base_lwd <- .5
     base_lty <- "dotted"
   } else {
@@ -338,16 +343,18 @@ plot.x_from_power <- function(x,
   # It is intended *not* to use plot.power_curve().
   # It is possible that the fit failed.
 
+  args_tmp <- args
+  args_tmp$xlim <- NULL
   do.call(plot_power_x,
-          list(object = x$power4test_trials,
+          c(list(object = x$power4test_trials,
                predictor = predictor,
                main = main,
                xlab = xlab,
                ylab = ylab,
                xlim = base_xlim,
                lwd = base_lwd,
-               lty = base_lty,
-               ...))
+               lty = base_lty),
+            args_tmp))
 
   # === Add CIs?
 
@@ -374,7 +381,8 @@ plot.x_from_power <- function(x,
     }
 
     # Draw the other CIs
-    if (!override_for_pba) {
+    if (!override_for_pba ||
+        !is_pba) {
       tmp_args <- utils::modifyList(pars_ci,
                                     list(object = tmp_for_ci,
                                         predictor = predictor))

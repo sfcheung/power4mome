@@ -7,6 +7,7 @@
 \alias{print.x_from_power}
 \alias{print.n_region_from_power}
 \alias{arg_x_from_power}
+\alias{pba_diagnosis}
 \title{Sample Size and Effect Size Determination}
 \usage{
 x_from_power(
@@ -100,6 +101,12 @@ n_region_from_power(
 \method{print}{n_region_from_power}(x, digits = 3, ...)
 
 arg_x_from_power(object, arg, arg_in = NULL)
+
+pba_diagnosis(
+  a_out,
+  p_interval = c(0.05, 0.95),
+  posterior_xlim = c(0.01, 0.99)
+)
 }
 \arguments{
 \item{object}{A \code{power4test} object,
@@ -335,6 +342,22 @@ retrieve.}
 \item{arg_in}{The name of the element
 from which an element is to be
 retrieved.}
+
+\item{a_out}{The output of
+\code{\link[=x_from_power]{x_from_power()}} and friends. The
+algorithm used must be \code{"probabilistic_bisection"}.}
+
+\item{p_interval}{The range of
+the plot that "zooms" around the solution
+(or the median of in the final posterior
+probability distribution), expressed
+in terms of the area of the distribution.}
+
+\item{posterior_xlim}{The range of
+the first plot of search history and the
+plot of posterior probability distribution,
+expressed
+in terms of the area of the distribution.}
 }
 \value{
 The function \code{\link[=x_from_power]{x_from_power()}}
@@ -430,6 +453,10 @@ The function \code{\link[=arg_x_from_power]{arg_x_from_power()}}
 returns the requested argument if
 available. If not available, it
 returns \code{NULL}.
+
+The function \code{\link[=pba_diagnosis]{pba_diagnosis()}}
+returns \code{NULL} invisibly. Called for
+its side-effect.
 }
 \description{
 It searches by simulation
@@ -530,6 +557,15 @@ is a helper to set argument values
 if \code{object} is an output
 of \code{\link[=x_from_power]{x_from_power()}} or similar
 functions.
+
+The function \code{\link[=pba_diagnosis]{pba_diagnosis()}}
+generates simple diagnostic plots
+for the search history of probabilistic
+bisection algorithm. This function is for advanced users
+to examine the search history of
+the probabilistic bisection algorithm.
+It is for diagnostic purpose and has
+limited support for customizing the plots.
 }
 \section{Algorithms}{
 Two algorithms are currently available,
