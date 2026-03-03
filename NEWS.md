@@ -1,4 +1,4 @@
-# power4mome 0.1.1.56
+# power4mome 0.1.1.57
 
 - Improve the function for extending the
   initial interval before doing a
@@ -342,6 +342,18 @@
   algorithm for this mode. Other methods
   have been updated for this mode.
   (0.1.1.56)
+
+- For some functions, `nrep` will be included
+  in the output if its values vary across
+  rows. (0.1.1.57)
+
+- Increase `delta_tol` fo PBA (2 for `n`
+  and .002 for `es`).
+  (0.1.1.57)
+
+- The default values of `n` of q-functions
+  now depends on the `mode` and `algorithm`.
+  (0.1.1.57)
 
 # power4mome 0.1.1
 
