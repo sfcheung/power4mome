@@ -11,7 +11,7 @@ object or other supported objects."><meta property="og:image" content="https://s
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.55</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.57</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -98,6 +98,7 @@ object or other supported objects.</p>
 <span>  merge_all_tests <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  p_adjust_method <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  alpha <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  keep_nrep <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -108,6 +109,7 @@ object or other supported objects.</p>
 <span>  ci <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  level <span class="op">=</span> <span class="fl">0.95</span>,</span>
 <span>  se <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  nrep_if_diff <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -118,6 +120,7 @@ object or other supported objects.</p>
 <span>  ci <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  level <span class="op">=</span> <span class="fl">0.95</span>,</span>
 <span>  se <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  nrep_if_diff <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -242,6 +245,20 @@ adjusted <em>p</em>-values. Used only if
 <code>p_adjust_method</code> is not <code>"none"</code>.
 If <code>NULL</code>, will use the value stored
 in <code>object</code> (default is .05).</p></dd>
+
+
+<dt id="arg-keep-nrep">keep_nrep<a class="anchor" aria-label="anchor" href="#arg-keep-nrep"></a></dt>
+<dd><p>If <code>TRUE</code>, the column
+<code>nrep</code> will be kept.</p></dd>
+
+
+<dt id="arg-nrep-if-diff">nrep_if_diff<a class="anchor" aria-label="anchor" href="#arg-nrep-if-diff"></a></dt>
+<dd><p>If <code>TRUE</code> and
+the numbers of replications across
+rows are different, <code>nrep</code> will be
+included in the output. If <code>FALSE</code>,
+<code>nrep</code> will not be included unless
+<code>all_columns</code> is <code>TRUE</code>.</p></dd>
 
 
 <dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>

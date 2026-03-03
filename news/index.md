@@ -1,6 +1,6 @@
 # Changelog
 
-## power4mome 0.1.1.55
+## power4mome 0.1.1.57
 
 - Improve the function for extending the initial interval before doing a
   bisection search. (0.1.1.1)
@@ -231,8 +231,9 @@
   [`power4test_by_es()`](https://sfcheung.github.io/power4mome/reference/power4test_by_es.md)
   now also support multigroup models due to this change. (0.1.1.48)
 
-- Added `test_group_equal()` for testing equality constraints between
-  groups. (0.1.1.49)
+- Added
+  [`test_group_equal()`](https://sfcheung.github.io/power4mome/reference/test_group_equal.md)
+  for testing equality constraints between groups. (0.1.1.49)
 
 - The arguments in `control` is now passed directly to the entry point
   of the algorithms. Potential conflicts due to partial matching should
@@ -257,6 +258,30 @@
 - Updated
   [`power4test()`](https://sfcheung.github.io/power4mome/reference/power4test.md)
   to make one cluster that will be used in all stages. (0.1.1.55)
+
+- Load balancing is no longer used by default, to ensure the results are
+  reproducible. To enable load balancing, set the option
+  `"power4mome.use_lb"` to `TRUE` using
+  [`options()`](https://rdrr.io/r/base/options.html). (0.1.1.56)
+
+- For probabilistic bisection, the initial interval will no longer be
+  adjusted. This algorithm should e used with a wide enough initial
+  interval because the interval will not be adjusted during the search
+  (for now). (0.1.1.56)
+
+- Updated the quick functions
+  ([`q_power_mediation()`](https://sfcheung.github.io/power4mome/reference/q_power_mediation.md)
+  and friends) to have one more mode, `"n"`. Probabilistic bisection is
+  the default algorithm for this mode. Other methods have been updated
+  for this mode. (0.1.1.56)
+
+- For some functions, `nrep` will be included in the output if its
+  values vary across rows. (0.1.1.57)
+
+- Increase `delta_tol` fo PBA (2 for `n` and .002 for `es`). (0.1.1.57)
+
+- The default values of `n` of q-functions now depends on the `mode` and
+  `algorithm`. (0.1.1.57)
 
 ## power4mome 0.1.1
 

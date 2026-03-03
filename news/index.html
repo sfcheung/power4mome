@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.55</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.57</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -69,7 +69,7 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.1.1.55" id="power4mome-01155">power4mome 0.1.1.55<a class="anchor" aria-label="anchor" href="#power4mome-01155"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.1.1.57" id="power4mome-01157">power4mome 0.1.1.57<a class="anchor" aria-label="anchor" href="#power4mome-01157"></a></h2>
 <ul><li><p>Improve the function for extending the initial interval before doing a bisection search. (0.1.1.1)</p></li>
 <li><p>Changed the default method for rejection rate confidence intervals to Wilson’s (1927) method. For backward compatibility, use <code>options(power4mome.ci_method = "norm")</code> to set the default method to normal approximation. (0.1.1.2)</p></li>
 <li><p>Added the <code>test_method</code> argument for tests of indirect effects and their variants to use asymmetric <em>p</em>-values to do the tests. (0.1.1.3)</p></li>
@@ -119,13 +119,19 @@
 <li><p>Updated <code><a href="../reference/test_parameters.html">test_parameters()</a></code> to support doing likelihood ratio tests to test constraining pairs of parameters in multigroup models, by using the argument <code>compare_groups</code>. (0.1.1.47)</p></li>
 <li><p>Added the argument <code>exclude_var</code> to <code><a href="../reference/test_parameters.html">test_parameters()</a></code> to exclude variances and error variances. (0.1.1.47)</p></li>
 <li><p>Updated <code><a href="../reference/power4test.html">power4test()</a></code> to support updating a parameter in one group when the population model is a multigroup model. Use <code>"y ~ x.g2"</code> to denote <code>"y ~ x"</code> in Group 2. If the suffix is omitted, the parameter is assumed to be in Group 1. The function <code><a href="../reference/power4test_by_es.html">power4test_by_es()</a></code> now also support multigroup models due to this change. (0.1.1.48)</p></li>
-<li><p>Added <code>test_group_equal()</code> for testing equality constraints between groups. (0.1.1.49)</p></li>
+<li><p>Added <code><a href="../reference/test_group_equal.html">test_group_equal()</a></code> for testing equality constraints between groups. (0.1.1.49)</p></li>
 <li><p>The arguments in <code>control</code> is now passed directly to the entry point of the algorithms. Potential conflicts due to partial matching should be prevented inside these algorithms (0.1.1.50)</p></li>
 <li><p>Added the algorithm <code>"probabilistic_bisection"</code> for <code><a href="../reference/x_from_power.html">x_from_power()</a></code> and friends. (0.1.1.51)</p></li>
 <li><p>Adjust the <code>initial_nrep</code> in probabilistic bisection such that the rejection rate will not be exactly equal to the target power. (0.1.1.52)</p></li>
 <li><p>Test functions using <code>manymome</code> will automatically use <code>"pvalues"</code> as the test method if <code>R</code> is a value supported by the Boos-Zhang method. (0.1.1.53)</p></li>
 <li><p>Fixed <code>fix_many_lm_model()</code> to handle model syntax with a regression model spanning more than one line and fitted by <code><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm()</a></code>. (0.1.1.54)</p></li>
 <li><p>Updated <code><a href="../reference/power4test.html">power4test()</a></code> to make one cluster that will be used in all stages. (0.1.1.55)</p></li>
+<li><p>Load balancing is no longer used by default, to ensure the results are reproducible. To enable load balancing, set the option <code>"power4mome.use_lb"</code> to <code>TRUE</code> using <code><a href="https://rdrr.io/r/base/options.html" class="external-link">options()</a></code>. (0.1.1.56)</p></li>
+<li><p>For probabilistic bisection, the initial interval will no longer be adjusted. This algorithm should e used with a wide enough initial interval because the interval will not be adjusted during the search (for now). (0.1.1.56)</p></li>
+<li><p>Updated the quick functions (<code><a href="../reference/q_power_mediation.html">q_power_mediation()</a></code> and friends) to have one more mode, <code>"n"</code>. Probabilistic bisection is the default algorithm for this mode. Other methods have been updated for this mode. (0.1.1.56)</p></li>
+<li><p>For some functions, <code>nrep</code> will be included in the output if its values vary across rows. (0.1.1.57)</p></li>
+<li><p>Increase <code>delta_tol</code> fo PBA (2 for <code>n</code> and .002 for <code>es</code>). (0.1.1.57)</p></li>
+<li><p>The default values of <code>n</code> of q-functions now depends on the <code>mode</code> and <code>algorithm</code>. (0.1.1.57)</p></li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.1" id="power4mome-011">power4mome 0.1.1<a class="anchor" aria-label="anchor" href="#power4mome-011"></a></h2><p class="text-muted">CRAN release: 2025-09-21</p>

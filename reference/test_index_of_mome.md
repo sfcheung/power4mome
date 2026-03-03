@@ -235,7 +235,7 @@ print(test_out,
 #> 
 #> Variances:
 #>                    Population
-#>    .m                 0.731  
+#>    .m                 0.726  
 #>    .y                 1.000  
 #>     x                 1.000  
 #>     w                 1.000  
@@ -293,7 +293,7 @@ print(test_out,
 #> 
 #> ============ <fit> ============
 #> 
-#> lavaan 0.6-21 ended normally after 2 iterations
+#> lavaan 0.6-21 ended normally after 1 iteration
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
@@ -303,7 +303,7 @@ print(test_out,
 #> 
 #> Model Test User Model:
 #>                                                       
-#>   Test statistic                                 5.502
+#>   Test statistic                                 5.501
 #>   Degrees of freedom                                 3
 #>   P-value (Chi-square)                           0.139
 #> 
@@ -319,7 +319,7 @@ print(test_out,
 #> 
 #> Mean(s) across replication:
 #>     est   cilo  cihi   sig pvalue
-#>  -0.006 -0.040 0.029 0.000  0.630
+#>  -0.006 -0.049 0.025 0.000  0.600
 #> 
 #> - The value 'sig' is the rejection rate.
 #> - If the null hypothesis is false, this is the power.

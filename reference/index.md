@@ -79,6 +79,8 @@ and model parameters.
 - [`test_parameters()`](https://sfcheung.github.io/power4mome/reference/test_parameters.md)
   [`find_par_names()`](https://sfcheung.github.io/power4mome/reference/test_parameters.md)
   : Test All Free Parameters
+- [`test_group_equal()`](https://sfcheung.github.io/power4mome/reference/test_group_equal.md)
+  : Test Group Constraints
 
 ## Data Processors
 

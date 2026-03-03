@@ -13,7 +13,7 @@ mediation models."><meta property="og:image" content="https://sfcheung.github.io
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.55</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.57</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -92,7 +92,7 @@ mediation models.</p>
 <span>  test_fun <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  test_more_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  target_power <span class="op">=</span> <span class="fl">0.8</span>,</span>
-<span>  nrep <span class="op">=</span> <span class="fl">400</span>,</span>
+<span>  nrep <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  n <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>  R <span class="op">=</span> <span class="fl">1000</span>,</span>
 <span>  ci_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mc"</span>, <span class="st">"boot"</span><span class="op">)</span>,</span>
@@ -100,14 +100,15 @@ mediation models.</p>
 <span>  iseed <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  parallel <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  progress <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  simulation_progress <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  max_trials <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  simulation_progress <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  max_trials <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  algorithm <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">...</span>,</span>
-<span>  mode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"power"</span>, <span class="st">"region"</span><span class="op">)</span></span>
+<span>  mode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"power"</span>, <span class="st">"region"</span>, <span class="st">"n"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'q_power_mediation'</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, mode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"all"</span>, <span class="st">"region"</span>, <span class="st">"power"</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, mode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"all"</span>, <span class="st">"region"</span>, <span class="st">"n"</span>, <span class="st">"power"</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'q_power_mediation'</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
@@ -123,7 +124,7 @@ mediation models.</p>
 <span>  reliability <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  test_more_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  target_power <span class="op">=</span> <span class="fl">0.8</span>,</span>
-<span>  nrep <span class="op">=</span> <span class="fl">400</span>,</span>
+<span>  nrep <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  n <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>  R <span class="op">=</span> <span class="fl">1000</span>,</span>
 <span>  ci_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mc"</span>, <span class="st">"boot"</span><span class="op">)</span>,</span>
@@ -131,10 +132,11 @@ mediation models.</p>
 <span>  iseed <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  parallel <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  progress <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  simulation_progress <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  max_trials <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  simulation_progress <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  max_trials <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  algorithm <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">...</span>,</span>
-<span>  mode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"power"</span>, <span class="st">"region"</span><span class="op">)</span></span>
+<span>  mode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"power"</span>, <span class="st">"region"</span>, <span class="st">"n"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">q_power_mediation_serial</span><span class="op">(</span></span>
@@ -145,7 +147,7 @@ mediation models.</p>
 <span>  reliability <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  test_more_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  target_power <span class="op">=</span> <span class="fl">0.8</span>,</span>
-<span>  nrep <span class="op">=</span> <span class="fl">400</span>,</span>
+<span>  nrep <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  n <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>  R <span class="op">=</span> <span class="fl">1000</span>,</span>
 <span>  ci_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mc"</span>, <span class="st">"boot"</span><span class="op">)</span>,</span>
@@ -153,10 +155,11 @@ mediation models.</p>
 <span>  iseed <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  parallel <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  progress <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  simulation_progress <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  max_trials <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  simulation_progress <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  max_trials <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  algorithm <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">...</span>,</span>
-<span>  mode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"power"</span>, <span class="st">"region"</span><span class="op">)</span></span>
+<span>  mode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"power"</span>, <span class="st">"region"</span>, <span class="st">"n"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">q_power_mediation_parallel</span><span class="op">(</span></span>
@@ -169,7 +172,7 @@ mediation models.</p>
 <span>  at_least_k <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  test_more_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  target_power <span class="op">=</span> <span class="fl">0.8</span>,</span>
-<span>  nrep <span class="op">=</span> <span class="fl">400</span>,</span>
+<span>  nrep <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  n <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>  R <span class="op">=</span> <span class="fl">1000</span>,</span>
 <span>  ci_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mc"</span>, <span class="st">"boot"</span><span class="op">)</span>,</span>
@@ -177,10 +180,11 @@ mediation models.</p>
 <span>  iseed <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  parallel <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  progress <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  simulation_progress <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  max_trials <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  simulation_progress <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  max_trials <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  algorithm <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">...</span>,</span>
-<span>  mode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"power"</span>, <span class="st">"region"</span><span class="op">)</span></span>
+<span>  mode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"power"</span>, <span class="st">"region"</span>, <span class="st">"n"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -260,9 +264,8 @@ one.</p></dd>
 <dt id="arg-nrep">nrep<a class="anchor" aria-label="anchor" href="#arg-nrep"></a></dt>
 <dd><p>The number of replications
 to generate the simulated datasets.
-Default is <code>NULL</code>. Must be set when
-called to create a <code>power4test</code>
-object.</p></dd>
+Default is <code>NULL</code> and will be determined
+internally.</p></dd>
 
 
 <dt id="arg-n">n<a class="anchor" aria-label="anchor" href="#arg-n"></a></dt>
@@ -338,6 +341,16 @@ If <code>NULL</code>, set automatically based
 on the algorithm used.</p></dd>
 
 
+<dt id="arg-algorithm">algorithm<a class="anchor" aria-label="anchor" href="#arg-algorithm"></a></dt>
+<dd><p>The algorithm to be
+used in mode <code>"region"</code> and <code>"n"</code>.
+If <code>NULL</code>, then it will be determined
+internally based on the <code>mode</code>. (The
+default may be different from that
+of <code><a href="x_from_power.html">n_region_from_power()</a></code> and
+<code><a href="x_from_power.html">n_from_power()</a></code>)</p></dd>
+
+
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>For <code>q_power_mediation_*</code>,
 these are optional arguments to
@@ -361,10 +374,14 @@ be passed to <code><a href="summary.x_from_power.html">summary.n_region_from_pow
 <dd><p>What to print. If <code>"region"</code>
 and the output of <code><a href="x_from_power.html">n_region_from_power()</a></code>
 is available, it will print the results
-of <code><a href="x_from_power.html">n_region_from_power()</a></code>.
+of <code><a href="x_from_power.html">n_region_from_power()</a></code> if available.
+If <code>"n"</code>, then the output of
+<code><a href="x_from_power.html">n_from_power()</a></code> will be printed if
+available.
 If <code>"power"</code>, then the output of
-<code><a href="power4test.html">power4test()</a></code> will be printed. If
-<code>"all"</code>, then all available output
+<code><a href="power4test.html">power4test()</a></code> will be printed.
+If
+<code>"all"</code>, then all available outputs
 will be printed.</p></dd>
 
 
@@ -461,23 +478,36 @@ significant. Used when
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>If <code>mode</code> is <code>power</code>, then a
-<code>power4test</code> object is returned.
+    <p>A named list of outputs.
+If <code>mode</code> is <code>power</code>, then a
+<code>power4test</code> object is set to the
+element <code>power4test</code>.
 If <code>mode</code> is <code>region</code>, then a
 <code>n_region_from_power</code> object is
-returned.</p>
+set of the element <code>n_region_from_power</code>.
+If <code>mode</code> is <code>n_from_power</code>, then a
+<code>n_from_power</code> object is
+set to the <code>n_from_power</code> element.</p>
 <p>The <code>print</code> method of <code>q_power_mediation</code>
 returns <code>x</code> invisibly. Called for
 its side effect.</p>
 <p>The <code>plot</code>-method of <code>q_power_mediation</code>
-returns <code>x</code> invisibly.
-It is called for its side effect.</p>
+returns <code>NULL</code>.
+It will plot either the output of
+<code><a href="x_from_power.html">n_region_from_power()</a></code>
+(mode <code>"region"</code>) or the output of
+<code><a href="x_from_power.html">n_from_power()</a></code> (mode <code>"n"</code>).
+If no output from
+either of these functions is available,
+nothing wil be plotted.</p>
 <p>The <code>summary</code> method for
 <code>q_power_mediation</code> objects returns
-the output of <code><a href="summary.x_from_power.html">summary.n_region_from_power()</a></code>.
-An error is raised if the output
-of <code><a href="x_from_power.html">n_region_from_power()</a></code> is not
-available.</p>
+the output of <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> for
+either the output of <code><a href="x_from_power.html">n_region_from_power()</a></code>
+(mode <code>"region"</code>) or the output of
+<code><a href="x_from_power.html">n_from_power()</a></code> (mode <code>"n"</code>).
+Return <code>NULL</code> if no output from
+either of these functions is available.</p>
     </div>
     <div class="section level2">
     <h2 id="all-in-one-functions-for-common-mediation-models">All-in-One Functions for Common Mediation Models<a class="anchor" aria-label="anchor" href="#all-in-one-functions-for-common-mediation-models"></a></h2>
@@ -769,12 +799,6 @@ work.</p></div>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   intervals of the rejection rates estimated by the method of Boos and</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Zhang (2000).</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Refer to the tests for the meanings of other columns.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ========== n_region_from_power Results ==========</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 'mode' is not 'region' and results not available.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># If mode = "region" is added, can call the following</span></span></span>
 <span class="r-in"><span><span class="co"># summary(out)</span></span></span>

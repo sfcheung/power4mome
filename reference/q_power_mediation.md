@@ -14,7 +14,7 @@ q_power_mediation(
   test_fun = NULL,
   test_more_args = list(),
   target_power = 0.8,
-  nrep = 400,
+  nrep = NULL,
   n = 100,
   R = 1000,
   ci_type = c("mc", "boot"),
@@ -22,14 +22,15 @@ q_power_mediation(
   iseed = NULL,
   parallel = TRUE,
   progress = TRUE,
-  simulation_progress = TRUE,
-  max_trials = 10,
+  simulation_progress = NULL,
+  max_trials = NULL,
+  algorithm = NULL,
   ...,
-  mode = c("power", "region")
+  mode = c("power", "region", "n")
 )
 
 # S3 method for class 'q_power_mediation'
-print(x, mode = c("all", "region", "power"), ...)
+print(x, mode = c("all", "region", "n", "power"), ...)
 
 # S3 method for class 'q_power_mediation'
 plot(x, ...)
@@ -45,7 +46,7 @@ q_power_mediation_simple(
   reliability = NULL,
   test_more_args = list(),
   target_power = 0.8,
-  nrep = 400,
+  nrep = NULL,
   n = 100,
   R = 1000,
   ci_type = c("mc", "boot"),
@@ -53,10 +54,11 @@ q_power_mediation_simple(
   iseed = NULL,
   parallel = TRUE,
   progress = TRUE,
-  simulation_progress = TRUE,
-  max_trials = 10,
+  simulation_progress = NULL,
+  max_trials = NULL,
+  algorithm = NULL,
   ...,
-  mode = c("power", "region")
+  mode = c("power", "region", "n")
 )
 
 q_power_mediation_serial(
@@ -67,7 +69,7 @@ q_power_mediation_serial(
   reliability = NULL,
   test_more_args = list(),
   target_power = 0.8,
-  nrep = 400,
+  nrep = NULL,
   n = 100,
   R = 1000,
   ci_type = c("mc", "boot"),
@@ -75,10 +77,11 @@ q_power_mediation_serial(
   iseed = NULL,
   parallel = TRUE,
   progress = TRUE,
-  simulation_progress = TRUE,
-  max_trials = 10,
+  simulation_progress = NULL,
+  max_trials = NULL,
+  algorithm = NULL,
   ...,
-  mode = c("power", "region")
+  mode = c("power", "region", "n")
 )
 
 q_power_mediation_parallel(
@@ -91,7 +94,7 @@ q_power_mediation_parallel(
   at_least_k = 1,
   test_more_args = list(),
   target_power = 0.8,
-  nrep = 400,
+  nrep = NULL,
   n = 100,
   R = 1000,
   ci_type = c("mc", "boot"),
@@ -99,10 +102,11 @@ q_power_mediation_parallel(
   iseed = NULL,
   parallel = TRUE,
   progress = TRUE,
-  simulation_progress = TRUE,
-  max_trials = 10,
+  simulation_progress = NULL,
+  max_trials = NULL,
+  algorithm = NULL,
   ...,
-  mode = c("power", "region")
+  mode = c("power", "region", "n")
 )
 ```
 
@@ -157,7 +161,7 @@ q_power_mediation_parallel(
 - nrep:
 
   The number of replications to generate the simulated datasets. Default
-  is `NULL`. Must be set when called to create a `power4test` object.
+  is `NULL` and will be determined internally.
 
 - n:
 
@@ -217,6 +221,15 @@ q_power_mediation_parallel(
   power. Rounded up if not an integer. If `NULL`, set automatically
   based on the algorithm used.
 
+- algorithm:
+
+  The algorithm to be used in mode `"region"` and `"n"`. If `NULL`, then
+  it will be determined internally based on the `mode`. (The default may
+  be different from that of
+  [`n_region_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md)
+  and
+  [`n_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md))
+
 - ...:
 
   For `q_power_mediation_*`, these are optional arguments to be passed
@@ -240,10 +253,12 @@ q_power_mediation_parallel(
   What to print. If `"region"` and the output of
   [`n_region_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md)
   is available, it will print the results of
-  [`n_region_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md).
-  If `"power"`, then the output of
+  [`n_region_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md)
+  if available. If `"n"`, then the output of
+  [`n_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md)
+  will be printed if available. If `"power"`, then the output of
   [`power4test()`](https://sfcheung.github.io/power4mome/reference/power4test.md)
-  will be printed. If `"all"`, then all available output will be
+  will be printed. If `"all"`, then all available outputs will be
   printed.
 
 - x:
@@ -312,21 +327,31 @@ q_power_mediation_parallel(
 
 ## Value
 
-If `mode` is `power`, then a `power4test` object is returned. If `mode`
-is `region`, then a `n_region_from_power` object is returned.
+A named list of outputs. If `mode` is `power`, then a `power4test`
+object is set to the element `power4test`. If `mode` is `region`, then a
+`n_region_from_power` object is set of the element
+`n_region_from_power`. If `mode` is `n_from_power`, then a
+`n_from_power` object is set to the `n_from_power` element.
 
 The `print` method of `q_power_mediation` returns `x` invisibly. Called
 for its side effect.
 
-The `plot`-method of `q_power_mediation` returns `x` invisibly. It is
-called for its side effect.
+The `plot`-method of `q_power_mediation` returns `NULL`. It will plot
+either the output of
+[`n_region_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md)
+(mode `"region"`) or the output of
+[`n_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md)
+(mode `"n"`). If no output from either of these functions is available,
+nothing wil be plotted.
 
 The `summary` method for `q_power_mediation` objects returns the output
-of
-[`summary.n_region_from_power()`](https://sfcheung.github.io/power4mome/reference/summary.x_from_power.md).
-An error is raised if the output of
+of [`summary()`](https://rdrr.io/r/base/summary.html) for either the
+output of
 [`n_region_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md)
-is not available.
+(mode `"region"`) or the output of
+[`n_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md)
+(mode `"n"`). Return `NULL` if no output from either of these functions
+is available.
 
 ## All-in-One Functions for Common Mediation Models
 
@@ -612,12 +637,6 @@ out
 #>   intervals of the rejection rates estimated by the method of Boos and
 #>   Zhang (2000).
 #> - Refer to the tests for the meanings of other columns.
-#> 
-#> ========== n_region_from_power Results ==========
-#> 
-#> 
-#> 'mode' is not 'region' and results not available.
-#> 
 
 # If mode = "region" is added, can call the following
 # summary(out)

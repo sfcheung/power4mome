@@ -94,7 +94,7 @@ n_region_from_power(
 )
 
 # S3 method for class 'x_from_power'
-print(x, digits = 3, ...)
+print(x, digits = 3, call = TRUE, ...)
 
 # S3 method for class 'n_region_from_power'
 print(x, digits = 3, ...)
@@ -294,6 +294,10 @@ arg_x_from_power(object, arg, arg_in = NULL)
 - digits:
 
   The number of digits after the decimal when printing the results.
+
+- call:
+
+  Logical. Whether the call is printed.
 
 - ...:
 
@@ -635,7 +639,7 @@ power_vs_n <- x_from_power(test_out,
 #> 
 #> ========== Final Stage ==========
 #> 
-#> - Start at 2026-02-28 14:54:30 
+#> - Start at 2026-03-03 12:20:59 
 #> - Rejection Rates:
 #> 
 #> [test]: test_parameters: CIs (pars: m~x) 
@@ -709,7 +713,7 @@ summary(power_vs_n)
 #> 
 #> - Algorithm: bisection 
 #> - The range of values explored: 50 to 100 
-#> - Time spent in the search: 1.052 secs 
+#> - Time spent in the search: 0.9078 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 

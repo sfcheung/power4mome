@@ -23,6 +23,7 @@ rejection_rates(
   merge_all_tests = NULL,
   p_adjust_method = NULL,
   alpha = NULL,
+  keep_nrep = FALSE,
   ...
 )
 
@@ -33,6 +34,7 @@ rejection_rates(
   ci = TRUE,
   level = 0.95,
   se = FALSE,
+  nrep_if_diff = TRUE,
   ...
 )
 
@@ -43,6 +45,7 @@ rejection_rates(
   ci = TRUE,
   level = 0.95,
   se = FALSE,
+  nrep_if_diff = TRUE,
   ...
 )
 
@@ -130,6 +133,16 @@ print(x, digits = 3, annotation = TRUE, abbreviate_col_names = TRUE, ...)
   significance results (the column `sig`) will be updated using the
   adjusted *p*-values. Used only if `p_adjust_method` is not `"none"`.
   If `NULL`, will use the value stored in `object` (default is .05).
+
+- keep_nrep:
+
+  If `TRUE`, the column `nrep` will be kept.
+
+- nrep_if_diff:
+
+  If `TRUE` and the numbers of replications across rows are different,
+  `nrep` will be included in the output. If `FALSE`, `nrep` will not be
+  included unless `all_columns` is `TRUE`.
 
 - x:
 

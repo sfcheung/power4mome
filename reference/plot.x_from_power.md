@@ -13,14 +13,13 @@ plot(
     "sig_area", es = NULL)),
   text_what = c("final_x", "final_power", switch(x$x, n = "sig_area", es = NULL)),
   digits = 3,
-  main = paste0("Power Curve ", "(Target Power: ", formatC(x$target_power, digits =
-    digits, format = "f"), ")"),
+  main = NULL,
   xlab = NULL,
   ylab = "Estimated Power",
   ci_level = 0.95,
   pars_ci = list(),
   pars_power_curve = list(),
-  pars_ci_final_x = list(lwd = 2, length = 0.2, col = "blue"),
+  pars_ci_final_x = list(lwd = 3, length = 0.2, col = "blue"),
   pars_target_power = list(lty = "dashed", lwd = 2, col = "black"),
   pars_final_x = list(lty = "dotted"),
   pars_final_power = list(lty = "dotted", col = "blue"),
@@ -28,6 +27,9 @@ plot(
   pars_text_final_power = list(pos = 3, cex = 1),
   pars_sig_area = list(col = adjustcolor("lightblue", alpha.f = 0.1)),
   pars_text_sig_area = list(cex = 1),
+  prop_of_trials = NULL,
+  min_trials_for_prop = NULL,
+  override_for_pba = TRUE,
   ...
 )
 
@@ -97,7 +99,7 @@ plot(
 
 - main:
 
-  The title of the plot.
+  The title of the plot. If `NULL`, it will be generated automatically.
 
 - xlab, ylab:
 
@@ -169,6 +171,25 @@ plot(
   A named list of arguments to be passed to
   [`text()`](https://rdrr.io/r/graphics/text.html) when labelling the
   area significantly higher or lower than the target power.
+
+- prop_of_trials:
+
+  The proportion of trials to be included in the plot. If `NULL`, it
+  will be determined based on the algorithm used.
+
+- min_trials_for_prop:
+
+  The minimum number of trials for `prop_of_trials` to be used. If
+  `NULL`, it will be determined based on the algorithm used.
+
+- override_for_pba:
+
+  If `TRUE`, the default, the values of some arguments will be overriden
+  internally if the algorithm used is `"probabilistic_bisection"`, to
+  make the plot suitable for this algorithm. For example, the power
+  curve and the confidence intervals for trials other than the solution
+  will not be plotted, even if requested. If `FALSE`, then argument
+  values will be not be changed internally.
 
 - ...:
 
@@ -301,7 +322,7 @@ power_vs_n <- x_from_power(test_out,
 #> 
 #> ========== Final Stage ==========
 #> 
-#> - Start at 2026-02-28 14:53:43 
+#> - Start at 2026-03-03 12:20:12 
 #> - Rejection Rates:
 #> 
 #> [test]: test_parameters: CIs (pars: m~x) 
