@@ -251,7 +251,7 @@ plot.x_from_power <- function(x,
 
   if (is.null(main)) {
     if (x$algorithm == "probabilistic_bisection") {
-      main <- paste0("Search History",
+      main <- paste0("Search History ",
                      "(Target Power: ",
                      formatC(x$target_power, digits = digits, format = "f"),
                      ")")
@@ -338,16 +338,18 @@ plot.x_from_power <- function(x,
   # It is intended *not* to use plot.power_curve().
   # It is possible that the fit failed.
 
+  args_tmp <- args
+  args_tmp$xlim <- NULL
   do.call(plot_power_x,
-          list(object = x$power4test_trials,
+          c(list(object = x$power4test_trials,
                predictor = predictor,
                main = main,
                xlab = xlab,
                ylab = ylab,
                xlim = base_xlim,
                lwd = base_lwd,
-               lty = base_lty,
-               ...))
+               lty = base_lty),
+            args_tmp))
 
   # === Add CIs?
 

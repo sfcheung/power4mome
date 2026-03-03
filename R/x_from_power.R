@@ -1907,3 +1907,232 @@ arg_x_from_power <- function(
     return(NULL)
   }
 }
+
+#' @rdname x_from_power
+#'
+#' @details
+#'
+#' The function [pba_diagnosis()]
+#' generates simple diagnostic plots
+#' for the search history of probabilistic
+#' bisection algorithm. This function is for advanced users
+#' to examine the search history of
+#' the probabilistic bisection algorithm.
+#' It is for diagnostic purpose and has
+#' limited support for customizing the plots.
+#'
+#'
+#'
+#' @return
+#' The function [pba_diagnosis()]
+#' returns `NULL` invisibly. Called for
+#' its side-effect.
+#'
+#' @param a_out The output of
+#' [x_from_power()] and friends. The
+#' algorithm used must be `"probabilistic_bisection"`.
+#'
+#' @param p_interval The range of
+#' the plot that "zooms" around the solution
+#' (or the median of in the final posterior
+#' probability distribution), expressed
+#' in terms of the area of the distribution.
+#'
+#' @param posterior_xlim The range of
+#' the first plot of search history and the
+#' plot of posterior probability distribution,
+#' expressed
+#' in terms of the area of the distribution.
+#'
+#' @export
+pba_diagnosis <- function(
+  a_out,
+  p_interval = c(.05, .95),
+  posterior_xlim = c(.01, .99)
+) {
+  if (!inherits(class(a_out), "x_from_power")) {
+    i <- sapply(a_out,
+                inherits,
+                what = "x_from_power")
+    if (any(i)) {
+      a_out <- a_out[[which(i)]]
+    } else {
+      warning("No x_from_power object found")
+      invisible(NULL)
+    }
+  }
+  if (a_out$algorithm != "probabilistic_bisection") {
+    warning("The algorithm used is not probabilistic_bisection.")
+    invisible(NULL)
+  }
+  solution <- a_out$x_final
+  technical <- a_out$technical
+  i0 <- length(technical$x_history)
+  dfun_out <- technical$dfun_history[[i0]]
+  x_lo <- q_dfun(dfun_out, p_interval[1])
+  x_hi <- q_dfun(dfun_out, p_interval[2])
+  parold <- par(no.readonly = TRUE)
+  on.exit(par(parold))
+  graphics::layout(matrix(1:6,
+         nrow = 3,
+         byrow = TRUE))
+
+  # ==== Plot of power_curve ====
+
+  # plot(a_out$power_curve)
+  tmp <- c(q_dfun(dfun_out, posterior_xlim[1]),
+           q_dfun(dfun_out, posterior_xlim[2]))
+  plot(a_out,
+       xlim = tmp)
+  abline(h = technical$f_power,
+         col = "red",
+         lwd = 1)
+  abline(h = a_out$target_power,
+         col = "blue",
+         lwd = 1)
+  if (!is.na(solution)) {
+    abline(v = solution,
+           col = "red",
+           lwd = 1)
+  }
+  abline(v = c(x_lo, x_hi),
+         col = "black",
+         lwd = 1,
+         lty = "dotted")
+
+  # ==== x_history ====
+
+  plot(technical$x_history,
+       type = "l",
+       main = "History of x",
+       ylab = a_out$x,
+       xlab = "Iteration")
+  points(technical$x_history)
+  if (!is.na(solution)) {
+    abline(h = solution,
+           col = "red",
+           lwd = 1)
+  }
+  abline(h = c(x_lo, x_hi),
+         col = "black",
+         lwd = 1,
+         lty = "dotted")
+  tmp <- which(technical$final_check_history)
+  abline(v = tmp,
+         col = "red",
+         lty = "dotted")
+
+  # ==== Posterior Probability Distribution ====
+
+  tmp <- c(q_dfun(dfun_out, posterior_xlim[1]),
+           q_dfun(dfun_out, posterior_xlim[2]))
+  plot(dfun_out,
+       type = "l",
+       xlim = tmp,
+       main = "Posterior Probability Distribution",
+       xlab = a_out$x,
+       ylab = NULL)
+  if (!is.na(solution)) {
+    abline(v = solution,
+           col = "red",
+           lwd = 1)
+  }
+  abline(v = c(x_lo, x_hi),
+         col = "black",
+         lwd = 1,
+         lty = "dotted")
+  abline(h = 0,
+         col = "black",
+         lwd = 0.5,
+         lty = "dotted")
+
+  # ==== HDR history ====
+
+  hdr_power_history <- technical$hdr_power_history
+  tmp <- sapply(unlist(hdr_power_history,
+                       recursive = FALSE),
+                range)
+  plot(seq_along(hdr_power_history),
+       y = rep(a_out$f_power,
+               length(hdr_power_history)),
+       ylim = range(tmp),
+       type = "l",
+       main = "Highest Density Regions",
+       ylab = a_out$x,
+       xlab = "Iteration")
+  points(a_out$reject_by_power_curve_history)
+  abline(h = a_out$target_power,
+         col = "blue",
+         lwd = 1,
+         lty = "dotted")
+  for (i in seq_along(hdr_power_history)) {
+    for (y in hdr_power_history[[i]]) {
+      arrows(
+          x0 = i,
+          y0 = y[1],
+          x1 = i,
+          y1 = y[2],
+          lty = "solid",
+          code = 3,
+          angle = 90,
+          length = ifelse(y[1] == y[2], 0, .05)
+        )
+    }
+  }
+  tmp <- which(technical$final_check_history)
+  abline(v = tmp,
+         col = "red",
+         lty = "dotted")
+
+  # ==== Power curve around the solution ====
+
+  tmp <- c(q_dfun(dfun_out, posterior_xlim[1]),
+           q_dfun(dfun_out, posterior_xlim[2]))
+
+  if (!is.na(solution)) {
+    x_tmp <- solution
+  } else {
+    x_tmp <- q_dfun(dfun_out)
+  }
+  tmp2 <- max(abs(c(x_lo, x_hi) - x_tmp) / abs(tmp - x_tmp))
+  tmp3 <- x_tmp + (tmp - x_tmp) * tmp2
+  plot(a_out$power_curve,
+       xlim = tmp3)
+  abline(h = technical$f_power,
+         col = "red",
+         lwd = 1)
+  abline(h = a_out$target_power,
+         col = "blue",
+         lwd = 1)
+  if (!is.na(solution)) {
+    abline(v = solution,
+           col = "red",
+           lwd = 1)
+  }
+  abline(v = c(x_lo, x_hi),
+         col = "black",
+         lwd = 1,
+         lty = "dotted")
+  tmp <- which(technical$final_check_history)
+  abline(v = tmp,
+         col = "red")
+
+  # ==== f_history ====
+
+  plot(technical$f_history,
+       type = "l",
+       main = "History of Function Values",
+       xlab = "Iteration",
+       ylab = "Function Value")
+  points(technical$f_history)
+  abline(h = 0,
+         col = "blue",
+         lwd = 1,
+         lty = "dotted")
+  tmp <- which(technical$final_check_history)
+  abline(v = tmp,
+         col = "red",
+         lty = "dotted")
+
+  invisible(NULL)
+}
