@@ -11,14 +11,13 @@
     "sig_area", es = NULL)),
   text_what = c("final_x", "final_power", switch(x$x, n = "sig_area", es = NULL)),
   digits = 3,
-  main = paste0("Power Curve ", "(Target Power: ", formatC(x$target_power, digits =
-    digits, format = "f"), ")"),
+  main = NULL,
   xlab = NULL,
   ylab = "Estimated Power",
   ci_level = 0.95,
   pars_ci = list(),
   pars_power_curve = list(),
-  pars_ci_final_x = list(lwd = 2, length = 0.2, col = "blue"),
+  pars_ci_final_x = list(lwd = 3, length = 0.2, col = "blue"),
   pars_target_power = list(lty = "dashed", lwd = 2, col = "black"),
   pars_final_x = list(lty = "dotted"),
   pars_final_power = list(lty = "dotted", col = "blue"),
@@ -26,6 +25,9 @@
   pars_text_final_power = list(pos = 3, cex = 1),
   pars_sig_area = list(col = adjustcolor("lightblue", alpha.f = 0.1)),
   pars_text_sig_area = list(cex = 1),
+  prop_of_trials = NULL,
+  min_trials_for_prop = NULL,
+  override_for_pba = TRUE,
   ...
 )
 
@@ -103,7 +105,9 @@ be added.}
 after the decimal that will be used
 when adding numbers.}
 
-\item{main}{The title of the plot.}
+\item{main}{The title of the plot.
+If \code{NULL}, it will be generated
+automatically.}
 
 \item{xlab, ylab}{The labels for the
 horizontal and vertical axes,
@@ -171,6 +175,30 @@ of arguments to be passed to
 \code{\link[=text]{text()}} when labelling the area
 significantly higher or lower than
 the target power.}
+
+\item{prop_of_trials}{The proportion
+of trials to be included in the plot.
+If \code{NULL}, it will be determined
+based on the algorithm used.}
+
+\item{min_trials_for_prop}{The minimum
+number of trials for \code{prop_of_trials}
+to be used.
+If \code{NULL}, it will be determined
+based on the algorithm used.}
+
+\item{override_for_pba}{If \code{TRUE},
+the default, the values of
+some arguments will
+be overriden internally if the
+algorithm used is \code{"probabilistic_bisection"},
+to make the plot suitable for
+this algorithm. For example, the
+power curve and the confidence intervals
+for trials other than the solution
+will not be plotted, even if requested.
+If \code{FALSE}, then argument values
+will be not be changed internally.}
 
 \item{...}{Optional arguments.
 Passed to \code{\link[=plot]{plot()}} when drawing

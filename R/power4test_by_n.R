@@ -358,10 +358,12 @@ is_std_by_monte_carlo <- function(object) {
 #' @noRd
 rejection_rates_by_n <- function(object_by_n,
                                  all_columns = FALSE,
+                                 nrep_if_diff = TRUE,
                                  ...) {
   tmpfct <- function(x, n) {
     out_i <- rejection_rates(x,
                              all_columns = all_columns,
+                             keep_nrep = nrep_if_diff,
                              ...)
     out_i <- data.frame(n = n,
                         out_i)
@@ -382,6 +384,13 @@ rejection_rates_by_n <- function(object_by_n,
                               error = function(e) x[cnames1]))
   out <- do.call(rbind,
                  out)
+  if (nrep_if_diff &&
+      !all_columns) {
+    nrep_range <- try(suppressWarnings(diff(range(out$nrep, na.rm = TRUE))), silent = TRUE)
+    if (isFALSE(nrep_range > 1)) {
+      out$nrep <- NULL
+    }
+  }
   rownames(out) <- NULL
   out
 }

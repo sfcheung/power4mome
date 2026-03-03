@@ -68,6 +68,8 @@
 #' when adding numbers.
 #'
 #' @param main The title of the plot.
+#' If `NULL`, it will be generated
+#' automatically.
 #'
 #' @param xlab,ylab The labels for the
 #' horizontal and vertical axes,
@@ -136,6 +138,30 @@
 #' significantly higher or lower than
 #' the target power.
 #'
+#' @param prop_of_trials The proportion
+#' of trials to be included in the plot.
+#' If `NULL`, it will be determined
+#' based on the algorithm used.
+#'
+#' @param min_trials_for_prop The minimum
+#' number of trials for `prop_of_trials`
+#' to be used.
+#' If `NULL`, it will be determined
+#' based on the algorithm used.
+#'
+#' @param override_for_pba If `TRUE`,
+#' the default, the values of
+#' some arguments will
+#' be overriden internally if the
+#' algorithm used is `"probabilistic_bisection"`,
+#' to make the plot suitable for
+#' this algorithm. For example, the
+#' power curve and the confidence intervals
+#' for trials other than the solution
+#' will not be plotted, even if requested.
+#' If `FALSE`, then argument values
+#' will be not be changed internally.
+#'
 #' @param ... Optional arguments.
 #' Passed to [plot()] when drawing
 #' the estimated power against the
@@ -199,18 +225,15 @@ plot.x_from_power <- function(x,
                               text_what = c("final_x", "final_power",
                                             switch(x$x, n = "sig_area", es = NULL)),
                               digits = 3,
-                              main = paste0("Power Curve ",
-                                            "(Target Power: ",
-                                            formatC(x$target_power, digits = digits, format = "f"),
-                                            ")"),
+                              main = NULL,
                               xlab = NULL,
                               ylab = "Estimated Power",
                               ci_level = .95,
                               pars_ci = list(),
                               pars_power_curve = list(),
-                              pars_ci_final_x = list(lwd = 2,
-                                                               length = .2,
-                                                               col = "blue"),
+                              pars_ci_final_x = list(lwd = 3,
+                                                     length = .2,
+                                                     col = "blue"),
                               pars_target_power = list(lty = "dashed",
                                                        lwd = 2,
                                                        col = "black"),
@@ -221,7 +244,36 @@ plot.x_from_power <- function(x,
                               pars_sig_area = list(col = adjustcolor("lightblue",
                                                    alpha.f = .1)),
                               pars_text_sig_area = list(cex = 1),
+                              prop_of_trials = NULL,
+                              min_trials_for_prop = NULL,
+                              override_for_pba = TRUE,
                               ...) {
+
+  if (is.null(main)) {
+    if (x$algorithm == "probabilistic_bisection") {
+      main <- paste0("Search History",
+                     "(Target Power: ",
+                     formatC(x$target_power, digits = digits, format = "f"),
+                     ")")
+   } else {
+      main <- paste0("Power Curve ",
+                     "(Target Power: ",
+                     formatC(x$target_power, digits = digits, format = "f"),
+                     ")")
+   }
+  }
+
+  if ((x$algorithm == "probabilistic_bisection") &&
+      override_for_pba) {
+    prop_of_trials <- prop_of_trials %||% .95
+    min_trials_for_prop <- min_trials_for_prop %||% 20
+  }
+
+  if (override_for_pba) {
+    what <- setdiff(what, c("power_curve"))
+  }
+
+  args <- list(...)
 
   what <- match.arg(what, several.ok = TRUE)
   text_what <- match.arg(text_what, several.ok = TRUE)
@@ -243,6 +295,44 @@ plot.x_from_power <- function(x,
 
   solution_found <- isFALSE(identical(NA, x$x_final))
 
+  # === Set the xlim? ===
+
+  if (is.null(args$xlim) &&
+      !is.null(prop_of_trials)) {
+    base_xlim <- NULL
+    tmp <- as.data.frame(rejection_rates(x$power4test_trials))
+    tmp1 <- tmp[, predictor]
+    if (min_trials_for_prop <= nrow(tmp)) {
+      # # tmp should have already been sorted
+      # tmp <- tmp[order(tmp[, predictor, drop = TRUE]), ]
+      tmp2 <- stats::ecdf(tmp1)
+      i0 <- (1 - prop_of_trials) / 2
+      i1 <- 1 - i0 * 2
+      if (solution_found) {
+        ix <- x$x_final
+        p_final <- tmp2(ix)
+        if ((p_final < i0) ||
+            (p_final > i1)) {
+        }
+      }
+      base_xlim <- stats::quantile(
+                      tmp2,
+                      unname(c(i0, i1))
+                    )
+    }
+  } else {
+    base_xlim <- args$xlim
+  }
+
+  if (is.null(args$lwd) &&
+      override_for_pba) {
+    base_lwd <- .5
+    base_lty <- "dotted"
+  } else {
+    base_lwd <- args$lwd
+    base_lty <- NULL
+  }
+
   # === Draw the base plot: Power vs. Predictor
 
   # It is intended *not* to use plot.power_curve().
@@ -254,6 +344,9 @@ plot.x_from_power <- function(x,
                main = main,
                xlab = xlab,
                ylab = ylab,
+               xlim = base_xlim,
+               lwd = base_lwd,
+               lty = base_lty,
                ...))
 
   # === Add CIs?
@@ -281,11 +374,13 @@ plot.x_from_power <- function(x,
     }
 
     # Draw the other CIs
-    tmp_args <- utils::modifyList(pars_ci,
-                                  list(object = tmp_for_ci,
-                                       predictor = predictor))
-    do.call(plot_power_x_ci,
-            tmp_args)
+    if (!override_for_pba) {
+      tmp_args <- utils::modifyList(pars_ci,
+                                    list(object = tmp_for_ci,
+                                        predictor = predictor))
+      do.call(plot_power_x_ci,
+              tmp_args)
+    }
   }
 
   # === Draw the power curve?

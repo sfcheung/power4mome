@@ -208,6 +208,16 @@ rejection_rates.default <- function(object,
 #' If `NULL`, will use the value stored
 #' in `object` (default is .05).
 #'
+#' @param nrep_if_diff If `TRUE` and
+#' the numbers of replications across
+#' rows are different, `nrep` will be
+#' included in the output. If `FALSE`,
+#' `nrep` will not be included unless
+#' `all_columns` is `TRUE`.
+#'
+#' @param keep_nrep If `TRUE`, the column
+#' `nrep` will be kept.
+#'
 #' @references
 #' Wilson, E. B. (1927). Probable inference, the law of
 #' succession, and statistical inference.
@@ -226,6 +236,7 @@ rejection_rates.power4test <- function(object,
                                        merge_all_tests = NULL,
                                        p_adjust_method = NULL,
                                        alpha = NULL,
+                                       keep_nrep = FALSE,
                                        ...) {
   stored_args <- attr(object, "args")$rejection_rates_args
   collapse <- collapse %||% (stored_args$collapse %||% "none")
@@ -253,6 +264,10 @@ rejection_rates.power4test <- function(object,
   } else {
     out2 <- do.call(rbind,
                     out1)
+  }
+  if (!all_columns &&
+      !keep_nrep) {
+    out2$nrep <- NULL
   }
   rownames(out2) <- NULL
   class(out2) <- c("rejection_rates_df",
@@ -319,6 +334,7 @@ rejection_rates_i_vector <- function(object_i,
                         est = object_i$mean["est"],
                         pvalid = object_i$nvalid["sig"] / object_i$nrep,
                         nvalid = object_i$nvalid["sig"],
+                        nrep = object_i$nrep,
                         reject = object_i$mean["sig"],
                         row.names = NULL)
   }
@@ -370,6 +386,7 @@ rejection_rates_i_data_frame <- function(object_i,
                         est = object_i$mean[, "est", drop = TRUE],
                         pvalid = pvalid,
                         nvalid = object_i$nvalid[, "sig", drop = TRUE],
+                        nrep = object_i$nrep,
                         reject = object_i$mean[, "sig", drop = TRUE],
                         row.names = NULL)
   }
@@ -471,12 +488,14 @@ rejection_rates.power4test_by_es <- function(object,
                                              ci = TRUE,
                                              level = .95,
                                              se = FALSE,
+                                             nrep_if_diff = TRUE,
                                              ...) {
   out <- rejection_rates_by_es(object_by_es = object,
                                all_columns = all_columns,
                                ci = ci,
                                level = level,
                                se = se,
+                               nrep_if_diff = nrep_if_diff,
                                ...)
   class(out) <- c("rejection_rates_df_by_es",
                   "rejection_rates_df",
@@ -511,12 +530,14 @@ rejection_rates.power4test_by_n <- function(object,
                                             ci = TRUE,
                                             level = .95,
                                             se = FALSE,
+                                            nrep_if_diff = TRUE,
                                             ...) {
   out <- rejection_rates_by_n(object_by_n = object,
                               all_columns = all_columns,
                               ci = ci,
                               level = level,
                               se = se,
+                              nrep_if_diff = nrep_if_diff,
                               ...)
   class(out) <- c("rejection_rates_df_by_n",
                   "rejection_rates_df",

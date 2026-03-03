@@ -129,6 +129,7 @@ reference:
   - test_moderation
   - test_index_of_mome
   - test_parameters
+  - test_group_equal
 - title: Data Processors
   desc:  >
     Built-in functions for processing

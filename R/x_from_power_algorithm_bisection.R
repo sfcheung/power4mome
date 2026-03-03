@@ -547,7 +547,7 @@ power_algorithm_bisection <- function(object,
     ok_lower <- tmp["ok_lower"]
     ok_upper <- tmp["ok_upper"]
 
-    if ((interval_updated$extend_status != 0) &&
+    if ((interval_updated$extend_status > 0) &&
         (!ok_lower && !ok_upper)) {
 
       # ==== No solution and interval invalid. Skip the search ====
@@ -1064,7 +1064,9 @@ extend_interval <- function(f,
                             overshoot = .5,
                             min_x_diff = 0,
                             variants = list(use_power_curve_assist = FALSE),
-                            proxy_power = NULL) {
+                            proxy_power = NULL,
+                            min_abs_f = 0,
+                            extend_only = FALSE) {
   if (trace) {
     cat("\n== Enter extending interval ...\n")
   }
@@ -1105,7 +1107,9 @@ extend_interval <- function(f,
   # ==== Interval already valid? ====
 
   if ((sign(f.lower) != sign(f.upper)) &&
-      (abs(lower - upper) >= min_x_diff)) {
+      (abs(lower - upper) >= min_x_diff) &&
+      (abs(as.numeric(f.lower)) >= min_abs_f) &&
+      (abs(as.numeric(f.upper)) >= min_abs_f)) {
 
     # ==== Yes. Exit ====
 
@@ -1173,7 +1177,8 @@ extend_interval <- function(f,
       lower <- max(lower_hard,
                    ifelse(x_type == "n",
                           floor(lower * tmp),
-                          lower * tmp))
+                          lower * tmp),
+                   na.rm = TRUE)
       lower <- force_new_x(
                     lower,
                     x_tried = c(get_x_tried(object = by_x_1,
@@ -1193,7 +1198,8 @@ extend_interval <- function(f,
       upper <- min(upper_hard,
                    ifelse(x_type == "n",
                           floor(upper * tmp),
-                          upper * tmp))
+                          upper * tmp),
+                   na.rm = TRUE)
       upper <- force_new_x(
                     upper,
                     x_tried = c(get_x_tried(object = by_x_1,
@@ -1214,11 +1220,13 @@ extend_interval <- function(f,
       upper <- min(upper_hard,
                    ifelse(x_type == "n",
                           floor(upper * tmp_upper),
-                          upper * tmp_upper))
+                          upper * tmp_upper),
+                   na.rm = TRUE)
       lower <- max(lower_hard,
                    ifelse(x_type == "n",
                           floor(lower * tmp_lower),
-                          lower * tmp_lower))
+                          lower * tmp_lower),
+                   na.rm = TRUE)
       upper <- force_new_x(
                     upper,
                     x_tried = c(get_x_tried(object = by_x_1,
@@ -1353,11 +1361,28 @@ extend_interval <- function(f,
             variants = variants,
             proxy_power = proxy_power
           )
-        lower <- out_i$lower
-        upper <- out_i$upper
-        f.lower <- out_i$f.lower
-        f.upper <- out_i$f.upper
-
+        if (extend_only) {
+          if (lower > out_i$lower) {
+            lower <- out_i$lower
+            f.lower <- out_i$f.lower
+          }
+          if (upper < out_i$upper) {
+            upper <- out_i$upper
+            f.upper <- out_i$f.upper
+          }
+        } else {
+          lower <- out_i$lower
+          upper <- out_i$upper
+          f.lower <- out_i$f.lower
+          f.upper <- out_i$f.upper
+        }
+        if (trace) {
+          cat("\n(Extending the interval) Iteration:", i, "\n")
+          print_interval(lower = lower,
+                         upper = upper,
+                         digits = digits,
+                         x_type = x_type)
+        }
         if (is.na(in_x_tried(
                     lower,
                     by_x_1,
@@ -1654,13 +1679,13 @@ extend_i <- function(
       f.upper <- tmp
       rm(tmp)
     }
-    if (trace) {
-      cat("\n\n(Extending the interval) Iteration:", i, "\n\n")
-      print_interval(lower = lower,
-                      upper = upper,
-                      digits = digits,
-                      x_type = x_type)
-    }
+    # if (trace) {
+    #   cat("\n\n(Extending the interval) Iteration:", i, "\n\n")
+    #   print_interval(lower = lower,
+    #                   upper = upper,
+    #                   digits = digits,
+    #                   x_type = x_type)
+    # }
   }
   list(
     lower = lower,
