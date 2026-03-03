@@ -76,8 +76,10 @@
 #' mod_es <-
 #' "
 #' y ~ m: l
-#' m ~ x: c(m, s)
-#' y ~ x: n
+#' m ~ x:
+#'   - nil
+#'   - s
+#' y ~ x: nil
 #' "
 #'
 #' # Simulate the data
@@ -86,7 +88,6 @@
 #'                        model = mod,
 #'                        pop_es = mod_es,
 #'                        n = 100,
-#'                        do_the_test = FALSE,
 #'                        iseed = 1234)
 #'
 #' # Do the tests in each replication
@@ -99,7 +100,7 @@
 #'       test_long = TRUE)
 #'
 #'
-#' @noRd
+#' @export
 test_group_equal <- function(fit = fit,
                              group.equal = NULL,
                              group.partial = NULL,
