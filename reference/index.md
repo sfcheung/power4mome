@@ -23,6 +23,7 @@ All-in-one functions for common tasks.
   [`print(`*`<x_from_power>`*`)`](https://sfcheung.github.io/power4mome/reference/x_from_power.md)
   [`print(`*`<n_region_from_power>`*`)`](https://sfcheung.github.io/power4mome/reference/x_from_power.md)
   [`arg_x_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md)
+  [`pba_diagnosis()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md)
   : Sample Size and Effect Size Determination
 
 - [`q_power_mediation()`](https://sfcheung.github.io/power4mome/reference/q_power_mediation.md)

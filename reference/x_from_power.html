@@ -19,7 +19,7 @@ value."><meta property="og:image" content="https://sfcheung.github.io/power4mome
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.57</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.58</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -185,7 +185,13 @@ value.</p>
 <span><span class="co"># S3 method for class 'n_region_from_power'</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, digits <span class="op">=</span> <span class="fl">3</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">arg_x_from_power</span><span class="op">(</span><span class="va">object</span>, <span class="va">arg</span>, arg_in <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">arg_x_from_power</span><span class="op">(</span><span class="va">object</span>, <span class="va">arg</span>, arg_in <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">pba_diagnosis</span><span class="op">(</span></span>
+<span>  <span class="va">a_out</span>,</span>
+<span>  p_interval <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.05</span>, <span class="fl">0.95</span><span class="op">)</span>,</span>
+<span>  posterior_xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.99</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -483,6 +489,28 @@ retrieve.</p></dd>
 from which an element is to be
 retrieved.</p></dd>
 
+
+<dt id="arg-a-out">a_out<a class="anchor" aria-label="anchor" href="#arg-a-out"></a></dt>
+<dd><p>The output of
+<code>x_from_power()</code> and friends. The
+algorithm used must be <code>"probabilistic_bisection"</code>.</p></dd>
+
+
+<dt id="arg-p-interval">p_interval<a class="anchor" aria-label="anchor" href="#arg-p-interval"></a></dt>
+<dd><p>The range of
+the plot that "zooms" around the solution
+(or the median of in the final posterior
+probability distribution), expressed
+in terms of the area of the distribution.</p></dd>
+
+
+<dt id="arg-posterior-xlim">posterior_xlim<a class="anchor" aria-label="anchor" href="#arg-posterior-xlim"></a></dt>
+<dd><p>The range of
+the first plot of search history and the
+plot of posterior probability distribution,
+expressed
+in terms of the area of the distribution.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -572,6 +600,9 @@ It is called for its side effect.</p>
 returns the requested argument if
 available. If not available, it
 returns <code>NULL</code>.</p>
+<p>The function <code>pba_diagnosis()</code>
+returns <code>NULL</code> invisibly. Called for
+its side-effect.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -650,6 +681,14 @@ is a helper to set argument values
 if <code>object</code> is an output
 of <code>x_from_power()</code> or similar
 functions.</p>
+<p>The function <code>pba_diagnosis()</code>
+generates simple diagnostic plots
+for the search history of probabilistic
+bisection algorithm. This function is for advanced users
+to examine the search history of
+the probabilistic bisection algorithm.
+It is for diagnostic purpose and has
+limited support for customizing the plots.</p>
     </div>
     <div class="section level2">
     <h2 id="algorithms">Algorithms<a class="anchor" aria-label="anchor" href="#algorithms"></a></h2>
@@ -859,7 +898,7 @@ and <code><a href="power4test_by_es.html">power4test_by_es()</a></code>.</p></di
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ========== Final Stage ==========</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2026-03-03 12:20:59 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2026-03-03 16:50:57 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Rejection Rates:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [test]: test_parameters: CIs (pars: m~x) </span>
@@ -933,7 +972,7 @@ and <code><a href="power4test_by_es.html">power4test_by_es()</a></code>.</p></di
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Algorithm: bisection </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - The range of values explored: 50 to 100 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Time spent in the search: 0.9078 secs </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Time spent in the search: 0.8737 secs </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - The final crude model for the power-predictor relation:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Model Type: Logistic Regression </span>

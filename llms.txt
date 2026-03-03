@@ -1,6 +1,6 @@
 # power4mome
 
-(Version 0.1.1.57, updated on 2026-03-03, [release
+(Version 0.1.1.58, updated on 2026-03-03, [release
 history](https://sfcheung.github.io/power4mome/news/index.html))
 
 This package is for power analysis and sample size determination for
@@ -155,6 +155,7 @@ All-in-one functions for common tasks.
   [`print(`*`<x_from_power>`*`)`](https://sfcheung.github.io/power4mome/reference/x_from_power.md)
   [`print(`*`<n_region_from_power>`*`)`](https://sfcheung.github.io/power4mome/reference/x_from_power.md)
   [`arg_x_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md)
+  [`pba_diagnosis()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md)
   : Sample Size and Effect Size Determination
 
 - [`q_power_mediation()`](https://sfcheung.github.io/power4mome/reference/q_power_mediation.md)

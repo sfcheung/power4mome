@@ -100,6 +100,12 @@ print(x, digits = 3, call = TRUE, ...)
 print(x, digits = 3, ...)
 
 arg_x_from_power(object, arg, arg_in = NULL)
+
+pba_diagnosis(
+  a_out,
+  p_interval = c(0.05, 0.95),
+  posterior_xlim = c(0.01, 0.99)
+)
 ```
 
 ## Arguments
@@ -311,6 +317,23 @@ arg_x_from_power(object, arg, arg_in = NULL)
 
   The name of the element from which an element is to be retrieved.
 
+- a_out:
+
+  The output of `x_from_power()` and friends. The algorithm used must be
+  `"probabilistic_bisection"`.
+
+- p_interval:
+
+  The range of the plot that "zooms" around the solution (or the median
+  of in the final posterior probability distribution), expressed in
+  terms of the area of the distribution.
+
+- posterior_xlim:
+
+  The range of the first plot of search history and the plot of
+  posterior probability distribution, expressed in terms of the area of
+  the distribution.
+
 ## Value
 
 The function `x_from_power()` returns an `x_from_power` object, which is
@@ -389,6 +412,9 @@ The `print`-method of `x_from_power_region` objects returns the object
 The function `arg_x_from_power()` returns the requested argument if
 available. If not available, it returns `NULL`.
 
+The function `pba_diagnosis()` returns `NULL` invisibly. Called for its
+side-effect.
+
 ## Details
 
 This is how to use `x_from_power()`:
@@ -458,6 +484,12 @@ and its `print` method for detailed results
 
 The function `arg_x_from_power()` is a helper to set argument values if
 `object` is an output of `x_from_power()` or similar functions.
+
+The function `pba_diagnosis()` generates simple diagnostic plots for the
+search history of probabilistic bisection algorithm. This function is
+for advanced users to examine the search history of the probabilistic
+bisection algorithm. It is for diagnostic purpose and has limited
+support for customizing the plots.
 
 ## Algorithms
 
@@ -639,7 +671,7 @@ power_vs_n <- x_from_power(test_out,
 #> 
 #> ========== Final Stage ==========
 #> 
-#> - Start at 2026-03-03 12:20:59 
+#> - Start at 2026-03-03 16:50:57 
 #> - Rejection Rates:
 #> 
 #> [test]: test_parameters: CIs (pars: m~x) 
@@ -713,7 +745,7 @@ summary(power_vs_n)
 #> 
 #> - Algorithm: bisection 
 #> - The range of values explored: 50 to 100 
-#> - Time spent in the search: 0.9078 secs 
+#> - Time spent in the search: 0.8737 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
