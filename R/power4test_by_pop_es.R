@@ -325,6 +325,7 @@ c.power4test_by_es <- function(...,
 #' @noRd
 rejection_rates_by_es <- function(object_by_es,
                                   all_columns = FALSE,
+                                  nrep_if_diff = TRUE,
                                   ...) {
   tmpfct <- function(x) {
     out_i <- rejection_rates(x,
@@ -351,6 +352,13 @@ rejection_rates_by_es <- function(object_by_es,
                               error = function(e) x[cnames1]))
   out <- do.call(rbind,
                  out)
+  if (nrep_if_diff &&
+      !all_columns) {
+    nrep_range <- try(suppressWarnings(diff(range(out$nrep, na.rm = TRUE))), silent = TRUE)
+    if (isTRUE(nrep_range == 0)) {
+      out$nrep <- NULL
+    }
+  }
   rownames(out) <- NULL
   out
 }
