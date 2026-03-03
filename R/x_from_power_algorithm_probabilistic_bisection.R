@@ -43,8 +43,8 @@ alg_prob_bisection <- function(
     tol = NULL,
     delta_tol = switch(
                   x,
-                  n = 1,
-                  es = .001
+                  n = 2,
+                  es = .002
                 ),
     last_k = 5,
     variants = list()
