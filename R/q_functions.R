@@ -557,7 +557,7 @@ plot.q_power_mediation <- function(
     plot(x$n_from_power,
          ...)
   }
-  NULL
+  invisible(NULL)
 }
 
 #' @param object For the `summary`
