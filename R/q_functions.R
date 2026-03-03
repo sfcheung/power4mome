@@ -130,6 +130,11 @@
 #' @inheritParams power4test
 #' @inheritParams n_region_from_power
 #'
+#' @param nrep The number of replications
+#' to generate the simulated datasets.
+#' Default is `NULL` and will be determined
+#' internally.
+#'
 #' @param test_fun A function to do the
 #' test. See 'Details' of [power4test()]
 #' for the requirement of this function.
@@ -254,7 +259,7 @@ q_power_mediation <- function(
   test_fun = NULL,
   test_more_args = list(),
   target_power = 0.8,
-  nrep = 400,
+  nrep = NULL,
   n = 100,
   R = 1000,
   ci_type = c("mc", "boot"),
@@ -343,6 +348,25 @@ q_power_mediation <- function(
                   test_more_args
                 )
 
+  if (is.null(nrep)) {
+    if (mode == "power") {
+      nrep <- 400
+    } else if (mode == "region") {
+      if (is.null(algorithm)) {
+        # Do not override the default, for now
+        algorithm <- NULL
+      }
+      nrep <- 400
+    } else if (mode == "n") {
+      if (is.null(algorithm)) {
+        algorithm <- "probabilistic_bisection"
+      }
+      if (algorithm == "probabilistic_bisection") {
+        nrep <- 51
+      }
+    }
+  }
+
   # ==== Call power4test() =====
 
   p4t_args <- list(
@@ -376,11 +400,6 @@ q_power_mediation <- function(
 
   if (mode == "region") {
 
-    if (is.null(algorithm)) {
-      # Do not override the default, for now
-      algorithm <- NULL
-    }
-
     # Do this only if mode is not "power",
     # i.e., "region"
 
@@ -411,11 +430,6 @@ q_power_mediation <- function(
   # ==== Find the n ====
 
   if (mode == "n") {
-
-    if (is.null(algorithm)) {
-      # Do not override the default, for now
-      algorithm <- "probabilistic_bisection"
-    }
 
     n_args <- list(
               object = out,
@@ -630,7 +644,7 @@ q_power_mediation_simple <- function(
   reliability = NULL,
   test_more_args = list(),
   target_power = 0.8,
-  nrep = 400,
+  nrep = NULL,
   n = 100,
   R = 1000,
   ci_type = c("mc", "boot"),
@@ -781,7 +795,7 @@ q_power_mediation_serial <- function(
   reliability = NULL,
   test_more_args = list(),
   target_power = 0.8,
-  nrep = 400,
+  nrep = NULL,
   n = 100,
   R = 1000,
   ci_type = c("mc", "boot"),
@@ -1001,7 +1015,7 @@ q_power_mediation_parallel <- function(
   at_least_k = 1,
   test_more_args = list(),
   target_power = 0.8,
-  nrep = 400,
+  nrep = NULL,
   n = 100,
   R = 1000,
   ci_type = c("mc", "boot"),
