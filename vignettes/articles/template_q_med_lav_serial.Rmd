@@ -1,6 +1,6 @@
 ---
 title: "Quick Function: Serial Mediation with Latent Variables"
-date: "2026-02-28"
+date: "2026-03-06"
 output:
   html_document:
     fig.align: "center"
@@ -17,9 +17,17 @@ csl: apa.csl
 # Introduction
 
 This and other "Quick Function" articles
-are examples of R code to determine the
-range of sample sizes for a target level of power
-or estimate the power for a specific
+are examples of R code to:
+
+- estimate the power,
+
+- search for a sample size with a target level
+  of power, or
+
+- determine the range of sample sizes for
+  a target level of power
+
+for a specific
 scenario in
 typical mediation models using
 [`power4mome`](https://sfcheung.github.io/power4mome/).
@@ -31,7 +39,8 @@ technical details involved.
 # Prerequisite
 
 These functions are wrappers to
-`power4test()` and `n_region_from_power()`.
+`power4test()`, `n_from_power()`,
+and `n_region_from_power()`.
 For simple scenarios, users do not need
 to know how to use these advanced functions,
 though knowledge about them can help
@@ -436,11 +445,6 @@ out_power
 #> - r.cilo,r.cihi: The confidence interval of the rejection rate, based
 #>   on Wilson's (1927) method.
 #> - Refer to the tests for the meanings of other columns.
-#> 
-#> ========== n_region_from_power Results ==========
-#> 
-#> 
-#> 'mode' is not 'region' and results not available.
 ```
 
 
@@ -464,11 +468,177 @@ sample size 150.
 
 
 
+
+# Find the Sample Size with the Target Power
+
+It is also possible to estimate the
+sample size with the target level of power.
+This can be done by trying different
+sample sizes. However, if a high level of
+precision is desired and so a large number
+of replications (`nrep`), say 2000, is needed.
+
+An alternative way is find the probable
+sample size using an algorithm. This can
+be done with `mode = "n"`, to find the `n`
+(sample size). By default, the
+probabilistic bisection algorithm by
+@waeber_bisection_2013 is used. See
+@chalmers_solving_2024 for an introduction
+on using this algorithm for power analysis
+[note that the original algorithm by
+@waeber_bisection_2013, is used in `power4mome`].
+
+Finding the sample size with the target
+level of power can be done using the
+same code
+above, with the argument `mode = "n"`
+added, and a few more arguments:
+
+
+
+``` r
+out_n <- q_power_mediation_serial(
+  ab = c("m", "m", "l"),
+  ab_other = "nil",
+  cp = "s",
+  number_of_indicators = c(x = 3,
+                           m1 = 4,
+                           m2 = 3,
+                           y = 3),
+  reliability = c(x = .70,
+                  m1 = .80,
+                  m2 = .70,
+                  y = .70),
+  target_power = .80,
+  n = 200,
+  x_interval = c(100, 2000),
+  R = 199,
+  final_nrep = 2000,
+  final_R = 1000,
+  seed = 1234,
+  mode = "n"
+)
+```
+
+
+These are the arguments for this mode:
+
+- `n`: This is the initial `n`. Its value
+  does not matter because the search will
+  be based on an initial interval
+  (50 to 2000, by default; can be changed
+  by `x_interval` to a vector of the
+  lower and upper limits of the interval).
+
+- `nrep`: This argument is not necessary
+ and should be omitted.
+
+- `R`: Set this number of a value supported
+  by the method proposed by @boos_monte_2000
+  for the desired level of confidence (95%
+  by default). The first few values
+  are 39, 79, 119, 159, and 199. 199 is
+  recommended to balance speed and accuracy.
+
+- `final_nrep`: The desired number of
+  replication. The search will use a
+  much smaller value for `nrep`. However,
+  the probable solution will be checked
+  using this number of replications. a
+  sample size will be returned as a
+  solution only if it is close enough
+  to `target_power` based on this number
+  of replications.
+
+- `final_R`: Although the search can use
+  a much small value for `R` due to
+  the method by @boos_monte_2000, users
+  may want a larger number of `R` for
+  the solution. To do this, set `final_R`
+  to the `R` to be used in the checking
+  a candidate sample size.
+
+- `mode`: Setting `mode` to `"n"` enables
+  this mode.
+
+Note that this process can take a some
+time, sometimes more than 10 minutes.
+Nevertheless, power analysis is usually
+conducted in the planning stage of a
+study, and so the slow processing time is
+acceptable in this stage.
+
+
+For latent variable models in the mode `"n"`,
+it is recommended to use `x_interval` to
+increase the minimum sample size for the
+interval because the default lower limit
+is 50.
+
+
+
+
+
+This is the printout, showing only the
+section from the output of `n_from_power()`:
+
+
+```
+#> ========== n_from_power Results ==========
+#> 
+#> 
+#>                                      Setting
+#> Predictor(x):                    Sample Size
+#> Parameter:                               N/A
+#> goal:                           close_enough
+#> what:                                  point
+#> algorithm:           probabilistic_bisection
+#> Level of confidence:                  95.00%
+#> Target Power:                          0.800
+#> 
+#> - Final Value of Sample Size (n): 235
+#> 
+#> - Final Estimated Power (CI): 0.798 [0.780, 0.815]
+#> 
+#> Call `summary()` for detailed results.
+```
+
+In this example, the estimated sample
+size with power equal to (close to)
+the target level (0.80)
+is 235.
+
+Based on 2000
+replications, determined by `final_rep`,
+the estimated power for 235
+is 0.798, 95%
+confidence interval [0.780, 0.815].
+
+## How is Being "Close Enough" Defined
+
+Being "Close enough" is defined by
+the tolerance value, which is determined
+internally based on the number of replications (`final_nrep`).
+For a smaller value of `final_rep`, the tolerance will
+be larger, and so a sample with estimated power
+farther away from the target power would be
+considered as "close enough." For a `final_nrep`
+of 2000, the default tolerance is
+0.018,
+which should be practically precise enough.
+
+
+
+
+
+
 # Find the Region of Sample Sizes
 
-In addition to estimate the power for
-a sample size, the function can also
-be used to find an approximate region
+If it is not necessary to have a high
+precision to find *the sample size*
+with the target power, we can
+find an *approximate region*
 of sample sizes with levels of power
 *not* significantly different from the
 target power. This region is useful
@@ -477,15 +647,22 @@ likely to have sufficient power, but
 are not greater than necessary when
 resources are limited.
 
-Note that this process can be slow.
-Nevertheless, power analysis is usually
+Note that, unlike mode `"n"`, this
+process use bisection by default, and
+so the number of replications used in
+each trial (iteration) need to be close
+to the desired final level of replication.
+Therefore, this process can sometimes
+be very fast, but sometimes can be slow.
+Again, power analysis is usually
 conducted in the planning stage of a
-study, and so the slow processing time is
-acceptable in this stage.
+study, and so the slow processing time may
+be acceptable in this stage.
 
 Finding the region can be done using the
 same code
-above, with the argument `mode = "region"`
+for estimating power (mode `"power"`),
+with only the argument `mode = "region"`
 added:
 
 
@@ -513,6 +690,30 @@ out_region <- q_power_mediation_serial(
 ```
 
 
+These are the arguments for this mode:
+
+- `n`: This is the initial `n`. For bisection,
+  this will affect the search because
+  the initial interval will be estimated
+  based on this value Nevertheless, even
+  if this sample size's power is very different
+  from the target power, the search should
+  still be able to find the target region,
+  though may be slower.
+
+- `nrep`: This number of replications will
+  be used for all iterations. Therefore,
+  this should not be a large value, unlike
+  mode `"n"`.
+
+- `R`: For bisection, this value will be
+  used for all iterations.
+
+- `mode`: Setting `mode` to `"region"` enables
+  this mode.
+
+
+
 
 
 
@@ -525,8 +726,8 @@ section from the output of `n_region_from_power()`:
 #> 
 #> Call:
 #> n_region_from_power(object = `<hidden>`, target_power = 0.8, 
-#>     progress = TRUE, simulation_progress = TRUE, max_trials = 10, 
-#>     seed = 1234)
+#>     progress = TRUE, simulation_progress = NULL, max_trials = NULL, 
+#>     seed = 1234, algorithm = NULL)
 #> 
 #>                      Setting                                      
 #> Predictor(x)         Sample Size                                  
@@ -586,12 +787,15 @@ refer to the articles above.
 
 ## Technical Details
 
-For options of `power4test()`
+For options of `power4test()`,
+`n_from_power()`,
 and `n_region_from_power()`, please refer to
 their help pages, as well as the
 [Get-Started article](https://sfcheung.github.io/power4mome/articles/power4mome.html)
 and this [article](https://sfcheung.github.io/power4mome/articles/x_from_power_for_n.html)
-for `n_from_power()`, which is the
+for `n_from_power()`, which is also the
 function to find one of the regions,
 called twice by `n_region_from_power()`.
 
+
+# Reference(s)
