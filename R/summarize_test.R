@@ -383,10 +383,27 @@ summarize_one_test_vector <- function(x) {
     }
   }
   nrep <- length(test_results_all)
-  test_results_all <- do.call(rbind,
-                              test_results_all)
-  test_results_all <- as.data.frame(test_results_all,
+  i_na <- sapply(
+            test_results_all,
+            \(x) all(is.na(x))
+          )
+  test_results_all_not_na <- test_results_all[!i_na]
+  test_results_all_not_na <- do.call(rbind,
+                              test_results_all_not_na)
+  test_results_all_not_na <- as.data.frame(test_results_all_not_na,
                                     check.names = FALSE)
+  if (any(i_na)) {
+    # Fill NA rows
+    tmp1 <- sum(i_na)
+    tmp2 <- test_results_all_not_na[rep(1, tmp1), , drop = FALSE]
+    tmp2[] <- NA
+    tmp3 <- rbind(test_results_all_not_na,
+                  tmp2)
+    rownames(tmp3) <- NULL
+    test_results_all <- tmp3
+  } else {
+    test_results_all <- test_results_all_not_na
+  }
   test_means <- colMeans(test_results_all, na.rm = TRUE)
   if (do_bz) {
     tmp <- bz_rr(test_means)
@@ -428,9 +445,15 @@ summarize_one_test_data_frame <- function(x,
   i <- sapply(test_i,
               is.numeric)
   i_names <- colnames(test_i)[i]
+  # Identify failed iteration
+  no_test_label <- sapply(
+          x,
+          \(xx) !(test_label %in% colnames(xx$test_results))
+         )
+  x_ok <- x[!no_test_label]
   out0 <- sapply(test_i[, "test_label", drop = TRUE],
                  function(xx) {
-                   t(sapply(x,
+                   t(sapply(x_ok,
                             function(yy) {
                               tmp <- yy$test_results
                               unlist(tmp[tmp[, test_label] == xx, i])
@@ -438,6 +461,19 @@ summarize_one_test_data_frame <- function(x,
                             simplify = TRUE))
                  },
                  simplify = FALSE)
+
+  if (any(no_test_label)) {
+    # Fill NA rows
+    for (i in seq_along(out0)) {
+      j <- sum(no_test_label)
+      tmp <- out0[[i]]
+      tmp2 <- tmp[rep(1, j), ]
+      tmp2[] <- NA
+      tmp3 <- rbind(tmp, tmp2)
+      out0[[i]] <- tmp3
+    }
+  }
+
   do_bz <- FALSE
   has_R <- FALSE
   R_case <- ""

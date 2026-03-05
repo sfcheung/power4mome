@@ -1,4 +1,4 @@
-# power4mome 0.1.1.58
+# power4mome 0.1.1.59
 
 - Improve the function for extending the
   initial interval before doing a
@@ -359,6 +359,12 @@
   plots related to the search history
   of probabilistic bisection algorithm.
   (0.1.1.58)
+
+- Updated the internal functions
+ `summarize_one_test_vector ()` and
+ `summarize_one_test_data_frame()` to
+ handle failed replications properly.
+ (0.1.1.59)
 
 # power4mome 0.1.1
 
