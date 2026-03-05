@@ -1,0 +1,42 @@
+
+```{r echo=FALSE, results="hide"}
+tmp <- capture.output(print(out_n))
+i <- grepl("n_from_power Results", tmp)
+tmp <- tmp[-seq(1, which(i)-1)]
+n_target <- out_n$n_from_power$x_final
+n_power <- out_n$n_from_power$power_final
+n_power_ci <- out_n$n_from_power$ci_final
+```
+
+This is the printout, showing only the
+section from the output of `n_from_power()`:
+
+```{r echo=FALSE}
+cat(tmp, sep = "\n")
+```
+
+In this example, the estimated sample
+size with power equal to (close to)
+the target level (`r sprintf("%3.2f", out_n$n_from_power$target_power)`)
+is `r n_target`.
+
+Based on `r out_n$n_from_power$nrep_final`
+replications, determined by `final_rep`,
+the estimated power for `r n_target`
+is `r sprintf("%4.3f", n_power)`, 95%
+confidence interval `r sprintf("[%1$4.3f, %2$4.3f]", n_power_ci[1], n_power_ci[2])`.
+
+## How is Being "Close Enough" Defined
+
+Being "Close enough" is defined by
+the tolerance value, which is determined
+internally based on the number of replications (`final_nrep`).
+For a smaller value of `final_rep`, the tolerance will
+be larger, and so a sample with estimated power
+farther away from the target power would be
+considered as "close enough." For a `final_nrep`
+of 2000, the default tolerance is
+`r sprintf("%4.3f", out_n$n_from_power$power_tolerance)`,
+which should be practically precise enough.
+
+

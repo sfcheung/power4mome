@@ -1,9 +1,17 @@
 # Introduction
 
 This and other "Quick Function" articles
-are examples of R code to determine the
-range of sample sizes for a target level of power
-or estimate the power for a specific
+are examples of R code to:
+
+- estimate the power,
+
+- search for a sample size with a target level
+  of power, or
+
+- determine the range of sample sizes for
+  a target level of power
+
+for a specific
 scenario in
 typical mediation models using
 [`power4mome`](https://sfcheung.github.io/power4mome/).
@@ -15,7 +23,8 @@ technical details involved.
 # Prerequisite
 
 These functions are wrappers to
-`power4test()` and `n_region_from_power()`.
+`power4test()`, `n_from_power()`,
+and `n_region_from_power()`.
 For simple scenarios, users do not need
 to know how to use these advanced functions,
 though knowledge about them can help
