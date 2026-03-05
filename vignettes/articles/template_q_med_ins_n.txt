@@ -1,0 +1,27 @@
+
+# Find the Sample Size with the Target Power
+
+It is also possible to estimate the
+sample size with the target level of power.
+This can be done by trying different
+sample sizes. However, if a high level of
+precision is desired and so a large number
+of replications (`nrep`), say 2000, is needed.
+
+An alternative way is find the probable
+sample size using an algorithm. This can
+be done with `mode = "n"`, to find the `n`
+(sample size). By default, the
+probabilistic bisection algorithm by
+@waeber_bisection_2013 is used. See
+@chalmers_solving_2024 for an introduction
+on using this algorithm for power analysis
+[note that the original algorithm by
+@waeber_bisection_2013, is used in `power4mome`].
+
+Finding the sample size with the target
+level of power can be done using the
+same code
+above, with the argument `mode = "n"`
+added, and a few more arguments:
+

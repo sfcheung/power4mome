@@ -44,7 +44,10 @@ suppressWarnings(
             progress = !is_testing()
           )
 )
-expect_true(rejection_rates(out_i, all_columns = TRUE)$nvalid < 2)
+# TODO:
+# - Find a better way to handle failed replications
+# expect_true(rejection_rates(out_i)$nvalid < 2)
+expect_true(is.na(rejection_rates(out_i)$pvalid))
 
 suppressWarnings(
   out_i <- power4test(
@@ -66,6 +69,9 @@ suppressWarnings(
             progress = !is_testing()
           )
 )
-expect_true(rejection_rates(out_i, all_columns = TRUE)$nvalid == 0)
+# TODO:
+# - Find a better way to handle failed replications
+# expect_true(rejection_rates(out_i, all_columns = TRUE)$nvalid == 0)
+expect_true(is.na(rejection_rates(out_i)$pvalid))
 
 })

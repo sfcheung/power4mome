@@ -249,6 +249,32 @@ out_power
 ```{r load_p4t_output, child=c("template_q_med_ins_power4test_output.txt")}
 ```
 
+```{r load_n, child=c("template_q_med_ins_n.txt")}
+```
+
+```{r med_serial_n, eval=TRUE, results="hide", message=FALSE}
+out_n <- q_power_mediation_serial(
+  ab = c("m", "m", "l"),
+  ab_other = "nil",
+  cp = "s",
+  target_power = .80,
+  n = 80,
+  R = 199,
+  final_nrep = 2000,
+  final_R = 2000,
+  seed = 1234,
+  mode = "n"
+)
+```
+
+```{r load_n_args, child=c("template_q_med_ins_n_args.txt")}
+```
+
+```{r load_n_out, child=c("template_q_med_ins_n_printout.txt")}
+```
+
+
+
 ```{r load_regions, child=c("template_q_med_ins_regions.txt")}
 ```
 
@@ -267,6 +293,9 @@ out_region <- q_power_mediation_serial(
 )
 ```
 
+```{r load_region_args, child=c("template_q_med_ins_region_args.txt")}
+```
+
 ```{r load_regions_out, child=c("template_q_med_ins_regions_printout.txt")}
 ```
 
@@ -281,3 +310,4 @@ approximate region of sample sizes found.
 ```{r load_final, child=c("template_q_med_ins_final_remarks.txt")}
 ```
 
+# Reference(s)

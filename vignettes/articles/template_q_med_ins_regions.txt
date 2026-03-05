@@ -1,9 +1,10 @@
 
 # Find the Region of Sample Sizes
 
-In addition to estimate the power for
-a sample size, the function can also
-be used to find an approximate region
+If it is not necessary to have a high
+precision to find *the sample size*
+with the target power, we can
+find an *approximate region*
 of sample sizes with levels of power
 *not* significantly different from the
 target power. This region is useful
@@ -12,14 +13,21 @@ likely to have sufficient power, but
 are not greater than necessary when
 resources are limited.
 
-Note that this process can be slow.
-Nevertheless, power analysis is usually
+Note that, unlike mode `"n"`, this
+process use bisection by default, and
+so the number of replications used in
+each trial (iteration) need to be close
+to the desired final level of replication.
+Therefore, this process can sometimes
+be very fast, but sometimes can be slow.
+Again, power analysis is usually
 conducted in the planning stage of a
-study, and so the slow processing time is
-acceptable in this stage.
+study, and so the slow processing time may
+be acceptable in this stage.
 
 Finding the region can be done using the
 same code
-above, with the argument `mode = "region"`
+for estimating power (mode `"power"`),
+with only the argument `mode = "region"`
 added:
 

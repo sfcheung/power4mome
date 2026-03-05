@@ -1,0 +1,22 @@
+These are the arguments for this mode:
+
+- `n`: This is the initial `n`. For bisection,
+  this will affect the search because
+  the initial interval will be estimated
+  based on this value Nevertheless, even
+  if this sample size's power is very different
+  from the target power, the search should
+  still be able to find the target region,
+  though may be slower.
+
+- `nrep`: This number of replications will
+  be used for all iterations. Therefore,
+  this should not be a large value, unlike
+  mode `"n"`.
+
+- `R`: For bisection, this value will be
+  used for all iterations.
+
+- `mode`: Setting `mode` to `"region"` enables
+  this mode.
+

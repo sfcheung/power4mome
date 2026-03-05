@@ -1,0 +1,47 @@
+These are the arguments for this mode:
+
+- `n`: This is the initial `n`. Its value
+  does not matter because the search will
+  be based on an initial interval
+  (50 to 2000, by default; can be changed
+  by `x_interval` to a vector of the
+  lower and upper limits of the interval).
+
+- `nrep`: This argument is not necessary
+ and should be omitted.
+
+- `R`: Set this number of a value supported
+  by the method proposed by @boos_monte_2000
+  for the desired level of confidence (95%
+  by default). The first few values
+  are 39, 79, 119, 159, and 199. 199 is
+  recommended to balance speed and accuracy.
+
+- `final_nrep`: The desired number of
+  replication. The search will use a
+  much smaller value for `nrep`. However,
+  the probable solution will be checked
+  using this number of replications. a
+  sample size will be returned as a
+  solution only if it is close enough
+  to `target_power` based on this number
+  of replications.
+
+- `final_R`: Although the search can use
+  a much small value for `R` due to
+  the method by @boos_monte_2000, users
+  may want a larger number of `R` for
+  the solution. To do this, set `final_R`
+  to the `R` to be used in the checking
+  a candidate sample size.
+
+- `mode`: Setting `mode` to `"n"` enables
+  this mode.
+
+Note that this process can take a some
+time, sometimes more than 10 minutes.
+Nevertheless, power analysis is usually
+conducted in the planning stage of a
+study, and so the slow processing time is
+acceptable in this stage.
+
