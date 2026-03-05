@@ -2,17 +2,24 @@
 
 ## Introduction
 
-This and other “Quick Function” articles are examples of R code to
-determine the range of sample sizes for a target level of power or
-estimate the power for a specific scenario in typical mediation models
-using [`power4mome`](https://sfcheung.github.io/power4mome/). Users can
+This and other “Quick Function” articles are examples of R code to:
+
+- estimate the power,
+
+- search for a sample size with a target level of power, or
+
+- determine the range of sample sizes for a target level of power
+
+for a specific scenario in typical mediation models using
+[`power4mome`](https://sfcheung.github.io/power4mome/). Users can
 quickly adapt them for their scenarios. They are how-to guides and will
 not cover the technical details involved.
 
 ## Prerequisite
 
 These functions are wrappers to
-[`power4test()`](https://sfcheung.github.io/power4mome/reference/power4test.md)
+[`power4test()`](https://sfcheung.github.io/power4mome/reference/power4test.md),
+[`n_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md),
 and
 [`n_region_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md).
 For simple scenarios, users do not need to know how to use these
@@ -170,100 +177,100 @@ This is the output:
 
 ``` r
 out_power
-#> 
+#>
 #> ========== power4test Results ==========
-#> 
-#> 
+#>
+#>
 #> ====================== Model Information ======================
-#> 
+#>
 #> == Model on Factors/Variables ==
 #> m ~ x
 #> y ~ m + x
-#> 
+#>
 #> == Model on Variables/Indicators ==
 #> m ~ x
 #> y ~ m + x
-#> 
+#>
 #> ====== Population Values ======
-#> 
+#>
 #> Regressions:
 #>                    Population
-#>   m ~                        
-#>     x                 0.300  
-#>   y ~                        
-#>     m                 0.300  
-#>     x                 0.100  
-#> 
+#>   m ~
+#>     x                 0.300
+#>   y ~
+#>     m                 0.300
+#>     x                 0.100
+#>
 #> Variances:
 #>                    Population
-#>    .m                 0.910  
-#>    .y                 0.882  
-#>     x                 1.000  
-#> 
+#>    .m                 0.910
+#>    .y                 0.882
+#>     x                 1.000
+#>
 #> (Computing indirect effects for 2 paths ...)
-#> 
+#>
 #> == Population Conditional/Indirect Effect(s) ==
-#> 
+#>
 #> == Indirect Effect(s) ==
-#> 
+#>
 #>               ind
 #> x -> m -> y 0.090
 #> x -> y      0.100
-#> 
+#>
 #>  - The 'ind' column shows the indirect effect(s).
-#>  
+#>
 #> ======================= Data Information =======================
-#> 
-#> Number of Replications:  600 
-#> Sample Sizes:  80 
-#> 
+#>
+#> Number of Replications:  600
+#> Sample Sizes:  80
+#>
 #> Call print with 'data_long = TRUE' for further information.
-#> 
+#>
 #> ==================== Extra Element(s) Found ====================
-#> 
+#>
 #> - fit
 #> - mc_out
-#> 
+#>
 #> === Element(s) of the First Dataset ===
-#> 
+#>
 #> ============ <fit> ============
-#> 
+#>
 #> lavaan 0.6-21 ended normally after 1 iteration
-#> 
+#>
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
 #>   Number of model parameters                         5
-#> 
+#>
 #>   Number of observations                            80
-#> 
+#>
 #> Model Test User Model:
-#>                                                       
+#>
 #>   Test statistic                                 0.000
 #>   Degrees of freedom                                 0
-#> 
+#>
 #> =========== <mc_out> ===========
-#> 
-#> 
+#>
+#>
 #> == A 'mc_out' class object ==
-#> 
-#> Number of Monte Carlo replications: 1000 
-#> 
-#> 
+#>
+#> Number of Monte Carlo replications: 1000
+#>
+#>
 #> =============== <test_indirect: x->m->y> ===============
-#> 
+#>
 #> Mean(s) across replication:
 #>    est  cilo  cihi   sig pvalue
 #>  0.087 0.004 0.196 0.530  0.122
-#> 
+#>
 #> - The value 'sig' is the rejection rate.
 #> - If the null hypothesis is false, this is the power.
-#> - Number of valid replications for rejection rate: 600 
-#> - Proportion of valid replications for rejection rate: 1.000 
-#> 
+#> - Number of valid replications for rejection rate: 600
+#> - Proportion of valid replications for rejection rate: 1.000
+#>
 #> ========== power4test Power ==========
-#> 
-#> [test]: test_indirect: x->m->y 
-#> [test_label]: Test 
+#>
+#> [test]: test_indirect: x->m->y
+#> [test_label]: Test
 #>     est   p.v reject r.cilo r.cihi
 #> 1 0.087 1.000  0.530  0.490  0.570
 #> Notes:
@@ -275,11 +282,6 @@ out_power
 #> - r.cilo,r.cihi: The confidence interval of the rejection rate, based
 #>   on Wilson's (1927) method.
 #> - Refer to the tests for the meanings of other columns.
-#> 
-#> ========== n_region_from_power Results ==========
-#> 
-#> 
-#> 'mode' is not 'region' and results not available.
 ```
 
 The first set of output is the default printout of the output of
@@ -293,21 +295,126 @@ showing the power under the column `reject`.
 
 In this example, the power is about 0.53 for sample size 80.
 
+## Find the Sample Size with the Target Power
+
+It is also possible to estimate the sample size with the target level of
+power. This can be done by trying different sample sizes. However, if a
+high level of precision is desired and so a large number of replications
+(`nrep`), say 2000, is needed.
+
+An alternative way is find the probable sample size using an algorithm.
+This can be done with `mode = "n"`, to find the `n` (sample size). By
+default, the probabilistic bisection algorithm by Waeber et al. (2013)
+is used. See Chalmers (2024) for an introduction on using this algorithm
+for power analysis (note that the original algorithm by Waeber et al.,
+2013, is used in `power4mome`).
+
+Finding the sample size with the target level of power can be done using
+the same code above, with the argument `mode = "n"` added, and a few
+more arguments:
+
+``` r
+out_n <- q_power_mediation_simple(
+  a = "m",
+  b = "m",
+  cp = "s",
+  target_power = .80,
+  n = 80,
+  R = 199,
+  final_nrep = 2000,
+  final_R = 2000,
+  seed = 1234,
+  mode = "n"
+)
+```
+
+These are the arguments for this mode:
+
+- `n`: This is the initial `n`. Its value does not matter because the
+  search will be based on an initial interval (50 to 2000, by default;
+  can be changed by `x_interval` to a vector of the lower and upper
+  limits of the interval).
+
+- `nrep`: This argument is not necessary and should be omitted.
+
+- `R`: Set this number of a value supported by the method proposed by
+  Boos & Zhang (2000) for the desired level of confidence (95% by
+  default). The first few values are 39, 79, 119, 159, and 199. 199 is
+  recommended to balance speed and accuracy.
+
+- `final_nrep`: The desired number of replication. The search will use a
+  much smaller value for `nrep`. However, the probable solution will be
+  checked using this number of replications. a sample size will be
+  returned as a solution only if it is close enough to `target_power`
+  based on this number of replications.
+
+- `final_R`: Although the search can use a much small value for `R` due
+  to the method by Boos & Zhang (2000), users may want a larger number
+  of `R` for the solution. To do this, set `final_R` to the `R` to be
+  used in the checking a candidate sample size.
+
+- `mode`: Setting `mode` to `"n"` enables this mode.
+
+Note that this process can take a some time, sometimes more than 10
+minutes. Nevertheless, power analysis is usually conducted in the
+planning stage of a study, and so the slow processing time is acceptable
+in this stage.
+
+This is the printout, showing only the section from the output of
+[`n_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md):
+
+    #> ========== n_from_power Results ==========
+    #>
+    #>
+    #>                                      Setting
+    #> Predictor(x):                    Sample Size
+    #> Parameter:                               N/A
+    #> goal:                           close_enough
+    #> what:                                  point
+    #> algorithm:           probabilistic_bisection
+    #> Level of confidence:                  95.00%
+    #> Target Power:                          0.800
+    #>
+    #> - Final Value of Sample Size (n): 112
+    #>
+    #> - Final Estimated Power (CI): 0.800 [0.782, 0.817]
+    #>
+    #> Call `summary()` for detailed results.
+
+In this example, the estimated sample size with power equal to (close
+to) the target level (0.80) is 112.
+
+Based on 2000 replications, determined by `final_rep`, the estimated
+power for 112 is 0.800, 95% confidence interval \[0.782, 0.817\].
+
+### How is Being “Close Enough” Defined
+
+Being “Close enough” is defined by the tolerance value, which is
+determined internally based on the number of replications
+(`final_nrep`). For a smaller value of `final_rep`, the tolerance will
+be larger, and so a sample with estimated power farther away from the
+target power would be considered as “close enough.” For a `final_nrep`
+of 2000, the default tolerance is 0.018, which should be practically
+precise enough.
+
 ## Find the Region of Sample Sizes
 
-In addition to estimate the power for a sample size, the function can
-also be used to find an approximate region of sample sizes with levels
-of power *not* significantly different from the target power. This
-region is useful for determining a range of sample sizes likely to have
-sufficient power, but are not greater than necessary when resources are
-limited.
+If it is not necessary to have a high precision to find *the sample
+size* with the target power, we can find an *approximate region* of
+sample sizes with levels of power *not* significantly different from the
+target power. This region is useful for determining a range of sample
+sizes likely to have sufficient power, but are not greater than
+necessary when resources are limited.
 
-Note that this process can be slow. Nevertheless, power analysis is
-usually conducted in the planning stage of a study, and so the slow
-processing time is acceptable in this stage.
+Note that, unlike mode `"n"`, this process use bisection by default, and
+so the number of replications used in each trial (iteration) need to be
+close to the desired final level of replication. Therefore, this process
+can sometimes be very fast, but sometimes can be slow. Again, power
+analysis is usually conducted in the planning stage of a study, and so
+the slow processing time may be acceptable in this stage.
 
-Finding the region can be done using the same code above, with the
-argument `mode = "region"` added:
+Finding the region can be done using the same code for estimating power
+(mode `"power"`), with only the argument `mode = "region"` added:
 
 ``` r
 out_region <- q_power_mediation_simple(
@@ -323,34 +430,49 @@ out_region <- q_power_mediation_simple(
 )
 ```
 
+These are the arguments for this mode:
+
+- `n`: This is the initial `n`. For bisection, this will affect the
+  search because the initial interval will be estimated based on this
+  value Nevertheless, even if this sample size’s power is very different
+  from the target power, the search should still be able to find the
+  target region, though may be slower.
+
+- `nrep`: This number of replications will be used for all iterations.
+  Therefore, this should not be a large value, unlike mode `"n"`.
+
+- `R`: For bisection, this value will be used for all iterations.
+
+- `mode`: Setting `mode` to `"region"` enables this mode.
+
 This is the printout, showing only the section from the output of
 [`n_region_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md):
 
     #> ========== n_region_from_power Results ==========
-    #> 
+    #>
     #> Call:
-    #> n_region_from_power(object = `<hidden>`, target_power = 0.8, 
-    #>     progress = TRUE, simulation_progress = TRUE, max_trials = 10, 
-    #>     seed = 1234)
-    #> 
-    #>                      Setting                                      
-    #> Predictor(x)         Sample Size                                  
+    #> n_region_from_power(object = `<hidden>`, target_power = 0.8,
+    #>     progress = TRUE, simulation_progress = NULL, max_trials = NULL,
+    #>     seed = 1234, algorithm = NULL)
+    #>
+    #>                      Setting
+    #> Predictor(x)         Sample Size
     #> Goal:                Power significantly below or above the target
-    #> algorithm:           bisection                                    
-    #> Level of confidence: 95.00%                                       
-    #> Target Power:        0.800                                        
-    #> 
-    #> Solution: 
-    #> 
+    #> algorithm:           bisection
+    #> Level of confidence: 95.00%
+    #> Target Power:        0.800
+    #>
+    #> Solution:
+    #>
     #> Approximate region of sample sizes with power:
     #> - not significantly different from 0.800: 111 to 121
     #> - significantly lower than 0.800: 111
     #> - significantly higher than 0.800: 121
-    #> 
+    #>
     #> Confidence intervals of the estimated power:
     #> - for the lower bound (111): [0.752, 0.818]
     #> - for the upper bound (121): [0.782, 0.844]
-    #> 
+    #>
     #> Call `summary()` for detailed results.
 
 In this example, the range of the sample size is 111 to 121.
@@ -381,7 +503,8 @@ those with moderators. Interested users can refer to the articles above.
 ### Technical Details
 
 For options of
-[`power4test()`](https://sfcheung.github.io/power4mome/reference/power4test.md)
+[`power4test()`](https://sfcheung.github.io/power4mome/reference/power4test.md),
+[`n_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md),
 and
 [`n_region_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md),
 please refer to their help pages, as well as the [Get-Started
@@ -390,5 +513,20 @@ and this
 [article](https://sfcheung.github.io/power4mome/articles/x_from_power_for_n.html)
 for
 [`n_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md),
-which is the function to find one of the regions, called twice by
+which is also the function to find one of the regions, called twice by
 [`n_region_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md).
+
+## Reference(s)
+
+Boos, D. D., & Zhang, J. (2000). Monte Carlo evaluation of
+resampling-based hypothesis tests. *Journal of the American Statistical
+Association*, *95*(450), 486–492.
+<https://doi.org/10.1080/01621459.2000.10474226>
+
+Chalmers, R. P. (2024). Solving variables with Monte Carlo simulation
+experiments: A stochastic root-solving approach. *Psychological
+Methods*. <https://doi.org/10.1037/met0000689>
+
+Waeber, R., Frazier, P. I., & Henderson, S. G. (2013). Bisection search
+with noisy responses. *SIAM Journal on Control and Optimization*,
+*51*(3), 2261–2279. <https://doi.org/10.1137/120861898>

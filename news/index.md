@@ -1,6 +1,6 @@
 # Changelog
 
-## power4mome 0.1.1.58
+## power4mome 0.1.1.59
 
 - Improve the function for extending the initial interval before doing a
   bisection search. (0.1.1.1)
@@ -287,6 +287,10 @@
   [`pba_diagnosis()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md)
   to generate plots related to the search history of probabilistic
   bisection algorithm. (0.1.1.58)
+
+- Updated the internal functions `summarize_one_test_vector ()` and
+  `summarize_one_test_data_frame()` to handle failed replications
+  properly. (0.1.1.59)
 
 ## power4mome 0.1.1
 

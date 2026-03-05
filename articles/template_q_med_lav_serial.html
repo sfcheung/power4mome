@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.58</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.59</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -98,7 +98,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Quick Function: Serial Mediation with Latent Variables</h1>
             
-            <h4 data-toc-skip class="date">2026-02-28</h4>
+            <h4 data-toc-skip class="date">2026-03-06</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/sfcheung/power4mome/blob/main/vignettes/articles/template_q_med_lav_serial.Rmd" class="external-link"><code>vignettes/articles/template_q_med_lav_serial.Rmd</code></a></small>
       <div class="d-none name"><code>template_q_med_lav_serial.Rmd</code></div>
@@ -109,22 +109,28 @@
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p>This and other “Quick Function” articles are examples of R code to
-determine the range of sample sizes for a target level of power or
-estimate the power for a specific scenario in typical mediation models
-using <a href="https://sfcheung.github.io/power4mome/"><code>power4mome</code></a>.
+<p>This and other “Quick Function” articles are examples of R code
+to:</p>
+<ul>
+<li><p>estimate the power,</p></li>
+<li><p>search for a sample size with a target level of power,
+or</p></li>
+<li><p>determine the range of sample sizes for a target level of
+power</p></li>
+</ul>
+<p>for a specific scenario in typical mediation models using <a href="https://sfcheung.github.io/power4mome/"><code>power4mome</code></a>.
 Users can quickly adapt them for their scenarios. They are how-to guides
 and will not cover the technical details involved.</p>
 </div>
 <div class="section level2">
 <h2 id="prerequisite">Prerequisite<a class="anchor" aria-label="anchor" href="#prerequisite"></a>
 </h2>
-<p>These functions are wrappers to <code><a href="../reference/power4test.html">power4test()</a></code> and
-<code><a href="../reference/x_from_power.html">n_region_from_power()</a></code>. For simple scenarios, users do not
-need to know how to use these advanced functions, though knowledge about
-them can help customizing the search for the region. Further information
-on these functions can be found in <a href="#final_remarks">Final
-Remarks</a></p>
+<p>These functions are wrappers to <code><a href="../reference/power4test.html">power4test()</a></code>,
+<code><a href="../reference/x_from_power.html">n_from_power()</a></code>, and <code><a href="../reference/x_from_power.html">n_region_from_power()</a></code>. For
+simple scenarios, users do not need to know how to use these advanced
+functions, though knowledge about them can help customizing the search
+for the region. Further information on these functions can be found in
+<a href="#final_remarks">Final Remarks</a></p>
 </div>
 <div class="section level2">
 <h2 id="scope">Scope<a class="anchor" aria-label="anchor" href="#scope"></a>
@@ -438,12 +444,7 @@ do a final check of the sample size to be used using
 <span><span class="co">#&gt;   error rate. If the null hypothesis is false, this is the power.</span></span>
 <span><span class="co">#&gt; - r.cilo,r.cihi: The confidence interval of the rejection rate, based</span></span>
 <span><span class="co">#&gt;   on Wilson's (1927) method.</span></span>
-<span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ========== n_region_from_power Results ==========</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; 'mode' is not 'region' and results not available.</span></span></code></pre></div>
+<span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span></code></pre></div>
 <p>The first set of output is the default printout of the output of
 <code><a href="../reference/power4test.html">power4test()</a></code>. This can be used to check the model
 specified. It also automatically computes the population standardized
@@ -453,20 +454,135 @@ showing the power under the column <code>reject</code>.</p>
 <p>In this example, the power is about 0.46 for sample size 150.</p>
 </div>
 <div class="section level2">
+<h2 id="find-the-sample-size-with-the-target-power">Find the Sample Size with the Target Power<a class="anchor" aria-label="anchor" href="#find-the-sample-size-with-the-target-power"></a>
+</h2>
+<p>It is also possible to estimate the sample size with the target level
+of power. This can be done by trying different sample sizes. However, if
+a high level of precision is desired and so a large number of
+replications (<code>nrep</code>), say 2000, is needed.</p>
+<p>An alternative way is find the probable sample size using an
+algorithm. This can be done with <code>mode = "n"</code>, to find the
+<code>n</code> (sample size). By default, the probabilistic bisection
+algorithm by <span class="citation">Waeber et al. (2013)</span> is used.
+See <span class="citation">Chalmers (2024)</span> for an introduction on
+using this algorithm for power analysis <span class="citation">(note
+that the original algorithm by Waeber et al., 2013, is used in
+<code>power4mome</code>)</span>.</p>
+<p>Finding the sample size with the target level of power can be done
+using the same code above, with the argument <code>mode = "n"</code>
+added, and a few more arguments:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">out_n</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/q_power_mediation.html">q_power_mediation_serial</a></span><span class="op">(</span></span>
+<span>  ab <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"m"</span>, <span class="st">"m"</span>, <span class="st">"l"</span><span class="op">)</span>,</span>
+<span>  ab_other <span class="op">=</span> <span class="st">"nil"</span>,</span>
+<span>  cp <span class="op">=</span> <span class="st">"s"</span>,</span>
+<span>  number_of_indicators <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>                           m1 <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>                           m2 <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>                           y <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>,</span>
+<span>  reliability <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">.70</span>,</span>
+<span>                  m1 <span class="op">=</span> <span class="fl">.80</span>,</span>
+<span>                  m2 <span class="op">=</span> <span class="fl">.70</span>,</span>
+<span>                  y <span class="op">=</span> <span class="fl">.70</span><span class="op">)</span>,</span>
+<span>  target_power <span class="op">=</span> <span class="fl">.80</span>,</span>
+<span>  n <span class="op">=</span> <span class="fl">200</span>,</span>
+<span>  x_interval <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">2000</span><span class="op">)</span>,</span>
+<span>  R <span class="op">=</span> <span class="fl">199</span>,</span>
+<span>  final_nrep <span class="op">=</span> <span class="fl">2000</span>,</span>
+<span>  final_R <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>  seed <span class="op">=</span> <span class="fl">1234</span>,</span>
+<span>  mode <span class="op">=</span> <span class="st">"n"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>These are the arguments for this mode:</p>
+<ul>
+<li><p><code>n</code>: This is the initial <code>n</code>. Its value
+does not matter because the search will be based on an initial interval
+(50 to 2000, by default; can be changed by <code>x_interval</code> to a
+vector of the lower and upper limits of the interval).</p></li>
+<li><p><code>nrep</code>: This argument is not necessary and should be
+omitted.</p></li>
+<li><p><code>R</code>: Set this number of a value supported by the
+method proposed by <span class="citation">Boos &amp; Zhang (2000)</span>
+for the desired level of confidence (95% by default). The first few
+values are 39, 79, 119, 159, and 199. 199 is recommended to balance
+speed and accuracy.</p></li>
+<li><p><code>final_nrep</code>: The desired number of replication. The
+search will use a much smaller value for <code>nrep</code>. However, the
+probable solution will be checked using this number of replications. a
+sample size will be returned as a solution only if it is close enough to
+<code>target_power</code> based on this number of replications.</p></li>
+<li><p><code>final_R</code>: Although the search can use a much small
+value for <code>R</code> due to the method by <span class="citation">Boos &amp; Zhang (2000)</span>, users may want a larger
+number of <code>R</code> for the solution. To do this, set
+<code>final_R</code> to the <code>R</code> to be used in the checking a
+candidate sample size.</p></li>
+<li><p><code>mode</code>: Setting <code>mode</code> to <code>"n"</code>
+enables this mode.</p></li>
+</ul>
+<p>Note that this process can take a some time, sometimes more than 10
+minutes. Nevertheless, power analysis is usually conducted in the
+planning stage of a study, and so the slow processing time is acceptable
+in this stage.</p>
+<p>For latent variable models in the mode <code>"n"</code>, it is
+recommended to use <code>x_interval</code> to increase the minimum
+sample size for the interval because the default lower limit is 50.</p>
+<p>This is the printout, showing only the section from the output of
+<code><a href="../reference/x_from_power.html">n_from_power()</a></code>:</p>
+<pre><code><span><span class="co">#&gt; ========== n_from_power Results ==========</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;                                      Setting</span></span>
+<span><span class="co">#&gt; Predictor(x):                    Sample Size</span></span>
+<span><span class="co">#&gt; Parameter:                               N/A</span></span>
+<span><span class="co">#&gt; goal:                           close_enough</span></span>
+<span><span class="co">#&gt; what:                                  point</span></span>
+<span><span class="co">#&gt; algorithm:           probabilistic_bisection</span></span>
+<span><span class="co">#&gt; Level of confidence:                  95.00%</span></span>
+<span><span class="co">#&gt; Target Power:                          0.800</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; - Final Value of Sample Size (n): 235</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; - Final Estimated Power (CI): 0.798 [0.780, 0.815]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Call `summary()` for detailed results.</span></span></code></pre>
+<p>In this example, the estimated sample size with power equal to (close
+to) the target level (0.80) is 235.</p>
+<p>Based on 2000 replications, determined by <code>final_rep</code>, the
+estimated power for 235 is 0.798, 95% confidence interval [0.780,
+0.815].</p>
+<div class="section level3">
+<h3 id="how-is-being-close-enough-defined">How is Being “Close Enough” Defined<a class="anchor" aria-label="anchor" href="#how-is-being-close-enough-defined"></a>
+</h3>
+<p>Being “Close enough” is defined by the tolerance value, which is
+determined internally based on the number of replications
+(<code>final_nrep</code>). For a smaller value of
+<code>final_rep</code>, the tolerance will be larger, and so a sample
+with estimated power farther away from the target power would be
+considered as “close enough.” For a <code>final_nrep</code> of 2000, the
+default tolerance is 0.018, which should be practically precise
+enough.</p>
+</div>
+</div>
+<div class="section level2">
 <h2 id="find-the-region-of-sample-sizes">Find the Region of Sample Sizes<a class="anchor" aria-label="anchor" href="#find-the-region-of-sample-sizes"></a>
 </h2>
-<p>In addition to estimate the power for a sample size, the function can
-also be used to find an approximate region of sample sizes with levels
-of power <em>not</em> significantly different from the target power.
-This region is useful for determining a range of sample sizes likely to
-have sufficient power, but are not greater than necessary when resources
-are limited.</p>
-<p>Note that this process can be slow. Nevertheless, power analysis is
-usually conducted in the planning stage of a study, and so the slow
-processing time is acceptable in this stage.</p>
-<p>Finding the region can be done using the same code above, with the
-argument <code>mode = "region"</code> added:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<p>If it is not necessary to have a high precision to find <em>the
+sample size</em> with the target power, we can find an <em>approximate
+region</em> of sample sizes with levels of power <em>not</em>
+significantly different from the target power. This region is useful for
+determining a range of sample sizes likely to have sufficient power, but
+are not greater than necessary when resources are limited.</p>
+<p>Note that, unlike mode <code>"n"</code>, this process use bisection
+by default, and so the number of replications used in each trial
+(iteration) need to be close to the desired final level of replication.
+Therefore, this process can sometimes be very fast, but sometimes can be
+slow. Again, power analysis is usually conducted in the planning stage
+of a study, and so the slow processing time may be acceptable in this
+stage.</p>
+<p>Finding the region can be done using the same code for estimating
+power (mode <code>"power"</code>), with only the argument
+<code>mode = "region"</code> added:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">out_region</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/q_power_mediation.html">q_power_mediation_serial</a></span><span class="op">(</span></span>
 <span>  ab <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"m"</span>, <span class="st">"m"</span>, <span class="st">"l"</span><span class="op">)</span>,</span>
 <span>  ab_other <span class="op">=</span> <span class="st">"nil"</span>,</span>
@@ -486,14 +602,29 @@ argument <code>mode = "region"</code> added:</p>
 <span>  seed <span class="op">=</span> <span class="fl">1234</span>,</span>
 <span>  mode <span class="op">=</span> <span class="st">"region"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
+<p>These are the arguments for this mode:</p>
+<ul>
+<li><p><code>n</code>: This is the initial <code>n</code>. For
+bisection, this will affect the search because the initial interval will
+be estimated based on this value Nevertheless, even if this sample
+size’s power is very different from the target power, the search should
+still be able to find the target region, though may be slower.</p></li>
+<li><p><code>nrep</code>: This number of replications will be used for
+all iterations. Therefore, this should not be a large value, unlike mode
+<code>"n"</code>.</p></li>
+<li><p><code>R</code>: For bisection, this value will be used for all
+iterations.</p></li>
+<li><p><code>mode</code>: Setting <code>mode</code> to
+<code>"region"</code> enables this mode.</p></li>
+</ul>
 <p>This is the printout, showing only the section from the output of
 <code><a href="../reference/x_from_power.html">n_region_from_power()</a></code>:</p>
 <pre><code><span><span class="co">#&gt; ========== n_region_from_power Results ==========</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call:</span></span>
 <span><span class="co">#&gt; n_region_from_power(object = `&lt;hidden&gt;`, target_power = 0.8, </span></span>
-<span><span class="co">#&gt;     progress = TRUE, simulation_progress = TRUE, max_trials = 10, </span></span>
-<span><span class="co">#&gt;     seed = 1234)</span></span>
+<span><span class="co">#&gt;     progress = TRUE, simulation_progress = NULL, max_trials = NULL, </span></span>
+<span><span class="co">#&gt;     seed = 1234, algorithm = NULL)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;                      Setting                                      </span></span>
 <span><span class="co">#&gt; Predictor(x)         Sample Size                                  </span></span>
@@ -541,12 +672,33 @@ articles above.</p>
 <div class="section level3">
 <h3 id="technical-details">Technical Details<a class="anchor" aria-label="anchor" href="#technical-details"></a>
 </h3>
-<p>For options of <code><a href="../reference/power4test.html">power4test()</a></code> and
-<code><a href="../reference/x_from_power.html">n_region_from_power()</a></code>, please refer to their help pages, as
-well as the <a href="https://sfcheung.github.io/power4mome/articles/power4mome.html">Get-Started
+<p>For options of <code><a href="../reference/power4test.html">power4test()</a></code>,
+<code><a href="../reference/x_from_power.html">n_from_power()</a></code>, and <code><a href="../reference/x_from_power.html">n_region_from_power()</a></code>,
+please refer to their help pages, as well as the <a href="https://sfcheung.github.io/power4mome/articles/power4mome.html">Get-Started
 article</a> and this <a href="https://sfcheung.github.io/power4mome/articles/x_from_power_for_n.html">article</a>
-for <code><a href="../reference/x_from_power.html">n_from_power()</a></code>, which is the function to find one of
-the regions, called twice by <code><a href="../reference/x_from_power.html">n_region_from_power()</a></code>.</p>
+for <code><a href="../reference/x_from_power.html">n_from_power()</a></code>, which is also the function to find one
+of the regions, called twice by <code><a href="../reference/x_from_power.html">n_region_from_power()</a></code>.</p>
+</div>
+</div>
+<div class="section level2">
+<h2 class="unnumbered" id="references">Reference(s)<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0" line-spacing="2">
+<div id="ref-boos_monte_2000" class="csl-entry">
+Boos, D. D., &amp; Zhang, J. (2000). Monte <span>Carlo</span> evaluation
+of resampling-based hypothesis tests. <em>Journal of the American
+Statistical Association</em>, <em>95</em>(450), 486–492. <a href="https://doi.org/10.1080/01621459.2000.10474226" class="external-link">https://doi.org/10.1080/01621459.2000.10474226</a>
+</div>
+<div id="ref-chalmers_solving_2024" class="csl-entry">
+Chalmers, R. P. (2024). Solving variables with <span>Monte</span>
+<span>Carlo</span> simulation experiments: <span>A</span> stochastic
+root-solving approach. <em>Psychological Methods</em>. <a href="https://doi.org/10.1037/met0000689" class="external-link">https://doi.org/10.1037/met0000689</a>
+</div>
+<div id="ref-waeber_bisection_2013" class="csl-entry">
+Waeber, R., Frazier, P. I., &amp; Henderson, S. G. (2013). Bisection
+search with noisy responses. <em>SIAM Journal on Control and
+Optimization</em>, <em>51</em>(3), 2261–2279. <a href="https://doi.org/10.1137/120861898" class="external-link">https://doi.org/10.1137/120861898</a>
+</div>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
