@@ -1,4 +1,4 @@
-# power4mome 0.1.1.59
+# power4mome 0.1.1.60
 
 - Improve the function for extending the
   initial interval before doing a
@@ -365,6 +365,11 @@
  `summarize_one_test_data_frame()` to
  handle failed replications properly.
  (0.1.1.59)
+
+- Updated the help page of `x_from_power()`
+  to describe the probabilistic bisection
+  method.
+  (0.1.1.60)
 
 # power4mome 0.1.1
 
