@@ -1,6 +1,6 @@
 ---
 title: "Quick Function: Parallel Mediation with Observed Variables"
-date: "2026-03-05"
+date: "2026-03-06"
 output:
   html_document:
     fig.align: "center"
@@ -200,7 +200,6 @@ out_power <- q_power_mediation_parallel(
   as = c("s", "m", "m"),
   bs = c("l", "m", "l"),
   cp = "nil",
-  target_power = .80,
   nrep = 600,
   n = 400,
   R = 1000,
@@ -242,18 +241,14 @@ These are the arguments:
 
 
 
-- `target_power`: The target level of
-  power. Default is .80, and can be
-  omitted if this is the desired level
-  of power
-
 - `nrep`: The number of replications
   when estimating the power for a
   sample size. Default is 400.
-  Can be omitted if this is the desired
-  number of replications. Using 600 or
-  800 increases the time of each iteration,
-  but can lead to more stable results.
+  For a crude estimate, 600 or
+  800 is sufficient. For the candidate
+  sample size to be used, set it to 2000
+  or even 5000 for a more precise estimate
+  of the power.
 
 - `R`: The number of random samples used
   in forming Monte Carlo or nonparametric
@@ -277,14 +272,13 @@ These are the arguments:
   seed. Nevertheless, it is still advised
   to set this seed to an integer, to
   make the results reproducible at least
-  on the same machine.
+  on the same machine and version of `power4mome`.
   For a moderate to small `nrep`, the
   results may be
   sensitive to the `seed`. It is
   advised to do a final check of the
   sample size to be used using
-  `power4test()` and an `nrep` of 1000
-  or 2000.
+  an `nrep` of 2000 or 5000.
 
 
 This is the output:
@@ -416,7 +410,6 @@ out_power
 
 
 
-
 The first set of output is the default printout
 of the output of `power4test()`. This
 can be used to check the model specified.
@@ -429,7 +422,9 @@ under the column `reject`.
 
 In this example, the power is about
 0.50 for
-sample size 400.
+sample size 400, 95% confidence
+interval
+[0.47, 0.54].
 
 
 
@@ -469,6 +464,7 @@ out_n <- q_power_mediation_parallel(
   cp = "nil",
   target_power = .80,
   n = 80,
+  x_interval = c(50, 2000),
   R = 199,
   final_nrep = 2000,
   final_R = 2000,
@@ -480,12 +476,25 @@ out_n <- q_power_mediation_parallel(
 
 These are the arguments for this mode:
 
+- `target_power`: The target level of
+  power. Default is .80, and can be
+  omitted if this is the desired level
+  of power.
+
 - `n`: This is the initial `n`. Its value
   does not matter because the search will
   be based on an initial interval
-  (50 to 2000, by default; can be changed
-  by `x_interval` to a vector of the
-  lower and upper limits of the interval).
+  (`x_interval`).
+
+- `x_interval`: The interval of sample
+  sizes to search. Default is 50 to 2000
+  and so this argument can be omitted is
+  this range is desired. For the default
+  algorithm, it is preferable to have
+  a wide initial range. (If the model
+  may be difficult to fit for a small
+  sample size, increase the lower limit
+  to a value large enough for the model.)
 
 - `nrep`: This argument is not necessary
  and should be omitted.
@@ -636,6 +645,11 @@ out_region <- q_power_mediation_parallel(
 
 These are the arguments for this mode:
 
+- `target_power`: The target level of
+  power. Default is .80, and can be
+  omitted if this is the desired level
+  of power
+
 - `n`: This is the initial `n`. For bisection,
   this will affect the search because
   the initial interval will be estimated
@@ -697,6 +711,10 @@ section from the output of `n_region_from_power()`:
 
 In this example, the range of the sample
 size is 727 to 839.
+
+The large the `nrep`, the higher the precision
+and so the narrower this region. However,
+it will also take longer to run.
 
 The results can also be visualized using
 the `plot()` function:
