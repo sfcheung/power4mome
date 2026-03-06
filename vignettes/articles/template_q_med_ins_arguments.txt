@@ -1,16 +1,12 @@
 
-- `target_power`: The target level of
-  power. Default is .80, and can be
-  omitted if this is the desired level
-  of power
-
 - `nrep`: The number of replications
   when estimating the power for a
   sample size. Default is 400.
-  Can be omitted if this is the desired
-  number of replications. Using 600 or
-  800 increases the time of each iteration,
-  but can lead to more stable results.
+  For a crude estimate, 600 or
+  800 is sufficient. For the candidate
+  sample size to be used, set it to 2000
+  or even 5000 for a more precise estimate
+  of the power.
 
 - `R`: The number of random samples used
   in forming Monte Carlo or nonparametric
@@ -34,12 +30,11 @@
   seed. Nevertheless, it is still advised
   to set this seed to an integer, to
   make the results reproducible at least
-  on the same machine.
+  on the same machine and version of `power4mome`.
   For a moderate to small `nrep`, the
   results may be
   sensitive to the `seed`. It is
   advised to do a final check of the
   sample size to be used using
-  `power4test()` and an `nrep` of 1000
-  or 2000.
+  an `nrep` of 2000 or 5000.
 
