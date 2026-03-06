@@ -98,7 +98,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Quick Function: Serial Mediation with Observed Variables</h1>
             
-            <h4 data-toc-skip class="date">2026-03-05</h4>
+            <h4 data-toc-skip class="date">2026-03-06</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/sfcheung/power4mome/blob/main/vignettes/articles/template_q_med_obs_serial.Rmd" class="external-link"><code>vignettes/articles/template_q_med_obs_serial.Rmd</code></a></small>
       <div class="d-none name"><code>template_q_med_obs_serial.Rmd</code></div>
@@ -232,7 +232,6 @@ for tests of indirect effects.</p>
 <span>  ab <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"m"</span>, <span class="st">"m"</span>, <span class="st">"l"</span><span class="op">)</span>,</span>
 <span>  ab_other <span class="op">=</span> <span class="st">"nil"</span>,</span>
 <span>  cp <span class="op">=</span> <span class="st">"s"</span>,</span>
-<span>  target_power <span class="op">=</span> <span class="fl">.80</span>,</span>
 <span>  nrep <span class="op">=</span> <span class="fl">600</span>,</span>
 <span>  n <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>  R <span class="op">=</span> <span class="fl">1000</span>,</span>
@@ -255,12 +254,10 @@ a numeric value.</p></li>
 <li><p><code>cp</code>: The hypothesized standardized direct effect from
 the predictor <code>x</code> to the outcome variable <code>y</code>. Can
 be one of the labels supported by the <a href="#convention">convention</a>, or a numeric value.</p></li>
-<li><p><code>target_power</code>: The target level of power. Default is
-.80, and can be omitted if this is the desired level of power</p></li>
 <li><p><code>nrep</code>: The number of replications when estimating the
-power for a sample size. Default is 400. Can be omitted if this is the
-desired number of replications. Using 600 or 800 increases the time of
-each iteration, but can lead to more stable results.</p></li>
+power for a sample size. Default is 400. For a crude estimate, 600 or
+800 is sufficient. For the candidate sample size to be used, set it to
+2000 or even 5000 for a more precise estimate of the power.</p></li>
 <li><p><code>R</code>: The number of random samples used in forming
 Monte Carlo or nonparametric bootstrapping confidence intervals.
 Although they should be large when testing an effect in one single
@@ -273,11 +270,10 @@ results are reproducible <em>only</em> if the configuration is exactly
 identical. Moreover, changes in the algorithm will also make results not
 reproducible even with the same seed. Nevertheless, it is still advised
 to set this seed to an integer, to make the results reproducible at
-least on the same machine. For a moderate to small <code>nrep</code>,
-the results may be sensitive to the <code>seed</code>. It is advised to
-do a final check of the sample size to be used using
-<code><a href="../reference/power4test.html">power4test()</a></code> and an <code>nrep</code> of 1000 or
-2000.</p></li>
+least on the same machine and version of <code>power4mome</code>. For a
+moderate to small <code>nrep</code>, the results may be sensitive to the
+<code>seed</code>. It is advised to do a final check of the sample size
+to be used using an <code>nrep</code> of 2000 or 5000.</p></li>
 </ul>
 <p>This is the output:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
@@ -400,7 +396,8 @@ specified. It also automatically computes the population standardized
 indirect effect(s).</p>
 <p>The second section is the output of <code><a href="../reference/rejection_rates.html">rejection_rates()</a></code>,
 showing the power under the column <code>reject</code>.</p>
-<p>In this example, the power is about 0.71 for sample size 100.</p>
+<p>In this example, the power is about 0.71 for sample size 100, 95%
+confidence interval [0.67, 0.74].</p>
 </div>
 <div class="section level2">
 <h2 id="find-the-sample-size-with-the-target-power">Find the Sample Size with the Target Power<a class="anchor" aria-label="anchor" href="#find-the-sample-size-with-the-target-power"></a>
@@ -427,6 +424,7 @@ added, and a few more arguments:</p>
 <span>  cp <span class="op">=</span> <span class="st">"s"</span>,</span>
 <span>  target_power <span class="op">=</span> <span class="fl">.80</span>,</span>
 <span>  n <span class="op">=</span> <span class="fl">80</span>,</span>
+<span>  x_interval <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">50</span>, <span class="fl">2000</span><span class="op">)</span>,</span>
 <span>  R <span class="op">=</span> <span class="fl">199</span>,</span>
 <span>  final_nrep <span class="op">=</span> <span class="fl">2000</span>,</span>
 <span>  final_R <span class="op">=</span> <span class="fl">2000</span>,</span>
@@ -435,10 +433,17 @@ added, and a few more arguments:</p>
 <span><span class="op">)</span></span></code></pre></div>
 <p>These are the arguments for this mode:</p>
 <ul>
+<li><p><code>target_power</code>: The target level of power. Default is
+.80, and can be omitted if this is the desired level of power.</p></li>
 <li><p><code>n</code>: This is the initial <code>n</code>. Its value
 does not matter because the search will be based on an initial interval
-(50 to 2000, by default; can be changed by <code>x_interval</code> to a
-vector of the lower and upper limits of the interval).</p></li>
+(<code>x_interval</code>).</p></li>
+<li><p><code>x_interval</code>: The interval of sample sizes to search.
+Default is 50 to 2000 and so this argument can be omitted is this range
+is desired. For the default algorithm, it is preferable to have a wide
+initial range. (If the model may be difficult to fit for a small sample
+size, increase the lower limit to a value large enough for the
+model.)</p></li>
 <li><p><code>nrep</code>: This argument is not necessary and should be
 omitted.</p></li>
 <li><p><code>R</code>: Set this number of a value supported by the
@@ -533,6 +538,8 @@ power (mode <code>"power"</code>), with only the argument
 <span><span class="op">)</span></span></code></pre></div>
 <p>These are the arguments for this mode:</p>
 <ul>
+<li><p><code>target_power</code>: The target level of power. Default is
+.80, and can be omitted if this is the desired level of power</p></li>
 <li><p><code>n</code>: This is the initial <code>n</code>. For
 bisection, this will affect the search because the initial interval will
 be estimated based on this value Nevertheless, even if this sample
@@ -575,6 +582,8 @@ iterations.</p></li>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call `summary()` for detailed results.</span></span></code></pre>
 <p>In this example, the range of the sample size is 113 to 125.</p>
+<p>The large the <code>nrep</code>, the higher the precision and so the
+narrower this region. However, it will also take longer to run.</p>
 <p>The results can also be visualized using the <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>
 function:</p>
 <div class="figure" style="text-align: center">
@@ -607,7 +616,11 @@ please refer to their help pages, as well as the <a href="https://sfcheung.githu
 article</a> and this <a href="https://sfcheung.github.io/power4mome/articles/x_from_power_for_n.html">article</a>
 for <code><a href="../reference/x_from_power.html">n_from_power()</a></code>, which is also the function to find one
 of the regions, called twice by <code><a href="../reference/x_from_power.html">n_region_from_power()</a></code>.</p>
-<p>Reference(s)</p>
+</div>
+</div>
+<div class="section level2">
+<h2 class="unnumbered" id="references">Reference(s)<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
 <div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0" line-spacing="2">
 <div id="ref-boos_monte_2000" class="csl-entry">
 Boos, D. D., &amp; Zhang, J. (2000). Monte <span>Carlo</span> evaluation
@@ -623,7 +636,6 @@ root-solving approach. <em>Psychological Methods</em>. <a href="https://doi.org/
 Waeber, R., Frazier, P. I., &amp; Henderson, S. G. (2013). Bisection
 search with noisy responses. <em>SIAM Journal on Control and
 Optimization</em>, <em>51</em>(3), 2261–2279. <a href="https://doi.org/10.1137/120861898" class="external-link">https://doi.org/10.1137/120861898</a>
-</div>
 </div>
 </div>
 </div>

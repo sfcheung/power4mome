@@ -129,7 +129,6 @@ out_power <- q_power_mediation_serial(
   ab = c("m", "m", "l"),
   ab_other = "nil",
   cp = "s",
-  target_power = .80,
   nrep = 600,
   n = 100,
   R = 1000,
@@ -154,13 +153,10 @@ These are the arguments:
   `x` to the outcome variable `y`. Can be one of the labels supported by
   the [convention](#convention), or a numeric value.
 
-- `target_power`: The target level of power. Default is .80, and can be
-  omitted if this is the desired level of power
-
 - `nrep`: The number of replications when estimating the power for a
-  sample size. Default is 400. Can be omitted if this is the desired
-  number of replications. Using 600 or 800 increases the time of each
-  iteration, but can lead to more stable results.
+  sample size. Default is 400. For a crude estimate, 600 or 800 is
+  sufficient. For the candidate sample size to be used, set it to 2000
+  or even 5000 for a more precise estimate of the power.
 
 - `R`: The number of random samples used in forming Monte Carlo or
   nonparametric bootstrapping confidence intervals. Although they should
@@ -175,11 +171,10 @@ These are the arguments:
   Moreover, changes in the algorithm will also make results not
   reproducible even with the same seed. Nevertheless, it is still
   advised to set this seed to an integer, to make the results
-  reproducible at least on the same machine. For a moderate to small
-  `nrep`, the results may be sensitive to the `seed`. It is advised to
-  do a final check of the sample size to be used using
-  [`power4test()`](https://sfcheung.github.io/power4mome/reference/power4test.md)
-  and an `nrep` of 1000 or 2000.
+  reproducible at least on the same machine and version of `power4mome`.
+  For a moderate to small `nrep`, the results may be sensitive to the
+  `seed`. It is advised to do a final check of the sample size to be
+  used using an `nrep` of 2000 or 5000.
 
 This is the output:
 
@@ -308,7 +303,8 @@ The second section is the output of
 [`rejection_rates()`](https://sfcheung.github.io/power4mome/reference/rejection_rates.md),
 showing the power under the column `reject`.
 
-In this example, the power is about 0.71 for sample size 100.
+In this example, the power is about 0.71 for sample size 100, 95%
+confidence interval \[0.67, 0.74\].
 
 ## Find the Sample Size with the Target Power
 
@@ -335,6 +331,7 @@ out_n <- q_power_mediation_serial(
   cp = "s",
   target_power = .80,
   n = 80,
+  x_interval = c(50, 2000),
   R = 199,
   final_nrep = 2000,
   final_R = 2000,
@@ -345,10 +342,17 @@ out_n <- q_power_mediation_serial(
 
 These are the arguments for this mode:
 
+- `target_power`: The target level of power. Default is .80, and can be
+  omitted if this is the desired level of power.
+
 - `n`: This is the initial `n`. Its value does not matter because the
-  search will be based on an initial interval (50 to 2000, by default;
-  can be changed by `x_interval` to a vector of the lower and upper
-  limits of the interval).
+  search will be based on an initial interval (`x_interval`).
+
+- `x_interval`: The interval of sample sizes to search. Default is 50 to
+  2000 and so this argument can be omitted is this range is desired. For
+  the default algorithm, it is preferable to have a wide initial range.
+  (If the model may be difficult to fit for a small sample size,
+  increase the lower limit to a value large enough for the model.)
 
 - `nrep`: This argument is not necessary and should be omitted.
 
@@ -447,6 +451,9 @@ out_region <- q_power_mediation_serial(
 
 These are the arguments for this mode:
 
+- `target_power`: The target level of power. Default is .80, and can be
+  omitted if this is the desired level of power
+
 - `n`: This is the initial `n`. For bisection, this will affect the
   search because the initial interval will be estimated based on this
   value Nevertheless, even if this sample size’s power is very different
@@ -492,6 +499,9 @@ This is the printout, showing only the section from the output of
 
 In this example, the range of the sample size is 113 to 125.
 
+The large the `nrep`, the higher the precision and so the narrower this
+region. However, it will also take longer to run.
+
 The results can also be visualized using the
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html) function:
 
@@ -531,7 +541,7 @@ for
 which is also the function to find one of the regions, called twice by
 [`n_region_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md).
 
-Reference(s)
+## Reference(s)
 
 Boos, D. D., & Zhang, J. (2000). Monte Carlo evaluation of
 resampling-based hypothesis tests. *Journal of the American Statistical

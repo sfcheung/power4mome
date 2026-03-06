@@ -124,7 +124,6 @@ out_power <- q_power_mediation_simple(
   a = "m",
   b = "m",
   cp = "s",
-  target_power = .80,
   nrep = 600,
   n = 80,
   R = 1000,
@@ -146,13 +145,10 @@ These are the arguments:
   `x` to the outcome variable `y`. Can be one of the labels supported by
   the [convention](#convention), or a numeric value.
 
-- `target_power`: The target level of power. Default is .80, and can be
-  omitted if this is the desired level of power
-
 - `nrep`: The number of replications when estimating the power for a
-  sample size. Default is 400. Can be omitted if this is the desired
-  number of replications. Using 600 or 800 increases the time of each
-  iteration, but can lead to more stable results.
+  sample size. Default is 400. For a crude estimate, 600 or 800 is
+  sufficient. For the candidate sample size to be used, set it to 2000
+  or even 5000 for a more precise estimate of the power.
 
 - `R`: The number of random samples used in forming Monte Carlo or
   nonparametric bootstrapping confidence intervals. Although they should
@@ -167,110 +163,109 @@ These are the arguments:
   Moreover, changes in the algorithm will also make results not
   reproducible even with the same seed. Nevertheless, it is still
   advised to set this seed to an integer, to make the results
-  reproducible at least on the same machine. For a moderate to small
-  `nrep`, the results may be sensitive to the `seed`. It is advised to
-  do a final check of the sample size to be used using
-  [`power4test()`](https://sfcheung.github.io/power4mome/reference/power4test.md)
-  and an `nrep` of 1000 or 2000.
+  reproducible at least on the same machine and version of `power4mome`.
+  For a moderate to small `nrep`, the results may be sensitive to the
+  `seed`. It is advised to do a final check of the sample size to be
+  used using an `nrep` of 2000 or 5000.
 
 This is the output:
 
 ``` r
 out_power
-#>
+#> 
 #> ========== power4test Results ==========
-#>
-#>
+#> 
+#> 
 #> ====================== Model Information ======================
-#>
+#> 
 #> == Model on Factors/Variables ==
 #> m ~ x
 #> y ~ m + x
-#>
+#> 
 #> == Model on Variables/Indicators ==
 #> m ~ x
 #> y ~ m + x
-#>
+#> 
 #> ====== Population Values ======
-#>
+#> 
 #> Regressions:
 #>                    Population
-#>   m ~
-#>     x                 0.300
-#>   y ~
-#>     m                 0.300
-#>     x                 0.100
-#>
+#>   m ~                        
+#>     x                 0.300  
+#>   y ~                        
+#>     m                 0.300  
+#>     x                 0.100  
+#> 
 #> Variances:
 #>                    Population
-#>    .m                 0.910
-#>    .y                 0.882
-#>     x                 1.000
-#>
+#>    .m                 0.910  
+#>    .y                 0.882  
+#>     x                 1.000  
+#> 
 #> (Computing indirect effects for 2 paths ...)
-#>
+#> 
 #> == Population Conditional/Indirect Effect(s) ==
-#>
+#> 
 #> == Indirect Effect(s) ==
-#>
+#> 
 #>               ind
 #> x -> m -> y 0.090
 #> x -> y      0.100
-#>
+#> 
 #>  - The 'ind' column shows the indirect effect(s).
-#>
+#>  
 #> ======================= Data Information =======================
-#>
-#> Number of Replications:  600
-#> Sample Sizes:  80
-#>
+#> 
+#> Number of Replications:  600 
+#> Sample Sizes:  80 
+#> 
 #> Call print with 'data_long = TRUE' for further information.
-#>
+#> 
 #> ==================== Extra Element(s) Found ====================
-#>
+#> 
 #> - fit
 #> - mc_out
-#>
+#> 
 #> === Element(s) of the First Dataset ===
-#>
+#> 
 #> ============ <fit> ============
-#>
+#> 
 #> lavaan 0.6-21 ended normally after 1 iteration
-#>
+#> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
 #>   Number of model parameters                         5
-#>
+#> 
 #>   Number of observations                            80
-#>
+#> 
 #> Model Test User Model:
-#>
+#>                                                       
 #>   Test statistic                                 0.000
 #>   Degrees of freedom                                 0
-#>
+#> 
 #> =========== <mc_out> ===========
-#>
-#>
+#> 
+#> 
 #> == A 'mc_out' class object ==
-#>
-#> Number of Monte Carlo replications: 1000
-#>
-#>
+#> 
+#> Number of Monte Carlo replications: 1000 
+#> 
+#> 
 #> =============== <test_indirect: x->m->y> ===============
-#>
+#> 
 #> Mean(s) across replication:
 #>    est  cilo  cihi   sig pvalue
 #>  0.087 0.004 0.196 0.530  0.122
-#>
+#> 
 #> - The value 'sig' is the rejection rate.
 #> - If the null hypothesis is false, this is the power.
-#> - Number of valid replications for rejection rate: 600
-#> - Proportion of valid replications for rejection rate: 1.000
-#>
+#> - Number of valid replications for rejection rate: 600 
+#> - Proportion of valid replications for rejection rate: 1.000 
+#> 
 #> ========== power4test Power ==========
-#>
-#> [test]: test_indirect: x->m->y
-#> [test_label]: Test
+#> 
+#> [test]: test_indirect: x->m->y 
+#> [test_label]: Test 
 #>     est   p.v reject r.cilo r.cihi
 #> 1 0.087 1.000  0.530  0.490  0.570
 #> Notes:
@@ -293,7 +288,8 @@ The second section is the output of
 [`rejection_rates()`](https://sfcheung.github.io/power4mome/reference/rejection_rates.md),
 showing the power under the column `reject`.
 
-In this example, the power is about 0.53 for sample size 80.
+In this example, the power is about 0.53 for sample size 80, 95%
+confidence interval \[0.49, 0.57\].
 
 ## Find the Sample Size with the Target Power
 
@@ -320,6 +316,7 @@ out_n <- q_power_mediation_simple(
   cp = "s",
   target_power = .80,
   n = 80,
+  x_interval = c(50, 2000),
   R = 199,
   final_nrep = 2000,
   final_R = 2000,
@@ -330,10 +327,17 @@ out_n <- q_power_mediation_simple(
 
 These are the arguments for this mode:
 
+- `target_power`: The target level of power. Default is .80, and can be
+  omitted if this is the desired level of power.
+
 - `n`: This is the initial `n`. Its value does not matter because the
-  search will be based on an initial interval (50 to 2000, by default;
-  can be changed by `x_interval` to a vector of the lower and upper
-  limits of the interval).
+  search will be based on an initial interval (`x_interval`).
+
+- `x_interval`: The interval of sample sizes to search. Default is 50 to
+  2000 and so this argument can be omitted is this range is desired. For
+  the default algorithm, it is preferable to have a wide initial range.
+  (If the model may be difficult to fit for a small sample size,
+  increase the lower limit to a value large enough for the model.)
 
 - `nrep`: This argument is not necessary and should be omitted.
 
@@ -364,8 +368,8 @@ This is the printout, showing only the section from the output of
 [`n_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md):
 
     #> ========== n_from_power Results ==========
-    #>
-    #>
+    #> 
+    #> 
     #>                                      Setting
     #> Predictor(x):                    Sample Size
     #> Parameter:                               N/A
@@ -374,11 +378,11 @@ This is the printout, showing only the section from the output of
     #> algorithm:           probabilistic_bisection
     #> Level of confidence:                  95.00%
     #> Target Power:                          0.800
-    #>
+    #> 
     #> - Final Value of Sample Size (n): 112
-    #>
+    #> 
     #> - Final Estimated Power (CI): 0.800 [0.782, 0.817]
-    #>
+    #> 
     #> Call `summary()` for detailed results.
 
 In this example, the estimated sample size with power equal to (close
@@ -432,6 +436,9 @@ out_region <- q_power_mediation_simple(
 
 These are the arguments for this mode:
 
+- `target_power`: The target level of power. Default is .80, and can be
+  omitted if this is the desired level of power
+
 - `n`: This is the initial `n`. For bisection, this will affect the
   search because the initial interval will be estimated based on this
   value Nevertheless, even if this sample size’s power is very different
@@ -449,33 +456,36 @@ This is the printout, showing only the section from the output of
 [`n_region_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md):
 
     #> ========== n_region_from_power Results ==========
-    #>
+    #> 
     #> Call:
-    #> n_region_from_power(object = `<hidden>`, target_power = 0.8,
-    #>     progress = TRUE, simulation_progress = NULL, max_trials = NULL,
+    #> n_region_from_power(object = `<hidden>`, target_power = 0.8, 
+    #>     progress = TRUE, simulation_progress = NULL, max_trials = NULL, 
     #>     seed = 1234, algorithm = NULL)
-    #>
-    #>                      Setting
-    #> Predictor(x)         Sample Size
+    #> 
+    #>                      Setting                                      
+    #> Predictor(x)         Sample Size                                  
     #> Goal:                Power significantly below or above the target
-    #> algorithm:           bisection
-    #> Level of confidence: 95.00%
-    #> Target Power:        0.800
-    #>
-    #> Solution:
-    #>
+    #> algorithm:           bisection                                    
+    #> Level of confidence: 95.00%                                       
+    #> Target Power:        0.800                                        
+    #> 
+    #> Solution: 
+    #> 
     #> Approximate region of sample sizes with power:
     #> - not significantly different from 0.800: 111 to 121
     #> - significantly lower than 0.800: 111
     #> - significantly higher than 0.800: 121
-    #>
+    #> 
     #> Confidence intervals of the estimated power:
     #> - for the lower bound (111): [0.752, 0.818]
     #> - for the upper bound (121): [0.782, 0.844]
-    #>
+    #> 
     #> Call `summary()` for detailed results.
 
 In this example, the range of the sample size is 111 to 121.
+
+The large the `nrep`, the higher the precision and so the narrower this
+region. However, it will also take longer to run.
 
 The results can also be visualized using the
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html) function:
