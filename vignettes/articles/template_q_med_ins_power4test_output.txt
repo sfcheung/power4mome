@@ -1,9 +1,10 @@
 
 ```{r output=FALSE, echo=FALSE}
-power_i <- rejection_rates(out_power$power4test)$reject
+rj <- rejection_rates(out_power$power4test)
+power_i <- rj$reject
+power_ci <- c(rj$reject_ci_lo, rj$reject_ci_hi)
 n_i <- attr(out_power$power4test, "args")$n
 ```
-
 
 The first set of output is the default printout
 of the output of `power4test()`. This
@@ -17,4 +18,6 @@ under the column `reject`.
 
 In this example, the power is about
 `r sprintf("%4.2f", power_i)` for
-sample size `r n_i`.
+sample size `r n_i`, 95% confidence
+interval
+`r sprintf("[%1$4.2f, %2$4.2f]", power_ci[1], power_ci[2])`.

@@ -17,6 +17,10 @@ cat(tmp, sep = "\n")
 In this example, the range of the sample
 size is `r n_lower` to `r n_upper`.
 
+The large the `nrep`, the higher the precision
+and so the narrower this region. However,
+it will also take longer to run.
+
 The results can also be visualized using
 the `plot()` function:
 

@@ -1,5 +1,10 @@
 These are the arguments for this mode:
 
+- `target_power`: The target level of
+  power. Default is .80, and can be
+  omitted if this is the desired level
+  of power
+
 - `n`: This is the initial `n`. For bisection,
   this will affect the search because
   the initial interval will be estimated
