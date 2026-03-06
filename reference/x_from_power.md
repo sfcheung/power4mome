@@ -493,51 +493,112 @@ support for customizing the plots.
 
 ## Algorithms
 
-Two algorithms are currently available, the simple (though sometimes
-inefficient) bisection method, and a method that makes use of the
-estimated crude power curve.
+Three algorithms are currently available, the simple (though sometimes
+inefficient) bisection method, a method that makes use of the estimated
+crude power curve, and probabilistic bisection algorithm (Waeber et al.,
+2013; see Chalmers, 2024, for applying this algorithm to power
+analysis).
 
 Unlike typical root-finding problems, the prediction of the level of
 power is stochastic. Moreover, the computational cost is high when Monte
 Carlo or bootstrap confidence intervals are used to do a test because
 the estimation of the power for one single value of `x` can sometimes
 take one minute or longer. Therefore, in addition to the simple
-bisection method, a method, named *power curve* method, was also
-specifically developed for this scenario.
+bisection method, two methods, named *power curve* method (which belongs
+to the family of surrogate function approximation method reviewed in
+Chalmers, 2024) and probabilistic bisection method (Chalmers, 2024;
+Waeber et al., 2013) were also developed for this scenario.
 
 ### Bisection Method
 
-This method, `algorithm = "bisection"`, basically starts with an
-interval that probably encloses the value of `x` that meets the goal,
-and then successively narrows this interval. The mid-point of this
-interval is used as the estimate. Though simple, there are cases in
-which it can be slow. Nevertheless, preliminary examination suggests
-that this method is good enough for common scenarios. Therefore, this
-method is the default algorithm when `x` is `n`.
+This method (called informat bisection in Chalmers, 2024), enabled by
+`algorithm = "bisection"`, basically starts with an interval that
+probably encloses the value of `x` that meets the goal, and then
+successively narrows this interval. A point inside this interval,
+usually the mid-point but can also be approximated by another method
+(e.g., the power curve method), is used as the estimate. Though simple,
+there are cases in which it can be slow. Nevertheless, preliminary
+examination suggests that this method is good enough for scenarios in
+which only an approximate sample size or range of sample sizes is
+needed.
+
+The internal workflow of this method implemented in `x_from_power()`
+will be presented in a forthcoming technical vignette.
 
 ### Power Curve Method
 
-This method, `algorithm = "power_curve"`, starts with a crude power
-curve based on a few points. This tentative model is then used to
-suggest the values to examine in the next iteration. The form, not just
-the parameters, of the model can change across iterations, as more and
-more data points are available.
+This method (belongs to the surrogate function approximation family
+reviewed in Chalmers, 2024), enabled by `algorithm = "power_curve"`,
+starts with a crude power curve based on a few points. This tentative
+model is then used to suggest the values to examine in the next
+iteration. Unlike some other implementations of this family of methods,
+the form, not just the parameters, of the model can change across
+iterations, as more and more data points are available.
 
-This method is the default method for `x = "es"` with `goal = "ci_hit"`
-because the relation between the power and the population value of a
-parameter varies across parameters, unlike the relation between power
-and sample size. Therefore, taking into account the working power curve
-may help finding the desired value of `x`.
+This method is the default method for some scenarios, such as `x = "es"`
+with `goal = "ci_hit"` because the relation between the power and the
+population value of a parameter varies across parameters, unlike the
+relation between power and sample size, which is monotonic. Therefore,
+taking into account the working power curve may help finding the desired
+value of `x`.
 
 Before version 0.1.1.33, this method can be used only with the goal
 `"ci_hit"`. Since version 0.1.1.34, it supports all goals, like the
 bisection method.
 
-The technical internal workflow of this method implemented in
-`x_from_power()` can be found in this page:
+The internal workflow of this method implemented in `x_from_power()` can
+be found in this technical vignette:
 <https://sfcheung.github.io/power4mome/articles/x_from_power_workflow.html>.
 
+### Probabilistic Bisection
+
+This method, proposed by Waeber and others (2013) for stochastic
+root-solving, has been adapted by Chalmers (2024) for power analysis.
+Similar to bisection, this method starts with an interval, with a
+initial probability for each value (or range of values), such as sample
+sizes, as the sample size with the target power. A value is then
+selected to estimate power (the median, by default). Based on the
+estimated power for this value, the distribution of probabilities is
+updated. This process is repeated until some termination criteria are
+met.
+
+Unlike bisection, each iteration can be conducted with a small number of
+replications (e.g., 50). The method accumulate evidence in a Bayesian
+approach, and so the certainty of the solution is based on the
+accumulation of evidence from successive iterations, not on having
+strong evidence from a few iterations.
+
+In `x_from_power`, the version of probabilistic bisection proposed by
+Waeber et al. (2013) was implemented, with minor changes.
+
+Most importantly, when some termination criteria are met, the candidate
+value of `x` (e.g., a sample size) will be checked using a larger number
+of replications (set by `final_nrep`) to ensure that the estimated power
+is indeed close enough to the target power (based on `tolerance` value,
+determined internally but can also be set directly). If yes, it will be
+returned as the solution. If no, then the search will continue, until a
+maximum number of candidate values has been checked.
+
+Although the bisection method can be fast in some situations (e.g., when
+the interval is narrow and the solution happens to be inside the
+interval), the probabilistic bisection method is nearly guaranteed to
+converge to the solution (as long as the solution is inside the
+interval). Therefore, this is the default algorithm in some scenarios.
+
+The internal workflow of this method implemented in `x_from_power()`
+will be presented in a forthcoming technical vignette.
+
 ## References
+
+Chalmers, R. P. (2024). Solving variables with Monte Carlo simulation
+experiments: A stochastic root-solving approach. *Psychological
+Methods*. Advance online publication.
+[doi:10.1037/met0000689](https://doi.org/10.1037/met0000689)
+
+Waeber, R., Frazier, P. I., & Henderson, S. G. (2013). Bisection search
+with noisy responses. *SIAM Journal on Control and Optimization*,
+*51*(3), 2261–2279.
+[doi:10.1137/120861898](https://doi.org/10.1137/120861898)
 
 Wilson, E. B. (1927). Probable inference, the law of succession, and
 statistical inference. *Journal of the American Statistical Association,
@@ -671,7 +732,7 @@ power_vs_n <- x_from_power(test_out,
 #> 
 #> ========== Final Stage ==========
 #> 
-#> - Start at 2026-03-06 10:07:25 
+#> - Start at 2026-03-06 15:38:10 
 #> - Rejection Rates:
 #> 
 #> [test]: test_parameters: CIs (pars: m~x) 
@@ -745,7 +806,7 @@ summary(power_vs_n)
 #> 
 #> - Algorithm: bisection 
 #> - The range of values explored: 50 to 100 
-#> - Time spent in the search: 1.079 secs 
+#> - Time spent in the search: 0.8411 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 

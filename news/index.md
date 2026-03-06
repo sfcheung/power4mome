@@ -1,6 +1,6 @@
 # Changelog
 
-## power4mome 0.1.1.59
+## power4mome 0.1.1.60
 
 - Improve the function for extending the initial interval before doing a
   bisection search. (0.1.1.1)
@@ -291,6 +291,10 @@
 - Updated the internal functions `summarize_one_test_vector ()` and
   `summarize_one_test_data_frame()` to handle failed replications
   properly. (0.1.1.59)
+
+- Updated the help page of
+  [`x_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md)
+  to describe the probabilistic bisection method. (0.1.1.60)
 
 ## power4mome 0.1.1
 

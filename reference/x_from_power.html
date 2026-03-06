@@ -19,7 +19,7 @@ value."><meta property="og:image" content="https://sfcheung.github.io/power4mome
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.59</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.60</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -692,11 +692,14 @@ limited support for customizing the plots.</p>
     </div>
     <div class="section level2">
     <h2 id="algorithms">Algorithms<a class="anchor" aria-label="anchor" href="#algorithms"></a></h2>
-    <p>Two algorithms are currently available,
+    <p>Three algorithms are currently available,
 the simple (though sometimes inefficient)
-bisection method, and a method that
+bisection method, a method that
 makes use of the estimated crude power
-curve.</p>
+curve, and probabilistic bisection
+algorithm (Waeber et al., 2013;
+see Chalmers, 2024, for applying
+this algorithm to power analysis).</p>
 <p>Unlike typical root-finding problems,
 the prediction of the level of power
 is stochastic. Moreover, the computational
@@ -706,50 +709,71 @@ used to do a test because the estimation
 of the power for one single value of
 <code>x</code> can sometimes take one minute or
 longer. Therefore, in addition to
-the simple bisection method, a method,
-named <em>power curve</em> method, was also
-specifically developed for this
+the simple bisection method, two methods,
+named <em>power curve</em> method
+(which belongs to the family of
+surrogate function approximation method
+reviewed in Chalmers, 2024) and
+probabilistic bisection method
+(Chalmers, 2024; Waeber et al., 2013) were also
+developed for this
 scenario.</p><div class="section">
 <h3 id="bisection-method">Bisection Method<a class="anchor" aria-label="anchor" href="#bisection-method"></a></h3>
 
 
-<p>This method, <code>algorithm = "bisection"</code>,
+<p>This method (called informat bisection
+in Chalmers, 2024), enabled by
+<code>algorithm = "bisection"</code>,
 basically starts with
 an interval that probably encloses the
 value of <code>x</code> that meets the goal,
 and then successively narrows this
-interval. The mid-point of this
-interval is used as the estimate.
+interval. A point inside this
+interval, usually the mid-point but
+can also be approximated by another
+method (e.g., the power curve method),
+is used as the estimate.
 Though simple, there are cases in
 which it can be slow. Nevertheless,
 preliminary examination suggests that
-this method is good enough for common
-scenarios. Therefore, this method is
-the default algorithm when <code>x</code> is
-<code>n</code>.</p>
+this method is good enough for
+scenarios in which only an approximate
+sample size or range of sample sizes is
+needed.</p>
+<p>The internal workflow of
+this method implemented in
+<code>x_from_power()</code> will be presented
+in a forthcoming technical vignette.</p>
 </div>
 
 <div class="section">
 <h3 id="power-curve-method">Power Curve Method<a class="anchor" aria-label="anchor" href="#power-curve-method"></a></h3>
 
 
-<p>This method, <code>algorithm = "power_curve"</code>,
+<p>This method (belongs to the
+surrogate function approximation family
+reviewed in Chalmers, 2024),
+enabled by <code>algorithm = "power_curve"</code>,
 starts with a crude
 power curve based on a few points.
 This tentative model is then used
 to suggest the values to examine in
-the next iteration. The form, not
+the next iteration. Unlike some other
+implementations
+of this family of methods, the form, not
 just the parameters, of the
 model can change across iterations,
 as more and more data points are
 available.</p>
 <p>This method is the default method
-for <code>x = "es"</code> with <code>goal = "ci_hit"</code>
+for some scenarios, such as
+<code>x = "es"</code> with <code>goal = "ci_hit"</code>
 because the relation
 between the power and the population
 value of a parameter varies across
 parameters, unlike the relation
-between power and sample size. Therefore,
+between power and sample size, which
+is monotonic. Therefore,
 taking into account the working
 power curve may help finding the
 desired value of <code>x</code>.</p>
@@ -758,16 +782,89 @@ method can be used only with
 the goal <code>"ci_hit"</code>. Since
 version 0.1.1.34, it supports all
 goals, like the bisection method.</p>
-<p>The technical internal workflow of
+<p>The internal workflow of
 this method implemented in
 <code>x_from_power()</code> can be found in
-this page: <a href="https://sfcheung.github.io/power4mome/articles/x_from_power_workflow.html">https://sfcheung.github.io/power4mome/articles/x_from_power_workflow.html</a>.</p>
+this technical vignette: <a href="https://sfcheung.github.io/power4mome/articles/x_from_power_workflow.html">https://sfcheung.github.io/power4mome/articles/x_from_power_workflow.html</a>.</p>
+</div>
+
+<div class="section">
+<h3 id="probabilistic-bisection">Probabilistic Bisection<a class="anchor" aria-label="anchor" href="#probabilistic-bisection"></a></h3>
+
+
+<p>This method, proposed by Waeber
+and others (2013) for stochastic
+root-solving, has been adapted by
+Chalmers (2024) for power analysis.
+Similar to bisection, this method
+starts with an interval, with a
+initial probability for each value
+(or range of values), such as sample sizes,
+as the sample size with the target power.
+A value is then selected to estimate
+power (the median, by default).
+Based on the estimated power
+for this value,
+the distribution of probabilities
+is updated. This process is repeated
+until some termination criteria are met.</p>
+<p>Unlike bisection, each iteration can
+be conducted with a small number of
+replications (e.g., 50). The method
+accumulate evidence in a Bayesian
+approach, and so the certainty of the solution
+is based on the accumulation of evidence
+from successive iterations, not on
+having strong evidence from a few iterations.</p>
+<p>In <code>x_from_power</code>, the version
+of probabilistic bisection proposed
+by Waeber et al. (2013) was implemented,
+with minor changes.</p>
+<p>Most importantly, when some termination
+criteria are met, the candidate value
+of <code>x</code> (e.g., a sample size) will be
+checked using a larger number of
+replications (set by <code>final_nrep</code>)
+to ensure that the estimated power
+is indeed close enough to the target
+power (based on <code>tolerance</code> value,
+determined internally but can also be
+set directly). If yes, it will be
+returned as the solution. If no, then
+the search will continue, until a
+maximum number of candidate values
+has been checked.</p>
+<p>Although the bisection method can be fast
+in some situations (e.g., when the
+interval is narrow and the solution
+happens to be inside the interval),
+the probabilistic bisection method
+is nearly guaranteed to converge to
+the solution (as long as the solution
+is inside the interval). Therefore,
+this is the default algorithm in
+some scenarios.</p>
+<p>The internal workflow of
+this method implemented in
+<code>x_from_power()</code> will be presented
+in a forthcoming technical vignette.</p>
 </div>
 
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
-    <p>Wilson, E. B. (1927). Probable inference, the law of
+    <p>Chalmers, R. P. (2024). Solving variables
+with Monte Carlo simulation experiments:
+A stochastic root-solving approach.
+<em>Psychological Methods</em>.
+Advance online publication.
+<a href="https://doi.org/10.1037/met0000689" class="external-link">doi:10.1037/met0000689</a></p>
+<p>Waeber, R., Frazier, P. I., &amp;
+Henderson, S. G. (2013). Bisection
+search with noisy responses.
+<em>SIAM Journal on Control and Optimization</em>, <em>51</em>(3),
+2261–2279. <a href="https://doi.org/10.1137/120861898" class="external-link">doi:10.1137/120861898</a></p>
+<p>Wilson, E. B. (1927). Probable inference, the law of
 succession, and statistical inference.
 <em>Journal of the American Statistical Association, 22</em>(158),
 209-212. <a href="https://doi.org/10.1080/01621459.1927.10502953" class="external-link">doi:10.1080/01621459.1927.10502953</a></p>
@@ -898,7 +995,7 @@ and <code><a href="power4test_by_es.html">power4test_by_es()</a></code>.</p></di
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ========== Final Stage ==========</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2026-03-06 10:07:25 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2026-03-06 15:38:10 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Rejection Rates:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [test]: test_parameters: CIs (pars: m~x) </span>
@@ -972,7 +1069,7 @@ and <code><a href="power4test_by_es.html">power4test_by_es()</a></code>.</p></di
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Algorithm: bisection </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - The range of values explored: 50 to 100 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Time spent in the search: 1.079 secs </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Time spent in the search: 0.8411 secs </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - The final crude model for the power-predictor relation:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Model Type: Logistic Regression </span>
