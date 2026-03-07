@@ -12,7 +12,8 @@ These are the arguments for this mode:
   if this sample size's power is very different
   from the target power, the search should
   still be able to find the target region,
-  though may be slower.
+  though may be slower. If omitted, it will
+  be determined internally.
 
 - `nrep`: This number of replications will
   be used for all iterations. Therefore,

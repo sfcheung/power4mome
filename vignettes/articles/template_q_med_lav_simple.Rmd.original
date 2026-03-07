@@ -252,7 +252,6 @@ out_n <- q_power_mediation_simple(
                   m = .75,
                   y = .80),
   target_power = .80,
-  n = 200,
   x_interval = c(100, 2000),
   R = 199,
   final_nrep = 2000,
