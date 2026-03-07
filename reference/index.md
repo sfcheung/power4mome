@@ -59,6 +59,9 @@ Helpers for main functions
   : Plot a Power Curve
 - [`predict(`*`<power_curve>`*`)`](https://sfcheung.github.io/power4mome/reference/predict.power_curve.md)
   : Predict Method for a 'power_curve' Object
+- [`Rs_bz_supported()`](https://sfcheung.github.io/power4mome/reference/bz_helpers.md)
+  [`R_for_bz()`](https://sfcheung.github.io/power4mome/reference/bz_helpers.md)
+  : Helpers for the Boos-and-Zhang (2000) Method
 
 ## Test Functions
 

@@ -1,6 +1,6 @@
 # power4mome
 
-(Version 0.1.1.60, updated on 2026-03-06, [release
+(Version 0.1.1.61, updated on 2026-03-07, [release
 history](https://sfcheung.github.io/power4mome/news/index.html))
 
 This package is for power analysis and sample size determination for
@@ -191,6 +191,9 @@ Helpers for main functions
   : Plot a Power Curve
 - [`predict(`*`<power_curve>`*`)`](https://sfcheung.github.io/power4mome/reference/predict.power_curve.md)
   : Predict Method for a 'power_curve' Object
+- [`Rs_bz_supported()`](https://sfcheung.github.io/power4mome/reference/bz_helpers.md)
+  [`R_for_bz()`](https://sfcheung.github.io/power4mome/reference/bz_helpers.md)
+  : Helpers for the Boos-and-Zhang (2000) Method
 
 ## Test Functions
 
