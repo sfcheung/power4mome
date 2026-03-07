@@ -1,4 +1,4 @@
-# power4mome 0.1.1.60
+# power4mome 0.1.1.61
 
 - Improve the function for extending the
   initial interval before doing a
@@ -370,6 +370,11 @@
   to describe the probabilistic bisection
   method.
   (0.1.1.60)
+
+- Added some helpers for users to use
+  the Boos-Zhang-2000 method without
+  remembering the number of resamples
+  supported. (0.1.1.61)
 
 # power4mome 0.1.1
 
