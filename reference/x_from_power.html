@@ -19,7 +19,7 @@ value."><meta property="og:image" content="https://sfcheung.github.io/power4mome
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.61</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.62</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -190,7 +190,8 @@ value.</p>
 <span><span class="fu">pba_diagnosis</span><span class="op">(</span></span>
 <span>  <span class="va">a_out</span>,</span>
 <span>  p_interval <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.05</span>, <span class="fl">0.95</span><span class="op">)</span>,</span>
-<span>  posterior_xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.99</span><span class="op">)</span></span>
+<span>  posterior_xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.99</span><span class="op">)</span>,</span>
+<span>  which <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -510,6 +511,16 @@ the first plot of search history and the
 plot of posterior probability distribution,
 expressed
 in terms of the area of the distribution.</p></dd>
+
+
+<dt id="arg-which">which<a class="anchor" aria-label="anchor" href="#arg-which"></a></dt>
+<dd><p>If <code>a_out</code> is a list with
+more than one output of <code>x_from_power()</code>,
+such as the output of <code>n_region_from_power()</code>,
+<code>which</code> must be set to the name of
+one such output (<code>"below"</code> or <code>"above"</code>
+for the output of <code>n_region_from_power()</code>,
+or the output of <code>q_power_mediation_*</code>).</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -995,7 +1006,7 @@ and <code><a href="power4test_by_es.html">power4test_by_es()</a></code>.</p></di
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ========== Final Stage ==========</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2026-03-07 07:39:47 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Start at 2026-03-07 09:57:19 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Rejection Rates:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [test]: test_parameters: CIs (pars: m~x) </span>
@@ -1069,7 +1080,7 @@ and <code><a href="power4test_by_es.html">power4test_by_es()</a></code>.</p></di
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Algorithm: bisection </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - The range of values explored: 50 to 100 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Time spent in the search: 0.9385 secs </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Time spent in the search: 1.038 secs </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - The final crude model for the power-predictor relation:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Model Type: Logistic Regression </span>

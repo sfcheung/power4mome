@@ -104,7 +104,8 @@ arg_x_from_power(object, arg, arg_in = NULL)
 pba_diagnosis(
   a_out,
   p_interval = c(0.05, 0.95),
-  posterior_xlim = c(0.01, 0.99)
+  posterior_xlim = c(0.01, 0.99),
+  which = NULL
 )
 ```
 
@@ -333,6 +334,13 @@ pba_diagnosis(
   The range of the first plot of search history and the plot of
   posterior probability distribution, expressed in terms of the area of
   the distribution.
+
+- which:
+
+  If `a_out` is a list with more than one output of `x_from_power()`,
+  such as the output of `n_region_from_power()`, `which` must be set to
+  the name of one such output (`"below"` or `"above"` for the output of
+  `n_region_from_power()`, or the output of `q_power_mediation_*`).
 
 ## Value
 
@@ -732,7 +740,7 @@ power_vs_n <- x_from_power(test_out,
 #> 
 #> ========== Final Stage ==========
 #> 
-#> - Start at 2026-03-07 07:39:47 
+#> - Start at 2026-03-07 09:57:19 
 #> - Rejection Rates:
 #> 
 #> [test]: test_parameters: CIs (pars: m~x) 
@@ -806,7 +814,7 @@ summary(power_vs_n)
 #> 
 #> - Algorithm: bisection 
 #> - The range of values explored: 50 to 100 
-#> - Time spent in the search: 0.9385 secs 
+#> - Time spent in the search: 1.038 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 

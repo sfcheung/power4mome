@@ -1,6 +1,6 @@
 # Changelog
 
-## power4mome 0.1.1.61
+## power4mome 0.1.1.62
 
 - Improve the function for extending the initial interval before doing a
   bisection search. (0.1.1.1)
@@ -298,6 +298,12 @@
 
 - Added some helpers for users to use the Boos-Zhang-2000 method without
   remembering the number of resamples supported. (0.1.1.61)
+
+- Updated
+  [`pba_diagnosis()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md)
+  to support the output of
+  [`n_region_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md).
+  (0.1.1.62)
 
 ## power4mome 0.1.1
 

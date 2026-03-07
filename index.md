@@ -1,6 +1,6 @@
 # power4mome
 
-(Version 0.1.1.61, updated on 2026-03-07, [release
+(Version 0.1.1.62, updated on 2026-03-07, [release
 history](https://sfcheung.github.io/power4mome/news/index.html))
 
 This package is for power analysis and sample size determination for
