@@ -8,7 +8,8 @@ These are the arguments for this mode:
 - `n`: This is the initial `n`. Its value
   does not matter because the search will
   be based on an initial interval
-  (`x_interval`).
+  (`x_interval`). It can be omitted when
+  `mode` is `"n"`.
 
 - `x_interval`: The interval of sample
   sizes to search. Default is 50 to 2000

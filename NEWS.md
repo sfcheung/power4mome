@@ -1,4 +1,4 @@
-# power4mome 0.1.1.62
+# power4mome 0.1.1.63
 
 - Improve the function for extending the
   initial interval before doing a
@@ -379,6 +379,13 @@
 - Updated `pba_diagnosis()` to support
   the output of `n_region_from_power()`.
   (0.1.1.62)
+
+- Updated the quick functions
+  (`q_power_mediation()` and friends).
+  When `mode` is `"n"` or `"region"`,
+  it is optional to set `n`. If not
+  set, it will be determined internally.
+  (0.1.1.63)
 
 # power4mome 0.1.1
 

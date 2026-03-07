@@ -19,7 +19,7 @@ q_power_mediation(
   test_more_args = list(),
   target_power = 0.8,
   nrep = NULL,
-  n = 100,
+  n = NULL,
   R = 1000,
   ci_type = c("mc", "boot"),
   seed = NULL,
@@ -48,7 +48,7 @@ q_power_mediation_simple(
   test_more_args = list(),
   target_power = 0.8,
   nrep = NULL,
-  n = 100,
+  n = NULL,
   R = 1000,
   ci_type = c("mc", "boot"),
   seed = NULL,
@@ -71,7 +71,7 @@ q_power_mediation_serial(
   test_more_args = list(),
   target_power = 0.8,
   nrep = NULL,
-  n = 100,
+  n = NULL,
   R = 1000,
   ci_type = c("mc", "boot"),
   seed = NULL,
@@ -96,7 +96,7 @@ q_power_mediation_parallel(
   test_more_args = list(),
   target_power = 0.8,
   nrep = NULL,
-  n = 100,
+  n = NULL,
   R = 1000,
   ci_type = c("mc", "boot"),
   seed = NULL,
@@ -171,8 +171,12 @@ to generate the simulated datasets.
 Default is \code{NULL} and will be determined
 internally.}
 
-\item{n}{The sample size for each
-dataset. Default is 100.}
+\item{n}{The sample size for the
+first run of \code{\link[=power4test]{power4test()}}. Must be
+set to a sample size if \code{mode} is
+\code{"power"}. For the other modes,
+if \code{NULL}, the default, it will be
+determined internally.}
 
 \item{R}{The number of replications
 to generate the Monte Carlo or

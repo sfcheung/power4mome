@@ -297,7 +297,6 @@ out_n <- q_power_mediation_parallel(
                   m2 = .70,
                   y = .70),
   target_power = .80,
-  n = 300,
   x_interval = c(200, 2000),
   R = 199,
   final_nrep = 2000,

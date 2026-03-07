@@ -130,6 +130,13 @@
 #' @inheritParams power4test
 #' @inheritParams n_region_from_power
 #'
+#' @param n The sample size for the
+#' first run of [power4test()]. Must be
+#' set to a sample size if `mode` is
+#' `"power"`. For the other modes,
+#' if `NULL`, the default, it will be
+#' determined internally.
+#'
 #' @param nrep The number of replications
 #' to generate the simulated datasets.
 #' Default is `NULL` and will be determined
@@ -260,7 +267,7 @@ q_power_mediation <- function(
   test_more_args = list(),
   target_power = 0.8,
   nrep = NULL,
-  n = 100,
+  n = NULL,
   R = 1000,
   ci_type = c("mc", "boot"),
   seed = NULL,
@@ -277,6 +284,12 @@ q_power_mediation <- function(
   # wrappers.
   ci_type <- match.arg(ci_type)
   mode <- match.arg(mode)
+
+  if (mode == "power") {
+    if (is.null(n)) {
+      stop("'n' must be set to a sample size if mode is 'power'")
+    }
+  }
 
   if (progress) {
     tmp <- switch(
@@ -296,6 +309,36 @@ q_power_mediation <- function(
     cat("\n",
         tmp,
         "\n\n")
+  }
+
+  # ==== Set n if mode is region or n ====
+
+  if (is.null(n)) {
+    tmp <- match.call()
+    if (mode == "region") {
+      tmp2 <- eval(formals(n_region_from_power)$x_interval)
+      if (is.null(tmp$x_interval)) {
+        if (is.null(tmp2)) {
+          n <- 200
+        } else {
+          n <- mean(tmp2)
+        }
+      } else {
+        n <- mean(eval(tmp$x_interval))
+      }
+    }
+    if (mode == "n") {
+      tmp2 <- eval(formals(n_from_power)$x_interval)
+      if (is.null(tmp$x_interval)) {
+        if (is.null(tmp2)) {
+          n <- 200
+        } else {
+          n <- mean(tmp2)
+        }
+      } else {
+        n <- mean(eval(tmp$x_interval))
+      }
+    }
   }
 
   if (!parallel &&
@@ -645,7 +688,7 @@ q_power_mediation_simple <- function(
   test_more_args = list(),
   target_power = 0.8,
   nrep = NULL,
-  n = 100,
+  n = NULL,
   R = 1000,
   ci_type = c("mc", "boot"),
   seed = NULL,
@@ -796,7 +839,7 @@ q_power_mediation_serial <- function(
   test_more_args = list(),
   target_power = 0.8,
   nrep = NULL,
-  n = 100,
+  n = NULL,
   R = 1000,
   ci_type = c("mc", "boot"),
   seed = NULL,
@@ -1016,7 +1059,7 @@ q_power_mediation_parallel <- function(
   test_more_args = list(),
   target_power = 0.8,
   nrep = NULL,
-  n = 100,
+  n = NULL,
   R = 1000,
   ci_type = c("mc", "boot"),
   seed = NULL,
@@ -1119,8 +1162,6 @@ q_power_mediation_parallel <- function(
     reliability = reliability,
     test_fun = "test_k_indirect_effects",
     test_more_args = test_more_args,
-    omnibus = omnibus,
-    at_least_k = at_least_k,
     target_power = target_power,
     nrep = nrep,
     n = n,
@@ -1134,6 +1175,8 @@ q_power_mediation_parallel <- function(
     max_trials = max_trials,
     algorithm = algorithm,
     ...,
+    omnibus = omnibus,
+    at_least_k = at_least_k,
     mode = mode
   )
   out
