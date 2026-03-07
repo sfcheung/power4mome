@@ -2047,21 +2047,41 @@ arg_x_from_power <- function(
 #' expressed
 #' in terms of the area of the distribution.
 #'
+#' @param which If `a_out` is a list with
+#' more than one output of [x_from_power()],
+#' such as the output of [n_region_from_power()],
+#' `which` must be set to the name of
+#' one such output (`"below"` or `"above"`
+#' for the output of [n_region_from_power()],
+#' or the output of `q_power_mediation_*`).
+#'
 #' @export
 pba_diagnosis <- function(
   a_out,
   p_interval = c(.05, .95),
-  posterior_xlim = c(.01, .99)
+  posterior_xlim = c(.01, .99),
+  which = NULL
 ) {
-  if (!inherits(class(a_out), "x_from_power")) {
+  if (!inherits(a_out, "x_from_power")) {
     i <- sapply(a_out,
                 inherits,
-                what = "x_from_power")
+                what = c("x_from_power", "n_region_from_power"))
     if (any(i)) {
       a_out <- a_out[[which(i)]]
     } else {
-      warning("No x_from_power object found")
-      invisible(NULL)
+      warning("No supported object found")
+      return(invisible(NULL))
+    }
+    if (inherits(a_out, "n_region_from_power")) {
+      tmp <- names(a_out)
+      if (is.null(which) ||
+          !isFALSE(is.na(match(which, tmp))) ||
+          length(which) != 1) {
+        stop("'which' should be set to one of these: ",
+             paste0(sQuote(tmp), collapse = ","))
+      } else {
+        a_out <- a_out[[which]]
+      }
     }
   }
   if (a_out$algorithm != "probabilistic_bisection") {

@@ -1,4 +1,4 @@
-# power4mome 0.1.1.61
+# power4mome 0.1.1.62
 
 - Improve the function for extending the
   initial interval before doing a
@@ -375,6 +375,10 @@
   the Boos-Zhang-2000 method without
   remembering the number of resamples
   supported. (0.1.1.61)
+
+- Updated `pba_diagnosis()` to support
+  the output of `n_region_from_power()`.
+  (0.1.1.62)
 
 # power4mome 0.1.1
 
