@@ -1,6 +1,6 @@
 # Changelog
 
-## power4mome 0.1.1.62
+## power4mome 0.1.1.63
 
 - Improve the function for extending the initial interval before doing a
   bisection search. (0.1.1.1)
@@ -304,6 +304,11 @@
   to support the output of
   [`n_region_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md).
   (0.1.1.62)
+
+- Updated the quick functions
+  ([`q_power_mediation()`](https://sfcheung.github.io/power4mome/reference/q_power_mediation.md)
+  and friends). When `mode` is `"n"` or `"region"`, it is optional to
+  set `n`. If not set, it will be determined internally. (0.1.1.63)
 
 ## power4mome 0.1.1
 

@@ -367,7 +367,6 @@ out_n <- q_power_mediation_simple(
                   m = .75,
                   y = .80),
   target_power = .80,
-  n = 200,
   x_interval = c(100, 2000),
   R = 199,
   final_nrep = 2000,
@@ -383,7 +382,8 @@ These are the arguments for this mode:
   omitted if this is the desired level of power.
 
 - `n`: This is the initial `n`. Its value does not matter because the
-  search will be based on an initial interval (`x_interval`).
+  search will be based on an initial interval (`x_interval`). It can be
+  omitted when `mode` is `"n"`.
 
 - `x_interval`: The interval of sample sizes to search. Default is 50 to
   2000 and so this argument can be omitted is this range is desired. For
@@ -435,17 +435,17 @@ This is the printout, showing only the section from the output of
     #> Level of confidence:                  95.00%
     #> Target Power:                          0.800
     #> 
-    #> - Final Value of Sample Size (n): 228
+    #> - Final Value of Sample Size (n): 229
     #> 
-    #> - Final Estimated Power (CI): 0.799 [0.781, 0.816]
+    #> - Final Estimated Power (CI): 0.805 [0.787, 0.822]
     #> 
     #> Call `summary()` for detailed results.
 
 In this example, the estimated sample size with power equal to (close
-to) the target level (0.80) is 228.
+to) the target level (0.80) is 229.
 
 Based on 2000 replications, determined by `final_rep`, the estimated
-power for 228 is 0.799, 95% confidence interval \[0.781, 0.816\].
+power for 229 is 0.805, 95% confidence interval \[0.787, 0.822\].
 
 ### How is Being “Close Enough” Defined
 
@@ -505,7 +505,8 @@ These are the arguments for this mode:
   search because the initial interval will be estimated based on this
   value Nevertheless, even if this sample size’s power is very different
   from the target power, the search should still be able to find the
-  target region, though may be slower.
+  target region, though may be slower. If omitted, it will be determined
+  internally.
 
 - `nrep`: This number of replications will be used for all iterations.
   Therefore, this should not be a large value, unlike mode `"n"`.

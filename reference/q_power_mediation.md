@@ -15,7 +15,7 @@ q_power_mediation(
   test_more_args = list(),
   target_power = 0.8,
   nrep = NULL,
-  n = 100,
+  n = NULL,
   R = 1000,
   ci_type = c("mc", "boot"),
   seed = NULL,
@@ -47,7 +47,7 @@ q_power_mediation_simple(
   test_more_args = list(),
   target_power = 0.8,
   nrep = NULL,
-  n = 100,
+  n = NULL,
   R = 1000,
   ci_type = c("mc", "boot"),
   seed = NULL,
@@ -70,7 +70,7 @@ q_power_mediation_serial(
   test_more_args = list(),
   target_power = 0.8,
   nrep = NULL,
-  n = 100,
+  n = NULL,
   R = 1000,
   ci_type = c("mc", "boot"),
   seed = NULL,
@@ -95,7 +95,7 @@ q_power_mediation_parallel(
   test_more_args = list(),
   target_power = 0.8,
   nrep = NULL,
-  n = 100,
+  n = NULL,
   R = 1000,
   ci_type = c("mc", "boot"),
   seed = NULL,
@@ -165,7 +165,10 @@ q_power_mediation_parallel(
 
 - n:
 
-  The sample size for each dataset. Default is 100.
+  The sample size for the first run of
+  [`power4test()`](https://sfcheung.github.io/power4mome/reference/power4test.md).
+  Must be set to a sample size if `mode` is `"power"`. For the other
+  modes, if `NULL`, the default, it will be determined internally.
 
 - R:
 

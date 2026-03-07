@@ -98,7 +98,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Quick Function: Parallel Mediation with Latent Variables</h1>
             
-            <h4 data-toc-skip class="date">2026-03-06</h4>
+            <h4 data-toc-skip class="date">2026-03-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/sfcheung/power4mome/blob/main/vignettes/articles/template_q_med_lav_parallel.Rmd" class="external-link"><code>vignettes/articles/template_q_med_lav_parallel.Rmd</code></a></small>
       <div class="d-none name"><code>template_q_med_lav_parallel.Rmd</code></div>
@@ -479,7 +479,6 @@ added, and a few more arguments:</p>
 <span>                  m2 <span class="op">=</span> <span class="fl">.70</span>,</span>
 <span>                  y <span class="op">=</span> <span class="fl">.70</span><span class="op">)</span>,</span>
 <span>  target_power <span class="op">=</span> <span class="fl">.80</span>,</span>
-<span>  n <span class="op">=</span> <span class="fl">300</span>,</span>
 <span>  x_interval <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">200</span>, <span class="fl">2000</span><span class="op">)</span>,</span>
 <span>  R <span class="op">=</span> <span class="fl">199</span>,</span>
 <span>  final_nrep <span class="op">=</span> <span class="fl">2000</span>,</span>
@@ -493,7 +492,8 @@ added, and a few more arguments:</p>
 .80, and can be omitted if this is the desired level of power.</p></li>
 <li><p><code>n</code>: This is the initial <code>n</code>. Its value
 does not matter because the search will be based on an initial interval
-(<code>x_interval</code>).</p></li>
+(<code>x_interval</code>). It can be omitted when <code>mode</code> is
+<code>"n"</code>.</p></li>
 <li><p><code>x_interval</code>: The interval of sample sizes to search.
 Default is 50 to 2000 and so this argument can be omitted is this range
 is desired. For the default algorithm, it is preferable to have a wide
@@ -541,15 +541,15 @@ sample size for the interval because the default lower limit is 50.</p>
 <span><span class="co">#&gt; Level of confidence:                  95.00%</span></span>
 <span><span class="co">#&gt; Target Power:                          0.800</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; - Final Value of Sample Size (n): 257</span></span>
+<span><span class="co">#&gt; - Final Value of Sample Size (n): 262</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; - Final Estimated Power (CI): 0.805 [0.787, 0.822]</span></span>
+<span><span class="co">#&gt; - Final Estimated Power (CI): 0.805 [0.788, 0.822]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call `summary()` for detailed results.</span></span></code></pre>
 <p>In this example, the estimated sample size with power equal to (close
-to) the target level (0.80) is 257.</p>
+to) the target level (0.80) is 262.</p>
 <p>Based on 2000 replications, determined by <code>final_rep</code>, the
-estimated power for 257 is 0.805, 95% confidence interval [0.787,
+estimated power for 262 is 0.805, 95% confidence interval [0.788,
 0.822].</p>
 <div class="section level3">
 <h3 id="how-is-being-close-enough-defined">How is Being “Close Enough” Defined<a class="anchor" aria-label="anchor" href="#how-is-being-close-enough-defined"></a>
@@ -611,7 +611,8 @@ power (mode <code>"power"</code>), with only the argument
 bisection, this will affect the search because the initial interval will
 be estimated based on this value Nevertheless, even if this sample
 size’s power is very different from the target power, the search should
-still be able to find the target region, though may be slower.</p></li>
+still be able to find the target region, though may be slower. If
+omitted, it will be determined internally.</p></li>
 <li><p><code>nrep</code>: This number of replications will be used for
 all iterations. Therefore, this should not be a large value, unlike mode
 <code>"n"</code>.</p></li>
