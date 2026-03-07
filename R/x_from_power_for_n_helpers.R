@@ -69,7 +69,7 @@ set_n_range <- function(object,
   # No need for other arguments because only `reject` is used
   reject0 <- rejection_rates(object)
   power0 <- reject0$reject[1]
-  if (n0 >= n_max) {
+  if (n0 > n_max) {
     stop("Initial sample size (",
           n0,
           ") is equal to or greater than 'n_max' (",
