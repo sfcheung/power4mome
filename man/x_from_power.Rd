@@ -105,7 +105,8 @@ arg_x_from_power(object, arg, arg_in = NULL)
 pba_diagnosis(
   a_out,
   p_interval = c(0.05, 0.95),
-  posterior_xlim = c(0.01, 0.99)
+  posterior_xlim = c(0.01, 0.99),
+  which = NULL
 )
 }
 \arguments{
@@ -358,6 +359,14 @@ the first plot of search history and the
 plot of posterior probability distribution,
 expressed
 in terms of the area of the distribution.}
+
+\item{which}{If \code{a_out} is a list with
+more than one output of \code{\link[=x_from_power]{x_from_power()}},
+such as the output of \code{\link[=n_region_from_power]{n_region_from_power()}},
+\code{which} must be set to the name of
+one such output (\code{"below"} or \code{"above"}
+for the output of \code{\link[=n_region_from_power]{n_region_from_power()}},
+or the output of \verb{q_power_mediation_*}).}
 }
 \value{
 The function \code{\link[=x_from_power]{x_from_power()}}
