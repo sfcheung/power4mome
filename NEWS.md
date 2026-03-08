@@ -399,7 +399,7 @@
   the total indirect effect.
   (0.1.1.65)
 
-- Added `gen_missing()` for generating
+- Added `missing_values()` for generating
   missing values, through the argument
   `process_data`.
   (0.1.1.66)
