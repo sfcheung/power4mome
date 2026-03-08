@@ -1,4 +1,4 @@
-# power4mome 0.1.1.66
+# power4mome 0.1.1.67
 
 - Improve the function for extending the
   initial interval before doing a
@@ -399,10 +399,16 @@
   the total indirect effect.
   (0.1.1.65)
 
-- Added `gen_missing()` for generating
+- Added `missing_values()` for generating
   missing values, through the argument
   `process_data`.
   (0.1.1.66)
+
+- Added `ordinal_variables()` for
+  converting continuous indicator variables
+  to ordinal variables, through the
+  argument `process_data`.
+  (0.1.1.67)
 
 # power4mome 0.1.1
 

@@ -139,7 +139,8 @@ reference:
     scores to scale scores.
 - contents:
   - scale_scores
-  - gen_missing
+  - missing_values
+  - ordinal_variables
 - title: Advanced Functions
   desc:  >
     For advanced users to
