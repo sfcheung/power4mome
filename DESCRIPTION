@@ -1,6 +1,6 @@
 Package: power4mome
 Title: Power Analysis for Moderation and Mediation
-Version: 0.1.1.62
+Version: 0.1.1.66
 Authors@R:
     c(person(given = "Shu Fai",
            family = "Cheung",
@@ -49,7 +49,8 @@ Imports:
     yaml,
     graphics,
     methods,
-    cli
+    cli,
+    mice
 Config/Needs/website: rmarkdown
 LazyData: true
 VignetteBuilder: knitr

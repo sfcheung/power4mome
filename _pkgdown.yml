@@ -139,6 +139,7 @@ reference:
     scores to scale scores.
 - contents:
   - scale_scores
+  - gen_missing
 - title: Advanced Functions
   desc:  >
     For advanced users to

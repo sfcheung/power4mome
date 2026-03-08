@@ -1,4 +1,4 @@
-# power4mome 0.1.1.63
+# power4mome 0.1.1.66
 
 - Improve the function for extending the
   initial interval before doing a
@@ -386,6 +386,23 @@
   it is optional to set `n`. If not
   set, it will be determined internally.
   (0.1.1.63)
+
+- The internal helper `do_FUN()` for
+  parallel processing now export functions
+  defined in the global environment to
+  clusters, because they may be used
+  in arguments such as `process_data`.
+  (0.1.1.64)
+
+- Updated `test_k_indirect_effects()`
+  to support computing and testing
+  the total indirect effect.
+  (0.1.1.65)
+
+- Added `gen_missing()` for generating
+  missing values, through the argument
+  `process_data`.
+  (0.1.1.66)
 
 # power4mome 0.1.1
 

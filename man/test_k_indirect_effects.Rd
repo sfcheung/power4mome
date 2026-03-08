@@ -16,7 +16,7 @@ test_k_indirect_effects(
   check_post_check = TRUE,
   test_method = NULL,
   ...,
-  omnibus = c("no", "all_sig", "at_least_one_sig", "at_least_k_sig"),
+  omnibus = c("no", "all_sig", "at_least_one_sig", "at_least_k_sig", "total"),
   at_least_k = 1,
   p_adjust_method = "none",
   fit_name = "fit",
@@ -112,7 +112,9 @@ then only one row of test is stored,
 and the test is declared significant
 if at least \code{k} of the paths is
 significant, \code{k} determined by the
-argument \code{at_least_k}.}
+argument \code{at_least_k}. If \code{"total"},
+then the total indirect effect will
+be tested.}
 
 \item{at_least_k}{The minimum number
 of paths required to be significant
@@ -196,6 +198,10 @@ nonparametric bootstrap confidence
 interval is supported for models
 fitted by regression using
 \code{\link[stats:lm]{stats::lm()}}.
+
+It also supports testing the total
+indirect effect. Just set \code{omnibus}
+to \code{"total"}.
 }
 \examples{
 

@@ -29,6 +29,19 @@ do_FUN <- function(X,
     if (is.null(cl)) {
       cl <- parallel::makeCluster(ncores)
     }
+
+    # Export all functions defined in the global environment
+
+    global_names <- ls(envir = .GlobalEnv)
+    global_fs <- sapply(
+                  global_names,
+                  \(x) is.function(get(x))
+                )
+    if (any(global_fs)) {
+      to_export <- global_names[global_fs]
+      parallel::clusterExport(cl, to_export)
+    }
+
     if (!is.null(iseed)) {
       parallel::clusterSetRNGStream(cl = cl,
                                     iseed = iseed)
