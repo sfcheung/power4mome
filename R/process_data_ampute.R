@@ -18,14 +18,14 @@
 #'
 #' In addition to `data`, only two
 #' arguments are explicitly defined for
-#' [gen_missing()]: `prop` and `mech`.
+#' [missing_values()]: `prop` and `mech`.
 #' The argument `prop` is defined to remind
 #' users of the default value for this
 #' argument. The argument `mech`, specifying
 #' the missing data mechanism, is
 #' defined because its default value
 #' is different from that of [mice::ampute()].
-#' For [gen_missing()], the default value
+#' For [missing_values()], the default value
 #' is `"MCAR"`, missing completely at
 #' random.
 #'
@@ -100,7 +100,7 @@
 #'          model = mod,
 #'          pop_es = mod_es,
 #'          n = 200,
-#'          process_data = list(fun = "gen_missing",
+#'          process_data = list(fun = "missing_values",
 #'                              args = list(prop = .75)),
 #'          test_fun = test_parameters,
 #'          test_args = list(op = "~"),
@@ -111,7 +111,7 @@
 #' head(dat, 50)
 #'
 #' @export
-gen_missing <- function(
+missing_values <- function(
   data,
   ...,
   prop = 0.5,

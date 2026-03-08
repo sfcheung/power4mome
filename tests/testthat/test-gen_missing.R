@@ -1,6 +1,6 @@
 library(testthat)
 
-test_that("gen_missing", {
+test_that("missing_values", {
 
 model_simple_med <-
 "
@@ -20,7 +20,7 @@ sim_only1 <- power4test(
                   model = model_simple_med,
                   pop_es = model_simple_med_es,
                   n = 12000,
-                  process_data = list(fun = "gen_missing"),
+                  process_data = list(fun = "missing_values"),
                   fit_model_args = list(estimator = "ML"),
                   progress = !is_testing(),
                   parallel = FALSE,
@@ -49,7 +49,7 @@ sim_only2 <- power4test(
                   pop_es = model_simple_med_es,
                   n = 12000,
                   process_data = list(
-                    fun = "gen_missing",
+                    fun = "missing_values",
                     args = list(patterns = my_patterns)),
                   fit_model_args = list(estimator = "ML"),
                   progress = !is_testing(),
@@ -82,7 +82,7 @@ sim_only3 <- power4test(
                   pop_es = model_simple_med_es,
                   n = 10000,
                   process_data = list(
-                    fun = "gen_missing",
+                    fun = "missing_values",
                     args = list(patterns = my_patterns,
                                 mech = "MAR",
                                 prop = .25)),
@@ -118,7 +118,7 @@ sim_only1 <- power4test(
                   number_of_indicators = k,
                   reliability = rel,
                   n = 12000,
-                  process_data = list(fun = "gen_missing"),
+                  process_data = list(fun = "missing_values"),
                   fit_model_args = list(estimator = "ML"),
                   progress = !is_testing(),
                   parallel = FALSE,
