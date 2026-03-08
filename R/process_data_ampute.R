@@ -101,14 +101,14 @@
 #'          pop_es = mod_es,
 #'          n = 200,
 #'          process_data = list(fun = "gen_missing",
-#'                              args = list(prop = .25)),
+#'                              args = list(prop = .75)),
 #'          test_fun = test_parameters,
 #'          test_args = list(op = "~"),
 #'          parallel = FALSE,
 #'          iseed = 1234)
 #'
 #' dat <- pool_sim_data(out)
-#' head(dat)
+#' head(dat, 50)
 #'
 #' @export
 gen_missing <- function(
