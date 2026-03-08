@@ -97,7 +97,9 @@ then only one row of test is stored,
 and the test is declared significant
 if at least \code{k} of the paths is
 significant, \code{k} determined by the
-argument \code{at_least_k}.}
+argument \code{at_least_k}. If \code{"total"},
+then the total indirect effect will
+be tested.}
 
 \item{at_least_k}{The minimum number
 of paths required to be significant

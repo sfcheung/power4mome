@@ -19,6 +19,10 @@
 #' fitted by regression using
 #' [stats::lm()].
 #'
+#' It also supports testing the total
+#' indirect effect. Just set `omnibus`
+#' to `"total"`.
+#'
 #' @return
 #' In its normal usage, it returns
 #' a data frame with the
@@ -84,7 +88,9 @@
 #' and the test is declared significant
 #' if at least `k` of the paths is
 #' significant, `k` determined by the
-#' argument `at_least_k`.
+#' argument `at_least_k`. If `"total"`,
+#' then the total indirect effect will
+#' be tested.
 #'
 #' @param at_least_k The minimum number
 #' of paths required to be significant
@@ -172,7 +178,7 @@ test_k_indirect_effects <- function(
                             check_post_check = TRUE,
                             test_method = NULL,
                             ...,
-                            omnibus = c("no", "all_sig", "at_least_one_sig", "at_least_k_sig"),
+                            omnibus = c("no", "all_sig", "at_least_one_sig", "at_least_k_sig", "total"),
                             at_least_k = 1,
                             p_adjust_method = "none",
                             fit_name = "fit",
@@ -322,22 +328,43 @@ test_k_indirect_effects <- function(
             )
     return(out2)
   }
-  out1 <- manymome::indirect_effects_from_list(
-                              out,
-                              add_sig = FALSE,
-                              pvalue = TRUE,
-                              se = FALSE
-                            )
-  if (p_adjust_method != "none") {
-    out1$pvalue_org <- out1$pvalue
-    out1$pvalue <- stats::p.adjust(
-                        out1$pvalue_org,
-                        method = p_adjust_method
-                      )
+  if (omnibus == "total") {
+    out_ind <- out
+    out_total <- manymome::total_indirect_effect(out_ind)
+    tmp1 <- paste0(c(x, y), collapse = "-...->")
+    tmp1 <- paste(tmp1, "(Total)")
+    tmp <- stats::confint(out_total,
+                          level = ci_level)
+    out1 <- data.frame(
+              ind = unname(stats::coef(out_total)),
+              CI.lo = tmp[1, 1],
+              CI.hi = tmp[1, 2],
+              pvalue = out_total$boot_p %||% (out_total$mc_p %||% NA)
+            )
+    rownames(out1) <- tmp1
+    out <- list(out)
+    names(out) <- tmp1
+    out1 <- cbind(test_label = rownames(out1),
+                  out1)
+    rownames(out1) <- NULL
+  } else {
+    out1 <- manymome::indirect_effects_from_list(
+                                out,
+                                add_sig = FALSE,
+                                pvalue = TRUE,
+                                se = FALSE
+                              )
+    if (p_adjust_method != "none") {
+      out1$pvalue_org <- out1$pvalue
+      out1$pvalue <- stats::p.adjust(
+                          out1$pvalue_org,
+                          method = p_adjust_method
+                        )
+    }
+    out1 <- cbind(test_label = rownames(out1),
+                  out1)
+    rownames(out1) <- NULL
   }
-  out1 <- cbind(test_label = rownames(out1),
-                out1)
-  rownames(out1) <- NULL
   out1_names <- colnames(out1)
   out1_names <- gsub("CI.lo", "cilo", out1_names)
   out1_names <- gsub("CI.hi", "cihi", out1_names)
@@ -387,7 +414,7 @@ test_k_indirect_effects <- function(
                     tmp)
     }
   }
-  if (omnibus == "no") {
+  if (omnibus %in% c("no", "total")) {
     attr(out1, "test_label") <- "test_label"
     return(out1)
   } else {
@@ -398,7 +425,8 @@ test_k_indirect_effects <- function(
                               at_least_one_sig = " (1+ sig)",
                               at_least_k_sig = paste0(" (",
                                                       at_least_k,
-                                                      "+ sig)")))
+                                                      "+ sig)"),
+                              total = " (Total)"))
     out2[1, "test_label"] <- tmp
     out2[, c("est", "cilo", "cihi")] <- as.numeric(NA)
     tmp <- switch(omnibus,

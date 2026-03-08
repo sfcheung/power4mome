@@ -1,4 +1,4 @@
-# power4mome 0.1.1.64
+# power4mome 0.1.1.65
 
 - Improve the function for extending the
   initial interval before doing a
@@ -393,6 +393,11 @@
   clusters, because they may be used
   in arguments such as `process_data`.
   (0.1.1.64)
+
+- Updated `test_k_indirect_effects()`
+  to support computing and testing
+  the total indirect effect.
+  (0.1.1.65)
 
 # power4mome 0.1.1
 
