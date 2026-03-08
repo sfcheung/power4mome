@@ -1,4 +1,4 @@
-# power4mome 0.1.1.65
+# power4mome 0.1.1.66
 
 - Improve the function for extending the
   initial interval before doing a
@@ -398,6 +398,11 @@
   to support computing and testing
   the total indirect effect.
   (0.1.1.65)
+
+- Added `gen_missing()` for generating
+  missing values, through the argument
+  `process_data`.
+  (0.1.1.66)
 
 # power4mome 0.1.1
 
