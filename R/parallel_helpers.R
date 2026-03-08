@@ -42,6 +42,18 @@ do_FUN <- function(X,
       parallel::clusterExport(cl, to_export)
     }
 
+    # Reproduce the search paths
+    pkgs <- .packages()
+    pkgs <- rev(pkgs)
+    parallel::clusterExport(cl, "pkgs", envir = environment())
+    parallel::clusterEvalQ(cl, {
+                    sapply(pkgs,
+                    function(x) {
+                      library(x,
+                             character.only = TRUE)
+                    })
+                  })
+
     if (!is.null(iseed)) {
       parallel::clusterSetRNGStream(cl = cl,
                                     iseed = iseed)
