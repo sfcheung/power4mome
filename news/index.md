@@ -1,6 +1,6 @@
 # Changelog
 
-## power4mome 0.1.1.67
+## power4mome 0.1.1.69
 
 - Improve the function for extending the initial interval before doing a
   bisection search. (0.1.1.1)
@@ -326,7 +326,10 @@
 - Added
   [`ordinal_variables()`](https://sfcheung.github.io/power4mome/reference/ordinal_variables.md)
   for converting continuous indicator variables to ordinal variables,
-  through the argument `process_data`. (0.1.1.67)
+  through the argument `process_data`. (0.1.1.67, 0.1.1.69)
+
+- The internal helper `do_FUN()` will reproduce the search path by
+  loading the packages in the workers. (0.1.1.69)
 
 ## power4mome 0.1.1
 
