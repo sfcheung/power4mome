@@ -100,7 +100,8 @@ find_par_names(object, fit_name = "fit")
   test is declared significant if at least one of the paths is
   significant. If `"at_least_k_sig"`, then only one row of test is
   stored, and the test is declared significant if at least `k` of the
-  paths is significant, `k` determined by the argument `at_least_k`.
+  paths is significant, `k` determined by the argument `at_least_k`. If
+  `"total"`, then the total indirect effect will be tested.
 
 - at_least_k:
 

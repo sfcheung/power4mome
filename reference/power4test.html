@@ -15,7 +15,7 @@ results."><meta property="og:image" content="https://sfcheung.github.io/power4mo
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.62</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.66</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -268,19 +268,19 @@ must be a named list with these
 elements: <code>fun</code> (required), the function
 to further process the simulated
 data, such as generating missing data using
-functions such as <code>mice::ampute()</code>; <code>args</code> (optional), a
+functions such as <code><a href="https://amices.org/mice/reference/ampute.html" class="external-link">mice::ampute()</a></code>; <code>args</code> (optional), a
 named list of arguments to be passed
 to <code>fun</code>, except the one for the
 source data; <code>sim_data_name</code> (optional) the
 name of the argument to receive the
 simulated data (e.g., <code>"data"</code> for
-<code>mice::ampute()</code>), default to
+<code><a href="https://amices.org/mice/reference/ampute.html" class="external-link">mice::ampute()</a></code>), default to
 <code>"data"</code> if it is not set; <code>processed_data_name</code>
 (optional), the name of the data frame
 after being processed by <code>fun</code>,
 such as the data frame
 with missing data in the output of
-<code>fun</code> (e.g., <code>"amp"</code> for <code>mice::ampute()</code>),
+<code>fun</code> (e.g., <code>"amp"</code> for <code><a href="https://amices.org/mice/reference/ampute.html" class="external-link">mice::ampute()</a></code>),
 if omitted, the output of <code>fun</code> should
 be the data frame with missing data.</p></dd>
 

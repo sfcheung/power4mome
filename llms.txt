@@ -1,6 +1,6 @@
 # power4mome
 
-(Version 0.1.1.63, updated on 2026-03-07, [release
+(Version 0.1.1.66, updated on 2026-03-08, [release
 history](https://sfcheung.github.io/power4mome/news/index.html))
 
 This package is for power analysis and sample size determination for
@@ -225,6 +225,8 @@ such as converting indicator scores to scale scores.
 
 - [`scale_scores()`](https://sfcheung.github.io/power4mome/reference/scale_scores.md)
   : Process Data by Computing Scale Scores
+- [`gen_missing()`](https://sfcheung.github.io/power4mome/reference/gen_missing.md)
+  : Process Data by Generating Missing Values
 
 ## Advanced Functions
 

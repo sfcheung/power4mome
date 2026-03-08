@@ -17,7 +17,7 @@ test_k_indirect_effects(
   check_post_check = TRUE,
   test_method = NULL,
   ...,
-  omnibus = c("no", "all_sig", "at_least_one_sig", "at_least_k_sig"),
+  omnibus = c("no", "all_sig", "at_least_one_sig", "at_least_k_sig", "total"),
   at_least_k = 1,
   p_adjust_method = "none",
   fit_name = "fit",
@@ -110,7 +110,8 @@ test_k_indirect_effects(
   test is declared significant if at least one of the paths is
   significant. If `"at_least_k_sig"`, then only one row of test is
   stored, and the test is declared significant if at least `k` of the
-  paths is significant, `k` determined by the argument `at_least_k`.
+  paths is significant, `k` determined by the argument `at_least_k`. If
+  `"total"`, then the total indirect effect will be tested.
 
 - at_least_k:
 
@@ -182,6 +183,9 @@ a sequence of calls to [`stats::lm()`](https://rdrr.io/r/stats/lm.html),
 although only nonparametric bootstrap confidence interval is supported
 for models fitted by regression using
 [`stats::lm()`](https://rdrr.io/r/stats/lm.html).
+
+It also supports testing the total indirect effect. Just set `omnibus`
+to `"total"`.
 
 ## See also
 

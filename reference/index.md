@@ -93,6 +93,8 @@ such as converting indicator scores to scale scores.
 
 - [`scale_scores()`](https://sfcheung.github.io/power4mome/reference/scale_scores.md)
   : Process Data by Computing Scale Scores
+- [`gen_missing()`](https://sfcheung.github.io/power4mome/reference/gen_missing.md)
+  : Process Data by Generating Missing Values
 
 ## Advanced Functions
 

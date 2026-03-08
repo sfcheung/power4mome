@@ -1,6 +1,6 @@
 # Changelog
 
-## power4mome 0.1.1.63
+## power4mome 0.1.1.66
 
 - Improve the function for extending the initial interval before doing a
   bisection search. (0.1.1.1)
@@ -309,6 +309,19 @@
   ([`q_power_mediation()`](https://sfcheung.github.io/power4mome/reference/q_power_mediation.md)
   and friends). When `mode` is `"n"` or `"region"`, it is optional to
   set `n`. If not set, it will be determined internally. (0.1.1.63)
+
+- The internal helper `do_FUN()` for parallel processing now export
+  functions defined in the global environment to clusters, because they
+  may be used in arguments such as `process_data`. (0.1.1.64)
+
+- Updated
+  [`test_k_indirect_effects()`](https://sfcheung.github.io/power4mome/reference/test_k_indirect_effects.md)
+  to support computing and testing the total indirect effect. (0.1.1.65)
+
+- Added
+  [`gen_missing()`](https://sfcheung.github.io/power4mome/reference/gen_missing.md)
+  for generating missing values, through the argument `process_data`.
+  (0.1.1.66)
 
 ## power4mome 0.1.1
 

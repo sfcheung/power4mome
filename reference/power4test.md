@@ -146,15 +146,19 @@ print(
 
   If not `NULL`, it must be a named list with these elements: `fun`
   (required), the function to further process the simulated data, such
-  as generating missing data using functions such as `mice::ampute()`;
+  as generating missing data using functions such as
+  [`mice::ampute()`](https://amices.org/mice/reference/ampute.html);
   `args` (optional), a named list of arguments to be passed to `fun`,
   except the one for the source data; `sim_data_name` (optional) the
   name of the argument to receive the simulated data (e.g., `"data"` for
-  `mice::ampute()`), default to `"data"` if it is not set;
-  `processed_data_name` (optional), the name of the data frame after
-  being processed by `fun`, such as the data frame with missing data in
-  the output of `fun` (e.g., `"amp"` for `mice::ampute()`), if omitted,
-  the output of `fun` should be the data frame with missing data.
+  [`mice::ampute()`](https://amices.org/mice/reference/ampute.html)),
+  default to `"data"` if it is not set; `processed_data_name`
+  (optional), the name of the data frame after being processed by `fun`,
+  such as the data frame with missing data in the output of `fun` (e.g.,
+  `"amp"` for
+  [`mice::ampute()`](https://amices.org/mice/reference/ampute.html)), if
+  omitted, the output of `fun` should be the data frame with missing
+  data.
 
 - fit_model_args:
 
