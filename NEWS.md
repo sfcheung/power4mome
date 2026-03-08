@@ -1,4 +1,4 @@
-# power4mome 0.1.1.67
+# power4mome 0.1.1.68
 
 - Improve the function for extending the
   initial interval before doing a
@@ -408,7 +408,7 @@
   converting continuous indicator variables
   to ordinal variables, through the
   argument `process_data`.
-  (0.1.1.67)
+  (0.1.1.67, 0.1.1.68)
 
 # power4mome 0.1.1
 
