@@ -1,6 +1,6 @@
 # Changelog
 
-## power4mome 0.1.1.66
+## power4mome 0.1.1.67
 
 - Improve the function for extending the initial interval before doing a
   bisection search. (0.1.1.1)
@@ -319,9 +319,14 @@
   to support computing and testing the total indirect effect. (0.1.1.65)
 
 - Added
-  [`gen_missing()`](https://sfcheung.github.io/power4mome/reference/gen_missing.md)
+  [`missing_values()`](https://sfcheung.github.io/power4mome/reference/missing_values.md)
   for generating missing values, through the argument `process_data`.
   (0.1.1.66)
+
+- Added
+  [`ordinal_variables()`](https://sfcheung.github.io/power4mome/reference/ordinal_variables.md)
+  for converting continuous indicator variables to ordinal variables,
+  through the argument `process_data`. (0.1.1.67)
 
 ## power4mome 0.1.1
 
