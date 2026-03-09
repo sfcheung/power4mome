@@ -15,6 +15,8 @@ power4test(
   n = NULL,
   number_of_indicators = NULL,
   reliability = NULL,
+  loading_difference = NULL,
+  reference = NULL,
   x_fun = list(),
   e_fun = list(),
   process_data = NULL,
@@ -131,6 +133,41 @@ of each set of indicators. Default
 is \code{NULL}.
 See the help page on how
 to use this argument.}
+
+\item{loading_difference}{A named vector
+(for a single-group model) or a
+named list of named vectors
+(for a multigroup model)
+to set the difference in factor
+loadings between neighboring indicators
+of each set of indicators. Default
+is \code{NULL}, and all indicators of
+a factor have
+the same factor loadings. If specified,
+must be specified for all factors
+named in \code{reliability}, even for
+those with all loadings equal.}
+
+\item{reference}{A named vector
+(for a single-group model) or a
+named list of named vectors
+(for a multigroup model)
+to indicate which indicator will
+be the first indicator (and so
+is the reference indicator, by default).
+Default
+is \code{NULL}, and for all factors,
+the indicator with
+the medium loading in a factor is
+the first indicator. Has no effect
+if loading difference is zero (and
+so all indicators have the same
+loadings). If specified,
+must be specified for all factors
+named in \code{reliability}, even for
+those with all loadings equal. Accepted
+values are \code{"medium"}, \code{"weakest"},
+and \code{"strongest"}.}
 
 \item{x_fun}{The function(s) used to
 generate the exogenous variables or

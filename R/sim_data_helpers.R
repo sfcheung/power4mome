@@ -37,6 +37,8 @@ mm_lm_data <- function(object,
                        n,
                        number_of_indicators = NULL,
                        reliability = NULL,
+                       loading_difference = NULL,
+                       reference = NULL,
                        keep_f_scores = FALSE,
                        x_fun = list(),
                        e_fun = list(),
@@ -73,7 +75,9 @@ mm_lm_data <- function(object,
                                     ps = number_of_indicators,
                                     rels = reliability,
                                     e_fun = e_fun,
-                                    keep_f_scores = keep_f_scores)
+                                    keep_f_scores = keep_f_scores,
+                                    ds = loading_difference,
+                                    refs = reference)
   }
   dat_all <- as.data.frame(dat_all)
   if (is.list(process_data)) {
@@ -133,14 +137,17 @@ add_indicator_syntax <- function(model,
 # - A matrix of scores (e.g., from mm_lm_data()).
 # - ps: A named vector of the number of indicators.
 # - rels: A named vector of reliability coefficients.
+# - ds: A named vector of 'd's, differences in lambdas.
 # - keep_f_scores: If TRUE, factor scores are ratained.
 # Output:
 # - A matrix with indicator scores added.
 add_indicator_scores <- function(x,
                                  ps,
                                  rels,
+                                 refs = NULL,
                                  keep_f_scores = FALSE,
-                                 e_fun = NULL) {
+                                 e_fun = NULL,
+                                 ds = NULL) {
   if (!setequal(names(ps), names(rels))) {
     stop("'ps' and 'rels' do not match in names.")
   }
@@ -149,6 +156,19 @@ add_indicator_scores <- function(x,
     stop("Some factors not found in the data.")
   }
   rels <- rels[f_names]
+
+  ds0 <- rels
+  ds0[] <- 0
+  if (!is.null(ds)) {
+    ds0[f_names] <- ds[f_names]
+  }
+
+  refs0 <- vector("character", length(rels))
+  names(refs0) <- names(rels)
+  refs0[] <- "medium"
+  if (!is.null(refs)) {
+    refs0[f_names] <- refs[f_names]
+  }
   f_scores <- sapply(f_names,
                      function(xx) x[, xx, drop = TRUE],
                      simplify = FALSE)
@@ -176,6 +196,8 @@ add_indicator_scores <- function(x,
                  omega = rels,
                  prefix = prefixes,
                  e_fun = e_fun1,
+                 d = ds0,
+                 ref = refs0,
                  SIMPLIFY = FALSE)
   out1 <- do.call(cbind,
                   out0)
@@ -195,20 +217,27 @@ add_indicator_scores <- function(x,
 # - p: The number of indicators.
 # - omega: The reliability.
 # - prefix: The prefix for naming the indicators.
+# - d: The difference in lambdas between neighbouring items
+# - ref: Which indicator will be the first indicator
 # Ouput:
 # - A matrix of indicator scores
 gen_indicator_scores <- function(f_score,
                                  p,
                                  omega,
                                  prefix = "x",
-                                 e_fun = list()) {
+                                 e_fun = list(),
+                                 d = 0,
+                                 ref = "medium") {
   # e_fun is of this form
   # list(rexp_rs, ....)
   f_score <- matrix(as.vector(f_score),
                     ncol = 1)
   n <- nrow(f_score)
   lambda0 <- lambda_from_reliability(p = p,
-                                    omega = omega)
+                                    omega = omega,
+                                    d = d,
+                                    ref = ref)
+  # lambda and e_sd may differ across items.
   lambda1 <- matrix(lambda0,
                     nrow = 1,
                     ncol = p)
@@ -221,15 +250,17 @@ gen_indicator_scores <- function(f_score,
                                  list(n = n * p))
     e <- do.call(ee_fun,
                  ee_args)
-    e <- e * e_sd
+    e <- matrix(e,
+                nrow = n,
+                ncol = p)
   } else {
     e <- matrix(stats::rnorm(n * p,
                              mean = 0,
-                             sd = e_sd),
+                             sd = 1),
                 nrow = n,
                 ncol = p)
   }
-
+  e <- e %*% diag(e_sd)
   x <- f_score %*% lambda1 + e
   colnames(x) <- paste0(prefix, seq(from = 1,
                                     to = p))

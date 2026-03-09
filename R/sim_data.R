@@ -316,6 +316,41 @@
 #' See the help page on how
 #' to use this argument.
 #'
+#' @param loading_difference A named vector
+#' (for a single-group model) or a
+#' named list of named vectors
+#' (for a multigroup model)
+#' to set the difference in factor
+#' loadings between neighboring indicators
+#' of each set of indicators. Default
+#' is `NULL`, and all indicators of
+#' a factor have
+#' the same factor loadings. If specified,
+#' must be specified for all factors
+#' named in `reliability`, even for
+#' those with all loadings equal.
+#'
+#' @param reference A named vector
+#' (for a single-group model) or a
+#' named list of named vectors
+#' (for a multigroup model)
+#' to indicate which indicator will
+#' be the first indicator (and so
+#' is the reference indicator, by default).
+#' Default
+#' is `NULL`, and for all factors,
+#' the indicator with
+#' the medium loading in a factor is
+#' the first indicator. Has no effect
+#' if loading difference is zero (and
+#' so all indicators have the same
+#' loadings). If specified,
+#' must be specified for all factors
+#' named in `reliability`, even for
+#' those with all loadings equal. Accepted
+#' values are `"medium"`, `"weakest"`,
+#' and `"strongest"`.
+#'
 #' @param x_fun The function(s) used to
 #' generate the exogenous variables or
 #' error terms. If
@@ -471,6 +506,8 @@ sim_data <- function(nrep = 10,
                      iseed = NULL,
                      number_of_indicators = NULL,
                      reliability = NULL,
+                     loading_difference = NULL,
+                     reference = NULL,
                      x_fun = list(),
                      e_fun = list(),
                      process_data = NULL,
@@ -515,6 +552,8 @@ sim_data <- function(nrep = 10,
                 n = n,
                 number_of_indicators = number_of_indicators,
                 reliability = reliability,
+                loading_difference = loading_difference,
+                reference = reference,
                 x_fun = x_fun,
                 e_fun = e_fun,
                 process_data = process_data,
@@ -708,6 +747,8 @@ print.sim_data <- function(x,
   }
 
   if (!is.null(k0[[1]])) {
+    # TODO:
+    # - Handle loading_difference != 0
     lambda0 <- mapply(function(xx, yy) {
                         out <- mapply(lambda_from_reliability,
                                       p = xx,
@@ -924,6 +965,8 @@ sim_data_i <- function(repid = 1,
                        mm_lm_out = NULL,
                        number_of_indicators = NULL,
                        reliability = NULL,
+                       loading_difference = NULL,
+                       reference = NULL,
                        x_fun = list(),
                        e_fun = list(),
                        process_data = NULL,
@@ -1006,11 +1049,41 @@ sim_data_i <- function(repid = 1,
   } else {
     reliability <- split_par_es(reliability)
   }
+
+  if ((length(loading_difference) == 1) &&
+      is.numeric(loading_difference) &&
+      is.null(names(loading_difference))) {
+    loading_difference <- rep(loading_difference,
+                             p)
+    names(loading_difference) <- vnames
+  }
+  if (!is.list(loading_difference)) {
+    loading_difference <- rep(list(loading_difference),
+                            ngroups)
+  } else {
+    loading_difference <- split_par_es(loading_difference)
+  }
+
+  if ((length(reference) == 1) &&
+      is.numeric(reference) &&
+      is.null(names(reference))) {
+    reference <- rep(reference,
+                             p)
+    names(reference) <- vnames
+  }
+  if (!is.list(reference)) {
+    reference <- rep(list(reference),
+                            ngroups)
+  } else {
+    reference <- split_par_es(reference)
+  }
   mm_lm_dat_out <- mapply(mm_lm_data,
                           object = mm_lm_out,
                           n = n,
                           number_of_indicators = number_of_indicators,
                           reliability = reliability,
+                          loading_difference = loading_difference,
+                          reference = reference,
                           MoreArgs = list(keep_f_scores = FALSE,
                                           x_fun = x_fun,
                                           e_fun = e_fun,

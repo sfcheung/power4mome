@@ -254,10 +254,55 @@ fix_par_es <- function(par_es,
 
 #' @noRd
 # Copied from another project by the author
+# lambda_from_reliability <- function(p = 3,
+#                                     omega = .70) {
+#   lambda <- sqrt(omega / (p - omega * (p - 1)))
+#   lambda
+# }
+
+#' @noRd
+# Copied from another project by the author
 lambda_from_reliability <- function(p = 3,
-                                    omega = .70) {
-  lambda <- sqrt(omega / (p - omega * (p - 1)))
-  lambda
+                                    omega = .70,
+                                    d = 0,
+                                    ref = NULL) {
+  if (is.null(ref)) {
+    ref <- "medium"
+  } else {
+    ref <- match.arg(ref, c("medium", "weakest", "strongest"))
+  }
+  # Find the sequence of lambdas that are:
+  # - of equal successive distance, and
+  # - have the target omega
+  # Work for generating a sequence of identical loadings
+  d <- abs(d)
+  dp <- sum((seq_len(p) - (p + 1) / 2)^2)
+  lambda0 <- (dp * d^2 - p) * omega / ((omega * p - omega - p) * p)
+  lambda0 <- sqrt(lambda0)
+  out <- expand_lambda(lambda0 = lambda0,
+                       p = p,
+                       d = d)
+  i <- floor(mean(seq_len(p)))
+  outmed <- c(out[i], out[-i])
+  out <- switch(ref,
+                medium = outmed,
+                strongest = rev(out),
+                weakest = out)
+  out
+}
+
+#' @noRd
+# Copied from another project by the author
+expand_lambda <- function(lambda0,
+                          p,
+                          d) {
+  # Create a sequence of lambdas
+  i <- seq_len(p)
+  out <- sapply(i,
+                function(x) {
+                  lambda0 + (x - (p + 1) / 2) * d
+                })
+  out
 }
 
 #' @noRd

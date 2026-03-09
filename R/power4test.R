@@ -280,6 +280,10 @@
 #'
 # @param reliability <- Inherited
 #'
+# @param loading_difference <- Inherited
+#'
+# @param reference <- Inherited
+#'
 # @param x_fun <- Inherited
 #'
 # @param e_fun <- Inherited
@@ -464,6 +468,8 @@ power4test <- function(object = NULL,
                        n = NULL,
                        number_of_indicators = NULL,
                        reliability = NULL,
+                       loading_difference = NULL,
+                       reference = NULL,
                        x_fun = list(),
                        e_fun = list(),
                        process_data = NULL,
@@ -596,6 +602,8 @@ power4test <- function(object = NULL,
     if (is.null(n) &&
         is.null(number_of_indicators) &&
         is.null(reliability) &&
+        is.null(loading_difference) &&
+        is.null(reference) &&
         identical(x_fun, list()) &&
         identical(e_fun, list()) &&
         is.null(nrep)) {
@@ -625,6 +633,8 @@ power4test <- function(object = NULL,
                             n = args$n,
                             number_of_indicators = args$number_of_indicators,
                             reliability = args$reliability,
+                            loading_difference = args$loading_difference,
+                            reference = args$reference,
                             x_fun = args$x_fun,
                             e_fun = args$e_fun,
                             process_data = args$process_data,
@@ -654,6 +664,8 @@ power4test <- function(object = NULL,
                             n = args$n,
                             number_of_indicators = args$number_of_indicators,
                             reliability = args$reliability,
+                            loading_difference = args$loading_difference,
+                            reference = args$reference,
                             x_fun = args$x_fun,
                             e_fun = args$e_fun,
                             process_data = args$process_data,
