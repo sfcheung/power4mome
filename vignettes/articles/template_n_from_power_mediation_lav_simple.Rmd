@@ -1,6 +1,6 @@
 ---
 title: "Quick Template: Simple Mediation with Latent Variables"
-date: "2026-02-28"
+date: "2026-03-10"
 output:
   html_document:
     fig.align: "center"
@@ -290,8 +290,11 @@ print(out,
 #> 
 #> == Population Standardized Loadings ==
 #> 
-#>      x     m     y
-#>  0.707 0.661 0.756
+#>   Standardized Loadings  
+#> x 0.707,0.707,0.707,0.707
+#> m 0.661,0.661,0.661      
+#> y 0.756,0.756,0.756      
+#> 
 #> ======================= Data Information =======================
 #> 
 #> Number of Replications:  600 
@@ -379,7 +382,7 @@ print(out,
 #> 
 #> Mean(s) across replication:
 #>    est  cilo  cihi   sig pvalue
-#>  0.171 0.005 0.374 0.548  0.108
+#>  0.171 0.005 0.375 0.544  0.109
 #> 
 #> - The value 'sig' is the rejection rate.
 #> - If the null hypothesis is false, this is the power.
@@ -389,7 +392,7 @@ rejection_rates(out)
 #> [test]: test_indirect: x->m->y 
 #> [test_label]: Test 
 #>     est   p.v reject r.cilo r.cihi
-#> 1 0.171 0.998  0.548  0.508  0.587
+#> 1 0.171 0.998  0.544  0.504  0.584
 #> Notes:
 #> - p.v: The proportion of valid replications.
 #> - est: The mean of the estimates in a test across replications.
@@ -481,13 +484,13 @@ n_power_region
 #> Solution: 
 #> 
 #> Approximate region of sample sizes with power:
-#> - not significantly different from 0.800: 150 to 187
-#> - significantly lower than 0.800: 150
-#> - significantly higher than 0.800: 187
+#> - not significantly different from 0.800: 147 to 164
+#> - significantly lower than 0.800: 147
+#> - significantly higher than 0.800: 164
 #> 
 #> Confidence intervals of the estimated power:
-#> - for the lower bound (150): [0.750, 0.816]
-#> - for the upper bound (187): [0.819, 0.876]
+#> - for the lower bound (147): [0.717, 0.786]
+#> - for the upper bound (164): [0.789, 0.850]
 #> 
 #> Call `summary()` for detailed results.
 
@@ -506,16 +509,16 @@ plot(n_power_region)
 As shown above, approximately:
 
 - sample sizes lower than
-  150 have
+  147 have
   power significantly lower than .80, and
 
 - sample sizes higher than
-  187 have
+  164 have
   power significantly higher than .80.
 
 In other words, sample sizes between
-150 and
-187 have
+147 and
+164 have
 power not significantly different from
 .80.
 
@@ -544,10 +547,10 @@ summary(n_power_region)
 #> 
 #> === Major Results ===
 #> 
-#> - Final Value (Sample Size): 150
+#> - Final Value (Sample Size): 147
 #> 
-#> - Final Estimated Power: 0.785 
-#> - Confidence Interval: [0.750; 0.816]
+#> - Final Estimated Power: 0.753 
+#> - Confidence Interval: [0.717; 0.786]
 #> - Level of confidence: 95.0%
 #> - Based on 600 replications.
 #> 
@@ -555,8 +558,8 @@ summary(n_power_region)
 #> 
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
-#> - The range of values explored: 100 to 228 
-#> - Time spent in the search: 2.627 mins 
+#> - The range of values explored: 100 to 147 
+#> - Time spent in the search: 28.46 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -574,24 +577,19 @@ summary(n_power_region)
 #> 
 #> Coefficients:
 #> (Intercept)            x  
-#>    -1.67013      0.01921  
+#>    -1.81096      0.01991  
 #> 
-#> Degrees of Freedom: 4199 Total (i.e. Null);  4198 Residual
-#> Null Deviance:	    4385 
-#> Residual Deviance: 4094 	AIC: 4098
+#> Degrees of Freedom: 1199 Total (i.e. Null);  1198 Residual
+#> Null Deviance:	    1555 
+#> Residual Deviance: 1497 	AIC: 1501
 #> 
 #> - Detailed Results:
 #> 
 #> [test]: test_indirect: x->m->y 
 #> [test_label]: Test 
 #>     n   est   p.v reject r.cilo r.cihi
-#> 1 100 0.171 0.998  0.548  0.508  0.587
-#> 2 146 0.164 1.000  0.747  0.710  0.780
-#> 3 150 0.166 1.000  0.785  0.750  0.816
-#> 4 153 0.168 1.000  0.807  0.773  0.836
-#> 5 161 0.164 1.000  0.813  0.780  0.842
-#> 6 187 0.161 1.000  0.850  0.819  0.876
-#> 7 228 0.166 1.000  0.937  0.914  0.954
+#> 1 100 0.171 0.998  0.544  0.504  0.584
+#> 2 147 0.164 1.000  0.753  0.717  0.786
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.
@@ -622,10 +620,10 @@ summary(n_power_region)
 #> 
 #> === Major Results ===
 #> 
-#> - Final Value (Sample Size): 187
+#> - Final Value (Sample Size): 164
 #> 
-#> - Final Estimated Power: 0.850 
-#> - Confidence Interval: [0.819; 0.876]
+#> - Final Estimated Power: 0.822 
+#> - Confidence Interval: [0.789; 0.850]
 #> - Level of confidence: 95.0%
 #> - Based on 600 replications.
 #> 
@@ -633,17 +631,16 @@ summary(n_power_region)
 #> 
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
-#> - The range of values explored: 100 to 228 
-#> - Time spent in the search: 0.1357 secs 
+#> - The range of values explored: 100 to 164 
+#> - Time spent in the search: 27.69 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
 #> 
 #> Call:
-#> power_curve(object = by_x_1, formula = power_curve_args$power_model, 
-#>     start = power_curve_args$start, lower_bound = power_curve_args$lower_bound, 
-#>     upper_bound = power_curve_args$upper_bound, nls_args = power_curve_args$nls_args, 
-#>     nls_control = power_curve_args$nls_control, verbose = progress)
+#> power_curve(object = by_x_1, formula = power_model, start = power_curve_start, 
+#>     lower_bound = lower_bound, upper_bound = upper_bound, nls_args = nls_args, 
+#>     nls_control = nls_control, verbose = progress)
 #> 
 #> Predictor: n (Sample Size)
 #> 
@@ -653,24 +650,20 @@ summary(n_power_region)
 #> 
 #> Coefficients:
 #> (Intercept)            x  
-#>    -1.67013      0.01921  
+#>     -1.8959       0.0207  
 #> 
-#> Degrees of Freedom: 4199 Total (i.e. Null);  4198 Residual
-#> Null Deviance:	    4385 
-#> Residual Deviance: 4094 	AIC: 4098
+#> Degrees of Freedom: 1799 Total (i.e. Null);  1798 Residual
+#> Null Deviance:	    2178 
+#> Residual Deviance: 2060 	AIC: 2064
 #> 
 #> - Detailed Results:
 #> 
 #> [test]: test_indirect: x->m->y 
 #> [test_label]: Test 
 #>     n   est   p.v reject r.cilo r.cihi
-#> 1 100 0.171 0.998  0.548  0.508  0.587
-#> 2 146 0.164 1.000  0.747  0.710  0.780
-#> 3 150 0.166 1.000  0.785  0.750  0.816
-#> 4 153 0.168 1.000  0.807  0.773  0.836
-#> 5 161 0.164 1.000  0.813  0.780  0.842
-#> 6 187 0.161 1.000  0.850  0.819  0.876
-#> 7 228 0.166 1.000  0.937  0.914  0.954
+#> 1 100 0.171 0.998  0.544  0.504  0.584
+#> 2 147 0.164 1.000  0.753  0.717  0.786
+#> 3 164 0.166 1.000  0.822  0.789  0.850
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.
