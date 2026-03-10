@@ -746,30 +746,73 @@ print.sim_data <- function(x,
           digits = digits)
   }
 
-  if (!is.null(k0[[1]])) {
+  if (!is.null(k0[[1]]) &&
+      !is.null(x_i$lambda)) {
     # TODO:
     # - Handle loading_difference != 0
-    lambda0 <- mapply(function(xx, yy) {
-                        out <- mapply(lambda_from_reliability,
-                                      p = xx,
-                                      omega = yy)
-                        out
-                      },
-                      xx = k0,
-                      yy = rel0,
-                      SIMPLIFY = FALSE)
-    lambda <- do.call(rbind,
-                      lambda0)
-    lambda <- as.data.frame(lambda)
-    lambda_n <- nrow(lambda)
-    rownames(lambda) <- paste0("Group ", seq_len(lambda_n))
+    lambda_pop <- x_i$lambda
+    tmpf <- function(x) {
+      tmp <- lapply(
+          x,
+          \(y) paste0(formatC(y, digits = digits, format = "f"),
+                      collapse = ",")
+        )
+      out0 <- do.call(
+                rbind,
+                tmp
+              )
+      colnames(out0) <- "Standardized Loadings"
+      out0
+    }
+    if (ngroups > 1) {
+      lambda_str <- lapply(
+          lambda_pop,
+          tmpf
+        )
+    } else {
+      lambda_str <- tmpf(lambda_pop)
+    }
+
     cat(header_str("Population Standardized Loadings",
                   hw = .4,
                   prefix = "\n",
-                  suffix = "\n\n"))
-    print(lambda,
-          row.names = isTRUE(lambda_n > 1),
-          digits = digits)
+                  suffix = "\n"))
+
+    if (ngroups > 1) {
+      for (tmpi in names(lambda_str)) {
+        cat("\n", tmpi, ":\n")
+        print(lambda_str[[tmpi]],
+              quote = FALSE)
+      }
+    } else {
+      cat("\n")
+      print(lambda_str,
+            quote = FALSE)
+    }
+    cat("\n")
+
+    # lambda0 <- mapply(function(xx, yy) {
+    #                     out <- mapply(lambda_from_reliability,
+    #                                   p = xx,
+    #                                   omega = yy)
+    #                     out
+    #                   },
+    #                   xx = k0,
+    #                   yy = rel0,
+    #                   SIMPLIFY = FALSE)
+    # lambda <- do.call(rbind,
+    #                   lambda0)
+    # lambda <- as.data.frame(lambda)
+    # lambda_n <- nrow(lambda)
+    # rownames(lambda) <- paste0("Group ", seq_len(lambda_n))
+    # cat(header_str("Population Standardized Loadings",
+    #               hw = .4,
+    #               prefix = "\n",
+    #               suffix = "\n\n"))
+    # print(lambda,
+    #       row.names = isTRUE(lambda_n > 1),
+    #       digits = digits)
+
   }
 
   # Summarize data
@@ -1089,7 +1132,14 @@ sim_data_i <- function(repid = 1,
                                           e_fun = e_fun,
                                           process_data = process_data),
                           SIMPLIFY = FALSE)
-
+  # mm_lm_dat_out is always a list, even for
+  # single-group models
+  lambda_pop <- sapply(
+                  mm_lm_dat_out,
+                  attr,
+                  which = "lambda",
+                  simplify = FALSE
+                )
   model_original <- model
   # add_indicator_syntax() already supports
   # a model syntax with "x:z ~~ y:w"
@@ -1138,6 +1188,7 @@ sim_data_i <- function(repid = 1,
     mm_out <- mm_out[[1]]
     mm_lm_out <- mm_lm_out[[1]]
     mm_lm_dat_out <- mm_lm_dat_out[[1]]
+    lambda_pop <- lambda_pop[[1]]
   }
   if (ngroups > 1) {
     for (i in group_labels) {
@@ -1160,7 +1211,8 @@ sim_data_i <- function(repid = 1,
               group_labels = group_labels,
               number_of_indicators = number_of_indicators,
               reliability = reliability,
-              fit_external = fit_external)
+              fit_external = fit_external,
+              lambda = lambda_pop)
   class(out) <- c("sim_data_i", class(out))
   out
 }

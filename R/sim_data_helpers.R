@@ -79,7 +79,10 @@ mm_lm_data <- function(object,
                                     ds = loading_difference,
                                     refs = reference)
   }
+  lambda_pop <- attr(dat_all, "lambda")
   dat_all <- as.data.frame(dat_all)
+  # In case a processor needs lambda
+  attr(dat_all, "lambda") <- lambda_pop
   if (is.list(process_data)) {
     process_data_fun <- match.fun(process_data$fun)
     attr(dat_all, "number_of_indicators") <- number_of_indicators
@@ -99,6 +102,8 @@ mm_lm_data <- function(object,
       dat_all <- dat_all_amp
     }
   }
+  # In case a processor removes the attributes
+  attr(dat_all, "lambda") <- lambda_pop
   return(dat_all)
 }
 
@@ -199,6 +204,12 @@ add_indicator_scores <- function(x,
                  d = ds0,
                  ref = refs0,
                  SIMPLIFY = FALSE)
+  lambda_pop <- sapply(
+                  out0,
+                  attr,
+                  which = "lambda",
+                  simplify = FALSE
+                )
   out1 <- do.call(cbind,
                   out0)
   out2 <- cbind(x, out1)
@@ -208,6 +219,7 @@ add_indicator_scores <- function(x,
     i <- match(f_names, colnames(x))
     out2 <- out2[, -i, drop = FALSE]
   }
+  attr(out2, "lambda") <- lambda_pop
   return(out2)
 }
 
@@ -264,6 +276,7 @@ gen_indicator_scores <- function(f_score,
   x <- f_score %*% lambda1 + e
   colnames(x) <- paste0(prefix, seq(from = 1,
                                     to = p))
+  attr(x, "lambda") <- lambda0
   return(x)
 }
 
