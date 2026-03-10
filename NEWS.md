@@ -1,4 +1,4 @@
-# power4mome 0.1.1.69
+# power4mome 0.1.1.70
 
 - Improve the function for extending the
   initial interval before doing a
@@ -414,6 +414,15 @@
   reproduce the search path by loading
   the packages in the workers.
   (0.1.1.69)
+
+- Added `loading_difference` and
+  `reference` for `sim_data()`. The population
+  standardized factor loadings of indicators
+  of a factor can have different loadings,
+  and the first indicator (the default
+  reference indicator) can be the indicator
+  with the strongest, weakest, or medium
+  loadings. (0.1.1.70)
 
 # power4mome 0.1.1
 
