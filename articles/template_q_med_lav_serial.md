@@ -278,8 +278,12 @@ out_power
 #> 
 #> == Population Standardized Loadings ==
 #> 
-#>      x    m1    m2     y
-#>  0.661 0.707 0.661 0.661
+#>    Standardized Loadings  
+#> x  0.661,0.661,0.661      
+#> m1 0.707,0.707,0.707,0.707
+#> m2 0.661,0.661,0.661      
+#> y  0.661,0.661,0.661      
+#> 
 #> ======================= Data Information =======================
 #> 
 #> Number of Replications:  600 

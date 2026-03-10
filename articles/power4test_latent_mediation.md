@@ -302,8 +302,11 @@ out
 #> 
 #> == Population Standardized Loadings ==
 #> 
-#>     fm    fx    fy
-#>  0.661 0.522 0.408
+#>    Standardized Loadings        
+#> fm 0.577,0.577,0.577            
+#> fx 0.447,0.447,0.447,0.447      
+#> fy 0.564,0.564,0.564,0.564,0.564
+#> 
 #> ======================= Data Information =======================
 #> 
 #> Number of Replications:  2 
@@ -380,8 +383,10 @@ the loadings are assumed to be the same for all items:
 
     #> == Population Standardized Loadings ==
     #> 
-    #>     fm    fx    fy
-    #>  0.661 0.522 0.408
+    #>    Standardized Loadings        
+    #> fm 0.577,0.577,0.577            
+    #> fx 0.447,0.447,0.447,0.447      
+    #> fy 0.564,0.564,0.564,0.564,0.564
 
 If necessary, we can check the data generation by adding
 `data_long = TRUE` when printing the output:
@@ -585,8 +590,11 @@ out
 #> 
 #> == Population Standardized Loadings ==
 #> 
-#>     fm    fx    fy
-#>  0.661 0.522 0.408
+#>    Standardized Loadings        
+#> fm 0.577,0.577,0.577            
+#> fx 0.447,0.447,0.447,0.447      
+#> fy 0.564,0.564,0.564,0.564,0.564
+#> 
 #> ======================= Data Information =======================
 #> 
 #> Number of Replications:  400 
@@ -629,7 +637,7 @@ out
 #> 
 #> Mean(s) across replication:
 #>    est   cilo  cihi   sig pvalue
-#>  0.336 -0.057 0.833 0.495  0.099
+#>  0.336 -0.056 0.832 0.492  0.100
 #> 
 #> - The value 'sig' is the rejection rate.
 #> - If the null hypothesis is false, this is the power.
@@ -650,7 +658,7 @@ out_power
 #> [test]: test_indirect: fx->fm->fy 
 #> [test_label]: Test 
 #>     est   p.v reject r.cilo r.cihi
-#> 1 0.336 1.000  0.495  0.446  0.544
+#> 1 0.336 1.000  0.492  0.444  0.541
 #> Notes:
 #> - p.v: The proportion of valid replications.
 #> - est: The mean of the estimates in a test across replications.
@@ -663,7 +671,7 @@ out_power
 ```
 
 In the example above, the estimated power of the test of the indirect
-effect, conducted by Monte Carlo confidence interval, is 0.495, under
+effect, conducted by Monte Carlo confidence interval, is 0.492, under
 the column `reject`.
 
 `p.v` is the proportion of valid results across replications. `1.000`
@@ -671,8 +679,8 @@ means that the test conducted normally in all replications.
 
 By default, the 95% confidence interval of the rejection rate (power)
 based on normal approximation is also printed, under the column `r.cilo`
-and `r.cihi`. In this example, the 95% confidence interval is \[0.446;
-0.544\].
+and `r.cihi`. In this example, the 95% confidence interval is \[0.444;
+0.541\].
 
 ## Repeat a Simulation With A Different Sample Size
 
@@ -705,7 +713,7 @@ out_new_n_reject
 #> [test]: test_indirect: fx->fm->fy 
 #> [test_label]: Test 
 #>     est   p.v reject r.cilo r.cihi
-#> 1 0.352 1.000  0.810  0.769  0.845
+#> 1 0.352 1.000  0.818  0.777  0.852
 #> Notes:
 #> - p.v: The proportion of valid replications.
 #> - est: The mean of the estimates in a test across replications.
@@ -717,7 +725,7 @@ out_new_n_reject
 #> - Refer to the tests for the meanings of other columns.
 ```
 
-The estimated power is 0.810, 95% confidence interval \[0.769; 0.845\],
+The estimated power is 0.818, 95% confidence interval \[0.777; 0.852\],
 when the sample size is 200.
 
 This technique can be repeated to find the required sample size for a
@@ -752,7 +760,7 @@ out_new_rel_reject
 #> [test]: test_indirect: fx->fm->fy 
 #> [test_label]: Test 
 #>     est   p.v reject r.cilo r.cihi
-#> 1 0.235 1.000  0.985  0.968  0.993
+#> 1 0.235 1.000  0.988  0.971  0.995
 #> Notes:
 #> - p.v: The proportion of valid replications.
 #> - est: The mean of the estimates in a test across replications.
@@ -764,7 +772,7 @@ out_new_rel_reject
 #> - Refer to the tests for the meanings of other columns.
 ```
 
-The estimated power is 0.985, 95% confidence interval \[0.968; 0.993\],
+The estimated power is 0.988, 95% confidence interval \[0.971; 0.995\],
 much higher than the original scenario.
 
 ## Find the Sample Size With Desired Power
@@ -841,10 +849,10 @@ rejection_rates(out_several_ns)
 #> [test]: test_indirect: fx->fm->fy 
 #> [test_label]: Test 
 #>     n   est   p.v reject r.cilo r.cihi
-#> 1 175 0.327 1.000  0.700  0.653  0.743
-#> 2 200 0.329 1.000  0.835  0.795  0.868
+#> 1 175 0.327 1.000  0.703  0.656  0.745
+#> 2 200 0.329 1.000  0.833  0.793  0.866
 #> 3 225 0.340 1.000  0.897  0.864  0.924
-#> 4 250 0.330 1.000  0.905  0.872  0.930
+#> 4 250 0.330 1.000  0.907  0.875  0.932
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.

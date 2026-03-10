@@ -296,8 +296,8 @@ summary(out_n)
 #> 
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
-#> - The range of values explored: 100 to 75 
-#> - Time spent in the search: 6.856 secs 
+#> - The range of values explored: 50 to 100 
+#> - Time spent in the search: 6.921 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -405,8 +405,8 @@ summary(out_n_lb)
 #> 
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
-#> - The range of values explored: 100 to 96 
-#> - Time spent in the search: 13.62 secs 
+#> - The range of values explored: 50 to 100 
+#> - Time spent in the search: 14.2 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -627,9 +627,7 @@ n_power_region <- n_region_from_power(out,
 #> 
 #> Estimated power at 63: 0.610, 95.0% confidence interval: [0.541,0.675]
 #> 
-#> 
 #> (Extending the interval) Iteration: 1 
-#> 
 #> New interval: [63, 69] 
 #> 
 #> Try x = 93 
@@ -643,9 +641,7 @@ n_power_region <- n_region_from_power(out,
 #> 
 #> Estimated power at 93: 0.814, 95.0% confidence interval: [0.755,0.863]
 #> 
-#> 
 #> (Extending the interval) Iteration: 2 
-#> 
 #> New interval: [69, 93] 
 #> Interval OK.
 #> Final extended interval: [69, 93] 
@@ -685,7 +681,7 @@ n_power_region <- n_region_from_power(out,
 #> 
 #> ========== Final Stage ==========
 #> 
-#> - Start at 2026-02-28 12:08:29 
+#> - Start at 2026-03-10 20:25:10 
 #> - Rejection Rates:
 #> 
 #> [test]: test_indirect: x->m->y 
@@ -843,7 +839,7 @@ n_power_region <- n_region_from_power(out,
 #> 
 #> ========== Final Stage ==========
 #> 
-#> - Start at 2026-02-28 12:08:37 
+#> - Start at 2026-03-10 20:25:18 
 #> - Rejection Rates:
 #> 
 #> [test]: test_indirect: x->m->y 
@@ -1027,7 +1023,7 @@ n_power_region2 <- n_region_from_power(out_n_lb,
 #> 
 #> ========== Final Stage ==========
 #> 
-#> - Start at 2026-02-28 12:08:45 
+#> - Start at 2026-03-10 20:25:26 
 #> - Rejection Rates:
 #> 
 #> [test]: test_indirect: x->m->y 
@@ -1102,7 +1098,7 @@ n_power_region2 <- n_region_from_power(out_n_lb,
 #> 
 #> ========== Final Stage ==========
 #> 
-#> - Start at 2026-02-28 12:08:45 
+#> - Start at 2026-03-10 20:25:26 
 #> - Rejection Rates:
 #> 
 #> [test]: test_indirect: x->m->y 

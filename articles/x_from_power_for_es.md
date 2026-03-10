@@ -624,7 +624,7 @@ summary(out_es_a)
 #> 
 #> - Algorithm: power_curve 
 #> - The range of values explored: 0.469 to 0.520 
-#> - Time spent in the search: 1.169 mins 
+#> - Time spent in the search: 1.165 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -768,7 +768,7 @@ summary(out_es_b)
 #> 
 #> - Algorithm: power_curve 
 #> - The range of values explored: 0.293 to 0.344 
-#> - Time spent in the search: 1.144 mins 
+#> - Time spent in the search: 1.156 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 

@@ -296,9 +296,7 @@ out_n <- n_from_power(out,
 #> 
 #> Estimated power at 504: 0.575, 95.0% confidence interval: [0.506,0.641]
 #> 
-#> 
 #> (Extending the interval) Iteration: 1 
-#> 
 #> New interval: [100, 504] 
 #> 
 #> Try x = 1284 
@@ -312,9 +310,7 @@ out_n <- n_from_power(out,
 #> 
 #> Estimated power at 1284: 0.920, 95.0% confidence interval: [0.874,0.950]
 #> 
-#> 
 #> (Extending the interval) Iteration: 2 
-#> 
 #> New interval: [504, 1284] 
 #> Interval OK.
 #> Final extended interval: [504, 1284] 
@@ -491,7 +487,7 @@ out_n <- n_from_power(out,
 #> 
 #> ========== Final Stage ==========
 #> 
-#> - Start at 2026-02-28 10:45:49 
+#> - Start at 2026-03-10 20:03:13 
 #> - Rejection Rates:
 #> 
 #> [test]: test_indirect: x->m->y 
@@ -596,8 +592,8 @@ summary(out_n)
 #> 
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
-#> - The range of values explored: 100 to 894 
-#> - Time spent in the search: 1.053 mins 
+#> - The range of values explored: 50 to 1284 
+#> - Time spent in the search: 1.302 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Nonlinear Regression Model 
@@ -712,9 +708,7 @@ out_n_lb <- n_from_power(out,
 #> 
 #> Estimated power at 1166: 0.905, 95.0% confidence interval: [0.856,0.938]
 #> 
-#> 
 #> (Extending the interval) Iteration: 1 
-#> 
 #> New interval: [100, 1166] 
 #> Interval OK.
 #> Final extended interval: [100, 1166] 
@@ -771,7 +765,7 @@ out_n_lb <- n_from_power(out,
 #> 
 #> ========== Final Stage ==========
 #> 
-#> - Start at 2026-02-28 10:46:17 
+#> - Start at 2026-03-10 20:03:47 
 #> - Rejection Rates:
 #> 
 #> [test]: test_indirect: x->m->y 
@@ -871,8 +865,8 @@ summary(out_n_lb)
 #> 
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
-#> - The range of values explored: 100 to 903 
-#> - Time spent in the search: 27.94 secs 
+#> - The range of values explored: 50 to 1166 
+#> - Time spent in the search: 33.22 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Nonlinear Regression Model 
@@ -985,9 +979,7 @@ n_power_region <- n_region_from_power(out,
 #> 
 #> Estimated power at 675: 0.675, 95.0% confidence interval: [0.607,0.736]
 #> 
-#> 
 #> (Extending the interval) Iteration: 1 
-#> 
 #> New interval: [100, 675] 
 #> 
 #> Try x = 1490 
@@ -1001,9 +993,7 @@ n_power_region <- n_region_from_power(out,
 #> 
 #> Estimated power at 1490: 0.930, 95.0% confidence interval: [0.886,0.958]
 #> 
-#> 
 #> (Extending the interval) Iteration: 2 
-#> 
 #> New interval: [675, 1490] 
 #> Interval OK.
 #> Final extended interval: [675, 1490] 
@@ -1119,7 +1109,7 @@ n_power_region <- n_region_from_power(out,
 #> 
 #> ========== Final Stage ==========
 #> 
-#> - Start at 2026-02-28 10:47:08 
+#> - Start at 2026-03-10 20:04:45 
 #> - Rejection Rates:
 #> 
 #> [test]: test_indirect: x->m->y 
@@ -1302,7 +1292,7 @@ n_power_region <- n_region_from_power(out,
 #> 
 #> ========== Final Stage ==========
 #> 
-#> - Start at 2026-02-28 10:47:29 
+#> - Start at 2026-03-10 20:05:10 
 #> - Rejection Rates:
 #> 
 #> [test]: test_indirect: x->m->y 
@@ -1456,7 +1446,7 @@ n_power_region2 <- n_region_from_power(out_n_lb,
 #> 
 #> ========== Final Stage ==========
 #> 
-#> - Start at 2026-02-28 10:47:36 
+#> - Start at 2026-03-10 20:05:18 
 #> - Rejection Rates:
 #> 
 #> [test]: test_indirect: x->m->y 
@@ -1527,7 +1517,7 @@ n_power_region2 <- n_region_from_power(out_n_lb,
 #> 
 #> ========== Final Stage ==========
 #> 
-#> - Start at 2026-02-28 10:47:36 
+#> - Start at 2026-03-10 20:05:18 
 #> - Rejection Rates:
 #> 
 #> [test]: test_indirect: x->m->y 

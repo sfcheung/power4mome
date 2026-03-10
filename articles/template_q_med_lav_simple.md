@@ -257,8 +257,11 @@ out_power
 #> 
 #> == Population Standardized Loadings ==
 #> 
-#>      x     m     y
-#>  0.661 0.655 0.667
+#>   Standardized Loadings        
+#> x 0.661,0.661,0.661            
+#> m 0.655,0.655,0.655,0.655      
+#> y 0.667,0.667,0.667,0.667,0.667
+#> 
 #> ======================= Data Information =======================
 #> 
 #> Number of Replications:  600 
@@ -301,7 +304,7 @@ out_power
 #> 
 #> Mean(s) across replication:
 #>    est  cilo  cihi   sig pvalue
-#>  0.091 0.013 0.191 0.732  0.058
+#>  0.091 0.013 0.191 0.730  0.059
 #> 
 #> - The value 'sig' is the rejection rate.
 #> - If the null hypothesis is false, this is the power.
@@ -313,7 +316,7 @@ out_power
 #> [test]: test_indirect: x->m->y 
 #> [test_label]: Test 
 #>     est   p.v reject r.cilo r.cihi
-#> 1 0.091 1.000  0.732  0.695  0.766
+#> 1 0.091 1.000  0.730  0.693  0.764
 #> Notes:
 #> - p.v: The proportion of valid replications.
 #> - est: The mean of the estimates in a test across replications.
@@ -335,7 +338,7 @@ The second section is the output of
 showing the power under the column `reject`.
 
 In this example, the power is about 0.73 for sample size 200, 95%
-confidence interval \[0.69, 0.77\].
+confidence interval \[0.69, 0.76\].
 
 ## Find the Sample Size with the Target Power
 
@@ -435,17 +438,17 @@ This is the printout, showing only the section from the output of
     #> Level of confidence:                  95.00%
     #> Target Power:                          0.800
     #> 
-    #> - Final Value of Sample Size (n): 229
+    #> - Final Value of Sample Size (n): 223
     #> 
-    #> - Final Estimated Power (CI): 0.805 [0.787, 0.822]
+    #> - Final Estimated Power (CI): 0.798 [0.780, 0.815]
     #> 
     #> Call `summary()` for detailed results.
 
 In this example, the estimated sample size with power equal to (close
-to) the target level (0.80) is 229.
+to) the target level (0.80) is 223.
 
 Based on 2000 replications, determined by `final_rep`, the estimated
-power for 229 is 0.805, 95% confidence interval \[0.787, 0.822\].
+power for 223 is 0.798, 95% confidence interval \[0.780, 0.815\].
 
 ### How is Being “Close Enough” Defined
 
@@ -535,17 +538,17 @@ This is the printout, showing only the section from the output of
     #> Solution: 
     #> 
     #> Approximate region of sample sizes with power:
-    #> - not significantly different from 0.800: 219 to 240
+    #> - not significantly different from 0.800: 219 to 231
     #> - significantly lower than 0.800: 219
-    #> - significantly higher than 0.800: 240
+    #> - significantly higher than 0.800: 231
     #> 
     #> Confidence intervals of the estimated power:
-    #> - for the lower bound (219): [0.733, 0.800]
-    #> - for the upper bound (240): [0.807, 0.866]
+    #> - for the lower bound (219): [0.724, 0.792]
+    #> - for the upper bound (231): [0.780, 0.842]
     #> 
     #> Call `summary()` for detailed results.
 
-In this example, the range of the sample size is 219 to 240.
+In this example, the range of the sample size is 219 to 231.
 
 The large the `nrep`, the higher the precision and so the narrower this
 region. However, it will also take longer to run.

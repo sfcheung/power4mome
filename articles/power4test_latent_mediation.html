@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.69</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.70</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -98,7 +98,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Power Analysis for Latent Variable Mediation</h1>
             
-            <h4 data-toc-skip class="date">2026-03-03</h4>
+            <h4 data-toc-skip class="date">2026-03-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/sfcheung/power4mome/blob/main/vignettes/power4test_latent_mediation.Rmd" class="external-link"><code>vignettes/power4test_latent_mediation.Rmd</code></a></small>
       <div class="d-none name"><code>power4test_latent_mediation.Rmd</code></div>
@@ -384,8 +384,11 @@ and &lt;code&gt;&lt;a href="https://rdrr.io/r/base/Random.html" class="external-
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; == Population Standardized Loadings ==</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     fm    fx    fy</span></span>
-<span><span class="co">#&gt;  0.661 0.522 0.408</span></span>
+<span><span class="co">#&gt;    Standardized Loadings        </span></span>
+<span><span class="co">#&gt; fm 0.577,0.577,0.577            </span></span>
+<span><span class="co">#&gt; fx 0.447,0.447,0.447,0.447      </span></span>
+<span><span class="co">#&gt; fy 0.564,0.564,0.564,0.564,0.564</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ======================= Data Information =======================</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Number of Replications:  2 </span></span>
@@ -455,8 +458,10 @@ factor because the loadings are assumed to be the same for all
 items:</p>
 <pre><code><span><span class="co">#&gt; == Population Standardized Loadings ==</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     fm    fx    fy</span></span>
-<span><span class="co">#&gt;  0.661 0.522 0.408</span></span></code></pre>
+<span><span class="co">#&gt;    Standardized Loadings        </span></span>
+<span><span class="co">#&gt; fm 0.577,0.577,0.577            </span></span>
+<span><span class="co">#&gt; fx 0.447,0.447,0.447,0.447      </span></span>
+<span><span class="co">#&gt; fy 0.564,0.564,0.564,0.564,0.564</span></span></code></pre>
 <p>If necessary, we can check the data generation by adding
 <code>data_long = TRUE</code> when printing the output:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
@@ -646,8 +651,11 @@ sample size to be used.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; == Population Standardized Loadings ==</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     fm    fx    fy</span></span>
-<span><span class="co">#&gt;  0.661 0.522 0.408</span></span>
+<span><span class="co">#&gt;    Standardized Loadings        </span></span>
+<span><span class="co">#&gt; fm 0.577,0.577,0.577            </span></span>
+<span><span class="co">#&gt; fx 0.447,0.447,0.447,0.447      </span></span>
+<span><span class="co">#&gt; fy 0.564,0.564,0.564,0.564,0.564</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ======================= Data Information =======================</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Number of Replications:  400 </span></span>
@@ -690,7 +698,7 @@ sample size to be used.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Mean(s) across replication:</span></span>
 <span><span class="co">#&gt;    est   cilo  cihi   sig pvalue</span></span>
-<span><span class="co">#&gt;  0.336 -0.057 0.833 0.495  0.099</span></span>
+<span><span class="co">#&gt;  0.336 -0.056 0.832 0.492  0.100</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - The value 'sig' is the rejection rate.</span></span>
 <span><span class="co">#&gt; - If the null hypothesis is false, this is the power.</span></span>
@@ -710,7 +718,7 @@ false. The rejection rate can be retrieved by
 <span><span class="co">#&gt; [test]: test_indirect: fx-&gt;fm-&gt;fy </span></span>
 <span><span class="co">#&gt; [test_label]: Test </span></span>
 <span><span class="co">#&gt;     est   p.v reject r.cilo r.cihi</span></span>
-<span><span class="co">#&gt; 1 0.336 1.000  0.495  0.446  0.544</span></span>
+<span><span class="co">#&gt; 1 0.336 1.000  0.492  0.444  0.541</span></span>
 <span><span class="co">#&gt; Notes:</span></span>
 <span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>
 <span><span class="co">#&gt; - est: The mean of the estimates in a test across replications.</span></span>
@@ -721,7 +729,7 @@ false. The rejection rate can be retrieved by
 <span><span class="co">#&gt;   on Wilson's (1927) method.</span></span>
 <span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span></code></pre></div>
 <p>In the example above, the estimated power of the test of the indirect
-effect, conducted by Monte Carlo confidence interval, is 0.495, under
+effect, conducted by Monte Carlo confidence interval, is 0.492, under
 the column <code>reject</code>.</p>
 <p><code>p.v</code> is the proportion of valid results across
 replications. <code>1.000</code> means that the test conducted normally
@@ -729,7 +737,7 @@ in all replications.</p>
 <p>By default, the 95% confidence interval of the rejection rate (power)
 based on normal approximation is also printed, under the column
 <code>r.cilo</code> and <code>r.cihi</code>. In this example, the 95%
-confidence interval is [0.446; 0.544].</p>
+confidence interval is [0.444; 0.541].</p>
 </div>
 </div>
 <div class="section level2">
@@ -759,7 +767,7 @@ effect, but for a smaller sample size of 200. We simply call
 <span><span class="co">#&gt; [test]: test_indirect: fx-&gt;fm-&gt;fy </span></span>
 <span><span class="co">#&gt; [test_label]: Test </span></span>
 <span><span class="co">#&gt;     est   p.v reject r.cilo r.cihi</span></span>
-<span><span class="co">#&gt; 1 0.352 1.000  0.810  0.769  0.845</span></span>
+<span><span class="co">#&gt; 1 0.352 1.000  0.818  0.777  0.852</span></span>
 <span><span class="co">#&gt; Notes:</span></span>
 <span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>
 <span><span class="co">#&gt; - est: The mean of the estimates in a test across replications.</span></span>
@@ -769,7 +777,7 @@ effect, but for a smaller sample size of 200. We simply call
 <span><span class="co">#&gt; - r.cilo,r.cihi: The confidence interval of the rejection rate, based</span></span>
 <span><span class="co">#&gt;   on Wilson's (1927) method.</span></span>
 <span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span></code></pre></div>
-<p>The estimated power is 0.810, 95% confidence interval [0.769; 0.845],
+<p>The estimated power is 0.818, 95% confidence interval [0.777; 0.852],
 when the sample size is 200.</p>
 <p>This technique can be repeated to find the required sample size for a
 target power.</p>
@@ -799,7 +807,7 @@ all scales having a population reliability of .80:</p>
 <span><span class="co">#&gt; [test]: test_indirect: fx-&gt;fm-&gt;fy </span></span>
 <span><span class="co">#&gt; [test_label]: Test </span></span>
 <span><span class="co">#&gt;     est   p.v reject r.cilo r.cihi</span></span>
-<span><span class="co">#&gt; 1 0.235 1.000  0.985  0.968  0.993</span></span>
+<span><span class="co">#&gt; 1 0.235 1.000  0.988  0.971  0.995</span></span>
 <span><span class="co">#&gt; Notes:</span></span>
 <span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>
 <span><span class="co">#&gt; - est: The mean of the estimates in a test across replications.</span></span>
@@ -809,7 +817,7 @@ all scales having a population reliability of .80:</p>
 <span><span class="co">#&gt; - r.cilo,r.cihi: The confidence interval of the rejection rate, based</span></span>
 <span><span class="co">#&gt;   on Wilson's (1927) method.</span></span>
 <span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span></code></pre></div>
-<p>The estimated power is 0.985, 95% confidence interval [0.968; 0.993],
+<p>The estimated power is 0.988, 95% confidence interval [0.971; 0.995],
 much higher than the original scenario.</p>
 </div>
 <div class="section level2">
@@ -869,10 +877,10 @@ calling <code><a href="../reference/power4test.html">power4test()</a></code> onc
 <span><span class="co">#&gt; [test]: test_indirect: fx-&gt;fm-&gt;fy </span></span>
 <span><span class="co">#&gt; [test_label]: Test </span></span>
 <span><span class="co">#&gt;     n   est   p.v reject r.cilo r.cihi</span></span>
-<span><span class="co">#&gt; 1 175 0.327 1.000  0.700  0.653  0.743</span></span>
-<span><span class="co">#&gt; 2 200 0.329 1.000  0.835  0.795  0.868</span></span>
+<span><span class="co">#&gt; 1 175 0.327 1.000  0.703  0.656  0.745</span></span>
+<span><span class="co">#&gt; 2 200 0.329 1.000  0.833  0.793  0.866</span></span>
 <span><span class="co">#&gt; 3 225 0.340 1.000  0.897  0.864  0.924</span></span>
-<span><span class="co">#&gt; 4 250 0.330 1.000  0.905  0.872  0.930</span></span>
+<span><span class="co">#&gt; 4 250 0.330 1.000  0.907  0.875  0.932</span></span>
 <span><span class="co">#&gt; Notes:</span></span>
 <span><span class="co">#&gt; - n: The sample size in a trial.</span></span>
 <span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>

@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.69</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.70</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -99,7 +99,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Quick Template: Serial Mediation with Latent Variables</h1>
             
-            <h4 data-toc-skip class="date">2026-02-28</h4>
+            <h4 data-toc-skip class="date">2026-03-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/sfcheung/power4mome/blob/main/vignettes/articles/template_n_from_power_mediation_lav_serial.Rmd" class="external-link"><code>vignettes/articles/template_n_from_power_mediation_lav_serial.Rmd</code></a></small>
       <div class="d-none name"><code>template_n_from_power_mediation_lav_serial.Rmd</code></div>
@@ -359,8 +359,13 @@ on how to set <code>number_of_indicators</code> and
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; == Population Standardized Loadings ==</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;      x    m1    m2    m3     y</span></span>
-<span><span class="co">#&gt;  0.756 0.607 0.661 0.607 0.756</span></span>
+<span><span class="co">#&gt;    Standardized Loadings  </span></span>
+<span><span class="co">#&gt; x  0.756,0.756,0.756      </span></span>
+<span><span class="co">#&gt; m1 0.607,0.607,0.607,0.607</span></span>
+<span><span class="co">#&gt; m2 0.661,0.661,0.661      </span></span>
+<span><span class="co">#&gt; m3 0.607,0.607,0.607,0.607</span></span>
+<span><span class="co">#&gt; y  0.756,0.756,0.756      </span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ======================= Data Information =======================</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Number of Replications:  600 </span></span>
@@ -473,7 +478,7 @@ on how to set <code>number_of_indicators</code> and
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Mean(s) across replication:</span></span>
 <span><span class="co">#&gt;    est  cilo  cihi   sig pvalue</span></span>
-<span><span class="co">#&gt;  0.040 0.001 0.102 0.627  0.082</span></span>
+<span><span class="co">#&gt;  0.040 0.001 0.102 0.628  0.082</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - The value 'sig' is the rejection rate.</span></span>
 <span><span class="co">#&gt; - If the null hypothesis is false, this is the power.</span></span>
@@ -483,7 +488,7 @@ on how to set <code>number_of_indicators</code> and
 <span><span class="co">#&gt; [test]: test_indirect: x-&gt;m1-&gt;m2-&gt;m3-&gt;y </span></span>
 <span><span class="co">#&gt; [test_label]: Test </span></span>
 <span><span class="co">#&gt;     est   p.v reject r.cilo r.cihi</span></span>
-<span><span class="co">#&gt; 1 0.040 1.000  0.627  0.587  0.664</span></span>
+<span><span class="co">#&gt; 1 0.040 1.000  0.628  0.589  0.666</span></span>
 <span><span class="co">#&gt; Notes:</span></span>
 <span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>
 <span><span class="co">#&gt; - est: The mean of the estimates in a test across replications.</span></span>
@@ -557,13 +562,13 @@ size is too different from the target power.</p>
 <span><span class="co">#&gt; Solution: </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Approximate region of sample sizes with power:</span></span>
-<span><span class="co">#&gt; - not significantly different from 0.800: 228 to 288</span></span>
+<span><span class="co">#&gt; - not significantly different from 0.800: 228 to 289</span></span>
 <span><span class="co">#&gt; - significantly lower than 0.800: 228</span></span>
-<span><span class="co">#&gt; - significantly higher than 0.800: 288</span></span>
+<span><span class="co">#&gt; - significantly higher than 0.800: 289</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Confidence intervals of the estimated power:</span></span>
-<span><span class="co">#&gt; - for the lower bound (228): [0.716, 0.785]</span></span>
-<span><span class="co">#&gt; - for the upper bound (288): [0.798, 0.858]</span></span>
+<span><span class="co">#&gt; - for the lower bound (228): [0.712, 0.781]</span></span>
+<span><span class="co">#&gt; - for the upper bound (289): [0.812, 0.870]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call `summary()` for detailed results.</span></span>
 <span></span>
@@ -579,10 +584,10 @@ Power Curve
 <ul>
 <li><p>sample sizes lower than 228 have power significantly lower than
 .80, and</p></li>
-<li><p>sample sizes higher than 288 have power significantly higher than
+<li><p>sample sizes higher than 289 have power significantly higher than
 .80.</p></li>
 </ul>
-<p>In other words, sample sizes between 228 and 288 have power not
+<p>In other words, sample sizes between 228 and 289 have power not
 significantly different from .80.</p>
 <p>If necessary, detailed results can be printed by
 <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code>:</p>
@@ -609,8 +614,8 @@ significantly different from .80.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - Final Value (Sample Size): 228</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; - Final Estimated Power: 0.752 </span></span>
-<span><span class="co">#&gt; - Confidence Interval: [0.716; 0.785]</span></span>
+<span><span class="co">#&gt; - Final Estimated Power: 0.748 </span></span>
+<span><span class="co">#&gt; - Confidence Interval: [0.712; 0.781]</span></span>
 <span><span class="co">#&gt; - Level of confidence: 95.0%</span></span>
 <span><span class="co">#&gt; - Based on 600 replications.</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -619,7 +624,7 @@ significantly different from .80.</p>
 <span><span class="co">#&gt; - Algorithm: bisection </span></span>
 <span><span class="co">#&gt; - Tolerance for 'close enough': Within 0.02000 of 0.800 </span></span>
 <span><span class="co">#&gt; - The range of values explored: 200 to 255 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 1.284 mins </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 1.392 mins </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Logistic Regression </span></span>
@@ -637,20 +642,20 @@ significantly different from .80.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Coefficients:</span></span>
 <span><span class="co">#&gt; (Intercept)            x  </span></span>
-<span><span class="co">#&gt;     -2.8294       0.0169  </span></span>
+<span><span class="co">#&gt;    -2.75160      0.01653  </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Degrees of Freedom: 1799 Total (i.e. Null);  1798 Residual</span></span>
-<span><span class="co">#&gt; Null Deviance:       2106 </span></span>
-<span><span class="co">#&gt; Residual Deviance: 2056  AIC: 2060</span></span>
+<span><span class="co">#&gt; Null Deviance:       2110 </span></span>
+<span><span class="co">#&gt; Residual Deviance: 2062  AIC: 2066</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - Detailed Results:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [test]: test_indirect: x-&gt;m1-&gt;m2-&gt;m3-&gt;y </span></span>
 <span><span class="co">#&gt; [test_label]: Test </span></span>
 <span><span class="co">#&gt;     n   est   p.v reject r.cilo r.cihi</span></span>
-<span><span class="co">#&gt; 1 200 0.040 1.000  0.627  0.587  0.664</span></span>
-<span><span class="co">#&gt; 2 228 0.040 1.000  0.752  0.716  0.785</span></span>
-<span><span class="co">#&gt; 3 255 0.040 1.000  0.807  0.773  0.836</span></span>
+<span><span class="co">#&gt; 1 200 0.040 1.000  0.628  0.589  0.666</span></span>
+<span><span class="co">#&gt; 2 228 0.040 1.000  0.748  0.712  0.781</span></span>
+<span><span class="co">#&gt; 3 255 0.040 1.000  0.805  0.771  0.835</span></span>
 <span><span class="co">#&gt; Notes:</span></span>
 <span><span class="co">#&gt; - n: The sample size in a trial.</span></span>
 <span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>
@@ -681,10 +686,10 @@ significantly different from .80.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; === Major Results ===</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; - Final Value (Sample Size): 288</span></span>
+<span><span class="co">#&gt; - Final Value (Sample Size): 289</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; - Final Estimated Power: 0.830 </span></span>
-<span><span class="co">#&gt; - Confidence Interval: [0.798; 0.858]</span></span>
+<span><span class="co">#&gt; - Final Estimated Power: 0.843 </span></span>
+<span><span class="co">#&gt; - Confidence Interval: [0.812; 0.870]</span></span>
 <span><span class="co">#&gt; - Level of confidence: 95.0%</span></span>
 <span><span class="co">#&gt; - Based on 600 replications.</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -693,7 +698,7 @@ significantly different from .80.</p>
 <span><span class="co">#&gt; - Algorithm: bisection </span></span>
 <span><span class="co">#&gt; - Tolerance for 'close enough': Within 0.02000 of 0.800 </span></span>
 <span><span class="co">#&gt; - The range of values explored: 137 to 534 </span></span>
-<span><span class="co">#&gt; - Time spent in the search: 3.874 mins </span></span>
+<span><span class="co">#&gt; - Time spent in the search: 4.456 mins </span></span>
 <span><span class="co">#&gt; - The final crude model for the power-predictor relation:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Type: Nonlinear Regression Model </span></span>
@@ -709,9 +714,9 @@ significantly different from .80.</p>
 <span><span class="co">#&gt; Nonlinear regression model</span></span>
 <span><span class="co">#&gt;   model: reject ~ 1 - I(exp((a - x)/b))</span></span>
 <span><span class="co">#&gt;    data: "(Omitted)"</span></span>
-<span><span class="co">#&gt;      a      b </span></span>
-<span><span class="co">#&gt;  94.39 103.56 </span></span>
-<span><span class="co">#&gt;  residual sum-of-squares: 1.108</span></span>
+<span><span class="co">#&gt;     a     b </span></span>
+<span><span class="co">#&gt;  94.6 103.3 </span></span>
+<span><span class="co">#&gt;  residual sum-of-squares: 0.8086</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Algorithm "port", convergence message: both X-convergence and relative convergence (5)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -721,14 +726,14 @@ significantly different from .80.</p>
 <span><span class="co">#&gt; [test_label]: Test </span></span>
 <span><span class="co">#&gt;     n   est   p.v reject r.cilo r.cihi</span></span>
 <span><span class="co">#&gt; 1 137 0.041 1.000  0.337  0.300  0.375</span></span>
-<span><span class="co">#&gt; 2 200 0.040 1.000  0.627  0.587  0.664</span></span>
-<span><span class="co">#&gt; 3 228 0.040 1.000  0.752  0.716  0.785</span></span>
-<span><span class="co">#&gt; 4 255 0.040 1.000  0.807  0.773  0.836</span></span>
-<span><span class="co">#&gt; 5 260 0.039 1.000  0.792  0.757  0.822</span></span>
-<span><span class="co">#&gt; 6 264 0.039 1.000  0.790  0.756  0.821</span></span>
-<span><span class="co">#&gt; 7 288 0.039 1.000  0.830  0.798  0.858</span></span>
-<span><span class="co">#&gt; 8 338 0.038 1.000  0.910  0.884  0.930</span></span>
-<span><span class="co">#&gt; 9 534 0.038 1.000  0.978  0.963  0.987</span></span>
+<span><span class="co">#&gt; 2 200 0.040 1.000  0.628  0.589  0.666</span></span>
+<span><span class="co">#&gt; 3 228 0.040 1.000  0.748  0.712  0.781</span></span>
+<span><span class="co">#&gt; 4 255 0.040 1.000  0.805  0.771  0.835</span></span>
+<span><span class="co">#&gt; 5 260 0.039 1.000  0.785  0.750  0.816</span></span>
+<span><span class="co">#&gt; 6 265 0.039 1.000  0.795  0.761  0.825</span></span>
+<span><span class="co">#&gt; 7 289 0.039 1.000  0.843  0.812  0.870</span></span>
+<span><span class="co">#&gt; 8 338 0.038 1.000  0.908  0.883  0.929</span></span>
+<span><span class="co">#&gt; 9 534 0.038 1.000  0.980  0.965  0.989</span></span>
 <span><span class="co">#&gt; Notes:</span></span>
 <span><span class="co">#&gt; - n: The sample size in a trial.</span></span>
 <span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>

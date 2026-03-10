@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.69</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.70</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -98,7 +98,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Quick Function: Simple Mediation with Latent Variables</h1>
             
-            <h4 data-toc-skip class="date">2026-03-07</h4>
+            <h4 data-toc-skip class="date">2026-03-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/sfcheung/power4mome/blob/main/vignettes/articles/template_q_med_lav_simple.Rmd" class="external-link"><code>vignettes/articles/template_q_med_lav_simple.Rmd</code></a></small>
       <div class="d-none name"><code>template_q_med_lav_simple.Rmd</code></div>
@@ -354,8 +354,11 @@ to be used using an <code>nrep</code> of 2000 or 5000.</p></li>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; == Population Standardized Loadings ==</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;      x     m     y</span></span>
-<span><span class="co">#&gt;  0.661 0.655 0.667</span></span>
+<span><span class="co">#&gt;   Standardized Loadings        </span></span>
+<span><span class="co">#&gt; x 0.661,0.661,0.661            </span></span>
+<span><span class="co">#&gt; m 0.655,0.655,0.655,0.655      </span></span>
+<span><span class="co">#&gt; y 0.667,0.667,0.667,0.667,0.667</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ======================= Data Information =======================</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Number of Replications:  600 </span></span>
@@ -398,7 +401,7 @@ to be used using an <code>nrep</code> of 2000 or 5000.</p></li>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Mean(s) across replication:</span></span>
 <span><span class="co">#&gt;    est  cilo  cihi   sig pvalue</span></span>
-<span><span class="co">#&gt;  0.091 0.013 0.191 0.732  0.058</span></span>
+<span><span class="co">#&gt;  0.091 0.013 0.191 0.730  0.059</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; - The value 'sig' is the rejection rate.</span></span>
 <span><span class="co">#&gt; - If the null hypothesis is false, this is the power.</span></span>
@@ -410,7 +413,7 @@ to be used using an <code>nrep</code> of 2000 or 5000.</p></li>
 <span><span class="co">#&gt; [test]: test_indirect: x-&gt;m-&gt;y </span></span>
 <span><span class="co">#&gt; [test_label]: Test </span></span>
 <span><span class="co">#&gt;     est   p.v reject r.cilo r.cihi</span></span>
-<span><span class="co">#&gt; 1 0.091 1.000  0.732  0.695  0.766</span></span>
+<span><span class="co">#&gt; 1 0.091 1.000  0.730  0.693  0.764</span></span>
 <span><span class="co">#&gt; Notes:</span></span>
 <span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>
 <span><span class="co">#&gt; - est: The mean of the estimates in a test across replications.</span></span>
@@ -427,7 +430,7 @@ indirect effect(s).</p>
 <p>The second section is the output of <code><a href="../reference/rejection_rates.html">rejection_rates()</a></code>,
 showing the power under the column <code>reject</code>.</p>
 <p>In this example, the power is about 0.73 for sample size 200, 95%
-confidence interval [0.69, 0.77].</p>
+confidence interval [0.69, 0.76].</p>
 </div>
 <div class="section level2">
 <h2 id="find-the-sample-size-with-the-target-power">Find the Sample Size with the Target Power<a class="anchor" aria-label="anchor" href="#find-the-sample-size-with-the-target-power"></a>
@@ -521,16 +524,16 @@ sample size for the interval because the default lower limit is 50.</p>
 <span><span class="co">#&gt; Level of confidence:                  95.00%</span></span>
 <span><span class="co">#&gt; Target Power:                          0.800</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; - Final Value of Sample Size (n): 229</span></span>
+<span><span class="co">#&gt; - Final Value of Sample Size (n): 223</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; - Final Estimated Power (CI): 0.805 [0.787, 0.822]</span></span>
+<span><span class="co">#&gt; - Final Estimated Power (CI): 0.798 [0.780, 0.815]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call `summary()` for detailed results.</span></span></code></pre>
 <p>In this example, the estimated sample size with power equal to (close
-to) the target level (0.80) is 229.</p>
+to) the target level (0.80) is 223.</p>
 <p>Based on 2000 replications, determined by <code>final_rep</code>, the
-estimated power for 229 is 0.805, 95% confidence interval [0.787,
-0.822].</p>
+estimated power for 223 is 0.798, 95% confidence interval [0.780,
+0.815].</p>
 <div class="section level3">
 <h3 id="how-is-being-close-enough-defined">How is Being “Close Enough” Defined<a class="anchor" aria-label="anchor" href="#how-is-being-close-enough-defined"></a>
 </h3>
@@ -618,16 +621,16 @@ iterations.</p></li>
 <span><span class="co">#&gt; Solution: </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Approximate region of sample sizes with power:</span></span>
-<span><span class="co">#&gt; - not significantly different from 0.800: 219 to 240</span></span>
+<span><span class="co">#&gt; - not significantly different from 0.800: 219 to 231</span></span>
 <span><span class="co">#&gt; - significantly lower than 0.800: 219</span></span>
-<span><span class="co">#&gt; - significantly higher than 0.800: 240</span></span>
+<span><span class="co">#&gt; - significantly higher than 0.800: 231</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Confidence intervals of the estimated power:</span></span>
-<span><span class="co">#&gt; - for the lower bound (219): [0.733, 0.800]</span></span>
-<span><span class="co">#&gt; - for the upper bound (240): [0.807, 0.866]</span></span>
+<span><span class="co">#&gt; - for the lower bound (219): [0.724, 0.792]</span></span>
+<span><span class="co">#&gt; - for the upper bound (231): [0.780, 0.842]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call `summary()` for detailed results.</span></span></code></pre>
-<p>In this example, the range of the sample size is 219 to 240.</p>
+<p>In this example, the range of the sample size is 219 to 231.</p>
 <p>The large the <code>nrep</code>, the higher the precision and so the
 narrower this region. However, it will also take longer to run.</p>
 <p>The results can also be visualized using the <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>

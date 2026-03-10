@@ -623,7 +623,7 @@ summary(out_n)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 50 to 138 
-#> - Time spent in the search: 2.655 mins 
+#> - Time spent in the search: 2.507 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -793,7 +793,7 @@ summary(out_n_lb)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 50 to 174 
-#> - Time spent in the search: 2.444 mins 
+#> - Time spent in the search: 2.511 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 

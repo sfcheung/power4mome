@@ -15,7 +15,7 @@ results."><meta property="og:image" content="https://sfcheung.github.io/power4mo
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.69</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.70</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -97,6 +97,8 @@ results.</p>
 <span>  n <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  number_of_indicators <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  reliability <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  loading_difference <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  reference <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  x_fun <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  e_fun <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  process_data <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -235,6 +237,45 @@ of each set of indicators. Default
 is <code>NULL</code>.
 See the help page on how
 to use this argument.</p></dd>
+
+
+<dt id="arg-loading-difference">loading_difference<a class="anchor" aria-label="anchor" href="#arg-loading-difference"></a></dt>
+<dd><p>A named vector
+(for a single-group model) or a
+named list of named vectors
+(for a multigroup model)
+to set the difference in factor
+loadings between neighboring indicators
+of each set of indicators. Default
+is <code>NULL</code>, and all indicators of
+a factor have
+the same factor loadings. If specified,
+must be specified for all factors
+named in <code>reliability</code>, even for
+those with all loadings equal.</p></dd>
+
+
+<dt id="arg-reference">reference<a class="anchor" aria-label="anchor" href="#arg-reference"></a></dt>
+<dd><p>A named vector
+(for a single-group model) or a
+named list of named vectors
+(for a multigroup model)
+to indicate which indicator will
+be the first indicator (and so
+is the reference indicator, by default).
+Default
+is <code>NULL</code>, and for all factors,
+the indicator with
+the medium loading in a factor is
+the first indicator. Has no effect
+if loading difference is zero (and
+so all indicators have the same
+loadings). If specified,
+must be specified for all factors
+named in <code>reliability</code>, even for
+those with all loadings equal. Accepted
+values are <code>"medium"</code>, <code>"weakest"</code>,
+and <code>"strongest"</code>.</p></dd>
 
 
 <dt id="arg-x-fun">x_fun<a class="anchor" aria-label="anchor" href="#arg-x-fun"></a></dt>
@@ -1056,7 +1097,16 @@ specify the number of indicators
 and the population reliability
 coefficient of each factor,
 if the variables in the model
-syntax are latent variables.</p><div class="section">
+syntax are latent variables.</p>
+<p>Optionally, <code>loading_difference</code> can
+be used to generate indicators with
+unequal standardized factor loadings,
+and <code>reference</code> can be used to specify
+the indicator with the medium,
+strongest, or weakest standardized
+factor loading as the first indicator,
+which is used as the reference indicator
+in <code>lavaan</code>.</p><div class="section">
 <h3 id="single-group-model-3">Single-Group Model<a class="anchor" aria-label="anchor" href="#single-group-model-3"></a></h3>
 
 

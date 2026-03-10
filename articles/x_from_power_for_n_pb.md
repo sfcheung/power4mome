@@ -651,7 +651,7 @@ summary(out_n)
 #> - Algorithm: probabilistic_bisection 
 #> - Tolerance for 'close enough': Within 0.01525 of 0.800 
 #> - The range of values explored: 50 to 2000 
-#> - Time spent in the search: 2.378 mins 
+#> - Time spent in the search: 2.176 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Linear Regression 
