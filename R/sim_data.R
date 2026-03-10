@@ -791,6 +791,8 @@ print.sim_data <- function(x,
     }
     cat("\n")
 
+    # # The following code print the wrong standardized loadings
+    # # However, the computation is correct. Only the printout is wrong.
     # lambda0 <- mapply(function(xx, yy) {
     #                     out <- mapply(lambda_from_reliability,
     #                                   p = xx,
