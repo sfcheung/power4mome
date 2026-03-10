@@ -70,6 +70,16 @@
 #' if the variables in the model
 #' syntax are latent variables.
 #'
+#' Optionally, `loading_difference` can
+#' be used to generate indicators with
+#' unequal standardized factor loadings,
+#' and `reference` can be used to specify
+#' the indicator with the medium,
+#' strongest, or weakest standardized
+#' factor loading as the first indicator,
+#' which is used as the reference indicator
+#' in `lavaan`.
+#'
 #' ## Single-Group Model
 #'
 #' If a variable in the model is to be

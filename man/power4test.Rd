@@ -971,6 +971,16 @@ and the population reliability
 coefficient of each factor,
 if the variables in the model
 syntax are latent variables.
+
+Optionally, \code{loading_difference} can
+be used to generate indicators with
+unequal standardized factor loadings,
+and \code{reference} can be used to specify
+the indicator with the medium,
+strongest, or weakest standardized
+factor loading as the first indicator,
+which is used as the reference indicator
+in \code{lavaan}.
 \subsection{Single-Group Model}{
 
 If a variable in the model is to be
