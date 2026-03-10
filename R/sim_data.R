@@ -70,6 +70,16 @@
 #' if the variables in the model
 #' syntax are latent variables.
 #'
+#' Optionally, `loading_difference` can
+#' be used to generate indicators with
+#' unequal standardized factor loadings,
+#' and `reference` can be used to specify
+#' the indicator with the medium,
+#' strongest, or weakest standardized
+#' factor loading as the first indicator,
+#' which is used as the reference indicator
+#' in `lavaan`.
+#'
 #' ## Single-Group Model
 #'
 #' If a variable in the model is to be
@@ -316,6 +326,41 @@
 #' See the help page on how
 #' to use this argument.
 #'
+#' @param loading_difference A named vector
+#' (for a single-group model) or a
+#' named list of named vectors
+#' (for a multigroup model)
+#' to set the difference in factor
+#' loadings between neighboring indicators
+#' of each set of indicators. Default
+#' is `NULL`, and all indicators of
+#' a factor have
+#' the same factor loadings. If specified,
+#' must be specified for all factors
+#' named in `reliability`, even for
+#' those with all loadings equal.
+#'
+#' @param reference A named vector
+#' (for a single-group model) or a
+#' named list of named vectors
+#' (for a multigroup model)
+#' to indicate which indicator will
+#' be the first indicator (and so
+#' is the reference indicator, by default).
+#' Default
+#' is `NULL`, and for all factors,
+#' the indicator with
+#' the medium loading in a factor is
+#' the first indicator. Has no effect
+#' if loading difference is zero (and
+#' so all indicators have the same
+#' loadings). If specified,
+#' must be specified for all factors
+#' named in `reliability`, even for
+#' those with all loadings equal. Accepted
+#' values are `"medium"`, `"weakest"`,
+#' and `"strongest"`.
+#'
 #' @param x_fun The function(s) used to
 #' generate the exogenous variables or
 #' error terms. If
@@ -471,6 +516,8 @@ sim_data <- function(nrep = 10,
                      iseed = NULL,
                      number_of_indicators = NULL,
                      reliability = NULL,
+                     loading_difference = NULL,
+                     reference = NULL,
                      x_fun = list(),
                      e_fun = list(),
                      process_data = NULL,
@@ -515,6 +562,8 @@ sim_data <- function(nrep = 10,
                 n = n,
                 number_of_indicators = number_of_indicators,
                 reliability = reliability,
+                loading_difference = loading_difference,
+                reference = reference,
                 x_fun = x_fun,
                 e_fun = e_fun,
                 process_data = process_data,
@@ -707,28 +756,75 @@ print.sim_data <- function(x,
           digits = digits)
   }
 
-  if (!is.null(k0[[1]])) {
-    lambda0 <- mapply(function(xx, yy) {
-                        out <- mapply(lambda_from_reliability,
-                                      p = xx,
-                                      omega = yy)
-                        out
-                      },
-                      xx = k0,
-                      yy = rel0,
-                      SIMPLIFY = FALSE)
-    lambda <- do.call(rbind,
-                      lambda0)
-    lambda <- as.data.frame(lambda)
-    lambda_n <- nrow(lambda)
-    rownames(lambda) <- paste0("Group ", seq_len(lambda_n))
+  if (!is.null(k0[[1]]) &&
+      !is.null(x_i$lambda)) {
+    # TODO:
+    # - Handle loading_difference != 0
+    lambda_pop <- x_i$lambda
+    tmpf <- function(x) {
+      tmp <- lapply(
+          x,
+          \(y) paste0(formatC(y, digits = digits, format = "f"),
+                      collapse = ",")
+        )
+      out0 <- do.call(
+                rbind,
+                tmp
+              )
+      colnames(out0) <- "Standardized Loadings"
+      out0
+    }
+    if (ngroups > 1) {
+      lambda_str <- lapply(
+          lambda_pop,
+          tmpf
+        )
+    } else {
+      lambda_str <- tmpf(lambda_pop)
+    }
+
     cat(header_str("Population Standardized Loadings",
                   hw = .4,
                   prefix = "\n",
-                  suffix = "\n\n"))
-    print(lambda,
-          row.names = isTRUE(lambda_n > 1),
-          digits = digits)
+                  suffix = "\n"))
+
+    if (ngroups > 1) {
+      for (tmpi in names(lambda_str)) {
+        cat("\n", tmpi, ":\n")
+        print(lambda_str[[tmpi]],
+              quote = FALSE)
+      }
+    } else {
+      cat("\n")
+      print(lambda_str,
+            quote = FALSE)
+    }
+    cat("\n")
+
+    # # The following code print the wrong standardized loadings
+    # # However, the computation is correct. Only the printout is wrong.
+    # lambda0 <- mapply(function(xx, yy) {
+    #                     out <- mapply(lambda_from_reliability,
+    #                                   p = xx,
+    #                                   omega = yy)
+    #                     out
+    #                   },
+    #                   xx = k0,
+    #                   yy = rel0,
+    #                   SIMPLIFY = FALSE)
+    # lambda <- do.call(rbind,
+    #                   lambda0)
+    # lambda <- as.data.frame(lambda)
+    # lambda_n <- nrow(lambda)
+    # rownames(lambda) <- paste0("Group ", seq_len(lambda_n))
+    # cat(header_str("Population Standardized Loadings",
+    #               hw = .4,
+    #               prefix = "\n",
+    #               suffix = "\n\n"))
+    # print(lambda,
+    #       row.names = isTRUE(lambda_n > 1),
+    #       digits = digits)
+
   }
 
   # Summarize data
@@ -924,6 +1020,8 @@ sim_data_i <- function(repid = 1,
                        mm_lm_out = NULL,
                        number_of_indicators = NULL,
                        reliability = NULL,
+                       loading_difference = NULL,
+                       reference = NULL,
                        x_fun = list(),
                        e_fun = list(),
                        process_data = NULL,
@@ -1006,17 +1104,54 @@ sim_data_i <- function(repid = 1,
   } else {
     reliability <- split_par_es(reliability)
   }
+
+  if ((length(loading_difference) == 1) &&
+      is.numeric(loading_difference) &&
+      is.null(names(loading_difference))) {
+    loading_difference <- rep(loading_difference,
+                             p)
+    names(loading_difference) <- vnames
+  }
+  if (!is.list(loading_difference)) {
+    loading_difference <- rep(list(loading_difference),
+                            ngroups)
+  } else {
+    loading_difference <- split_par_es(loading_difference)
+  }
+
+  if ((length(reference) == 1) &&
+      is.numeric(reference) &&
+      is.null(names(reference))) {
+    reference <- rep(reference,
+                             p)
+    names(reference) <- vnames
+  }
+  if (!is.list(reference)) {
+    reference <- rep(list(reference),
+                            ngroups)
+  } else {
+    reference <- split_par_es(reference)
+  }
   mm_lm_dat_out <- mapply(mm_lm_data,
                           object = mm_lm_out,
                           n = n,
                           number_of_indicators = number_of_indicators,
                           reliability = reliability,
+                          loading_difference = loading_difference,
+                          reference = reference,
                           MoreArgs = list(keep_f_scores = FALSE,
                                           x_fun = x_fun,
                                           e_fun = e_fun,
                                           process_data = process_data),
                           SIMPLIFY = FALSE)
-
+  # mm_lm_dat_out is always a list, even for
+  # single-group models
+  lambda_pop <- sapply(
+                  mm_lm_dat_out,
+                  attr,
+                  which = "lambda",
+                  simplify = FALSE
+                )
   model_original <- model
   # add_indicator_syntax() already supports
   # a model syntax with "x:z ~~ y:w"
@@ -1065,6 +1200,7 @@ sim_data_i <- function(repid = 1,
     mm_out <- mm_out[[1]]
     mm_lm_out <- mm_lm_out[[1]]
     mm_lm_dat_out <- mm_lm_dat_out[[1]]
+    lambda_pop <- lambda_pop[[1]]
   }
   if (ngroups > 1) {
     for (i in group_labels) {
@@ -1087,7 +1223,8 @@ sim_data_i <- function(repid = 1,
               group_labels = group_labels,
               number_of_indicators = number_of_indicators,
               reliability = reliability,
-              fit_external = fit_external)
+              fit_external = fit_external,
+              lambda = lambda_pop)
   class(out) <- c("sim_data_i", class(out))
   out
 }

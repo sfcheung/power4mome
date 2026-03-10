@@ -1,6 +1,6 @@
 ---
 title: "Quick Template: Serial Mediation with Latent Variables"
-date: "2026-02-28"
+date: "2026-03-10"
 output:
   html_document:
     fig.align: "center"
@@ -326,8 +326,13 @@ print(out,
 #> 
 #> == Population Standardized Loadings ==
 #> 
-#>      x    m1    m2    m3     y
-#>  0.756 0.607 0.661 0.607 0.756
+#>    Standardized Loadings  
+#> x  0.756,0.756,0.756      
+#> m1 0.607,0.607,0.607,0.607
+#> m2 0.661,0.661,0.661      
+#> m3 0.607,0.607,0.607,0.607
+#> y  0.756,0.756,0.756      
+#> 
 #> ======================= Data Information =======================
 #> 
 #> Number of Replications:  600 
@@ -440,7 +445,7 @@ print(out,
 #> 
 #> Mean(s) across replication:
 #>    est  cilo  cihi   sig pvalue
-#>  0.040 0.001 0.102 0.627  0.082
+#>  0.040 0.001 0.102 0.628  0.082
 #> 
 #> - The value 'sig' is the rejection rate.
 #> - If the null hypothesis is false, this is the power.
@@ -450,7 +455,7 @@ rejection_rates(out)
 #> [test]: test_indirect: x->m1->m2->m3->y 
 #> [test_label]: Test 
 #>     est   p.v reject r.cilo r.cihi
-#> 1 0.040 1.000  0.627  0.587  0.664
+#> 1 0.040 1.000  0.628  0.589  0.666
 #> Notes:
 #> - p.v: The proportion of valid replications.
 #> - est: The mean of the estimates in a test across replications.
@@ -542,13 +547,13 @@ n_power_region
 #> Solution: 
 #> 
 #> Approximate region of sample sizes with power:
-#> - not significantly different from 0.800: 228 to 288
+#> - not significantly different from 0.800: 228 to 289
 #> - significantly lower than 0.800: 228
-#> - significantly higher than 0.800: 288
+#> - significantly higher than 0.800: 289
 #> 
 #> Confidence intervals of the estimated power:
-#> - for the lower bound (228): [0.716, 0.785]
-#> - for the upper bound (288): [0.798, 0.858]
+#> - for the lower bound (228): [0.712, 0.781]
+#> - for the upper bound (289): [0.812, 0.870]
 #> 
 #> Call `summary()` for detailed results.
 
@@ -571,12 +576,12 @@ As shown above, approximately:
   power significantly lower than .80, and
 
 - sample sizes higher than
-  288 have
+  289 have
   power significantly higher than .80.
 
 In other words, sample sizes between
 228 and
-288 have
+289 have
 power not significantly different from
 .80.
 
@@ -607,8 +612,8 @@ summary(n_power_region)
 #> 
 #> - Final Value (Sample Size): 228
 #> 
-#> - Final Estimated Power: 0.752 
-#> - Confidence Interval: [0.716; 0.785]
+#> - Final Estimated Power: 0.748 
+#> - Confidence Interval: [0.712; 0.781]
 #> - Level of confidence: 95.0%
 #> - Based on 600 replications.
 #> 
@@ -617,7 +622,7 @@ summary(n_power_region)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 200 to 255 
-#> - Time spent in the search: 1.284 mins 
+#> - Time spent in the search: 1.392 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 
@@ -635,20 +640,20 @@ summary(n_power_region)
 #> 
 #> Coefficients:
 #> (Intercept)            x  
-#>     -2.8294       0.0169  
+#>    -2.75160      0.01653  
 #> 
 #> Degrees of Freedom: 1799 Total (i.e. Null);  1798 Residual
-#> Null Deviance:	    2106 
-#> Residual Deviance: 2056 	AIC: 2060
+#> Null Deviance:	    2110 
+#> Residual Deviance: 2062 	AIC: 2066
 #> 
 #> - Detailed Results:
 #> 
 #> [test]: test_indirect: x->m1->m2->m3->y 
 #> [test_label]: Test 
 #>     n   est   p.v reject r.cilo r.cihi
-#> 1 200 0.040 1.000  0.627  0.587  0.664
-#> 2 228 0.040 1.000  0.752  0.716  0.785
-#> 3 255 0.040 1.000  0.807  0.773  0.836
+#> 1 200 0.040 1.000  0.628  0.589  0.666
+#> 2 228 0.040 1.000  0.748  0.712  0.781
+#> 3 255 0.040 1.000  0.805  0.771  0.835
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.
@@ -679,10 +684,10 @@ summary(n_power_region)
 #> 
 #> === Major Results ===
 #> 
-#> - Final Value (Sample Size): 288
+#> - Final Value (Sample Size): 289
 #> 
-#> - Final Estimated Power: 0.830 
-#> - Confidence Interval: [0.798; 0.858]
+#> - Final Estimated Power: 0.843 
+#> - Confidence Interval: [0.812; 0.870]
 #> - Level of confidence: 95.0%
 #> - Based on 600 replications.
 #> 
@@ -691,7 +696,7 @@ summary(n_power_region)
 #> - Algorithm: bisection 
 #> - Tolerance for 'close enough': Within 0.02000 of 0.800 
 #> - The range of values explored: 137 to 534 
-#> - Time spent in the search: 3.874 mins 
+#> - Time spent in the search: 4.456 mins 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Nonlinear Regression Model 
@@ -707,9 +712,9 @@ summary(n_power_region)
 #> Nonlinear regression model
 #>   model: reject ~ 1 - I(exp((a - x)/b))
 #>    data: "(Omitted)"
-#>      a      b 
-#>  94.39 103.56 
-#>  residual sum-of-squares: 1.108
+#>     a     b 
+#>  94.6 103.3 
+#>  residual sum-of-squares: 0.8086
 #> 
 #> Algorithm "port", convergence message: both X-convergence and relative convergence (5)
 #> 
@@ -719,14 +724,14 @@ summary(n_power_region)
 #> [test_label]: Test 
 #>     n   est   p.v reject r.cilo r.cihi
 #> 1 137 0.041 1.000  0.337  0.300  0.375
-#> 2 200 0.040 1.000  0.627  0.587  0.664
-#> 3 228 0.040 1.000  0.752  0.716  0.785
-#> 4 255 0.040 1.000  0.807  0.773  0.836
-#> 5 260 0.039 1.000  0.792  0.757  0.822
-#> 6 264 0.039 1.000  0.790  0.756  0.821
-#> 7 288 0.039 1.000  0.830  0.798  0.858
-#> 8 338 0.038 1.000  0.910  0.884  0.930
-#> 9 534 0.038 1.000  0.978  0.963  0.987
+#> 2 200 0.040 1.000  0.628  0.589  0.666
+#> 3 228 0.040 1.000  0.748  0.712  0.781
+#> 4 255 0.040 1.000  0.805  0.771  0.835
+#> 5 260 0.039 1.000  0.785  0.750  0.816
+#> 6 265 0.039 1.000  0.795  0.761  0.825
+#> 7 289 0.039 1.000  0.843  0.812  0.870
+#> 8 338 0.038 1.000  0.908  0.883  0.929
+#> 9 534 0.038 1.000  0.980  0.965  0.989
 #> Notes:
 #> - n: The sample size in a trial.
 #> - p.v: The proportion of valid replications.
