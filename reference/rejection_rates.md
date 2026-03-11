@@ -49,6 +49,15 @@ rejection_rates(
   ...
 )
 
+# S3 method for class 'x_from_power'
+rejection_rates(object, ...)
+
+# S3 method for class 'n_region_from_power'
+rejection_rates(object, ...)
+
+# S3 method for class 'q_power_mediation'
+rejection_rates(object, ...)
+
 # S3 method for class 'rejection_rates_df'
 print(x, digits = 3, annotation = TRUE, abbreviate_col_names = TRUE, ...)
 ```
@@ -66,7 +75,14 @@ print(x, digits = 3, annotation = TRUE, abbreviate_col_names = TRUE, ...)
   Optional arguments. For the `print` method, these arguments will be
   passed to the `print` method of `data.frame` objects
   [`print.data.frame()`](https://rdrr.io/r/base/print.dataframe.html).
-  Not used by other methods.
+  For the `rejection_rates` method of `x_from_power` and
+  `n_region_from_power` objects, these are arguments to be passed to the
+  `rejection_rates` method for `power4test_by_n` and `power4test_by_es`
+  objects. For the `rejection_rates` method for `q_power_mediation`
+  objects (the output of
+  [`q_power_mediation()`](https://sfcheung.github.io/power4mome/reference/q_power_mediation.md)
+  and friends), they are optional arguments to be passed to the
+  corresponding methods.
 
 - all_columns:
 
@@ -198,6 +214,25 @@ object of the class `rejection_rates_df_by_n`, which is a subclass of
 of a `power4test` object, with a column `n` added for the sample size
 for each test.
 
+The `rejection_rates` method for `x_from_power` objects retrieves the
+stored `power4test_by_n` or `power4test_by_es` object, and then runs
+`rejection_rates` on it and returns the result.
+
+The `rejection_rates` method for `n_region_from_power` objects retrieves
+the stored `power4test_by_n` object from the `above` element (the search
+for the region with power significantly above the target power) and then
+runs `rejection_rates` on it and returns the result.
+
+The `rejection_rates` method for `q_power_mediation` objects retrieves
+the trials from and then runs `rejection_rates` on them and returns the
+result. If `mode` is `"n"`, then the stored output from
+[`n_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md)
+is used. If `mode` is `"region"`, then the stored output from
+[`n_region_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md)
+is used. If `mode` is `"power"`, then the stored output from
+[`power4test()`](https://sfcheung.github.io/power4mome/reference/power4test.md)
+is used.
+
 The `print` method of a `rejection_rates_df` object returns the object
 invisibly. It is called for its side-effect.
 
@@ -212,6 +247,23 @@ effect sizes added to the output.
 
 The `rejection_rates` method for `power4test_by_n` objects is used to
 compute the rejection rates, with sample sizes added to the output.
+
+The `rejection_rates` method for `x_from_power` objects is used to
+compute the rejection rates for stored trials. It supports the output of
+[`x_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md)
+and its wrappers, such as
+[`n_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md).
+
+The `rejection_rates` method for `n_region_from_power` objects is used
+to compute the rejection rates for stored trials. It supports the output
+of
+[`n_region_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md).
+It is sufficient to retrieve the trials in searching for the upper bound
+because they also include the trials used in searching for the lower
+bound.
+
+The `rejection_rates` method for `q_power_mediation` objects is used to
+compute the rejection rates for stored trials.
 
 ## References
 

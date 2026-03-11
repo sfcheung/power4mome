@@ -11,7 +11,7 @@ object or other supported objects."><meta property="og:image" content="https://s
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.70</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.71</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -124,6 +124,15 @@ object or other supported objects.</p>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
 <span></span>
+<span><span class="co"># S3 method for class 'x_from_power'</span></span>
+<span><span class="fu">rejection_rates</span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for class 'n_region_from_power'</span></span>
+<span><span class="fu">rejection_rates</span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for class 'q_power_mediation'</span></span>
+<span><span class="fu">rejection_rates</span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># S3 method for class 'rejection_rates_df'</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, digits <span class="op">=</span> <span class="fl">3</span>, annotation <span class="op">=</span> <span class="cn">TRUE</span>, abbreviate_col_names <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -146,7 +155,17 @@ or a <code>power4test_by_es</code> object.</p></dd>
 the <code>print</code> method, these arguments
 will be passed to the <code>print</code> method
 of <code>data.frame</code> objects <code><a href="https://rdrr.io/r/base/print.dataframe.html" class="external-link">print.data.frame()</a></code>.
-Not used by other methods.</p></dd>
+For the <code>rejection_rates</code> method
+of <code>x_from_power</code> and <code>n_region_from_power</code> objects, these are
+arguments to be passed to the
+<code>rejection_rates</code> method
+for <code>power4test_by_n</code>
+and <code>power4test_by_es</code> objects.
+For the <code>rejection_rates</code> method for
+<code>q_power_mediation</code> objects (the
+output of <code><a href="q_power_mediation.html">q_power_mediation()</a></code>
+and friends), they are optional arguments
+to be passed to the corresponding methods.</p></dd>
 
 
 <dt id="arg-all-columns">all_columns<a class="anchor" aria-label="anchor" href="#arg-all-columns"></a></dt>
@@ -331,6 +350,37 @@ similar to the output of
 a <code>power4test</code> object, with a
 column <code>n</code> added for the sample size
 for each test.</p>
+<p>The <code>rejection_rates</code> method
+for <code>x_from_power</code> objects
+retrieves the stored
+<code>power4test_by_n</code> or
+<code>power4test_by_es</code> object,
+and then
+runs <code>rejection_rates</code> on it
+and returns the result.</p>
+<p>The <code>rejection_rates</code> method
+for <code>n_region_from_power</code> objects
+retrieves the stored
+<code>power4test_by_n</code> object from
+the <code>above</code> element (the search
+for the region with power significantly
+above the target power)
+and then
+runs <code>rejection_rates</code> on it
+and returns the result.</p>
+<p>The <code>rejection_rates</code> method
+for <code>q_power_mediation</code> objects
+retrieves the trials from
+and then
+runs <code>rejection_rates</code> on them
+and returns the result. If <code>mode</code>
+is <code>"n"</code>, then the stored output
+from <code><a href="x_from_power.html">n_from_power()</a></code> is used.
+If <code>mode</code> is <code>"region"</code>, then
+the stored output from <code><a href="x_from_power.html">n_region_from_power()</a></code>
+is used. If <code>mode</code> is <code>"power"</code>, then
+the stored output from <code><a href="power4test.html">power4test()</a></code>
+is used.</p>
 <p>The <code>print</code> method of a
 <code>rejection_rates_df</code> object returns
 the object invisibly. It is called
@@ -353,6 +403,25 @@ the output.</p>
 is used to compute the rejection
 rates, with sample sizes added to
 the output.</p>
+<p>The <code>rejection_rates</code> method for
+<code>x_from_power</code> objects
+is used to compute the rejection
+rates for stored trials. It supports
+the output of <code><a href="x_from_power.html">x_from_power()</a></code> and
+its wrappers, such as <code><a href="x_from_power.html">n_from_power()</a></code>.</p>
+<p>The <code>rejection_rates</code> method for
+<code>n_region_from_power</code> objects
+is used to compute the rejection
+rates for stored trials. It supports
+the output of <code><a href="x_from_power.html">n_region_from_power()</a></code>.
+It is sufficient to retrieve the
+trials in searching for the upper bound
+because they also include the trials
+used in searching for the lower bound.</p>
+<p>The <code>rejection_rates</code> method for
+<code>q_power_mediation</code> objects
+is used to compute the rejection
+rates for stored trials.</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
