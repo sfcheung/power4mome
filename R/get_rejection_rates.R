@@ -60,6 +60,11 @@
 #' `rejection_rates` method
 #' for `power4test_by_n`
 #' and `power4test_by_es` objects.
+#' For the `rejection_rates` method for
+#' `q_power_mediation` objects (the
+#' output of [q_power_mediation()]
+#' and friends), they are optional arguments
+#' to be passed to the corresponding methods.
 #'
 #' @seealso [power4test()],
 #' [power4test_by_n()], and
@@ -614,6 +619,52 @@ rejection_rates.n_region_from_power <- function(
                   ...)
 }
 
+
+#' @return
+#' The `rejection_rates` method
+#' for `q_power_mediation` objects
+#' retrieves the trials from
+#' and then
+#' runs `rejection_rates` on them
+#' and returns the result. If `mode`
+#' is `"n"`, then the stored output
+#' from [n_from_power()] is used.
+#' If `mode` is `"region"`, then
+#' the stored output from [n_region_from_power()]
+#' is used. If `mode` is `"power"`, then
+#' the stored output from [power4test()]
+#' is used.
+#'
+#' @details
+#' The `rejection_rates` method for
+#' `q_power_mediation` objects
+#' is used to compute the rejection
+#' rates for stored trials.
+#'
+#' @rdname rejection_rates
+#' @export
+rejection_rates.q_power_mediation <- function(
+  object,
+  ...
+) {
+  if (!is.null(object$n_region_from_power)) {
+    out <- rejection_rates(
+              object = object$n_region_from_power,
+              ...
+            )
+  } else if (!is.null(object$n_from_power)) {
+    out <- rejection_rates(
+              object = object$n_from_power,
+              ...
+            )
+  } else {
+    out <- rejection_rates(
+              object = object$power4test,
+              ...
+            )
+  }
+  return(out)
+}
 
 #' @param x The `rejection_rates_df`
 #' object to be printed.
