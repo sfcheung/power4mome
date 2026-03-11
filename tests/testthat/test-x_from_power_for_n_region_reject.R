@@ -1,0 +1,46 @@
+skip_on_cran()
+
+library(testthat)
+
+test_that("x_from_power: n region: rejection_rates", {
+
+mod <-
+"
+m ~ x
+y ~ m + x
+"
+
+mod_es <-
+"
+m ~ x: s
+y ~ m: m
+y ~ x: s
+"
+
+out <- power4test(nrep = 50,
+                  model = mod,
+                  pop_es = mod_es,
+                  n = 100,
+                  fit_model_args = list(fit_function = "lm"),
+                  test_fun = test_parameters,
+                  test_args = list(pars = "y~m"),
+                  iseed = 1234,
+                  parallel = FALSE,
+                  progress = !is_testing())
+
+expect_no_error(tmp <- n_region_from_power(out,
+                    target_power = .80,
+                    final_nrep = 60,
+                    max_trials = 2,
+                    seed = 2345,
+                    progress = !is_testing(),
+                    simulation_progress = !is_testing(),
+                    algorithm = "bisection"))
+
+chk1 <- rejection_rates(tmp, all_columns = TRUE)
+chk2 <- rejection_rates(tmp$above$power4test_trials, all_columns = TRUE)
+
+expect_equal(chk1$reject,
+             chk2$reject)
+
+})

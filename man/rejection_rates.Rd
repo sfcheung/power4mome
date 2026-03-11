@@ -6,6 +6,9 @@
 \alias{rejection_rates.power4test}
 \alias{rejection_rates.power4test_by_es}
 \alias{rejection_rates.power4test_by_n}
+\alias{rejection_rates.x_from_power}
+\alias{rejection_rates.n_region_from_power}
+\alias{rejection_rates.q_power_mediation}
 \alias{print.rejection_rates_df}
 \title{Rejection Rates}
 \usage{
@@ -48,6 +51,12 @@ rejection_rates(object, ...)
   ...
 )
 
+\method{rejection_rates}{x_from_power}(object, ...)
+
+\method{rejection_rates}{n_region_from_power}(object, ...)
+
+\method{rejection_rates}{q_power_mediation}(object, ...)
+
 \method{print}{rejection_rates_df}(x, digits = 3, annotation = TRUE, abbreviate_col_names = TRUE, ...)
 }
 \arguments{
@@ -62,7 +71,17 @@ or a \code{power4test_by_es} object.}
 the \code{print} method, these arguments
 will be passed to the \code{print} method
 of \code{data.frame} objects \code{\link[=print.data.frame]{print.data.frame()}}.
-Not used by other methods.}
+For the \code{rejection_rates} method
+of \code{x_from_power} and \code{n_region_from_power} objects, these are
+arguments to be passed to the
+\code{rejection_rates} method
+for \code{power4test_by_n}
+and \code{power4test_by_es} objects.
+For the \code{rejection_rates} method for
+\code{q_power_mediation} objects (the
+output of \code{\link[=q_power_mediation]{q_power_mediation()}}
+and friends), they are optional arguments
+to be passed to the corresponding methods.}
 
 \item{all_columns}{If \code{TRUE}, all
 columns stored by a test will be
@@ -223,6 +242,40 @@ a \code{power4test} object, with a
 column \code{n} added for the sample size
 for each test.
 
+The \code{rejection_rates} method
+for \code{x_from_power} objects
+retrieves the stored
+\code{power4test_by_n} or
+\code{power4test_by_es} object,
+and then
+runs \code{rejection_rates} on it
+and returns the result.
+
+The \code{rejection_rates} method
+for \code{n_region_from_power} objects
+retrieves the stored
+\code{power4test_by_n} object from
+the \code{above} element (the search
+for the region with power significantly
+above the target power)
+and then
+runs \code{rejection_rates} on it
+and returns the result.
+
+The \code{rejection_rates} method
+for \code{q_power_mediation} objects
+retrieves the trials from
+and then
+runs \code{rejection_rates} on them
+and returns the result. If \code{mode}
+is \code{"n"}, then the stored output
+from \code{\link[=n_from_power]{n_from_power()}} is used.
+If \code{mode} is \code{"region"}, then
+the stored output from \code{\link[=n_region_from_power]{n_region_from_power()}}
+is used. If \code{mode} is \code{"power"}, then
+the stored output from \code{\link[=power4test]{power4test()}}
+is used.
+
 The \code{print} method of a
 \code{rejection_rates_df} object returns
 the object invisibly. It is called
@@ -251,6 +304,28 @@ The \code{rejection_rates} method for
 is used to compute the rejection
 rates, with sample sizes added to
 the output.
+
+The \code{rejection_rates} method for
+\code{x_from_power} objects
+is used to compute the rejection
+rates for stored trials. It supports
+the output of \code{\link[=x_from_power]{x_from_power()}} and
+its wrappers, such as \code{\link[=n_from_power]{n_from_power()}}.
+
+The \code{rejection_rates} method for
+\code{n_region_from_power} objects
+is used to compute the rejection
+rates for stored trials. It supports
+the output of \code{\link[=n_region_from_power]{n_region_from_power()}}.
+It is sufficient to retrieve the
+trials in searching for the upper bound
+because they also include the trials
+used in searching for the lower bound.
+
+The \code{rejection_rates} method for
+\code{q_power_mediation} objects
+is used to compute the rejection
+rates for stored trials.
 }
 \examples{
 
