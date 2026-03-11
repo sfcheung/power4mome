@@ -1,4 +1,4 @@
-# power4mome 0.1.1.70
+# power4mome 0.1.1.71
 
 - Improve the function for extending the
   initial interval before doing a
@@ -423,6 +423,11 @@
   reference indicator) can be the indicator
   with the strongest, weakest, or medium
   loadings. (0.1.1.70)
+
+- Added the `rejection_rates()` method to
+  `x_from_power`, `n_region_from_power`,
+  and `q_power_mediation` objects.
+  (0.1.1.71)
 
 # power4mome 0.1.1
 
