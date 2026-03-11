@@ -55,7 +55,7 @@
 #' will be passed to the `print` method
 #' of `data.frame` objects [print.data.frame()].
 #' For the `rejection_rates` method
-#' of `x_from_power` objects, these are
+#' of `x_from_power` and `n_region_from_power` objects, these are
 #' arguments to be passed to the
 #' `rejection_rates` method
 #' for `power4test_by_n`
@@ -578,6 +578,42 @@ rejection_rates.x_from_power <- function(
   rejection_rates(object = x,
                   ...)
 }
+
+
+#' @return
+#' The `rejection_rates` method
+#' for `n_region_from_power` objects
+#' retrieves the stored
+#' `power4test_by_n` object from
+#' the `above` element (the search
+#' for the region with power significantly
+#' above the target power)
+#' and then
+#' runs `rejection_rates` on it
+#' and returns the result.
+#'
+#' @details
+#' The `rejection_rates` method for
+#' `n_region_from_power` objects
+#' is used to compute the rejection
+#' rates for stored trials. It supports
+#' the output of [n_region_from_power()].
+#' It is sufficient to retrieve the
+#' trials in searching for the upper bound
+#' because they also include the trials
+#' used in searching for the lower bound.
+#'
+#' @rdname rejection_rates
+#' @export
+rejection_rates.n_region_from_power <- function(
+  object,
+  ...
+) {
+  x <- object$above
+  rejection_rates(object = x,
+                  ...)
+}
+
 
 #' @param x The `rejection_rates_df`
 #' object to be printed.

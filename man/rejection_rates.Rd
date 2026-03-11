@@ -7,6 +7,7 @@
 \alias{rejection_rates.power4test_by_es}
 \alias{rejection_rates.power4test_by_n}
 \alias{rejection_rates.x_from_power}
+\alias{rejection_rates.n_region_from_power}
 \alias{print.rejection_rates_df}
 \title{Rejection Rates}
 \usage{
@@ -51,6 +52,8 @@ rejection_rates(object, ...)
 
 \method{rejection_rates}{x_from_power}(object, ...)
 
+\method{rejection_rates}{n_region_from_power}(object, ...)
+
 \method{print}{rejection_rates_df}(x, digits = 3, annotation = TRUE, abbreviate_col_names = TRUE, ...)
 }
 \arguments{
@@ -66,7 +69,7 @@ the \code{print} method, these arguments
 will be passed to the \code{print} method
 of \code{data.frame} objects \code{\link[=print.data.frame]{print.data.frame()}}.
 For the \code{rejection_rates} method
-of \code{x_from_power} objects, these are
+of \code{x_from_power} and \code{n_region_from_power} objects, these are
 arguments to be passed to the
 \code{rejection_rates} method
 for \code{power4test_by_n}
@@ -240,6 +243,17 @@ and then
 runs \code{rejection_rates} on it
 and returns the result.
 
+The \code{rejection_rates} method
+for \code{n_region_from_power} objects
+retrieves the stored
+\code{power4test_by_n} object from
+the \code{above} element (the search
+for the region with power significantly
+above the target power)
+and then
+runs \code{rejection_rates} on it
+and returns the result.
+
 The \code{print} method of a
 \code{rejection_rates_df} object returns
 the object invisibly. It is called
@@ -275,6 +289,16 @@ is used to compute the rejection
 rates for stored trials. It supports
 the output of \code{\link[=x_from_power]{x_from_power()}} and
 its wrappers, such as \code{\link[=n_from_power]{n_from_power()}}.
+
+The \code{rejection_rates} method for
+\code{n_region_from_power} objects
+is used to compute the rejection
+rates for stored trials. It supports
+the output of \code{\link[=n_region_from_power]{n_region_from_power()}}.
+It is sufficient to retrieve the
+trials in searching for the upper bound
+because they also include the trials
+used in searching for the lower bound.
 }
 \examples{
 
