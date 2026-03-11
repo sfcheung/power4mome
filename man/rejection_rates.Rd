@@ -6,6 +6,7 @@
 \alias{rejection_rates.power4test}
 \alias{rejection_rates.power4test_by_es}
 \alias{rejection_rates.power4test_by_n}
+\alias{rejection_rates.x_from_power}
 \alias{print.rejection_rates_df}
 \title{Rejection Rates}
 \usage{
@@ -48,6 +49,8 @@ rejection_rates(object, ...)
   ...
 )
 
+\method{rejection_rates}{x_from_power}(object, ...)
+
 \method{print}{rejection_rates_df}(x, digits = 3, annotation = TRUE, abbreviate_col_names = TRUE, ...)
 }
 \arguments{
@@ -62,7 +65,12 @@ or a \code{power4test_by_es} object.}
 the \code{print} method, these arguments
 will be passed to the \code{print} method
 of \code{data.frame} objects \code{\link[=print.data.frame]{print.data.frame()}}.
-Not used by other methods.}
+For the \code{rejection_rates} method
+of \code{x_from_power} objects, these are
+arguments to be passed to the
+\code{rejection_rates} method
+for \code{power4test_by_n}
+and \code{power4test_by_es} objects.}
 
 \item{all_columns}{If \code{TRUE}, all
 columns stored by a test will be
@@ -223,6 +231,15 @@ a \code{power4test} object, with a
 column \code{n} added for the sample size
 for each test.
 
+The \code{rejection_rates} method
+for \code{x_from_power} objects
+retrieves the stored
+\code{power4test_by_n} or
+\code{power4test_by_es} object,
+and then
+runs \code{rejection_rates} on it
+and returns the result.
+
 The \code{print} method of a
 \code{rejection_rates_df} object returns
 the object invisibly. It is called
@@ -251,6 +268,13 @@ The \code{rejection_rates} method for
 is used to compute the rejection
 rates, with sample sizes added to
 the output.
+
+The \code{rejection_rates} method for
+\code{x_from_power} objects
+is used to compute the rejection
+rates for stored trials. It supports
+the output of \code{\link[=x_from_power]{x_from_power()}} and
+its wrappers, such as \code{\link[=n_from_power]{n_from_power()}}.
 }
 \examples{
 

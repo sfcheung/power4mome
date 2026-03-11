@@ -54,7 +54,12 @@
 #' the `print` method, these arguments
 #' will be passed to the `print` method
 #' of `data.frame` objects [print.data.frame()].
-#' Not used by other methods.
+#' For the `rejection_rates` method
+#' of `x_from_power` objects, these are
+#' arguments to be passed to the
+#' `rejection_rates` method
+#' for `power4test_by_n`
+#' and `power4test_by_es` objects.
 #'
 #' @seealso [power4test()],
 #' [power4test_by_n()], and
@@ -543,6 +548,35 @@ rejection_rates.power4test_by_n <- function(object,
                   "rejection_rates_df",
                   class(out))
   out
+}
+
+#' @return
+#' The `rejection_rates` method
+#' for `x_from_power` objects
+#' retrieves the stored
+#' `power4test_by_n` or
+#' `power4test_by_es` object,
+#' and then
+#' runs `rejection_rates` on it
+#' and returns the result.
+#'
+#' @details
+#' The `rejection_rates` method for
+#' `x_from_power` objects
+#' is used to compute the rejection
+#' rates for stored trials. It supports
+#' the output of [x_from_power()] and
+#' its wrappers, such as [n_from_power()].
+#'
+#' @rdname rejection_rates
+#' @export
+rejection_rates.x_from_power <- function(
+  object,
+  ...
+) {
+  x <- object$power4test_trials
+  rejection_rates(object = x,
+                  ...)
 }
 
 #' @param x The `rejection_rates_df`
