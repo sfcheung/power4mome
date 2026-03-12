@@ -62,6 +62,8 @@
 
 - [Workflow of
   \`power4test()\`](https://sfcheung.github.io/power4mome/articles/power4test_workflow.md):
+- [Workflow of 'x_from_power()' Using the 'probabilistic_bisection'
+  Algorithm](https://sfcheung.github.io/power4mome/articles/x_from_power_workflow_pba.md):
 - [Workflow of 'x_from_power()' Using the 'power_curve'
   Algorithm](https://sfcheung.github.io/power4mome/articles/x_from_power_workflow.md):
 - [Workflows of
