@@ -76,6 +76,7 @@ articles:
 - title: Technical Appendices
   contents:
   - articles/power4test_workflow
+  - articles/x_from_power_workflow_pba
   - articles/x_from_power_workflow
   - articles/sim_data_i_workflow
 

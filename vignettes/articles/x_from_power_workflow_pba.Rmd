@@ -1,0 +1,325 @@
+---
+title: "Workflow of 'x_from_power()' Using the 'probabilistic_bisection' Algorithm"
+output:
+  html_document:
+    fig.align: "center"
+    toc: true
+    number_sections: false
+bibliography: references.bib
+csl: apa.csl
+---
+
+```{r echo = FALSE}
+library(DiagrammeR)
+```
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Goal
+
+This technical appendix describes the
+workflow of `x_from_power()` in
+[power4mome](https://sfcheung.github.io/power4mome/)
+when using the `"probabilistic_bisection"` algorithm.
+
+# `x_from_power()`
+
+The following is the workflow of `x_from_power()`,
+when the algorithm `"probabilistic_bisection"` is used.
+
+```{r fig-n_from_power_pba, fig.cap = "From Power to x (Sample Size or Effect Size [Parameter Value])", echo = FALSE}
+# https://mermaid.live/edit#pako:eNqtWP9P4kgU_1cmvWyCOd0FRUXuspeWgqKIG3VzOWBDBhigZ-mQdrrCGv_3e_O1M5XF_eFM1L55n_fevK8z7Ys3pTPiNb15TJ-nS5wy9BiOEoQ-fEDTGGdZSOZoRuY4jxmaR3Hc_K0NP53OH2UQSVOaJqBMwTqdEH7ewDIGNkgyU6gw5DhAcVzGtjFBURKxCMcSgOJosWSLlBALEVO6ttmTOCcFdx4lOI5-EBuxJTH4V2DIJmL7-IykK1DDyPhpLPTt2Q3X9Wug9QTvgHDQwK8MR14ngriwJUEbVEkQTRHJDkbetwOO8IPKyGtnLFrBrtAX-kzSJlrzf3VGMjaebMdJ5YALuYskq4AOqaIFKm5JuiAIxzFKSQZJzZoIUJtxTYOCGqC-ZoCBvW7IDPIB0fgO3lXmoD2hz1of_w1uXl5G3gONcxbRBM1pnsz-Gnmvr5LpV8rMJnogDDEq_MwUq4k2MoKHcjPqWXiiiWmkn5KUrPWzWlQ7Cm4C22BCWclo3__fTN2CpS_AxikRvtCcrXOGKjjhFlK6GgudiE7-JVMmYyZSPRh-Gnn3hOVpYgmOvE_fdC2go6PPPBGqK_LJIsXrpWmMIZg96kJSsPDygeB0ulTCIKWkJSWJlmRC2-1WybtlqJ3hWRbJcfRWRSohinoYMBqTNMFTgirwaGqsGpRwV-G9xOKEY5ezVAZm7Ei1SlIzEjNsy4kFLjOeF1IhSF2ShEdCJUEEO_oOXuTJVISnYuHbgG_RFYQbAAhqOieZ8VeHV9d7ZsQ6vMa7GaIJWJgL8ISXVQY9okvYFL1fvRxCL7c3YspJxaqBojlKyJRkGU630NffJPxKaefQhDwX8LsbS2n37R44-Gf7kP0us1_1VQYVGahEKbKlMqDIUIVWkW0VOUV2VESARH2qFi-V34q8Un5xzD8QYLna3V2BYpYPH1Me-R48q3oLRLnxswJ8Y5xrGigIeCh8OefRdEmmT8XEaflOinluN-MI5VmULGQ3RwhDXu51G7eCPQLCxJiLCSFJGlFefX8viep_nQC0wls0gYrtkTn7dM8H_QGq_BhHugwDXoVf1zNdszOSZBHbWhU7g0cL39nj76UqC77nHcUYXBW2AKI1XnGnxWmzTukET-CASsmC24bSEt1pog2Js3Id-Do9kgx0SuxcQ0yLRS3Y8lV-JBmq4NuULLmgLYMkiY6MgKP-sljT2q-kW4qQ5i_fAi4dPQp3FWhSOOdUp3UPQMMezhh6ggzgZAE6_kRmJv2lqxZ07ElW951kdYXwHjMFUvTAmqQsn4hTYDyFQcDQZ1S1QGKoLqM5ExYnWzA6BREcJQivOF7XQze0StK4LHcwpk8GNngfpsPgRFr0_u6wqpvT0AnZN4nnJu0kdn1UMEoWgoLjFmO3VeIYbaFkiJlUbNqwBz87NMXlcdjmf3n_8qllCqDr2L5WabX1qrWWQ4WGEvR1EWecbMcmXDoR1_uq7Nr336mza57HPtkwFOlbxCE_nNIc_j_DBZXPL4y-QEAMwJgeFJNZzkNhHuqPxjP6bHA9sYmKs330eP-1fYD8fogqtd_t3WdoBgebYvXh2jbL02IAuxYOjB-9wHKUUQpvGRQurnDPwzDYyPeI5pk85aUVcZkV99odYeu1-LF9T-N4gqdPJSUmDOIckDcjhBfQSfocB3l9Q3J9BkUdv_fQNoEJ-abfxsXaSSjTm2zdEMVwoNgo6X2yM0gWrv1LybYsmRvue3XU5x6bPhAnebRakVkEPsVbrebunUqAxljRlDi-KtbjMrJjH2XuRotKuBOxqNziTbTKV_LCkMGZhgE3O0B398jwxGmuOcVlCfrd7shrRfhydKjGcpvb961l3d49veiCb_3SCDQvhDD5nEYrZl9PqOCRUqqLGddzZ1yvVRISFad4YUnK7NRitLQe_y0vdE2Ffol2lbatobrL5f3jXoXNzMpBwdHpGfglC3oLpVjrnWpdZnXH4rV65zKgtkPeOorufFXWbnb6Ntbspe-XThElZyXoLlAlXFr3rWXXzO5jyXz3GL59LTVvce5N6sa6qWv3bqxbnwsE24aSb9suxi8WjbJAfQdQ8VQv6YZyQ3Mr1gcDeQ3zDr0VzAsczbym9yI-OHjg0QpOwSY8ik8oI2-UvAIQ54w-bJOp12RpTg69lOaLpdecwxQAKhdHaRhhCNRKQ9Y4GVBqSJhajKa38mOY-CYmIF7zxdt4zdpp_WOtcdo4r1VPTutn1cbxobf1mke16sX5x3q1Wj-unzfOjy8aJ6-H3g-h9vjjSaN-Vj-5OLk4rx6fVhuH3iLlvqgdgtskbfFbGKg_a9TOXv8Dd38JxQ
+mermaid('
+flowchart TD
+  %% classDef default fill:#EEEEFF;
+  %% classDef errornode fill:#FFDDDD;
+  %% classDef startend fill:#DDFFDD;
+
+  style initial fill: lightgreen
+  style loop fill: lightblue
+  style finalize fill: lightyellow
+  style exit fill: lightyellow
+  style terminate_k_final fill: lightgreen
+  style exit_final fill: lightgreen
+  style exit_pba fill: lightgreen
+
+  ZA(["Find the x (n or es)"])
+  AB("Estimate Power: power4test_by_n() or power4test_by_es()")
+  AC("Merge all results: by_x_1")
+  AB1("Use a fixed interval (for now)")
+
+  BK{{"Solution found?"}}
+  BKA("Solution found: Set to the solution: x_final, by_x_final, power_final, ci_final, nrep_final, i_final")
+  BKB("Solution not found: Set to NA: x_final, by_x_final, power_final, ci_final, nrep_final, i_final")
+  BM("Prepare the output (an x_from_power object)")
+
+  ZZ[/"Return the output"/]
+
+  ZA --> AB1
+
+  subgraph initial [Pre-Iteration Search]
+
+  AB1 --> AB
+  AB --> AC
+
+  end
+
+  subgraph initialize [Prepare for the search]
+
+  A0A("Set default tolernace (tol)")
+  A0B("Set default HDR tolerance (hdr_power_tol)")
+  A0C("Set default delta tolerance (delta_tol_f)")
+  A0D("Generate the objective function (f)")
+  A0E("Compute f values for the initial intervals")
+  A0F{{"Is one of the bounds a solution?"}}
+  A0G[["Extend the interval if necessary"]]
+  A0H{{"Is the new interval OK?"}}
+  A0I{{"Is one of the new bounds a solution?"}}
+
+  AC --> A0A
+  A0A --> A0B
+  A0B --> A0C
+  A0C --> A0D
+  A0D --> A0E
+  A0E --> A0F
+  A0F -- No --> A0G
+  A0G --> A0H
+  A0H -- Yes --> A0I
+  end
+
+  subgraph loop [Trial Loop]
+
+  BA("Start a trial")
+
+  BB{{"A final check?"}}
+  BCA("Compute f for x_i using nrep_i and R")
+  BCB("Compute f for x_i using final_nrep and final_R")
+  BD("Where the solution may be (Left/Right) (z_i)")
+  BE("Update the density function (dfun_i)")
+  BF{{"A final check?"}}
+  BG{{"Is x_i a solution?"}}
+  BH("Update x_i")
+  BHB("Find probable region of power")
+
+  A0I -- No --> BA
+
+  BA --> BB
+
+  BB -- Yes --> BCB
+  BB -- No --> BCA
+  BCA --> BD
+  BCB --> BD
+  BD --> BE
+  BE --> BF
+  BF -- Yes --> BG
+  BF -- No --> BH
+  BH --> BHB
+  BG -- No --> BH
+  BG -- Yes --> BHB
+  BHB --> BHBA
+
+
+  subgraph terminate_k [Last k changes < delta_tol?]
+
+  BHBA{{"A final check?"}}
+  BI{{"Is x_i a solution?"}}
+  BIA{{"Last k changes < delta_tol?"}}
+  BIB{{"pertubation_count > 0?"}}
+  BIC("Shift x_i by a certain amount")
+  BID("Update terminate_change_ok")
+  BIZ("Update terminate_change_ok")
+
+  BHBA -- Yes --> BI
+    subgraph terminate_k_final [A final check]
+      BI -- No --> BIA
+      BIA -- Yes --> BIB
+      BIB -- Yes --> BIC
+      BIB -- No --> BID
+    end
+  BHBA -- No --> BIZ
+
+  end
+
+  subgraph exit [Exit the Loop?]
+
+  BI -- Yes --> BJ
+  BIA -- No --> BJ
+  BIC --> BJ
+  BID --> BJ
+
+  BJ("Update any_terminate")
+  BJA{{"A final check?"}}
+  BJAA{{"Is x_i a solution?"}}
+  BJZ("Next iteration, if run, will be a PBA iteration")
+  BJZA("Start final_check_cooldown")
+  BLA{{"(any_terminate TRUE) AND (1+ final checks done) AND (Not during final_check_cooldown)"}}
+  BLB{{"Is x_i too close to a previous value checked in a final check?"}}
+  BLC[["Rollback to a previous iteration and search again"]]
+  BLCA("Set any_terminate to FALSE")
+  BLD{{"any_terminate TRUE?"}}
+  BLDA{{"Any final checks left?"}}
+  BLDB{{"In final_check_cooldown?"}}
+  BLE("Next iteration, if run, will be a final check")
+  BMA{{"Is x_i a solution?"}}
+  BNA("Exit the loop immediately")
+  BOA{{"(any_terminate TRUE) AND (No more final checks) AND (This iteration is a final check)"}}
+  BOB{{"(Maximum trials reached) OR (Maximum nrep reached)"}}
+
+  BIZ --> BJ
+  BJ --> BJA
+  BJA -- Yes --> BJAA
+  BJA -- No --> BLA
+  BJAA -- Yes --> BMA
+    subgraph exit_pba [A PBA iteration]
+      BLA -- TRUE --> BLB
+      BLB -- Yes --> BLC
+      BLA -- FALSE --> BLD
+      BLB -- No --> BLD
+      BLC --> BLCA --> BLD
+      BLD -- Yes --> BLDA -- Yes --> BLDB -- No --> BLE
+    end
+
+    subgraph exit_final [A final check]
+      BJAA -- No --> BJZ
+      BJZ --> BJZA
+    end
+
+  BLDB -- Yes --> BMA
+  BLDA -- No --> BMA
+  BLD -- No --> BMA
+  BJZA --> BMA
+  BLE --> BMA
+  BMA -- No --> BOA
+  BOA -- TRUE --> BNA
+  BMA -- Yes --> BNA
+
+  end
+
+  BOA -- FALSE --> BOB
+  BOB -- FALSE --> BA
+  BOB -- TRUE --> BNA
+
+  end
+
+  subgraph finalize [Prepare the output]
+
+  A0F -- Yes --> BK
+  A0H -- No --> BK
+  A0I -- Yes --> BK
+  BNA --> BK
+
+  BK -- Yes --> BKA
+  BK -- No --> BKB
+  BKA --> BM
+  BKB --> BM
+
+  end
+
+  BM --> ZZ
+', height = 4050, width = 800)
+```
+
+In `x_from_power`, `x` can be a sample
+size (`n`) or a population value (`es`,
+"effect size") of the selected model
+parameter.
+
+# Annotation
+
+- `by_x_1`
+
+  - The collection of all values tried and their results.
+    It is updated whenever new value(s) is/are tried.
+
+- `fit_1`
+
+  - The latest power curve estimated by
+    `power_curve`, using the values tried,
+    stored in `by_x_1`. It is updated whenever
+    `by_x_1` is updated.
+
+- `x_i`
+
+  - The value(s) for which power levels
+    will be estimated in a trial.
+
+- `final_nrep`
+
+  - The desired number of replications
+    for the solution. This value determines
+    the desired level of precision
+    (the width of the confidence interval)
+    in the solution.
+
+- `final_R`
+
+  - The desired number of R for bootstrapping
+    and Monte Carlo simulation
+    for the solution.
+
+- Termination criterion: `tol`
+
+  - The tolerance used to determine whether
+    the estimated power is "close enough"
+    to the target power. If not set, determined
+    by the confidence interval for a power
+    equal to the target power, given `final_nrep`.
+    Therefore, the larger the `final_nrep`,
+    the smaller the tolerance. Used only
+    when doing a final check using `final_nrep`.
+
+- Termination criterion: `hdr_power_tol`
+
+  - The tolerance used to determine whether
+    the width of the highest-density region
+    of power is narrow enough. If not set, determined
+    by the confidence interval for a power
+    equal to the target power, given `final_nrep`.
+    Therefore, the larger the `final_nrep`,
+    the smaller the tolerance. It is used
+    to determine whether a final check using
+    `final_nrep` will be conducted next.
+
+- Termination criterion: `delta_tol`
+
+  - The tolerance used to determine whether
+    the range of changes of `x` (sample size
+    or effect size) in the last *k* trials
+    is small enough.  It is used
+    to determine whether a final check using
+    `final_nrep` will be conducted next.
+
+- Termination criterion: `delta_tol_f`
+
+  - The tolerance used to determine whether
+    the range of changes of the objective function
+    value in the last *k* trials
+    is small enough.  It is used
+    to determine whether a final check using
+    `final_nrep` will be conducted next.
+    Although used in the check, this criterion
+    is rarely met because the number of replications
+    per trial (`nrep_i`) is designed to be small
+    (e.g., around 50) for efficiency.
+
+- `x_final`
+
+  - The value of `x` in the solution (e.g., with estimated power
+    closest to the target value), if
+    found.
+
+- `power_final`, `nrep_final`, `ci_final`, `by_x_final`
+
+  - Results based on `x_final`.
+
+- Main functions used
+
+  - `power4test_by_n()` and `power4test_by_es()`,
+    for estimating the power levels for a set of values
+    of `x`.
+
