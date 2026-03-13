@@ -1,0 +1,213 @@
+---
+title: "Workflow of 'x_from_power()' Using the 'bisection' Algorithm"
+output:
+  html_document:
+    fig.align: "center"
+    toc: true
+    number_sections: false
+bibliography: references.bib
+csl: apa.csl
+---
+
+```{r echo = FALSE}
+library(DiagrammeR)
+```
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Goal
+
+This technical appendix describes the
+workflow of `x_from_power()` in
+[power4mome](https://sfcheung.github.io/power4mome/)
+when using the `"bisection"` algorithm.
+
+# `x_from_power()`
+
+The following is the workflow of `x_from_power()`,
+when the algorithm `"bisection"` is used.
+
+```{r fig-n_from_power_bisection, fig.cap = "From Power to x (Sample Size or Effect Size [Parameter Value])", echo = FALSE}
+# https://mermaid.live/edit#pako:eNqtVm1v2zYQ_isEhwIOkKSx4ziJBqywZDsoHHfF0qGY40CgbcrmJpEGRTV2g_z3HV9EU0qLfZmBINTdw3t7jke-4JVYUxzhLBfPqy2RCn0ZLThC796hVU7KckQztKYZqXKFMpbn0S9j-E0mv7ZBVEohORhzsMlkBL83sFKBD8rXDjUaaRygNK5Uh5wixpliJLcAlLPNVm0kpQEiF2IXqpd5RY_aarcmiqb7EHGgOeR3xIhK7Sr1AxcaMh92Hhd4wiBItaVojzocCYloebLATycaMRw-AmJEFZUF49TA6rAZB-k3WGzYN8obKklLKGMZoZKqdJ9Kwje0c6JtB4J0eUj3He3qybiKOws8LhUrICn0WTxTGaGd_tdXtFQaza2NppCW2oaNNgETMyo3FJE8iEI7SrsGZNNGZ2e_QW6OjGq5kWS39dE_fpb07CMkRxQTHD1QIlfbJwvWJbG7Y_cZ28_E6oFwuxgmRh5rXMPLTtLU8Grc3MPKm45NDRJJdQV0PcXyb7pSUF6UVXxloulkdbYarxNORAEU2w0ZAkIqWqIM6qQFS1HxdRnsGL28LPDHEglgU2QBBhFUirzSTj4s8OtrvWGsO2C8N61sOXa0swxxuqJlSeShJlFvmLz1YDt1_R-e7tzGcIf3Bn9s7eC-Wq7EiS-HE4x8tiBAn4QTj31OTjDxMTdwdy0uQaL1f0FdLaBFqaXzi9TN0yIU-HnQgwByVlp_ZMLoGtzVFBsKDYP7lAUbYlcfkP6khLHuh_GeKRsSKwq6ZlDH_BCYGQVlNgdRswRTS6F_EAxGEIBOCFQWcIg-oM49UAxgwmE85oqkSuQnoc9xYM_TpQ1wApPyGSx8ZWsFVfJ2YJSkNTJ91sqGwYntuB1pdZxtsrqylgrNhSunE8S-XA3O4qQhr7mOR74sP4E3Wige-6yb8ElDXsOToY83nrRFvn38HH_806w0wT5RpLfoCn_dEoWYLXNB1VasA-YNyszqWZXnVDrE8VgaQKwBZnqmq0rCVIGripWqhUo0KmYlNd3YUs51KDOyZ0VVIF4VS_ClD7nu7RImLllt6TGwYKMui4vN1WHY0r4NrEbGLaQPrgYkR2f-0NqS1Ii5F8VvRUkg8sJ5YyQ0xY02aY6K2Bmb2sHR7ConnPxIeBf6m7YmjLvG9ZWxI9LOi9-N7HgippqaBzcVYHzAqA1nw9TMooY6grtNwVE15up5EkH7ZYyT_NTem25t2XEfK1avOARUr53wOGqmceiSC9Vy-2n4_zmDp1d83wnfKnt4yNjXBFw8B5OjsYtsi3WqUt8vmU_8GOBJFDYjPDo0J_vUmztmOAOPISeOpw4MOUhGiiK1Lu1FHtzc02YLDEOxb4LYtnWzwaaup2f2K_Zf5mkzf3y_wH9QVUkeBLTA712fxDODn5tOx6e4gGIRtoZ38YtxhmFTQRc4gqV7DS_wgr8ClFRKPBz4CkdKVvQUS1FttjjK4ODDlx1iI0agYYsaAiN8LoT_hMtICTmz73DzHDcQHL3gPY66g_759cXtxc1Fr3s56F30-6f4gKOzq8HN-dXtZb_XHVwPbi4vb19P8XdjtXt-e3V9ddO77va615f9Qe8Ub6ROxgUIRaMyAUYVjga3r_8CHoO83g
+mermaid('
+flowchart TD
+  %% classDef default fill:#EEEEFF;
+  %% classDef errornode fill:#FFDDDD;
+  %% classDef startend fill:#DDFFDD;
+
+  style initial fill: lightgreen
+  style loop fill: lightblue
+  style update_x fill: lightyellow
+  style output fill: lightgreen
+
+  ZA(["Find the x (n or es)"])
+  AA[["Determine the initial interval given the initial results: set_x_range() or set_x_range_by_x()"]]
+  AB("Estimate Power: power4test_by_n() or power4test_by_es()")
+  AC("Merge all results: by_x_1")
+
+  ZA --> AA
+
+  subgraph initial [Pre-Iteration Search]
+
+    AA --> AB
+    AB --> AC
+
+  end
+
+  AC --> BAB
+
+  subgraph pre_loop [Pre-Loop]
+
+    BAB("Create the objective function (f)")
+    BAC("Compute the f values for the bounds")
+    BAD{{"Is one of the bounds a solution?"}}
+    BAE[["Extend the interval if necessary"]]
+    BAF{{"Is one of the updated bounds a solution?"}}
+    BAG{{"Is the updated interval valid?"}}
+
+    BAB --> BAC
+    BAC --> BAD
+    BAD -- No --> BAE
+    BAE --> BAF
+    BAF -- No --> BAG
+
+  end
+
+  BAG -- Yes --> BA
+
+  subgraph loop [Trial Loop]
+
+    BA("Start a trial")
+    BBA("Compute the function value for x_i")
+    BBB{{"Is x_i a solution?"}}
+    BBC("Exit loop immediately")
+    BBD{{"Is the range of last k changes too small? (Less than delta_tol)"}}
+    BBE{{"Is the interval too narrow? (Width less than min_interval_width)"}}
+    BBF[["Expand the interval"]]
+
+    BA --> BBA
+    BBA --> BBB
+    BBB -- Yes --> BBC
+    BBB -- No --> BBD
+    BBD -- Yes --> BBC
+    BBD -- No --> BBE
+    BBE -- Yes --> BBF
+    BBE -- No --> BCA
+
+    BBF --> BCA
+
+    subgraph update_x [Update x_i]
+
+      BCA{{"What is the method?"}}
+      BCAA[["Muller method"]]
+      BCAB[["power_curve assist"]]
+      BCAC[["Bisection"]]
+      BCAZ{{"Maximum number of trials reached?"}}
+
+      BCA -- Muller --> BCAA
+      BCA -- power_curve assist --> BCAB
+      BCA -- Bisection --> BCAC
+
+    end
+
+    BCAA --> BCAZ
+    BCAB --> BCAZ
+    BCAC --> BCAZ
+
+    BCAZ -- No --> BA
+    BCAZ -- Yes --> BBC
+
+  end
+
+  BBC --> BK
+  BAD -- Yes --> BK
+  BAF -- Yes --> BK
+  BAG -- No --> BK
+
+  subgraph output [Prepare the Output]
+
+    BK{{"Solution found?"}}
+    BKA("Solution found: Set to the solution: x_final, by_x_final, power_final, ci_final, nrep_final, i_final")
+    BKB("Solution not found: Set to NA: x_final, by_x_final, power_final, ci_final, nrep_final, i_final")
+    %% BL("Determine x estimated by the power curve (used if solution not found): power_curve() --> x_estimated")
+    BM("Prepare the output (an x_from_power object)")
+    BK -- Yes --> BKA
+    BK -- No --> BKB
+
+
+  end
+
+  BKA --> BM
+  BKB --> BM
+
+  ZZ[/"Return the output"/]
+
+  BM --> ZZ
+
+
+', height = 3050, width = 800)
+```
+
+In `x_from_power`, `x` can be a sample
+size (`n`) or a population value (`es`,
+"effect size") of the selected model
+parameter.
+
+# Annotation
+
+- `by_x_1`
+
+  - The collection of all values tried and their results.
+    It is updated whenever new value(s) is/are tried.
+
+- `fit_1`
+
+  - The latest power curve estimated by
+    `power_curve`, using the values tried,
+    stored in `by_x_1`. It is updated whenever
+    `by_x_1` is updated.
+
+- `x_i`
+
+  - The value for which power levels
+    will be estimated in a trial.
+
+- Termination criterion: `tol`
+
+  - The tolerance used to determine whether
+    the estimated power is a solution
+    if the goal is "close enough"
+    to the target power.
+
+- Termination criterion: `delta_tol`
+
+  - The tolerance used to determine whether
+    the range of changes of `x` (sample size
+    or effect size) in the last *k* trials
+    is "too small." Unlike some other algorithm,
+    having similar values across trials that are
+    *not* solutions (e.g., not "close enough")
+    indicate a problem in convergence,
+    and so the algorithm will terminate.
+
+- `x_final`
+
+  - The value of `x` in the solution (e.g., with estimated power
+    closest to the target value), if
+    found.
+
+- `power_final`, `nrep_final`, `ci_final`, `by_x_final`
+
+  - Results based on `x_final`.
+
+- Main functions used
+
+  - `power4test_by_n()` and `power4test_by_es()`,
+    for estimating the power levels for a set of values
+    of `x`.
+

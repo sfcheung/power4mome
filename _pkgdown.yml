@@ -77,7 +77,8 @@ articles:
   contents:
   - articles/power4test_workflow
   - articles/x_from_power_workflow_pba
-  - articles/x_from_power_workflow
+  - articles/x_from_power_workflow_power_curve
+  - articles/x_from_power_workflow_bisection
   - articles/sim_data_i_workflow
 
 - title: internal
