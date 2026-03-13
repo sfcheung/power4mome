@@ -640,7 +640,7 @@ out
 #> 
 #> Mean(s) across replication:
 #>    est cilo cihi   sig pvalue       R   nlt0 alpha bz_39 bz_79 bz_119 bz_159
-#>  0.071  NaN  NaN 0.281  0.288 199.000 34.850 0.050 0.202 0.234  0.261  0.276
+#>  0.071  NaN  NaN 0.278  0.286 199.000 34.600 0.050 0.214 0.244  0.261  0.276
 #>  bz_199
 #>   0.250
 #> 
@@ -654,7 +654,7 @@ out
 #> [test]: test_indirect: x->m->y 
 #> [test_label]: Test 
 #>     est   p.v reject r.cilo r.cihi
-#> 1 0.071 1.000  0.281  0.145  0.519
+#> 1 0.071 1.000  0.278  0.145  0.519
 #> Notes:
 #> - p.v: The proportion of valid replications.
 #> - est: The mean of the estimates in a test across replications.
