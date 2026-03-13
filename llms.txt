@@ -355,6 +355,8 @@ Miscellaneous functions
 - [Workflow of 'x_from_power()' Using the 'probabilistic_bisection'
   Algorithm](https://sfcheung.github.io/power4mome/articles/x_from_power_workflow_pba.md):
 - [Workflow of 'x_from_power()' Using the 'power_curve'
-  Algorithm](https://sfcheung.github.io/power4mome/articles/x_from_power_workflow.md):
+  Algorithm](https://sfcheung.github.io/power4mome/articles/x_from_power_workflow_power_curve.md):
+- [Workflow of 'x_from_power()' Using the 'bisection'
+  Algorithm](https://sfcheung.github.io/power4mome/articles/x_from_power_workflow_bisection.md):
 - [Workflows of
   \`sim_data_i()](https://sfcheung.github.io/power4mome/articles/sim_data_i_workflow.md):
