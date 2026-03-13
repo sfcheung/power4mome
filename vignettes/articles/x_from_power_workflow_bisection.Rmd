@@ -150,7 +150,7 @@ flowchart TD
   BM --> ZZ
 
 
-', height = 1980, width = 800)
+', height = 2010, width = 800)
 ```
 
 In `x_from_power`, `x` can be a sample
