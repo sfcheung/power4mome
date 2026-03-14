@@ -1,4 +1,4 @@
-# power4mome 0.1.1.71
+# power4mome 0.1.1.72
 
 - Improve the function for extending the
   initial interval before doing a
@@ -428,6 +428,12 @@
   `x_from_power`, `n_region_from_power`,
   and `q_power_mediation` objects.
   (0.1.1.71)
+
+- Moved `delta_tol` and `last_k` to
+  `variants`, such that users can change
+  them through `control` when calling
+  `x_from_power()` and friends.
+  (0.1.1.72)
 
 # power4mome 0.1.1
 

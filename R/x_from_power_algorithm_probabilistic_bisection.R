@@ -41,12 +41,6 @@ alg_prob_bisection <- function(
     what = c("point", "ub", "lb"),
     goal = c("close_enough", "ci_hit"),
     tol = NULL,
-    delta_tol = switch(
-                  x,
-                  n = 2,
-                  es = .002
-                ),
-    last_k = 5,
     variants = list()
 ) {
 
@@ -143,8 +137,6 @@ alg_prob_bisection <- function(
     what = what,
     goal = goal,
     tol = tol,
-    delta_tol = delta_tol,
-    last_k = last_k,
     power_model = variants$power_model,
     power_curve_start = variants$power_curve_start,
     lower_bound = variants$lower_bound,
@@ -195,7 +187,6 @@ power_algorithm_prob_bisection <- function(
                                       what = c("point", "ub", "lb"),
                                       goal = c("close_enough", "ci_hit"),
                                       tol = NULL,
-                                      delta_tol = switch(x, n = 1, es = .001),
                                       last_k = 5,
                                       variants = list()) {
   extendInt <- match.arg(extendInt)
@@ -257,7 +248,9 @@ power_algorithm_prob_bisection <- function(
 
   # ==== Default for variants ====
 
-  variants0 <- list(delta_tol_f = NULL,
+  variants0 <- list(delta_tol = NULL,
+                    last_k = 5,
+                    delta_tol_f = NULL,
                     use_power_curve_assist = TRUE,
                     use_power_curve_min_points = 2,
                     power_curve_args = list(),
@@ -371,6 +364,20 @@ power_algorithm_prob_bisection <- function(
             )
     variants$hdr_power_tol <- diff(tmp1[1, ])
   }
+
+  # ==== Set default for delta_tol ====
+
+  if (is.null(variants$delta_tol)) {
+    delta_tol <- switch(
+                    x,
+                    n = 2,
+                    es = .002
+                  )
+  } else {
+    delta_tol <- variants$delta_tol
+  }
+
+  last_k <- variants$last_k
 
   # ==== Set default for delta_tol_f ====
 
