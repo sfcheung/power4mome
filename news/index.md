@@ -1,6 +1,6 @@
 # Changelog
 
-## power4mome 0.1.1.71
+## power4mome 0.1.1.72
 
 - Improve the function for extending the initial interval before doing a
   bisection search. (0.1.1.1)
@@ -342,6 +342,11 @@
   [`rejection_rates()`](https://sfcheung.github.io/power4mome/reference/rejection_rates.md)
   method to `x_from_power`, `n_region_from_power`, and
   `q_power_mediation` objects. (0.1.1.71)
+
+- Moved `delta_tol` and `last_k` to `variants`, such that users can
+  change them through `control` when calling
+  [`x_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md)
+  and friends. (0.1.1.72)
 
 ## power4mome 0.1.1
 

@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.71</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.72</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -111,7 +111,9 @@
 </h2>
 <p>This technical appendix describes the workflow of
 <code><a href="../reference/x_from_power.html">x_from_power()</a></code> in <a href="https://sfcheung.github.io/power4mome/">power4mome</a> when using
-the <code>"probabilistic_bisection"</code> algorithm.</p>
+the <code>"probabilistic_bisection"</code> algorithm, based on the
+algorithm proposed by <span class="citation">Waeber et al.
+(2013)</span>, applied to power analysis by <span class="citation">Chalmers (2024)</span>.</p>
 </div>
 <div class="section level2">
 <h2 id="x_from_power">
@@ -128,6 +130,166 @@ From Power to x (Sample Size or Effect Size [Parameter Value])
 <p>In <code>x_from_power</code>, <code>x</code> can be a sample size
 (<code>n</code>) or a population value (<code>es</code>, “effect size”)
 of the selected model parameter.</p>
+</div>
+<div class="section level2">
+<h2 id="technical-details">Technical Details<a class="anchor" aria-label="anchor" href="#technical-details"></a>
+</h2>
+<ul>
+<li>The interval used in the search is fixed throughout the search.
+Users can set the interval manually if so desired.</li>
+</ul>
+<div class="section level3">
+<h3 id="termination-criteria">Termination Criteria<a class="anchor" aria-label="anchor" href="#termination-criteria"></a>
+</h3>
+<p>The following criteria are used to decide when the search will be
+ended.</p>
+<ul>
+<li>
+<p><code>tol</code></p>
+<p>The tolerance used to determine whether the estimated power is “close
+enough” to the target power. If not set, determined by the confidence
+interval for a power equal to the target power, given
+<code>final_nrep</code> (the number of replications for the solution)
+and <code>ci_level</code> (the level of confidence for the estimated
+power): the distance from the confidence limit closet to the target
+power, multiplied by .90. Therefore, the larger the
+<code>final_nrep</code>, the smaller the tolerance. Used only when doing
+a final check using <code>final_nrep</code>. When calling
+<code><a href="../reference/x_from_power.html">x_from_power()</a></code> and related functions, it can be set
+manually by the argument <code>tolerance</code>. It is used to determine
+whether a value of <code>x</code> is considered to be a solution. The
+default value ensured that the confidence interval of the solution
+includes the target power.</p>
+</li>
+<li>
+<p><code>max_final_checks</code></p>
+<p>The maximum number of final checks. It is possible that a candidate
+value turned out does not meet the tolerance (the estimated power not
+“close enough” to the target power). The search will then continue. The
+value <code>max_final_checks</code> determine the maximum number of
+final checks to try. If this number of checks is reached but solution
+not found, the search will terminate. The default value is 5, and can be
+changed through the <code>control</code> argument (e.g.,
+<code>control = list(max_final_checks = 2)</code>).</p>
+</li>
+<li>
+<p><code>max_trials</code></p>
+<p>The maximum number of trials (iterations) for the search. If this
+number of trials is reached, the search will stop. The default value is
+determined by the calling function, default to 100 for
+<code>probabilistic_bisection</code>, and can be changed through the
+argument <code>max_trials</code> of <code><a href="../reference/x_from_power.html">x_from_power()</a></code> and
+friends.</p>
+</li>
+<li>
+<p><code>total_nrep</code></p>
+<p>The total number of replications for the whole search process. If
+this number is reached, the search will stop. The default value is
+determined by the calling function, default to 5000, and can be changed
+through the <code>control</code> argument (e.g.,
+<code>control = list(total_nrep = 2)</code>).</p>
+</li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="number-of-replications-in-each-iteration">Number of Replications in Each Iteration<a class="anchor" aria-label="anchor" href="#number-of-replications-in-each-iteration"></a>
+</h3>
+<p>The number of replications in a trial (<code>nrep_i</code>) is
+<code>total_nrep / max_trials</code>. Therefore, the default number of
+iterations is 50. It will be adjusted upward such that the estimated
+power in an iteration will not be exactly equal to the target power.
+Therefore, with a target power of .80, the default number of iterations
+is 51, because an estimated power of exactly .80 is possible with 50
+replications.</p>
+</div>
+<div class="section level3">
+<h3 id="final-checks">Final Checks<a class="anchor" aria-label="anchor" href="#final-checks"></a>
+</h3>
+<p>A value will be considered a solution only if it passed the final
+check, carried out using the number of replications equal to
+<code>final_nrep</code>.</p>
+<p>In an iteration, after the density function is updated, the next
+iteration will be final check if</p>
+<ul>
+<li><p>there are still unused attempts for final checks available (i.e.,
+the number of attempted final checks is not equal to
+<code>max_final_checks</code>), and</p></li>
+<li><p>the iteration is not during the cooldown period after the
+previous final check, if any,</p></li>
+</ul>
+<p>and at least one of the following criteria is met (described in
+details next):</p>
+<ul>
+<li><p>The range of changes of the candidate value (<code>x_i</code>),
+such as the sample size, in the <code>last_k</code> iterations is less
+than <code>delta_tol</code>.</p></li>
+<li><p>The range of changes of the function values (the deviation of the
+estimated power from the target power, if the goal is “close_enough”) in
+the <code>last_k</code> iterations is less than
+<code>delta_tol_f</code>.</p></li>
+<li><p>The width of the (derived) highest-density region of the
+estimated power is less than or equal to <code>hdr_power_tol</code>
+<em>and</em> the region includes the target power.</p></li>
+</ul>
+<p>If a solution is found in a final check, the search will
+terminate.</p>
+<p>If a solution is not found and this final check is not the last one
+available, the search will resume. The next
+<code>final_check_cooldown</code> iterations (default to
+<code>last_k</code>) will be the cooldown period and final check will
+not be carried out regardless of other criteria.</p>
+</div>
+<div class="section level3">
+<h3 id="final-check-criteria">Final Check Criteria<a class="anchor" aria-label="anchor" href="#final-check-criteria"></a>
+</h3>
+<p>The following criteria will be used to determine whether a final
+check will be conducted next.</p>
+<ul>
+<li>
+<p><code>hdr_power_tol</code></p>
+<p>The tolerance used to determine whether the width of the
+highest-density region of power is narrow enough. If not set, to be
+conservative, it is set to the .90 of the width of the confidence
+interval for a power equal to the target power, given
+<code>final_nrep</code>. Therefore, the larger the
+<code>final_nrep</code>, the smaller the tolerance. It is used to
+determine whether a final check using <code>final_nrep</code> will be
+conducted next. To change it, set it through the <code>control</code>
+argument (e.g.,
+<code>control = list(hdr_power_tol = .02)</code>.</p>
+</li>
+<li>
+<p><code>delta_tol</code></p>
+<p>The tolerance used to determine whether the range of changes of
+<code>x</code> (sample size or effect size) in the last <em>k</em>
+trials is small enough. If the change is small enough, a solution may
+have been found. It is used to determine whether a final check using
+<code>final_nrep</code> will be conducted next. The default value is 2
+for <code>n</code> (sample size) and .002 for <code>es</code> (effect
+size). To change it, set it through the <code>control</code> argument
+(e.g., <code>control = list(delta_tol = .02)</code>. The number of
+trails (<em>k</em>), default to 5, can be changed through the
+<code>control</code> argument (e.g.,
+<code>control = list(last_k = 3)</code>).</p>
+</li>
+<li>
+<p><code>delta_tol_f</code></p>
+<p>The tolerance used to determine whether the range of changes of the
+objective function value in the last <em>k</em> trials is small enough.
+It is used to determine whether a final check using
+<code>final_nrep</code> will be conducted next. The default value is
+half of the width of the confidence interval at the target power.
+Although used in the check, this criterion is rarely met because the
+number of replications per trial (<code>nrep_i</code>) is designed to be
+small (e.g., around 50) for efficiency. To change it, set it through the
+<code>control</code> argument (e.g.,
+<code>control = list(delta_tol_f = .02)</code>. The number of trails
+(<em>k</em>), default to 5, can be changed through the
+<code>control</code> argument (e.g.,
+<code>control = list(last_k = 3)</code>).</p>
+</li>
+</ul>
+</div>
 </div>
 <div class="section level2">
 <h2 id="annotation">Annotation<a class="anchor" aria-label="anchor" href="#annotation"></a>
@@ -171,50 +333,6 @@ for the solution.</li>
 </ul>
 </li>
 <li>
-<p>Termination criterion: <code>tol</code></p>
-<ul>
-<li>The tolerance used to determine whether the estimated power is
-“close enough” to the target power. If not set, determined by the
-confidence interval for a power equal to the target power, given
-<code>final_nrep</code>. Therefore, the larger the
-<code>final_nrep</code>, the smaller the tolerance. Used only when doing
-a final check using <code>final_nrep</code>.</li>
-</ul>
-</li>
-<li>
-<p>Termination criterion: <code>hdr_power_tol</code></p>
-<ul>
-<li>The tolerance used to determine whether the width of the
-highest-density region of power is narrow enough. If not set, determined
-by the confidence interval for a power equal to the target power, given
-<code>final_nrep</code>. Therefore, the larger the
-<code>final_nrep</code>, the smaller the tolerance. It is used to
-determine whether a final check using <code>final_nrep</code> will be
-conducted next.</li>
-</ul>
-</li>
-<li>
-<p>Termination criterion: <code>delta_tol</code></p>
-<ul>
-<li>The tolerance used to determine whether the range of changes of
-<code>x</code> (sample size or effect size) in the last <em>k</em>
-trials is small enough. It is used to determine whether a final check
-using <code>final_nrep</code> will be conducted next.</li>
-</ul>
-</li>
-<li>
-<p>Termination criterion: <code>delta_tol_f</code></p>
-<ul>
-<li>The tolerance used to determine whether the range of changes of the
-objective function value in the last <em>k</em> trials is small enough.
-It is used to determine whether a final check using
-<code>final_nrep</code> will be conducted next. Although used in the
-check, this criterion is rarely met because the number of replications
-per trial (<code>nrep_i</code>) is designed to be small (e.g., around
-50) for efficiency.</li>
-</ul>
-</li>
-<li>
 <p><code>x_final</code></p>
 <ul>
 <li>The value of <code>x</code> in the solution (e.g., with estimated
@@ -238,6 +356,22 @@ for estimating the power levels for a set of values of
 </ul>
 </li>
 </ul>
+</div>
+<div class="section level2">
+<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0" line-spacing="2">
+<div id="ref-chalmers_solving_2024" class="csl-entry">
+Chalmers, R. P. (2024). Solving variables with <span>Monte</span>
+<span>Carlo</span> simulation experiments: <span>A</span> stochastic
+root-solving approach. <em>Psychological Methods</em>. <a href="https://doi.org/10.1037/met0000689" class="external-link">https://doi.org/10.1037/met0000689</a>
+</div>
+<div id="ref-waeber_bisection_2013" class="csl-entry">
+Waeber, R., Frazier, P. I., &amp; Henderson, S. G. (2013). Bisection
+search with noisy responses. <em>SIAM Journal on Control and
+Optimization</em>, <em>51</em>(3), 2261–2279. <a href="https://doi.org/10.1137/120861898" class="external-link">https://doi.org/10.1137/120861898</a>
+</div>
+</div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
