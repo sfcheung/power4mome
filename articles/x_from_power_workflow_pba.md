@@ -21,8 +21,10 @@ In `x_from_power`, `x` can be a sample size (`n`) or a population value
 
 ## Technical Details
 
-- The interval used in the search is fixed throughout the search. Users
-  can set the interval manually if so desired.
+The basic workflow is based on the probabilistic bisection method
+\[waeber_bisection_2013\]. In the current implementation, the interval
+used in the search is fixed throughout the search. Users can set the
+interval manually if so desired, using the argument `x_interval`.
 
 ### Termination Criteria
 

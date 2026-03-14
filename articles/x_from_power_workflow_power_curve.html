@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.72</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.73</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -111,21 +111,23 @@
 </h2>
 <p>This technical appendix describes the workflow of
 <code><a href="../reference/x_from_power.html">x_from_power()</a></code> in <a href="https://sfcheung.github.io/power4mome/">power4mome</a> when using
-the <code>"power_curve"</code> algorithm.</p>
+the <code>"power_curve"</code> algorithm. This algorithm belongs to a
+family of algorithm called surrogate function approximation method <span class="citation">(see Chalmers, 2024 for a review)</span>.</p>
 </div>
 <div class="section level2">
 <h2 id="x_from_power">
 <code>x_from_power()</code><a class="anchor" aria-label="anchor" href="#x_from_power"></a>
 </h2>
 <p>The following is the workflow of <code><a href="../reference/x_from_power.html">x_from_power()</a></code>, when
-the algorithm <code>"power_curve"</code> is used. Simulation is to be
-done for each value of <code>x</code>, and this can be slow when Monte
-Carlo or bootstrapping confidence intervals are involved in the test. It
-is not feasible, and also not necessary, to accurately estimate the
-levels of power along many values across a range of <code>x</code>, if
-the goal is to find <em>the</em> value of <code>x</code> with the target
-power. Therefore, steps are taken to balance speed and precision when
-finding the solution.</p>
+the algorithm <code>"power_curve"</code> is used. In simulation-based
+power analysis, a number of replications is to be done for each value of
+<code>x</code>, and this can be slow when Monte Carlo or bootstrapping
+confidence intervals are involved in the test in each replication. It is
+not feasible, and also not necessary, to accurately estimate the levels
+of power along many values across a range of <code>x</code>, if the goal
+is to find a value of <code>x</code> with estimated power close to the
+target power. Therefore, steps are taken to balance speed and precision
+when finding the solution.</p>
 <div class="figure">
 <div id="htmlwidget-ac96cb3ee4656e2e9ec3" style="width:800px;height:4050px;" class="DiagrammeR html-widget"></div>
 <script type="application/json" data-for="htmlwidget-ac96cb3ee4656e2e9ec3">{"x":{"diagram":"\nflowchart TD\n  %% classDef default fill:#EEEEFF;\n  %% classDef errornode fill:#FFDDDD;\n  %% classDef startend fill:#DDFFDD;\n\n  style initial fill: lightgreen\n  style loop fill: lightblue\n  style solution fill: lightyellow\n  style exit fill: lightyellow\n  style found fill: lightgreen\n\n  ZA([\"Find the x (n or es)\"])\n  AA[[\"Determine the initial values given the initial results: set_x_range()\"]]\n  AB(\"Estimate Power: power4test_by_n() or power4test_by_es()\")\n  AC(\"Merge all results: by_x_1\")\n  AD(\"Fit a power curve: power_curve() -> fit_i\")\n  %% ADA(\"Update fit_1\")\n  %% ADB(\"Update by_x_1\")\n  AE(\"Set the sequences of nreps, Rs, and xs per trial\")\n  %% AF(\"Set the sequence of Rs\")\n  %% AG(\"Set the sequence of # of ns per trial\")\n\n  BA(\"Start a trial\")\n\n  BB{{\"CI conttains target power?\"}}\n\n  BBA(\"Update the interval of power levels to search\")\n\n  BC[[\"Determine xs to try: estimate_x_range() --> x_j\"]]\n  BD[[\"Adjust nrep based on power levels of xs: nrep_from_power() --> nrep_j\"]]\n  BE(\"Estimate power: power4test_by_n() or power4test_by_es() --> by_x_j\")\n  BF(\"Merge all results --> by_x_1\")\n  BG(\"Update the power curve: power_curve() --> fit_1\")\n\n  BH{{\"Is target power inside the range of estimated power levels?\"}}\n\n  BHA(\"Find the candidate solution (x_out) with power closest to the target power\")\n  BHAA(\"Update x_out, power_out, nrep_out, ci_out, and by_x_out\")\n\n  BHB(\"Estimate the candidate x by the power curve\")\n  BHBA(\"Estiamte the power of x: power4test_by_n() or power4test_by_es()\")\n  BHBB(\"Update x_out, power_out, nrep_out, ci_out, and by_x_out\")\n  BHBC(\"Merge all results --> by_x_1\")\n  BHBD(\"Update the power curve: power_curve() --> fit_1\")\n\n  BI{{\"Any CIs include the target power?\"}}\n\n  BIA(\"Set ci_hit to TRUE\")\n  BIB(\"Find the x (a) with CI including the target power and (b) smallest standard error\")\n  BIC(\"Update n_out, power_out, nrep_out, ci_out, and by_x_out\")\n\n  BIZ(\"Set ci_hit to FALSE\")\n\n  BJ{{\"ci_hit TRUE?\"}}\n\n  BJA{{\"nrep_out == final_nrep?\"}}\n\n  BJAA{{\"At least one nrep left?\"}}\n\n  BJAAA(\"Next nrep, R, and xs_per_trial\")\n\n  BJZ(\"Maximum number of trials reached?\")\n\n  BK{{\"(ci_hit) and (nrep_out == final_nrep)?\"}}\n\n  BKA(\"Solution found: Set to the solution: x_final, by_x_final, power_final, ci_final, nrep_final, i_final\")\n\n  BKB(\"Solution not found: Set to NA: x_final, by_x_final, power_final, ci_final, nrep_final, i_final\")\n\n  BL(\"Determine x estimated by the power curve (used if solution not found): power_curve() --> x_estimated\")\n\n  BM(\"Prepare the output (an x_from_power object)\")\n\n  ZZ[/\"Return the output\"/]\n\n  ZA --> AA\n\n  subgraph initial [Pre-Iteration Search]\n\n  AA --> AB\n  AB --> AC\n  AC --> AD\n  AD --> AE\n\n  end\n\n  AE --> BA\n\n  subgraph loop [Trial Loop]\n\n  BA --> BB\n  BB -- Yes --> BBA --> BC\n  BB -- No --> BC\n  BC --> BD\n  BD --> BE\n  BE --> BF\n  BF --> BG\n  BG --> BH\n\n  subgraph solution [Any candidate solution?]\n\n  BH -- Yes --> BHA\n  BH -- No --> BHB\n\n  BHA --> BHAA\n  BHAA --> BI\n\n  BHB --> BHBA\n  BHBA --> BHBB\n  BHBB --> BHBC\n  BHBC --> BHBD\n\n  BHBD --> BI\n\n  BI -- Yes --> BIA\n  BIA --> BIB\n  BIB --> BIC\n\n  BI -- No --> BIZ\n\n  end\n\n  subgraph exit [Exit the Loop?]\n\n  BIC --> BJ\n  BIZ --> BJ\n\n  BJ -- Yes --> BJA\n\n  BJ -- No --> BJZ\n\n  BJA -- No --> BJAA\n  BJAA -- Yes --> BJAAA\n  BJAA -- No --> BJZ\n  BJAAA --> BJZ\n\n  end\n\n  BJZ -- No --> BA\n  BJAA -- No --> BA\n\n  end\n\n  subgraph found [Solution Found?]\n\n  BJA -- Yes --> BK\n\n  BJZ -- Yes --> BK\n\n  BK -- Yes --> BKA\n  BK -- No --> BKB\n\n  BKA --> BL\n  BKB --> BL\n\n  end\n\n  BL --> BM\n\n  BM --> ZZ\n\n"},"evals":[],"jsHooks":[]}</script><p class="caption">
@@ -135,6 +137,141 @@ From Power to x (Sample Size or Effect Size [Parameter Value])
 <p>In <code>x_from_power</code>, <code>x</code> can be a sample size
 (<code>n</code>) or a population value (<code>es</code>, “effect size”)
 of the selected model parameter.</p>
+</div>
+<div class="section level2">
+<h2 id="technical-details">Technical Details<a class="anchor" aria-label="anchor" href="#technical-details"></a>
+</h2>
+<p>These are the basic steps of the algorithm:</p>
+<ul>
+<li>
+<p>Pre-iteration search</p>
+<ul>
+<li><p>Several candidate values of <code>x</code> spanning a range is
+selected, using a small initial number of replications
+(<code>nrep0</code>). If simulation-based methods such as Monte Carlo or
+bootstrapping is used, a small initial number of resampling
+(<code>R0</code>) is also used.</p></li>
+<li><p>The levels of power for these levels are estimated.</p></li>
+<li><p>A working power curve is fitted to these values of <code>x</code>
+and the estimated levels of power.</p></li>
+</ul>
+</li>
+<li>
+<p>The search</p>
+<ul>
+<li><p>The working power curve will be used to identify one or more
+probable values of <code>x</code> (<code>x_j</code>) to
+examine.</p></li>
+<li><p>The levels of power for <code>x_j</code> are estimated.</p></li>
+<li><p>The working power curve will be updated.</p></li>
+<li>
+<p>Examine the values</p>
+<ul>
+<li>If the number of replications is not yet equal to the target number
+(<code>final_nrep</code>), then the search will continue, increasing the
+number of replications for high precision if necessary.</li>
+</ul>
+</li>
+<li><p>If the number of replications is already equal to the target
+number (<code>final_nrep</code>), then the values tried will be examined
+to see whether a solution has been found.</p></li>
+</ul>
+</li>
+</ul>
+<div class="section level3">
+<h3 id="termination-criteria">Termination Criteria<a class="anchor" aria-label="anchor" href="#termination-criteria"></a>
+</h3>
+<p>If one of the following criteria is met, the search will end:</p>
+<ul>
+<li><p>A solution is found. This depends on the <code>goal</code>. For
+<code>ci_hit</code>, a solution is found if the confidence interval of
+the estimated power includes the target power. For
+<code>close_enough</code>, a solution is found if the difference between
+the estimated power and the target power is less than the tolerance
+(<code>tolerance</code>). The tolerance can be set manually by the
+argument <code>tolerance</code>, and its default is .02 for
+<code>close_enough</code>.</p></li>
+<li><p>The range of changes of <code>x</code> in the <code>last_k</code>
+iterations is less than <code>delta_tol</code>. For
+<code>power_curve</code>, it suggests that the search failed, and a new
+search using a different seed or different interval is needed. To change
+<code>delta_tol</code>, set it through the <code>control</code> argument
+(e.g., <code>control = list(delta_tol = .02)</code>. The number of
+trails (<em>k</em>), default to 3, can be changed through the
+<code>control</code> argument (e.g.,
+<code>control = list(last_k = 5)</code>).</p></li>
+<li><p>The maximum number of trials (iterations) for the search is
+reached. The default value is determined by the calling function,
+default to 10 for <code>power_curve</code>, and can be changed through
+the argument <code>max_trials</code> of <code><a href="../reference/x_from_power.html">x_from_power()</a></code> and
+friends.</p></li>
+</ul>
+<p>Note that the working power curve is only used to assist the
+identification of the values of <code>x</code> to examine. Whether a
+value of <code>x</code> (e.g., a sample size) is considered a solution
+is determined solely by the estimated power, and/or the confidence
+interval. Therefore, whether the working power curve is “correct” along
+a wide range of <code>x</code> is not essential. The working power curve
+serves it role as long as it can lead to a predicted value of
+<code>x</code> close enough to the solution.</p>
+</div>
+<div class="section level3">
+<h3 id="the-working-power-curve">The Working Power Curve<a class="anchor" aria-label="anchor" href="#the-working-power-curve"></a>
+</h3>
+<p>Strictly speaking, the model to be fitted is not the true power
+curve, but a model that is “good enough” for the values of
+<code>x</code> examined so far (that’s why these models are called
+surrogate functions).</p>
+<p>The function <code><a href="../reference/power_curve.html">power_curve()</a></code> is used to fit a working
+power curve. Unlike some previous implementations, one or models are
+tried, in sequence, to determine the working power curve. The current
+internal default models for sample sizes are as following, tried in this
+order:</p>
+<ul>
+<li><p><code>reject ~ 1 - I(exp((a - x) / b))</code>, fitted by
+<code><a href="https://rdrr.io/r/stats/nls.html" class="external-link">nls()</a></code></p></li>
+<li><p><code>reject ~ I((x - c0)^e) / (b + I((x - c0)^e))</code>, fitted
+by <code><a href="https://rdrr.io/r/stats/nls.html" class="external-link">nls()</a></code></p></li>
+<li><p><code>reject ~ x</code>, fitted by a logistic regression model
+using <code><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm()</a></code></p></li>
+<li><p><code>reject ~ x</code>, fitted by a linear regression model
+using <code><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm()</a></code>.</p></li>
+</ul>
+<p>The current internal default models for effect sizes are as
+following, tried in this order:</p>
+<ul>
+<li><p><code>reject ~ 1 - I(exp((a - x) / b))</code>, fitted by
+<code><a href="https://rdrr.io/r/stats/nls.html" class="external-link">nls()</a></code></p></li>
+<li><p><code>reject ~ 1 - 1 / I((1 + (x / d)^a)^b)</code>, fitted by
+<code><a href="https://rdrr.io/r/stats/nls.html" class="external-link">nls()</a></code></p></li>
+<li><p><code>reject ~ 1 - exp(x / a) / I((1  + exp(x / a))^b)</code>,
+fitted by <code><a href="https://rdrr.io/r/stats/nls.html" class="external-link">nls()</a></code></p></li>
+<li><p><code>reject ~ 1 - 2 / (exp(x / d) + exp(-x / d))</code>, fitted
+by <code><a href="https://rdrr.io/r/stats/nls.html" class="external-link">nls()</a></code></p></li>
+<li><p><code>reject ~ 1 / (1 + a * exp(-b * x))</code>, fitted by
+<code><a href="https://rdrr.io/r/stats/nls.html" class="external-link">nls()</a></code></p></li>
+<li><p><code>reject ~ x</code>, fitted by a logistic regression model
+using <code><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm()</a></code></p></li>
+<li><p><code>reject ~ x</code>, fitted by a linear regression model
+using <code><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm()</a></code>.</p></li>
+</ul>
+<p>The term <code>reject</code> is the estimated power for
+<code><a href="https://rdrr.io/r/stats/nls.html" class="external-link">nls()</a></code> and <code><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm()</a></code>, and the significant test
+results (0 for not significant and 1 for significant) for
+<code><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm()</a></code> logistic regression model. If appropriate, the number
+of replications will be used as the weights when fitting a model.</p>
+<p>The <code><a href="https://rdrr.io/r/stats/nls.html" class="external-link">nls()</a></code> models will be fitted first, and the model
+with the smallest deviance will be used. If all models failed, which is
+possible for <code><a href="https://rdrr.io/r/stats/nls.html" class="external-link">nls()</a></code>, then the logistic regression model will
+be fitted. If this model also failed to fit, then the linear model will
+be attempted.</p>
+<p>Although the relation between power and <code>x</code> certainly is
+not linear for a wide range of <code>x</code> (e.g., sample sizes), this
+algorithm only needs a working power curve that is a good-enough
+approximation for the interval being searched. Therefore, if the
+interval is narrow enough and close to solution, a simple linear model
+can also be a good approximation.</p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="annotation">Annotation<a class="anchor" aria-label="anchor" href="#annotation"></a>
@@ -254,6 +391,17 @@ curve.</p></li>
 </ul>
 </li>
 </ul>
+</div>
+<div class="section level2">
+<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0" line-spacing="2">
+<div id="ref-chalmers_solving_2024" class="csl-entry">
+Chalmers, R. P. (2024). Solving variables with <span>Monte</span>
+<span>Carlo</span> simulation experiments: <span>A</span> stochastic
+root-solving approach. <em>Psychological Methods</em>. <a href="https://doi.org/10.1037/met0000689" class="external-link">https://doi.org/10.1037/met0000689</a>
+</div>
+</div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

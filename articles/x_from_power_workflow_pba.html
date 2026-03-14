@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.72</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.73</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -134,10 +134,11 @@ of the selected model parameter.</p>
 <div class="section level2">
 <h2 id="technical-details">Technical Details<a class="anchor" aria-label="anchor" href="#technical-details"></a>
 </h2>
-<ul>
-<li>The interval used in the search is fixed throughout the search.
-Users can set the interval manually if so desired.</li>
-</ul>
+<p>The basic workflow is based on the probabilistic bisection method
+[waeber_bisection_2013]. In the current implementation, the interval
+used in the search is fixed throughout the search. Users can set the
+interval manually if so desired, using the argument
+<code>x_interval</code>.</p>
 <div class="section level3">
 <h3 id="termination-criteria">Termination Criteria<a class="anchor" aria-label="anchor" href="#termination-criteria"></a>
 </h3>

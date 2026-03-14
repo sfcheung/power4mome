@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.72</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.73</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -111,7 +111,9 @@
 </h2>
 <p>This technical appendix describes the workflow of
 <code><a href="../reference/x_from_power.html">x_from_power()</a></code> in <a href="https://sfcheung.github.io/power4mome/">power4mome</a> when using
-the <code>"bisection"</code> algorithm.</p>
+the <code>"bisection"</code> algorithm. This algorithm, called the
+informal bisection algorithm in <span class="citation">Chalmers
+(2024)</span>, uses a modified version of the bisection method.</p>
 </div>
 <div class="section level2">
 <h2 id="x_from_power">
@@ -128,6 +130,120 @@ From Power to x (Sample Size or Effect Size [Parameter Value])
 <p>In <code>x_from_power</code>, <code>x</code> can be a sample size
 (<code>n</code>) or a population value (<code>es</code>, “effect size”)
 of the selected model parameter.</p>
+</div>
+<div class="section level2">
+<h2 id="technical-details">Technical Details<a class="anchor" aria-label="anchor" href="#technical-details"></a>
+</h2>
+<p>These are the basic steps of the algorithm:</p>
+<ul>
+<li>
+<p>Pre-iteration search</p>
+<ul>
+<li>An initial interval of <code>x</code> will be determined. For the
+<code>close_enough</code> goal, the estimated differences in the levels
+of power of the lower and upper bounds from the target power must be of
+opposite signs (e.g., the power). For example, if the target power is
+.80 and <code>x</code> is sample size, then the lower bound must have an
+estimated power less than .80 and the upper bound must have an estimated
+power higher than .80. This initial interval can be a wide one, and it
+is preferable to have a wide interval due to the random error in
+estimating the power.</li>
+</ul>
+</li>
+<li>
+<p>The search</p>
+<ul>
+<li><p>The mean of the interval is initially used as a candidate
+solution (<code>x_i</code>).</p></li>
+<li><p>The level of power for <code>x_i</code> will be
+estimated.</p></li>
+<li><p>If <code>x_i</code> is a solution (e.g., the estimated power is
+“close enough” to the target power), then the search will end.</p></li>
+<li><p>If <code>x_i</code> is not a solution, the interval will be
+updated using <code>x_i</code> as one of the bounds, such that estimated
+level of power of one of the bounds is above the target power and that
+of the other bond is below the target power.</p></li>
+<li><p>If some conditions are met, the interval will be expanded before
+doing the next iteration.</p></li>
+</ul>
+</li>
+</ul>
+<p>Due to the random nature of the estimation, unlike using the
+bisection method for deterministic function (the same value of
+<code>x</code> guarantees the same value of <code>y</code>), it is
+possible that solution is outside the interval after several iterations.
+One sign for this is having a narrow interval but the mean is not a
+solution. Whether an interval is too narrow is controlled by
+<code>min_interval_width</code>, which is 2 for sample size and .001 for
+effect size.</p>
+<p>If this happens, the algorithm will try to expand the interval by a
+certain amount and use this expanded interval for the next
+iteration.</p>
+<div class="section level3">
+<h3 id="termination-criteria">Termination Criteria<a class="anchor" aria-label="anchor" href="#termination-criteria"></a>
+</h3>
+<p>If one of the following criteria is met, the search will end:</p>
+<ul>
+<li><p>A solution is found. This depends on the <code>goal</code>. For
+<code>ci_hit</code>, a solution is found if the confidence interval of
+the estimated power includes the target power. For
+<code>close_enough</code>, a solution is found if the difference between
+the estimated power and the target power is less than the tolerance
+(<code>tolerance</code>). The tolerance can be set manually by the
+argument <code>tolerance</code>, and its default is .02 for
+<code>close_enough</code>.</p></li>
+<li><p>The range of changes of <code>x</code> in the <code>last_k</code>
+iterations is less than <code>delta_tol</code>. For
+<code>bisection</code>, it suggests that the search failed, and a new
+search using a different seed or different interval is needed. To change
+<code>delta_tol</code>, set it through the <code>control</code> argument
+(e.g., <code>control = list(delta_tol = .02)</code>. The number of
+trails (<em>k</em>), default to 3, can be changed through the
+<code>control</code> argument (e.g.,
+<code>control = list(last_k = 5)</code>).</p></li>
+<li><p>The maximum number of trials (iterations) for the search is
+reached. The default value is determined by the calling function,
+default to 10 for <code>bisection</code>, and can be changed through the
+argument <code>max_trials</code> of <code><a href="../reference/x_from_power.html">x_from_power()</a></code> and
+friends.</p></li>
+</ul>
+<p>Note that interval is only used to find a solution. Whether a value
+of <code>x</code> (e.g., a sample size) is considered a solution is
+determined solely by the estimated power, and/or the confidence
+interval.</p>
+</div>
+<div class="section level3">
+<h3 id="determining-the-value-to-examine">Determining the value to examine<a class="anchor" aria-label="anchor" href="#determining-the-value-to-examine"></a>
+</h3>
+<p>The original bisection method use the mean (center) of the interval
+as the value to examine in an iteration. The current implementation
+supports two more variants, and the power-curve assited method is
+enabled by default.</p>
+<ul>
+<li>
+<p>Muller’s Method</p>
+<p>This version is supported (adding
+<code>control = list(muller = TRUE</code>). However, preliminary tests
+found that this method sometimes failed even in simple scenarios.
+Therefore, it is not enabled by default.</p>
+</li>
+<li>
+<p>Power-Curve Assisted Method</p>
+<p>This method finds a working power curve for the current interval,
+using all values of <code>x</code> examined inside this interval, and
+use this working power curve to estimate the solution. If this estimated
+solution is also inside the interval, then this solution will be used as
+<code>x_i</code> in the next iteration. This method is enabled by
+default. To disable it, use
+<code>control = list(use_power_curve_assist = FALSE)</code>. If
+<code>use_power_curve_hybrid</code> is <code>TRUE</code>, the default,
+then the mean of the power-curve-assisted value and the center of the
+interval will be use as <code>x_i</code> in the next iteration. To
+disable this, use
+<code>control = list(use_power_curve_hybrid = FALSE)</code>.</p>
+</li>
+</ul>
+</div>
 </div>
 <div class="section level2">
 <h2 id="annotation">Annotation<a class="anchor" aria-label="anchor" href="#annotation"></a>
@@ -196,6 +312,13 @@ for estimating the power levels for a set of values of
 </ul>
 </li>
 </ul>
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0" line-spacing="2">
+<div id="ref-chalmers_solving_2024" class="csl-entry">
+Chalmers, R. P. (2024). Solving variables with <span>Monte</span>
+<span>Carlo</span> simulation experiments: <span>A</span> stochastic
+root-solving approach. <em>Psychological Methods</em>. <a href="https://doi.org/10.1037/met0000689" class="external-link">https://doi.org/10.1037/met0000689</a>
+</div>
+</div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
