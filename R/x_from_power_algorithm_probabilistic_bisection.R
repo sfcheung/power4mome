@@ -270,7 +270,7 @@ power_algorithm_prob_bisection <- function(
                     hdr_prob_ci_level_ratio = .90,
                     perturbation_times = 2,
                     max_final_checks = 3,
-                    final_check_cooldown = last_k,
+                    final_check_cooldown = NULL,
                     dfun_integer = switch(x,
                                           n = TRUE,
                                           NULL),
@@ -282,6 +282,11 @@ power_algorithm_prob_bisection <- function(
                                 variants)
   if (is.null(variants$hdr_prob)) {
     variants$hdr_prob <- ci_level * variants$hdr_prob_ci_level_ratio
+  }
+
+
+  if (is.null(variants$final_check_cooldown)) {
+    variants$final_check_cooldown <- variants$last_k
   }
 
   # ==== Default to Boos-Zhang ====
