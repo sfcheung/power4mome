@@ -1,5 +1,3 @@
-skip("WIP")
-
 skip_on_cran()
 
 test_that("q_power_mediation: rejection", {

@@ -31,10 +31,6 @@ alg_bisection <- function(
     what = c("point", "ub", "lb"),
     goal = c("ci_hit", "close_enough"),
     tol = .02,
-    delta_tol = switch(x,
-                    n = 1,
-                    es = .001),
-    last_k = 3,
     variants = list()
 ) {
 
@@ -107,8 +103,6 @@ alg_bisection <- function(
     what = what,
     goal = goal,
     tol = tol,
-    delta_tol = delta_tol,
-    last_k = last_k,
     variants = variants
   )
 
@@ -150,10 +144,6 @@ power_algorithm_bisection <- function(object,
                                       what = c("point", "ub", "lb"),
                                       goal = c("ci_hit", "close_enough"),
                                       tol = .02,
-                                      delta_tol = switch(x,
-                                                      n = 1,
-                                                      es = .001),
-                                      last_k = 3,
                                       variants = list()) {
   extendInt <- match.arg(extendInt)
   what <- match.arg(what)
@@ -186,7 +176,9 @@ power_algorithm_bisection <- function(object,
 
   # ==== Default for variants ====
 
-  variants0 <- list(use_power_curve_assist = TRUE,
+  variants0 <- list(delta_tol = NULL,
+                    last_k = 3,
+                    use_power_curve_assist = TRUE,
                     use_power_curve_min_points = 2,
                     power_curve_args = list(),
                     use_power_curve_hybrid = TRUE,
@@ -211,6 +203,20 @@ power_algorithm_bisection <- function(object,
       variants$use_power_curve_assist <- FALSE
     }
   }
+
+  # ==== Set default for delta_tol ====
+
+  if (is.null(variants$delta_tol)) {
+    delta_tol <- switch(
+                    x,
+                    n = 1,
+                    es = .001
+                  )
+  } else {
+    delta_tol <- variants$delta_tol
+  }
+
+  last_k <- variants$last_k
 
   # Create the objective function
 

@@ -161,10 +161,7 @@ alg_power_curve <- function(
   what = c("point", "ub", "lb"),
   goal = c("ci_hit", "close_enough"),
   tol = .02,
-  delta_tol = switch(x,
-                   n = 1,
-                   es = .001),
-  last_k = 3
+  variants = list()
 ) {
 
   what <- match.arg(what)
@@ -330,12 +327,11 @@ alg_power_curve <- function(
     final_nrep_seq = final_nrep_seq,
     R_seq = R_seq,
     final_xs_per_trial = final_xs_per_trial,
-    delta_tol = delta_tol,
-    last_k = last_k,
     what = what,
     goal = goal,
     tol = tol,
-    proxy_power = proxy_power)
+    proxy_power = proxy_power,
+    variants = variants)
 
   # ==== Return the output ====
 
@@ -374,14 +370,11 @@ power_algorithm_search_by_curve <- function(object,
                                             final_nrep_seq,
                                             R_seq,
                                             final_xs_per_trial,
-                                            delta_tol = switch(x,
-                                                               n = 1,
-                                                               es = .001),
-                                            last_k = 3,
                                             what = "point",
                                             goal = "ci_hit",
                                             tol = .02,
-                                            proxy_power) {
+                                            proxy_power,
+                                            variants = list()) {
 
   # goal: ci_hit
   #   what: point
@@ -408,6 +401,27 @@ power_algorithm_search_by_curve <- function(object,
   x_history[] <- NA
   reject_history <- vector("numeric", max_trials)
   reject_history[] <- NA
+
+  # ==== Default for variants ====
+
+  variants0 <- list(delta_tol = NULL,
+                    last_k = 3)
+  variants <- utils::modifyList(variants0,
+                                variants)
+
+  # ==== Set default for delta_tol ====
+
+  if (is.null(variants$delta_tol)) {
+    delta_tol <- switch(
+                    x,
+                    n = 1,
+                    es = .001
+                  )
+  } else {
+    delta_tol <- variants$delta_tol
+  }
+
+  last_k <- variants$last_k
 
   # power_tolerance_in_interval
   # ci_hit-point: Used in the tolerance of estimate_x_range()
