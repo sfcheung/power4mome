@@ -132,8 +132,8 @@
 #'
 #' The internal workflow of
 #' this method implemented in
-#' [x_from_power()] will be presented
-#' in a forthcoming technical vignette.
+#' [x_from_power()] can be found in
+#' this technical vignette: <https://sfcheung.github.io/power4mome/articles/x_from_power_workflow_bisection.html>.
 #'
 #' ## Power Curve Method
 #'
@@ -175,7 +175,7 @@
 #' The internal workflow of
 #' this method implemented in
 #' [x_from_power()] can be found in
-#' this technical vignette: <https://sfcheung.github.io/power4mome/articles/x_from_power_workflow.html>.
+#' this technical vignette: <https://sfcheung.github.io/power4mome/articles/x_from_power_workflow_power_curve.html>.
 #'
 #' ## Probabilistic Bisection
 #'
@@ -238,8 +238,9 @@
 #'
 #' The internal workflow of
 #' this method implemented in
-#' [x_from_power()] will be presented
-#' in a forthcoming technical vignette.
+#' [x_from_power()] can be found in
+#' this technical vignette: <https://sfcheung.github.io/power4mome/articles/x_from_power_workflow_pba.html>.
+
 #'
 #' @return
 #' The function [x_from_power()]
