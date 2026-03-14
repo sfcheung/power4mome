@@ -26,11 +26,15 @@ This technical appendix describes the
 workflow of `x_from_power()` in
 [power4mome](https://sfcheung.github.io/power4mome/)
 when using the `"bisection"` algorithm.
+This algorithm, called the informal bisection
+algorithm in @chalmers_solving_2024, uses
+a modified version of the bisection method.
 
 # `x_from_power()`
 
 The following is the workflow of `x_from_power()`,
 when the algorithm `"bisection"` is used.
+
 
 ```{r fig-n_from_power_bisection, fig.cap = "From Power to x (Sample Size or Effect Size [Parameter Value])", echo = FALSE}
 # https://mermaid.live/edit#pako:eNqtVm1v2zYQ_isEhwIOkKSx4ziJBqywZDsoHHfF0qGY40CgbcrmJpEGRTV2g_z3HV9EU0qLfZmBINTdw3t7jke-4JVYUxzhLBfPqy2RCn0ZLThC796hVU7KckQztKYZqXKFMpbn0S9j-E0mv7ZBVEohORhzsMlkBL83sFKBD8rXDjUaaRygNK5Uh5wixpliJLcAlLPNVm0kpQEiF2IXqpd5RY_aarcmiqb7EHGgOeR3xIhK7Sr1AxcaMh92Hhd4wiBItaVojzocCYloebLATycaMRw-AmJEFZUF49TA6rAZB-k3WGzYN8obKklLKGMZoZKqdJ9Kwje0c6JtB4J0eUj3He3qybiKOws8LhUrICn0WTxTGaGd_tdXtFQaza2NppCW2oaNNgETMyo3FJE8iEI7SrsGZNNGZ2e_QW6OjGq5kWS39dE_fpb07CMkRxQTHD1QIlfbJwvWJbG7Y_cZ28_E6oFwuxgmRh5rXMPLTtLU8Grc3MPKm45NDRJJdQV0PcXyb7pSUF6UVXxloulkdbYarxNORAEU2w0ZAkIqWqIM6qQFS1HxdRnsGL28LPDHEglgU2QBBhFUirzSTj4s8OtrvWGsO2C8N61sOXa0swxxuqJlSeShJlFvmLz1YDt1_R-e7tzGcIf3Bn9s7eC-Wq7EiS-HE4x8tiBAn4QTj31OTjDxMTdwdy0uQaL1f0FdLaBFqaXzi9TN0yIU-HnQgwByVlp_ZMLoGtzVFBsKDYP7lAUbYlcfkP6khLHuh_GeKRsSKwq6ZlDH_BCYGQVlNgdRswRTS6F_EAxGEIBOCFQWcIg-oM49UAxgwmE85oqkSuQnoc9xYM_TpQ1wApPyGSx8ZWsFVfJ2YJSkNTJ91sqGwYntuB1pdZxtsrqylgrNhSunE8S-XA3O4qQhr7mOR74sP4E3Wige-6yb8ElDXsOToY83nrRFvn38HH_806w0wT5RpLfoCn_dEoWYLXNB1VasA-YNyszqWZXnVDrE8VgaQKwBZnqmq0rCVIGripWqhUo0KmYlNd3YUs51KDOyZ0VVIF4VS_ClD7nu7RImLllt6TGwYKMui4vN1WHY0r4NrEbGLaQPrgYkR2f-0NqS1Ii5F8VvRUkg8sJ5YyQ0xY02aY6K2Bmb2sHR7ConnPxIeBf6m7YmjLvG9ZWxI9LOi9-N7HgippqaBzcVYHzAqA1nw9TMooY6grtNwVE15up5EkH7ZYyT_NTem25t2XEfK1avOARUr53wOGqmceiSC9Vy-2n4_zmDp1d83wnfKnt4yNjXBFw8B5OjsYtsi3WqUt8vmU_8GOBJFDYjPDo0J_vUmztmOAOPISeOpw4MOUhGiiK1Lu1FHtzc02YLDEOxb4LYtnWzwaaup2f2K_Zf5mkzf3y_wH9QVUkeBLTA712fxDODn5tOx6e4gGIRtoZ38YtxhmFTQRc4gqV7DS_wgr8ClFRKPBz4CkdKVvQUS1FttjjK4ODDlx1iI0agYYsaAiN8LoT_hMtICTmz73DzHDcQHL3gPY66g_759cXtxc1Fr3s56F30-6f4gKOzq8HN-dXtZb_XHVwPbi4vb19P8XdjtXt-e3V9ddO77va615f9Qe8Ub6ROxgUIRaMyAUYVjga3r_8CHoO83g
@@ -157,6 +161,157 @@ In `x_from_power`, `x` can be a sample
 size (`n`) or a population value (`es`,
 "effect size") of the selected model
 parameter.
+
+# Technical Details
+
+These are the basic steps of the algorithm:
+
+- Pre-iteration search
+
+  - An initial interval of `x` will be
+    determined. For the `close_enough` goal,
+    the estimated differences in the levels
+    of power of
+    the lower and upper bounds from the
+    target power must be
+    of opposite signs (e.g., the power).
+    For example, if the target power is
+    .80 and `x` is sample size, then
+    the lower bound must have an estimated
+    power less than .80 and the upper bound
+    must have an estimated power higher
+    than .80. This initial interval can
+    be a wide one, and it is preferable
+    to have a wide interval due to the
+    random error in estimating the power.
+
+- The search
+
+  - The mean of the interval is initially
+    used as a candidate solution (`x_i`).
+
+  - The level of power for `x_i` will be
+    estimated.
+
+  - If `x_i` is a solution (e.g., the
+    estimated power is "close enough" to
+    the target power), then the search
+    will end.
+
+  - If `x_i` is not a solution, the
+    interval will be updated using
+    `x_i` as one of the bounds, such that
+    estimated level of power of one of
+    the bounds is above the target power
+    and that of the other bond is below
+    the target power.
+
+  - If some conditions are met, the
+    interval will be expanded before
+    doing the next iteration.
+
+Due to the random nature of the estimation,
+unlike using the bisection method for
+deterministic function (the same value of
+`x` guarantees the same value of `y`),
+it is possible that solution is outside
+the interval after several iterations.
+One sign for this is having a narrow
+interval but the mean is not a solution.
+Whether an interval is too narrow is
+controlled by `min_interval_width`,
+which is 2 for sample size and .001 for
+effect size.
+
+If this happens, the algorithm will
+try to expand the interval by a certain
+amount and use this expanded interval
+for the next iteration.
+
+## Termination Criteria
+
+If one of the following criteria is met,
+the search will end:
+
+- A solution is found. This depends on
+  the `goal`. For `ci_hit`, a solution is
+  found if the confidence interval of
+  the estimated power includes the target
+  power. For `close_enough`, a solution is
+  found if the difference between the
+  estimated power and the target power
+  is less than the tolerance (`tolerance`).
+  The tolerance can be set
+  manually by the argument `tolerance`,
+  and its default is .02 for `close_enough`.
+
+- The range of changes of `x` in the `last_k`
+  iterations is less than `delta_tol`.
+  For `bisection`, it suggests that
+  the search failed, and a new search using
+  a different seed or different interval
+  is needed.
+  To change `delta_tol`, set it through
+  the `control` argument (e.g.,
+  `control = list(delta_tol = .02)`.
+  The number of trails (*k*), default to
+  3, can be changed through the
+  `control` argument (e.g.,
+  `control = list(last_k = 5)`).
+
+- The maximum number of trials (iterations)
+  for the search is reached.
+  The default value is determined by
+  the calling function, default to 10 for
+  `bisection`, and
+  can be changed through the argument
+  `max_trials` of `x_from_power()` and
+  friends.
+
+Note that interval is
+only used to find a solution. Whether a value of `x`
+(e.g., a sample size) is considered a
+solution is determined solely by
+the estimated power, and/or the confidence
+interval.
+
+## Determining the value to examine
+
+The original bisection method use the
+mean (center) of the interval as the value to
+examine in an iteration. The current
+implementation supports two more variants,
+and the power-curve assited method is
+enabled by default.
+
+- Muller's Method
+
+  This version is supported (adding
+  `control = list(muller = TRUE`). However,
+  preliminary tests found that this method
+  sometimes failed even in simple scenarios.
+  Therefore, it is not enabled by default.
+
+- Power-Curve Assisted Method
+
+  This method finds a working power curve
+  for the current interval, using all
+  values of `x` examined inside this
+  interval, and use this working power
+  curve to estimate the solution. If
+  this estimated solution is also inside the interval,
+  then this solution will be used as
+  `x_i` in the next iteration.
+  This method is enabled by default. To disable
+  it, use
+  `control = list(use_power_curve_assist = FALSE)`.
+  If `use_power_curve_hybrid` is `TRUE`,
+  the default, then the mean of
+  the power-curve-assisted value and
+  the center of the interval will be use
+  as `x_i` in the next iteration.
+  To disable this,
+  use `control = list(use_power_curve_hybrid = FALSE)`.
 
 # Annotation
 

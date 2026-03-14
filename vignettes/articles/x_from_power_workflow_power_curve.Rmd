@@ -223,7 +223,7 @@ parameter.
 
 These are the basic steps of the algorithm:
 
-- Pre-Iteration Search
+- Pre-iteration search
 
   - Several candidate values of `x` spanning
     a range is selected, using a small
@@ -287,7 +287,8 @@ the search will end:
   iterations is less than `delta_tol`.
   For `power_curve`, it suggests that
   the search failed, and a new search using
-  a different seed or different interval.
+  a different seed or different interval
+  is needed.
   To change `delta_tol`, set it through
   the `control` argument (e.g.,
   `control = list(delta_tol = .02)`.
