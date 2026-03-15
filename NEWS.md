@@ -1,4 +1,4 @@
-# power4mome 0.1.1.74
+# power4mome 0.1.1.75
 
 - Improve the function for extending the
   initial interval before doing a
@@ -443,6 +443,10 @@
 - Changed the default algorithms to be
   used in `x_from_power()`.
   (0.1.1.74)
+
+- Fixed the help for the argument
+  `mode` of `q_power_mediation()`
+  and friends. (0.1.1.75)
 
 # power4mome 0.1.1
 

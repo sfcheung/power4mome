@@ -298,17 +298,7 @@ For the \code{summary} method, these
 are optional arguments to
 be passed to \code{\link[=summary.n_region_from_power]{summary.n_region_from_power()}}.}
 
-\item{mode}{What to print. If \code{"region"}
-and the output of \code{\link[=n_region_from_power]{n_region_from_power()}}
-is available, it will print the results
-of \code{\link[=n_region_from_power]{n_region_from_power()}} if available.
-If \code{"n"}, then the output of
-\code{\link[=n_from_power]{n_from_power()}} will be printed if
-available.
-If \code{"power"}, then the output of
-\code{\link[=power4test]{power4test()}} will be printed.
-If
-\code{"all"}, then all available outputs
+\item{mode}{For \verb{q_power_mediation_*, this is the mode of what to do. If }"power"\verb{, then only [power4test()] will be called, and the level of power will be estimated. If }"region"\verb{, then the region of sample sizes with levels of power not significantly different from the target power will be searched by calling [n_region_from_power()]. For the }print\verb{method, this indicates what to print. If}"region"\verb{and the output of [n_region_from_power()] is available, it will print the results of [n_region_from_power()] if available. If}"n"\verb{, then the output of [n_from_power()] will be printed if available. If }"power"\verb{, then the output of [power4test()] will be printed. If }"all"`, then all available outputs
 will be printed.}
 
 \item{x}{The object

@@ -193,7 +193,9 @@
 #' are optional arguments to
 #' be passed to [summary.n_region_from_power()].
 #'
-#' @param mode If `"power"`, then
+#' @param mode For `q_power_mediation_*,
+#' this is the mode of what to do.
+#' If `"power"`, then
 #' only [power4test()] will be called,
 #' and the level of power will be
 #' estimated. If `"region"`, then
@@ -201,7 +203,20 @@
 #' levels of power not significantly
 #' different from the target power will
 #' be searched by calling
-#' [n_region_from_power()].
+#' [n_region_from_power()]. For the
+#' `print` method, this indicates
+#' what to print. If `"region"`
+#' and the output of [n_region_from_power()]
+#' is available, it will print the results
+#' of [n_region_from_power()] if available.
+#' If `"n"`, then the output of
+#' [n_from_power()] will be printed if
+#' available.
+#' If `"power"`, then the output of
+#' [power4test()] will be printed.
+#' If
+#' `"all"`, then all available outputs
+#' will be printed.
 #'
 #' @seealso See [power4test()] and
 #' [n_region_from_power()] for full
@@ -510,19 +525,6 @@ q_power_mediation <- function(
 
 #' @param x The object
 #' for the relevant methods.
-#'
-#' @param mode What to print. If `"region"`
-#' and the output of [n_region_from_power()]
-#' is available, it will print the results
-#' of [n_region_from_power()] if available.
-#' If `"n"`, then the output of
-#' [n_from_power()] will be printed if
-#' available.
-#' If `"power"`, then the output of
-#' [power4test()] will be printed.
-#' If
-#' `"all"`, then all available outputs
-#' will be printed.
 #'
 #' @return
 #' The `print` method of `q_power_mediation`
