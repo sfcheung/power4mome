@@ -1,11 +1,11 @@
-# Sample Size Determination with Nonnormal Variables: Latent Variable Models
+# Sample Size Determination with Nonnormal Variables: Path Models of Observed Variables
 
 ## Introduction
 
 This article illustrates how to do power analysis and sample size
-determination in some typical latent variable models, with the variables
-hypothesized to be nonnormally distributed and the model to be estimated
-using robust methods such as MLR in `lavaan`. The package
+determination in some typical observed variable path models, with the
+variables hypothesized to be nonnormally distributed and the model to be
+estimated using robust methods such as MLR in `lavaan`. The package
 [power4mome](https://sfcheung.github.io/power4mome/) will be used for
 illustration.
 
@@ -31,11 +31,11 @@ to find the regions described below.
 
 ## Scope
 
-A simple mediation model of latent variables will be used as an example.
-Users new to the package are recommended to read the
-[article](https://sfcheung.github.io/power4mome/articles/articles/template_n_from_power_mediation_lav_simple.md)
-on the steps for a model with variables having a multivariate normal
-distribution (the default).
+A simple mediation model of observed variables will be used as an
+example. Users new to the package are recommended to read the
+[article](https://sfcheung.github.io/power4mome/articles/articles/template_n_from_power_mediation_obs_simple.md)
+on the steps for a path model with observed variables having a
+multivariate normal distribution (the default).
 
 ## Set Up the Model and Test
 
@@ -64,7 +64,7 @@ y ~ x: s
 "
 ```
 
-![The Model](n_from_power_mediation_mlr_lav_simple-1.png)
+![The Model](n_from_power_mediation_obs_lav_simple-1.png)
 
 The Model
 
@@ -75,13 +75,14 @@ on how to set `number_of_indicators` and `reliability` when calling
 
 ## Specify the Distributions
 
-Suppose that we expect the error terms of the indicators are not
-normally distributed. For example, they represent attributes that are
-positively skewed, with people likely to be below the mean while some
-cases are far away from the mean. Without real data, it is difficult to
-know the actual distribution. Nevertheless, we can select a distribution
-that reasonably approximate the expected distribution of the error
-terms.
+Suppose that we expect the predictor (`x`) has a uniform distribution
+because cases were sample more or less evenly across a range of values
+of `x`. Moreover, the outcome variable (`y`) is a measure of a mental
+health problem and so its error term is positively skewed.[¹](#fn1)
+
+Without real data, it is difficult to know the actual distribution.
+Nevertheless, we can select a distribution that reasonably approximate
+the expected distribution of a variable or an error term.
 
 ### Built-In Functions For Random Numbers
 
@@ -106,48 +107,32 @@ population mean and standard deviation are 0 and 1, respectively.
 ### An Example
 
 Suppose we would like to estimate the power to test the indirect effect
-using Monte Carlo confidence interval. We expect that the indicators are
-nonnormally distributed. For the sake of illustration, the following
-distributions hypothesized for the indicators of `x`, `m`, and `y`.
+using Monte Carlo confidence interval. We expect that one or more
+observed variable or error term is not normally distributed. For the
+sake of illustration, the following distributions hypothesized for the
+`x` and the error term of `y`.
 
-#### The Indicators of `x`
+#### The Distribution of `x`
 
-For the indicators of `x`, the distribution is severely positively
-skewed, generated from a lognormal distribution using
+Let’s assume that the distribution of `x` is a severely positively
+skewed distribution. This can be simulated by the function
 [`rlnorm_rs()`](https://sfcheung.github.io/power4mome/reference/rlnorm_rs.md).
 This is an illustration of the distribution:
 
 ``` r
 set.seed(1234)
-x_e <- rlnorm_rs(10000)
-hist(x_e)
+x_dist <- rlnorm_rs(10000)
+hist(x_dist)
 ```
 
-![plot of chunk x_dist](x_dist-1.png)
+![plot of chunk x_dist_obs](x_dist_obs-1.png)
 
-plot of chunk x_dist
+plot of chunk x_dist_obs
 
-#### The Indicators of `m`
+#### The Distribution of the Error Term of `y`
 
-The distribution of the error terms of `m` is assumed to be positively
-skewed, but not as severe as that of `x`. We use
-[`rexp_rs()`](https://sfcheung.github.io/power4mome/reference/rexp_rs.md)
-to simulate this distribution:
-
-``` r
-set.seed(1234)
-m_e <- rexp_rs(10000)
-hist(m_e)
-```
-
-![plot of chunk m_dist](m_dist-1.png)
-
-plot of chunk m_dist
-
-#### The Indicators of `y`
-
-Last, let’s assume that the distribution of the error terms the
-indicators of `y` is bounded and is bimodal. We we
+Last, let’s assume that the distribution of the error terms of `y` is
+bounded and is bimodal. We we
 [`rbeta_rs()`](https://sfcheung.github.io/power4mome/reference/rbeta_rs.md)
 to simulate this distribution, setting the parameters `shape1` and
 `shape2` to create the bimodal distribution:
@@ -160,69 +145,62 @@ y_e <- rbeta_rs(10000,
 hist(y_e)
 ```
 
-![plot of chunk y_dist](y_dist-1.png)
+![plot of chunk y_e_obs](y_e_obs-1.png)
 
-plot of chunk y_dist
+plot of chunk y_e_obs
 
-In real data, we may not have a situation as complicated as this one.
-For example, all error terms are assumed to be normally distributed,
-except for the indicators of one or two latent factor. These
-distributions are used just to illustrate how to use the arguments.
-
-### Set the Distributions of Error Terms by `e_fun`
+### Set the Distributions by `x_fun`
 
 This section illustrates how to set up the call to
 [`power4test()`](https://sfcheung.github.io/power4mome/reference/power4test.md),
-with error terms generated using the distributions described above. We
-would like to check the model first. Therefore, the test of indirect
-effect is not added for now.
+with observed variables or error terms generated using the distributions
+described above. We would like to check the model first. Therefore, the
+test of indirect effect is not added for now.
 
 ``` r
 out <- power4test(nrep = 600,
                   model = model,
                   pop_es = model_es,
                   n = 100,
-                  number_of_indicators = c(x = 4,
-                                           m = 3,
-                                           y = 3),
-                  reliability = c(x = .80,
-                                  m = .70,
-                                  y = .80),
-                  e_fun = list(x = list(rlnorm_rs),
-                               m = list(rexp_rs),
+                  x_fun = list(x = list(rlnorm_rs),
                                y = list(rbeta_rs, shape1 = .5, shape2 = .5)),
                   iseed = 1234,
                   parallel = TRUE)
 ```
 
-#### How to Use `e_fun`
+#### How to Use `x_fun`
 
-The argument `e_fun` is used to specify the function used to generate
-the error terms of indicators.
+The argument `x_fun` is used to specify the function used to generate
+the observed variables. If an observed variable is a “pure” predictor
+(it is not predicted by any other variables in the model), then this is
+the function to generate its values. If it is an endogenous variable (it
+is predicted by at least one other variable in the model), then this is
+the function to generate its error term.
 
-The value must be a named list, with the name being one of the latent
-variables (`x`, `m`, and `y` in this example).
+The value must be a named list, with the name being one of variables
+(`x`, `m`, and `y` in this example).
 
 Each element must itself a list, with the first argument is the function
 to be used.
 
-- For example, `m = list(rexp_rs)` indicates that the function `rexp_rs`
-  will be used to generate the error terms of `m`.
+- For example, `x = list(rlnorm_rs)` indicates that the function
+  `rlnorm_rs` will be used to generate `x`.
 
 If there are additional arguments to be passed to this function, include
 them as named arguments in the list.
 
-- For example, `y = list(rbeta_rs, shape1 = .5, shape2 = .5)` indicates
-  that `rbeta_rs` will be used to generate the error terms, and the
-  arguments `shape1` and `shape2` will both be set .5.
+- For example, if an element is
+  `y = list(rbeta_rs, shape1 = .5, shape2 = .5)`, then `rbeta_rs` will
+  be used to generate `y` or its error term, and the arguments `shape1`
+  and `shape2` will both be set .5.
 
-If a latent factor is not included in the list for `e_fun`, the default
-distribution used a normal distribution.
+If a variable is not included in the lists for `x_fun`, the default
+distribution used is a normal distribution.
 
-#### Functions That `e_fun` Can Use
+#### Functions That `x_fun` and `e_fun` Can Use
 
-In principle, any function can be used to generate the numbers for the
-error terms, as long as it meets these requirements:
+In principle, any function can be used to generate the numbers, as long
+as it meets these requirements:
 
 - It has an argument named `n`, the number of random numbers to be
   generated.
@@ -230,9 +208,9 @@ error terms, as long as it meets these requirements:
 - It returns a numeric vector.
 
 Though no error will be returned, to ensure that the population
-standardized coefficients are of the specified values, the function for
-`e_fun` should generate numbers from a population with mean and standard
-deviation equal to 0 and 1, respectively.
+standardized coefficients are of the specified values, the functions for
+`x_fun` and `e_fun` should generate numbers from a population with mean
+and standard deviation equal to 0 and 1, respectively.
 
 ### Check The Generated Data
 
@@ -247,29 +225,20 @@ print(out,
 This is part of the output:
 
     #> ==== Descriptive Statistics ====
-    #>
-    #>    vars     n  mean   sd  skew kurtosis se
-    #> x1    1 60000 -0.01 0.99  1.79    14.19  0
-    #> x2    2 60000  0.00 1.01  2.07    17.93  0
-    #> x3    3 60000  0.00 0.99  1.86    15.48  0
-    #> x4    4 60000  0.00 1.03  3.10    54.15  0
-    #> m1    5 60000  0.00 1.00  0.82     1.80  0
-    #> m2    6 60000  0.00 1.00  0.84     1.88  0
-    #> m3    7 60000  0.00 0.99  0.79     1.59  0
-    #> y1    8 60000  0.00 1.00 -0.01    -0.29  0
-    #> y2    9 60000 -0.01 1.00 -0.01    -0.27  0
-    #> y3   10 60000  0.00 1.00  0.01    -0.27  0
+    #> 
+    #>   vars     n mean   sd skew kurtosis se
+    #> m    1 60000 0.00 1.00 0.16     0.50  0
+    #> y    2 60000 0.00 1.06 0.04    -1.13  0
+    #> x    3 60000 0.01 1.00 5.24    53.74  0
 
-The descriptive statistics shows that the distributions of the
-indicators are not normal. As expected, those of `x` and `m` are
-positively skewed, while those of `y` are nearly symmetric but light
-tailed.
+The descriptive statistics shows that the distributions are not normal.
+As expected, those of `x` is positively skewed, while those of `y` are
+nearly symmetric but light tailed (negative excess kurtosis).
 
-Note that, the distribution of an indicator depends on both the latent
-factors and and the error terms, as well as the factor loadings. For
-example, the distributions of the error terms of `m` are less skewed
-than that of an exponential distribution because the latent factor, `m`,
-is normally distributed.
+Note that the distribution of an endogenous variable depends on both its
+predictors and and its error term. Therefore, even though the error term
+of `m` is normally distributed, `m` is still not normally distributed
+because `x` is positively skewed.
 
 ### Fit the Model by MLR (Robust Maximum Likelihood)
 
@@ -295,14 +264,7 @@ out <- power4test(nrep = 600,
                   model = model,
                   pop_es = model_es,
                   n = 100,
-                  number_of_indicators = c(x = 4,
-                                           m = 3,
-                                           y = 3),
-                  reliability = c(x = .80,
-                                  m = .70,
-                                  y = .80),
-                  e_fun = list(x = list(rlnorm_rs),
-                               m = list(rexp_rs),
+                  x_fun = list(x = list(rlnorm_rs),
                                y = list(rbeta_rs, shape1 = .5, shape2 = .5)),
                   fit_model_args = list(estimator = "MLR"),
                   iseed = 1234,
@@ -318,22 +280,19 @@ print(out)
 This is part of the output:
 
     #> ============ <fit> ============
-    #>
-    #> lavaan 0.6-21 ended normally after 30 iterations
-    #>
+    #> 
+    #> lavaan 0.6-21 ended normally after 1 iteration
+    #> 
     #>   Estimator                                         ML
     #>   Optimization method                           NLMINB
-    #>   Number of model parameters                        23
-    #>
+    #>   Number of model parameters                         5
+    #> 
     #>   Number of observations                           100
-    #>
+    #> 
     #> Model Test User Model:
     #>                                               Standard      Scaled
-    #>   Test Statistic                                22.444      23.597
-    #>   Degrees of freedom                                32          32
-    #>   P-value (Chi-square)                           0.895       0.859
-    #>   Scaling correction factor                                  0.951
-    #>     Yuan-Bentler correction (Mplus variant)
+    #>   Test Statistic                                 0.000       0.000
+    #>   Degrees of freedom                                 0           0
 
 As shown in the printout, MLR was used and so there is a column `Scaled`
 in the printout of `lavaan`.
@@ -346,21 +305,14 @@ for details on the test function
 [`test_indirect_effect()`](https://sfcheung.github.io/power4mome/reference/test_indirect_effect.md)
 and how to set the argument `test_fun` and `test_args`. `R_for_bz(200)`
 is used to set `R` to the largest value less than 200 that is supported
-by the method proposed by Boos & Zhang (2000). [¹](#fn1)
+by the method proposed by Boos & Zhang (2000). [²](#fn2)
 
 ``` r
 out <- power4test(nrep = 600,
                   model = model,
                   pop_es = model_es,
                   n = 100,
-                  number_of_indicators = c(x = 4,
-                                           m = 3,
-                                           y = 3),
-                  reliability = c(x = .80,
-                                  m = .70,
-                                  y = .80),
-                  e_fun = list(x = list(rlnorm_rs),
-                               m = list(rexp_rs),
+                  x_fun = list(x = list(rlnorm_rs),
                                y = list(rbeta_rs, shape1 = .5, shape2 = .5)),
                   fit_model_args = list(estimator = "MLR"),
                   R = R_for_bz(200),
@@ -379,10 +331,10 @@ The rejection rate (power) for this example can be found by
 
 ``` r
 rejection_rates(out)
-#> [test]: test_indirect: x->m->y
-#> [test_label]: Test
+#> [test]: test_indirect: x->m->y 
+#> [test_label]: Test 
 #>     est   p.v reject r.cilo r.cihi
-#> 1 0.098 0.993  0.244  0.212  0.281
+#> 1 0.091 1.000  0.643  0.604  0.681
 #> Notes:
 #> - p.v: The proportion of valid replications.
 #> - est: The mean of the estimates in a test across replications.
@@ -399,20 +351,20 @@ rejection_rates(out)
 #> - Refer to the tests for the meanings of other columns.
 ```
 
-## Using `e_fun` in Other Functions
+## Using `x_fun` in Other Functions
 
 Other functions that make use of
 [`power4test()`](https://sfcheung.github.io/power4mome/reference/power4test.md)
-can also use the arguments `e_fun` and `fit_model_args`.
+can also use the arguments `x_fun` and `fit_model_args`.
 
 For example. the previous output of
 [`power4test()`](https://sfcheung.github.io/power4mome/reference/power4test.md),
-with `e_fun` and `fit_model_args` set, can be used directly by
+with `x_fun` and `fit_model_args` set, can be used directly by
 [`n_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md)
 and
 [`n_region_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md).
 
-For example, the output above, with nonnormal indicators, can be used
+For example, the output above, with nonnormal variables, can be used
 directly by
 [`n_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md)
 to find a sample size given a target power:
@@ -421,13 +373,13 @@ to find a sample size given a target power:
 n_power <- n_from_power(
               out,
               target_power = .80,
-              x_interval = c(100, 2000),
+              x_interval = c(50, 200),
               final_nrep = 2000,
-              seed = 1357
+              seed = 1234
             )
 ```
 
-The output with nonnormal indicators can also be used directly by
+The output with nonnormal variables can also be used directly by
 `n_power_region()` to find a region of sample sizes given a target
 power:
 
@@ -451,19 +403,12 @@ q_power <- q_power_mediation_simple(
   a = "m",
   b = "m",
   cp = "s",
-  number_of_indicators = c(x = 3,
-                           m = 4,
-                           y = 5),
-  reliability = c(x = .70,
-                  m = .75,
-                  y = .80),
-  e_fun = list(x = list(rlnorm_rs),
-               m = list(rexp_rs),
+  x_fun = list(x = list(rlnorm_rs),
                y = list(rbeta_rs, shape1 = .5, shape2 = .5)),
   fit_model_args = list(estimator = "MLR"),
   target_power = .80,
   nrep = 600,
-  n = 200,
+  n = 100,
   R = R_for_bz(200),
   seed = 1234
 )
@@ -477,19 +422,12 @@ q_power_n <- q_power_mediation_simple(
   a = "m",
   b = "m",
   cp = "s",
-  number_of_indicators = c(x = 3,
-                           m = 4,
-                           y = 5),
-  reliability = c(x = .70,
-                  m = .75,
-                  y = .80),
-  e_fun = list(x = list(rlnorm_rs),
-               m = list(rexp_rs),
+  x_fun = list(x = list(rlnorm_rs),
                y = list(rbeta_rs, shape1 = .5, shape2 = .5)),
   fit_model_args = list(estimator = "MLR"),
   target_power = .80,
   R = R_for_bz(200),
-  x_interval = c(100, 2000),
+  x_interval = c(50, 300),
   final_nrep = 2000,
   seed = 1234,
   mode = "n"
@@ -505,7 +443,11 @@ Association*, *95*(450), 486–492.
 
 ------------------------------------------------------------------------
 
-1.  For tests that use Monte Carlo or bootstrapping confidence interval,
+1.  Note: In a path model, the distribution of an endogenous variable is
+    determined jointly by its predictors and its error term, and so its
+    distribution cannot be specified directly.
+
+2.  For tests that use Monte Carlo or bootstrapping confidence interval,
     the method proposed by Boos & Zhang (2000) to use a small number of
     resamples or simulated samples is recommended. This can be enabled
     automatically by setting `R` to a supported value. The helper

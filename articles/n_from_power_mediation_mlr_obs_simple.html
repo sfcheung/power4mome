@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Sample Size Determination with Nonnormal Variables: Latent Variable Models • power4mome</title>
+<title>Sample Size Determination with Nonnormal Variables: Path Models of Observed Variables • power4mome</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="../favicon-96x96.png">
 <link rel="icon" type="”image/svg+xml”" href="../favicon.svg">
 <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
@@ -17,7 +17,7 @@
 <link href="../deps/Oxygen_Mono-0.4.10/font.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Sample Size Determination with Nonnormal Variables: Latent Variable Models">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Sample Size Determination with Nonnormal Variables: Path Models of Observed Variables">
 <meta name="google-site-verification" content="0VLBmFnW_UJFI-7gXnORPBsWxqZwmzuGpK-TeVRLBjQ">
 </head>
 <body>
@@ -100,12 +100,12 @@
 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>Sample Size Determination with Nonnormal Variables: Latent Variable Models</h1>
+      <img src="../logo.png" class="logo" alt=""><h1>Sample Size Determination with Nonnormal Variables: Path Models of Observed Variables</h1>
             
             <h4 data-toc-skip class="date">2026-03-15</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/sfcheung/power4mome/blob/main/vignettes/articles/n_from_power_mediation_mlr_lav_simple.Rmd" class="external-link"><code>vignettes/articles/n_from_power_mediation_mlr_lav_simple.Rmd</code></a></small>
-      <div class="d-none name"><code>n_from_power_mediation_mlr_lav_simple.Rmd</code></div>
+      <small class="dont-index">Source: <a href="https://github.com/sfcheung/power4mome/blob/main/vignettes/articles/n_from_power_mediation_mlr_obs_simple.Rmd" class="external-link"><code>vignettes/articles/n_from_power_mediation_mlr_obs_simple.Rmd</code></a></small>
+      <div class="d-none name"><code>n_from_power_mediation_mlr_obs_simple.Rmd</code></div>
     </div>
 
     
@@ -114,10 +114,11 @@
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
 <p>This article illustrates how to do power analysis and sample size
-determination in some typical latent variable models, with the variables
-hypothesized to be nonnormally distributed and the model to be estimated
-using robust methods such as MLR in <code>lavaan</code>. The package <a href="https://sfcheung.github.io/power4mome/">power4mome</a> will be
-used for illustration.</p>
+determination in some typical observed variable path models, with the
+variables hypothesized to be nonnormally distributed and the model to be
+estimated using robust methods such as MLR in <code>lavaan</code>. The
+package <a href="https://sfcheung.github.io/power4mome/">power4mome</a>
+will be used for illustration.</p>
 </div>
 <div class="section level2">
 <h2 id="prerequisite">Prerequisite<a class="anchor" aria-label="anchor" href="#prerequisite"></a>
@@ -136,10 +137,10 @@ below.</p>
 <div class="section level2">
 <h2 id="scope">Scope<a class="anchor" aria-label="anchor" href="#scope"></a>
 </h2>
-<p>A simple mediation model of latent variables will be used as an
-example. Users new to the package are recommended to read the <a href="articles/template_n_from_power_mediation_lav_simple.html">article</a>
-on the steps for a model with variables having a multivariate normal
-distribution (the default).</p>
+<p>A simple mediation model of observed variables will be used as an
+example. Users new to the package are recommended to read the <a href="articles/template_n_from_power_mediation_obs_simple.html">article</a>
+on the steps for a path model with observed variables having a
+multivariate normal distribution (the default).</p>
 </div>
 <div class="section level2">
 <h2 id="set-up-the-model-and-test">Set Up the Model and Test<a class="anchor" aria-label="anchor" href="#set-up-the-model-and-test"></a>
@@ -163,7 +164,7 @@ distribution (the default).</p>
 <span><span class="st">y ~ x: s</span></span>
 <span><span class="st">"</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="n_from_power_mediation_mlr_lav_simple-1.png" alt="The Model"><p class="caption">
+<img src="n_from_power_mediation_obs_lav_simple-1.png" alt="The Model"><p class="caption">
 The Model
 </p>
 </div>
@@ -174,13 +175,16 @@ calling <code><a href="../reference/power4test.html">power4test()</a></code>.</p
 <div class="section level2">
 <h2 id="specify-the-distributions">Specify the Distributions<a class="anchor" aria-label="anchor" href="#specify-the-distributions"></a>
 </h2>
-<p>Suppose that we expect the error terms of the indicators are not
-normally distributed. For example, they represent attributes that are
-positively skewed, with people likely to be below the mean while some
-cases are far away from the mean. Without real data, it is difficult to
-know the actual distribution. Nevertheless, we can select a distribution
-that reasonably approximate the expected distribution of the error
-terms.</p>
+<p>Suppose that we expect the predictor (<code>x</code>) has a uniform
+distribution because cases were sample more or less evenly across a
+range of values of <code>x</code>. Moreover, the outcome variable
+(<code>y</code>) is a measure of a mental health problem and so its
+error term is positively skewed.<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content="&lt;p&gt;Note: In a path model, the distribution of an endogenous
+variable is determined jointly by its predictors and its error term, and
+so its distribution cannot be specified directly.&lt;/p&gt;"><sup>1</sup></a></p>
+<p>Without real data, it is difficult to know the actual distribution.
+Nevertheless, we can select a distribution that reasonably approximate
+the expected distribution of a variable or an error term.</p>
 <div class="section level3">
 <h3 id="built-in-functions-for-random-numbers">Built-In Functions For Random Numbers<a class="anchor" aria-label="anchor" href="#built-in-functions-for-random-numbers"></a>
 </h3>
@@ -201,133 +205,112 @@ deviation are 0 and 1, respectively.</p>
 <h3 id="an-example">An Example<a class="anchor" aria-label="anchor" href="#an-example"></a>
 </h3>
 <p>Suppose we would like to estimate the power to test the indirect
-effect using Monte Carlo confidence interval. We expect that the
-indicators are nonnormally distributed. For the sake of illustration,
-the following distributions hypothesized for the indicators of
-<code>x</code>, <code>m</code>, and <code>y</code>.</p>
+effect using Monte Carlo confidence interval. We expect that one or more
+observed variable or error term is not normally distributed. For the
+sake of illustration, the following distributions hypothesized for the
+<code>x</code> and the error term of <code>y</code>.</p>
 <div class="section level4">
-<h4 id="the-indicators-of-x">The Indicators of <code>x</code><a class="anchor" aria-label="anchor" href="#the-indicators-of-x"></a>
+<h4 id="the-distribution-of-x">The Distribution of <code>x</code><a class="anchor" aria-label="anchor" href="#the-distribution-of-x"></a>
 </h4>
-<p>For the indicators of <code>x</code>, the distribution is severely
-positively skewed, generated from a lognormal distribution using
+<p>Let’s assume that the distribution of <code>x</code> is a severely
+positively skewed distribution. This can be simulated by the function
 <code><a href="../reference/rlnorm_rs.html">rlnorm_rs()</a></code>. This is an illustration of the
 distribution:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
-<span><span class="va">x_e</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rlnorm_rs.html">rlnorm_rs</a></span><span class="op">(</span><span class="fl">10000</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist</a></span><span class="op">(</span><span class="va">x_e</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">x_dist</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rlnorm_rs.html">rlnorm_rs</a></span><span class="op">(</span><span class="fl">10000</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist</a></span><span class="op">(</span><span class="va">x_dist</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="x_dist-1.png" alt="plot of chunk x_dist"><p class="caption">
-plot of chunk x_dist
+<img src="x_dist_obs-1.png" alt="plot of chunk x_dist_obs"><p class="caption">
+plot of chunk x_dist_obs
 </p>
 </div>
 </div>
 <div class="section level4">
-<h4 id="the-indicators-of-m">The Indicators of <code>m</code><a class="anchor" aria-label="anchor" href="#the-indicators-of-m"></a>
+<h4 id="the-distribution-of-the-error-term-of-y">The Distribution of the Error Term of <code>y</code><a class="anchor" aria-label="anchor" href="#the-distribution-of-the-error-term-of-y"></a>
 </h4>
-<p>The distribution of the error terms of <code>m</code> is assumed to
-be positively skewed, but not as severe as that of <code>x</code>. We
-use <code><a href="../reference/rexp_rs.html">rexp_rs()</a></code> to simulate this distribution:</p>
+<p>Last, let’s assume that the distribution of the error terms of
+<code>y</code> is bounded and is bimodal. We we <code><a href="../reference/rbeta_rs.html">rbeta_rs()</a></code>
+to simulate this distribution, setting the parameters
+<code>shape1</code> and <code>shape2</code> to create the bimodal
+distribution:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
-<span><span class="va">m_e</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rexp_rs.html">rexp_rs</a></span><span class="op">(</span><span class="fl">10000</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist</a></span><span class="op">(</span><span class="va">m_e</span><span class="op">)</span></span></code></pre></div>
-<div class="figure" style="text-align: center">
-<img src="m_dist-1.png" alt="plot of chunk m_dist"><p class="caption">
-plot of chunk m_dist
-</p>
-</div>
-</div>
-<div class="section level4">
-<h4 id="the-indicators-of-y">The Indicators of <code>y</code><a class="anchor" aria-label="anchor" href="#the-indicators-of-y"></a>
-</h4>
-<p>Last, let’s assume that the distribution of the error terms the
-indicators of <code>y</code> is bounded and is bimodal. We we
-<code><a href="../reference/rbeta_rs.html">rbeta_rs()</a></code> to simulate this distribution, setting the
-parameters <code>shape1</code> and <code>shape2</code> to create the
-bimodal distribution:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
 <span><span class="va">y_e</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rbeta_rs.html">rbeta_rs</a></span><span class="op">(</span><span class="fl">10000</span>,</span>
 <span>                shape1 <span class="op">=</span> <span class="fl">.5</span>,</span>
 <span>                shape2 <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist</a></span><span class="op">(</span><span class="va">y_e</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="y_dist-1.png" alt="plot of chunk y_dist"><p class="caption">
-plot of chunk y_dist
+<img src="y_e_obs-1.png" alt="plot of chunk y_e_obs"><p class="caption">
+plot of chunk y_e_obs
 </p>
 </div>
-<p>In real data, we may not have a situation as complicated as this one.
-For example, all error terms are assumed to be normally distributed,
-except for the indicators of one or two latent factor. These
-distributions are used just to illustrate how to use the arguments.</p>
 </div>
 </div>
 <div class="section level3">
-<h3 id="set-the-distributions-of-error-terms-by-e_fun">Set the Distributions of Error Terms by <code>e_fun</code><a class="anchor" aria-label="anchor" href="#set-the-distributions-of-error-terms-by-e_fun"></a>
+<h3 id="set-the-distributions-by-x_fun">Set the Distributions by <code>x_fun</code><a class="anchor" aria-label="anchor" href="#set-the-distributions-by-x_fun"></a>
 </h3>
 <p>This section illustrates how to set up the call to
-<code><a href="../reference/power4test.html">power4test()</a></code>, with error terms generated using the
-distributions described above. We would like to check the model first.
-Therefore, the test of indirect effect is not added for now.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code><a href="../reference/power4test.html">power4test()</a></code>, with observed variables or error terms
+generated using the distributions described above. We would like to
+check the model first. Therefore, the test of indirect effect is not
+added for now.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/power4test.html">power4test</a></span><span class="op">(</span>nrep <span class="op">=</span> <span class="fl">600</span>,</span>
 <span>                  model <span class="op">=</span> <span class="va">model</span>,</span>
 <span>                  pop_es <span class="op">=</span> <span class="va">model_es</span>,</span>
 <span>                  n <span class="op">=</span> <span class="fl">100</span>,</span>
-<span>                  number_of_indicators <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">4</span>,</span>
-<span>                                           m <span class="op">=</span> <span class="fl">3</span>,</span>
-<span>                                           y <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>,</span>
-<span>                  reliability <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">.80</span>,</span>
-<span>                                  m <span class="op">=</span> <span class="fl">.70</span>,</span>
-<span>                                  y <span class="op">=</span> <span class="fl">.80</span><span class="op">)</span>,</span>
-<span>                  e_fun <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">rlnorm_rs</span><span class="op">)</span>,</span>
-<span>                               m <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">rexp_rs</span><span class="op">)</span>,</span>
+<span>                  x_fun <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">rlnorm_rs</span><span class="op">)</span>,</span>
 <span>                               y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">rbeta_rs</span>, shape1 <span class="op">=</span> <span class="fl">.5</span>, shape2 <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>                  iseed <span class="op">=</span> <span class="fl">1234</span>,</span>
 <span>                  parallel <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <div class="section level4">
-<h4 id="how-to-use-e_fun">How to Use <code>e_fun</code><a class="anchor" aria-label="anchor" href="#how-to-use-e_fun"></a>
+<h4 id="how-to-use-x_fun">How to Use <code>x_fun</code><a class="anchor" aria-label="anchor" href="#how-to-use-x_fun"></a>
 </h4>
-<p>The argument <code>e_fun</code> is used to specify the function used
-to generate the error terms of indicators.</p>
-<p>The value must be a named list, with the name being one of the latent
-variables (<code>x</code>, <code>m</code>, and <code>y</code> in this
+<p>The argument <code>x_fun</code> is used to specify the function used
+to generate the observed variables. If an observed variable is a “pure”
+predictor (it is not predicted by any other variables in the model),
+then this is the function to generate its values. If it is an endogenous
+variable (it is predicted by at least one other variable in the model),
+then this is the function to generate its error term.</p>
+<p>The value must be a named list, with the name being one of variables
+(<code>x</code>, <code>m</code>, and <code>y</code> in this
 example).</p>
 <p>Each element must itself a list, with the first argument is the
 function to be used.</p>
 <ul>
-<li>For example, <code>m = list(rexp_rs)</code> indicates that the
-function <code>rexp_rs</code> will be used to generate the error terms
-of <code>m</code>.</li>
+<li>For example, <code>x = list(rlnorm_rs)</code> indicates that the
+function <code>rlnorm_rs</code> will be used to generate
+<code>x</code>.</li>
 </ul>
 <p>If there are additional arguments to be passed to this function,
 include them as named arguments in the list.</p>
 <ul>
-<li>For example,
-<code>y = list(rbeta_rs, shape1 = .5, shape2 = .5)</code> indicates that
-<code>rbeta_rs</code> will be used to generate the error terms, and the
-arguments <code>shape1</code> and <code>shape2</code> will both be set
-.5.</li>
+<li>For example, if an element is
+<code>y = list(rbeta_rs, shape1 = .5, shape2 = .5)</code>, then
+<code>rbeta_rs</code> will be used to generate <code>y</code> or its
+error term, and the arguments <code>shape1</code> and
+<code>shape2</code> will both be set .5.</li>
 </ul>
-<p>If a latent factor is not included in the list for
-<code>e_fun</code>, the default distribution used a normal
-distribution.</p>
+<p>If a variable is not included in the lists for <code>x_fun</code>,
+the default distribution used is a normal distribution.</p>
 </div>
 <div class="section level4">
-<h4 id="functions-that-e_fun-can-use">Functions That <code>e_fun</code> Can Use<a class="anchor" aria-label="anchor" href="#functions-that-e_fun-can-use"></a>
+<h4 id="functions-that-x_fun-and-e_fun-can-use">Functions That <code>x_fun</code> and <code>e_fun</code> Can
+Use<a class="anchor" aria-label="anchor" href="#functions-that-x_fun-and-e_fun-can-use"></a>
 </h4>
-<p>In principle, any function can be used to generate the numbers for
-the error terms, as long as it meets these requirements:</p>
+<p>In principle, any function can be used to generate the numbers, as
+long as it meets these requirements:</p>
 <ul>
 <li><p>It has an argument named <code>n</code>, the number of random
 numbers to be generated.</p></li>
 <li><p>It returns a numeric vector.</p></li>
 </ul>
 <p>Though no error will be returned, to ensure that the population
-standardized coefficients are of the specified values, the function for
-<code>e_fun</code> should generate numbers from a population with mean
-and standard deviation equal to 0 and 1, respectively.</p>
+standardized coefficients are of the specified values, the functions for
+<code>x_fun</code> and <code>e_fun</code> should generate numbers from a
+population with mean and standard deviation equal to 0 and 1,
+respectively.</p>
 </div>
 </div>
 <div class="section level3">
@@ -336,32 +319,25 @@ and standard deviation equal to 0 and 1, respectively.</p>
 <p>To print the details of the generated data, including the descriptive
 statistics, use <code>print</code> with
 <code>data_long = TRUE</code>:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">out</span>,</span>
 <span>      data_long <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>This is part of the output:</p>
 <pre><code><span><span class="co">#&gt; ==== Descriptive Statistics ====</span></span>
-<span><span class="co">#&gt;</span></span>
-<span><span class="co">#&gt;    vars     n  mean   sd  skew kurtosis se</span></span>
-<span><span class="co">#&gt; x1    1 60000 -0.01 0.99  1.79    14.19  0</span></span>
-<span><span class="co">#&gt; x2    2 60000  0.00 1.01  2.07    17.93  0</span></span>
-<span><span class="co">#&gt; x3    3 60000  0.00 0.99  1.86    15.48  0</span></span>
-<span><span class="co">#&gt; x4    4 60000  0.00 1.03  3.10    54.15  0</span></span>
-<span><span class="co">#&gt; m1    5 60000  0.00 1.00  0.82     1.80  0</span></span>
-<span><span class="co">#&gt; m2    6 60000  0.00 1.00  0.84     1.88  0</span></span>
-<span><span class="co">#&gt; m3    7 60000  0.00 0.99  0.79     1.59  0</span></span>
-<span><span class="co">#&gt; y1    8 60000  0.00 1.00 -0.01    -0.29  0</span></span>
-<span><span class="co">#&gt; y2    9 60000 -0.01 1.00 -0.01    -0.27  0</span></span>
-<span><span class="co">#&gt; y3   10 60000  0.00 1.00  0.01    -0.27  0</span></span></code></pre>
-<p>The descriptive statistics shows that the distributions of the
-indicators are not normal. As expected, those of <code>x</code> and
-<code>m</code> are positively skewed, while those of <code>y</code> are
-nearly symmetric but light tailed.</p>
-<p>Note that, the distribution of an indicator depends on both the
-latent factors and and the error terms, as well as the factor loadings.
-For example, the distributions of the error terms of <code>m</code> are
-less skewed than that of an exponential distribution because the latent
-factor, <code>m</code>, is normally distributed.</p>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;   vars     n mean   sd skew kurtosis se</span></span>
+<span><span class="co">#&gt; m    1 60000 0.00 1.00 0.16     0.50  0</span></span>
+<span><span class="co">#&gt; y    2 60000 0.00 1.06 0.04    -1.13  0</span></span>
+<span><span class="co">#&gt; x    3 60000 0.01 1.00 5.24    53.74  0</span></span></code></pre>
+<p>The descriptive statistics shows that the distributions are not
+normal. As expected, those of <code>x</code> is positively skewed, while
+those of <code>y</code> are nearly symmetric but light tailed (negative
+excess kurtosis).</p>
+<p>Note that the distribution of an endogenous variable depends on both
+its predictors and and its error term. Therefore, even though the error
+term of <code>m</code> is normally distributed, <code>m</code> is still
+not normally distributed because <code>x</code> is positively
+skewed.</p>
 </div>
 <div class="section level3">
 <h3 id="fit-the-model-by-mlr-robust-maximum-likelihood">Fit the Model by MLR (Robust Maximum Likelihood)<a class="anchor" aria-label="anchor" href="#fit-the-model-by-mlr-robust-maximum-likelihood"></a>
@@ -379,44 +355,34 @@ arguments, as a named list, to the fit function, which is
 <code>estimator = "MLR"</code>. Therefore, we add the argument
 <code>fit_model_args = list(estimator = "MLR")</code> in the call to
 <code><a href="../reference/power4test.html">power4test()</a></code>:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/power4test.html">power4test</a></span><span class="op">(</span>nrep <span class="op">=</span> <span class="fl">600</span>,</span>
 <span>                  model <span class="op">=</span> <span class="va">model</span>,</span>
 <span>                  pop_es <span class="op">=</span> <span class="va">model_es</span>,</span>
 <span>                  n <span class="op">=</span> <span class="fl">100</span>,</span>
-<span>                  number_of_indicators <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">4</span>,</span>
-<span>                                           m <span class="op">=</span> <span class="fl">3</span>,</span>
-<span>                                           y <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>,</span>
-<span>                  reliability <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">.80</span>,</span>
-<span>                                  m <span class="op">=</span> <span class="fl">.70</span>,</span>
-<span>                                  y <span class="op">=</span> <span class="fl">.80</span><span class="op">)</span>,</span>
-<span>                  e_fun <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">rlnorm_rs</span><span class="op">)</span>,</span>
-<span>                               m <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">rexp_rs</span><span class="op">)</span>,</span>
+<span>                  x_fun <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">rlnorm_rs</span><span class="op">)</span>,</span>
 <span>                               y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">rbeta_rs</span>, shape1 <span class="op">=</span> <span class="fl">.5</span>, shape2 <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>                  fit_model_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>estimator <span class="op">=</span> <span class="st">"MLR"</span><span class="op">)</span>,</span>
 <span>                  iseed <span class="op">=</span> <span class="fl">1234</span>,</span>
 <span>                  parallel <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>We can verify that MLR is used by printing the results:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span></span></code></pre></div>
 <p>This is part of the output:</p>
 <pre><code><span><span class="co">#&gt; ============ &lt;fit&gt; ============</span></span>
-<span><span class="co">#&gt;</span></span>
-<span><span class="co">#&gt; lavaan 0.6-21 ended normally after 30 iterations</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; lavaan 0.6-21 ended normally after 1 iteration</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Estimator                                         ML</span></span>
 <span><span class="co">#&gt;   Optimization method                           NLMINB</span></span>
-<span><span class="co">#&gt;   Number of model parameters                        23</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt;   Number of model parameters                         5</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Number of observations                           100</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Model Test User Model:</span></span>
 <span><span class="co">#&gt;                                               Standard      Scaled</span></span>
-<span><span class="co">#&gt;   Test Statistic                                22.444      23.597</span></span>
-<span><span class="co">#&gt;   Degrees of freedom                                32          32</span></span>
-<span><span class="co">#&gt;   P-value (Chi-square)                           0.895       0.859</span></span>
-<span><span class="co">#&gt;   Scaling correction factor                                  0.951</span></span>
-<span><span class="co">#&gt;     Yuan-Bentler correction (Mplus variant)</span></span></code></pre>
+<span><span class="co">#&gt;   Test Statistic                                 0.000       0.000</span></span>
+<span><span class="co">#&gt;   Degrees of freedom                                 0           0</span></span></code></pre>
 <p>As shown in the printout, MLR was used and so there is a column
 <code>Scaled</code> in the printout of <code>lavaan</code>.</p>
 </div>
@@ -437,20 +403,13 @@ setting &lt;code&gt;R&lt;/code&gt; to a supported value. The helper
 &lt;code&gt;&lt;a href="../reference/bz_helpers.html"&gt;R_for_bz()&lt;/a&gt;&lt;/code&gt; can be used. By default, it returns the largest
 supported &lt;code&gt;R&lt;/code&gt; which is less than a target &lt;code&gt;R&lt;/code&gt;,
 given a default level of significance of .05 (two-tailed). For example,
-&lt;code&gt;R_for_bz(200)&lt;/code&gt; returns 199.&lt;/p&gt;'><sup>1</sup></a></p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+&lt;code&gt;R_for_bz(200)&lt;/code&gt; returns 199.&lt;/p&gt;'><sup>2</sup></a></p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/power4test.html">power4test</a></span><span class="op">(</span>nrep <span class="op">=</span> <span class="fl">600</span>,</span>
 <span>                  model <span class="op">=</span> <span class="va">model</span>,</span>
 <span>                  pop_es <span class="op">=</span> <span class="va">model_es</span>,</span>
 <span>                  n <span class="op">=</span> <span class="fl">100</span>,</span>
-<span>                  number_of_indicators <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">4</span>,</span>
-<span>                                           m <span class="op">=</span> <span class="fl">3</span>,</span>
-<span>                                           y <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>,</span>
-<span>                  reliability <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">.80</span>,</span>
-<span>                                  m <span class="op">=</span> <span class="fl">.70</span>,</span>
-<span>                                  y <span class="op">=</span> <span class="fl">.80</span><span class="op">)</span>,</span>
-<span>                  e_fun <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">rlnorm_rs</span><span class="op">)</span>,</span>
-<span>                               m <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">rexp_rs</span><span class="op">)</span>,</span>
+<span>                  x_fun <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">rlnorm_rs</span><span class="op">)</span>,</span>
 <span>                               y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">rbeta_rs</span>, shape1 <span class="op">=</span> <span class="fl">.5</span>, shape2 <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>                  fit_model_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>estimator <span class="op">=</span> <span class="st">"MLR"</span><span class="op">)</span>,</span>
 <span>                  R <span class="op">=</span> <span class="fu"><a href="../reference/bz_helpers.html">R_for_bz</a></span><span class="op">(</span><span class="fl">200</span><span class="op">)</span>,</span>
@@ -464,12 +423,12 @@ given a default level of significance of .05 (two-tailed). For example,
 <span>                  parallel <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>The rejection rate (power) for this example can be found by
 <code><a href="../reference/rejection_rates.html">rejection_rates()</a></code>:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/rejection_rates.html">rejection_rates</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [test]: test_indirect: x-&gt;m-&gt;y</span></span>
-<span><span class="co">#&gt; [test_label]: Test</span></span>
+<span><span class="co">#&gt; [test]: test_indirect: x-&gt;m-&gt;y </span></span>
+<span><span class="co">#&gt; [test_label]: Test </span></span>
 <span><span class="co">#&gt;     est   p.v reject r.cilo r.cihi</span></span>
-<span><span class="co">#&gt; 1 0.098 0.993  0.244  0.212  0.281</span></span>
+<span><span class="co">#&gt; 1 0.091 1.000  0.643  0.604  0.681</span></span>
 <span><span class="co">#&gt; Notes:</span></span>
 <span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>
 <span><span class="co">#&gt; - est: The mean of the estimates in a test across replications.</span></span>
@@ -487,30 +446,30 @@ given a default level of significance of .05 (two-tailed). For example,
 </div>
 </div>
 <div class="section level2">
-<h2 id="using-e_fun-in-other-functions">Using <code>e_fun</code> in Other Functions<a class="anchor" aria-label="anchor" href="#using-e_fun-in-other-functions"></a>
+<h2 id="using-x_fun-in-other-functions">Using <code>x_fun</code> in Other Functions<a class="anchor" aria-label="anchor" href="#using-x_fun-in-other-functions"></a>
 </h2>
 <p>Other functions that make use of <code><a href="../reference/power4test.html">power4test()</a></code> can also
-use the arguments <code>e_fun</code> and
+use the arguments <code>x_fun</code> and
 <code>fit_model_args</code>.</p>
 <p>For example. the previous output of <code><a href="../reference/power4test.html">power4test()</a></code>, with
-<code>e_fun</code> and <code>fit_model_args</code> set, can be used
+<code>x_fun</code> and <code>fit_model_args</code> set, can be used
 directly by <code><a href="../reference/x_from_power.html">n_from_power()</a></code> and
 <code><a href="../reference/x_from_power.html">n_region_from_power()</a></code>.</p>
-<p>For example, the output above, with nonnormal indicators, can be used
+<p>For example, the output above, with nonnormal variables, can be used
 directly by <code><a href="../reference/x_from_power.html">n_from_power()</a></code> to find a sample size given a
 target power:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">n_power</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/x_from_power.html">n_from_power</a></span><span class="op">(</span></span>
 <span>              <span class="va">out</span>,</span>
 <span>              target_power <span class="op">=</span> <span class="fl">.80</span>,</span>
-<span>              x_interval <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">2000</span><span class="op">)</span>,</span>
+<span>              x_interval <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">50</span>, <span class="fl">200</span><span class="op">)</span>,</span>
 <span>              final_nrep <span class="op">=</span> <span class="fl">2000</span>,</span>
-<span>              seed <span class="op">=</span> <span class="fl">1357</span></span>
+<span>              seed <span class="op">=</span> <span class="fl">1234</span></span>
 <span>            <span class="op">)</span></span></code></pre></div>
-<p>The output with nonnormal indicators can also be used directly by
+<p>The output with nonnormal variables can also be used directly by
 <code>n_power_region()</code> to find a region of sample sizes given a
 target power:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">n_power_region</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/x_from_power.html">n_region_from_power</a></span><span class="op">(</span></span>
 <span>                      <span class="va">out</span>,</span>
 <span>                      seed <span class="op">=</span> <span class="fl">1357</span></span>
@@ -521,47 +480,33 @@ arguments. They are set in the same way as in
 <code><a href="../reference/power4test.html">power4test()</a></code></p>
 <p>This is an example for estimating the power for a specific sample
 size:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">q_power</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/q_power_mediation.html">q_power_mediation_simple</a></span><span class="op">(</span></span>
 <span>  a <span class="op">=</span> <span class="st">"m"</span>,</span>
 <span>  b <span class="op">=</span> <span class="st">"m"</span>,</span>
 <span>  cp <span class="op">=</span> <span class="st">"s"</span>,</span>
-<span>  number_of_indicators <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">3</span>,</span>
-<span>                           m <span class="op">=</span> <span class="fl">4</span>,</span>
-<span>                           y <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>,</span>
-<span>  reliability <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">.70</span>,</span>
-<span>                  m <span class="op">=</span> <span class="fl">.75</span>,</span>
-<span>                  y <span class="op">=</span> <span class="fl">.80</span><span class="op">)</span>,</span>
-<span>  e_fun <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">rlnorm_rs</span><span class="op">)</span>,</span>
-<span>               m <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">rexp_rs</span><span class="op">)</span>,</span>
+<span>  x_fun <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">rlnorm_rs</span><span class="op">)</span>,</span>
 <span>               y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">rbeta_rs</span>, shape1 <span class="op">=</span> <span class="fl">.5</span>, shape2 <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  fit_model_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>estimator <span class="op">=</span> <span class="st">"MLR"</span><span class="op">)</span>,</span>
 <span>  target_power <span class="op">=</span> <span class="fl">.80</span>,</span>
 <span>  nrep <span class="op">=</span> <span class="fl">600</span>,</span>
-<span>  n <span class="op">=</span> <span class="fl">200</span>,</span>
+<span>  n <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>  R <span class="op">=</span> <span class="fu"><a href="../reference/bz_helpers.html">R_for_bz</a></span><span class="op">(</span><span class="fl">200</span><span class="op">)</span>,</span>
 <span>  seed <span class="op">=</span> <span class="fl">1234</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>This is an example of finding a sample size given a target power
 (mode <code>"n"</code>):</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">q_power_n</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/q_power_mediation.html">q_power_mediation_simple</a></span><span class="op">(</span></span>
 <span>  a <span class="op">=</span> <span class="st">"m"</span>,</span>
 <span>  b <span class="op">=</span> <span class="st">"m"</span>,</span>
 <span>  cp <span class="op">=</span> <span class="st">"s"</span>,</span>
-<span>  number_of_indicators <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">3</span>,</span>
-<span>                           m <span class="op">=</span> <span class="fl">4</span>,</span>
-<span>                           y <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>,</span>
-<span>  reliability <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">.70</span>,</span>
-<span>                  m <span class="op">=</span> <span class="fl">.75</span>,</span>
-<span>                  y <span class="op">=</span> <span class="fl">.80</span><span class="op">)</span>,</span>
-<span>  e_fun <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">rlnorm_rs</span><span class="op">)</span>,</span>
-<span>               m <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">rexp_rs</span><span class="op">)</span>,</span>
+<span>  x_fun <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">rlnorm_rs</span><span class="op">)</span>,</span>
 <span>               y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">rbeta_rs</span>, shape1 <span class="op">=</span> <span class="fl">.5</span>, shape2 <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  fit_model_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>estimator <span class="op">=</span> <span class="st">"MLR"</span><span class="op">)</span>,</span>
 <span>  target_power <span class="op">=</span> <span class="fl">.80</span>,</span>
 <span>  R <span class="op">=</span> <span class="fu"><a href="../reference/bz_helpers.html">R_for_bz</a></span><span class="op">(</span><span class="fl">200</span><span class="op">)</span>,</span>
-<span>  x_interval <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">2000</span><span class="op">)</span>,</span>
+<span>  x_interval <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">50</span>, <span class="fl">300</span><span class="op">)</span>,</span>
 <span>  final_nrep <span class="op">=</span> <span class="fl">2000</span>,</span>
 <span>  seed <span class="op">=</span> <span class="fl">1234</span>,</span>
 <span>  mode <span class="op">=</span> <span class="st">"n"</span></span>

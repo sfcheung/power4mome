@@ -60,8 +60,11 @@
 
 ### Advanced Features
 
-- [Sample Size Determination with Nonnormal
-  Variables](https://sfcheung.github.io/power4mome/articles/n_from_power_mediation_mlr_lav_simple.md):
+- [Sample Size Determination with Nonnormal Variables: Latent Variable
+  Models](https://sfcheung.github.io/power4mome/articles/n_from_power_mediation_mlr_lav_simple.md):
+- [Sample Size Determination with Nonnormal Variables: Path Models of
+  Observed
+  Variables](https://sfcheung.github.io/power4mome/articles/n_from_power_mediation_mlr_obs_simple.md):
 
 ### Technical Appendices
 
