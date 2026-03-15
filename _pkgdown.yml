@@ -73,6 +73,11 @@ articles:
   - articles/template_n_from_power_mome_obs_a
   - articles/template_n_from_power_mome_obs_b
 
+- title: Advanced Features
+  navbar: Advanced Features
+  contents:
+  - articles/n_from_power_mediation_mlr_lav_simple
+
 - title: Technical Appendices
   contents:
   - articles/power4test_workflow
