@@ -750,9 +750,14 @@ x_from_power <- function(object,
 
   if (goal == "ci_hit") {
     if (is.null(algorithm)) {
-      algorithm <- switch(x,
-                          n = "bisection",
-                          es = "power_curve")
+      if ((final_nrep >= 1000) &&
+          (x == "n")) {
+        algorithm <- "probabilistic_bisection"
+      } else {
+        algorithm <- switch(x,
+                            n = "bisection",
+                            es = "power_curve")
+      }
     }
   }
 
@@ -760,6 +765,12 @@ x_from_power <- function(object,
   if (goal == "close_enough") {
     # internal_args$keep_algorithm is now ignored
     if (is.null(algorithm)) {
+      if (final_nrep >= 1000) {
+        algorithm <- "probabilistic_bisection"
+      } else {
+        algorithm <- "bisection"
+      }
+    } else {
       algorithm <- match.arg(algorithm,
                              c("bisection",
                                "probabilistic_bisection",

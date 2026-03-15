@@ -628,8 +628,8 @@ needed.
 
 The internal workflow of
 this method implemented in
-\code{\link[=x_from_power]{x_from_power()}} will be presented
-in a forthcoming technical vignette.
+\code{\link[=x_from_power]{x_from_power()}} can be found in
+this technical vignette: \url{https://sfcheung.github.io/power4mome/articles/x_from_power_workflow_bisection.html}.
 }
 
 \subsection{Power Curve Method}{
@@ -672,7 +672,7 @@ goals, like the bisection method.
 The internal workflow of
 this method implemented in
 \code{\link[=x_from_power]{x_from_power()}} can be found in
-this technical vignette: \url{https://sfcheung.github.io/power4mome/articles/x_from_power_workflow.html}.
+this technical vignette: \url{https://sfcheung.github.io/power4mome/articles/x_from_power_workflow_power_curve.html}.
 }
 
 \subsection{Probabilistic Bisection}{
@@ -736,8 +736,8 @@ some scenarios.
 
 The internal workflow of
 this method implemented in
-\code{\link[=x_from_power]{x_from_power()}} will be presented
-in a forthcoming technical vignette.
+\code{\link[=x_from_power]{x_from_power()}} can be found in
+this technical vignette: \url{https://sfcheung.github.io/power4mome/articles/x_from_power_workflow_pba.html}.
 }
 }
 

@@ -1,4 +1,4 @@
-# power4mome 0.1.1.73
+# power4mome 0.1.1.74
 
 - Improve the function for extending the
   initial interval before doing a
@@ -439,6 +439,10 @@
   for the three algorithms used in
   `x_from_power()` and friends.
   (0.1.1.73)
+
+- Changed the default algorithms to be
+  used in `x_from_power()`.
+  (0.1.1.74)
 
 # power4mome 0.1.1
 
