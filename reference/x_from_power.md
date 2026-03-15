@@ -530,8 +530,9 @@ examination suggests that this method is good enough for scenarios in
 which only an approximate sample size or range of sample sizes is
 needed.
 
-The internal workflow of this method implemented in `x_from_power()`
-will be presented in a forthcoming technical vignette.
+The internal workflow of this method implemented in `x_from_power()` can
+be found in this technical vignette:
+<https://sfcheung.github.io/power4mome/articles/x_from_power_workflow_bisection.html>.
 
 ### Power Curve Method
 
@@ -556,7 +557,7 @@ bisection method.
 
 The internal workflow of this method implemented in `x_from_power()` can
 be found in this technical vignette:
-<https://sfcheung.github.io/power4mome/articles/x_from_power_workflow.html>.
+<https://sfcheung.github.io/power4mome/articles/x_from_power_workflow_power_curve.html>.
 
 ### Probabilistic Bisection
 
@@ -593,8 +594,9 @@ interval), the probabilistic bisection method is nearly guaranteed to
 converge to the solution (as long as the solution is inside the
 interval). Therefore, this is the default algorithm in some scenarios.
 
-The internal workflow of this method implemented in `x_from_power()`
-will be presented in a forthcoming technical vignette.
+The internal workflow of this method implemented in `x_from_power()` can
+be found in this technical vignette:
+<https://sfcheung.github.io/power4mome/articles/x_from_power_workflow_pba.html>.
 
 ## References
 
@@ -740,7 +742,7 @@ power_vs_n <- x_from_power(test_out,
 #> 
 #> ========== Final Stage ==========
 #> 
-#> - Start at 2026-03-14 11:16:41 
+#> - Start at 2026-03-15 11:04:40 
 #> - Rejection Rates:
 #> 
 #> [test]: test_parameters: CIs (pars: m~x) 
@@ -814,7 +816,7 @@ summary(power_vs_n)
 #> 
 #> - Algorithm: bisection 
 #> - The range of values explored: 50 to 100 
-#> - Time spent in the search: 0.8779 secs 
+#> - Time spent in the search: 0.8451 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 

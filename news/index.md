@@ -1,6 +1,6 @@
 # Changelog
 
-## power4mome 0.1.1.73
+## power4mome 0.1.1.74
 
 - Improve the function for extending the initial interval before doing a
   bisection search. (0.1.1.1)
@@ -352,6 +352,10 @@
   in
   [`x_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md)
   and friends. (0.1.1.73)
+
+- Changed the default algorithms to be used in
+  [`x_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md).
+  (0.1.1.74)
 
 ## power4mome 0.1.1
 
