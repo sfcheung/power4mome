@@ -43,7 +43,8 @@ will be used as an example. Users new
 to the package are recommended to
 read the [article](articles/template_n_from_power_mediation_lav_simple.html)
 on the steps for a model with variables
-having a multivariate distribution.
+having a multivariate normal distribution
+(the default).
 
 # Set Up the Model and Test
 
@@ -58,8 +59,6 @@ Estimate the power for a sample size.
 The code for the model:
 
 ```{r model, eval=TRUE, results="hide", message=FALSE}
-# ====== Model: Form ======
-
 model <-
 "
 m ~ x
@@ -127,13 +126,13 @@ text(label = "Simple Mediation Model",
      cex = 1.25)
 ```
 
-Refer to this [article](https://sfcheung.github.io/power4mome/articles/power4test_latent_mediation.html)
+Refer to this [article](articles/power4test_latent_mediation.html)
 on how to set `number_of_indicators` and
 `reliability` when calling `power4test()`.
 
 # Specify the Distributions
 
-Suppose that we expect that the error
+Suppose that we expect the error
 terms of the indicators are not normally
 distributed. For example, they represent
 attributes that are positively skewed,
@@ -178,7 +177,7 @@ the indicators of `x`, `m`, and `y`.
 
 ### The Indicators of `x`
 
-For the indicator of `x`, the distribution
+For the indicators of `x`, the distribution
 is severely positively skewed, generated
 from a lognormal distribution using `rlnorm_rs()`.
 This is an illustration of the distribution:
@@ -219,18 +218,22 @@ y_e <- rbeta_rs(10000,
 hist(y_e)
 ```
 
-In real data, we may not have enough knowledge
-about the distribution of the error terms.
+In real data, we may not have a situation
+as complicated as this one. For example,
+all error terms are assumed to be normally distributed,
+except for the indicators of one or two
+latent factor.
 These distributions are used just to illustrate
 how to use the arguments.
 
 ## Set the Distributions of Error Terms by `e_fun`
 
-This is how to set up the call to
+This section illustrates how to set up the call to
 `power4test()`, with error terms generated
-using the distributions above. We would
+using the distributions described above. We would
 like to check the model first. Therefore,
-the test of indirect effect is not yet added.
+the test of indirect effect is not added
+for now.
 
 ```{r check_model, eval=TRUE, results="hide", message=FALSE}
 out <- power4test(nrep = 600,
@@ -249,6 +252,8 @@ out <- power4test(nrep = 600,
                   iseed = 1234)
 ```
 
+### How to Use `e_fun`
+
 The argument `e_fun` is used to specify
 the function used to generate the error terms
 of indicators.
@@ -258,9 +263,7 @@ being one of the latent variables (`x`, `m`, and `y`
 in this example).
 
 Each element must itself a list, with
-the first argument the function to be used.
-The first argument of this function needs to be
-the sample size.
+the first argument is the function to be used.
 
 - For example, `m = list(rexp_rs)` indicates
   that the function `rexp_rs` will be used
@@ -274,6 +277,31 @@ named arguments in the list.
   indicates that `rbeta_rs` will be used to
   generate the error terms, and the arguments
   `shape1` and `shape2` will both be set .5.
+
+If a latent factor is not included in
+the list for `e_fun`, the default distribution
+used a normal distribution.
+
+### Functions That `e_fun` Can Use
+
+In principle, any function can be used
+to generate the numbers for the error terms,
+as long as it meets these requirements:
+
+- It has an argument named `n`, the number
+  of random numbers to be generated.
+
+- It returns a numeric vector.
+
+Though no error will be returned, to
+ensure that the population standardized
+coefficients are of the specified values,
+the function for `e_fun` should generate
+numbers from a population with mean and
+standard deviation equal to 0 and 1,
+respectively.
+
+## Check The Generated Data
 
 To print the details of the generated data,
 including the descriptive statistics,
@@ -384,7 +412,25 @@ printout of `lavaan`.
 ## Add the Test and Estimate Power
 
 We now can add the test and estimate
-power:
+power.
+See this [article](articles/template_n_from_power_mediation_lav_simple.html)
+for details on the test function
+`test_indirect_effect()` and how to
+set the argument `test_fun` and `test_args`.
+`R_for_bz(200)` is used to set `R` to the largest
+value less than 200 that is supported by
+the method proposed by @boos_monte_2000.
+^[For tests that use Monte Carlo or bootstrapping
+confidence interval, the method proposed
+by @boos_monte_2000 to use a small number
+of resamples or simulated samples is recommended.
+This can be enabled automatically by setting
+`R` to a supported value. The helper
+`R_for_bz()` can be used. By default, it returns
+the largest supported `R` which is less than
+a target `R`, given a default
+level of significance of .05 (two-tailed).
+For example, `R_for_bz(200)` returns 199.]
 
 ```{r test, results=FALSE, message=FALSE}
 out <- power4test(nrep = 600,
@@ -401,7 +447,7 @@ out <- power4test(nrep = 600,
                                m = list(rexp_rs),
                                y = list(rbeta_rs, shape1 = .5, shape2 = .5)),
                   fit_model_args = list(estimator = "MLR"),
-                  R = 1000,
+                  R = R_for_bz(200),
                   ci_type = "mc",
                   test_fun = test_indirect_effect,
                   test_args = list(x = "x",
@@ -411,7 +457,10 @@ out <- power4test(nrep = 600,
                   iseed = 1234)
 ```
 
-```{r rejection_ml}
+The rejection rate (power) for this
+example can be found by `rejection_rates()`:
+
+```{r rejection_test}
 rejection_rates(out)
 ```
 
@@ -424,56 +473,46 @@ arguments `e_fun` and `fit_model_args`.
 For example. the previous output
 of `power4test()`, with `e_fun` and
 `fit_model_args` set, can be used directly
-by `n_from_power()` and `n_region_from_power()`:
+by `n_from_power()` and `n_region_from_power()`.
+
+For example, the output above, with nonnormal
+indicators, can be used directly by
+`n_from_power()` to find a sample size
+given a target power:
 
 ```{r n_power, eval=FALSE}
-out2 <- power4test(nrep = 50,
-                  model = model,
-                  pop_es = model_es,
-                  n = 100,
-                  number_of_indicators = c(x = 4,
-                                           m = 3,
-                                           y = 3),
-                  reliability = c(x = .80,
-                                  m = .70,
-                                  y = .80),
-                  e_fun = list(x = list(rlnorm_rs),
-                               m = list(rexp_rs),
-                               y = list(rbeta_rs, shape1 = .5, shape2 = .5)),
-                  fit_model_args = list(estimator = "MLR"),
-                  R = 199,
-                  ci_type = "mc",
-                  test_fun = test_indirect_effect,
-                  test_args = list(x = "x",
-                                   m = "m",
-                                   y = "y",
-                                   mc_ci = TRUE),
-                  iseed = 1234)
 n_power <- n_from_power(
-              out2,
+              out,
               target_power = .80,
               x_interval = c(100, 2000),
               final_nrep = 2000,
-              final_R = 1000,
-              goal = "close_enough",
-              algorithm = "probabilistic_bisection",
               seed = 1357
             )
 ```
 
+The output with nonnormal
+indicators can also be used directly by
+`n_power_region()` to find a region of
+sample sizes
+given a target power:
 
 ```{r n_region, eval=FALSE}
 n_power_region <- n_region_from_power(
-                      out2,
-                      final_nrep = 600,
+                      out,
                       seed = 1357
                     )
 ```
 
-The quick-functions also support `e_fun`
-and `fit_model_args`.
+The quick functions, described
+in these [articles](articles/index.html#common-mediation-models),
+also support the `e_fun`
+and `fit_model_args` arguments. They are
+set in the same way as in `power4test()`
 
-```{r q_fun1}
+This is an example for estimating the power
+for a specific sample size:
+
+```{r q_fun1, eval=FALSE}
 q_power <- q_power_mediation_simple(
   a = "m",
   b = "m",
@@ -491,12 +530,15 @@ q_power <- q_power_mediation_simple(
   target_power = .80,
   nrep = 600,
   n = 200,
-  R = 199,
+  R = R_for_bz(200),
   seed = 1234
 )
 ```
 
-```{r q_fun1}
+This is an example of finding a sample
+size given a target power (mode `"n"`):
+
+```{r q_fun2, eval=FALSE}
 q_power_n <- q_power_mediation_simple(
   a = "m",
   b = "m",
@@ -512,11 +554,12 @@ q_power_n <- q_power_mediation_simple(
                y = list(rbeta_rs, shape1 = .5, shape2 = .5)),
   fit_model_args = list(estimator = "MLR"),
   target_power = .80,
-  n = 200,
-  R = 199,
+  R = R_for_bz(200),
   x_interval = c(100, 2000),
   final_nrep = 2000,
   seed = 1234,
   mode = "n"
 )
 ```
+
+# Reference(s)
