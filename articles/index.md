@@ -58,6 +58,11 @@
   b-Path
   Moderated](https://sfcheung.github.io/power4mome/articles/template_n_from_power_mome_obs_b.md):
 
+### Advanced Features
+
+- [Sample Size Determination with Nonnormal
+  Variables](https://sfcheung.github.io/power4mome/articles/n_from_power_mediation_mlr_lav_simple.md):
+
 ### Technical Appendices
 
 - [Workflow of
