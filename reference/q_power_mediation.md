@@ -282,16 +282,9 @@ q_power_mediation_parallel(
 
 - mode:
 
-  What to print. If `"region"` and the output of
-  [`n_region_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md)
-  is available, it will print the results of
-  [`n_region_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md)
-  if available. If `"n"`, then the output of
-  [`n_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md)
-  will be printed if available. If `"power"`, then the output of
-  [`power4test()`](https://sfcheung.github.io/power4mome/reference/power4test.md)
-  will be printed. If `"all"`, then all available outputs will be
-  printed.
+  For
+  `q_power_mediation_*, this is the mode of what to do. If `"power"`, then only [power4test()] will be called, and the level of power will be estimated. If `"region"`, then the region of sample sizes with levels of power not significantly different from the target power will be searched by calling [n_region_from_power()]. For the `print`method, this indicates what to print. If`"region"`and the output of [n_region_from_power()] is available, it will print the results of [n_region_from_power()] if available. If`"n"`, then the output of [n_from_power()] will be printed if available. If `"power"`, then the output of [power4test()] will be printed. If `"all"\`,
+  then all available outputs will be printed.
 
 - x:
 

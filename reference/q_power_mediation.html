@@ -13,7 +13,7 @@ mediation models."><meta property="og:image" content="https://sfcheung.github.io
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.74</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.75</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -425,17 +425,7 @@ be passed to <code><a href="summary.x_from_power.html">summary.n_region_from_pow
 
 
 <dt id="arg-mode">mode<a class="anchor" aria-label="anchor" href="#arg-mode"></a></dt>
-<dd><p>What to print. If <code>"region"</code>
-and the output of <code><a href="x_from_power.html">n_region_from_power()</a></code>
-is available, it will print the results
-of <code><a href="x_from_power.html">n_region_from_power()</a></code> if available.
-If <code>"n"</code>, then the output of
-<code><a href="x_from_power.html">n_from_power()</a></code> will be printed if
-available.
-If <code>"power"</code>, then the output of
-<code><a href="power4test.html">power4test()</a></code> will be printed.
-If
-<code>"all"</code>, then all available outputs
+<dd><p>For <code>q_power_mediation_*, this is the mode of what to do. If </code>"power"<code>, then only [power4test()] will be called, and the level of power will be estimated. If </code>"region"<code>, then the region of sample sizes with levels of power not significantly different from the target power will be searched by calling [n_region_from_power()]. For the </code>print<code>method, this indicates what to print. If</code>"region"<code>and the output of [n_region_from_power()] is available, it will print the results of [n_region_from_power()] if available. If</code>"n"<code>, then the output of [n_from_power()] will be printed if available. If </code>"power"<code>, then the output of [power4test()] will be printed. If </code>"all"`, then all available outputs
 will be printed.</p></dd>
 
 
