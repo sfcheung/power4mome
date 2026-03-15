@@ -1,0 +1,522 @@
+---
+title: "Sample Size Determination with Nonnormal Variables"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    fig.align: "center"
+    toc: true
+    toc_depth: 2
+    number_sections: false
+bibliography: references.bib
+csl: apa.csl
+---
+
+```{r knitr_setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "",
+  fig.align = "center"
+)
+```
+
+# Introduction
+
+This article illustrates how to
+do power analysis and sample size
+determination in
+some typical latent variable models, with the variables
+hypothesized to be nonnormally distributed
+and the model to be estimated using
+robust methods such as MLR in `lavaan`.
+The package
+[power4mome](https://sfcheung.github.io/power4mome/)
+will be used for illustration.
+
+```{r load_pre, child=c("template_n_ins_preamble_prerequisite.txt")}
+```
+
+# Scope
+
+A simple mediation model of latent variables
+will be used as an example. Users new
+to the package are recommended to
+read the [article](articles/template_n_from_power_mediation_lav_simple.html)
+on the steps for a model with variables
+having a multivariate distribution.
+
+# Set Up the Model and Test
+
+Load the packages first:
+
+```{r load_pkg, message=FALSE}
+library(power4mome)
+```
+
+Estimate the power for a sample size.
+
+The code for the model:
+
+```{r model, eval=TRUE, results="hide", message=FALSE}
+# ====== Model: Form ======
+
+model <-
+"
+m ~ x
+y ~ m + x
+"
+
+model_es <-
+"
+m ~ x: m
+y ~ m: m
+y ~ x: s
+"
+```
+
+```{r n_from_power_mediation_mlr_lav_simple, echo = FALSE, fig.cap = "The Model", fig.width = 7, fig.height = 5}
+# knitr::opts_chunk$set(dpi = 300, dev.args = list(png = list(type = "cairo")))
+library(semPlot)
+library(semptools)
+suppressMessages(library(lavaan))
+mod <-
+"
+m ~ m*x
+y ~ l*m + s*x
+x =~ x1 + x2 + x3 + x4
+m =~ m1 + m2 + m3
+y =~ y1 + y2 + y3
+"
+fit0 <- sem(mod, do.fit = FALSE, fixed.x = FALSE)
+set.seed(1234)
+onames <- lavNames(fit0)
+p <- length(onames)
+dat <- data.frame(MASS::mvrnorm(100, rep(0, p), diag(p)))
+colnames(dat) <- onames
+fit0 <- sem(mod, dat, do.fit = FALSE)
+layout_m <- matrix(c(NA, "m", NA,
+                     "x", NA, "y"), 2, 3, byrow = TRUE)
+p <- semPaths(fit0,
+              whatLabels = "label",
+              nCharNodes = 0,
+              exoCov = FALSE,
+              edge.label.cex = 1.25,
+              label.cex = 1.8,
+              residuals = FALSE,
+              sizeMan = 6,
+              sizeMan2 = 4,
+              sizeLat = 8,
+              sizeLat2 = 7,
+              asize = 5,
+              DoNotPlot = TRUE)
+p2 <- set_sem_layout(
+          p,
+          factor_layout = layout_m,
+          factor_point_to = c(x = "left",
+                              m = "up",
+                              y = "right"),
+          indicator_spread = c(m = 1.2)
+        )
+p2$graphAttributes$Edges$labels[1:3] <-
+  c("m\n(medium: .30)",
+    "m\n(medium: .00)",
+    "s\n(small: .10)")
+plot(p2)
+text(label = "Simple Mediation Model",
+     x = 0, y = -1,
+     cex = 1.25)
+```
+
+Refer to this [article](https://sfcheung.github.io/power4mome/articles/power4test_latent_mediation.html)
+on how to set `number_of_indicators` and
+`reliability` when calling `power4test()`.
+
+# Specify the Distributions
+
+Suppose that we expect that the error
+terms of the indicators are not normally
+distributed. For example, they represent
+attributes that are positively skewed,
+with people likely to be below the mean
+while some cases are far away from the
+mean. Without real data, it is difficult
+to know the actual distribution. Nevertheless,
+we can select a distribution that reasonably
+approximate the expected distribution of the error
+terms.
+
+## Built-In Functions For Random Numbers
+
+The package [power4mome](https://sfcheung.github.io/power4mome/) comes with
+some ready-to-use function for generating
+random error. A full list of them can
+be found [here](reference/index.html#generate-random-numbers).
+To be used in `power4test()`, these functions
+need to have the distribution standardized
+such that the population mean and standard
+deviation are 0 and 1, respectively. All
+the build-in functions already have the distributions
+standardized.
+
+For example, the function `rexp_rs()`
+can be used to approximate a heavily
+positively skewed distribution. The
+function used is `stats::rexp()` from
+base R, but, by default, the distribution is transformed
+such that the population mean and standard
+deviation are 0 and 1, respectively.
+
+## An Example
+
+Suppose we would like to estimate the
+power to test the indirect effect using
+Monte Carlo confidence interval. We expect
+that the indicators are nonnormally distributed.
+For the sake of illustration, the following
+distributions hypothesized for
+the indicators of `x`, `m`, and `y`.
+
+### The Indicators of `x`
+
+For the indicator of `x`, the distribution
+is severely positively skewed, generated
+from a lognormal distribution using `rlnorm_rs()`.
+This is an illustration of the distribution:
+
+```{r x_dist}
+set.seed(1234)
+x_e <- rlnorm_rs(10000)
+hist(x_e)
+```
+
+### The Indicators of `m`
+
+The distribution of the error terms
+of `m` is assumed to be positively skewed, but not
+as severe as that of `x`. We use `rexp_rs()`
+to simulate this distribution:
+
+```{r m_dist}
+set.seed(1234)
+m_e <- rexp_rs(10000)
+hist(m_e)
+```
+
+### The Indicators of `y`
+
+Last, let's assume that the distribution
+of the error terms the indicators
+of `y` is bounded and is bimodal. We
+we `rbeta_rs()` to simulate this distribution,
+setting the parameters `shape1` and `shape2`
+to create the bimodal distribution:
+
+```{r y_dist}
+set.seed(1234)
+y_e <- rbeta_rs(10000,
+                shape1 = .5,
+                shape2 = .5)
+hist(y_e)
+```
+
+In real data, we may not have enough knowledge
+about the distribution of the error terms.
+These distributions are used just to illustrate
+how to use the arguments.
+
+## Set the Distributions of Error Terms by `e_fun`
+
+This is how to set up the call to
+`power4test()`, with error terms generated
+using the distributions above. We would
+like to check the model first. Therefore,
+the test of indirect effect is not yet added.
+
+```{r check_model, eval=TRUE, results="hide", message=FALSE}
+out <- power4test(nrep = 600,
+                  model = model,
+                  pop_es = model_es,
+                  n = 100,
+                  number_of_indicators = c(x = 4,
+                                           m = 3,
+                                           y = 3),
+                  reliability = c(x = .80,
+                                  m = .70,
+                                  y = .80),
+                  e_fun = list(x = list(rlnorm_rs),
+                               m = list(rexp_rs),
+                               y = list(rbeta_rs, shape1 = .5, shape2 = .5)),
+                  iseed = 1234)
+```
+
+The argument `e_fun` is used to specify
+the function used to generate the error terms
+of indicators.
+
+The value must be a named list, with the name
+being one of the latent variables (`x`, `m`, and `y`
+in this example).
+
+Each element must itself a list, with
+the first argument the function to be used.
+The first argument of this function needs to be
+the sample size.
+
+- For example, `m = list(rexp_rs)` indicates
+  that the function `rexp_rs` will be used
+  to generate the error terms of `m`.
+
+If there are additional arguments to be
+passed to this function, include them as
+named arguments in the list.
+
+- For example, `y = list(rbeta_rs, shape1 = .5, shape2 = .5)`
+  indicates that `rbeta_rs` will be used to
+  generate the error terms, and the arguments
+  `shape1` and `shape2` will both be set .5.
+
+To print the details of the generated data,
+including the descriptive statistics,
+use `print` with `data_long = TRUE`:
+
+```{r model_check, eval=FALSE}
+print(out,
+      data_long = TRUE)
+```
+
+```{r model_check2, echo=FALSE, message=FALSE, results=FALSE}
+tmp <- capture.output(
+print(out,
+      data_long = TRUE)
+)
+```
+
+This is part of the output:
+
+```{r des, echo=FALSE}
+i1 <- which(grepl("= Descriptive Statistics =", tmp))
+i2 <- which(grepl("^$", tmp))
+i2 <- i2[which(i2 > (i1 + 2))][1]
+cat(tmp[i1:i2], sep = "\n")
+```
+
+The descriptive statistics shows that
+the distributions of the indicators are
+not normal. As expected, those of `x` and `m` are positively
+skewed, while those of `y` are nearly symmetric
+but light tailed.
+
+Note that, the distribution of an indicator
+depends on both the latent factors and
+and the error terms, as well as the factor
+loadings. For example, the
+distributions of the error terms of `m`
+are less skewed than that of an exponential
+distribution because the latent factor,
+`m`, is normally distributed.
+
+## Fit the Model by MLR (Robust Maximum Likelihood)
+
+Because of the nonnormal distribution,
+we would like to estimate the power when
+a robust estimation method is used. One
+common method used in `lavaan` is MLR.
+Although this method and the default,
+maximum likelihood (ML), yield the same
+point estimates, their standard errors are
+different. Therefore, the results from
+Monte Carlo confidence intervals are also
+different.
+
+The argument `fit_model_args` can be use
+to pass arguments, as a named list,
+to the fit function,
+which is `lavaan::sem()` by default.
+
+To use MLR in `lavaan::sem()`, we use
+`estimator = "MLR"`. Therefore, we
+add the argument
+`fit_model_args = list(estimator = "MLR")`
+in the call to `power4test()`:
+
+```{r add_fit_args, eval=TRUE, results="hide", message=FALSE}
+out <- power4test(nrep = 600,
+                  model = model,
+                  pop_es = model_es,
+                  n = 100,
+                  number_of_indicators = c(x = 4,
+                                           m = 3,
+                                           y = 3),
+                  reliability = c(x = .80,
+                                  m = .70,
+                                  y = .80),
+                  e_fun = list(x = list(rlnorm_rs),
+                               m = list(rexp_rs),
+                               y = list(rbeta_rs, shape1 = .5, shape2 = .5)),
+                  fit_model_args = list(estimator = "MLR"),
+                  iseed = 1234)
+```
+
+We can verify that MLR is used by printing the results:
+
+```{r add_fit_args_print, eval=FALSE}
+print(out)
+```
+
+```{r add_fit_args_print2, echo=FALSE, message=FALSE, results=FALSE}
+tmp <- capture.output(
+print(out)
+)
+```
+
+This is part of the output:
+
+```{r add_fit_args_print3, echo=FALSE}
+i1 <- which(grepl("= <fit> =", tmp))
+i2 <- which(grepl("Yuan-Bentler correction", tmp))
+cat(tmp[i1:i2], sep = "\n")
+```
+
+As shown in the printout, MLR was used
+and so there is a column `Scaled` in the
+printout of `lavaan`.
+
+## Add the Test and Estimate Power
+
+We now can add the test and estimate
+power:
+
+```{r test, results=FALSE, message=FALSE}
+out <- power4test(nrep = 600,
+                  model = model,
+                  pop_es = model_es,
+                  n = 100,
+                  number_of_indicators = c(x = 4,
+                                           m = 3,
+                                           y = 3),
+                  reliability = c(x = .80,
+                                  m = .70,
+                                  y = .80),
+                  e_fun = list(x = list(rlnorm_rs),
+                               m = list(rexp_rs),
+                               y = list(rbeta_rs, shape1 = .5, shape2 = .5)),
+                  fit_model_args = list(estimator = "MLR"),
+                  R = 1000,
+                  ci_type = "mc",
+                  test_fun = test_indirect_effect,
+                  test_args = list(x = "x",
+                                   m = "m",
+                                   y = "y",
+                                   mc_ci = TRUE),
+                  iseed = 1234)
+```
+
+```{r rejection_ml}
+rejection_rates(out)
+```
+
+# Using `e_fun` in Other Functions
+
+Other functions that make use of
+`power4test()` can also use the
+arguments `e_fun` and `fit_model_args`.
+
+For example. the previous output
+of `power4test()`, with `e_fun` and
+`fit_model_args` set, can be used directly
+by `n_from_power()` and `n_region_from_power()`:
+
+```{r n_power, eval=FALSE}
+out2 <- power4test(nrep = 50,
+                  model = model,
+                  pop_es = model_es,
+                  n = 100,
+                  number_of_indicators = c(x = 4,
+                                           m = 3,
+                                           y = 3),
+                  reliability = c(x = .80,
+                                  m = .70,
+                                  y = .80),
+                  e_fun = list(x = list(rlnorm_rs),
+                               m = list(rexp_rs),
+                               y = list(rbeta_rs, shape1 = .5, shape2 = .5)),
+                  fit_model_args = list(estimator = "MLR"),
+                  R = 199,
+                  ci_type = "mc",
+                  test_fun = test_indirect_effect,
+                  test_args = list(x = "x",
+                                   m = "m",
+                                   y = "y",
+                                   mc_ci = TRUE),
+                  iseed = 1234)
+n_power <- n_from_power(
+              out2,
+              target_power = .80,
+              x_interval = c(100, 2000),
+              final_nrep = 2000,
+              final_R = 1000,
+              goal = "close_enough",
+              algorithm = "probabilistic_bisection",
+              seed = 1357
+            )
+```
+
+
+```{r n_region, eval=FALSE}
+n_power_region <- n_region_from_power(
+                      out2,
+                      final_nrep = 600,
+                      seed = 1357
+                    )
+```
+
+The quick-functions also support `e_fun`
+and `fit_model_args`.
+
+```{r q_fun1}
+q_power <- q_power_mediation_simple(
+  a = "m",
+  b = "m",
+  cp = "s",
+  number_of_indicators = c(x = 3,
+                           m = 4,
+                           y = 5),
+  reliability = c(x = .70,
+                  m = .75,
+                  y = .80),
+  e_fun = list(x = list(rlnorm_rs),
+               m = list(rexp_rs),
+               y = list(rbeta_rs, shape1 = .5, shape2 = .5)),
+  fit_model_args = list(estimator = "MLR"),
+  target_power = .80,
+  nrep = 600,
+  n = 200,
+  R = 199,
+  seed = 1234
+)
+```
+
+```{r q_fun1}
+q_power_n <- q_power_mediation_simple(
+  a = "m",
+  b = "m",
+  cp = "s",
+  number_of_indicators = c(x = 3,
+                           m = 4,
+                           y = 5),
+  reliability = c(x = .70,
+                  m = .75,
+                  y = .80),
+  e_fun = list(x = list(rlnorm_rs),
+               m = list(rexp_rs),
+               y = list(rbeta_rs, shape1 = .5, shape2 = .5)),
+  fit_model_args = list(estimator = "MLR"),
+  target_power = .80,
+  n = 200,
+  R = 199,
+  x_interval = c(100, 2000),
+  final_nrep = 2000,
+  seed = 1234,
+  mode = "n"
+)
+```
