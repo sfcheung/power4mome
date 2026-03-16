@@ -1,0 +1,515 @@
+---
+title: "Sample Size Determination with Missing Data"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    fig.align: "center"
+    toc: true
+    toc_depth: 2
+    number_sections: false
+bibliography: references.bib
+csl: apa.csl
+---
+
+```{r knitr_setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "",
+  fig.align = "center"
+)
+```
+
+# Introduction
+
+This article illustrates how to
+do power analysis and sample size
+determination in the presence of
+missing data.
+The package
+[power4mome](https://sfcheung.github.io/power4mome/)
+will be used for illustration.
+
+```{r load_pre, child=c("template_n_ins_preamble_prerequisite.txt")}
+```
+
+# Scope
+
+A simple mediation model of observed variables
+will be used as an example. Users new
+to the package are recommended to
+read the [article](articles/template_n_from_power_mediation_obs_simple.html)
+on the steps for a path model with observed variables
+having a multivariate normal distribution
+(the default).
+
+# Set Up the Model and Test
+
+Load the packages first:
+
+```{r load_pkg, message=FALSE}
+library(power4mome)
+```
+
+Estimate the power for a sample size.
+
+The code for the model:
+
+```{r model, eval=TRUE, results="hide", message=FALSE}
+model <-
+"
+m ~ x
+y ~ m + x
+"
+
+model_es <-
+"
+m ~ x: m
+y ~ m: m
+y ~ x: s
+"
+```
+
+```{r n_from_power_mediation_obs_lav_simple, echo = FALSE, fig.cap = "The Model", fig.width = 7, fig.height = 5}
+library(semPlot)
+suppressMessages(library(lavaan))
+mod <-
+"
+m ~ l*x
+y ~ s*m + m*x
+"
+fit0 <- sem(mod, do.fit = FALSE, fixed.x = FALSE)
+set.seed(1234)
+dat <- data.frame(MASS::mvrnorm(100, rep(0, 3), diag(3)))
+colnames(dat) <- lavNames(fit0)
+fit0 <- sem(mod, dat, do.fit = FALSE, fixed.x = FALSE)
+layout_m <- matrix(c(NA, "m", NA,
+                     "x", NA, "y"), 2, 3, byrow = TRUE)
+p <- semPaths(fit0,
+              whatLabels = "label",
+              layout = layout_m,
+              nCharNodes = 0,
+              exoCov = FALSE,
+              edge.label.cex = 1.5,
+              label.cex = 1.8,
+              residuals = FALSE,
+              sizeMan = 10,
+              asize = 10,
+              DoNotPlot = TRUE)
+# p$graphAttributes$Edges$labels <-
+#   c("l\n(large: .50)",
+#     "s\n(small: .10)",
+#     "m\n(medium: .30)")
+p$graphAttributes$Edges$labels <-
+  c("m\n(medium: .30)",
+    "m\n(medium: .30)",
+    "s\n(small: .10)")
+plot(p)
+text(label = "Simple Mediation Model",
+     x = 0, y = -1.3,
+     cex = 2)
+```
+
+Refer to this [article](articles/power4test_latent_mediation.html)
+on how to set `number_of_indicators` and
+`reliability` when calling `power4test()`.
+
+# Specify the Missing Data Mechanism
+
+Suppose that missing data is expected
+before data collection, maybe due to
+the nature of the topic or population.
+To make a realistic
+power analysis and sample size
+determination, the possibility of missing
+data needs to be taken into account.
+
+In real research, it is difficult, sometimes
+impossible, to know in advance (a) the
+missing data mechanism and (b) the proportion
+of missing data.
+
+Nevertheless, for sample size determination
+and power analysis, a reasonable guess based
+on previous studies or researcher's
+expert knowledge would still be useful.
+If necessary, a conservative expectation,
+expecting the worst case scenario,
+can enhance the chance to have a sample
+size with sufficient power, even with missing data.
+
+Although `power4mome` allows users to
+have control many aspects of the missing data
+mechanism [see @enders_applied_2022 for
+a detailed Introduction to the major
+mechanisms, missing completely at random,
+missing at random, and missing not at random]
+as well as the distribution of missing data
+in the data cells, thanks to the excellent
+function `ampute()` from the `mice` package,
+this article illustrates only a simple
+scenario: values are missing completely
+at random (the chance that a value is missing
+does not depend on any variable).
+
+## Data Processor
+
+The package [power4mome](https://sfcheung.github.io/power4mome/) comes with
+some *data processors*,
+functions for processing the generated
+dataset before fitting a model to it.
+A full list of them can
+be found [here](reference/index.html#data-processors).
+
+Power analysis with missing data can be
+conducted through one of the processors,
+`missing_values()`. It processes the generated
+data by introducing missing values (*removing*
+some values by replacing them with `NA`).
+The processed
+dataset, with missing data,
+will then be used instead of the original
+dataset for subsequent analyses, such as model
+fitting and power analysis.
+
+## An Example
+
+Suppose we would like to estimate the
+power to test the indirect effect using
+Monte Carlo confidence interval. Without
+prior knowledge to suggest otherwise,
+we assume that values are
+*missing completely at random* (MCAR).
+To have a conservative estimate of the
+sample size required, we assume that
+about 30% of the case will missing data
+on one variable.
+
+## `missing_values()`
+
+The data processor `missing_values()`
+is a wrapper of `ampute()` from
+the `mice` package, with the default
+values for some arguments different from
+those of `ampute()`. If users adopts
+MCAR, the default, and only want to
+specify the approximate proportion of
+cases with missing data on one variable,
+then only the argument `prop` needs to
+be used.
+
+For details on the missing data generation
+processes and other available options,
+please refer to the help page of
+`missing_values()`, `mice::ampute()`,
+and @schouten_generating_2018.
+
+## Set the Missing Data Mechanism Using `process_data`
+
+This section illustrates how to set up the call to
+`power4test()` using `process_data`
+and `missing_values()`.
+We would
+like to check the model first. Therefore,
+the test of indirect effect is not added
+for now.
+
+```{r check_model, eval=TRUE, results="hide", message=FALSE}
+out <- power4test(
+  nrep = 600,
+  model = model,
+  pop_es = model_es,
+  n = 100,
+  process_data = list(
+      fun = missing_values,
+      args = list(prop = .30)
+    ),
+  iseed = 1234,
+  parallel = TRUE)
+```
+
+### How to Use `process_data` and `missing_values()`
+
+The argument `process_data` is used to specify
+the function, as well as any arguments need,
+to *process* the generated data.
+
+The value must be a named list. The argument
+`fun` is a required argument, which is
+the argument to be used to process the data
+(`missing_values` in the example above).
+
+If additional arguments are to be passed to
+this function, set them to a named list
+for `args`, as shown above.
+
+In the example above, the argument
+`propr` is set, telling `missing_values()`
+the proportion of cases with missing data.
+
+## Check The Generated Data
+
+To print the details of the generated data,
+including the missing data patterns, if any,
+use `print` with `data_long = TRUE`:
+
+```{r model_check, eval=FALSE}
+print(out,
+      data_long = TRUE)
+```
+
+```{r model_check2, echo=FALSE, message=FALSE, results=FALSE}
+tmp <- capture.output(
+print(out,
+      data_long = TRUE)
+)
+```
+
+This is part of the output:
+
+```{r des, echo=FALSE}
+i1 <- which(grepl("Missing Data Pattern", tmp))
+i2 <- which(grepl("- V Prop:", tmp))
+cat(tmp[i1:(i2 + 1)], sep = "\n")
+```
+
+If missing data is presence, the missing data
+patterns will be printed, using `mice::md.pattern()`
+internally. As shown in the output,
+about 30% of cases have missing data
+on one of the variables. The proportions
+are only approximate for each pattern because
+the mechanism is random.
+
+## Fit the Model by Full Information Maximum Likelihood (FIML)
+
+Because of missing data,
+we would like to estimate the power when
+using an estimator that handle missing data. One
+common method used in `lavaan` is FIML
+(full information maximum likelihood).
+
+The argument `fit_model_args` can be use
+to pass arguments, as a named list,
+to the fit function,
+which is `lavaan::sem()` by default.
+
+To use FIML in `lavaan::sem()`, we use
+`missing = "fiml.x"`. `"fiml.x"` can
+be used in this case because `x` is drawn
+from a normal distribution. Therefore, we
+add the argument
+`fit_model_args = list(missing = "fiml.x")`
+in the call to `power4test()`:
+
+```{r add_fit_args, eval=TRUE, results="hide", message=FALSE}
+out <- power4test(
+  nrep = 600,
+  model = model,
+  pop_es = model_es,
+  n = 100,
+  process_data = list(
+      fun = missing_values,
+      args = list(prop = .30)
+    ),
+  fit_model_args = list(missing = "fiml.x"),
+  iseed = 1234,
+  parallel = TRUE)
+```
+
+We can verify that FIML is used by printing the results:
+
+```{r add_fit_args_print, eval=FALSE}
+print(out)
+```
+
+```{r add_fit_args_print2, echo=FALSE, message=FALSE, results=FALSE}
+tmp <- capture.output(
+print(out)
+)
+```
+
+This is part of the output:
+
+```{r add_fit_args_print3, echo=FALSE}
+i1 <- which(grepl("= <fit> =", tmp))
+i2 <- which(grepl("Number of missing patterns", tmp))
+cat(tmp[i1:i2], sep = "\n")
+```
+
+As shown in the printout, FIML was used
+and so `lavaan` also reports the number
+of missing patterns. The sample size
+is the one we specified,
+`r attr(out, "args")$n`, despite missing data,
+confirming that all cases are used when
+fitting the model.
+
+## Add the Test and Estimate Power
+
+We now can add the test and estimate
+power.
+See this [article](articles/template_n_from_power_mediation_lav_simple.html)
+for details on the test function
+`test_indirect_effect()` and how to
+set the argument `test_fun` and `test_args`.
+`R_for_bz(200)` is used to set `R` to the largest
+value less than 200 that is supported by
+the method proposed by @boos_monte_2000.
+^[For tests that use Monte Carlo or bootstrapping
+confidence interval, the method proposed
+by @boos_monte_2000 to use a small number
+of resamples or simulated samples is recommended.
+This can be enabled automatically by setting
+`R` to a supported value. The helper
+`R_for_bz()` can be used. By default, it returns
+the largest supported `R` which is less than
+a target `R`, given a default
+level of significance of .05 (two-tailed).
+For example, `R_for_bz(200)` returns 199.]
+
+```{r test, results=FALSE, message=FALSE}
+out <- power4test(
+  nrep = 600,
+  model = model,
+  pop_es = model_es,
+  n = 100,
+  process_data = list(
+      fun = missing_values,
+      args = list(prop = .30)
+    ),
+  fit_model_args = list(missing = "fiml.x"),
+  R = R_for_bz(200),
+  ci_type = "mc",
+  test_fun = test_indirect_effect,
+  test_args = list(x = "x",
+                   m = "m",
+                   y = "y",
+                   mc_ci = TRUE),
+  iseed = 1234,
+  parallel = TRUE)
+```
+
+The rejection rate (power) for this
+example can be found by `rejection_rates()`:
+
+```{r rejection_test}
+rejection_rates(out)
+```
+
+For comparison, we can estimate the power
+when listwise deletion is used. This is
+the default method of `lavaan::sem()`.
+Therefore, we can rerun the analysis with
+`fit_model_args` removed:
+
+```{r test_list, results=FALSE, message=FALSE}
+out_listwise <- power4test(
+  nrep = 600,
+  model = model,
+  pop_es = model_es,
+  n = 100,
+  process_data = list(
+      fun = missing_values,
+      args = list(prop = .30)
+    ),
+  R = R_for_bz(200),
+  ci_type = "mc",
+  test_fun = test_indirect_effect,
+  test_args = list(x = "x",
+                   m = "m",
+                   y = "y",
+                   mc_ci = TRUE),
+  iseed = 1234,
+  parallel = TRUE)
+```
+
+```{r rejection_test_list}
+rejection_rates(out_listwise)
+```
+
+In this scenario, the power is reduced by
+nearly 10% if listwise deletion is used.
+
+# Using `process_data` in Other Functions
+
+Other functions that make use of
+`power4test()` can also use the
+arguments `process_data` and `fit_model_args`.
+
+For example, the output above, with ordinal
+indicators, can be used directly by
+`n_from_power()` to find a sample size
+given a target power:
+
+```{r n_power, eval=FALSE}
+n_power <- n_from_power(
+              out,
+              target_power = .80,
+              final_nrep = 2000,
+              seed = 1357
+            )
+```
+
+The output with ordinal
+indicators can also be used directly by
+`n_power_region()` to find a region of
+sample sizes
+given a target power:
+
+```{r n_region, eval=FALSE}
+n_power_region <- n_region_from_power(
+                      out,
+                      seed = 1357
+                    )
+```
+
+The quick functions, described
+in these [articles](articles/index.html#common-mediation-models),
+also support the `process_data`
+and `fit_model_args` arguments. They are
+set in the same way as in `power4test()`
+
+This is an example for estimating the power
+for a specific sample size:
+
+```{r q_fun1, eval=FALSE}
+q_power <- q_power_mediation_simple(
+  a = "m",
+  b = "m",
+  cp = "s",
+  process_data = list(
+      fun = missing_values,
+      args = list(prop = .30)
+    ),
+  fit_model_args = list(missing = "fiml.x"),
+  target_power = .80,
+  nrep = 600,
+  n = 100,
+  R = R_for_bz(200),
+  seed = 1234
+)
+```
+
+This is an example of finding a sample
+size given a target power (mode `"n"`):
+
+```{r q_fun2, eval=FALSE}
+q_power_n <- q_power_mediation_simple(
+  a = "m",
+  b = "m",
+  cp = "s",
+  process_data = list(
+      fun = missing_values,
+      args = list(prop = .30)
+    ),
+  fit_model_args = list(missing = "fiml.x"),
+  target_power = .80,
+  R = R_for_bz(200),
+  final_nrep = 2000,
+  seed = 1234,
+  mode = "n"
+)
+```
+
+# Reference(s)
