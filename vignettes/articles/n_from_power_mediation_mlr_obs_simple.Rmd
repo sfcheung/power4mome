@@ -1,6 +1,6 @@
 ---
 title: "Sample Size Determination with Nonnormal Variables: Path Models of Observed Variables"
-date: "2026-03-15"
+date: "2026-03-16"
 output:
   html_document:
     fig.align: "center"
@@ -200,14 +200,15 @@ for now.
 
 
 ``` r
-out <- power4test(nrep = 600,
-                  model = model,
-                  pop_es = model_es,
-                  n = 100,
-                  x_fun = list(x = list(rlnorm_rs),
-                               y = list(rbeta_rs, shape1 = .5, shape2 = .5)),
-                  iseed = 1234,
-                  parallel = TRUE)
+out <- power4test(
+  nrep = 600,
+  model = model,
+  pop_es = model_es,
+  n = 100,
+  x_fun = list(x = list(rlnorm_rs),
+               y = list(rbeta_rs, shape1 = .5, shape2 = .5)),
+  iseed = 1234,
+  parallel = TRUE)
 ```
 
 ### How to Use `x_fun`
@@ -333,15 +334,16 @@ in the call to `power4test()`:
 
 
 ``` r
-out <- power4test(nrep = 600,
-                  model = model,
-                  pop_es = model_es,
-                  n = 100,
-                  x_fun = list(x = list(rlnorm_rs),
-                               y = list(rbeta_rs, shape1 = .5, shape2 = .5)),
-                  fit_model_args = list(estimator = "MLR"),
-                  iseed = 1234,
-                  parallel = TRUE)
+out <- power4test(
+  nrep = 600,
+  model = model,
+  pop_es = model_es,
+  n = 100,
+  x_fun = list(x = list(rlnorm_rs),
+               y = list(rbeta_rs, shape1 = .5, shape2 = .5)),
+  fit_model_args = list(estimator = "MLR"),
+  iseed = 1234,
+  parallel = TRUE)
 ```
 
 We can verify that MLR is used by printing the results:
@@ -402,22 +404,23 @@ For example, `R_for_bz(200)` returns 199.]
 
 
 ``` r
-out <- power4test(nrep = 600,
-                  model = model,
-                  pop_es = model_es,
-                  n = 100,
-                  x_fun = list(x = list(rlnorm_rs),
-                               y = list(rbeta_rs, shape1 = .5, shape2 = .5)),
-                  fit_model_args = list(estimator = "MLR"),
-                  R = R_for_bz(200),
-                  ci_type = "mc",
-                  test_fun = test_indirect_effect,
-                  test_args = list(x = "x",
-                                   m = "m",
-                                   y = "y",
-                                   mc_ci = TRUE),
-                  iseed = 1234,
-                  parallel = TRUE)
+out <- power4test(
+  nrep = 600,
+  model = model,
+  pop_es = model_es,
+  n = 100,
+  x_fun = list(x = list(rlnorm_rs),
+               y = list(rbeta_rs, shape1 = .5, shape2 = .5)),
+  fit_model_args = list(estimator = "MLR"),
+  R = R_for_bz(200),
+  ci_type = "mc",
+  test_fun = test_indirect_effect,
+  test_args = list(x = "x",
+                   m = "m",
+                   y = "y",
+                   mc_ci = TRUE),
+  iseed = 1234,
+  parallel = TRUE)
 ```
 
 The rejection rate (power) for this
@@ -451,11 +454,6 @@ rejection_rates(out)
 Other functions that make use of
 `power4test()` can also use the
 arguments `x_fun` and `fit_model_args`.
-
-For example. the previous output
-of `power4test()`, with `x_fun` and
-`fit_model_args` set, can be used directly
-by `n_from_power()` and `n_region_from_power()`.
 
 For example, the output above, with nonnormal
 variables, can be used directly by
