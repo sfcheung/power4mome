@@ -158,14 +158,15 @@ described above. We would like to check the model first. Therefore, the
 test of indirect effect is not added for now.
 
 ``` r
-out <- power4test(nrep = 600,
-                  model = model,
-                  pop_es = model_es,
-                  n = 100,
-                  x_fun = list(x = list(rlnorm_rs),
-                               y = list(rbeta_rs, shape1 = .5, shape2 = .5)),
-                  iseed = 1234,
-                  parallel = TRUE)
+out <- power4test(
+  nrep = 600,
+  model = model,
+  pop_es = model_es,
+  n = 100,
+  x_fun = list(x = list(rlnorm_rs),
+               y = list(rbeta_rs, shape1 = .5, shape2 = .5)),
+  iseed = 1234,
+  parallel = TRUE)
 ```
 
 #### How to Use `x_fun`
@@ -260,15 +261,16 @@ To use MLR in
 [`power4test()`](https://sfcheung.github.io/power4mome/reference/power4test.md):
 
 ``` r
-out <- power4test(nrep = 600,
-                  model = model,
-                  pop_es = model_es,
-                  n = 100,
-                  x_fun = list(x = list(rlnorm_rs),
-                               y = list(rbeta_rs, shape1 = .5, shape2 = .5)),
-                  fit_model_args = list(estimator = "MLR"),
-                  iseed = 1234,
-                  parallel = TRUE)
+out <- power4test(
+  nrep = 600,
+  model = model,
+  pop_es = model_es,
+  n = 100,
+  x_fun = list(x = list(rlnorm_rs),
+               y = list(rbeta_rs, shape1 = .5, shape2 = .5)),
+  fit_model_args = list(estimator = "MLR"),
+  iseed = 1234,
+  parallel = TRUE)
 ```
 
 We can verify that MLR is used by printing the results:
@@ -308,22 +310,23 @@ is used to set `R` to the largest value less than 200 that is supported
 by the method proposed by Boos & Zhang (2000). [²](#fn2)
 
 ``` r
-out <- power4test(nrep = 600,
-                  model = model,
-                  pop_es = model_es,
-                  n = 100,
-                  x_fun = list(x = list(rlnorm_rs),
-                               y = list(rbeta_rs, shape1 = .5, shape2 = .5)),
-                  fit_model_args = list(estimator = "MLR"),
-                  R = R_for_bz(200),
-                  ci_type = "mc",
-                  test_fun = test_indirect_effect,
-                  test_args = list(x = "x",
-                                   m = "m",
-                                   y = "y",
-                                   mc_ci = TRUE),
-                  iseed = 1234,
-                  parallel = TRUE)
+out <- power4test(
+  nrep = 600,
+  model = model,
+  pop_es = model_es,
+  n = 100,
+  x_fun = list(x = list(rlnorm_rs),
+               y = list(rbeta_rs, shape1 = .5, shape2 = .5)),
+  fit_model_args = list(estimator = "MLR"),
+  R = R_for_bz(200),
+  ci_type = "mc",
+  test_fun = test_indirect_effect,
+  test_args = list(x = "x",
+                   m = "m",
+                   y = "y",
+                   mc_ci = TRUE),
+  iseed = 1234,
+  parallel = TRUE)
 ```
 
 The rejection rate (power) for this example can be found by
@@ -356,13 +359,6 @@ rejection_rates(out)
 Other functions that make use of
 [`power4test()`](https://sfcheung.github.io/power4mome/reference/power4test.md)
 can also use the arguments `x_fun` and `fit_model_args`.
-
-For example. the previous output of
-[`power4test()`](https://sfcheung.github.io/power4mome/reference/power4test.md),
-with `x_fun` and `fit_model_args` set, can be used directly by
-[`n_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md)
-and
-[`n_region_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md).
 
 For example, the output above, with nonnormal variables, can be used
 directly by

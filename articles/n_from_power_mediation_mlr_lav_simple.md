@@ -178,21 +178,22 @@ would like to check the model first. Therefore, the test of indirect
 effect is not added for now.
 
 ``` r
-out <- power4test(nrep = 600,
-                  model = model,
-                  pop_es = model_es,
-                  n = 100,
-                  number_of_indicators = c(x = 4,
-                                           m = 3,
-                                           y = 3),
-                  reliability = c(x = .80,
-                                  m = .70,
-                                  y = .80),
-                  e_fun = list(x = list(rlnorm_rs),
-                               m = list(rexp_rs),
-                               y = list(rbeta_rs, shape1 = .5, shape2 = .5)),
-                  iseed = 1234,
-                  parallel = TRUE)
+out <- power4test(
+  nrep = 600,
+  model = model,
+  pop_es = model_es,
+  n = 100,
+  number_of_indicators = c(x = 4,
+                           m = 3,
+                           y = 3),
+  reliability = c(x = .80,
+                  m = .70,
+                  y = .80),
+  e_fun = list(x = list(rlnorm_rs),
+               m = list(rexp_rs),
+               y = list(rbeta_rs, shape1 = .5, shape2 = .5)),
+  iseed = 1234,
+  parallel = TRUE)
 ```
 
 #### How to Use `e_fun`
@@ -247,7 +248,7 @@ print(out,
 This is part of the output:
 
     #> ==== Descriptive Statistics ====
-    #>
+    #> 
     #>    vars     n  mean   sd  skew kurtosis se
     #> x1    1 60000 -0.01 0.99  1.79    14.19  0
     #> x2    2 60000  0.00 1.01  2.07    17.93  0
@@ -291,22 +292,23 @@ To use MLR in
 [`power4test()`](https://sfcheung.github.io/power4mome/reference/power4test.md):
 
 ``` r
-out <- power4test(nrep = 600,
-                  model = model,
-                  pop_es = model_es,
-                  n = 100,
-                  number_of_indicators = c(x = 4,
-                                           m = 3,
-                                           y = 3),
-                  reliability = c(x = .80,
-                                  m = .70,
-                                  y = .80),
-                  e_fun = list(x = list(rlnorm_rs),
-                               m = list(rexp_rs),
-                               y = list(rbeta_rs, shape1 = .5, shape2 = .5)),
-                  fit_model_args = list(estimator = "MLR"),
-                  iseed = 1234,
-                  parallel = TRUE)
+out <- power4test(
+  nrep = 600,
+  model = model,
+  pop_es = model_es,
+  n = 100,
+  number_of_indicators = c(x = 4,
+                           m = 3,
+                           y = 3),
+  reliability = c(x = .80,
+                  m = .70,
+                  y = .80),
+  e_fun = list(x = list(rlnorm_rs),
+               m = list(rexp_rs),
+               y = list(rbeta_rs, shape1 = .5, shape2 = .5)),
+  fit_model_args = list(estimator = "MLR"),
+  iseed = 1234,
+  parallel = TRUE)
 ```
 
 We can verify that MLR is used by printing the results:
@@ -318,15 +320,15 @@ print(out)
 This is part of the output:
 
     #> ============ <fit> ============
-    #>
+    #> 
     #> lavaan 0.6-21 ended normally after 30 iterations
-    #>
+    #> 
     #>   Estimator                                         ML
     #>   Optimization method                           NLMINB
     #>   Number of model parameters                        23
-    #>
+    #> 
     #>   Number of observations                           100
-    #>
+    #> 
     #> Model Test User Model:
     #>                                               Standard      Scaled
     #>   Test Statistic                                22.444      23.597
@@ -349,29 +351,30 @@ is used to set `R` to the largest value less than 200 that is supported
 by the method proposed by Boos & Zhang (2000). [¹](#fn1)
 
 ``` r
-out <- power4test(nrep = 600,
-                  model = model,
-                  pop_es = model_es,
-                  n = 100,
-                  number_of_indicators = c(x = 4,
-                                           m = 3,
-                                           y = 3),
-                  reliability = c(x = .80,
-                                  m = .70,
-                                  y = .80),
-                  e_fun = list(x = list(rlnorm_rs),
-                               m = list(rexp_rs),
-                               y = list(rbeta_rs, shape1 = .5, shape2 = .5)),
-                  fit_model_args = list(estimator = "MLR"),
-                  R = R_for_bz(200),
-                  ci_type = "mc",
-                  test_fun = test_indirect_effect,
-                  test_args = list(x = "x",
-                                   m = "m",
-                                   y = "y",
-                                   mc_ci = TRUE),
-                  iseed = 1234,
-                  parallel = TRUE)
+out <- power4test(
+  nrep = 600,
+  model = model,
+  pop_es = model_es,
+  n = 100,
+  number_of_indicators = c(x = 4,
+                           m = 3,
+                           y = 3),
+  reliability = c(x = .80,
+                  m = .70,
+                  y = .80),
+  e_fun = list(x = list(rlnorm_rs),
+               m = list(rexp_rs),
+               y = list(rbeta_rs, shape1 = .5, shape2 = .5)),
+  fit_model_args = list(estimator = "MLR"),
+  R = R_for_bz(200),
+  ci_type = "mc",
+  test_fun = test_indirect_effect,
+  test_args = list(x = "x",
+                   m = "m",
+                   y = "y",
+                   mc_ci = TRUE),
+  iseed = 1234,
+  parallel = TRUE)
 ```
 
 The rejection rate (power) for this example can be found by
@@ -379,8 +382,8 @@ The rejection rate (power) for this example can be found by
 
 ``` r
 rejection_rates(out)
-#> [test]: test_indirect: x->m->y
-#> [test_label]: Test
+#> [test]: test_indirect: x->m->y 
+#> [test_label]: Test 
 #>     est   p.v reject r.cilo r.cihi
 #> 1 0.098 0.993  0.244  0.212  0.281
 #> Notes:
@@ -404,13 +407,6 @@ rejection_rates(out)
 Other functions that make use of
 [`power4test()`](https://sfcheung.github.io/power4mome/reference/power4test.md)
 can also use the arguments `e_fun` and `fit_model_args`.
-
-For example. the previous output of
-[`power4test()`](https://sfcheung.github.io/power4mome/reference/power4test.md),
-with `e_fun` and `fit_model_args` set, can be used directly by
-[`n_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md)
-and
-[`n_region_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md).
 
 For example, the output above, with nonnormal indicators, can be used
 directly by
@@ -451,11 +447,11 @@ q_power <- q_power_mediation_simple(
   a = "m",
   b = "m",
   cp = "s",
-  number_of_indicators = c(x = 3,
-                           m = 4,
-                           y = 5),
-  reliability = c(x = .70,
-                  m = .75,
+  number_of_indicators = c(x = 4,
+                           m = 3,
+                           y = 3),
+  reliability = c(x = .80,
+                  m = .70,
                   y = .80),
   e_fun = list(x = list(rlnorm_rs),
                m = list(rexp_rs),
@@ -463,7 +459,7 @@ q_power <- q_power_mediation_simple(
   fit_model_args = list(estimator = "MLR"),
   target_power = .80,
   nrep = 600,
-  n = 200,
+  n = 100,
   R = R_for_bz(200),
   seed = 1234
 )
@@ -477,11 +473,11 @@ q_power_n <- q_power_mediation_simple(
   a = "m",
   b = "m",
   cp = "s",
-  number_of_indicators = c(x = 3,
-                           m = 4,
-                           y = 5),
-  reliability = c(x = .70,
-                  m = .75,
+  number_of_indicators = c(x = 4,
+                           m = 3,
+                           y = 3),
+  reliability = c(x = .80,
+                  m = .70,
                   y = .80),
   e_fun = list(x = list(rlnorm_rs),
                m = list(rexp_rs),

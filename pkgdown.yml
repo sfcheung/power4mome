@@ -4,6 +4,7 @@ pkgdown_sha: ~
 articles:
   articles/n_from_power_mediation_mlr_lav_simple: n_from_power_mediation_mlr_lav_simple.html
   articles/n_from_power_mediation_mlr_obs_simple: n_from_power_mediation_mlr_obs_simple.html
+  articles/n_from_power_mediation_ordinal_lav_simple: n_from_power_mediation_ordinal_lav_simple.html
   power4mome: power4mome.html
   power4test_latent_mediation: power4test_latent_mediation.html
   articles/power4test_workflow: power4test_workflow.html
@@ -35,7 +36,7 @@ articles:
   articles/x_from_power_workflow_bisection: x_from_power_workflow_bisection.html
   articles/x_from_power_workflow_pba: x_from_power_workflow_pba.html
   articles/x_from_power_workflow_power_curve: x_from_power_workflow_power_curve.html
-last_built: 2026-03-15T16:05Z
+last_built: 2026-03-16T12:37Z
 urls:
   reference: https://sfcheung.github.io/power4mome/reference
   article: https://sfcheung.github.io/power4mome/articles
