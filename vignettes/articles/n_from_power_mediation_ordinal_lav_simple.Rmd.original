@@ -1,5 +1,5 @@
 ---
-title: "Sample Size Determination with Nonnormal Variables: Latent Variable Models"
+title: "Sample Size Determination with Ordinal Variables: Latent Variable Models"
 date: "`r Sys.Date()`"
 output:
   html_document:
@@ -26,9 +26,10 @@ This article illustrates how to
 do power analysis and sample size
 determination in
 some typical latent variable models, with the variables
-hypothesized to be nonnormally distributed
+being ordinal (e.g., true-false binary
+items, or 5-point Likert scale items)
 and the model to be estimated using
-robust methods such as MLR in `lavaan`.
+methods such as MLR or DWLS in `lavaan`.
 The package
 [power4mome](https://sfcheung.github.io/power4mome/)
 will be used for illustration.
@@ -73,7 +74,7 @@ y ~ x: s
 "
 ```
 
-```{r n_from_power_mediation_mlr_lav_simple, echo = FALSE, fig.cap = "The Model", fig.width = 7, fig.height = 5}
+```{r n_from_power_mediation_ordinal_lav_simple, echo = FALSE, fig.cap = "The Model", fig.width = 7, fig.height = 5}
 # knitr::opts_chunk$set(dpi = 300, dev.args = list(png = list(type = "cairo")))
 library(semPlot)
 library(semptools)
@@ -130,107 +131,64 @@ Refer to this [article](articles/power4test_latent_mediation.html)
 on how to set `number_of_indicators` and
 `reliability` when calling `power4test()`.
 
-# Specify the Distributions
+# Convert the Continuous Variables to Ordinal Variables
 
-Suppose that we expect the error
-terms of the indicators are not normally
-distributed. For example, they represent
-attributes that are positively skewed,
-with people likely to be below the mean
-while some cases are far away from the
-mean. Without real data, it is difficult
-to know the actual distribution. Nevertheless,
-we can select a distribution that reasonably
-approximate the expected distribution of the error
-terms.
+Suppose that we know in advance the indicators
+collect data in ordinal format, such as
+binary items (true-false) or 5-point items,
+although the underlying distributions are
+assumed to be multivariate normal, as is usually
+the case for this kind of data. In `lavaan`,
+it is common to set `ordered = TRUE` and
+fit the model using DWLS (or WLSMV in Mplus literature),
+or using MLR for items with five or more
+categories, such as Likert scale items.
+We would like to have an accurate assessment
+of the power and sample size requirements
+by taking these into account.
 
-## Built-In Functions For Random Numbers
+## Data Processor
 
 The package [power4mome](https://sfcheung.github.io/power4mome/) comes with
-some ready-to-use function for generating
-random error. A full list of them can
-be found [here](reference/index.html#generate-random-numbers).
-To be used in `power4test()`, these functions
-need to have the distribution standardized
-such that the population mean and standard
-deviation are 0 and 1, respectively. All
-the build-in functions already have the distributions
-standardized.
+some *data processors*,
+functions for processing the generated
+dataset before fitting a model to it.
+A full list of them can
+be found [here](reference/index.html#data-processors).
 
-For example, the function `rexp_rs()`
-can be used to approximate a heavily
-positively skewed distribution. The
-function used is `stats::rexp()` from
-base R, but, by default, the distribution is transformed
-such that the population mean and standard
-deviation are 0 and 1, respectively.
+For example, the function `ordinal_variables()`
+can be used to convert a generated variable,
+drawn from a multivariate normal distribution
+by default, to a variable with two or more
+categories, using some thresholds (*k - 1*
+thresholds for *k* categories). The processed
+dataset will be used instead of the original
+dataset for subsequent analyses, such as model
+fitting and power analysis.
 
 ## An Example
 
-Suppose we would like to estimate the
-power to test the indirect effect using
-Monte Carlo confidence interval. We expect
-that the indicators are nonnormally distributed.
-For the sake of illustration, the following
-distributions hypothesized for
-the indicators of `x`, `m`, and `y`.
+Suppose we know in advance that the
+indicators of `x` and `y` are binary
+indicators, and the indicators of
+`m` are 5-point Likert scale indicators.
+We have no special reason to assume that
+distribution is skewed, and so a symmetric
+conversion will be conducted. Although
+users can specify the thresholds they would
+like to use, a collection of built-in
+patterns based on @savalei_performance_2013
+can be selected using a keyword, as shown
+below. Please refer to the help page
+of `ordinal_variables()` for the list of
+supported patterns.
 
-### The Indicators of `x`
-
-For the indicators of `x`, the distribution
-is severely positively skewed, generated
-from a lognormal distribution using `rlnorm_rs()`.
-This is an illustration of the distribution:
-
-```{r x_dist}
-set.seed(1234)
-x_e <- rlnorm_rs(10000)
-hist(x_e)
-```
-
-### The Indicators of `m`
-
-The distribution of the error terms
-of `m` is assumed to be positively skewed, but not
-as severe as that of `x`. We use `rexp_rs()`
-to simulate this distribution:
-
-```{r m_dist}
-set.seed(1234)
-m_e <- rexp_rs(10000)
-hist(m_e)
-```
-
-### The Indicators of `y`
-
-Last, let's assume that the distribution
-of the error terms the indicators
-of `y` is bounded and is bimodal. We
-we `rbeta_rs()` to simulate this distribution,
-setting the parameters `shape1` and `shape2`
-to create the bimodal distribution:
-
-```{r y_dist}
-set.seed(1234)
-y_e <- rbeta_rs(10000,
-                shape1 = .5,
-                shape2 = .5)
-hist(y_e)
-```
-
-In real data, we may not have a situation
-as complicated as this one. For example,
-all error terms are assumed to be normally distributed,
-except for the indicators of one or two
-latent factor.
-These distributions are used just to illustrate
-how to use the arguments.
-
-## Set the Distributions of Error Terms by `e_fun`
+## Set the Conversion Using `process_data`
 
 This section illustrates how to set up the call to
-`power4test()`, with error terms generated
-using the distributions described above. We would
+`power4test()` using `process_data`
+and `ordinal_variables()`.
+We would
 like to check the model first. Therefore,
 the test of indirect effect is not added
 for now.
@@ -240,68 +198,65 @@ out <- power4test(
   nrep = 600,
   model = model,
   pop_es = model_es,
-  n = 100,
+  n = 200,
   number_of_indicators = c(x = 4,
                            m = 3,
                            y = 3),
   reliability = c(x = .80,
                   m = .70,
                   y = .80),
-  e_fun = list(x = list(rlnorm_rs),
-               m = list(rexp_rs),
-               y = list(rbeta_rs, shape1 = .5, shape2 = .5)),
+  process_data = list(
+      fun = ordinal_variables,
+      args = list(cut_patterns = c(x = "s2",
+                                   y = "s2",
+                                   m = "s5"))
+    ),
   iseed = 1234,
   parallel = TRUE)
 ```
 
-### How to Use `e_fun`
+Note that `reliability` refer to the
+population reliability coefficients of
+the scale of a factor *before* the variables
+are converted to ordinal variables.
 
-The argument `e_fun` is used to specify
-the function used to generate the error terms
-of indicators.
+### How to Use `process_data` and `ordinal_variables()`
 
-The value must be a named list, with the name
-being one of the latent variables (`x`, `m`, and `y`
-in this example).
+The argument `process_data` is used to specify
+the function, as well as any arguments need,
+to *process* the generated data.
 
-Each element must itself a list, with
-the first argument is the function to be used.
+The value must be a named list. The argument
+`fun` is a required argument, which is
+the argument to be used to process the data
+(`ordinal_variables` in the example above).
 
-- For example, `m = list(rexp_rs)` indicates
-  that the function `rexp_rs` will be used
-  to generate the error terms of `m`.
+If additional arguments are to be passed to
+this function, set them to a named list
+for `args`, as shown above.
 
-If there are additional arguments to be
-passed to this function, include them as
-named arguments in the list.
+In the example above, the argument
+`cut_patterns` is set, telling `ordinal_variables()`
+how the variables are to be converted.
+The value of `cut_patterns` can be
+named vector, with the names being the names
+of the *latent factors*, and the value
+the names of the built-in patterns to be used.
 
-- For example, `y = list(rbeta_rs, shape1 = .5, shape2 = .5)`
-  indicates that `rbeta_rs` will be used to
-  generate the error terms, and the arguments
-  `shape1` and `shape2` will both be set .5.
+In the example above, `"s2"` is a symmetric
+conversion, cutting the continuous variables
+into two values with a threshold of 0.
+`"s5"` is a symmetric conversion, cutting
+the continuous variables into five values
+with the thresholds -1.5, -0.5, 0.5, and 1.5.
+These thresholds are those used in
+the simulation study by @savalei_performance_2013
+on ordinal variables in structural
+equation modeling.
 
 If a latent factor is not included in
-the list for `e_fun`, the default distribution
-used a normal distribution.
-
-### Functions That `e_fun` Can Use
-
-In principle, any function can be used
-to generate the numbers for the error terms,
-as long as it meets these requirements:
-
-- It has an argument named `n`, the number
-  of random numbers to be generated.
-
-- It returns a numeric vector.
-
-Though no error will be returned, to
-ensure that the population standardized
-coefficients are of the specified values,
-the function for `e_fun` should generate
-numbers from a population with mean and
-standard deviation equal to 0 and 1,
-respectively.
+`cut_patterns`, then its indicator scores
+will not be converted.
 
 ## Check The Generated Data
 
@@ -330,43 +285,42 @@ i2 <- i2[which(i2 > (i1 + 2))][1]
 cat(tmp[i1:i2], sep = "\n")
 ```
 
-The descriptive statistics shows that
-the distributions of the indicators are
-not normal. As expected, those of `x` and `m` are positively
-skewed, while those of `y` are nearly symmetric
-but light tailed.
+By default, values of 1, 2, ... will
+be used for the categories. The values
+assigned does not matter when ordinal
+variable methods are used. For the estimation
+of power, the values also do not matter
+if the power of a method is invariant
+to linear transformation of the variables,
+which is usually the case for most common
+tests.
 
-Note that, the distribution of an indicator
-depends on both the latent factors and
-and the error terms, as well as the factor
-loadings. For example, the
-distributions of the error terms of `m`
-are less skewed than that of an exponential
-distribution because the latent factor,
-`m`, is normally distributed.
+If necessary, the data generated can be
+retrieved by `pool_sim_data()` and
+inspected directly:
 
-## Fit the Model by MLR (Robust Maximum Likelihood)
+```{r}
+dat <- pool_sim_data(out)
+head(dat, 10)
+```
 
-Because of the nonnormal distribution,
+## Fit the Model by DWLS Using `ordered = TRUE`
+
+Because of the ordinal nature,
 we would like to estimate the power when
-a robust estimation method is used. One
-common method used in `lavaan` is MLR.
-Although this method and the default,
-maximum likelihood (ML), yield the same
-point estimates, their standard errors are
-different. Therefore, the results from
-Monte Carlo confidence intervals are also
-different.
+a proper estimation method is used. One
+common method used in `lavaan` is DWLS,
+which can be enabled by adding `ordered = TRUE`.
 
 The argument `fit_model_args` can be use
 to pass arguments, as a named list,
 to the fit function,
 which is `lavaan::sem()` by default.
 
-To use MLR in `lavaan::sem()`, we use
-`estimator = "MLR"`. Therefore, we
+To use DWLS in `lavaan::sem()`, we use
+`ordered = TRUE`. Therefore, we
 add the argument
-`fit_model_args = list(estimator = "MLR")`
+`fit_model_args = list(ordered = TRUE)`
 in the call to `power4test()`:
 
 ```{r add_fit_args, eval=TRUE, results="hide", message=FALSE}
@@ -374,22 +328,25 @@ out <- power4test(
   nrep = 600,
   model = model,
   pop_es = model_es,
-  n = 100,
+  n = 200,
   number_of_indicators = c(x = 4,
                            m = 3,
                            y = 3),
   reliability = c(x = .80,
                   m = .70,
                   y = .80),
-  e_fun = list(x = list(rlnorm_rs),
-               m = list(rexp_rs),
-               y = list(rbeta_rs, shape1 = .5, shape2 = .5)),
-  fit_model_args = list(estimator = "MLR"),
+  process_data = list(
+      fun = ordinal_variables,
+      args = list(cut_patterns = c(x = "s2",
+                                   y = "s2",
+                                   m = "s5"))
+    ),
+  fit_model_args = list(ordered = TRUE),
   iseed = 1234,
   parallel = TRUE)
 ```
 
-We can verify that MLR is used by printing the results:
+We can verify that DWLS is used by printing the results:
 
 ```{r add_fit_args_print, eval=FALSE}
 print(out)
@@ -405,12 +362,12 @@ This is part of the output:
 
 ```{r add_fit_args_print3, echo=FALSE}
 i1 <- which(grepl("= <fit> =", tmp))
-i2 <- which(grepl("Yuan-Bentler correction", tmp))
+i2 <- which(grepl("simple second-order", tmp))
 cat(tmp[i1:i2], sep = "\n")
 ```
 
-As shown in the printout, MLR was used
-and so there is a column `Scaled` in the
+As shown in the printout, DWLS was used
+as the estimator in the
 printout of `lavaan`.
 
 ## Add the Test and Estimate Power
@@ -441,17 +398,20 @@ out <- power4test(
   nrep = 600,
   model = model,
   pop_es = model_es,
-  n = 100,
+  n = 200,
   number_of_indicators = c(x = 4,
                            m = 3,
                            y = 3),
   reliability = c(x = .80,
                   m = .70,
                   y = .80),
-  e_fun = list(x = list(rlnorm_rs),
-               m = list(rexp_rs),
-               y = list(rbeta_rs, shape1 = .5, shape2 = .5)),
-  fit_model_args = list(estimator = "MLR"),
+  process_data = list(
+      fun = ordinal_variables,
+      args = list(cut_patterns = c(x = "s2",
+                                   y = "s2",
+                                   m = "s5"))
+    ),
+  fit_model_args = list(ordered = TRUE),
   R = R_for_bz(200),
   ci_type = "mc",
   test_fun = test_indirect_effect,
@@ -470,13 +430,13 @@ example can be found by `rejection_rates()`:
 rejection_rates(out)
 ```
 
-# Using `e_fun` in Other Functions
+# Using `process_data` in Other Functions
 
 Other functions that make use of
 `power4test()` can also use the
-arguments `e_fun` and `fit_model_args`.
+arguments `process_data` and `fit_model_args`.
 
-For example, the output above, with nonnormal
+For example, the output above, with ordinal
 indicators, can be used directly by
 `n_from_power()` to find a sample size
 given a target power:
@@ -485,13 +445,13 @@ given a target power:
 n_power <- n_from_power(
               out,
               target_power = .80,
-              x_interval = c(100, 2000),
+              x_interval = c(200, 2000),
               final_nrep = 2000,
               seed = 1357
             )
 ```
 
-The output with nonnormal
+The output with ordinal
 indicators can also be used directly by
 `n_power_region()` to find a region of
 sample sizes
@@ -506,7 +466,7 @@ n_power_region <- n_region_from_power(
 
 The quick functions, described
 in these [articles](articles/index.html#common-mediation-models),
-also support the `e_fun`
+also support the `process_data`
 and `fit_model_args` arguments. They are
 set in the same way as in `power4test()`
 
@@ -524,13 +484,16 @@ q_power <- q_power_mediation_simple(
   reliability = c(x = .80,
                   m = .70,
                   y = .80),
-  e_fun = list(x = list(rlnorm_rs),
-               m = list(rexp_rs),
-               y = list(rbeta_rs, shape1 = .5, shape2 = .5)),
-  fit_model_args = list(estimator = "MLR"),
+  process_data = list(
+      fun = ordinal_variables,
+      args = list(cut_patterns = c(x = "s2",
+                                   y = "s2",
+                                   m = "s5"))
+    ),
+  fit_model_args = list(ordered = TRUE),
   target_power = .80,
   nrep = 600,
-  n = 100,
+  n = 200,
   R = R_for_bz(200),
   seed = 1234
 )
@@ -550,13 +513,16 @@ q_power_n <- q_power_mediation_simple(
   reliability = c(x = .80,
                   m = .70,
                   y = .80),
-  e_fun = list(x = list(rlnorm_rs),
-               m = list(rexp_rs),
-               y = list(rbeta_rs, shape1 = .5, shape2 = .5)),
-  fit_model_args = list(estimator = "MLR"),
+  process_data = list(
+      fun = ordinal_variables,
+      args = list(cut_patterns = c(x = "s2",
+                                   y = "s2",
+                                   m = "s5"))
+    ),
+  fit_model_args = list(ordered = TRUE),
   target_power = .80,
   R = R_for_bz(200),
-  x_interval = c(100, 2000),
+  x_interval = c(200, 2000),
   final_nrep = 2000,
   seed = 1234,
   mode = "n"
