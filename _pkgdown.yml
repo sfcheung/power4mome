@@ -78,6 +78,7 @@ articles:
   contents:
   - articles/n_from_power_mediation_mlr_lav_simple
   - articles/n_from_power_mediation_mlr_obs_simple
+  - articles/n_from_power_mediation_ordinal_lav_simple
 
 - title: Technical Appendices
   contents:

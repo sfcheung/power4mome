@@ -50,6 +50,7 @@ knitr::knit("template_n_from_power_mome_obs_b.Rmd.original", output = "template_
 
 knitr::knit("n_from_power_mediation_mlr_lav_simple.Rmd.original", output = "n_from_power_mediation_mlr_lav_simple.Rmd", envir = new.env())
 knitr::knit("n_from_power_mediation_mlr_obs_simple.Rmd.original", output = "n_from_power_mediation_mlr_obs_simple.Rmd", envir = new.env())
+knitr::knit("n_from_power_mediation_ordinal_lav_simple.Rmd.original", output = "n_from_power_mediation_ordinal_lav_simple.Rmd", envir = new.env())
 
 pkgdown::build_articles("../.."); pkgdown::preview_site("../..")
 
