@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Sample Size Determination with Nonnormal Variables: Path Models of Observed Variables • power4mome</title>
+<title>Sample Size Determination with Missing Data • power4mome</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="../favicon-96x96.png">
 <link rel="icon" type="”image/svg+xml”" href="../favicon.svg">
 <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
@@ -17,7 +17,7 @@
 <link href="../deps/Oxygen_Mono-0.4.10/font.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Sample Size Determination with Nonnormal Variables: Path Models of Observed Variables">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Sample Size Determination with Missing Data">
 <meta name="google-site-verification" content="0VLBmFnW_UJFI-7gXnORPBsWxqZwmzuGpK-TeVRLBjQ">
 </head>
 <body>
@@ -102,12 +102,12 @@
 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>Sample Size Determination with Nonnormal Variables: Path Models of Observed Variables</h1>
+      <img src="../logo.png" class="logo" alt=""><h1>Sample Size Determination with Missing Data</h1>
             
             <h4 data-toc-skip class="date">2026-03-16</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/sfcheung/power4mome/blob/main/vignettes/articles/n_from_power_mediation_mlr_obs_simple.Rmd" class="external-link"><code>vignettes/articles/n_from_power_mediation_mlr_obs_simple.Rmd</code></a></small>
-      <div class="d-none name"><code>n_from_power_mediation_mlr_obs_simple.Rmd</code></div>
+      <small class="dont-index">Source: <a href="https://github.com/sfcheung/power4mome/blob/main/vignettes/articles/n_from_power_mediation_missing_obs_simple.Rmd" class="external-link"><code>vignettes/articles/n_from_power_mediation_missing_obs_simple.Rmd</code></a></small>
+      <div class="d-none name"><code>n_from_power_mediation_missing_obs_simple.Rmd</code></div>
     </div>
 
     
@@ -116,11 +116,8 @@
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
 <p>This article illustrates how to do power analysis and sample size
-determination in some typical observed variable path models, with the
-variables hypothesized to be nonnormally distributed and the model to be
-estimated using robust methods such as MLR in <code>lavaan</code>. The
-package <a href="https://sfcheung.github.io/power4mome/">power4mome</a>
-will be used for illustration.</p>
+determination in the presence of missing data. The package <a href="https://sfcheung.github.io/power4mome/">power4mome</a> will be
+used for illustration.</p>
 </div>
 <div class="section level2">
 <h2 id="prerequisite">Prerequisite<a class="anchor" aria-label="anchor" href="#prerequisite"></a>
@@ -175,220 +172,182 @@ set <code>number_of_indicators</code> and <code>reliability</code> when
 calling <code><a href="../reference/power4test.html">power4test()</a></code>.</p>
 </div>
 <div class="section level2">
-<h2 id="specify-the-distributions">Specify the Distributions<a class="anchor" aria-label="anchor" href="#specify-the-distributions"></a>
+<h2 id="specify-the-missing-data-mechanism">Specify the Missing Data Mechanism<a class="anchor" aria-label="anchor" href="#specify-the-missing-data-mechanism"></a>
 </h2>
-<p>Suppose that we expect the predictor (<code>x</code>) has a uniform
-distribution because cases were sample more or less evenly across a
-range of values of <code>x</code>. Moreover, the outcome variable
-(<code>y</code>) is a measure of a mental health problem and so its
-error term is positively skewed.<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content="&lt;p&gt;Note: In a path model, the distribution of an endogenous
-variable is determined jointly by its predictors and its error term, and
-so its distribution cannot be specified directly.&lt;/p&gt;"><sup>1</sup></a></p>
-<p>Without real data, it is difficult to know the actual distribution.
-Nevertheless, we can select a distribution that reasonably approximate
-the expected distribution of a variable or an error term.</p>
+<p>Suppose that missing data is expected before data collection, maybe
+due to the nature of the topic or population. To make a realistic power
+analysis and sample size determination, the possibility of missing data
+needs to be taken into account.</p>
+<p>In real research, it is difficult, sometimes impossible, to know in
+advance (a) the missing data mechanism and (b) the proportion of missing
+data.</p>
+<p>Nevertheless, for sample size determination and power analysis, a
+reasonable guess based on previous studies or researcher’s expert
+knowledge would still be useful. If necessary, a conservative
+expectation, expecting the worst case scenario, can enhance the chance
+to have a sample size with sufficient power, even with missing data.</p>
+<p>Although <code>power4mome</code> allows users to have control many
+aspects of the missing data mechanism <span class="citation">(see
+Enders, 2022 for a detailed Introduction to the major mechanisms,
+missing completely at random, missing at random, and missing not at
+random)</span> as well as the distribution of missing data in the data
+cells, thanks to the excellent function <code>ampute()</code> from the
+<code>mice</code> package, this article illustrates only a simple
+scenario: values are missing completely at random (the chance that a
+value is missing does not depend on any variable).</p>
 <div class="section level3">
-<h3 id="built-in-functions-for-random-numbers">Built-In Functions For Random Numbers<a class="anchor" aria-label="anchor" href="#built-in-functions-for-random-numbers"></a>
+<h3 id="data-processor">Data Processor<a class="anchor" aria-label="anchor" href="#data-processor"></a>
 </h3>
 <p>The package <a href="https://sfcheung.github.io/power4mome/">power4mome</a> comes with
-some ready-to-use function for generating random error. A full list of
-them can be found <a href="reference/index.html#generate-random-numbers">here</a>. To be used
-in <code><a href="../reference/power4test.html">power4test()</a></code>, these functions need to have the
-distribution standardized such that the population mean and standard
-deviation are 0 and 1, respectively. All the build-in functions already
-have the distributions standardized.</p>
-<p>For example, the function <code><a href="../reference/rexp_rs.html">rexp_rs()</a></code> can be used to
-approximate a heavily positively skewed distribution. The function used
-is <code><a href="https://rdrr.io/r/stats/Exponential.html" class="external-link">stats::rexp()</a></code> from base R, but, by default, the
-distribution is transformed such that the population mean and standard
-deviation are 0 and 1, respectively.</p>
+some <em>data processors</em>, functions for processing the generated
+dataset before fitting a model to it. A full list of them can be found
+<a href="reference/index.html#data-processors">here</a>.</p>
+<p>Power analysis with missing data can be conducted through one of the
+processors, <code><a href="../reference/missing_values.html">missing_values()</a></code>. It processes the generated
+data by introducing missing values (<em>removing</em> some values by
+replacing them with <code>NA</code>). The processed dataset, with
+missing data, will then be used instead of the original dataset for
+subsequent analyses, such as model fitting and power analysis.</p>
 </div>
 <div class="section level3">
 <h3 id="an-example">An Example<a class="anchor" aria-label="anchor" href="#an-example"></a>
 </h3>
 <p>Suppose we would like to estimate the power to test the indirect
-effect using Monte Carlo confidence interval. We expect that one or more
-observed variable or error term is not normally distributed. For the
-sake of illustration, the following distributions hypothesized for the
-<code>x</code> and the error term of <code>y</code>.</p>
-<div class="section level4">
-<h4 id="the-distribution-of-x">The Distribution of <code>x</code><a class="anchor" aria-label="anchor" href="#the-distribution-of-x"></a>
-</h4>
-<p>Let’s assume that the distribution of <code>x</code> is a severely
-positively skewed distribution. This can be simulated by the function
-<code><a href="../reference/rlnorm_rs.html">rlnorm_rs()</a></code>. This is an illustration of the
-distribution:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
-<span><span class="va">x_dist</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rlnorm_rs.html">rlnorm_rs</a></span><span class="op">(</span><span class="fl">10000</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist</a></span><span class="op">(</span><span class="va">x_dist</span><span class="op">)</span></span></code></pre></div>
-<div class="figure" style="text-align: center">
-<img src="x_dist_obs-1.png" alt="plot of chunk x_dist_obs"><p class="caption">
-plot of chunk x_dist_obs
-</p>
-</div>
-</div>
-<div class="section level4">
-<h4 id="the-distribution-of-the-error-term-of-y">The Distribution of the Error Term of <code>y</code><a class="anchor" aria-label="anchor" href="#the-distribution-of-the-error-term-of-y"></a>
-</h4>
-<p>Last, let’s assume that the distribution of the error terms of
-<code>y</code> is bounded and is bimodal. We we <code><a href="../reference/rbeta_rs.html">rbeta_rs()</a></code>
-to simulate this distribution, setting the parameters
-<code>shape1</code> and <code>shape2</code> to create the bimodal
-distribution:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
-<span><span class="va">y_e</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rbeta_rs.html">rbeta_rs</a></span><span class="op">(</span><span class="fl">10000</span>,</span>
-<span>                shape1 <span class="op">=</span> <span class="fl">.5</span>,</span>
-<span>                shape2 <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist</a></span><span class="op">(</span><span class="va">y_e</span><span class="op">)</span></span></code></pre></div>
-<div class="figure" style="text-align: center">
-<img src="y_e_obs-1.png" alt="plot of chunk y_e_obs"><p class="caption">
-plot of chunk y_e_obs
-</p>
-</div>
-</div>
+effect using Monte Carlo confidence interval. Without prior knowledge to
+suggest otherwise, we assume that values are <em>missing completely at
+random</em> (MCAR). To have a conservative estimate of the sample size
+required, we assume that about 30% of the case will missing data on one
+variable.</p>
 </div>
 <div class="section level3">
-<h3 id="set-the-distributions-by-x_fun">Set the Distributions by <code>x_fun</code><a class="anchor" aria-label="anchor" href="#set-the-distributions-by-x_fun"></a>
+<h3 id="missing_values">
+<code>missing_values()</code><a class="anchor" aria-label="anchor" href="#missing_values"></a>
+</h3>
+<p>The data processor <code><a href="../reference/missing_values.html">missing_values()</a></code> is a wrapper of
+<code>ampute()</code> from the <code>mice</code> package, with the
+default values for some arguments different from those of
+<code>ampute()</code>. If users adopts MCAR, the default, and only want
+to specify the approximate proportion of cases with missing data on one
+variable, then only the argument <code>prop</code> needs to be used.</p>
+<p>For details on the missing data generation processes and other
+available options, please refer to the help page of
+<code><a href="../reference/missing_values.html">missing_values()</a></code>, <code><a href="https://amices.org/mice/reference/ampute.html" class="external-link">mice::ampute()</a></code>, and <span class="citation">Schouten et al. (2018)</span>.</p>
+</div>
+<div class="section level3">
+<h3 id="set-the-missing-data-mechanism-using-process_data">Set the Missing Data Mechanism Using <code>process_data</code><a class="anchor" aria-label="anchor" href="#set-the-missing-data-mechanism-using-process_data"></a>
 </h3>
 <p>This section illustrates how to set up the call to
-<code><a href="../reference/power4test.html">power4test()</a></code>, with observed variables or error terms
-generated using the distributions described above. We would like to
-check the model first. Therefore, the test of indirect effect is not
-added for now.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code><a href="../reference/power4test.html">power4test()</a></code> using <code>process_data</code> and
+<code><a href="../reference/missing_values.html">missing_values()</a></code>. We would like to check the model first.
+Therefore, the test of indirect effect is not added for now.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/power4test.html">power4test</a></span><span class="op">(</span></span>
 <span>  nrep <span class="op">=</span> <span class="fl">600</span>,</span>
 <span>  model <span class="op">=</span> <span class="va">model</span>,</span>
 <span>  pop_es <span class="op">=</span> <span class="va">model_es</span>,</span>
 <span>  n <span class="op">=</span> <span class="fl">100</span>,</span>
-<span>  x_fun <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">rlnorm_rs</span><span class="op">)</span>,</span>
-<span>               y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">rbeta_rs</span>, shape1 <span class="op">=</span> <span class="fl">.5</span>, shape2 <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  process_data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>      fun <span class="op">=</span> <span class="va">missing_values</span>,</span>
+<span>      args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>prop <span class="op">=</span> <span class="fl">.30</span><span class="op">)</span></span>
+<span>    <span class="op">)</span>,</span>
 <span>  iseed <span class="op">=</span> <span class="fl">1234</span>,</span>
 <span>  parallel <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <div class="section level4">
-<h4 id="how-to-use-x_fun">How to Use <code>x_fun</code><a class="anchor" aria-label="anchor" href="#how-to-use-x_fun"></a>
+<h4 id="how-to-use-process_data-and-missing_values">How to Use <code>process_data</code> and
+<code>missing_values()</code><a class="anchor" aria-label="anchor" href="#how-to-use-process_data-and-missing_values"></a>
 </h4>
-<p>The argument <code>x_fun</code> is used to specify the function used
-to generate the observed variables. If an observed variable is a “pure”
-predictor (it is not predicted by any other variables in the model),
-then this is the function to generate its values. If it is an endogenous
-variable (it is predicted by at least one other variable in the model),
-then this is the function to generate its error term.</p>
-<p>The value must be a named list, with the name being one of variables
-(<code>x</code>, <code>m</code>, and <code>y</code> in this
-example).</p>
-<p>Each element must itself a list, with the first argument is the
-function to be used.</p>
-<ul>
-<li>For example, <code>x = list(rlnorm_rs)</code> indicates that the
-function <code>rlnorm_rs</code> will be used to generate
-<code>x</code>.</li>
-</ul>
-<p>If there are additional arguments to be passed to this function,
-include them as named arguments in the list.</p>
-<ul>
-<li>For example, if an element is
-<code>y = list(rbeta_rs, shape1 = .5, shape2 = .5)</code>, then
-<code>rbeta_rs</code> will be used to generate <code>y</code> or its
-error term, and the arguments <code>shape1</code> and
-<code>shape2</code> will both be set .5.</li>
-</ul>
-<p>If a variable is not included in the lists for <code>x_fun</code>,
-the default distribution used is a normal distribution.</p>
-</div>
-<div class="section level4">
-<h4 id="functions-that-x_fun-and-e_fun-can-use">Functions That <code>x_fun</code> and <code>e_fun</code> Can
-Use<a class="anchor" aria-label="anchor" href="#functions-that-x_fun-and-e_fun-can-use"></a>
-</h4>
-<p>In principle, any function can be used to generate the numbers, as
-long as it meets these requirements:</p>
-<ul>
-<li><p>It has an argument named <code>n</code>, the number of random
-numbers to be generated.</p></li>
-<li><p>It returns a numeric vector.</p></li>
-</ul>
-<p>Though no error will be returned, to ensure that the population
-standardized coefficients are of the specified values, the functions for
-<code>x_fun</code> and <code>e_fun</code> should generate numbers from a
-population with mean and standard deviation equal to 0 and 1,
-respectively.</p>
+<p>The argument <code>process_data</code> is used to specify the
+function, as well as any arguments need, to <em>process</em> the
+generated data.</p>
+<p>The value must be a named list. The argument <code>fun</code> is a
+required argument, which is the argument to be used to process the data
+(<code>missing_values</code> in the example above).</p>
+<p>If additional arguments are to be passed to this function, set them
+to a named list for <code>args</code>, as shown above.</p>
+<p>In the example above, the argument <code>propr</code> is set, telling
+<code><a href="../reference/missing_values.html">missing_values()</a></code> the proportion of cases with missing
+data.</p>
 </div>
 </div>
 <div class="section level3">
 <h3 id="check-the-generated-data">Check The Generated Data<a class="anchor" aria-label="anchor" href="#check-the-generated-data"></a>
 </h3>
-<p>To print the details of the generated data, including the descriptive
-statistics, use <code>print</code> with
+<p>To print the details of the generated data, including the missing
+data patterns, if any, use <code>print</code> with
 <code>data_long = TRUE</code>:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">out</span>,</span>
 <span>      data_long <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>This is part of the output:</p>
-<pre><code><span><span class="co">#&gt; ==== Descriptive Statistics ====</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   vars     n mean   sd skew kurtosis se</span></span>
-<span><span class="co">#&gt; m    1 60000 0.00 1.00 0.16     0.50  0</span></span>
-<span><span class="co">#&gt; y    2 60000 0.00 1.06 0.04    -1.13  0</span></span>
-<span><span class="co">#&gt; x    3 60000 0.01 1.00 5.24    53.74  0</span></span></code></pre>
-<p>The descriptive statistics shows that the distributions are not
-normal. As expected, those of <code>x</code> is positively skewed, while
-those of <code>y</code> are nearly symmetric but light tailed (negative
-excess kurtosis).</p>
-<p>Note that the distribution of an endogenous variable depends on both
-its predictors and and its error term. Therefore, even though the error
-term of <code>m</code> is normally distributed, <code>m</code> is still
-not normally distributed because <code>x</code> is positively
-skewed.</p>
+<pre><code><span><span class="co">#&gt; ===== Missing Data Pattern =====</span></span>
+<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; Missing data is present</span></span>
+<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt;  P Prop   m   y   x # V</span></span>
+<span><span class="co">#&gt;   .7028   O   O   O   3</span></span>
+<span><span class="co">#&gt;   .0959   O   O   -   2</span></span>
+<span><span class="co">#&gt;   .1013   O   -   O   2</span></span>
+<span><span class="co">#&gt;   .1000   -   O   O   2</span></span>
+<span><span class="co">#&gt;  V Prop .90 .90 .90</span></span>
+<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; Note:</span></span>
+<span><span class="co">#&gt; - 'O': A variable has data in a pattern.</span></span>
+<span><span class="co">#&gt; - '-': A variable has missing data in a pattern.</span></span>
+<span><span class="co">#&gt; - P Prop: Proportion of each missing pattern.</span></span>
+<span><span class="co">#&gt; - # V: Number of non-missing variable(s) in a pattern.</span></span>
+<span><span class="co">#&gt; - V Prop: Proportion of non-missing data of each variables.</span></span></code></pre>
+<p>If missing data is presence, the missing data patterns will be
+printed, using <code><a href="https://amices.org/mice/reference/md.pattern.html" class="external-link">mice::md.pattern()</a></code> internally. As shown in
+the output, about 30% of cases have missing data on one of the
+variables. The proportions are only approximate for each pattern because
+the mechanism is random.</p>
 </div>
 <div class="section level3">
-<h3 id="fit-the-model-by-mlr-robust-maximum-likelihood">Fit the Model by MLR (Robust Maximum Likelihood)<a class="anchor" aria-label="anchor" href="#fit-the-model-by-mlr-robust-maximum-likelihood"></a>
+<h3 id="fit-the-model-by-full-information-maximum-likelihood-fiml">Fit the Model by Full Information Maximum Likelihood (FIML)<a class="anchor" aria-label="anchor" href="#fit-the-model-by-full-information-maximum-likelihood-fiml"></a>
 </h3>
-<p>Because of the nonnormal distribution, we would like to estimate the
-power when a robust estimation method is used. One common method used in
-<code>lavaan</code> is MLR. Although this method and the default,
-maximum likelihood (ML), yield the same point estimates, their standard
-errors are different. Therefore, the results from Monte Carlo confidence
-intervals are also different.</p>
+<p>Because of missing data, we would like to estimate the power when
+using an estimator that handle missing data. One common method used in
+<code>lavaan</code> is FIML (full information maximum likelihood).</p>
 <p>The argument <code>fit_model_args</code> can be use to pass
 arguments, as a named list, to the fit function, which is
 <code><a href="https://rdrr.io/pkg/lavaan/man/sem.html" class="external-link">lavaan::sem()</a></code> by default.</p>
-<p>To use MLR in <code><a href="https://rdrr.io/pkg/lavaan/man/sem.html" class="external-link">lavaan::sem()</a></code>, we use
-<code>estimator = "MLR"</code>. Therefore, we add the argument
-<code>fit_model_args = list(estimator = "MLR")</code> in the call to
+<p>To use FIML in <code><a href="https://rdrr.io/pkg/lavaan/man/sem.html" class="external-link">lavaan::sem()</a></code>, we use
+<code>missing = "fiml.x"</code>. <code>"fiml.x"</code> can be used in
+this case because <code>x</code> is drawn from a normal distribution.
+Therefore, we add the argument
+<code>fit_model_args = list(missing = "fiml.x")</code> in the call to
 <code><a href="../reference/power4test.html">power4test()</a></code>:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/power4test.html">power4test</a></span><span class="op">(</span></span>
 <span>  nrep <span class="op">=</span> <span class="fl">600</span>,</span>
 <span>  model <span class="op">=</span> <span class="va">model</span>,</span>
 <span>  pop_es <span class="op">=</span> <span class="va">model_es</span>,</span>
 <span>  n <span class="op">=</span> <span class="fl">100</span>,</span>
-<span>  x_fun <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">rlnorm_rs</span><span class="op">)</span>,</span>
-<span>               y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">rbeta_rs</span>, shape1 <span class="op">=</span> <span class="fl">.5</span>, shape2 <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  fit_model_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>estimator <span class="op">=</span> <span class="st">"MLR"</span><span class="op">)</span>,</span>
+<span>  process_data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>      fun <span class="op">=</span> <span class="va">missing_values</span>,</span>
+<span>      args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>prop <span class="op">=</span> <span class="fl">.30</span><span class="op">)</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>  fit_model_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>missing <span class="op">=</span> <span class="st">"fiml.x"</span><span class="op">)</span>,</span>
 <span>  iseed <span class="op">=</span> <span class="fl">1234</span>,</span>
 <span>  parallel <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p>We can verify that MLR is used by printing the results:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<p>We can verify that FIML is used by printing the results:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span></span></code></pre></div>
 <p>This is part of the output:</p>
 <pre><code><span><span class="co">#&gt; ============ &lt;fit&gt; ============</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; lavaan 0.6-21 ended normally after 1 iteration</span></span>
-<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; lavaan 0.6-21 ended normally after 8 iterations</span></span>
+<span><span class="co">#&gt;</span></span>
 <span><span class="co">#&gt;   Estimator                                         ML</span></span>
 <span><span class="co">#&gt;   Optimization method                           NLMINB</span></span>
-<span><span class="co">#&gt;   Number of model parameters                         5</span></span>
-<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;   Number of model parameters                         7</span></span>
+<span><span class="co">#&gt;</span></span>
 <span><span class="co">#&gt;   Number of observations                           100</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Model Test User Model:</span></span>
-<span><span class="co">#&gt;                                               Standard      Scaled</span></span>
-<span><span class="co">#&gt;   Test Statistic                                 0.000       0.000</span></span>
-<span><span class="co">#&gt;   Degrees of freedom                                 0           0</span></span></code></pre>
-<p>As shown in the printout, MLR was used and so there is a column
-<code>Scaled</code> in the printout of <code>lavaan</code>.</p>
+<span><span class="co">#&gt;   Number of missing patterns                         4</span></span></code></pre>
+<p>As shown in the printout, FIML was used and so <code>lavaan</code>
+also reports the number of missing patterns. The sample size is the one
+we specified, 100, despite missing data, confirming that all cases are
+used when fitting the model.</p>
 </div>
 <div class="section level3">
 <h3 id="add-the-test-and-estimate-power">Add the Test and Estimate Power<a class="anchor" aria-label="anchor" href="#add-the-test-and-estimate-power"></a>
@@ -407,16 +366,18 @@ setting &lt;code&gt;R&lt;/code&gt; to a supported value. The helper
 &lt;code&gt;&lt;a href="../reference/bz_helpers.html"&gt;R_for_bz()&lt;/a&gt;&lt;/code&gt; can be used. By default, it returns the largest
 supported &lt;code&gt;R&lt;/code&gt; which is less than a target &lt;code&gt;R&lt;/code&gt;,
 given a default level of significance of .05 (two-tailed). For example,
-&lt;code&gt;R_for_bz(200)&lt;/code&gt; returns 199.&lt;/p&gt;'><sup>2</sup></a></p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+&lt;code&gt;R_for_bz(200)&lt;/code&gt; returns 199.&lt;/p&gt;'><sup>1</sup></a></p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/power4test.html">power4test</a></span><span class="op">(</span></span>
 <span>  nrep <span class="op">=</span> <span class="fl">600</span>,</span>
 <span>  model <span class="op">=</span> <span class="va">model</span>,</span>
 <span>  pop_es <span class="op">=</span> <span class="va">model_es</span>,</span>
 <span>  n <span class="op">=</span> <span class="fl">100</span>,</span>
-<span>  x_fun <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">rlnorm_rs</span><span class="op">)</span>,</span>
-<span>               y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">rbeta_rs</span>, shape1 <span class="op">=</span> <span class="fl">.5</span>, shape2 <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  fit_model_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>estimator <span class="op">=</span> <span class="st">"MLR"</span><span class="op">)</span>,</span>
+<span>  process_data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>      fun <span class="op">=</span> <span class="va">missing_values</span>,</span>
+<span>      args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>prop <span class="op">=</span> <span class="fl">.30</span><span class="op">)</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>  fit_model_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>missing <span class="op">=</span> <span class="st">"fiml.x"</span><span class="op">)</span>,</span>
 <span>  R <span class="op">=</span> <span class="fu"><a href="../reference/bz_helpers.html">R_for_bz</a></span><span class="op">(</span><span class="fl">200</span><span class="op">)</span>,</span>
 <span>  ci_type <span class="op">=</span> <span class="st">"mc"</span>,</span>
 <span>  test_fun <span class="op">=</span> <span class="va">test_indirect_effect</span>,</span>
@@ -428,12 +389,12 @@ given a default level of significance of .05 (two-tailed). For example,
 <span>  parallel <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>The rejection rate (power) for this example can be found by
 <code><a href="../reference/rejection_rates.html">rejection_rates()</a></code>:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/rejection_rates.html">rejection_rates</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [test]: test_indirect: x-&gt;m-&gt;y </span></span>
-<span><span class="co">#&gt; [test_label]: Test </span></span>
+<span><span class="co">#&gt; [test]: test_indirect: x-&gt;m-&gt;y</span></span>
+<span><span class="co">#&gt; [test_label]: Test</span></span>
 <span><span class="co">#&gt;     est   p.v reject r.cilo r.cihi</span></span>
-<span><span class="co">#&gt; 1 0.091 1.000  0.643  0.604  0.681</span></span>
+<span><span class="co">#&gt; 1 0.093 1.000  0.591  0.552  0.630</span></span>
 <span><span class="co">#&gt; Notes:</span></span>
 <span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>
 <span><span class="co">#&gt; - est: The mean of the estimates in a test across replications.</span></span>
@@ -448,26 +409,70 @@ given a default level of significance of .05 (two-tailed). For example,
 <span><span class="co">#&gt;   intervals of the rejection rates estimated by the method of Boos and</span></span>
 <span><span class="co">#&gt;   Zhang (2000).</span></span>
 <span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span></code></pre></div>
+<p>For comparison, we can estimate the power when listwise deletion is
+used. This is the default method of <code><a href="https://rdrr.io/pkg/lavaan/man/sem.html" class="external-link">lavaan::sem()</a></code>.
+Therefore, we can rerun the analysis with <code>fit_model_args</code>
+removed:</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">out_listwise</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/power4test.html">power4test</a></span><span class="op">(</span></span>
+<span>  nrep <span class="op">=</span> <span class="fl">600</span>,</span>
+<span>  model <span class="op">=</span> <span class="va">model</span>,</span>
+<span>  pop_es <span class="op">=</span> <span class="va">model_es</span>,</span>
+<span>  n <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>  process_data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>      fun <span class="op">=</span> <span class="va">missing_values</span>,</span>
+<span>      args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>prop <span class="op">=</span> <span class="fl">.30</span><span class="op">)</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>  R <span class="op">=</span> <span class="fu"><a href="../reference/bz_helpers.html">R_for_bz</a></span><span class="op">(</span><span class="fl">200</span><span class="op">)</span>,</span>
+<span>  ci_type <span class="op">=</span> <span class="st">"mc"</span>,</span>
+<span>  test_fun <span class="op">=</span> <span class="va">test_indirect_effect</span>,</span>
+<span>  test_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"x"</span>,</span>
+<span>                   m <span class="op">=</span> <span class="st">"m"</span>,</span>
+<span>                   y <span class="op">=</span> <span class="st">"y"</span>,</span>
+<span>                   mc_ci <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>  iseed <span class="op">=</span> <span class="fl">1234</span>,</span>
+<span>  parallel <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/rejection_rates.html">rejection_rates</a></span><span class="op">(</span><span class="va">out_listwise</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [test]: test_indirect: x-&gt;m-&gt;y</span></span>
+<span><span class="co">#&gt; [test_label]: Test</span></span>
+<span><span class="co">#&gt;     est   p.v reject r.cilo r.cihi</span></span>
+<span><span class="co">#&gt; 1 0.093 1.000  0.503  0.463  0.543</span></span>
+<span><span class="co">#&gt; Notes:</span></span>
+<span><span class="co">#&gt; - p.v: The proportion of valid replications.</span></span>
+<span><span class="co">#&gt; - est: The mean of the estimates in a test across replications.</span></span>
+<span><span class="co">#&gt; - reject: The proportion of 'significant' replications, that is, the</span></span>
+<span><span class="co">#&gt;   rejection rate. If the null hypothesis is true, this is the Type I</span></span>
+<span><span class="co">#&gt;   error rate. If the null hypothesis is false, this is the power.</span></span>
+<span><span class="co">#&gt; - Some or all values in 'reject' are estimated using the extrapolation</span></span>
+<span><span class="co">#&gt;   method by Boos and Zhang (2000).</span></span>
+<span><span class="co">#&gt; - r.cilo,r.cihi: The confidence interval of the rejection rate, based</span></span>
+<span><span class="co">#&gt;   on Wilson's (1927) method.</span></span>
+<span><span class="co">#&gt; - Wilson's (1927) method is used to approximate the confidence</span></span>
+<span><span class="co">#&gt;   intervals of the rejection rates estimated by the method of Boos and</span></span>
+<span><span class="co">#&gt;   Zhang (2000).</span></span>
+<span><span class="co">#&gt; - Refer to the tests for the meanings of other columns.</span></span></code></pre></div>
+<p>In this scenario, the power is reduced by nearly 10% if listwise
+deletion is used.</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="using-x_fun-in-other-functions">Using <code>x_fun</code> in Other Functions<a class="anchor" aria-label="anchor" href="#using-x_fun-in-other-functions"></a>
+<h2 id="using-process_data-in-other-functions">Using <code>process_data</code> in Other Functions<a class="anchor" aria-label="anchor" href="#using-process_data-in-other-functions"></a>
 </h2>
 <p>Other functions that make use of <code><a href="../reference/power4test.html">power4test()</a></code> can also
-use the arguments <code>x_fun</code> and
+use the arguments <code>process_data</code> and
 <code>fit_model_args</code>.</p>
-<p>For example, the output above, with nonnormal variables, can be used
+<p>For example, the output above, with ordinal indicators, can be used
 directly by <code><a href="../reference/x_from_power.html">n_from_power()</a></code> to find a sample size given a
 target power:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">n_power</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/x_from_power.html">n_from_power</a></span><span class="op">(</span></span>
 <span>              <span class="va">out</span>,</span>
 <span>              target_power <span class="op">=</span> <span class="fl">.80</span>,</span>
-<span>              x_interval <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">50</span>, <span class="fl">200</span><span class="op">)</span>,</span>
 <span>              final_nrep <span class="op">=</span> <span class="fl">2000</span>,</span>
-<span>              seed <span class="op">=</span> <span class="fl">1234</span></span>
+<span>              seed <span class="op">=</span> <span class="fl">1357</span></span>
 <span>            <span class="op">)</span></span></code></pre></div>
-<p>The output with nonnormal variables can also be used directly by
+<p>The output with ordinal indicators can also be used directly by
 <code>n_power_region()</code> to find a region of sample sizes given a
 target power:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
@@ -476,7 +481,7 @@ target power:</p>
 <span>                      seed <span class="op">=</span> <span class="fl">1357</span></span>
 <span>                    <span class="op">)</span></span></code></pre></div>
 <p>The quick functions, described in these <a href="articles/index.html#common-mediation-models">articles</a>, also
-support the <code>e_fun</code> and <code>fit_model_args</code>
+support the <code>process_data</code> and <code>fit_model_args</code>
 arguments. They are set in the same way as in
 <code><a href="../reference/power4test.html">power4test()</a></code></p>
 <p>This is an example for estimating the power for a specific sample
@@ -486,9 +491,11 @@ size:</p>
 <span>  a <span class="op">=</span> <span class="st">"m"</span>,</span>
 <span>  b <span class="op">=</span> <span class="st">"m"</span>,</span>
 <span>  cp <span class="op">=</span> <span class="st">"s"</span>,</span>
-<span>  x_fun <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">rlnorm_rs</span><span class="op">)</span>,</span>
-<span>               y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">rbeta_rs</span>, shape1 <span class="op">=</span> <span class="fl">.5</span>, shape2 <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  fit_model_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>estimator <span class="op">=</span> <span class="st">"MLR"</span><span class="op">)</span>,</span>
+<span>  process_data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>      fun <span class="op">=</span> <span class="va">missing_values</span>,</span>
+<span>      args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>prop <span class="op">=</span> <span class="fl">.30</span><span class="op">)</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>  fit_model_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>missing <span class="op">=</span> <span class="st">"fiml.x"</span><span class="op">)</span>,</span>
 <span>  target_power <span class="op">=</span> <span class="fl">.80</span>,</span>
 <span>  nrep <span class="op">=</span> <span class="fl">600</span>,</span>
 <span>  n <span class="op">=</span> <span class="fl">100</span>,</span>
@@ -502,12 +509,13 @@ size:</p>
 <span>  a <span class="op">=</span> <span class="st">"m"</span>,</span>
 <span>  b <span class="op">=</span> <span class="st">"m"</span>,</span>
 <span>  cp <span class="op">=</span> <span class="st">"s"</span>,</span>
-<span>  x_fun <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">rlnorm_rs</span><span class="op">)</span>,</span>
-<span>               y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">rbeta_rs</span>, shape1 <span class="op">=</span> <span class="fl">.5</span>, shape2 <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  fit_model_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>estimator <span class="op">=</span> <span class="st">"MLR"</span><span class="op">)</span>,</span>
+<span>  process_data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>      fun <span class="op">=</span> <span class="va">missing_values</span>,</span>
+<span>      args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>prop <span class="op">=</span> <span class="fl">.30</span><span class="op">)</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>  fit_model_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>missing <span class="op">=</span> <span class="st">"fiml.x"</span><span class="op">)</span>,</span>
 <span>  target_power <span class="op">=</span> <span class="fl">.80</span>,</span>
 <span>  R <span class="op">=</span> <span class="fu"><a href="../reference/bz_helpers.html">R_for_bz</a></span><span class="op">(</span><span class="fl">200</span><span class="op">)</span>,</span>
-<span>  x_interval <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">50</span>, <span class="fl">300</span><span class="op">)</span>,</span>
 <span>  final_nrep <span class="op">=</span> <span class="fl">2000</span>,</span>
 <span>  seed <span class="op">=</span> <span class="fl">1234</span>,</span>
 <span>  mode <span class="op">=</span> <span class="st">"n"</span></span>
@@ -521,6 +529,16 @@ size:</p>
 Boos, D. D., &amp; Zhang, J. (2000). Monte <span>Carlo</span> evaluation
 of resampling-based hypothesis tests. <em>Journal of the American
 Statistical Association</em>, <em>95</em>(450), 486–492. <a href="https://doi.org/10.1080/01621459.2000.10474226" class="external-link">https://doi.org/10.1080/01621459.2000.10474226</a>
+</div>
+<div id="ref-enders_applied_2022" class="csl-entry">
+Enders, C. K. (2022). <em>Applied missing data analysis</em> (Second
+Edition). The Guilford Press.
+</div>
+<div id="ref-schouten_generating_2018" class="csl-entry">
+Schouten, R. M., Lugtig, P., &amp; Vink, G. (2018). Generating missing
+values for simulation purposes: <span>A</span> multivariate amputation
+procedure. <em>Journal of Statistical Computation and Simulation</em>,
+<em>88</em>(15), 2909–2930. <a href="https://doi.org/10.1080/00949655.2018.1491577" class="external-link">https://doi.org/10.1080/00949655.2018.1491577</a>
 </div>
 </div>
 </div>
