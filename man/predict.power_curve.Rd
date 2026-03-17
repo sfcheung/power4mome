@@ -74,7 +74,7 @@ y ~ x: s
 # Set `parallel` to TRUE for faster, usually much faster, analysis
 # Set `progress` to TRUE to display the progress of the analysis
 
-sim_only <- power4test(nrep = 10,
+sim_only <- power4test(nrep = 5,
                        model = model_simple_med,
                        pop_es = model_simple_med_es,
                        n = 50,
@@ -87,7 +87,7 @@ sim_only <- power4test(nrep = 10,
 # By n: Do a test for different sample sizes
 
 out1 <- power4test_by_n(sim_only,
-                        nrep = 10,
+                        nrep = 5,
                         test_fun = test_parameters,
                         test_args = list(par = "y~x"),
                         n = c(25, 100, 200, 1000),
@@ -100,22 +100,6 @@ pout1
 predict(pout1,
         newdata = list(x = c(150, 250, 500)))
 
-# By pop_es: Do a test for different population values of a model parameter
-
-out2 <- power4test_by_es(sim_only,
-                             nrep = 10,
-                             test_fun = test_parameters,
-                             test_args = list(par = "y~x"),
-                             pop_es_name = "y ~ x",
-                             pop_es_values = seq(0, .7, .15),
-                             by_seed = 1234,
-                             parallel = FALSE,
-                             progress = FALSE)
-
-pout2 <- power_curve(out2)
-pout2
-predict(pout2,
-        newdata = list(x = c(.25, .55)))
 
 }
 \seealso{

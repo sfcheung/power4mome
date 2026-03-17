@@ -1,4 +1,4 @@
-# power4mome 0.1.1.77
+# power4mome 0.1.1.78
 
 - Improve the function for extending the
   initial interval before doing a
@@ -460,6 +460,10 @@
   (e.g., ordinal variables),
   using `psych::responseFrequency()`.
   (0.1.1.77)
+
+- Simplify some examples to meet the
+  five-second requirement.
+  (0.1.1.78)
 
 # power4mome 0.1.1
 

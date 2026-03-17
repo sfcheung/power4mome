@@ -581,9 +581,9 @@ out <- q_power_mediation_simple(
     b = "m",
     cp = "n",
     n = 50,
-    R = 199,
+    R = 79,
     seed = 1234,
-    nrep = 20,
+    nrep = 10,
     parallel = FALSE,
     progress = FALSE
   )
