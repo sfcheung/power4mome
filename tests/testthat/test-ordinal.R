@@ -41,6 +41,9 @@ sim_only1 <- power4test(
                   parallel = FALSE,
                   iseed = 1234)
 
+expect_output(print(sim_only1, data_long = TRUE),
+              " Response Proportions ")
+
 tmp <- pool_sim_data(sim_only1)
 
 expect_equal(length(table(tmp$m1)), 4)

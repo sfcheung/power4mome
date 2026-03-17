@@ -295,6 +295,16 @@ to linear transformation of the variables,
 which is usually the case for most common
 tests.
 
+If there are variables with 10 or few
+unique values, the response proportions
+are also printed:
+
+```{r des2, echo=FALSE}
+i1 <- which(grepl("= Response Proportions =", tmp))
+i2 <- which(grepl("==== Parameter Estimates ", tmp))
+cat(tmp[i1:(i2 - 1)], sep = "\n")
+```
+
 If necessary, the data generated can be
 retrieved by `pool_sim_data()` and
 inspected directly:
