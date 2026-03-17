@@ -1,4 +1,4 @@
-# power4mome 0.1.1.76
+# power4mome 0.1.1.77
 
 - Improve the function for extending the
   initial interval before doing a
@@ -453,6 +453,13 @@
   generated data are printed by
   group, using `psych::describeBy()`.
   (0.1.1.76)
+
+- Response proportions will be printed
+  with `data_long = TRUE` if a variable
+  has 10 or fewer unique values
+  (e.g., ordinal variables),
+  using `psych::responseFrequency()`.
+  (0.1.1.77)
 
 # power4mome 0.1.1
 

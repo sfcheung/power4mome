@@ -914,6 +914,39 @@ print.sim_data <- function(x,
             digits = digits_descriptive)
     }
 
+    # ==== Response Frequencies ====
+
+    response_count <- sapply(
+                        all_data[seq_len(n * nrep), ],
+                        \(x) length(unique(x))
+                      )
+    tmp1 <- response_count <= 10
+    if (!is.null(x_i$group_name)) {
+      tmp1[x_i$group_name] <- FALSE
+    }
+
+    if (any(tmp1)) {
+      cat(header_str("Response Proportions",
+                    hw = .4,
+                    prefix = "\n",
+                    suffix = "\n"))
+      tmp2 <- unique(response_count[tmp1])
+      if (ngroups > 1) {
+        group <- all_data[[x_i$group_name]]
+      } else {
+        group <- rep("Single Group", nrow(all_data))
+      }
+      for (zz in tmp2) {
+        tmp3 <- (response_count == zz)
+        tmp5 <- by(all_data[, tmp3, drop = FALSE],
+                   INDICES = group,
+                   psych::responseFrequency,
+                   simplify = FALSE)
+        cat("\n")
+        print(tmp5,
+              digits = digits_descriptive)
+      }
+    }
     # Print missing data pattern
 
     mp <- tryCatch(miss_pattern(all_data),
