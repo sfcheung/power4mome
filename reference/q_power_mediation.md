@@ -543,9 +543,9 @@ out <- q_power_mediation_simple(
     b = "m",
     cp = "n",
     n = 50,
-    R = 199,
+    R = 79,
     seed = 1234,
-    nrep = 20,
+    nrep = 10,
     parallel = FALSE,
     progress = FALSE
   )
@@ -594,7 +594,7 @@ out
 #>  
 #> ======================= Data Information =======================
 #> 
-#> Number of Replications:  20 
+#> Number of Replications:  10 
 #> Sample Sizes:  50 
 #> 
 #> Call print with 'data_long = TRUE' for further information.
@@ -626,20 +626,18 @@ out
 #> 
 #> == A 'mc_out' class object ==
 #> 
-#> Number of Monte Carlo replications: 199 
+#> Number of Monte Carlo replications: 79 
 #> 
 #> 
 #> =============== <test_indirect: x->m->y> ===============
 #> 
 #> Mean(s) across replication:
-#>    est cilo cihi   sig pvalue       R   nlt0 alpha bz_39 bz_79 bz_119 bz_159
-#>  0.071  NaN  NaN 0.278  0.286 199.000 34.600 0.050 0.214 0.244  0.261  0.276
-#>  bz_199
-#>   0.250
+#>    est cilo cihi   sig pvalue      R   nlt0 alpha bz_39 bz_79
+#>  0.066  NaN  NaN 0.198  0.258 79.000 15.100 0.050 0.202 0.200
 #> 
 #> - The value 'sig' is the rejection rate.
 #> - If the null hypothesis is false, this is the power.
-#> - Number of valid replications for rejection rate: 20 
+#> - Number of valid replications for rejection rate: 10 
 #> - Proportion of valid replications for rejection rate: 1.000 
 #> 
 #> ========== power4test Power ==========
@@ -647,7 +645,7 @@ out
 #> [test]: test_indirect: x->m->y 
 #> [test_label]: Test 
 #>     est   p.v reject r.cilo r.cihi
-#> 1 0.071 1.000  0.278  0.145  0.519
+#> 1 0.066 1.000  0.198  0.057  0.510
 #> Notes:
 #> - p.v: The proportion of valid replications.
 #> - est: The mean of the estimates in a test across replications.

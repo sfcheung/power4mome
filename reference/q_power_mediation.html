@@ -13,7 +13,7 @@ mediation models."><meta property="og:image" content="https://sfcheung.github.io
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.77</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.78</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -730,9 +730,9 @@ work.</p></div>
 <span class="r-in"><span>    b <span class="op">=</span> <span class="st">"m"</span>,</span></span>
 <span class="r-in"><span>    cp <span class="op">=</span> <span class="st">"n"</span>,</span></span>
 <span class="r-in"><span>    n <span class="op">=</span> <span class="fl">50</span>,</span></span>
-<span class="r-in"><span>    R <span class="op">=</span> <span class="fl">199</span>,</span></span>
+<span class="r-in"><span>    R <span class="op">=</span> <span class="fl">79</span>,</span></span>
 <span class="r-in"><span>    seed <span class="op">=</span> <span class="fl">1234</span>,</span></span>
-<span class="r-in"><span>    nrep <span class="op">=</span> <span class="fl">20</span>,</span></span>
+<span class="r-in"><span>    nrep <span class="op">=</span> <span class="fl">10</span>,</span></span>
 <span class="r-in"><span>    parallel <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
 <span class="r-in"><span>    progress <span class="op">=</span> <span class="cn">FALSE</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
@@ -781,7 +781,7 @@ work.</p></div>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ======================= Data Information =======================</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Number of Replications:  20 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Number of Replications:  10 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Sample Sizes:  50 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call print with 'data_long = TRUE' for further information.</span>
@@ -813,20 +813,18 @@ work.</p></div>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> == A 'mc_out' class object ==</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Number of Monte Carlo replications: 199 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Number of Monte Carlo replications: 79 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> =============== &lt;test_indirect: x-&gt;m-&gt;y&gt; ===============</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mean(s) across replication:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    est cilo cihi   sig pvalue       R   nlt0 alpha bz_39 bz_79 bz_119 bz_159</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  0.071  NaN  NaN 0.278  0.286 199.000 34.600 0.050 0.214 0.244  0.261  0.276</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  bz_199</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.250</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    est cilo cihi   sig pvalue      R   nlt0 alpha bz_39 bz_79</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.066  NaN  NaN 0.198  0.258 79.000 15.100 0.050 0.202 0.200</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - The value 'sig' is the rejection rate.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - If the null hypothesis is false, this is the power.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - Number of valid replications for rejection rate: 20 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Number of valid replications for rejection rate: 10 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Proportion of valid replications for rejection rate: 1.000 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ========== power4test Power ==========</span>
@@ -834,7 +832,7 @@ work.</p></div>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [test]: test_indirect: x-&gt;m-&gt;y </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [test_label]: Test </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     est   p.v reject r.cilo r.cihi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.071 1.000  0.278  0.145  0.519</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.066 1.000  0.198  0.057  0.510</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Notes:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - p.v: The proportion of valid replications.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - est: The mean of the estimates in a test across replications.</span>

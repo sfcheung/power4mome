@@ -1,6 +1,6 @@
 # Changelog
 
-## power4mome 0.1.1.77
+## power4mome 0.1.1.78
 
 - Improve the function for extending the initial interval before doing a
   bisection search. (0.1.1.1)
@@ -371,6 +371,8 @@
   using
   [`psych::responseFrequency()`](https://rdrr.io/pkg/psych/man/score.items.html).
   (0.1.1.77)
+
+- Simplify some examples to meet the five-second requirement. (0.1.1.78)
 
 ## power4mome 0.1.1
 
