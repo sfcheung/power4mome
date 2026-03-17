@@ -73,6 +73,11 @@ articles:
   - articles/template_n_from_power_mome_obs_a
   - articles/template_n_from_power_mome_obs_b
 
+- title: Multigroup Models
+  navbar: Multigroup Models
+  contents:
+  - articles/n_from_power_mediation_mg_obs_simple
+
 - title: Advanced Features
   navbar: Advanced Features
   contents:
