@@ -901,10 +901,18 @@ print.sim_data <- function(x,
                   hw = .4,
                   prefix = "\n",
                   suffix = "\n\n"))
-
-    print(psych::describe(all_data,
-                          range = FALSE),
-          digits = digits_descriptive)
+    if (ngroups > 1) {
+      tmp <- which(colnames(all_data) == x_i$group_name)
+      print(psych::describeBy(
+                            all_data[, -tmp],
+                            group = all_data[[x_i$group_name]],
+                            range = FALSE),
+            digits = digits_descriptive)
+    } else {
+      print(psych::describe(all_data,
+                            range = FALSE),
+            digits = digits_descriptive)
+    }
 
     # Print missing data pattern
 
