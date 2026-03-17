@@ -58,6 +58,11 @@
   b-Path
   Moderated](https://sfcheung.github.io/power4mome/articles/template_n_from_power_mome_obs_b.md):
 
+### Multigroup Models
+
+- [Multigroup Sample Size Determination: Path Models of Observed
+  Variables](https://sfcheung.github.io/power4mome/articles/n_from_power_mediation_mg_obs_simple.md):
+
 ### Advanced Features
 
 - [Sample Size Determination with Nonnormal Variables: Latent Variable
