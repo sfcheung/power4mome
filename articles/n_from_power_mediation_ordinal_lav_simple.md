@@ -208,6 +208,27 @@ For the estimation of power, the values also do not matter if the power
 of a method is invariant to linear transformation of the variables,
 which is usually the case for most common tests.
 
+If there are variables with 10 or few unique values, the response
+proportions are also printed:
+
+    #> ===== Response Proportions =====
+    #> 
+    #> group: Single Group
+    #>      1   2 miss
+    #> x1 0.5 0.5    0
+    #> x2 0.5 0.5    0
+    #> x3 0.5 0.5    0
+    #> x4 0.5 0.5    0
+    #> y1 0.5 0.5    0
+    #> y2 0.5 0.5    0
+    #> y3 0.5 0.5    0
+    #> 
+    #> group: Single Group
+    #>        1    2    3    4     5 miss
+    #> m1 0.067 0.24 0.38 0.24 0.068    0
+    #> m2 0.067 0.24 0.38 0.24 0.066    0
+    #> m3 0.068 0.24 0.38 0.24 0.067    0
+
 If necessary, the data generated can be retrieved by
 [`pool_sim_data()`](https://sfcheung.github.io/power4mome/reference/sim_data.md)
 and inspected directly:

@@ -1,6 +1,6 @@
 # Changelog
 
-## power4mome 0.1.1.75
+## power4mome 0.1.1.77
 
 - Improve the function for extending the initial interval before doing a
   bisection search. (0.1.1.1)
@@ -360,6 +360,17 @@
 - Fixed the help for the argument `mode` of
   [`q_power_mediation()`](https://sfcheung.github.io/power4mome/reference/q_power_mediation.md)
   and friends. (0.1.1.75)
+
+- If the model is a multigroup model, descriptive statistics for the
+  generated data are printed by group, using
+  [`psych::describeBy()`](https://rdrr.io/pkg/psych/man/describe.by.html).
+  (0.1.1.76)
+
+- Response proportions will be printed with `data_long = TRUE` if a
+  variable has 10 or fewer unique values (e.g., ordinal variables),
+  using
+  [`psych::responseFrequency()`](https://rdrr.io/pkg/psych/man/score.items.html).
+  (0.1.1.77)
 
 ## power4mome 0.1.1
 
