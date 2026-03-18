@@ -31,7 +31,7 @@
 
     <a class="navbar-brand me-2" href="index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.78</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -104,7 +104,7 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9">
-<p>(Version 0.1.1.78, updated on 2026-03-18, <a href="https://sfcheung.github.io/power4mome/news/index.html">release history</a>)</p>
+<p>(Version 0.2.0, updated on 2026-03-18, <a href="https://sfcheung.github.io/power4mome/news/index.html">release history</a>)</p>
 <div class="section level1">
 <div class="page-header">
 <img src="logo.png" class="logo" alt=""><h1 id="power4mome-">power4mome 
@@ -119,6 +119,7 @@
 <p><a href="https://sfcheung.github.io/power4mome/articles/power4mome.html" class="uri">https://sfcheung.github.io/power4mome/articles/power4mome.html</a></p>
 <p>Code templates are also available for common mediation, moderation, and moderated mediation models:</p>
 <p><a href="https://sfcheung.github.io/power4mome/articles/" class="uri">https://sfcheung.github.io/power4mome/articles/</a></p>
+<p>Major new features can be found <a href="#major-new-features">below</a>.</p>
 </div>
 <div class="section level1">
 <h1 id="philosophy">Philosophy<a class="anchor" aria-label="anchor" href="#philosophy"></a>
@@ -136,6 +137,26 @@
 <li><p>balance these goals, and</p></li>
 <li><p>allow the functions to be used in different ways, to accommodate scenarios that prioritize these goals differently.</p></li>
 </ul>
+</div>
+<div class="section level1">
+<h1 id="major-new-features">Major New Features<a class="anchor" aria-label="anchor" href="#major-new-features"></a>
+</h1>
+<p>These are some major new features added in <code>power4mome</code> 0.2.0 (see the <a href="https://sfcheung.github.io/power4mome/news/index.html">release history</a> for a full list of changes).</p>
+<div class="section level2">
+<h2 id="all-in-one-quick-functions">All-In-One Quick Functions<a class="anchor" aria-label="anchor" href="#all-in-one-quick-functions"></a>
+</h2>
+<p>All-in-one “quick” functions for common mediation models. Instead of specifying the model and effect size and then call <code><a href="reference/power4test.html">power4test()</a></code>, these quick functions combine all the steps into one. Learn more about them in <a href="https://sfcheung.github.io/power4mome/articles/index.html#common-mediation-models">these examples</a>.</p>
+</div>
+<div class="section level2">
+<h2 id="multigroup-power-analysis">Multigroup Power Analysis<a class="anchor" aria-label="anchor" href="#multigroup-power-analysis"></a>
+</h2>
+<p>Support for multigroup models has been substantially improved. For example, power analysis for detecting the group difference in an indirect path can be conducted. Several test functions have also been updated to support testing group differences. See this <a href="https://sfcheung.github.io/power4mome/articles/index.html#multigroup-models">article</a> for an illustration. More demonstrations will be added.</p>
+</div>
+<div class="section level2">
+<h2 id="data-processors">Data Processors<a class="anchor" aria-label="anchor" href="#data-processors"></a>
+</h2>
+<p>Real studies rarely involve continuous variables. Datasets with missing data is also common. The argument <code>process_data</code> has been added to <code><a href="reference/power4test.html">power4test()</a></code> and friends for generating more realistic data for power analysis. For example, missing data can be simulated, and ordinal variables can be created from the continuous variables to simulate binary or Likert scale items. Power analysis can then be conducted by taking missing data into account. See these <a href="https://sfcheung.github.io/power4mome/articles/index.html#advanced-features">articles</a> for illustrations.</p>
+</div>
 </div>
 <div class="section level1">
 <h1 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -162,7 +183,7 @@
 <div class="section level1">
 <h1 id="not-just-that-">Not Just That …<a class="anchor" aria-label="anchor" href="#not-just-that-"></a>
 </h1>
-<p>But <code>power4mome</code> is not just for mediation, moderation, and moderated mediation. We avoided wrote the functions just for these effects, and have left room for testing other effects, as hinted in some examples in the help pages. They may be introduced later. For now, supporting effects that can be tested by <code>manymome</code> is our priority.</p>
+<p>But <code>power4mome</code> is not just for mediation, moderation, and moderated mediation. We avoided writing the functions just for these effects, and have left room for testing other effects, as hinted in some examples in the help pages. They may be introduced later. For now, supporting effects that can be tested by <code>manymome</code> is our priority.</p>
 </div>
 <div class="section level1">
 <h1 id="issues">Issues<a class="anchor" aria-label="anchor" href="#issues"></a>

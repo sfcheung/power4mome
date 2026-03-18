@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.78</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,90 +78,140 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.1.1.78" id="power4mome-01178">power4mome 0.1.1.78<a class="anchor" aria-label="anchor" href="#power4mome-01178"></a></h2>
-<ul><li><p>Improve the function for extending the initial interval before doing a bisection search. (0.1.1.1)</p></li>
-<li><p>Changed the default method for rejection rate confidence intervals to Wilson’s (1927) method. For backward compatibility, use <code>options(power4mome.ci_method = "norm")</code> to set the default method to normal approximation. (0.1.1.2)</p></li>
-<li><p>Added the <code>test_method</code> argument for tests of indirect effects and their variants to use asymmetric <em>p</em>-values to do the tests. (0.1.1.3)</p></li>
-<li><p>Updated test functions that used <code>manymome</code> to store the number of bootstrap or Monte Carlo samples and the number of estimates less than zero. (0.1.1.4)</p></li>
+<h2 class="pkg-version" data-toc-text="0.2.0" id="power4mome-020">power4mome 0.2.0<a class="anchor" aria-label="anchor" href="#power4mome-020"></a></h2><p class="text-muted">CRAN release: 2026-03-18</p>
+<div class="section level3">
+<h3 id="new-features-0-2-0">New Features<a class="anchor" aria-label="anchor" href="#new-features-0-2-0"></a></h3>
+<div class="section level4">
+<h4 id="power4test-x_from_power-and-related-functions-0-2-0">
+<code>power4test()</code>, <code>x_from_power()</code>, and Related Functions<a class="anchor" aria-label="anchor" href="#power4test-x_from_power-and-related-functions-0-2-0"></a></h4>
+<ul><li><p>Added an argument <code>rejection_rates_args</code> to <code><a href="../reference/power4test.html">power4test()</a></code>. When calling <code><a href="../reference/power4test.html">power4test()</a></code>, users can in advance some settings for rejection rates, such as collapsing all tests into one. They will be used when calling <code><a href="../reference/rejection_rates.html">rejection_rates()</a></code>. They will also be stored internally, and used by <code><a href="../reference/power4test_by_n.html">power4test_by_n()</a></code>, <code><a href="../reference/x_from_power.html">x_from_power()</a></code>, and similar functions that used a <code>power4test</code> object as an input. (0.1.1.39)</p></li>
+<li><p>Updated <code><a href="../reference/x_from_power.html">x_from_power()</a></code> and related functions to allow users specifying how tests will be collapsed (<code>"none"</code> is not allowed), by setting the argument <code>rejection_rates_args</code>. (0.1.1.39, 0.1.1.41)</p></li>
+</ul></div>
+<div class="section level4">
+<h4 id="quick-functions-0-2-0">“Quick” Functions<a class="anchor" aria-label="anchor" href="#quick-functions-0-2-0"></a></h4>
+<p>To simplify the workflows for some common mediation models, a set of “quick” functions have been added. Users can do common tasks using just one function.</p>
+<ul><li><p>Added <code><a href="../reference/q_power_mediation.html">q_power_mediation()</a></code> and friends for common mediation models. Users can do most steps in one call. (0.1.1.18, 0.1.1.19)</p></li>
+<li><p>Updated the quick functions (<code><a href="../reference/q_power_mediation.html">q_power_mediation()</a></code> and friends) to have one more mode, <code>"n"</code>. Probabilistic bisection is the default algorithm for this mode. Other methods have been updated for this mode. (0.1.1.56)</p></li>
+</ul></div>
+<div class="section level4">
+<h4 id="rejection-rates-0-2-0">Rejection Rates<a class="anchor" aria-label="anchor" href="#rejection-rates-0-2-0"></a></h4>
+<ul><li><p>Changed the default method for rejection rate confidence intervals to Wilson’s (1927) method. For backward compatibility, use <code>options(power4mome.ci_method = "norm")</code> to set the default method to normal approximation. (0.1.1.2)</p></li>
 <li><p>Updated <code><a href="../reference/summarize_tests.html">summarize_tests()</a></code> and <code><a href="../reference/rejection_rates.html">rejection_rates()</a></code> to use the extrapolation method by Boos and Zhang (2000) if the number of resamples for bootstrapping or Monte Carlo is of the supported values. (0.1.1.5, 0.1.1.6, 0.1.1.7)</p></li>
-<li><p>Improved <code>rejection_rates_by_n()</code> and <code>rejection_rates_by_es()</code> to handle attempts with different number of columns (due to the new Boos-Zhang methods). (0.1.1.8)</p></li>
-<li><p>Boos-Zhang-2000 method is disabled by default. Enable it by setting the option <code>power4mome.bz</code> to <code>TRUE</code>. (0.1.1.9)</p></li>
-<li><p><code><a href="../reference/x_from_power.html">x_from_power()</a></code> now detects whether a test has more than one result (e.g., testing two parameters but <code>omnibus</code> is <code>"none"</code>). If yes, it will throw an error. (0.1.1.10)</p></li>
-<li><p>Added two levels of effects, <code>sm</code> for small-to-moderate, and <code>ml</code> for moderate-to-large. (0.1.1.11)</p></li>
-<li><p>Updated <code>extend_interval()</code> to handle intervals with nearly equal function values. (0.1.1.12)</p></li>
-<li><p>Improved <code><a href="../reference/x_from_power.html">x_from_power()</a></code> and friends (e.g., <code><a href="../reference/x_from_power.html">n_from_power()</a></code> and <code><a href="../reference/x_from_power.html">n_region_from_power()</a></code>) to make use of previous trials. (0.1.1.13)</p></li>
+<li><p>Added <code>merge_all_tests</code> to <code><a href="../reference/rejection_rates.html">rejection_rates()</a></code> to support merging all tests into one. The argument <code>collapse</code> can then be used for collapsing several different tests, not just for one test with several results. (0.1.1.28)</p></li>
+<li><p>Added the <code>p_adjust_method</code> argument to some tests, as well as the <code>rejection_rates</code> method and <code><a href="../reference/summarize_tests.html">summarize_tests()</a></code>. Users can adjust <em>p</em>-values using <code><a href="https://rdrr.io/r/stats/p.adjust.html" class="external-link">p.adjust()</a></code> when there are more than one test in a test function set to <code>test_fun</code>, or when merging several tests in <code><a href="../reference/summarize_tests.html">summarize_tests()</a></code>. This feature is used to estimate power when multiple-comparison adjustment is used, such as false discover rate (FDR) or Bonferroni correction. (0.1.1.31)</p></li>
+</ul></div>
+<div class="section level4">
+<h4 id="model-specifications-0-2-0">Model Specifications<a class="anchor" aria-label="anchor" href="#model-specifications-0-2-0"></a></h4>
+<ul><li><p>Added two levels of effects, <code>sm</code> for small-to-moderate, and <code>ml</code> for moderate-to-large. (0.1.1.11)</p></li>
+<li><p>Added <code>loading_difference</code> and <code>reference</code> for <code><a href="../reference/sim_data.html">sim_data()</a></code>. The population standardized factor loadings of indicators of a factor can have different loadings, and the first indicator (the default reference indicator) can be the indicator with the strongest, weakest, or medium loadings. (0.1.1.70)</p></li>
+</ul></div>
+<div class="section level4">
+<h4 id="tests-0-2-0">Tests<a class="anchor" aria-label="anchor" href="#tests-0-2-0"></a></h4>
+<ul><li><p>Added the <code>test_method</code> argument for tests of indirect effects and their variants to use asymmetric <em>p</em>-values to do the tests. This change is for using the efficient method by Boos and Zhang (2000) to estimate the rejection rates for resampling methods. (0.1.1.3)</p></li>
+<li><p>Updated <code><a href="../reference/test_k_indirect_effects.html">test_k_indirect_effects()</a></code> to support computing and testing the total indirect effect. (0.1.1.65)</p></li>
+</ul></div>
+<div class="section level4">
+<h4 id="data-processors-0-2-0">Data Processors<a class="anchor" aria-label="anchor" href="#data-processors-0-2-0"></a></h4>
+<p>When calling the function <code><a href="../reference/power4test.html">power4test()</a></code>, the generated data can now be further processed by <em>data processors</em>: functions to manipulate the generated data, such as introducing missing values or computing scale scores. Some built-in processors are included, but user-supplied functions can also be used.</p>
+<ul><li><p>Added <code><a href="../reference/scale_scores.html">scale_scores()</a></code> for replacing the indicator scores by the corresponding scale scores before fitting a model. This allows estimating power when the data generating model is a latent factor model with indicators but the model will be fitted to the scale scores instead of the indicators. (0.1.1.43)</p></li>
+<li><p>Added <code><a href="../reference/missing_values.html">missing_values()</a></code> for generating missing values. This allows sample size determination that takes into account probable missing data. This also allows comparing the levels of power between two different methods to handle missing data, such as full information maximum likelihood versus listwise deletion. (0.1.1.66)</p></li>
+<li><p>Added <code><a href="../reference/ordinal_variables.html">ordinal_variables()</a></code> for converting continuous indicator variables to ordinal variables. This allows estimating power when the indicators are ordinal variables, such as binary items or 5-point Likert scales. This also allows comparing the levels of power between different numbers of response options. (0.1.1.67, 0.1.1.69)</p></li>
+<li><p>The argument <code>sim_data_name</code> of <code>process_data</code> is now default to <code>"data"</code>. It is not a required argument. (0.1.1.43)</p></li>
+</ul></div>
+<div class="section level4">
+<h4 id="multigroup-models-0-2-0">Multigroup Models<a class="anchor" aria-label="anchor" href="#multigroup-models-0-2-0"></a></h4>
+<p>Support for multigroup models have been substantially improved. Users can generate data from a multigroup models. Some tests can also be used for estimating power in detecting group differences, such as the group difference in an indirect effect.</p>
+<ul><li><p>Added <code>n_ratio</code> to <code><a href="../reference/power4test.html">power4test()</a></code> and related functions to supporting controlling the sample sizes of multigroup models using one single value for <code>n</code>. This allows functions such as <code><a href="../reference/x_from_power.html">n_from_power()</a></code> and <code><a href="../reference/x_from_power.html">n_region_from_power()</a></code> to support multigroup models. (0.1.1.44)</p></li>
+<li><p><code><a href="../reference/test_cond_indirect.html">test_cond_indirect()</a></code> and <code><a href="../reference/test_cond_indirect_effects.html">test_cond_indirect_effects()</a></code> now support multigroup models, although <code><a href="../reference/test_cond_indirect_effects.html">test_cond_indirect_effects()</a></code> only support either a path with moderators (<code>wlevels</code>) or a path between groups, but not both. (0.1.1.45)</p></li>
+<li><p>Updated <code><a href="../reference/test_cond_indirect_effects.html">test_cond_indirect_effects()</a></code> to support computing and testing group differences in indirect effects for multigroup models. (0.1.1.46)</p></li>
+<li><p>Updated <code><a href="../reference/test_parameters.html">test_parameters()</a></code> to support doing likelihood ratio tests to test constraining pairs of parameters in multigroup models, by using the argument <code>compare_groups</code>. (0.1.1.47)</p></li>
+<li><p>Added the argument <code>exclude_var</code> to <code><a href="../reference/test_parameters.html">test_parameters()</a></code> to exclude variances and error variances, useful for multigroup models. (0.1.1.47)</p></li>
+<li><p>Updated <code><a href="../reference/power4test.html">power4test()</a></code> to support updating a parameter in one group when the population model is a multigroup model. Use <code>"y ~ x.g2"</code> to denote <code>"y ~ x"</code> in Group 2. If the suffix is omitted, the parameter is assumed to be in Group 1. The function <code><a href="../reference/power4test_by_es.html">power4test_by_es()</a></code> now also support multigroup models due to this change. (0.1.1.48)</p></li>
+<li><p>Added <code><a href="../reference/test_group_equal.html">test_group_equal()</a></code> for testing equality constraints between groups. (0.1.1.49)</p></li>
+<li><p>If the model is a multigroup model, descriptive statistics for the generated data are printed by group, using <code><a href="https://rdrr.io/pkg/psych/man/describe.by.html" class="external-link">psych::describeBy()</a></code>. (0.1.1.76)</p></li>
+</ul></div>
+<div class="section level4">
+<h4 id="probabilistic-bisection-0-2-0">Probabilistic Bisection<a class="anchor" aria-label="anchor" href="#probabilistic-bisection-0-2-0"></a></h4>
+<p>The probabilistic bisection algorithm proposed by Waeber et al. (2013) has been added. For some scenarios, it allows for a more efficient search for a sample size with sufficient power, especially when a high precision is desired (by using a large value of <code>nrep</code>).</p>
+<ul><li>Added the algorithm <code>"probabilistic_bisection"</code> for <code><a href="../reference/x_from_power.html">x_from_power()</a></code> and friends. (0.1.1.51)</li>
+</ul></div>
+</div>
+<div class="section level3">
+<h3 id="miscellaneous-0-2-0">Miscellaneous<a class="anchor" aria-label="anchor" href="#miscellaneous-0-2-0"></a></h3>
+<div class="section level4">
+<h4 id="quality-of-life-changes-0-2-0">Quality-of-Life Changes<a class="anchor" aria-label="anchor" href="#quality-of-life-changes-0-2-0"></a></h4>
+<ul><li><p>Change the default of <code>test_long</code> to <code>TRUE</code> for the <code>print</code> method of <code>power4test</code> and related objects. (0.1.1.41)</p></li>
+<li><p>For some functions, <code>nrep</code> will be included in the output if its values vary across rows. (0.1.1.57)</p></li>
+<li><p>The default values of <code>n</code> of q-functions now depends on the <code>mode</code> and <code>algorithm</code>. (0.1.1.57)</p></li>
+<li><p>Added some helpers, <code><a href="../reference/bz_helpers.html">R_for_bz()</a></code> and <code><a href="../reference/bz_helpers.html">Rs_bz_supported()</a></code>, for users to use the Boos-Zhang-2000 method without remembering the number of resamples supported. (0.1.1.61)</p></li>
+<li><p>Updated the quick functions (<code><a href="../reference/q_power_mediation.html">q_power_mediation()</a></code> and friends). When <code>mode</code> is <code>"n"</code> or <code>"region"</code>, it is optional to set <code>n</code>. If not set, it will be determined internally. (0.1.1.63)</p></li>
+<li><p>Added the <code><a href="../reference/rejection_rates.html">rejection_rates()</a></code> method to <code>x_from_power</code>, <code>n_region_from_power</code>, and <code>q_power_mediation</code> objects. (0.1.1.71)</p></li>
+<li><p>Moved <code>delta_tol</code> and <code>last_k</code> to <code>variants</code>, such that users can change them through <code>control</code> when calling <code><a href="../reference/x_from_power.html">x_from_power()</a></code> and friends. (0.1.1.72)</p></li>
+<li><p>Changed the default algorithms to be used in <code><a href="../reference/x_from_power.html">x_from_power()</a></code>. (0.1.1.74)</p></li>
+<li><p>Response proportions will be printed with <code>data_long = TRUE</code> if a variable has 10 or fewer unique values (e.g., ordinal variables), using <code><a href="https://rdrr.io/pkg/psych/man/score.items.html" class="external-link">psych::responseFrequency()</a></code>. (0.1.1.77)</p></li>
+</ul></div>
+<div class="section level4">
+<h4 id="bisection-0-2-0">Bisection<a class="anchor" aria-label="anchor" href="#bisection-0-2-0"></a></h4>
+<ul><li><p>Improved the function for extending the initial interval before doing a bisection search. (0.1.1.1)</p></li>
 <li><p>Optimized the search by bisection, to make use of value already tried and store all values tried. (0.1.1.14)</p></li>
-<li><p>Fixed duplicated values of x when extending the range. (0.1.1.15)</p></li>
+<li><p>The bisection algorithm has been improved in handling unusual intervals. (0.1.1.21)</p></li>
+<li><p>Skipped the check for combining objects in the bisection algorithm because they must be identical in the model. (0.1.1.23)</p></li>
+<li><p>Updated the bisection algorithm to use <code><a href="../reference/power_curve.html">power_curve()</a></code> to assist finding the solution. If estimated solution inside an interval, use it instead of the mean. (0.1.1.37)</p></li>
+<li><p>More checks for the solution in the bisection algorithm. When extending an interval, the power curve will also be used. (0.1.1.38)</p></li>
+</ul></div>
+<div class="section level4">
+<h4 id="power-curve-0-2-0">Power Curve<a class="anchor" aria-label="anchor" href="#power-curve-0-2-0"></a></h4>
+<ul><li>Modified the power curve algorithm to support <code>goal = "close_enough"</code> and all three types of <code>what</code> (<code>"point"</code>, <code>"lb"</code>, and <code>"ub"</code>). (0.1.1.34)</li>
+</ul></div>
+<div class="section level4">
+<h4 id="probabilistic-bisection-0-2-0-1">Probabilistic Bisection<a class="anchor" aria-label="anchor" href="#probabilistic-bisection-0-2-0-1"></a></h4>
+<ul><li><p>Adjust the <code>initial_nrep</code> in probabilistic bisection such that the rejection rate will not be exactly equal to the target power. (0.1.1.52)</p></li>
+<li><p>For probabilistic bisection, the initial interval will no longer be adjusted. This algorithm should be used with a wide enough initial interval because the interval will not be adjusted during the search (for now). (0.1.1.56)</p></li>
+<li><p>Increased <code>delta_tol</code> fo PBA (2 for <code>n</code> and .002 for <code>es</code>). (0.1.1.57)</p></li>
+<li><p>Added <code><a href="../reference/x_from_power.html">pba_diagnosis()</a></code> to generate plots related to the search history of probabilistic bisection algorithm. For advanced users and developers. (0.1.1.58, 0.1.1.62)</p></li>
+<li><p>Updated the help page of <code><a href="../reference/x_from_power.html">x_from_power()</a></code> to describe the probabilistic bisection method. (0.1.1.60)</p></li>
+</ul></div>
+<div class="section level4">
+<h4 id="tests-0-2-0-1">Tests<a class="anchor" aria-label="anchor" href="#tests-0-2-0-1"></a></h4>
+<ul><li><p>Updated test functions that used <code>manymome</code> to store the number of bootstrap or Monte Carlo samples and the number of estimates less than zero. Used by the Boos-Zhang-2000 method. (0.1.1.4)</p></li>
+<li><p>Updated all test functions to include <em>p</em>-values in the output. (0.1.1.30)</p></li>
+<li><p>Test functions using <code>manymome</code> will now automatically use <code>"pvalues"</code> as the test method if <code>R</code> is a value supported by the Boos-Zhang-method. (0.1.1.53)</p></li>
+</ul></div>
+<div class="section level4">
+<h4 id="others-0-2-0">Others<a class="anchor" aria-label="anchor" href="#others-0-2-0"></a></h4>
+<ul><li><p>Improved <code><a href="../reference/x_from_power.html">x_from_power()</a></code> and friends (e.g., <code><a href="../reference/x_from_power.html">n_from_power()</a></code> and <code><a href="../reference/x_from_power.html">n_region_from_power()</a></code>) to make use of previous trials. (0.1.1.13)</p></li>
+<li><p><code><a href="../reference/x_from_power.html">x_from_power()</a></code> now detects whether a test has more than one result (e.g., testing two parameters but <code>omnibus</code> is <code>"none"</code>). If yes, it will throw an error. (0.1.1.10)</p></li>
+<li><p>Updated <code>extend_interval()</code> to handle intervals with nearly equal function values. (0.1.1.12)</p></li>
+<li><p>Fixed duplicated values of x when extending the interval. (0.1.1.15)</p></li>
 <li><p>Functions that print a call will replace <code>object</code> with <code>&lt;hidden&gt;</code> if it is not a symbol. (0.1.1.16)</p></li>
 <li><p>Functions that print a call will replace the function with the original function name if it is not a symbol. (0.1.1.17)</p></li>
-<li><p>Added <code><a href="../reference/q_power_mediation.html">q_power_mediation()</a></code> and friends for common mediation models. (0.1.1.18, 0.1.1.19)</p></li>
 <li><p>The arguments <code>final_nrep</code> and <code>final_R</code> of <code><a href="../reference/x_from_power.html">x_from_power()</a></code> and its wrappers will use stored values if available. (0.1.1.20)</p></li>
-<li><p>The bisection algorithm has been improved in handling unusual intervals. (0.1.1.21)</p></li>
-<li><p>Disable the check for the number of elements in <code>number_of_indicators</code> and <code>reliability</code> in the <code>q_power_mediation_*()</code> functions. (0.1.1.22)</p></li>
-<li><p>Skip the check for combining objects in the bisection algorithm because they must be identical in the model. (0.1.1.23)</p></li>
 <li><p>Revised <code><a href="../reference/power4test_by_n.html">c.power4test_by_n()</a></code> to allow for minor differences in error variances when they are determined by Monte Carlo simulation. (0.1.1.24)</p></li>
 <li><p>Properly support a model with only one latent variable. (0.1.1.25)</p></li>
 <li><p>Vertically displace the labels of sample sizes in <code><a href="../reference/plot.x_from_power.html">plot.n_region_from_power()</a></code> to prevent overlapping. (0.1.1.26)</p></li>
 <li><p>Fixed the printing of effects in a multigroup model with within-group moderation. (0.1.1.27)</p></li>
-<li><p>Added <code>merge_all_tests</code> to <code><a href="../reference/rejection_rates.html">rejection_rates()</a></code> to support merging all tests into one. The argument <code>collapse</code> can then be used for collapse several different tests, not just for one test with several results. (0.1.1.28)</p></li>
 <li><p>The function <code><a href="../reference/power4test.html">power4test()</a></code> now properly reuse arguments such as <code>parallel</code> and <code>ncores</code> when adding a new test to a <code>power4test</code> object. (0.1.1.29)</p></li>
-<li><p>Updated all test functions to include <em>p</em>-values in the output. (0.1.1.30)</p></li>
-<li><p>Added the <code>p_adjust_method</code> argument to some tests, as well as the <code>rejection_rates</code> method and <code><a href="../reference/summarize_tests.html">summarize_tests()</a></code>. Users can adjust <em>p</em>-values using <code><a href="https://rdrr.io/r/stats/p.adjust.html" class="external-link">p.adjust()</a></code> when there are more than one test in a test function set to <code>test_fun</code>, or when merging several tests in <code><a href="../reference/summarize_tests.html">summarize_tests()</a></code>. This feature is used to estimate power when multiple-comparison adjustment is used, such as false discover rate (FDR) or Bonferroni correction. (0.1.1.31)</p></li>
-<li><p>Updated all tests to disable printout when running in a test context. (0.1.1.32)</p></li>
 <li><p>Added one model to <code><a href="../reference/power_curve.html">power_curve()</a></code>. (0.1.1.34)</p></li>
-<li><p>Modified the power curve algorithm to support <code>goal = "close_enough"</code> and all three types of <code>what</code> (<code>"point"</code>, <code>"lb"</code>, and <code>"ub"</code>). (0.1.1.34)</p></li>
-<li><p>Fixed a bug in extending intervals in the bisection algorithm, and also improved way intervals are extended. (0.1.1.35)</p></li>
-<li><p>Add <code>nls_options</code> to <code><a href="../reference/power_curve.html">power_curve()</a></code> to configure the use of <code><a href="https://rdrr.io/r/stats/nls.html" class="external-link">nls()</a></code>, such as when it should not be attempted. (0.1.1.36)</p></li>
-<li><p>Updated the bisection algorithm to use <code><a href="../reference/power_curve.html">power_curve()</a></code> to assist finding the solution. If estimated solution inside an interval, use it instead of the mean. (0.1.1.37)</p></li>
-<li><p>More checks for the solution in the bisection algorithm. When extending an interval, the power curve will also be used. (0.1.1.38)</p></li>
-<li><p>Added an argument <code>rejection_rates_args</code> to <code><a href="../reference/power4test.html">power4test()</a></code>. When calling <code><a href="../reference/power4test.html">power4test()</a></code>, users can in advance some settings for rejection rates, such as collapsing all tests into one. They will be used when calling <code><a href="../reference/rejection_rates.html">rejection_rates()</a></code>. They will also be stored internally, and used by <code><a href="../reference/power4test_by_n.html">power4test_by_n()</a></code>, <code><a href="../reference/x_from_power.html">x_from_power()</a></code>, and similar functions that used a <code>power4test</code> object as an input. (0.1.1.39)</p></li>
-<li><p>Updated <code><a href="../reference/x_from_power.html">x_from_power()</a></code> and related functions to allow users specifying how tests will be collapsed (<code>"none"</code> is not allowed), by setting the argument <code>rejection_rates_args</code>. (0.1.1.39, 0.1.1.41)</p></li>
-<li><p>Change the default of <code>test_long</code> to <code>TRUE</code> for the <code>print</code> method of <code>power4test</code> and related objects. (0.1.1.41)</p></li>
-<li><p>Updated <code><a href="../reference/rejection_rates.html">rejection_rates()</a></code> to ignore <code>merge_all_tests</code> if there is only one test. (0.1.1.42)</p></li>
-<li><p>Added a data processor: <code><a href="../reference/scale_scores.html">scale_scores()</a></code>. It replaces the indicator scores by the corresponding scale scores before fitting a model. To be used in the <code>process_data</code> argument. (0.1.1.43)</p></li>
+<li><p>Added <code>nls_options</code> to <code><a href="../reference/power_curve.html">power_curve()</a></code> to configure the use of <code><a href="https://rdrr.io/r/stats/nls.html" class="external-link">nls()</a></code>, such as when it should not be attempted. (0.1.1.36)</p></li>
 <li><p>Updated <code><a href="../reference/sim_data.html">sim_data()</a></code>. Lines for the indicators will not be added to the model syntax if scale scores are used. (0.1.1.43)</p></li>
-<li><p>The argument <code>sim_data_name</code> of <code>process_data</code> is now default to <code>"data"</code>. It is not a required argument. (0.1.1.43)</p></li>
-<li><p>The attribute <code>number_of_indicators</code> will be added to the generated data before passing to <code>process_data</code>. (0.1.1.43)</p></li>
-<li><p>Added <code>n_ratio</code> to <code><a href="../reference/power4test.html">power4test()</a></code> and related functions to supporting controlling the sample sizes of multigroup models using one single value for <code>n</code>. This allows functions such as <code><a href="../reference/x_from_power.html">n_from_power()</a></code> and <code><a href="../reference/x_from_power.html">n_region_from_power()</a></code> to support multigroup models. (0.1.1.44)</p></li>
-<li><p><code><a href="../reference/test_cond_indirect.html">test_cond_indirect()</a></code> and <code><a href="../reference/test_cond_indirect_effects.html">test_cond_indirect_effects()</a></code> now support multigroup models, although <code><a href="../reference/test_cond_indirect_effects.html">test_cond_indirect_effects()</a></code> only support either a path with moderators (<code>wlevels</code>) or a path between groups, but not both. (0.1.1.45)</p></li>
-<li><p>Updated <code><a href="../reference/test_cond_indirect_effects.html">test_cond_indirect_effects()</a></code> to support computing and testing group differences in indirect effects for multigroup models. (0.1.1.46)</p></li>
-<li><p>Updated <code><a href="../reference/test_parameters.html">test_parameters()</a></code> to support doing likelihood ratio tests to test constraining pairs of parameters in multigroup models, by using the argument <code>compare_groups</code>. (0.1.1.47)</p></li>
-<li><p>Added the argument <code>exclude_var</code> to <code><a href="../reference/test_parameters.html">test_parameters()</a></code> to exclude variances and error variances. (0.1.1.47)</p></li>
-<li><p>Updated <code><a href="../reference/power4test.html">power4test()</a></code> to support updating a parameter in one group when the population model is a multigroup model. Use <code>"y ~ x.g2"</code> to denote <code>"y ~ x"</code> in Group 2. If the suffix is omitted, the parameter is assumed to be in Group 1. The function <code><a href="../reference/power4test_by_es.html">power4test_by_es()</a></code> now also support multigroup models due to this change. (0.1.1.48)</p></li>
-<li><p>Added <code><a href="../reference/test_group_equal.html">test_group_equal()</a></code> for testing equality constraints between groups. (0.1.1.49)</p></li>
-<li><p>The arguments in <code>control</code> is now passed directly to the entry point of the algorithms. Potential conflicts due to partial matching should be prevented inside these algorithms (0.1.1.50)</p></li>
-<li><p>Added the algorithm <code>"probabilistic_bisection"</code> for <code><a href="../reference/x_from_power.html">x_from_power()</a></code> and friends. (0.1.1.51)</p></li>
-<li><p>Adjust the <code>initial_nrep</code> in probabilistic bisection such that the rejection rate will not be exactly equal to the target power. (0.1.1.52)</p></li>
-<li><p>Test functions using <code>manymome</code> will automatically use <code>"pvalues"</code> as the test method if <code>R</code> is a value supported by the Boos-Zhang method. (0.1.1.53)</p></li>
-<li><p>Fixed <code>fix_many_lm_model()</code> to handle model syntax with a regression model spanning more than one line and fitted by <code><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm()</a></code>. (0.1.1.54)</p></li>
+<li><p>The attribute <code>number_of_indicators</code> will be added to the generated data before passing to <code>process_data</code>. Used by data processors such as <code><a href="../reference/scale_scores.html">scale_scores()</a></code>. (0.1.1.43)</p></li>
+<li><p>The arguments in <code>control</code> are now passed directly to the entry point of the algorithms. Potential conflicts due to partial matching should be prevented inside these algorithms (0.1.1.50)</p></li>
 <li><p>Updated <code><a href="../reference/power4test.html">power4test()</a></code> to make one cluster that will be used in all stages. (0.1.1.55)</p></li>
 <li><p>Load balancing is no longer used by default, to ensure the results are reproducible. To enable load balancing, set the option <code>"power4mome.use_lb"</code> to <code>TRUE</code> using <code><a href="https://rdrr.io/r/base/options.html" class="external-link">options()</a></code>. (0.1.1.56)</p></li>
-<li><p>For probabilistic bisection, the initial interval will no longer be adjusted. This algorithm should e used with a wide enough initial interval because the interval will not be adjusted during the search (for now). (0.1.1.56)</p></li>
-<li><p>Updated the quick functions (<code><a href="../reference/q_power_mediation.html">q_power_mediation()</a></code> and friends) to have one more mode, <code>"n"</code>. Probabilistic bisection is the default algorithm for this mode. Other methods have been updated for this mode. (0.1.1.56)</p></li>
-<li><p>For some functions, <code>nrep</code> will be included in the output if its values vary across rows. (0.1.1.57)</p></li>
-<li><p>Increase <code>delta_tol</code> fo PBA (2 for <code>n</code> and .002 for <code>es</code>). (0.1.1.57)</p></li>
-<li><p>The default values of <code>n</code> of q-functions now depends on the <code>mode</code> and <code>algorithm</code>. (0.1.1.57)</p></li>
-<li><p>Added <code><a href="../reference/x_from_power.html">pba_diagnosis()</a></code> to generate plots related to the search history of probabilistic bisection algorithm. (0.1.1.58)</p></li>
 <li><p>Updated the internal functions <code>summarize_one_test_vector ()</code> and <code>summarize_one_test_data_frame()</code> to handle failed replications properly. (0.1.1.59)</p></li>
-<li><p>Updated the help page of <code><a href="../reference/x_from_power.html">x_from_power()</a></code> to describe the probabilistic bisection method. (0.1.1.60)</p></li>
-<li><p>Added some helpers for users to use the Boos-Zhang-2000 method without remembering the number of resamples supported. (0.1.1.61)</p></li>
-<li><p>Updated <code><a href="../reference/x_from_power.html">pba_diagnosis()</a></code> to support the output of <code><a href="../reference/x_from_power.html">n_region_from_power()</a></code>. (0.1.1.62)</p></li>
-<li><p>Updated the quick functions (<code><a href="../reference/q_power_mediation.html">q_power_mediation()</a></code> and friends). When <code>mode</code> is <code>"n"</code> or <code>"region"</code>, it is optional to set <code>n</code>. If not set, it will be determined internally. (0.1.1.63)</p></li>
 <li><p>The internal helper <code>do_FUN()</code> for parallel processing now export functions defined in the global environment to clusters, because they may be used in arguments such as <code>process_data</code>. (0.1.1.64)</p></li>
-<li><p>Updated <code><a href="../reference/test_k_indirect_effects.html">test_k_indirect_effects()</a></code> to support computing and testing the total indirect effect. (0.1.1.65)</p></li>
-<li><p>Added <code><a href="../reference/missing_values.html">missing_values()</a></code> for generating missing values, through the argument <code>process_data</code>. (0.1.1.66)</p></li>
-<li><p>Added <code><a href="../reference/ordinal_variables.html">ordinal_variables()</a></code> for converting continuous indicator variables to ordinal variables, through the argument <code>process_data</code>. (0.1.1.67, 0.1.1.69)</p></li>
 <li><p>The internal helper <code>do_FUN()</code> will reproduce the search path by loading the packages in the workers. (0.1.1.69)</p></li>
-<li><p>Added <code>loading_difference</code> and <code>reference</code> for <code><a href="../reference/sim_data.html">sim_data()</a></code>. The population standardized factor loadings of indicators of a factor can have different loadings, and the first indicator (the default reference indicator) can be the indicator with the strongest, weakest, or medium loadings. (0.1.1.70)</p></li>
-<li><p>Added the <code><a href="../reference/rejection_rates.html">rejection_rates()</a></code> method to <code>x_from_power</code>, <code>n_region_from_power</code>, and <code>q_power_mediation</code> objects. (0.1.1.71)</p></li>
-<li><p>Moved <code>delta_tol</code> and <code>last_k</code> to <code>variants</code>, such that users can change them through <code>control</code> when calling <code><a href="../reference/x_from_power.html">x_from_power()</a></code> and friends. (0.1.1.72)</p></li>
 <li><p>Added and updated technical appendices for the three algorithms used in <code><a href="../reference/x_from_power.html">x_from_power()</a></code> and friends. (0.1.1.73)</p></li>
-<li><p>Changed the default algorithms to be used in <code><a href="../reference/x_from_power.html">x_from_power()</a></code>. (0.1.1.74)</p></li>
 <li><p>Fixed the help for the argument <code>mode</code> of <code><a href="../reference/q_power_mediation.html">q_power_mediation()</a></code> and friends. (0.1.1.75)</p></li>
-<li><p>If the model is a multigroup model, descriptive statistics for the generated data are printed by group, using <code><a href="https://rdrr.io/pkg/psych/man/describe.by.html" class="external-link">psych::describeBy()</a></code>. (0.1.1.76)</p></li>
-<li><p>Response proportions will be printed with <code>data_long = TRUE</code> if a variable has 10 or fewer unique values (e.g., ordinal variables), using <code><a href="https://rdrr.io/pkg/psych/man/score.items.html" class="external-link">psych::responseFrequency()</a></code>. (0.1.1.77)</p></li>
 <li><p>Simplify some examples to meet the five-second requirement. (0.1.1.78)</p></li>
 </ul></div>
+</div>
+<div class="section level3">
+<h3 id="bug-fixes-0-2-0">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-2-0"></a></h3>
+<ul><li><p>Fixed a bug in extending intervals in the bisection algorithm, and also improved the way intervals are extended. (0.1.1.35)</p></li>
+<li><p>Fixed <code>fix_many_lm_model()</code> to handle model syntax with a regression model spanning more than one line and fitted by <code><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm()</a></code>. (0.1.1.54)</p></li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.1" id="power4mome-011">power4mome 0.1.1<a class="anchor" aria-label="anchor" href="#power4mome-011"></a></h2><p class="text-muted">CRAN release: 2025-09-21</p>
 <ul><li>Updated to be compatible with the forthcoming version of <code>lavaan</code>, 0.9-12. (0.1.1)</li>
