@@ -8,7 +8,7 @@
 [![R-CMD-check](https://github.com/sfcheung/power4mome/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/sfcheung/power4mome/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-(Version 0.1.1.78, updated on 2026-03-18, [release history](https://sfcheung.github.io/power4mome/news/index.html))
+(Version 0.2.0, updated on 2026-03-18, [release history](https://sfcheung.github.io/power4mome/news/index.html))
 
 # power4mome <a href="https://sfcheung.github.io/power4mome/"><img src="man/figures/logo.png" align="right" height="120" alt="power4mome website" /></a>
 
@@ -40,6 +40,8 @@ common mediation, moderation, and
 moderated mediation models:
 
 https://sfcheung.github.io/power4mome/articles/
+
+Major new features can be found [below](#major-new-features).
 
 # Philosophy
 
@@ -75,6 +77,53 @@ Therefore, we also try to
   different ways, to accommodate
   scenarios that prioritize these goals
   differently.
+
+# Major New Features
+
+These are some major new features added
+in `power4mome` 0.2.0 (see the
+[release history](https://sfcheung.github.io/power4mome/news/index.html)
+for a full list of changes).
+
+## All-In-One Quick Functions
+
+All-in-one "quick" functions for
+common mediation models. Instead of
+specifying the model and effect size
+and then call `power4test()`, these
+quick functions combine all the steps
+into one. Learn more about them
+in [these examples](https://sfcheung.github.io/power4mome/articles/index.html#common-mediation-models).
+
+## Multigroup Power Analysis
+
+Support for multigroup models has been
+substantially improved. For example,
+power analysis for detecting the group
+difference in an indirect path can be
+conducted. Several test functions have
+also been updated to support testing
+group differences.
+See this [article](https://sfcheung.github.io/power4mome/articles/index.html#multigroup-models)
+for an illustration. More demonstrations
+will be added.
+
+## Data Processors
+
+Real studies rarely involve continuous
+variables. Datasets with missing data
+is also common. The argument `process_data`
+has been added to `power4test()` and
+friends for generating more realistic
+data for power analysis. For example,
+missing data can be simulated, and
+ordinal variables can be created from
+the continuous variables to simulate
+binary or Likert scale items. Power analysis
+can then be conducted by taking missing
+data into account.
+See these [articles](https://sfcheung.github.io/power4mome/articles/index.html#advanced-features)
+for illustrations.
 
 # Installation
 
@@ -148,7 +197,7 @@ moderation, and moderated mediation.
 
 But `power4mome` is not just for mediation,
 moderation, and moderated mediation. We
-avoided wrote the functions just
+avoided writing the functions just
 for these effects, and have left room for
 testing other effects, as hinted in some
 examples in the help pages. They may be
