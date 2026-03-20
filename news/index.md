@@ -1,8 +1,6 @@
 # Changelog
 
-## power4mome 0.2.0
-
-CRAN release: 2026-03-18
+## power4mome 0.2.1
 
 ### New Features
 
@@ -417,6 +415,8 @@ precision is desired (by using a large value of `nrep`).
   and friends. (0.1.1.75)
 
 - Simplify some examples to meet the five-second requirement. (0.1.1.78)
+
+- Replaced a test using `lavaan` by a test using `lm`. (0.2.1)
 
 ### Bug Fixes
 
