@@ -1,6 +1,8 @@
+skip_on_cran()
+
 library(testthat)
 
-test_that("indirect effect", {
+test_that("indirect effect: lavaan", {
 
 model_simple_med <-
 "
