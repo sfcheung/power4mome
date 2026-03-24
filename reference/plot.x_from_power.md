@@ -322,7 +322,7 @@ power_vs_n <- x_from_power(test_out,
 #> 
 #> ========== Final Stage ==========
 #> 
-#> - Start at 2026-03-20 13:20:45 
+#> - Start at 2026-03-24 10:45:29 
 #> - Rejection Rates:
 #> 
 #> [test]: test_parameters: CIs (pars: m~x) 

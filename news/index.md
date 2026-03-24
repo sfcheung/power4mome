@@ -2,6 +2,8 @@
 
 ## power4mome 0.2.1
 
+CRAN release: 2026-03-24
+
 ### New Features
 
 #### `power4test()`, `x_from_power()`, and Related Functions
@@ -416,7 +418,8 @@ precision is desired (by using a large value of `nrep`).
 
 - Simplify some examples to meet the five-second requirement. (0.1.1.78)
 
-- Replaced a test using `lavaan` by a test using `lm`. (0.2.1)
+- Replaced a test using `lavaan` by a test using `lm`. Also improved a
+  test for stability. (0.2.1)
 
 ### Bug Fixes
 
