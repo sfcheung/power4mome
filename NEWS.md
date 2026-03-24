@@ -517,7 +517,8 @@ using a large value of `nrep`).
   (0.1.1.78)
 
 - Replaced a test using `lavaan` by a
-  test using `lm`. (0.2.1)
+  test using `lm`. Also improved a
+  test for stability. (0.2.1)
 
 ## Bug Fixes
 

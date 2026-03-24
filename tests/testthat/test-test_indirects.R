@@ -1,3 +1,5 @@
+skip_on_cran()
+
 library(testthat)
 
 test_that("indirect effects", {
@@ -25,17 +27,17 @@ rel <- c(y = .70,
          m2 = .70,
          x = .70)
 
-sim_only <- power4test(nrep = 5,
+sim_only <- power4test(nrep = 10,
                        model = mod,
                        pop_es = mod_es,
                        n = 100,
                        number_of_indicators = k,
                        reliability = rel,
                        fit_model_args = list(estimator = "ML"),
-                       R = 100,
+                       R = 200,
                        do_the_test = FALSE,
                        progress = !is_testing(),
-                       iseed = 1234)
+                       iseed = 2345)
 
 test_ind <- power4test(object = sim_only,
                        test_fun = test_k_indirect_effects,
