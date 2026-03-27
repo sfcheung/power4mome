@@ -13,7 +13,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/sfcheung/power4mome/blob/main/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/sfcheung/power4mome/blob/v0.2.1/DESCRIPTION)
 
 Cheung S, Cheung S, Yang W (2026). *power4mome: Power Analysis for
 Moderation and Mediation*. R package version 0.2.1,
