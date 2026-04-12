@@ -1,5 +1,16 @@
 # Changelog
 
+## power4mome 0.2.1.1
+
+### Bug Fixes
+
+- Fixed the printing of the conditional effects in the simulated data.
+  If a moderator affects more than only component paths (e.g., both the
+  a-path and a b-path in a simple mediation model), it will be counted
+  only once in the printing. This affects only the printout used to
+  examine the generated data, and has not impact on the generated data.
+  (0.2.1.1)
+
 ## power4mome 0.2.1
 
 CRAN release: 2026-03-24
