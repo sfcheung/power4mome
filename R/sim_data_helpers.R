@@ -736,6 +736,7 @@ get_w <- function(
             }
           })
   out <- unlist(out)
+  out <- unique(out)
   out <- out[!is.na(out)]
   out
 }
