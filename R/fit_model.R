@@ -280,7 +280,8 @@ fit_model_i <- function(data_i,
   }
 
   # Fix the model if lm() is used to fitting the model
-  if (fit_function_org %in% c("lm", "many_lm")) {
+  if ((isTRUE(fit_function_org %in% c("lm", "many_lm"))) ||
+      (identical(fit_function, lmhelprs::many_lm))) {
     model_to_fit <- fix_many_lm_model(model_to_fit)
   }
 
