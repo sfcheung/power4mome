@@ -1,6 +1,10 @@
 # Changelog
 
-## power4mome 0.2.1.1
+## power4mome 0.2.1.2
+
+### Miscellaneous
+
+- Improve a check for the fit function. (0.2.1.2)
 
 ### Bug Fixes
 
