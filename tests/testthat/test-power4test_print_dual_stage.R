@@ -1,5 +1,3 @@
-skip("WIP")
-
 test_that("w on more than one component paths", {
 
 model <-
