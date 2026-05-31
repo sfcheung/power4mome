@@ -1,6 +1,6 @@
 Package: power4mome
 Title: Power Analysis for Moderation and Mediation
-Version: 0.2.1.2
+Version: 0.2.1.3
 Authors@R:
     c(person(given = "Shu Fai",
            family = "Cheung",
@@ -26,7 +26,6 @@ Description: Power analysis and sample size determination
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.3
 Suggests:
     knitr,
     rmarkdown,
@@ -54,3 +53,4 @@ Imports:
 Config/Needs/website: rmarkdown
 LazyData: true
 VignetteBuilder: knitr
+Config/roxygen2/version: 8.0.0

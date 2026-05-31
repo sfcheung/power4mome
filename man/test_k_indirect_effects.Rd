@@ -26,7 +26,7 @@ test_k_indirect_effects(
 }
 \arguments{
 \item{fit}{The fit object, to be
-passed to \code{\link[manymome:cond_indirect]{manymome::indirect_effect()}}.}
+passed to \code{\link[manymome:indirect_effect]{manymome::indirect_effect()}}.}
 
 \item{x}{The name of the \code{x}-variable,
 the predictor.}
@@ -95,7 +95,7 @@ method by Boos and Zhang (2000), and
 set to \code{"ci"} otherwise.}
 
 \item{...}{Additional arguments to
-be passed to \code{\link[manymome:cond_indirect]{manymome::many_indirect_effects()}}.}
+be passed to \code{\link[manymome:many_indirect_effects]{manymome::many_indirect_effects()}}.}
 
 \item{omnibus}{If \code{"no"}, the default,
 then the test results for all paths
@@ -189,7 +189,7 @@ This function is to be used in
 indirect effect, by setting it
 to the \code{test_fun} argument.
 
-It uses \code{\link[manymome:cond_indirect]{manymome::many_indirect_effects()}}
+It uses \code{\link[manymome:many_indirect_effects]{manymome::many_indirect_effects()}}
 to do the test. It can be used on
 models fitted by \code{\link[lavaan:sem]{lavaan::sem()}}
 or fitted by a sequence of calls

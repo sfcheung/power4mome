@@ -79,7 +79,7 @@ estimates can then be used to test
 effects such as indirect effects,
 usually by functions from the
 \code{manymome} package, such as
-\code{\link[manymome:cond_indirect]{manymome::indirect_effect()}}.
+\code{\link[manymome:indirect_effect]{manymome::indirect_effect()}}.
 }
 \section{The role of \code{gen_mc()}}{
 This function is used by the

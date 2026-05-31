@@ -40,7 +40,7 @@ First, specify the two parameters,
 desired population mean and standard
 deviation. The random numbers, drawn
 from a beta distribution by
-\code{\link[stats:Beta]{stats::rbeta()}} will then be
+\code{\link[stats:rbeta]{stats::rbeta()}} will then be
 rescaled to the desired population range.
 }
 \examples{
