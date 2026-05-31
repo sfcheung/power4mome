@@ -7,7 +7,7 @@ suppressMessages(library(lavaan))
 
 test_that("power4test: sam", {
 
-skip_if(utils::packageVersion("manymome") < "0.3.4.16")
+skip_if(utils::packageVersion("manymome") < "0.3.4.25")
 
 model_simple_med <-
 "

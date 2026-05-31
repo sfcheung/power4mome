@@ -258,10 +258,10 @@ fit_model_i <- function(data_i,
   } else {
     fit_function_org <- character(0)
   }
-  if (utils::packageVersion("manymome") < "0.3.4.16") {
+  if (utils::packageVersion("manymome") < "0.3.4.25") {
     if ((fit_function_org == "sam") ||
         identical(fit_function, lavaan::sam)) {
-      stop("lavaan::sam requires manymome 0.3.4.16 or above")
+      stop("lavaan::sam requires manymome 0.3.4.25 or above")
     }
   }
   # Anomalies should be checked in
