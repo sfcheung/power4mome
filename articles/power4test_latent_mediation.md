@@ -29,6 +29,7 @@ latent factors, please refer to
 This introduction only needs the following package:
 
 ``` r
+
 library(power4mome)
 ```
 
@@ -69,6 +70,7 @@ indicators.
 This is the model syntax:
 
 ``` r
+
 mod <-
 "
 fm ~ fx
@@ -104,7 +106,7 @@ Suppose we want to estimate the power when:
 - The path from `fx` to `fm` are “small” in strength.
 
 By default, `power4mome` use this convention for regression path and
-correlation:[¹](#fn1)
+correlation:[^1]
 
 - Small: .10 (or -.10)
 
@@ -118,6 +120,7 @@ so-called “betas”).
 The following string denotes the desired values:
 
 ``` r
+
 mod_es <-
 "
 fm ~ fx: l
@@ -185,12 +188,14 @@ reliability.
 For example, suppose we will use the following vectors:
 
 ``` r
+
 k <- c(fm = 3,
        fx = 4,
        fy = 5)
 ```
 
 ``` r
+
 mod_rel <- c(fy = .70,
              fm = .60,
              fx = .50)
@@ -213,6 +218,7 @@ We are all set and can call
 to check the model:
 
 ``` r
+
 out <- power4test(nrep = 2,
                   model = mod,
                   pop_es = mod_es,
@@ -245,11 +251,12 @@ These are the arguments used:
 
 - `iseed`: If supplied, it is used to set the seed for the random number
   generator. It is advised to always set this to an arbitrary integer,
-  to make the results reproducible.[²](#fn2)
+  to make the results reproducible.[^2]
 
 The population values can be shown by printing this object:
 
 ``` r
+
 out
 #> 
 #> ====================== Model Information ======================
@@ -392,6 +399,7 @@ If necessary, we can check the data generation by adding
 `data_long = TRUE` when printing the output:
 
 ``` r
+
 print(out,
       data_long = TRUE)
 ```
@@ -477,6 +485,7 @@ confidence interval to test the indirect effect from `fx` to `fy`
 through `fm`, when sample size is 150. This is the call:
 
 ``` r
+
 out <- power4test(nrep = 400,
                   model = mod,
                   pop_es = mod_es,
@@ -504,7 +513,7 @@ These are the new arguments used:
   stable interval.
 
 - `ci_type`: The method used to generate estimates. Support both Monte
-  Carlo (`"mc"`) and nonparametric bootstrapping (`"boot"`).[³](#fn3)
+  Carlo (`"mc"`) and nonparametric bootstrapping (`"boot"`).[^3]
   Although bootstrapping is usually used to test an indirect effect, it
   is very slow to do `R` bootstrapping in `nrep` datasets (the model
   will be fitted `R * nrep` times). Therefore, it is preferable to use
@@ -523,12 +532,12 @@ These are the new arguments used:
   it is a named list specifying the predictor (`x`), the mediator(s)
   (`m`), and the outcome (`y`). A path with any number of mediators can
   be supported. Please refer to the help page of
-  [`test_indirect_effect()`](https://sfcheung.github.io/power4mome/reference/test_indirect_effect.md).[⁴](#fn4)
+  [`test_indirect_effect()`](https://sfcheung.github.io/power4mome/reference/test_indirect_effect.md).[^4]
 
 - `parallel`: If the test to be conducted is slow, which is the case for
   tests done by Monte Carlo or nonparametric bootstrapping confidence
   interval, it is advised to enable parallel processing by setting
-  `parallel` to `TRUE`.[⁵](#fn5)
+  `parallel` to `TRUE`.[^5]
 
 For `nrep = 400`, the 95% confidence limits for a power of .80 are about
 .04 below and above .80. This should be precise enough for determining
@@ -538,6 +547,7 @@ desired, set `nrep` to 1000 or 2000 for the sample size to be used.
 This is the default printout:
 
 ``` r
+
 out
 #> 
 #> ====================== Model Information ======================
@@ -653,6 +663,7 @@ rate can be retrieved by
 [`rejection_rates()`](https://sfcheung.github.io/power4mome/reference/rejection_rates.md).
 
 ``` r
+
 out_power <- rejection_rates(out)
 out_power
 #> [test]: test_indirect: fx->fm->fy 
@@ -700,6 +711,7 @@ again, set the previous output (`out` in the example above) as the first
 argument, and set `n` to a new value (200 in this example):
 
 ``` r
+
 out_new_n <- power4test(out,
                         n = 200)
 out_new_n
@@ -708,6 +720,7 @@ out_new_n
 This is the estimated power when the sample size is 200.
 
 ``` r
+
 out_new_n_reject <- rejection_rates(out_new_n)
 out_new_n_reject
 #> [test]: test_indirect: fx->fm->fy 
@@ -745,6 +758,7 @@ Assume that we want to know the power for the same scenario, but with
 all scales having a population reliability of .80:
 
 ``` r
+
 out_new_rel <- power4test(out,
                           reliability = c(fx = .80,
                                           fm = .80,
@@ -755,6 +769,7 @@ out_new_rel
 This is the estimated power with higher population reliability:
 
 ``` r
+
 out_new_rel_reject <- rejection_rates(out_new_rel)
 out_new_rel_reject
 #> [test]: test_indirect: fx->fm->fy 
@@ -794,6 +809,7 @@ called directly on the output of
 [`power4test()`](https://sfcheung.github.io/power4mome/reference/power4test.md):
 
 ``` r
+
 out2_region <- n_region_from_power(out2,
                                    seed = 2345)
 ```
@@ -817,6 +833,7 @@ sample size of 200. We can estimate the power in the mediation model
 above for these sample sizes: 175, 200, 225, 250.
 
 ``` r
+
 out_several_ns <- power4test_by_n(out,
                                   n = c(175, 200, 225, 250),
                                   by_seed = 4567)
@@ -845,6 +862,7 @@ The rejection rates for each sample size can be retrieved by
 too:
 
 ``` r
+
 rejection_rates(out_several_ns)
 #> [test]: test_indirect: fx->fm->fy 
 #> [test_label]: Test 
@@ -869,6 +887,7 @@ The method [`plot()`](https://rdrr.io/r/graphics/plot.default.html) can
 also be used to plot the results:
 
 ``` r
+
 plot(out_several_ns)
 ```
 
@@ -917,23 +936,21 @@ confidence intervals, in many (though not all) models. *Behavior
 Research Methods*, *56*(5), 4862–4882.
 <https://doi.org/10.3758/s13428-023-02224-z>
 
-------------------------------------------------------------------------
+[^1]: Users can specify the values directly if necessary.
 
-1.  Users can specify the values directly if necessary.
-
-2.  The functions used are
+[^2]: The functions used are
     [`parallel::clusterSetRNGStream()`](https://rdrr.io/r/parallel/RngStream.html)
     for parallel processing, and
     [`set.seed()`](https://rdrr.io/r/base/Random.html) for serial
     processing.
 
-3.  They are implemented by
+[^3]: They are implemented by
     [`manymome::do_mc()`](https://sfcheung.github.io/manymome/reference/do_mc.html)
     and
     [`manymome::do_boot()`](https://sfcheung.github.io/manymome/reference/do_boot.html),
     respectively.
 
-4.  The test is implemented by `manymome::indirect()`.
+[^4]: The test is implemented by `manymome::indirect()`.
 
-5.  The number of cores is determined automatically but can be set
+[^5]: The number of cores is determined automatically but can be set
     directly by the `ncores` argument.

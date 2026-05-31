@@ -92,6 +92,7 @@ implementation.
 ## Examples
 
 ``` r
+
 # Specify the model
 
 mod <-

@@ -86,6 +86,7 @@ the amputation method.
 ## Examples
 
 ``` r
+
 # Specify the model
 
 mod <-

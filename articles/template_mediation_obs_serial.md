@@ -47,6 +47,7 @@ Estimate the power for a sample size.
 The code:
 
 ``` r
+
 library(power4mome)
 #
 # ====== Model: Form ======
@@ -111,6 +112,7 @@ rejection_rates(out)
 The results:
 
 ``` r
+
 print(out,
       data_long = TRUE)
 #> 
@@ -273,6 +275,7 @@ To rerun the simulation to estimate power for another sample size.
 The code:
 
 ``` r
+
 #
 # ===== Reuse the output of power4test() =====
 # Estimate power for n = 60
@@ -287,6 +290,7 @@ rejection_rates(out_new_n)
 The results:
 
 ``` r
+
 rejection_rates(out_new_n)
 #> [test]: test_indirect: x->m1->m2->m3->y 
 #> [test_label]: Test 
@@ -310,6 +314,7 @@ Rerun the simulation to estimate power for with several sample sizes.
 The code:
 
 ``` r
+
 #
 # ===== Reuse the output of power4test() =====
 # Estimate power for n = 70, 80, 90
@@ -325,6 +330,7 @@ rejection_rates(out_ns)
 The results:
 
 ``` r
+
 rejection_rates(out_ns)
 #> [test]: test_indirect: x->m1->m2->m3->y 
 #> [test_label]: Test 
@@ -361,6 +367,7 @@ is too different from the target power.
 The code:
 
 ``` r
+
 #
 # ===== Reuse the output of power4test() =====
 # Call x_from_power()
@@ -382,6 +389,7 @@ plot(n_power_80)
 The results:
 
 ``` r
+
 #
 # ===== Print the Summary =====
 summary(n_power_80)
@@ -477,6 +485,7 @@ sample sizes are too different from the target power.
 The code:
 
 ``` r
+
 #
 # ===== Reuse the output of power4test_by_n() =====
 # Call x_from_power()
@@ -498,6 +507,7 @@ plot(n_power_80_ns)
 The results:
 
 ``` r
+
 #
 # ===== Print the Summary =====
 summary(n_power_80_ns)
@@ -589,6 +599,7 @@ For example, set all the paths along the indirect effect to medium
 The code:
 
 ``` r
+
 model_es2 <-
 "
 m1 ~ x: m
@@ -620,6 +631,7 @@ rejection_rates(out2)
 The results:
 
 ``` r
+
 print(out2,
       data_long = TRUE)
 #> 
@@ -781,6 +793,7 @@ For illustration, go directly to searching by
 The code:
 
 ``` r
+
 #
 # ===== Reuse the output of power4test() =====
 n2_power_80 <- x_from_power(out2,
@@ -797,6 +810,7 @@ plot(n2_power_80)
 The results:
 
 ``` r
+
 #
 # ===== Print the Summary =====
 summary(n2_power_80)

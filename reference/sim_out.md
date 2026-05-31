@@ -100,6 +100,7 @@ build their own workflows to do the power analysis.
 ## Examples
 
 ``` r
+
 # Specify the model
 
 mod <-

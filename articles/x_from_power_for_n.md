@@ -48,6 +48,7 @@ this vignette self-contained.
 This illustration needs the following package(s):
 
 ``` r
+
 library(power4mome)
 ```
 
@@ -104,6 +105,7 @@ We will consider Case 1 first.
 This is the model syntax
 
 ``` r
+
 mod <-
 "
 m ~ x
@@ -132,7 +134,7 @@ Suppose we want to estimate the power when:
 - The path from `x` to `m` are “small” in strength.
 
 By default, `power4mome` use this convention for regression path and
-correlation:[¹](#fn1)
+correlation:[^1]
 
 - Small: .10 (or -.10)
 
@@ -146,6 +148,7 @@ All these values are for the standardized solution (the so-called
 The following string denotes the desired values:
 
 ``` r
+
 mod_es <-
 "
 m ~ x: l
@@ -175,6 +178,7 @@ to zero.
 ### Call `power4test()` to Check the Model
 
 ``` r
+
 out <- power4test(nrep = 2,
                   model = mod,
                   pop_es = mod_es,
@@ -199,11 +203,12 @@ These are the arguments used:
 
 - `iseed`: If supplied, it is used to set the seed for the random number
   generator. It is advised to always set this to an arbitrary integer,
-  to make the results reproducible.[²](#fn2)
+  to make the results reproducible.[^2]
 
 The population values can be shown by print this object:
 
 ``` r
+
 print(out,
       data_long = TRUE)
 #> 
@@ -335,6 +340,7 @@ confidence interval to test the indirect effect from `x` to `y` through
 one:
 
 ``` r
+
 out <- power4test(nrep = 50,
                   model = mod,
                   pop_es = mod_es,
@@ -364,7 +370,7 @@ These are the new arguments used:
   simulated estimates, 2000 in this example.
 
 - `ci_type`: The method used to generate estimates. Support Monte Carlo
-  (`"mc"`) and nonparametric bootstrapping (`"boot"`).[³](#fn3) Although
+  (`"mc"`) and nonparametric bootstrapping (`"boot"`).[^3] Although
   bootstrapping is usually used to test an indirect effect, it is very
   slow to do `R` bootstrapping in `nrep` datasets (the model will be
   fitted `R * nrep` times). Therefore, it is preferable to use Monte
@@ -383,12 +389,12 @@ These are the new arguments used:
   it is a named list specifying the predictor (`x`), the mediator(s)
   (`m`), and the outcome (`y`). A path with any number of mediators can
   be supported. Please refer to the help page of
-  [`test_indirect_effect()`](https://sfcheung.github.io/power4mome/reference/test_indirect_effect.md).[⁴](#fn4)
+  [`test_indirect_effect()`](https://sfcheung.github.io/power4mome/reference/test_indirect_effect.md).[^4]
 
 - `parallel`: If the test to be conducted is slow, which is the case for
   test done by Monte Carlo or nonparametric bootstrapping confidence
   interval, it is advised to enable parallel processing by setting
-  `parallel` to `TRUE`.[⁵](#fn5)
+  `parallel` to `TRUE`.[^5]
 
 Note that the simulation can take some time to run. Progress will be
 printed when run in an interactive session.
@@ -396,6 +402,7 @@ printed when run in an interactive session.
 This is the default printout:
 
 ``` r
+
 print(out,
       test_long = TRUE)
 #> 
@@ -519,6 +526,7 @@ simple method is usually good enough for finding an approximation.
 This is the function call:
 
 ``` r
+
 out_n <- n_from_power(out,
                       target_power = .80,
                       final_nrep = 400,
@@ -560,6 +568,7 @@ The example above needs a few attempts to arrive at the approximation.
 This is the basic output:
 
 ``` r
+
 out_n
 #> Call:
 #> power4mome::x_from_power(object = out, x = "n", target_power = 0.8, 
@@ -594,6 +603,7 @@ To obtain a more detailed results for the search, we can use the
 [`summary()`](https://rdrr.io/r/base/summary.html) method:
 
 ``` r
+
 summary(out_n)
 #> 
 #> ====== x_from_power Results ======
@@ -688,6 +698,7 @@ about the relation. A simple plot can be requested by
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html):
 
 ``` r
+
 plot(out_n)
 ```
 
@@ -716,6 +727,7 @@ power.
 This is the function call:
 
 ``` r
+
 out_n_lb <- n_from_power(out,
                          target_power = .80,
                          final_nrep = 400,
@@ -731,6 +743,7 @@ approximation.
 This is the output:
 
 ``` r
+
 out_n_lb
 #> Call:
 #> power4mome::x_from_power(object = out, x = "n", target_power = 0.8, 
@@ -764,6 +777,7 @@ target power is .80.
 This a summary of the results:
 
 ``` r
+
 summary(out_n_lb)
 #> 
 #> ====== x_from_power Results ======
@@ -845,6 +859,7 @@ summary(out_n_lb)
 This is a plot of the search:
 
 ``` r
+
 plot(out_n_lb)
 ```
 
@@ -904,23 +919,21 @@ Waeber, R., Frazier, P. I., & Henderson, S. G. (2013). Bisection search
 with noisy responses. *SIAM Journal on Control and Optimization*,
 *51*(3), 2261–2279. <https://doi.org/10.1137/120861898>
 
-------------------------------------------------------------------------
+[^1]: Users can specify the values directly if necessary.
 
-1.  Users can specify the values directly if necessary.
-
-2.  The functions used are
+[^2]: The functions used are
     [`parallel::clusterSetRNGStream()`](https://rdrr.io/r/parallel/RngStream.html)
     for parallel processing, and
     [`set.seed()`](https://rdrr.io/r/base/Random.html) for serial
     processing.
 
-3.  They are implemented by
+[^3]: They are implemented by
     [`manymome::do_mc()`](https://sfcheung.github.io/manymome/reference/do_mc.html)
     and
     [`manymome::do_boot()`](https://sfcheung.github.io/manymome/reference/do_boot.html),
     respectively.
 
-4.  The test is implemented by `manymome::indirect()`.
+[^4]: The test is implemented by `manymome::indirect()`.
 
-5.  The number of cores is determined automatically but can be set
+[^5]: The number of cores is determined automatically but can be set
     directly by the `ncores` argument.

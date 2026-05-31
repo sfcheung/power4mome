@@ -157,6 +157,7 @@ for models fitted by regression using
 ## Examples
 
 ``` r
+
 # Specify the model
 
 mod <-

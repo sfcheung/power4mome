@@ -42,6 +42,7 @@ multivariate normal distribution (the default).
 Load the packages first:
 
 ``` r
+
 library(power4mome)
 ```
 
@@ -50,6 +51,7 @@ Estimate the power for a sample size.
 The code for the model:
 
 ``` r
+
 model <-
 "
 m ~ x
@@ -90,6 +92,7 @@ We would like to check the model first. Therefore, the test of indirect
 effect is not added for now.
 
 ``` r
+
 out <- power4test(
   nrep = 600,
   model = model,
@@ -122,6 +125,7 @@ To illustrate how to use other functions that accepts only one sample
 size, we use `n_ratio` in the following illustration.
 
 ``` r
+
 out <- power4test(
   nrep = 600,
   model = model,
@@ -137,6 +141,7 @@ out <- power4test(
 We now check the simulation:
 
 ``` r
+
 out
 ```
 
@@ -251,12 +256,12 @@ Our interest is in testing the *difference* in the indirect effect. To
 do this, we add `compare_groups = TRUE` to the argument of the test.
 
 `R_for_bz(200)` is used to set `R` to the largest value less than 200
-that is supported by the method proposed by Boos & Zhang (2000).
-[¹](#fn1)
+that is supported by the method proposed by Boos & Zhang (2000). [^1]
 
 Note that
 
 ``` r
+
 out <- power4test(
   nrep = 600,
   model = model,
@@ -278,6 +283,7 @@ The rejection rate (power) for this example can be found by
 [`rejection_rates()`](https://sfcheung.github.io/power4mome/reference/rejection_rates.md):
 
 ``` r
+
 rejection_rates(out)
 #> [test]: test_cond_indirect_effects: x->m->y 
 #> [test_label]: x->m->y | Group2 - Group1 
@@ -311,6 +317,7 @@ For example, the output above can be used directly by
 to find sample sizes given a target power, with `n_ratio` fixed.
 
 ``` r
+
 n_power <- n_from_power(
               out,
               target_power = .80,
@@ -336,6 +343,7 @@ The output can also be used directly by `n_power_region()` to find a
 region of sample sizes given a target power:
 
 ``` r
+
 n_power_region <- n_region_from_power(
                       out,
                       seed = 1357
@@ -349,12 +357,11 @@ resampling-based hypothesis tests. *Journal of the American Statistical
 Association*, *95*(450), 486–492.
 <https://doi.org/10.1080/01621459.2000.10474226>
 
-------------------------------------------------------------------------
-
-1.  For tests that use Monte Carlo or bootstrapping confidence interval,
-    the method proposed by Boos & Zhang (2000) to use a small number of
-    resamples or simulated samples is recommended. This can be enabled
-    automatically by setting `R` to a supported value. The helper
+[^1]: For tests that use Monte Carlo or bootstrapping confidence
+    interval, the method proposed by Boos & Zhang (2000) to use a small
+    number of resamples or simulated samples is recommended. This can be
+    enabled automatically by setting `R` to a supported value. The
+    helper
     [`R_for_bz()`](https://sfcheung.github.io/power4mome/reference/bz_helpers.md)
     can be used. By default, it returns the largest supported `R` which
     is less than a target `R`, given a default level of significance of

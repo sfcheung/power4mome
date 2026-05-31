@@ -50,6 +50,7 @@ sizes, they will be used to compute the predicted rejection rates.
 ## Examples
 
 ``` r
+
 # Specify the population model
 
 model_simple_med <-

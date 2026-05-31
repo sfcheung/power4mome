@@ -1,6 +1,6 @@
 # power4mome
 
-(Version 0.2.1.2, updated on 2026-04-19, [release
+(Version 0.2.1.3, updated on 2026-05-31, [release
 history](https://sfcheung.github.io/power4mome/news/index.html))
 
 This package is for power analysis and sample size determination for
@@ -97,6 +97,7 @@ The stable version at CRAN can be installed by
 [`install.packages()`](https://rdrr.io/r/utils/install.packages.html):
 
 ``` r
+
 install.packages("power4mome")
 ```
 
@@ -104,6 +105,7 @@ The latest developmental version of this package can be installed by
 `remotes::install_github`:
 
 ``` r
+
 remotes::install_github("sfcheung/power4mome")
 ```
 

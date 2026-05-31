@@ -229,6 +229,7 @@ for the `predict` method of the output of `power_curve()`.
 ## Examples
 
 ``` r
+
 # Specify the population model
 
 model_simple_med <-

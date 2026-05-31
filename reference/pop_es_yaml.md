@@ -160,6 +160,7 @@ and other functions that have the `pop_es` argument.
 ## Examples
 
 ``` r
+
 mod_es <- c("y ~ m" = "l",
             "m ~ x" = "m",
             "y ~ x" = "nil")

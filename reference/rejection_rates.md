@@ -283,6 +283,7 @@ which are supported by this method.
 ## Examples
 
 ``` r
+
 # Specify the population model
 
 model_simple_med <-

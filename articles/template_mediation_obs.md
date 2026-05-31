@@ -47,6 +47,7 @@ Estimate the power for a sample size.
 The code:
 
 ``` r
+
 library(power4mome)
 #
 # ====== Model: Form ======
@@ -103,6 +104,7 @@ rejection_rates(out)
 The results:
 
 ``` r
+
 print(out,
       data_long = TRUE)
 #> 
@@ -233,6 +235,7 @@ To rerun the simulation to estimate power for another sample size.
 The code:
 
 ``` r
+
 #
 # ===== Reuse the output of power4test() =====
 # Estimate power for n = 150
@@ -247,6 +250,7 @@ rejection_rates(out_new_n)
 The results:
 
 ``` r
+
 rejection_rates(out_new_n)
 #> [test]: test_indirect: x->m->y 
 #> [test_label]: Test 
@@ -271,6 +275,7 @@ sizes.
 The code:
 
 ``` r
+
 #
 # ===== Reuse the output of power4test() =====
 # Estimate power for n = 200, 250, 300
@@ -286,6 +291,7 @@ rejection_rates(out_ns)
 The results:
 
 ``` r
+
 rejection_rates(out_ns)
 #> [test]: test_indirect: x->m->y 
 #> [test_label]: Test 
@@ -336,6 +342,7 @@ than the target level.
 The code:
 
 ``` r
+
 #
 # ===== Reuse the output of power4test() =====
 # Call n_from_power()
@@ -357,6 +364,7 @@ plot(n_power_80_ub)
 The results:
 
 ``` r
+
 #
 # ===== Print the Summary =====
 summary(n_power_80_ub)
@@ -445,6 +453,7 @@ level.
 The code:
 
 ``` r
+
 #
 # ===== Reuse the output of power4test() =====
 # Call n_from_power()
@@ -466,6 +475,7 @@ plot(n_power_80_lb)
 The results:
 
 ``` r
+
 #
 # ===== Print the Summary =====
 summary(n_power_80_lb)
@@ -567,6 +577,7 @@ The code for Case 1: Sample sizes with power significantly lower than
 the target level.
 
 ``` r
+
 #
 # ===== Reuse the output of power4test_by_n() =====
 # Call n_from_power()
@@ -588,6 +599,7 @@ plot(n_power_80_ns_ub)
 The results:
 
 ``` r
+
 #
 # ===== Print the Summary =====
 summary(n_power_80_ns_ub)
@@ -674,6 +686,7 @@ The code for Case 2: Sample sizes with power significantly higher than
 the target level.
 
 ``` r
+
 #
 # ===== Reuse the output of power4test_by_n() =====
 # Call n_from_power()
@@ -695,6 +708,7 @@ plot(n_power_80_ns_lb)
 The results:
 
 ``` r
+
 #
 # ===== Print the Summary =====
 summary(n_power_80_ns_lb)
@@ -791,6 +805,7 @@ For example, set both the `m ~ x` path and `y ~ m` path to medium (.30)
 The code:
 
 ``` r
+
 model_es2 <-
 "
 m ~ x: m
@@ -820,6 +835,7 @@ rejection_rates(out2)
 The results:
 
 ``` r
+
 print(out2,
       data_long = TRUE)
 #> 
@@ -950,6 +966,7 @@ The code for Case 1: Sample sizes with power significantly lower than
 the target level.
 
 ``` r
+
 #
 # ===== Reuse the output of power4test() =====
 n2_power_80_ub <- n_from_power(out2,
@@ -966,6 +983,7 @@ plot(n2_power_80_ub)
 The results:
 
 ``` r
+
 #
 # ===== Print the Summary =====
 summary(n2_power_80_ub)
@@ -1050,6 +1068,7 @@ The code for Case 2: Sample sizes with power significantly higher than
 the target level.
 
 ``` r
+
 #
 # ===== Reuse the output of power4test() =====
 n2_power_80_lb <- n_from_power(out2,
@@ -1066,6 +1085,7 @@ plot(n2_power_80_lb)
 The results:
 
 ``` r
+
 #
 # ===== Print the Summary =====
 summary(n2_power_80_lb)

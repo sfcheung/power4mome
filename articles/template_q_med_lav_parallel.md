@@ -34,6 +34,7 @@ This file is for parallel mediation models, and only use one function
 from the package [power4mome](https://sfcheung.github.io/power4mome/).
 
 ``` r
+
 library(power4mome)
 ```
 
@@ -146,6 +147,7 @@ reasonable expectation (e.g., .70 for minimal acceptable reliability).
 To estimate the power for a sample size, this is the code:
 
 ``` r
+
 out_power <- q_power_mediation_parallel(
   as = c("m", "l"),
   bs = c("l", "m"),
@@ -218,6 +220,7 @@ out_power <- q_power_mediation_parallel(
 This is the output:
 
 ``` r
+
 out_power
 #> 
 #> ========== power4test Results ==========
@@ -380,6 +383,7 @@ the same code above, with the argument `mode = "n"` added, and a few
 more arguments:
 
 ``` r
+
 out_n <- q_power_mediation_parallel(
   as = c("m", "l"),
   bs = c("l", "m"),
@@ -503,6 +507,7 @@ Finding the region can be done using the same code for estimating power
 (mode `"power"`), with only the argument `mode = "region"` added:
 
 ``` r
+
 out_region <- q_power_mediation_parallel(
   as = c("m", "l"),
   bs = c("l", "m"),

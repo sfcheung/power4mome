@@ -24,6 +24,7 @@ features of `power4mome` will be described in other vignettes.
 This introduction only needs the following package:
 
 ``` r
+
 library(power4mome)
 ```
 
@@ -59,6 +60,7 @@ power of testing a mediation effect by Monte Carlo confidence interval.
 This is the model syntax
 
 ``` r
+
 mod <-
 "
 m ~ x
@@ -91,7 +93,7 @@ Suppose we want to estimate the power when:
 - The path from `x` to `m` are “small” in strength.
 
 By default, `power4mome` uses this convention for regression path and
-correlation:[¹](#fn1)
+correlation:[^1]
 
 - Small: .10 (or -.10)
 
@@ -113,6 +115,7 @@ so-called “betas”).
 The following string denotes the desired values:
 
 ``` r
+
 mod_es <-
 "
 m ~ x: l
@@ -142,6 +145,7 @@ this string, are set to zero.
 ### Call `power4test()` to Check the Model
 
 ``` r
+
 out <- power4test(nrep = 2,
                   model = mod,
                   pop_es = mod_es,
@@ -166,11 +170,12 @@ These are the arguments used:
 
 - `iseed`: If supplied, it is used to set the seed for the random number
   generator. It is advised to always set this to an arbitrary integer,
-  to make the results reproducible.[²](#fn2)
+  to make the results reproducible.[^2]
 
 The population values can be shown by printing this object:
 
 ``` r
+
 out
 #> 
 #> ====================== Model Information ======================
@@ -259,6 +264,7 @@ If necessary, we can check the data generation by adding
 `data_long = TRUE` when printing the output:
 
 ``` r
+
 print(out,
       data_long = TRUE)
 #> 
@@ -378,6 +384,7 @@ confidence intervals to test the indirect effect from `x` to `y` through
 `m`, when sample size is 50. This is the call:
 
 ``` r
+
 out <- power4test(nrep = 400,
                   model = mod,
                   pop_es = mod_es,
@@ -403,7 +410,7 @@ These are the new arguments used:
   stable interval.
 
 - `ci_type`: The method used to generate estimates. Support both Monte
-  Carlo (`"mc"`) and nonparametric bootstrapping (`"boot"`).[³](#fn3)
+  Carlo (`"mc"`) and nonparametric bootstrapping (`"boot"`).[^3]
   Although bootstrapping is usually used to test an indirect effect, it
   is very slow to do `R` bootstrapping in `nrep` datasets (the model
   will be fitted `R * nrep` times). Therefore, it is preferable to use
@@ -422,12 +429,12 @@ These are the new arguments used:
   it is a named list specifying the predictor (`x`), the mediator(s)
   (`m`), and the outcome (`y`). A path with any number of mediators can
   be supported. Please refer to the help page of
-  [`test_indirect_effect()`](https://sfcheung.github.io/power4mome/reference/test_indirect_effect.md).[⁴](#fn4)
+  [`test_indirect_effect()`](https://sfcheung.github.io/power4mome/reference/test_indirect_effect.md).[^4]
 
 - `parallel`: If the test to be conducted is slow, which is the case for
   tests done by Monte Carlo or nonparametric bootstrapping confidence
   intervals, it is advised to enable parallel processing by setting
-  `parallel` to `TRUE`.[⁵](#fn5)
+  `parallel` to `TRUE`.[^5]
 
 For `nrep = 400`, the 95% confidence limits for a power of .80 are about
 .04 below and above .80. This should be precise enough for determining
@@ -436,6 +443,7 @@ whether a sample size has sufficient power.
 This is the default printout:
 
 ``` r
+
 out
 #> 
 #> ====================== Model Information ======================
@@ -553,6 +561,7 @@ also be retrieved by
 [`rejection_rates()`](https://sfcheung.github.io/power4mome/reference/rejection_rates.md).
 
 ``` r
+
 out_power <- rejection_rates(out)
 out_power
 #> [test]: test_indirect: x->m->y 
@@ -589,6 +598,7 @@ Let’s consider a moderation model, with some control variables.
 ### Specify the Population Model and Values
 
 ``` r
+
 mod2 <-
 "
 y ~ x + w + x:w + control
@@ -605,6 +615,7 @@ the *set of control variables* that may be included.
 This is the syntax for the population values:
 
 ``` r
+
 mod2_es <-
 "
 .beta.: s
@@ -636,6 +647,7 @@ product term values is different: `l` denotes .15 for product terms.
 We check the model first:
 
 ``` r
+
 out2 <- power4test(nrep = 2,
                    model = mod2,
                    pop_es = mod2_es,
@@ -644,6 +656,7 @@ out2 <- power4test(nrep = 2,
 ```
 
 ``` r
+
 print(out2,
       data_long = TRUE)
 #> 
@@ -814,6 +827,7 @@ the sample size is 50 and the model is fitted by
 [`lm()`](https://rdrr.io/r/stats/lm.html):
 
 ``` r
+
 out2 <- power4test(nrep = 400,
                    model = mod2,
                    pop_es = mod2_es,
@@ -831,13 +845,13 @@ These are the new arguments used:
   By default, [`lavaan::sem()`](https://rdrr.io/pkg/lavaan/man/sem.html)
   is used. To fit the model by linear regression using
   [`lm()`](https://rdrr.io/r/stats/lm.html), add `fit_function = "lm"`
-  to the list.[⁶](#fn6)
+  to the list.[^6]
 
 - `test_fun`: It is set to `test_moderation`, provided by `power4mome`.
   This function automatically identifies all product terms in a model
   and test them. The test used depends on method used to fit the model.
   If [`lm()`](https://rdrr.io/r/stats/lm.html) is used, then the usual
-  *t* test is used.[⁷](#fn7)
+  *t* test is used.[^7]
 
 ### Compute the Power
 
@@ -846,6 +860,7 @@ We can ues
 again to estimate the power:
 
 ``` r
+
 out2_power <- rejection_rates(out2)
 out2_power
 #> [test]: test_moderation: CIs  
@@ -873,6 +888,7 @@ Let’s consider a moderated mediation model.
 ### Specify the Population Model and Values
 
 ``` r
+
 mod3 <-
 "
 m ~ x + w + x:w
@@ -887,6 +903,7 @@ and parameters. This will be handled by the test function to be used.
 This is the syntax for the population values:
 
 ``` r
+
 mod3_es <-
 "
 .beta.: s
@@ -904,6 +921,7 @@ syntax.
 We check the model first:
 
 ``` r
+
 out3 <- power4test(nrep = 2,
                    model = mod3,
                    pop_es = mod3_es,
@@ -912,6 +930,7 @@ out3 <- power4test(nrep = 2,
 ```
 
 ``` r
+
 print(out3,
       data_long = TRUE)
 #> 
@@ -1080,6 +1099,7 @@ used.
 Let’s estimate the power when sample size is 100.
 
 ``` r
+
 out3 <- power4test(nrep = 400,
                    model = mod3,
                    pop_es = mod3_es,
@@ -1106,7 +1126,7 @@ This is the new argument used:
   [`test_indirect_effect()`](https://sfcheung.github.io/power4mome/reference/test_indirect_effect.md),
   with one more argument, `w`, for the moderator. Although this example
   has only one mediator, it support any number of mediators along a
-  path.[⁸](#fn8)
+  path.[^8]
 
 ### Compute the Power
 
@@ -1115,6 +1135,7 @@ We can ues
 again to estimate the power:
 
 ``` r
+
 out3_power <- rejection_rates(out3)
 out3_power
 #> [test]: test_index_of_mome: x->m->y, moderated by w 
@@ -1160,6 +1181,7 @@ again, set the previous output (`out2` in the example for moderation) as
 the first argument, and set `n` to a new value (200 in this example):
 
 ``` r
+
 out2_new_n <- power4test(out2,
                          n = 200)
 out2_new_n
@@ -1168,6 +1190,7 @@ out2_new_n
 This is the estimated power when the sample size is 200.
 
 ``` r
+
 out2_new_n_reject <- rejection_rates(out2_new_n)
 out2_new_n_reject
 #> [test]: test_moderation: CIs  
@@ -1207,6 +1230,7 @@ called directly on the output of
 [`power4test()`](https://sfcheung.github.io/power4mome/reference/power4test.md):
 
 ``` r
+
 out2_region <- n_region_from_power(out2,
                                    seed = 2345)
 ```
@@ -1228,6 +1252,7 @@ example, we can estimate the power in the moderation model above for
 these sample sizes: 250, 300, 350, 400.
 
 ``` r
+
 out2_several_ns <- power4test_by_n(out2,
                                    n = c(250, 300, 350, 400),
                                    by_seed = 4567)
@@ -1251,6 +1276,7 @@ The rejection rates for each sample size can be retrieved by
 too:
 
 ``` r
+
 rejection_rates(out2_several_ns)
 #> [test]: test_moderation: CIs  
 #> [test_label]: y~x:w 
@@ -1362,6 +1388,7 @@ These are other advanced features to be covered in other articles:
   as the first argument, and setting only `pop_es` to a named vector:
 
 ``` r
+
 out2_new_xw <- power4test(out2,
                           pop_es = c("y ~ x:w" = ".30"))
 ```
@@ -1396,33 +1423,31 @@ Hayes, A. F. (2015). An index and test of linear moderated mediation.
 *Multivariate Behavioral Research*, *50*(1), 1–22.
 <https://doi.org/10.1080/00273171.2014.962683>
 
-------------------------------------------------------------------------
+[^1]: Users can specify the values directly if necessary.
 
-1.  Users can specify the values directly if necessary.
-
-2.  The functions used are
+[^2]: The functions used are
     [`parallel::clusterSetRNGStream()`](https://rdrr.io/r/parallel/RngStream.html)
     for parallel processing, and
     [`set.seed()`](https://rdrr.io/r/base/Random.html) for serial
     processing.
 
-3.  They are implemented by
+[^3]: They are implemented by
     [`manymome::do_mc()`](https://sfcheung.github.io/manymome/reference/do_mc.html)
     and
     [`manymome::do_boot()`](https://sfcheung.github.io/manymome/reference/do_boot.html),
     respectively.
 
-4.  The test is implemented by `manymome::indirect()`.
+[^4]: The test is implemented by `manymome::indirect()`.
 
-5.  The number of cores is determined automatically but can be set
+[^5]: The number of cores is determined automatically but can be set
     directly by the `ncores` argument.
 
-6.  See the help page of
+[^6]: See the help page of
     [`fit_model()`](https://sfcheung.github.io/power4mome/reference/fit_model.md)
     on other available arguments.
 
-7.  The test name has `CIs` in it but this is equivalent to using the
+[^7]: The test name has `CIs` in it but this is equivalent to using the
     *t* test when the model is fitted by
     [`lm()`](https://rdrr.io/r/stats/lm.html).
 
-8.  The test is implemented by `manymome::test_index_of_mome()`.
+[^8]: The test is implemented by `manymome::test_index_of_mome()`.

@@ -139,6 +139,7 @@ for the function generating datasets for this function.
 ## Examples
 
 ``` r
+
 # Specify the population model
 
 mod <-

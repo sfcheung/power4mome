@@ -103,6 +103,7 @@ constraints are imposed , by setting it to the `test_fun` argument.
 ## Examples
 
 ``` r
+
 # Specify the model
 
 mod <-

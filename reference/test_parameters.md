@@ -204,6 +204,7 @@ names.
 ## Examples
 
 ``` r
+
 # Specify the model
 
 mod <-

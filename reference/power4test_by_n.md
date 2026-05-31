@@ -164,6 +164,7 @@ when concatenating `power4test` objects with `power4test_by_n` objects.
 ## Examples
 
 ``` r
+
 # Specify the model
 
 model_simple_med <-

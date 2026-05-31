@@ -121,6 +121,7 @@ with `pars` set to select the regression coefficients of these terms.
 ## Examples
 
 ``` r
+
 # Specify the model
 
 mod <-

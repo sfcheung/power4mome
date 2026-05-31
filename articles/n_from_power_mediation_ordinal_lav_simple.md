@@ -43,6 +43,7 @@ distribution (the default).
 Load the packages first:
 
 ``` r
+
 library(power4mome)
 ```
 
@@ -51,6 +52,7 @@ Estimate the power for a sample size.
 The code for the model:
 
 ``` r
+
 model <-
 "
 m ~ x
@@ -123,6 +125,7 @@ We would like to check the model first. Therefore, the test of indirect
 effect is not added for now.
 
 ``` r
+
 out <- power4test(
   nrep = 600,
   model = model,
@@ -182,6 +185,7 @@ To print the details of the generated data, including the descriptive
 statistics, use `print` with `data_long = TRUE`:
 
 ``` r
+
 print(out,
       data_long = TRUE)
 ```
@@ -234,6 +238,7 @@ If necessary, the data generated can be retrieved by
 and inspected directly:
 
 ``` r
+
 dat <- pool_sim_data(out)
 head(dat, 10)
 #>    x1 x2 x3 x4 m1 m2 m3 y1 y2 y3
@@ -266,6 +271,7 @@ To use DWLS in
 [`power4test()`](https://sfcheung.github.io/power4mome/reference/power4test.md):
 
 ``` r
+
 out <- power4test(
   nrep = 600,
   model = model,
@@ -291,6 +297,7 @@ out <- power4test(
 We can verify that DWLS is used by printing the results:
 
 ``` r
+
 print(out)
 ```
 
@@ -326,9 +333,10 @@ for details on the test function
 [`test_indirect_effect()`](https://sfcheung.github.io/power4mome/reference/test_indirect_effect.md)
 and how to set the argument `test_fun` and `test_args`. `R_for_bz(200)`
 is used to set `R` to the largest value less than 200 that is supported
-by the method proposed by Boos & Zhang (2000). [¹](#fn1)
+by the method proposed by Boos & Zhang (2000). [^1]
 
 ``` r
+
 out <- power4test(
   nrep = 600,
   model = model,
@@ -362,6 +370,7 @@ The rejection rate (power) for this example can be found by
 [`rejection_rates()`](https://sfcheung.github.io/power4mome/reference/rejection_rates.md):
 
 ``` r
+
 rejection_rates(out)
 #> [test]: test_indirect: x->m->y 
 #> [test_label]: Test 
@@ -395,6 +404,7 @@ directly by
 to find a sample size given a target power:
 
 ``` r
+
 n_power <- n_from_power(
               out,
               target_power = .80,
@@ -409,6 +419,7 @@ The output with ordinal indicators can also be used directly by
 power:
 
 ``` r
+
 n_power_region <- n_region_from_power(
                       out,
                       seed = 1357
@@ -424,6 +435,7 @@ set in the same way as in
 This is an example for estimating the power for a specific sample size:
 
 ``` r
+
 q_power <- q_power_mediation_simple(
   a = "m",
   b = "m",
@@ -453,6 +465,7 @@ This is an example of finding a sample size given a target power (mode
 `"n"`):
 
 ``` r
+
 q_power_n <- q_power_mediation_simple(
   a = "m",
   b = "m",
@@ -491,12 +504,11 @@ statistics with categorical data. *British Journal of Mathematical and
 Statistical Psychology*, *66*(2), 201–223.
 <https://doi.org/10.1111/j.2044-8317.2012.02049.x>
 
-------------------------------------------------------------------------
-
-1.  For tests that use Monte Carlo or bootstrapping confidence interval,
-    the method proposed by Boos & Zhang (2000) to use a small number of
-    resamples or simulated samples is recommended. This can be enabled
-    automatically by setting `R` to a supported value. The helper
+[^1]: For tests that use Monte Carlo or bootstrapping confidence
+    interval, the method proposed by Boos & Zhang (2000) to use a small
+    number of resamples or simulated samples is recommended. This can be
+    enabled automatically by setting `R` to a supported value. The
+    helper
     [`R_for_bz()`](https://sfcheung.github.io/power4mome/reference/bz_helpers.md)
     can be used. By default, it returns the largest supported `R` which
     is less than a target `R`, given a default level of significance of

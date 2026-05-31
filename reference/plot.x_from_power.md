@@ -234,6 +234,7 @@ in one plot. It is otherwise similar to the `plot`-method for
 ## Examples
 
 ``` r
+
 # Specify the population model
 
 mod <-
@@ -322,7 +323,7 @@ power_vs_n <- x_from_power(test_out,
 #> 
 #> ========== Final Stage ==========
 #> 
-#> - Start at 2026-04-19 13:09:05 
+#> - Start at 2026-05-31 12:44:10 
 #> - Rejection Rates:
 #> 
 #> [test]: test_parameters: CIs (pars: m~x) 

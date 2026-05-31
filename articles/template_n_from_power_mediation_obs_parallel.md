@@ -67,6 +67,7 @@ power close to the target power is found).
 Load the package first:
 
 ``` r
+
 library(power4mome)
 ```
 
@@ -81,6 +82,7 @@ significant if `omnibus` is set to `"all_sig"`.
 The code:
 
 ``` r
+
 # ====== Model: Form ======
 
 model <-
@@ -118,6 +120,7 @@ y ~ x: s
 The Model
 
 ``` r
+
 
 # ====== Test the Model Specification ======
 
@@ -160,6 +163,7 @@ rejection_rates(out)
 The results:
 
 ``` r
+
 print(out,
       data_long = TRUE)
 #> 
@@ -341,6 +345,7 @@ We can find the two regions by
 The code:
 
 ``` r
+
 #
 # ===== Reuse the output of power4test() =====
 #
@@ -368,6 +373,7 @@ plot(n_power_region)
 The results:
 
 ``` r
+
 # ===== Basic Results =====
 
 n_power_region
@@ -417,6 +423,7 @@ If necessary, detailed results can be printed by
 [`summary()`](https://rdrr.io/r/base/summary.html):
 
 ``` r
+
 # ===== Detailed Results =====
 summary(n_power_region)
 #> 
@@ -577,6 +584,7 @@ summary(n_power_region)
 This is the code used above:
 
 ``` r
+
 library(power4mome)
 
 # ====== Model and Effect Size (Population Values) ======

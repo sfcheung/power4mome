@@ -1027,6 +1027,7 @@ will then set to the argument `object` of
 ## Examples
 
 ``` r
+
 # Specify the model
 
 model_simple_med <-

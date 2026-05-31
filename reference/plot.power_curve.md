@@ -132,6 +132,7 @@ and
 ## Examples
 
 ``` r
+
 # Specify the population model
 
 model_simple_med <-

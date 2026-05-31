@@ -67,6 +67,7 @@ power close to the target power is found).
 Load the package first:
 
 ``` r
+
 library(power4mome)
 ```
 
@@ -75,6 +76,7 @@ Estimate the power for a sample size.
 The code for the model:
 
 ``` r
+
 # ====== Model: Form ======
 
 # Omit any paths hypothesized to be zero
@@ -117,6 +119,7 @@ on how to set `number_of_indicators` and `reliability` when calling
 [`power4test()`](https://sfcheung.github.io/power4mome/reference/power4test.md).
 
 ``` r
+
 
 # ====== Test the Model Specification ======
 out <- power4test(nrep = 2,
@@ -178,6 +181,7 @@ rejection_rates(out)
 The results:
 
 ``` r
+
 print(out,
       data_long = TRUE)
 #> 
@@ -422,6 +426,7 @@ We can find the two regions by
 The code:
 
 ``` r
+
 #
 # ===== Reuse the output of power4test() =====
 #
@@ -449,6 +454,7 @@ plot(n_power_region)
 The results:
 
 ``` r
+
 # ===== Basic Results =====
 
 n_power_region
@@ -498,6 +504,7 @@ If necessary, detailed results can be printed by
 [`summary()`](https://rdrr.io/r/base/summary.html):
 
 ``` r
+
 # ===== Detailed Results =====
 summary(n_power_region)
 #> 
@@ -657,6 +664,7 @@ summary(n_power_region)
 This is the code used above:
 
 ``` r
+
 library(power4mome)
 
 # ====== Model and Effect Size (Population Values) ======

@@ -482,6 +482,7 @@ for full details on how these functions work.
 ## Examples
 
 ``` r
+
 if (FALSE) { # \dontrun{
 
 # An arbitrary mediation model
@@ -633,7 +634,7 @@ out
 #> 
 #> Mean(s) across replication:
 #>    est cilo cihi   sig pvalue      R   nlt0 alpha bz_39 bz_79
-#>  0.066  NaN  NaN 0.198  0.258 79.000 15.100 0.050 0.202 0.200
+#>  0.066  NaN  NaN 0.195  0.251 79.000 14.800 0.050 0.205 0.200
 #> 
 #> - The value 'sig' is the rejection rate.
 #> - If the null hypothesis is false, this is the power.
@@ -645,7 +646,7 @@ out
 #> [test]: test_indirect: x->m->y 
 #> [test_label]: Test 
 #>     est   p.v reject r.cilo r.cihi
-#> 1 0.066 1.000  0.198  0.057  0.510
+#> 1 0.066 1.000  0.195  0.057  0.510
 #> Notes:
 #> - p.v: The proportion of valid replications.
 #> - est: The mean of the estimates in a test across replications.

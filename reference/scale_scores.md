@@ -53,6 +53,7 @@ into account the measurement error due to imperfect reliability.
 ## Examples
 
 ``` r
+
 # Specify the model
 
 mod <-

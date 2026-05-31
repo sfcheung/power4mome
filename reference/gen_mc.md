@@ -102,6 +102,7 @@ for the all-in-one function that uses this function.
 ## Examples
 
 ``` r
+
 # Specify the population model
 
 mod <-

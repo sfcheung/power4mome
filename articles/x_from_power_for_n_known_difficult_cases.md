@@ -5,11 +5,13 @@
 This article is for internal testing of the printout.
 
 ``` r
+
 library(power4mome)
 options(power4mome.bz = TRUE)
 ```
 
 ``` r
+
 mod <-
 "
 m ~ x
@@ -18,6 +20,7 @@ y ~ m + x
 ```
 
 ``` r
+
 mod_es <-
 "
 m ~ x: m
@@ -27,6 +30,7 @@ y ~ x: s
 ```
 
 ``` r
+
 out <- power4test(nrep = 2,
                   model = mod,
                   pop_es = mod_es,
@@ -35,6 +39,7 @@ out <- power4test(nrep = 2,
 ```
 
 ``` r
+
 print(out,
       data_long = TRUE)
 #> 
@@ -130,6 +135,7 @@ print(out,
 ```
 
 ``` r
+
 out <- power4test(nrep = 200,
                   model = mod,
                   pop_es = mod_es,
@@ -146,6 +152,7 @@ out <- power4test(nrep = 200,
 ```
 
 ``` r
+
 print(out,
       test_long = TRUE)
 #> 
@@ -239,6 +246,7 @@ print(out,
 ```
 
 ``` r
+
 out_n <- n_from_power(out,
                       what = "ub",
                       seed = 4567)
@@ -542,6 +550,7 @@ out_n <- n_from_power(out,
 ```
 
 ``` r
+
 out_n
 #> Call:
 #> power4mome::x_from_power(object = out, x = "n", what = "ub", 
@@ -565,6 +574,7 @@ out_n
 ```
 
 ``` r
+
 summary(out_n)
 #> 
 #> ====== x_from_power Results ======
@@ -643,6 +653,7 @@ summary(out_n)
 ```
 
 ``` r
+
 plot(out_n)
 ```
 
@@ -651,6 +662,7 @@ plot(out_n)
 The Power Curve
 
 ``` r
+
 out_n_lb <- n_from_power(out,
                          what = "lb",
                          seed = 2345)
@@ -815,6 +827,7 @@ out_n_lb <- n_from_power(out,
 ```
 
 ``` r
+
 out_n_lb
 #> Call:
 #> power4mome::x_from_power(object = out, x = "n", what = "lb", 
@@ -838,6 +851,7 @@ out_n_lb
 ```
 
 ``` r
+
 summary(out_n_lb)
 #> 
 #> ====== x_from_power Results ======
@@ -911,6 +925,7 @@ summary(out_n_lb)
 ```
 
 ``` r
+
 plot(out_n_lb)
 ```
 
@@ -919,6 +934,7 @@ plot(out_n_lb)
 The Power Curve
 
 ``` r
+
 n_power_region <- n_region_from_power(out,
                                       seed = 2468)
 #> 
@@ -1371,6 +1387,7 @@ n_power_region
 ```
 
 ``` r
+
 plot(n_power_region)
 ```
 
@@ -1380,6 +1397,7 @@ plot(n_power_region)
 The Power Curve (Region)
 
 ``` r
+
 n_power_region2 <- n_region_from_power(out_n_lb,
                                       seed = 24680)
 #> 
@@ -1592,6 +1610,7 @@ n_power_region2
 ```
 
 ``` r
+
 plot(n_power_region2)
 ```
 
