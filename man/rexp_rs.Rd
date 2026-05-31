@@ -10,7 +10,7 @@ rexp_rs(n = 10, rate = 1, pmean = 0, psd = 1, rev = FALSE)
 \item{n}{The number of random numbers
 to generate.}
 
-\item{rate}{\code{rate} for \code{\link[stats:Exponential]{stats::rexp()}}.}
+\item{rate}{\code{rate} for \code{\link[stats:rexp]{stats::rexp()}}.}
 
 \item{pmean}{Population mean.}
 
@@ -39,7 +39,7 @@ First, specify the parameter,
 desired population mean and standard
 deviation. The random numbers, drawn
 from an exponential distribution by
-\code{\link[stats:Exponential]{stats::rexp()}}, will then be
+\code{\link[stats:rexp]{stats::rexp()}}, will then be
 rescaled with the desired population
 mean and standard.
 }

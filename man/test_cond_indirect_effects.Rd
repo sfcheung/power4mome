@@ -25,7 +25,7 @@ test_cond_indirect_effects(
 }
 \arguments{
 \item{fit}{The fit object, to be
-passed to \code{\link[manymome:cond_indirect]{manymome::cond_indirect_effects()}}.}
+passed to \code{\link[manymome:cond_indirect_effects]{manymome::cond_indirect_effects()}}.}
 
 \item{x}{The name of the \code{x}-variable,
 the predictor.}
@@ -43,7 +43,7 @@ the outcome variable.}
 \item{wlevels}{The output of
 \code{\link[manymome:merge_mod_levels]{manymome::merge_mod_levels()}}, or
 the moderator(s) to be passed to
-\code{\link[manymome:mod_levels]{manymome::mod_levels_list()}}.
+\code{\link[manymome:mod_levels_list]{manymome::mod_levels_list()}}.
 If all the moderators can be
 represented by one variable, that is,
 each moderator is (a) a numeric
@@ -66,7 +66,7 @@ the first moderator \code{w1} and the
 second moderator a three-category
 variable represented by \code{gpgp2} and
 \code{gpgp3}. See the help page of
-\code{\link[manymome:cond_indirect]{manymome::cond_indirect_effects()}}
+\code{\link[manymome:cond_indirect_effects]{manymome::cond_indirect_effects()}}
 for further details.}
 
 \item{mc_ci}{Logical. If \code{TRUE}, the
@@ -125,7 +125,7 @@ combinations of the groups. Ignored
 if the model is a single-group model.}
 
 \item{...}{Additional arguments to
-be passed to \code{\link[manymome:cond_indirect]{manymome::cond_indirect_effects()}}.}
+be passed to \code{\link[manymome:cond_indirect_effects]{manymome::cond_indirect_effects()}}.}
 
 \item{fit_name}{The name of the
 model fit object to be extracted.
@@ -149,7 +149,7 @@ use this argument.}
 \value{
 In its normal usage, it returns
 the output returned by
-\code{\link[manymome:cond_indirect]{manymome::cond_indirect_effects()}},
+\code{\link[manymome:cond_indirect_effects]{manymome::cond_indirect_effects()}},
 with the following modifications:
 \itemize{
 \item \code{est}: The estimated
@@ -178,7 +178,7 @@ conditional
 indirect effects, by setting it
 to the \code{test_fun} argument.
 
-It uses \code{\link[manymome:cond_indirect]{manymome::cond_indirect_effects()}}
+It uses \code{\link[manymome:cond_indirect_effects]{manymome::cond_indirect_effects()}}
 to do the test. It can be used on
 models fitted by \code{\link[lavaan:sem]{lavaan::sem()}}
 or fitted by a sequence of calls

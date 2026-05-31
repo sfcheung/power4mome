@@ -10,7 +10,7 @@ rt_rs(n = 10, df = 5, pmean = 0, psd = 1)
 \item{n}{The number of random numbers
 to generate.}
 
-\item{df}{\code{df} for \code{\link[stats:TDist]{stats::rt()}}.}
+\item{df}{\code{df} for \code{\link[stats:rt]{stats::rt()}}.}
 
 \item{pmean}{Population mean.}
 
@@ -33,7 +33,7 @@ and the desired population
 mean and standard deviation. The
 random numbers, drawn from the
 generalized normal distribution by
-\code{\link[stats:TDist]{stats::rt()}}, will then be
+\code{\link[stats:rt]{stats::rt()}}, will then be
 rescaled with the desired population
 mean and standard.
 }

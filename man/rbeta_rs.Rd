@@ -11,10 +11,10 @@ rbeta_rs(n = 10, shape1 = 0.5, shape2 = 0.5, pmean = 0, psd = 1)
 to generate.}
 
 \item{shape1}{\code{shape1} for
-\code{\link[stats:Beta]{stats::rbeta()}}.}
+\code{\link[stats:rbeta]{stats::rbeta()}}.}
 
 \item{shape2}{\code{shape2} for
-\code{\link[stats:Beta]{stats::rbeta()}}.}
+\code{\link[stats:rbeta]{stats::rbeta()}}.}
 
 \item{pmean}{Population mean.}
 
@@ -37,7 +37,7 @@ First, specify the two parameters,
 desired population mean and standard
 deviation. The random numbers, drawn
 from a beta distribution by
-\code{\link[stats:Beta]{stats::rbeta()}} will then be
+\code{\link[stats:rbeta]{stats::rbeta()}} will then be
 rescaled with the desired population
 mean and standard deviation.
 }

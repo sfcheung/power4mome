@@ -11,10 +11,10 @@ rlnorm_rs(n = 10, mui = 0, sigma = 1, rev = FALSE, pmean = 0, psd = 1)
 to generate.}
 
 \item{mui}{The parameter \code{mui} to
-be used by \code{\link[stats:Lognormal]{stats::rlnorm()}}.}
+be used by \code{\link[stats:rlnorm]{stats::rlnorm()}}.}
 
 \item{sigma}{The parameter \code{sigma} to
-be used by \code{\link[stats:Lognormal]{stats::rlnorm()}}.}
+be used by \code{\link[stats:rlnorm]{stats::rlnorm()}}.}
 
 \item{rev}{If TRUE, the distribution
 is revered to generate a negatively
@@ -42,7 +42,7 @@ First, specify the parameter,
 desired population mean and standard
 deviation. The random numbers, drawn
 from a lognormal distribution by
-\code{\link[stats:Lognormal]{stats::rlnorm()}}, will then be
+\code{\link[stats:rlnorm]{stats::rlnorm()}}, will then be
 rescaled with the desired population
 mean and standard.
 }

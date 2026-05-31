@@ -256,7 +256,7 @@ In the early development of
 \code{power4mome}, \code{test_fun} is designed
 to accept existing functions from
 other packages, such as
-\code{\link[manymome:cond_indirect]{manymome::indirect_effect()}}. Their
+\code{\link[manymome:indirect_effect]{manymome::indirect_effect()}}. Their
 outputs are not of the required
 format for power analysis, and so
 results functions are needed to

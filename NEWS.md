@@ -1,9 +1,15 @@
-# power4mome 0.2.1.2
+# power4mome 0.2.1.3
 
 ## Miscellaneous
 
 - Improve a check for the fit function.
   (0.2.1.2)
+
+- Added support for estimating the power of SAM
+  (structural-after-measurement) by
+  `lavaan::sam()` if `manymome` 0.3.4.25
+  or above is installed.
+  (0.2.1.3)
 
 ## Bug Fixes
 
