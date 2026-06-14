@@ -45,6 +45,7 @@ expect_no_warning(fit_all <- fit_model(data_all,
 suppressWarnings(tmp <- sapply(fit_all,
                                lavInspect,
                                what = "post.check"))
+# This test can be sensitive to the seed. Stable with large N/R.
 expect_true(any(!tmp))
 suppressWarnings(tmp <- sapply(fit_all,
                                lavInspect,
