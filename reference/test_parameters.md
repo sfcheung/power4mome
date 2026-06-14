@@ -230,6 +230,7 @@ sim_only <- power4test(nrep = 2,
                        n = 100,
                        do_the_test = FALSE,
                        iseed = 1234)
+#> Recommend setting 'parallel' to TRUE for faster analysis
 #> Simulate the data:
 #> Fit the model(s):
 
@@ -237,6 +238,7 @@ sim_only <- power4test(nrep = 2,
 
 test_out <- power4test(object = sim_only,
                        test_fun = test_parameters)
+#> Recommend setting 'parallel' to TRUE for faster analysis
 #> Do the test: test_parameters: CIs  
 
 print(test_out,
@@ -331,6 +333,7 @@ print(test_out,
 test_out <- power4test(object = sim_only,
                        test_fun = test_parameters,
                        test_args = list(standardized = TRUE))
+#> Recommend setting 'parallel' to TRUE for faster analysis
 #> Do the test: test_parameters: CIs (standardized)  
 
 print(test_out,
@@ -425,6 +428,7 @@ print(test_out,
 test_out <- power4test(object = sim_only,
                        test_fun = test_parameters,
                        test_args = list(op = "~"))
+#> Recommend setting 'parallel' to TRUE for faster analysis
 #> Do the test: test_parameters: CIs (op: ~) 
 
 print(test_out,

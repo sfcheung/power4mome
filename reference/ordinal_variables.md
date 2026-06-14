@@ -135,6 +135,7 @@ out <- power4test(
          test_args = list(op = "~"),
          parallel = FALSE,
          iseed = 1234)
+#> Recommend setting 'parallel' to TRUE for faster analysis
 #> Simulate the data:
 #> Fit the model(s):
 #> Do the test: test_parameters: CIs (op: ~) 

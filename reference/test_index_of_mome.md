@@ -185,6 +185,7 @@ sim_only <- power4test(nrep = 2,
                        R = 100,
                        do_the_test = FALSE,
                        iseed = 1234)
+#> Recommend setting 'parallel' to TRUE for faster analysis
 #> Simulate the data:
 #> Fit the model(s):
 #> Generate Monte Carlo estimates:
@@ -198,6 +199,7 @@ test_out <- power4test(object = sim_only,
                                         y = "y",
                                         w = "w",
                                         mc_ci = TRUE))
+#> Recommend setting 'parallel' to TRUE for faster analysis
 #> Do the test: test_index_of_mome: x->m->y, moderated by w 
 
 print(test_out,

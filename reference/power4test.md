@@ -1058,6 +1058,7 @@ out <- power4test(nrep = 10,
                   iseed = 1234,
                   parallel = FALSE,
                   progress = TRUE)
+#> Recommend setting 'parallel' to TRUE for faster analysis
 #> Simulate the data:
 #> Fit the model(s):
 #> Do the test: test_parameters: CIs (pars: m~x) 
@@ -1151,6 +1152,7 @@ out1 <- power4test(out,
                    iseed = 1234,
                    parallel = FALSE,
                    progress = TRUE)
+#> Recommend setting 'parallel' to TRUE for faster analysis
 #> Re-simulate the data:
 #> Fit the model(s):
 #> Update the test(s):
@@ -1245,6 +1247,7 @@ out2 <- power4test(out,
                    test_args = list(pars = "y~x"),
                    parallel = FALSE,
                    progress = TRUE)
+#> Recommend setting 'parallel' to TRUE for faster analysis
 #> Do the test: test_parameters: CIs (pars: y~x) 
 
 print(out2,

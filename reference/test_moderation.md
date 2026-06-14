@@ -148,6 +148,7 @@ sim_only <- power4test(nrep = 4,
                        n = 100,
                        do_the_test = FALSE,
                        iseed = 1234)
+#> Recommend setting 'parallel' to TRUE for faster analysis
 #> Simulate the data:
 #> Fit the model(s):
 
@@ -155,6 +156,7 @@ sim_only <- power4test(nrep = 4,
 
 test_out <- power4test(object = sim_only,
                        test_fun = test_moderation)
+#> Recommend setting 'parallel' to TRUE for faster analysis
 #> Do the test: test_moderation: CIs  
 
 print(test_out,

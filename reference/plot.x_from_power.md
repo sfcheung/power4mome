@@ -260,6 +260,7 @@ sim_only <- power4test(nrep = 10,
                        n = 100,
                        do_the_test = FALSE,
                        iseed = 1234)
+#> Recommend setting 'parallel' to TRUE for faster analysis
 #> Simulate the data:
 #> Fit the model(s):
 
@@ -268,6 +269,7 @@ sim_only <- power4test(nrep = 10,
 test_out <- power4test(object = sim_only,
                        test_fun = test_parameters,
                        test_args = list(pars = "m~x"))
+#> Recommend setting 'parallel' to TRUE for faster analysis
 #> Do the test: test_parameters: CIs (pars: m~x) 
 
 # Determine the sample size with a power of .80 (default)
@@ -300,6 +302,7 @@ power_vs_n <- x_from_power(test_out,
 #> Try x = 50 
 #> 
 #> Updating the simulation for sample size: 50 
+#> Recommend setting 'parallel' to TRUE for faster analysis
 #> Re-simulate the data:
 #> Fit the model(s):
 #> Update the test(s):
@@ -323,7 +326,7 @@ power_vs_n <- x_from_power(test_out,
 #> 
 #> ========== Final Stage ==========
 #> 
-#> - Start at 2026-05-31 12:44:10 
+#> - Start at 2026-06-14 07:03:02 
 #> - Rejection Rates:
 #> 
 #> [test]: test_parameters: CIs (pars: m~x) 

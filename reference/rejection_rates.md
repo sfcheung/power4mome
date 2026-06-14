@@ -312,6 +312,7 @@ sim_only <- power4test(nrep = 4,
                        fit_model_args = list(fit_function = "lm"),
                        do_the_test = FALSE,
                        iseed = 1234)
+#> Recommend setting 'parallel' to TRUE for faster analysis
 #> Simulate the data:
 #> Fit the model(s):
 #> Generate bootstrap estimates:
@@ -325,6 +326,7 @@ test_out <- power4test(object = sim_only,
                                         y = "y",
                                         boot_ci = TRUE,
                                         mc_ci = FALSE))
+#> Recommend setting 'parallel' to TRUE for faster analysis
 #> Do the test: test_indirect: x->m->y 
 
 # Do the test 'test_parameters' on each datasets
@@ -332,6 +334,7 @@ test_out <- power4test(object = sim_only,
 
 test_out <- power4test(object = test_out,
                        test_fun = test_parameters)
+#> Recommend setting 'parallel' to TRUE for faster analysis
 #> Do the test: test_parameters: CIs  
 
 # Compute and print the rejection rates for stored tests

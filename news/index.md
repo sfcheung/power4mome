@@ -1,6 +1,6 @@
 # Changelog
 
-## power4mome 0.2.1.3
+## power4mome 0.2.1.5
 
 ### Miscellaneous
 
@@ -10,6 +10,11 @@
   (structural-after-measurement) by
   [`lavaan::sam()`](https://rdrr.io/pkg/lavaan/man/sam.html) if
   `manymome` 0.3.4.25 or above is installed. (0.2.1.3)
+
+- If `parallel = FALSE` and `progress = TRUE`,
+  [`power4test()`](https://sfcheung.github.io/power4mome/reference/power4test.md)
+  will print a message to recommend users to set `parallel` to `TRUE`.
+  (0.2.1.5)
 
 ### Bug Fixes
 

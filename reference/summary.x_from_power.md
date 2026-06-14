@@ -100,6 +100,7 @@ sim_only <- power4test(nrep = 5,
                        n = 100,
                        do_the_test = FALSE,
                        iseed = 2345)
+#> Recommend setting 'parallel' to TRUE for faster analysis
 #> Simulate the data:
 #> Fit the model(s):
 
@@ -108,6 +109,7 @@ sim_only <- power4test(nrep = 5,
 test_out <- power4test(object = sim_only,
                        test_fun = test_parameters,
                        test_args = list(pars = "m~x"))
+#> Recommend setting 'parallel' to TRUE for faster analysis
 #> Do the test: test_parameters: CIs (pars: m~x) 
 
 # Determine the sample size with a power of .80 (default)
@@ -140,6 +142,7 @@ power_vs_n <- x_from_power(test_out,
 #> Try x = 50 
 #> 
 #> Updating the simulation for sample size: 50 
+#> Recommend setting 'parallel' to TRUE for faster analysis
 #> Re-simulate the data:
 #> Fit the model(s):
 #> Update the test(s):
@@ -166,6 +169,7 @@ power_vs_n <- x_from_power(test_out,
 #> Try x = 75 
 #> 
 #> Updating the simulation for sample size: 75 
+#> Recommend setting 'parallel' to TRUE for faster analysis
 #> Re-simulate the data:
 #> Fit the model(s):
 #> Update the test(s):
@@ -185,7 +189,7 @@ power_vs_n <- x_from_power(test_out,
 #> 
 #> ========== Final Stage ==========
 #> 
-#> - Start at 2026-05-31 12:44:33 
+#> - Start at 2026-06-14 07:03:22 
 #> - Rejection Rates:
 #> 
 #> [test]: test_parameters: CIs (pars: m~x) 
@@ -259,7 +263,7 @@ summary(power_vs_n)
 #> 
 #> - Algorithm: bisection 
 #> - The range of values explored: 50 to 100 
-#> - Time spent in the search: 0.8461 secs 
+#> - Time spent in the search: 0.668 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 

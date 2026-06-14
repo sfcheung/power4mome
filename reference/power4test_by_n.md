@@ -191,6 +191,7 @@ sim_only <- power4test(nrep = 2,
                        fit_model_args = list(fit_function = "lm"),
                        do_the_test = FALSE,
                        iseed = 1234)
+#> Recommend setting 'parallel' to TRUE for faster analysis
 #> Simulate the data:
 #> Fit the model(s):
 #> Generate bootstrap estimates:
@@ -202,12 +203,14 @@ test_out <- power4test(object = sim_only,
                                         y = "y",
                                         boot_ci = TRUE,
                                         mc_ci = FALSE))
+#> Recommend setting 'parallel' to TRUE for faster analysis
 #> Do the test: test_indirect: x->m->y 
 
 out <- power4test_by_n(test_out,
                        n = c(100, 110, 120))
 #> 
 #> Updating the simulation for sample size: 100 
+#> Recommend setting 'parallel' to TRUE for faster analysis
 #> Re-simulate the data:
 #> Fit the model(s):
 #> Generate bootstrap estimates:
@@ -215,6 +218,7 @@ out <- power4test_by_n(test_out,
 #> Update test_indirect: x->m->y :
 #> 
 #> Updating the simulation for sample size: 110 
+#> Recommend setting 'parallel' to TRUE for faster analysis
 #> Re-simulate the data:
 #> Fit the model(s):
 #> Generate bootstrap estimates:
@@ -222,6 +226,7 @@ out <- power4test_by_n(test_out,
 #> Update test_indirect: x->m->y :
 #> 
 #> Updating the simulation for sample size: 120 
+#> Recommend setting 'parallel' to TRUE for faster analysis
 #> Re-simulate the data:
 #> Fit the model(s):
 #> Generate bootstrap estimates:

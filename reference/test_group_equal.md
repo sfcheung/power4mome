@@ -130,6 +130,7 @@ sim_only <- power4test(nrep = 2,
                        pop_es = mod_es,
                        n = 100,
                        iseed = 1234)
+#> Recommend setting 'parallel' to TRUE for faster analysis
 #> Simulate the data:
 #> Fit the model(s):
 
@@ -138,6 +139,7 @@ sim_only <- power4test(nrep = 2,
 test_out <- power4test(object = sim_only,
                        test_fun = test_group_equal,
                        test_args = list(group.equal = "regressions"))
+#> Recommend setting 'parallel' to TRUE for faster analysis
 #> Do the test: test_group_equal 
 
 print(test_out,

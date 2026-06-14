@@ -192,6 +192,7 @@ sim_only <- power4test(nrep = 2,
                        fit_model_args = list(fit_function = "lm"),
                        do_the_test = FALSE,
                        iseed = 1234)
+#> Recommend setting 'parallel' to TRUE for faster analysis
 #> Simulate the data:
 #> Fit the model(s):
 #> Generate bootstrap estimates:
@@ -203,6 +204,7 @@ test_out <- power4test(object = sim_only,
                                         y = "y",
                                         boot_ci = TRUE,
                                         mc_ci = FALSE))
+#> Recommend setting 'parallel' to TRUE for faster analysis
 #> Do the test: test_indirect: x->m->y 
 
 out <- power4test_by_es(test_out,
@@ -210,6 +212,7 @@ out <- power4test_by_es(test_out,
                             pop_es_values = c(.10, .20))
 #> 
 #> Updating the simulation for new value: y ~ m = 0.100 
+#> Recommend setting 'parallel' to TRUE for faster analysis
 #> Re-simulate the data:
 #> Fit the model(s):
 #> Generate bootstrap estimates:
@@ -217,6 +220,7 @@ out <- power4test_by_es(test_out,
 #> Update test_indirect: x->m->y :
 #> 
 #> Updating the simulation for new value: y ~ m = 0.200 
+#> Recommend setting 'parallel' to TRUE for faster analysis
 #> Re-simulate the data:
 #> Fit the model(s):
 #> Generate bootstrap estimates:

@@ -224,6 +224,7 @@ sim_only <- power4test(nrep = 5,
                        R = 100,
                        do_the_test = FALSE,
                        iseed = 1234)
+#> Recommend setting 'parallel' to TRUE for faster analysis
 #> Simulate the data:
 #> Fit the model(s):
 #> Generate Monte Carlo estimates:
@@ -235,6 +236,7 @@ test_ind <- power4test(object = sim_only,
                        test_args = list(x = "x",
                                         y = "y",
                                         mc_ci = TRUE))
+#> Recommend setting 'parallel' to TRUE for faster analysis
 #> Do the test: test_indirects: x-...->y 
 print(test_ind,
       test_long = TRUE)
@@ -347,6 +349,7 @@ test_ind_all_sig <- power4test(
                                         y = "y",
                                         mc_ci = TRUE,
                                         omnibus = "all_sig"))
+#> Recommend setting 'parallel' to TRUE for faster analysis
 #> Do the test: test_indirects: x-...->y 
 print(test_ind_all_sig,
       test_long = TRUE)

@@ -191,6 +191,7 @@ sim_only <- power4test(nrep = 5,
                        R = 100,
                        do_the_test = FALSE,
                        iseed = 1234)
+#> Recommend setting 'parallel' to TRUE for faster analysis
 #> Simulate the data:
 #> Fit the model(s):
 #> Generate Monte Carlo estimates:
@@ -204,6 +205,7 @@ test_ind <- power4test(object = sim_only,
                                         y = "y",
                                         wvalues = c(w = 1),
                                         mc_ci = TRUE))
+#> Recommend setting 'parallel' to TRUE for faster analysis
 #> Do the test: test_cond_indirect: x->m->y (w = 1) 
 print(test_ind,
       test_long = TRUE)
