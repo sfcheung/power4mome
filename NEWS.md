@@ -1,4 +1,4 @@
-# power4mome 0.2.1.4
+# power4mome 0.2.1.5
 
 ## Miscellaneous
 
@@ -10,6 +10,12 @@
   `lavaan::sam()` if `manymome` 0.3.4.25
   or above is installed.
   (0.2.1.3)
+
+- If `parallel = FALSE` and `progress = TRUE`,
+  `power4test()` will print a message to
+  recommend users to set `parallel` to
+  `TRUE`.
+  (0.2.1.5)
 
 ## Bug Fixes
 
