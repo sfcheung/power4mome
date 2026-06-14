@@ -61,7 +61,8 @@ dat <- gen_indicator_scores(f_score = f,
                             omega = omega0,
                             prefix = "item")
 dat <- as.data.frame(dat)
-expect_equal(omega_test(dat),
+# The warning is a known one that can be suppressed.
+expect_equal(suppressWarnings(omega_test(dat)),
              omega0,
              tolerance = 1e-2)
 
