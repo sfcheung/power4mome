@@ -579,6 +579,10 @@ power4test <- function(object = NULL,
 
     # ==== Serial ====
 
+    if (args$progress) {
+      cat("Recommend setting 'parallel' to TRUE for faster analysis\n")
+    }
+
     cl <- NULL
 
   }
