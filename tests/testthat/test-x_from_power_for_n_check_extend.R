@@ -35,7 +35,7 @@ out <- power4test(
                           ),
           iseed = 1234,
           parallel = TRUE,
-          ncores = max(1, parallel::detectCores(logical = FALSE) - 1)
+          ncores = max(1, parallel::detectCores(logical = FALSE) - 1, na.rm = TRUE)
         )
 
 out1 <- n_from_power(out,
@@ -84,7 +84,7 @@ outb <- power4test(
                           ),
           iseed = 1234,
           parallel = TRUE,
-          ncores = max(1, parallel::detectCores(logical = FALSE) - 1)
+          ncores = max(1, parallel::detectCores(logical = FALSE) - 1, na.rm = TRUE)
         )
 
 outb1 <- n_from_power(outb,

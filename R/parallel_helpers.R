@@ -6,7 +6,7 @@ do_FUN <- function(X,
                    iseed = NULL,
                    parallel = TRUE,
                    progress = TRUE,
-                   ncores = max(1, parallel::detectCores(logical = FALSE) - 1),
+                   ncores = max(1, parallel::detectCores(logical = FALSE) - 1, na.rm = TRUE),
                    cl = NULL) {
   stop_cluster <- TRUE
   if (inherits(cl, "cluster")) {

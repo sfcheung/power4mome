@@ -337,7 +337,7 @@ do_test <- function(sim_all,
                     results_args = list(),
                     parallel = FALSE,
                     progress = FALSE,
-                    ncores = max(1, parallel::detectCores(logical = FALSE) - 1),
+                    ncores = max(1, parallel::detectCores(logical = FALSE) - 1, na.rm = TRUE),
                     cl = NULL) {
   out <- do_FUN(X = sim_all,
                 FUN = do_test_i,

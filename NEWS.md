@@ -1,4 +1,4 @@
-# power4mome 0.2.1.5
+# power4mome 0.2.1.6
 
 ## Miscellaneous
 
@@ -16,6 +16,11 @@
   recommend users to set `parallel` to
   `TRUE`.
   (0.2.1.5)
+
+- Updated calls to `parallel::detectCores()`
+  to handle cases in which `NA` will be
+  returned.
+  (0.2.1.6)
 
 ## Bug Fixes
 
