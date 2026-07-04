@@ -51,7 +51,11 @@ Default is \code{"model"}.}
 the argument of \code{fit_function}
 expecting the name of the group
 variable. Used only for multigroup
-models. Default is \code{"group"}.}
+models. Default is \code{"group"}. If
+set to \code{NULL}, the group variable
+will not be used even if available,
+and a single-group model will be
+fitted.}
 
 \item{...}{Optional arguments to be
 passed to \code{fit_function} when

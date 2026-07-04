@@ -79,7 +79,11 @@
 #' the argument of `fit_function`
 #' expecting the name of the group
 #' variable. Used only for multigroup
-#' models. Default is `"group"`.
+#' models. Default is `"group"`. If
+#' set to `NULL`, the group variable
+#' will not be used even if available,
+#' and a single-group model will be
+#' fitted.
 #'
 #' @param ... Optional arguments to be
 #' passed to `fit_function` when
@@ -220,7 +224,8 @@ fit_model <- function(data_all = NULL,
                       eval,
                       envir = parent.frame())
   args <- utils::modifyList(args,
-                            as.list(call_args))
+                            as.list(call_args),
+                            keep.null = TRUE)
   args$fit_out <- NULL
   args$data_all <- NULL
   # args available in all cases.
@@ -297,7 +302,9 @@ fit_model_i <- function(data_i,
   fit_args0 <- list()
   fit_args0[[arg_model_name]] <- model_to_fit
   fit_args0[[arg_data_name]] <- data_i$mm_lm_dat_out
-  fit_args0[[arg_group_name]] = data_i$group_name
+  if (!is.null(arg_group_name)) {
+    fit_args0[[arg_group_name]] <- data_i$group_name
+  }
   fit_args <- utils::modifyList(list(...),
                                 fit_args0)
   fit <- tryCatch(suppressWarnings(do.call(fit_function,
