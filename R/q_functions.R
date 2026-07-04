@@ -445,7 +445,7 @@ q_power_mediation <- function(
                 iseed = iseed %||% seed,
                 parallel = parallel,
                 progress = progress,
-                ncores = max(1, parallel::detectCores(logical = FALSE) - 1)
+                ncores = max(1, parallel::detectCores(logical = FALSE) - 1, na.rm = TRUE)
               )
 
   p4t_args <- utils::modifyList(

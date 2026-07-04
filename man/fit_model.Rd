@@ -15,7 +15,7 @@ fit_model(
   fit_out = NULL,
   parallel = FALSE,
   progress = FALSE,
-  ncores = max(1, parallel::detectCores(logical = FALSE) - 1),
+  ncores = max(1, parallel::detectCores(logical = FALSE) - 1, na.rm = TRUE),
   cl = NULL
 )
 }

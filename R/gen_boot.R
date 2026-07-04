@@ -124,7 +124,7 @@ gen_boot <- function(fit_all,
                      iseed = NULL,
                      parallel = FALSE,
                      progress = FALSE,
-                     ncores = max(1, parallel::detectCores(logical = FALSE) - 1),
+                     ncores = max(1, parallel::detectCores(logical = FALSE) - 1, na.rm = TRUE),
                      compute_implied_stats = FALSE,
                      cl = NULL) {
   # This check can be removed after manymome is updated on CRAN.

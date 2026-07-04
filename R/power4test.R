@@ -490,7 +490,7 @@ power4test <- function(object = NULL,
                        iseed = NULL,
                        parallel = FALSE,
                        progress = TRUE,
-                       ncores = max(1, parallel::detectCores(logical = FALSE) - 1),
+                       ncores = max(1, parallel::detectCores(logical = FALSE) - 1, na.rm = TRUE),
                        es1 = c("n" = .00,
                                "nil" = .00,
                                "s" = .10,
@@ -973,7 +973,7 @@ update_test_i <- function(test_i,
                           sim_all,
                           parallel = FALSE,
                           progress = FALSE,
-                          ncores = max(1, parallel::detectCores(logical = FALSE) - 1),
+                          ncores = max(1, parallel::detectCores(logical = FALSE) - 1, na.rm = TRUE),
                           cl = NULL) {
   test_fun <- attr(test_i, "test_fun")
   test_args <- attr(test_i, "test_args")
