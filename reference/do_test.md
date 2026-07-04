@@ -15,7 +15,7 @@ do_test(
   results_args = list(),
   parallel = FALSE,
   progress = FALSE,
-  ncores = max(1, parallel::detectCores(logical = FALSE) - 1),
+  ncores = max(1, parallel::detectCores(logical = FALSE) - 1, na.rm = TRUE),
   cl = NULL
 )
 ```
@@ -317,8 +317,8 @@ lapply(test_all, function(x) x$test_results)
 #> 0.10461042 0.02975369 0.23184723 1.00000000 0.00000000 
 #> 
 #> [[5]]
-#>       est      cilo      cihi       sig    pvalue 
-#> 0.1169023 0.0195144 0.2311664 1.0000000 0.0000000 
+#>         est        cilo        cihi         sig      pvalue 
+#> 0.116902305 0.003271956 0.251780798 1.000000000 0.040000000 
 #> 
 
 ```

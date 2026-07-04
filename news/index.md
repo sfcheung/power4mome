@@ -1,6 +1,6 @@
 # Changelog
 
-## power4mome 0.2.1.5
+## power4mome 0.2.1.6
 
 ### Miscellaneous
 
@@ -15,6 +15,10 @@
   [`power4test()`](https://sfcheung.github.io/power4mome/reference/power4test.md)
   will print a message to recommend users to set `parallel` to `TRUE`.
   (0.2.1.5)
+
+- Updated calls to
+  [`parallel::detectCores()`](https://rdrr.io/r/parallel/detectCores.html)
+  to handle cases in which `NA` will be returned. (0.2.1.6)
 
 ### Bug Fixes
 
