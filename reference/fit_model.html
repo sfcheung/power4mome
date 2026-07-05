@@ -11,7 +11,7 @@ of the stored datasets."><meta property="og:image" content="https://sfcheung.git
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1.7</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -98,6 +98,7 @@ of the stored datasets.</p>
 <span>  arg_model_name <span class="op">=</span> <span class="st">"model"</span>,</span>
 <span>  arg_group_name <span class="op">=</span> <span class="st">"group"</span>,</span>
 <span>  <span class="va">...</span>,</span>
+<span>  model_append <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  fit_out <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  parallel <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  progress <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -152,13 +153,25 @@ Default is <code>"model"</code>.</p></dd>
 the argument of <code>fit_function</code>
 expecting the name of the group
 variable. Used only for multigroup
-models. Default is <code>"group"</code>.</p></dd>
+models. Default is <code>"group"</code>. If
+set to <code>NULL</code>, the group variable
+will not be used even if available,
+and a single-group model will be
+fitted.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>Optional arguments to be
 passed to <code>fit_function</code> when
 fitting the model.</p></dd>
+
+
+<dt id="arg-model-append">model_append<a class="anchor" aria-label="anchor" href="#arg-model-append"></a></dt>
+<dd><p>Model syntax to
+be appended to the original model
+syntax. This argument can be used
+for fitting a modified version of
+the model in <code>model</code>.</p></dd>
 
 
 <dt id="arg-fit-out">fit_out<a class="anchor" aria-label="anchor" href="#arg-fit-out"></a></dt>

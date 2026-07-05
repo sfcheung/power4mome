@@ -15,6 +15,7 @@ fit_model(
   arg_model_name = "model",
   arg_group_name = "group",
   ...,
+  model_append = NULL,
   fit_out = NULL,
   parallel = FALSE,
   progress = FALSE,
@@ -59,11 +60,19 @@ fit_model(
 
   The name of the argument of `fit_function` expecting the name of the
   group variable. Used only for multigroup models. Default is `"group"`.
+  If set to `NULL`, the group variable will not be used even if
+  available, and a single-group model will be fitted.
 
 - ...:
 
   Optional arguments to be passed to `fit_function` when fitting the
   model.
+
+- model_append:
+
+  Model syntax to be appended to the original model syntax. This
+  argument can be used for fitting a modified version of the model in
+  `model`.
 
 - fit_out:
 
