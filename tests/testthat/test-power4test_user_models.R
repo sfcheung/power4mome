@@ -1,4 +1,4 @@
-skip("WIP")
+skip_on_cran()
 
 library(testthat)
 suppressMessages(library(lavaan))
@@ -45,7 +45,12 @@ power_all_sim_only_1 <- power4test(
   iseed = 1234
 )
 
-power_all_sim_only_1
+fit <- power_all_sim_only_1$sim_all[[1]]$extra$fit
+expect_equal(
+  lavaan::fitMeasures(fit, "df"),
+  1,
+  ignore_attr = TRUE
+)
 
 # Fit a user model
 
@@ -64,8 +69,18 @@ power_all_sim_only_2 <- power4test(
   iseed = 1234
 )
 
-power_all_sim_only_2
-
+fit <- power_all_sim_only_2$sim_all[[1]]$extra$fit
+expect_equal(
+  lavaan::fitMeasures(fit, "df"),
+  1,
+  ignore_attr = TRUE
+)
+fit <- power_all_sim_only_2$sim_all[[1]]$extra$fit2
+expect_equal(
+  lavaan::fitMeasures(fit, "df"),
+  0,
+  ignore_attr = TRUE
+)
 
 # Indirect effect
 
@@ -81,8 +96,8 @@ power_all_test_only_1 <- power4test(
     y = "y",
     mc_ci = TRUE)
 )
-summary_all <- test_summary(power_all_test_only_1)
-summary_all
+summary_all1 <- test_summary(power_all_test_only_1)
+summary_all1
 
 power_all_test_only_2_fit <- power4test(
   object = power_all_sim_only_2,
@@ -93,8 +108,8 @@ power_all_test_only_2_fit <- power4test(
     y = "y",
     mc_ci = TRUE)
 )
-summary_all_fit <- test_summary(power_all_test_only_2_fit)
-summary_all_fit
+summary_all_fit2_1 <- test_summary(power_all_test_only_2_fit)
+summary_all_fit2_1
 
 power_all_test_only_2_fit2 <- power4test(
   object = power_all_sim_only_2,
@@ -118,8 +133,13 @@ power_all_test_only_2_fit2 <- power4test(
     mc_ci = TRUE),
   test_name = "ind_fit2"
 )
-summary_all_fit2 <- test_summary(power_all_test_only_2_fit2)
-summary_all_fit2
-rejection_rates(power_all_test_only_2_fit2)
+summary_all_fit2_2 <- test_summary(power_all_test_only_2_fit2)
+summary_all_fit2_2
+
+expect_equal(
+  summary_all_fit2_1[[1]][c("cilo", "cihi")],
+  summary_all_fit2_2[[1]][c("cilo", "cihi")],
+  tolerance = 1e-4
+)
 
 })

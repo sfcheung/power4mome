@@ -89,6 +89,12 @@
 #' passed to `fit_function` when
 #' fitting the model.
 #'
+#' @param model_append Model syntax to
+#' be appended to the original model
+#' syntax. This argument can be used
+#' for fitting a modified version of
+#' the model in `model`.
+#'
 #' @param fit_out If set to a `fit_out`
 #' object (the output of [fit_model()]),
 #' then all missing arguments will be
@@ -175,6 +181,7 @@ fit_model <- function(data_all = NULL,
                       arg_model_name = "model",
                       arg_group_name = "group",
                       ...,
+                      model_append = NULL,
                       fit_out = NULL,
                       parallel = FALSE,
                       progress = FALSE,
@@ -250,6 +257,7 @@ fit_model_i <- function(data_i,
                         arg_data_name = "data",
                         arg_model_name = "model",
                         arg_group_name = "group",
+                        model_append = NULL,
                         ...) {
   if (is.character(fit_function)) {
     fit_function_org <- fit_function
@@ -281,14 +289,28 @@ fit_model_i <- function(data_i,
     model_to_fit <- model
   }
   tmp <- attr(model_to_fit, "ptable")
+  # This attribute, "ptable",. is used only for lavaan < 0.6.20
   if (!is.null(tmp) &&
       is.null(data_i$number_of_indicators[[1]]) &&
       identical(getNamespaceName(environment(fit_function)),
                 c(name = "lavaan"))) {
+    if (!is.null(model_append)) {
+      stop("model_append cannot be used for this model. ",
+          "Please specify the model directly.")
+    }
     # Do this only for lavaan
     # TODO:
     # - Support moderated mediation model with indicators.
     model_to_fit <- tmp
+  }
+
+  # ==== Adjust the model using model_append ====
+  if (!is.character(model_to_fit)) {
+    stop("model_append cannot be used for this model. ",
+         "Please specify the model directly.")
+  } else {
+    model_to_fit <- c(model_to_fit,
+                      model_append)
   }
 
   # Fix the model if lm() is used to fitting the model
