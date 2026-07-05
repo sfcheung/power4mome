@@ -12,6 +12,7 @@ fit_model(
   arg_model_name = "model",
   arg_group_name = "group",
   ...,
+  model_append = NULL,
   fit_out = NULL,
   parallel = FALSE,
   progress = FALSE,
@@ -51,11 +52,21 @@ Default is \code{"model"}.}
 the argument of \code{fit_function}
 expecting the name of the group
 variable. Used only for multigroup
-models. Default is \code{"group"}.}
+models. Default is \code{"group"}. If
+set to \code{NULL}, the group variable
+will not be used even if available,
+and a single-group model will be
+fitted.}
 
 \item{...}{Optional arguments to be
 passed to \code{fit_function} when
 fitting the model.}
+
+\item{model_append}{Model syntax to
+be appended to the original model
+syntax. This argument can be used
+for fitting a modified version of
+the model in \code{model}.}
 
 \item{fit_out}{If set to a \code{fit_out}
 object (the output of \code{\link[=fit_model]{fit_model()}}),

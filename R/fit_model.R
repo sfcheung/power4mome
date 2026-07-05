@@ -79,11 +79,21 @@
 #' the argument of `fit_function`
 #' expecting the name of the group
 #' variable. Used only for multigroup
-#' models. Default is `"group"`.
+#' models. Default is `"group"`. If
+#' set to `NULL`, the group variable
+#' will not be used even if available,
+#' and a single-group model will be
+#' fitted.
 #'
 #' @param ... Optional arguments to be
 #' passed to `fit_function` when
 #' fitting the model.
+#'
+#' @param model_append Model syntax to
+#' be appended to the original model
+#' syntax. This argument can be used
+#' for fitting a modified version of
+#' the model in `model`.
 #'
 #' @param fit_out If set to a `fit_out`
 #' object (the output of [fit_model()]),
@@ -171,6 +181,7 @@ fit_model <- function(data_all = NULL,
                       arg_model_name = "model",
                       arg_group_name = "group",
                       ...,
+                      model_append = NULL,
                       fit_out = NULL,
                       parallel = FALSE,
                       progress = FALSE,
@@ -220,7 +231,8 @@ fit_model <- function(data_all = NULL,
                       eval,
                       envir = parent.frame())
   args <- utils::modifyList(args,
-                            as.list(call_args))
+                            as.list(call_args),
+                            keep.null = TRUE)
   args$fit_out <- NULL
   args$data_all <- NULL
   # args available in all cases.
@@ -245,6 +257,7 @@ fit_model_i <- function(data_i,
                         arg_data_name = "data",
                         arg_model_name = "model",
                         arg_group_name = "group",
+                        model_append = NULL,
                         ...) {
   if (is.character(fit_function)) {
     fit_function_org <- fit_function
@@ -276,14 +289,28 @@ fit_model_i <- function(data_i,
     model_to_fit <- model
   }
   tmp <- attr(model_to_fit, "ptable")
+  # This attribute, "ptable",. is used only for lavaan < 0.6.20
   if (!is.null(tmp) &&
       is.null(data_i$number_of_indicators[[1]]) &&
       identical(getNamespaceName(environment(fit_function)),
                 c(name = "lavaan"))) {
+    if (!is.null(model_append)) {
+      stop("model_append cannot be used for this model. ",
+          "Please specify the model directly.")
+    }
     # Do this only for lavaan
     # TODO:
     # - Support moderated mediation model with indicators.
     model_to_fit <- tmp
+  }
+
+  # ==== Adjust the model using model_append ====
+  if (!is.character(model_to_fit)) {
+    stop("model_append cannot be used for this model. ",
+         "Please specify the model directly.")
+  } else {
+    model_to_fit <- c(model_to_fit,
+                      model_append)
   }
 
   # Fix the model if lm() is used to fitting the model
@@ -297,7 +324,9 @@ fit_model_i <- function(data_i,
   fit_args0 <- list()
   fit_args0[[arg_model_name]] <- model_to_fit
   fit_args0[[arg_data_name]] <- data_i$mm_lm_dat_out
-  fit_args0[[arg_group_name]] = data_i$group_name
+  if (!is.null(arg_group_name)) {
+    fit_args0[[arg_group_name]] <- data_i$group_name
+  }
   fit_args <- utils::modifyList(list(...),
                                 fit_args0)
   fit <- tryCatch(suppressWarnings(do.call(fit_function,

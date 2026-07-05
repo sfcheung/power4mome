@@ -1,4 +1,4 @@
-# power4mome 0.2.1.6
+# power4mome 0.2.1.7
 
 ## Miscellaneous
 
@@ -21,6 +21,15 @@
   to handle cases in which `NA` will be
   returned.
   (0.2.1.6)
+
+- Updated `fit_model()` to allow fitting
+  a single-group model even if the data
+  generation model is a multigroup model
+  (set `arg_group_name` to `NULL). The
+  argument `model_append` is also added
+  to allow modifying the data generation
+  model.
+  (0.2.1.7)
 
 ## Bug Fixes
 
