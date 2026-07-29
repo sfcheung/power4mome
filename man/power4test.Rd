@@ -202,7 +202,9 @@ source data; \code{sim_data_name} (optional) the
 name of the argument to receive the
 simulated data (e.g., \code{"data"} for
 \code{\link[mice:ampute]{mice::ampute()}}), default to
-\code{"data"} if it is not set; \code{processed_data_name}
+\code{"data"} if it is not set or as the
+first argument of \code{fun} if it has
+no argument named \code{"data"}; \code{processed_data_name}
 (optional), the name of the data frame
 after being processed by \code{fun},
 such as the data frame

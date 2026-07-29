@@ -27,7 +27,7 @@ rel <- c(y = .70,
          m2 = .70,
          x = .70)
 
-sim_only <- power4test(nrep = 10,
+sim_only <- power4test(nrep = 20,
                        model = mod,
                        pop_es = mod_es,
                        n = 100,
@@ -37,7 +37,7 @@ sim_only <- power4test(nrep = 10,
                        R = 200,
                        do_the_test = FALSE,
                        progress = !is_testing(),
-                       iseed = 23456)
+                       iseed = 123456)
 
 test_ind <- power4test(object = sim_only,
                        test_fun = test_k_indirect_effects,
