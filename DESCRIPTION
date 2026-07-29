@@ -49,7 +49,8 @@ Imports:
     graphics,
     methods,
     cli,
-    mice
+    mice,
+    covsim
 Config/Needs/website: rmarkdown
 LazyData: true
 VignetteBuilder: knitr
