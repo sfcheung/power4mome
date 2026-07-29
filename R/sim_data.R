@@ -249,13 +249,58 @@
 #'
 #' - [rpgnorm_rs()].
 #'
-#' To use `x_fun`, the variables must
+#' To use `x_fun` with these univariate
+#' random number generators, the variables must
 #' have zero covariances with other
-#' variables in the population. It is
-#' possible to generate nonnormal
-#' multivariate data but we believe this
-#' is rarely needed when estimating
-#' power *before* having the data.
+#' variables in the population.
+#'
+#' ## Correlated Nonnormal Exogenous Variables
+#'
+#' Though may not be common, it is possible
+#' to specify exogenous variables which
+#' are correlated but have nonnormal marginal
+#' distributions. This is implemented
+#' internally by [covsim::rIG()].
+#'
+#' To specify this kind of distribution,
+#' set `x_fun` to a list with the first
+#' argument to `rig_rs`, *unnamed*. It
+#' should be unnamed because this function
+#' will be used for *all* exogenous variables.
+#'
+#' Then set `skew` and `kurt` to scalars
+#' (one-element numeric vectors) or
+#' named numeric vectors. If it is a scalar,
+#' then the value will be used for all
+#' exogenous variables.
+#' If it is a named vector, then the values
+#' will be used to set the population skew
+#' or (excess) kurtosis of the corresponding
+#' exogenous variables. Exogenous variables
+#' not named will have zero skew (or excess kurtosis).
+#' If not set, then default to zero.
+#'
+#' For example:
+#'
+#' \preformatted{x_fun = list(rig_rs,
+#'              skew = c(x = 2),
+#'              kurt = c(x = 6, w = 3))}
+#'
+#' The function [rig_rs] will be used to
+#' generate all exogenous variables.
+#' The population skewness of `x` is set
+#' to 2.
+#' The population excess kurtosis coefficients
+#' of `x` and `w` are set to 6 and 3,
+#' respectively.
+#'
+#' Note that [rig_rs] cannot be used with
+#' other univariate random functions.
+#'
+#' Other arguments to [rig_rs] can be supplied,
+#' but `n`, `sigma`, `pmean`, and `psd`
+#' will be ignored. They will be determined
+#' by the model.
 #'
 #' @inheritSection ptable_pop Specify the Population Model by 'model'
 #'
