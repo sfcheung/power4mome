@@ -1,15 +1,31 @@
-# power4mome 0.2.1.8
+# power4mome 0.2.1.9
 
-## Miscellaneous
-
-- Improve a check for the fit function.
-  (0.2.1.2)
+## New Features
 
 - Added support for estimating the power of SAM
   (structural-after-measurement) by
   `lavaan::sam()` if `manymome` 0.3.4.25
   or above is installed.
   (0.2.1.3)
+
+- Updated `fit_model()` to allow fitting
+  a single-group model even if the data
+  generation model is a multigroup model
+  (set `arg_group_name` to `NULL). The
+  argument `model_append` is also added
+  to allow modifying the data generation
+  model.
+  (0.2.1.7)
+
+- Added `rig_rs()`, which can be used
+  in `x_fun` to generate correlated
+  nonnormal variables.
+  (0.2.1.9)
+
+## Miscellaneous
+
+- Improve a check for the fit function.
+  (0.2.1.2)
 
 - If `parallel = FALSE` and `progress = TRUE`,
   `power4test()` will print a message to
@@ -21,15 +37,6 @@
   to handle cases in which `NA` will be
   returned.
   (0.2.1.6)
-
-- Updated `fit_model()` to allow fitting
-  a single-group model even if the data
-  generation model is a multigroup model
-  (set `arg_group_name` to `NULL). The
-  argument `model_append` is also added
-  to allow modifying the data generation
-  model.
-  (0.2.1.7)
 
 - Updated the argument `process_data`.
   The argument for the dataset does not
