@@ -508,52 +508,115 @@ gen_pure_x <- function(psi,
                ncol = p)
   x <- x0 %*% psi_q
   colnames(x) <- colnames(psi)
-
-  # Generate data using x_fun functions
-  if (length(x_fun) > 0) {
-    xnames <- colnames(x)
-    x_fun_names <- names(x_fun)
-    if (!all(x_fun_names %in% xnames)) {
-      tmp <- setdiff(x_fun_names,
-                     xnames)
-      msg <- paste0(paste0(tmp, collapse = ", "),
-                    " in x_fun but not in the model.")
-      stop(msg)
-    }
-    for (xx in x_fun_names) {
-      psi_xx <- psi[xx, ]
-      psi_xx <- psi_xx[-which(xnames == xx)]
-      if (!isTRUE(all.equal(psi_xx,
-                            rep(0, length(psi_xx)),
-                            tolerance = 1e-6,
-                            check.attributes = FALSE))) {
-        tmp <- paste0(xx, " must have zero covariance with other variables",
-                      " to be eligible for using x_fun.")
-        stop(tmp)
+  if ((length(x_fun) > 0) &&
+      ((nchar(names(x_fun)[1]) == 0) || is.null(names(x_fun)))) {
+    # Multivariate generation
+    x_fun_out <- gen_pure_x_rig(
+      x_fun = x_fun,
+      n = n,
+      psi = psi
+    )
+    x[, colnames(x_fun_out)] <- x_fun_out
+  } else {
+    # Univariate generation
+    # Generate data using x_fun functions
+    if (length(x_fun) > 0) {
+      xnames <- colnames(x)
+      x_fun_names <- names(x_fun)
+      if (!all(x_fun_names %in% xnames)) {
+        tmp <- setdiff(x_fun_names,
+                      xnames)
+        msg <- paste0(paste0(tmp, collapse = ", "),
+                      " in x_fun but not in the model.")
+        stop(msg)
+      }
+      for (xx in x_fun_names) {
+        psi_xx <- psi[xx, ]
+        psi_xx <- psi_xx[-which(xnames == xx)]
+        if (!isTRUE(all.equal(psi_xx,
+                              rep(0, length(psi_xx)),
+                              tolerance = 1e-6,
+                              check.attributes = FALSE))) {
+          tmp <- paste0(xx, " must have zero covariance with other variables",
+                        " to be eligible for using x_fun.")
+          stop(tmp)
+        }
+      }
+      tmpfct <- function(xx,
+                        n) {
+        xx_fun <- xx[[1]]
+        xx_fun <- match.fun(xx_fun)
+        xx <- xx[-1]
+        xx <- utils::modifyList(xx,
+                                list(n = n))
+        out <- do.call(xx_fun,
+                      xx)
+        out
+      }
+      x_fun_out <- sapply(x_fun,
+                          tmpfct,
+                          n = n,
+                          simplify = FALSE,
+                          USE.NAMES = TRUE)
+      for (xx in x_fun_names) {
+        x[, xx] <- x_fun_out[[xx]]
       }
     }
-    tmpfct <- function(xx,
-                       n) {
-      xx_fun <- xx[[1]]
-      xx_fun <- match.fun(xx_fun)
-      xx <- xx[-1]
-      xx <- utils::modifyList(xx,
-                              list(n = n))
-      out <- do.call(xx_fun,
-                     xx)
-      out
-    }
-    x_fun_out <- sapply(x_fun,
-                        tmpfct,
-                        n = n,
-                        simplify = FALSE,
-                        USE.NAMES = TRUE)
-    for (xx in x_fun_names) {
-      x[, xx] <- x_fun_out[[xx]]
+  }
+  x
+}
+
+#' @noRd
+gen_pure_x_rig <- function(
+  x_fun,
+  n,
+  psi
+) {
+  # Assume x_fun is a multivariate function
+  xnames <- colnames(psi)
+  xnames <- xnames[!grepl(":", xnames, fixed = TRUE)]
+  px <- length(xnames)
+  sigma <- psi[xnames, xnames, drop = FALSE]
+  x_fun0 <- match.fun(x_fun[[1]])
+  if (length(x_fun) > 1) {
+    x_fun_args <- x_fun[-1]
+  } else {
+    x_fun_args <- list()
+  }
+  skew0 <- rep(0, px)
+  names(skew0) <- xnames
+  kurt0 <- rep(0, px)
+  names(kurt0) <- xnames
+  if (!is.null(x_fun_args$skew)) {
+    if (is.null(names(x_fun_args$skew))) {
+      skew0[] <- unname(x_fun_args$skew[1])
+    } else {
+      skew0[names(x_fun_args$skew)] <- x_fun_args$skew
     }
   }
-
-  x
+  if (!is.null(x_fun_args$kurt)) {
+    if (is.null(names(x_fun_args$kurt))) {
+      kurt0[] <- unname(x_fun_args$kurt[1])
+    } else {
+      kurt0[names(x_fun_args$kurt)] <- x_fun_args$kurt
+    }
+  }
+  x_fun_args <- utils::modifyList(
+    x_fun_args,
+    list(
+      n = n,
+      sigma = sigma,
+      skew = skew0,
+      kurt = kurt0,
+      pmean = 0,
+      psd = sqrt(diag(sigma))
+    )
+  )
+  x_rig <- do.call(
+    x_fun0,
+    x_fun_args
+  )
+  x_rig
 }
 
 #' @noRd
