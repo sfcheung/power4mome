@@ -1,4 +1,4 @@
-# power4mome 0.2.1.7
+# power4mome 0.2.1.8
 
 ## Miscellaneous
 
@@ -30,6 +30,15 @@
   to allow modifying the data generation
   model.
   (0.2.1.7)
+
+- Updated the argument `process_data`.
+  The argument for the dataset does not
+  have to be named. If not set and
+  the function does not have an argument
+  named `data`, then it will be assumed
+  that the first argument will be treated
+  as the dataset to be processed.
+  (0.2.1.8)
 
 ## Bug Fixes
 
