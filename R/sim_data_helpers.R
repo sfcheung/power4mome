@@ -87,12 +87,24 @@ mm_lm_data <- function(object,
     process_data_fun <- match.fun(process_data$fun)
     attr(dat_all, "number_of_indicators") <- number_of_indicators
     tmp <- list(dat_all)
-    names(tmp) <- process_data$sim_data_name %||% "data"
+    sim_data_name_0 <- process_data$sim_data_name %||% "data"
+    process_data_fun_formals <- formals(process_data_fun)
     if (is.null(process_data$args)) {
       process_data$args <- list()
     }
-    process_data_args <- utils::modifyList(process_data$args,
-                                          tmp)
+    # sim_data_name_0 in process_data_fun?
+    if (sim_data_name_0 %in% names(process_data_fun_formals)) {
+      # sim_data_name_0 in formals
+      # Set data as the named argument
+      names(tmp) <- sim_data_name_0
+      process_data_args <- utils::modifyList(process_data$args,
+                                             tmp)
+    } else {
+      # sim_data_name_0 not in formals
+      # Set data as the first argument
+      process_data_args <- c(tmp,
+                             process_data$args)
+    }
     dat_all_amp <- do.call(process_data_fun,
                            process_data_args)
     m_name <- process_data$processed_data_name

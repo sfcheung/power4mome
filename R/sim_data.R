@@ -394,7 +394,9 @@
 #' name of the argument to receive the
 #' simulated data (e.g., `"data"` for
 #' [mice::ampute()]), default to
-#' `"data"` if it is not set; `processed_data_name`
+#' `"data"` if it is not set or as the
+#' first argument of `fun` if it has
+#' no argument named `"data"`; `processed_data_name`
 #' (optional), the name of the data frame
 #' after being processed by `fun`,
 #' such as the data frame
