@@ -91,9 +91,6 @@ rig_rs <- function(
           pmean = 0,
           psd = 1
 ) {
-  if (!requireNamespace("covsim", quietly = TRUE)) {
-    stop("Please install the covsim package first")
-  }
   p <- ncol(sigma)
   if (length(skew) == 1) {
     skew <- rep(skew, p)
