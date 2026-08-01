@@ -40,22 +40,45 @@
 #' and [lavaan::cfa()]. The model must
 #' be a multigroup model.
 #'
-#' @param group.equal The same argument
-#' used by `lavaan`. A character vector
-#' with one or more of these values:
-#' `"regressions"`, `"loadings"`,
-#' `"lv.covariances"`, `"lv.variances"`,
-#' `"intercepts"`, `"means"`, `"thresholds"`,
-#' `"residual.covariances"`, `"composite.weights"`,
-#' and `"residuals"`.
-#'
 #' @param model_to_fit The model to be
 #' fitted, specified by `lavaan` model
 #' syntax. If `NULL`, then the model
 #' used by `fit_model()` will be used.
 #'
-#' @param ... Optional arguments to be
-#' passed to [lavaan::lavTestLRT()].
+#' @param fit_measure The name of the
+#' fit measure to be used to do the test.
+#' Must be a name that can be accepted by
+#' [lavaan::fitMeasures()].
+#'
+#' @param sig_value The name of the element
+#' of the output of [lavaan::fitMeasures()]
+#' to be used to do the test.
+#' Must be a name that can be accepted by
+#' [lavaan::fitMeasures()]. Used when
+#' the value used to do the test (e.g., a p-value)
+#' is different from the value specified
+#' in `fit_measure` (e.g., `"pvalue"` is
+#' the p-value for model chi-square, `"chisq"`).
+#' It can be
+#' a named character vector, with the names
+#' being possible values for `fit_measure`.
+#' The name to be used will then be retrieved
+#' based on `fit_measure`.
+#'
+#' @param sig_if The criterion for doing
+#' the test, as a character string.
+#' For example, it is `"<.05"` if the test
+#' is "significant" when the p-value is less
+#' than .05. It is `"<.95"` if the "test"
+#' is "significant" when the fit measure
+#' (e.g., CFI) is less than .95.
+#'
+#' @param refit_args A named list
+#' of arguments to be passed to [fit_model()]
+#' if `model_to_fit` is set.
+#'
+#' @param fitmeasures_args A named list
+#' of arguments to be passed to [lavaan::fitMeasures()].
 #'
 #' @seealso [power4test()]
 #'
@@ -112,14 +135,18 @@ test_fit_measure <- function(
   ),
   sig_if = "<.05",
   check_post_check = TRUE,
-  refit_arguments = list(se = "none"),
-  ...,
+  refit_args = list(se = "none"),
+  fitmeasures_args = list(),
   fit_name = "fit",
   get_map_names = FALSE,
   get_test_name = FALSE
 ) {
   map_names <- c(fit = fit_name)
-  args <- list(...)
+
+  if (length(fit_measure) != 1) {
+    stop("'fit_measure' must has exactly one string.")
+  }
+
   if (get_map_names) {
 
     # ==== Return map_names ====
@@ -178,7 +205,7 @@ test_fit_measure <- function(
     )
     refit_args <- utils::modifyList(
       refit_args,
-      refit_arguments,
+      refit_args,
       keep.null = TRUE
     )
     suppressWarnings(
@@ -187,19 +214,6 @@ test_fit_measure <- function(
         refit_args
       )
     )
-
-    # suppressWarnings(
-    #   fit_update <- methods::getMethod("update",
-    #               signature = "lavaan",
-    #               where = asNamespace("lavaan"))(
-    #                 fit,
-    #                 group.equal = group.equal,
-    #                 group.partial = group.partial
-    #               )
-    # )
-    # update_ok <- lavaan::lavInspect(fit_update, "converged") &&
-    #           (suppressWarnings(lavaan::lavInspect(fit_update, "post.check") ||
-    #             !check_post_check))
   } else {
     # ==== No Refit ====
     fit_out <- fit
@@ -228,9 +242,17 @@ test_fit_measure <- function(
 
   # ==== Do the Test ====
 
+  fitmeasures_args0 <- utils::modifyList(
+    fitmeasures_args,
+    list(
+      fit_measures = unique(c(fit_measure, sig_value_name)),
+      object = fit_out
+    )
+  )
   fm_out <- suppressWarnings(
-    tryCatch(lavaan::fitMeasures(
-        fit_out
+    tryCatch(do.call(
+        lavaan::fitMeasures,
+        fitmeasures_args0
       ),
     error = function(e) e)
   )

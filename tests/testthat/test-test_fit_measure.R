@@ -1,5 +1,3 @@
-skip("WIP")
-
 library(testthat)
 suppressMessages(library(lavaan))
 
@@ -69,6 +67,34 @@ expect_equal(
   tolerance = 1e-4
 )
 
+fit_chk <- lapply(
+  sim_only$sim_all,
+  \(x) x$extra$fit
+)
+fm_chk <- sapply(
+  fit_chk,
+  fitMeasures,
+  "chisq"
+)
+
+expect_equal(
+  tmp1$est,
+  mean(fm_chk),
+  tolerance = 1e-4
+)
+
+sig_chk <- sapply(
+  fit_chk,
+  fitMeasures,
+  "pvalue"
+)
+
+expect_equal(
+  tmp1$reject,
+  mean(sig_chk < .05),
+  tolerance = 1e-4
+)
+
 # RMSEA
 
 test_out1 <- power4test(
@@ -95,6 +121,34 @@ tmp2 <- rejection_rates(test_out2)
 expect_equal(
   tmp1$est,
   tmp2$est,
+  tolerance = 1e-4
+)
+
+fit_chk <- lapply(
+  sim_only$sim_all,
+  \(x) x$extra$fit
+)
+fm_chk <- sapply(
+  fit_chk,
+  fitMeasures,
+  "rmsea"
+)
+
+expect_equal(
+  tmp1$est,
+  mean(fm_chk),
+  tolerance = 1e-4
+)
+
+sig_chk <- sapply(
+  fit_chk,
+  fitMeasures,
+  "rmsea.pvalue"
+)
+
+expect_equal(
+  tmp1$reject,
+  mean(sig_chk < .05),
   tolerance = 1e-4
 )
 
@@ -129,26 +183,26 @@ expect_equal(
   tolerance = 1e-4
 )
 
-# TO PROCESS
+fit_chk <- lapply(
+  sim_only$sim_all,
+  \(x) x$extra$fit
+)
+fm_chk <- sapply(
+  fit_chk,
+  fitMeasures,
+  "cfi"
+)
 
-fit0 <- test_out$sim_all[[2]]$extra$fit
-mod0 <- attr(test_out$sim_all[[2]]$ptable, "model")
-fit1 <- update(fit0,
-          group.equal = "regressions",
-          group.partial = "y~m")
-lrt_out <- lavTestLRT(fit0, fit1)
-test0 <- test_out$test_all[[1]][[2]]$test_results
+expect_equal(
+  tmp1$est,
+  mean(fm_chk),
+  tolerance = 1e-4
+)
 
-expect_equal(test0[, "pvalue"],
-             lrt_out[2, "Pr(>Chisq)"])
-
-est <- parameterEstimates(fit1, se = FALSE, ci = FALSE)
-
-expect_equal(est[est$lhs == "m" & est$rhs == "x" & est$group == 1, "est"],
-             est[est$lhs == "m" & est$rhs == "x" & est$group == 2, "est"])
-expect_false(isTRUE(all.equal(
-             est[est$lhs == "y" & est$rhs == "m" & est$group == 1, "est"],
-             est[est$lhs == "y" & est$rhs == "m" & est$group == 2, "est"]
-             )))
+expect_equal(
+  tmp1$reject,
+  mean(fm_chk < .95),
+  tolerance = 1e-4
+)
 
 })
