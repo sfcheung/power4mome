@@ -15,7 +15,7 @@ results."><meta property="og:image" content="https://sfcheung.github.io/power4mo
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1.7</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1.12</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -325,7 +325,9 @@ source data; <code>sim_data_name</code> (optional) the
 name of the argument to receive the
 simulated data (e.g., <code>"data"</code> for
 <code><a href="https://amices.org/mice/reference/ampute.html" class="external-link">mice::ampute()</a></code>), default to
-<code>"data"</code> if it is not set; <code>processed_data_name</code>
+<code>"data"</code> if it is not set or as the
+first argument of <code>fun</code> if it has
+no argument named <code>"data"</code>; <code>processed_data_name</code>
 (optional), the name of the data frame
 after being processed by <code>fun</code>,
 such as the data frame
@@ -416,7 +418,12 @@ in the element <code>extra</code> is set to
 the argument <code>fit</code> of <code>test_fun</code>.
 That is, for the first replication,
 <code>fit = sim_out[[1]]$extra$fit</code> when
-calling <code>test_fun</code>.</p></dd>
+calling <code>test_fun</code>. Since
+Version 0.2.1.11, if not found in
+<code>$extra</code>, the elements of <code>sim_out</code>
+will be searched, allowing the retrieval
+of information related to data
+generation, stored by <code><a href="sim_data.html">sim_data()</a></code>.</p></dd>
 
 
 <dt id="arg-results-fun">results_fun<a class="anchor" aria-label="anchor" href="#arg-results-fun"></a></dt>
@@ -1265,13 +1272,54 @@ These are some of them:</p><ul><li><p><code><a href="rbinary_rs.html">rbinary_rs
 <li><p><code><a href="rbeta_rs.html">rbeta_rs()</a></code>.</p></li>
 <li><p><code><a href="rlnorm_rs.html">rlnorm_rs()</a></code>.</p></li>
 <li><p><code><a href="rpgnorm_rs.html">rpgnorm_rs()</a></code>.</p></li>
-</ul><p>To use <code>x_fun</code>, the variables must
+</ul><p>To use <code>x_fun</code> with these univariate
+random number generators, the variables must
 have zero covariances with other
-variables in the population. It is
-possible to generate nonnormal
-multivariate data but we believe this
-is rarely needed when estimating
-power <em>before</em> having the data.</p>
+variables in the population.</p><div class="section">
+<h3 id="correlated-nonnormal-exogenous-variables">Correlated Nonnormal Exogenous Variables<a class="anchor" aria-label="anchor" href="#correlated-nonnormal-exogenous-variables"></a></h3>
+
+
+<p>Though may not be common, it is possible
+to specify exogenous variables which
+are correlated but have nonnormal marginal
+distributions. This is implemented
+internally by <code><a href="https://rdrr.io/pkg/covsim/man/rIG.html" class="external-link">covsim::rIG()</a></code>.</p>
+<p>To specify this kind of distribution,
+set <code>x_fun</code> to a list with the first
+argument to <code>rig_rs</code>, <em>unnamed</em>. It
+should be unnamed because this function
+will be used for <em>all</em> exogenous variables.</p>
+<p>Then set <code>skew</code> and <code>kurt</code> to scalars
+(one-element numeric vectors) or
+named numeric vectors. If it is a scalar,
+then the value will be used for all
+exogenous variables.
+If it is a named vector, then the values
+will be used to set the population skew
+or (excess) kurtosis of the corresponding
+exogenous variables. Exogenous variables
+not named will have zero skew (or excess kurtosis).
+If not set, then default to zero.</p>
+<p>For example:</p>
+<div class="sourceCode"><pre><code><span><span class="va">x_fun</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">rig_rs</span>,</span>
+<span>             skew <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>,</span>
+<span>             kurt <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">6</span>, w <span class="op">=</span> <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+
+<p>The function <a href="rig_rs.html">rig_rs</a> will be used to
+generate all exogenous variables.
+The population skewness of <code>x</code> is set
+to 2.
+The population excess kurtosis coefficients
+of <code>x</code> and <code>w</code> are set to 6 and 3,
+respectively.</p>
+<p>Note that <a href="rig_rs.html">rig_rs</a> cannot be used with
+other univariate random functions.</p>
+<p>Other arguments to <a href="rig_rs.html">rig_rs</a> can be supplied,
+but <code>n</code>, <code>sigma</code>, <code>pmean</code>, and <code>psd</code>
+will be ignored. They will be determined
+by the model.</p>
+</div>
+
     </div>
     <div class="section level2">
     <h2 id="major-test-related-arguments">Major Test-Related Arguments<a class="anchor" aria-label="anchor" href="#major-test-related-arguments"></a></h2>
@@ -1503,7 +1551,7 @@ then set to the argument <code>object</code> of
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ============ &lt;fit&gt; ============</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> lavaan 0.6-21 ended normally after 1 iteration</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lavaan 0.7-2 ended normally after 1 iteration</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Estimator                                         ML</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Optimization method                           NLMINB</span>
@@ -1598,7 +1646,7 @@ then set to the argument <code>object</code> of
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ============ &lt;fit&gt; ============</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> lavaan 0.6-21 ended normally after 1 iteration</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lavaan 0.7-2 ended normally after 1 iteration</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Estimator                                         ML</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Optimization method                           NLMINB</span>
@@ -1690,7 +1738,7 @@ then set to the argument <code>object</code> of
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ============ &lt;fit&gt; ============</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> lavaan 0.6-21 ended normally after 1 iteration</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lavaan 0.7-2 ended normally after 1 iteration</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Estimator                                         ML</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Optimization method                           NLMINB</span>
@@ -1736,7 +1784,7 @@ then set to the argument <code>object</code> of
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

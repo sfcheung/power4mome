@@ -304,7 +304,7 @@ print(test_ind,
 #> 
 #> ============ <fit> ============
 #> 
-#> lavaan 0.6-21 ended normally after 1 iteration
+#> lavaan 0.7-2 ended normally after 1 iteration
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
@@ -330,8 +330,8 @@ print(test_ind,
 #> 
 #> Mean(s) across replication:
 #>     test_label   est   cilo  cihi pvalue   sig
-#> 1 x -> m1 -> y 0.026 -0.042 0.103  0.504 0.000
-#> 2 x -> m2 -> y 0.034 -0.081 0.155  0.408 0.200
+#> 1 x -> m1 -> y 0.026 -0.043 0.103  0.492 0.000
+#> 2 x -> m2 -> y 0.034 -0.072 0.150  0.388 0.200
 #> 
 #> - The column 'sig' shows the rejection rates.
 #> - If the null hypothesis is false, the rate is the power.
@@ -417,7 +417,7 @@ print(test_ind_all_sig,
 #> 
 #> ============ <fit> ============
 #> 
-#> lavaan 0.6-21 ended normally after 1 iteration
+#> lavaan 0.7-2 ended normally after 1 iteration
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
@@ -443,7 +443,7 @@ print(test_ind_all_sig,
 #> 
 #> Mean(s) across replication:
 #>           test_label  est cilo cihi pvalue   sig
-#> 1 x-...->y (All sig)  NaN  NaN  NaN  0.504 0.000
+#> 1 x-...->y (All sig)  NaN  NaN  NaN  0.492 0.000
 #> 
 #> - The column 'sig' shows the rejection rates.
 #> - If the null hypothesis is false, the rate is the power.

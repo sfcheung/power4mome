@@ -85,6 +85,8 @@ and model parameters.
   : Test All Free Parameters
 - [`test_group_equal()`](https://sfcheung.github.io/power4mome/reference/test_group_equal.md)
   : Test Group Constraints
+- [`test_fit_measure()`](https://sfcheung.github.io/power4mome/reference/test_fit_measure.md)
+  : Test Model Fit
 
 ## Data Processors
 
@@ -143,6 +145,8 @@ Functions for generating one variable from a specific distribution.
   : Random Variable From a t Distribution
 - [`runif_rs()`](https://sfcheung.github.io/power4mome/reference/runif_rs.md)
   : Random Variable From a Uniform Distribution
+- [`rig_rs()`](https://sfcheung.github.io/power4mome/reference/rig_rs.md)
+  : Random Variables Using the IG method.
 
 ## Miscellaneous Functions
 

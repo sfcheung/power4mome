@@ -176,7 +176,7 @@ data_all <- sim_data(nrep = 5,
 
 fit_all <- fit_model(data_all)
 fit_all[[1]]
-#> lavaan 0.6-21 ended normally after 1 iteration
+#> lavaan 0.7-2 ended normally after 1 iteration
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
@@ -194,7 +194,7 @@ fit_all[[1]]
 fit_all_mlr <- fit_model(data_all,
                          estimator = "MLR")
 fit_all_mlr[[1]]
-#> lavaan 0.6-21 ended normally after 1 iteration
+#> lavaan 0.7-2 ended normally after 1 iteration
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
@@ -218,7 +218,7 @@ fit_all_mlr2 <- fit_model(data_all,
                           mod2,
                           estimator = "MLR")
 fit_all_mlr2[[1]]
-#> lavaan 0.6-21 ended normally after 2 iterations
+#> lavaan 0.7-2 ended normally after 2 iterations
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB

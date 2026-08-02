@@ -202,7 +202,7 @@ sim_out_all
 # Verify that the elements of fits are set to extra$fit
 
 library(lavaan)
-#> This is lavaan 0.6-21
+#> This is lavaan 0.7-2
 #> lavaan is FREE software! Please report any bugs.
 parameterEstimates(fits[[1]])
 #>   lhs op rhs   est    se     z pvalue ci.lower ci.upper

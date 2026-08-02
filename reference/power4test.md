@@ -175,7 +175,8 @@ print(
   except the one for the source data; `sim_data_name` (optional) the
   name of the argument to receive the simulated data (e.g., `"data"` for
   [`mice::ampute()`](https://amices.org/mice/reference/ampute.html)),
-  default to `"data"` if it is not set; `processed_data_name`
+  default to `"data"` if it is not set or as the first argument of `fun`
+  if it has no argument named `"data"`; `processed_data_name`
   (optional), the name of the data frame after being processed by `fun`,
   such as the data frame with missing data in the output of `fun` (e.g.,
   `"amp"` for
@@ -242,7 +243,11 @@ print(
   `test_fun`. Default is `c(fit = "fit")`, indicating that the element
   `fit` in the element `extra` is set to the argument `fit` of
   `test_fun`. That is, for the first replication,
-  `fit = sim_out[[1]]$extra$fit` when calling `test_fun`.
+  `fit = sim_out[[1]]$extra$fit` when calling `test_fun`. Since Version
+  0.2.1.11, if not found in `$extra`, the elements of `sim_out` will be
+  searched, allowing the retrieval of information related to data
+  generation, stored by
+  [`sim_data()`](https://sfcheung.github.io/power4mome/reference/sim_data.md).
 
 - results_fun:
 
@@ -909,10 +914,48 @@ respectively. These are some of them:
 
 - [`rpgnorm_rs()`](https://sfcheung.github.io/power4mome/reference/rpgnorm_rs.md).
 
-To use `x_fun`, the variables must have zero covariances with other
-variables in the population. It is possible to generate nonnormal
-multivariate data but we believe this is rarely needed when estimating
-power *before* having the data.
+To use `x_fun` with these univariate random number generators, the
+variables must have zero covariances with other variables in the
+population.
+
+### Correlated Nonnormal Exogenous Variables
+
+Though may not be common, it is possible to specify exogenous variables
+which are correlated but have nonnormal marginal distributions. This is
+implemented internally by
+[`covsim::rIG()`](https://rdrr.io/pkg/covsim/man/rIG.html).
+
+To specify this kind of distribution, set `x_fun` to a list with the
+first argument to `rig_rs`, *unnamed*. It should be unnamed because this
+function will be used for *all* exogenous variables.
+
+Then set `skew` and `kurt` to scalars (one-element numeric vectors) or
+named numeric vectors. If it is a scalar, then the value will be used
+for all exogenous variables. If it is a named vector, then the values
+will be used to set the population skew or (excess) kurtosis of the
+corresponding exogenous variables. Exogenous variables not named will
+have zero skew (or excess kurtosis). If not set, then default to zero.
+
+For example:
+
+    x_fun = list(rig_rs,
+                 skew = c(x = 2),
+                 kurt = c(x = 6, w = 3))
+
+The function
+[rig_rs](https://sfcheung.github.io/power4mome/reference/rig_rs.md) will
+be used to generate all exogenous variables. The population skewness of
+`x` is set to 2. The population excess kurtosis coefficients of `x` and
+`w` are set to 6 and 3, respectively.
+
+Note that
+[rig_rs](https://sfcheung.github.io/power4mome/reference/rig_rs.md)
+cannot be used with other univariate random functions.
+
+Other arguments to
+[rig_rs](https://sfcheung.github.io/power4mome/reference/rig_rs.md) can
+be supplied, but `n`, `sigma`, `pmean`, and `psd` will be ignored. They
+will be determined by the model.
 
 ## Major Test-Related Arguments
 
@@ -1121,7 +1164,7 @@ print(out,
 #> 
 #> ============ <fit> ============
 #> 
-#> lavaan 0.6-21 ended normally after 1 iteration
+#> lavaan 0.7-2 ended normally after 1 iteration
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
@@ -1216,7 +1259,7 @@ print(out1,
 #> 
 #> ============ <fit> ============
 #> 
-#> lavaan 0.6-21 ended normally after 1 iteration
+#> lavaan 0.7-2 ended normally after 1 iteration
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
@@ -1308,7 +1351,7 @@ print(out2,
 #> 
 #> ============ <fit> ============
 #> 
-#> lavaan 0.6-21 ended normally after 1 iteration
+#> lavaan 0.7-2 ended normally after 1 iteration
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB

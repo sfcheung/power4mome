@@ -609,7 +609,7 @@ out
 #> 
 #> ============ <fit> ============
 #> 
-#> lavaan 0.6-21 ended normally after 1 iteration
+#> lavaan 0.7-2 ended normally after 1 iteration
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
@@ -634,7 +634,7 @@ out
 #> 
 #> Mean(s) across replication:
 #>    est cilo cihi   sig pvalue      R   nlt0 alpha bz_39 bz_79
-#>  0.066  NaN  NaN 0.198  0.258 79.000 15.100 0.050 0.202 0.200
+#>  0.066  NaN  NaN 0.196  0.256 79.000 15.000 0.050 0.204 0.200
 #> 
 #> - The value 'sig' is the rejection rate.
 #> - If the null hypothesis is false, this is the power.
@@ -646,7 +646,7 @@ out
 #> [test]: test_indirect: x->m->y 
 #> [test_label]: Test 
 #>     est   p.v reject r.cilo r.cihi
-#> 1 0.066 1.000  0.198  0.057  0.510
+#> 1 0.066 1.000  0.196  0.057  0.510
 #> Notes:
 #> - p.v: The proportion of valid replications.
 #> - est: The mean of the estimates in a test across replications.

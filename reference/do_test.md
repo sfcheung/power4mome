@@ -45,7 +45,11 @@ do_test(
   `test_fun`. Default is `c(fit = "fit")`, indicating that the element
   `fit` in the element `extra` is set to the argument `fit` of
   `test_fun`. That is, for the first replication,
-  `fit = sim_out[[1]]$extra$fit` when calling `test_fun`.
+  `fit = sim_out[[1]]$extra$fit` when calling `test_fun`. Since Version
+  0.2.1.11, if not found in `$extra`, the elements of `sim_out` will be
+  searched, allowing the retrieval of information related to data
+  generation, stored by
+  [`sim_data()`](https://sfcheung.github.io/power4mome/reference/sim_data.md).
 
 - results_fun:
 
@@ -302,23 +306,23 @@ test_all <- do_test(sim_all,
 lapply(test_all, function(x) x$test_results)
 #> [[1]]
 #>        est       cilo       cihi        sig     pvalue 
-#> 0.10147276 0.02144103 0.18035550 1.00000000 0.00000000 
+#> 0.10147276 0.02623885 0.20505134 1.00000000 0.00000000 
 #> 
 #> [[2]]
 #>          est         cilo         cihi          sig       pvalue 
 #>  0.079776696 -0.002117072  0.194482289  0.000000000  0.040000000 
 #> 
 #> [[3]]
-#>          est         cilo         cihi          sig       pvalue 
-#>  0.052746533 -0.001695808  0.117672020  0.000000000  0.040000000 
+#>         est        cilo        cihi         sig      pvalue 
+#> 0.052746533 0.004908341 0.117536080 1.000000000 0.020000000 
 #> 
 #> [[4]]
 #>        est       cilo       cihi        sig     pvalue 
 #> 0.10461042 0.02975369 0.23184723 1.00000000 0.00000000 
 #> 
 #> [[5]]
-#>         est        cilo        cihi         sig      pvalue 
-#> 0.116902305 0.003271956 0.251780798 1.000000000 0.040000000 
+#>       est      cilo      cihi       sig    pvalue 
+#> 0.1169023 0.0195144 0.2311664 1.0000000 0.0000000 
 #> 
 
 ```

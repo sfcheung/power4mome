@@ -340,7 +340,7 @@ print(test_out,
 #> 
 #> ============ <fit> ============
 #> 
-#> lavaan 0.6-21 ended normally after 1 iteration
+#> lavaan 0.7-2 ended normally after 1 iteration
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
@@ -366,9 +366,9 @@ print(test_out,
 #> 
 #> Mean(s) across replication:
 #>             test_label     [w]    (w)   est   cilo  cihi   sig pvalue   m~x
-#> 1 x->m->y | w: M+1.0SD M+1.0SD  1.060 0.212  0.077 0.373 0.800  0.036 0.438
-#> 2    x->m->y | w: Mean    Mean  0.061 0.132  0.031 0.250 0.800  0.192 0.275
-#> 3 x->m->y | w: M-1.0SD M-1.0SD -0.939 0.053 -0.084 0.203 0.000  0.144 0.112
+#> 1 x->m->y | w: M+1.0SD M+1.0SD  1.060 0.212  0.069 0.384 0.800  0.036 0.438
+#> 2    x->m->y | w: Mean    Mean  0.061 0.132  0.036 0.263 0.800  0.192 0.275
+#> 3 x->m->y | w: M-1.0SD M-1.0SD -0.939 0.053 -0.092 0.205 0.000  0.156 0.112
 #>     y~m
 #> 1 0.474
 #> 2 0.474

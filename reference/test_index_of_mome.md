@@ -296,7 +296,7 @@ print(test_out,
 #> 
 #> ============ <fit> ============
 #> 
-#> lavaan 0.6-21 ended normally after 1 iteration
+#> lavaan 0.7-2 ended normally after 1 iteration
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB

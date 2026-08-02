@@ -1,15 +1,33 @@
 # Changelog
 
-## power4mome 0.2.1.7
+## power4mome 0.2.1.12
 
-### Miscellaneous
-
-- Improve a check for the fit function. (0.2.1.2)
+### New Features
 
 - Added support for estimating the power of SAM
   (structural-after-measurement) by
   [`lavaan::sam()`](https://rdrr.io/pkg/lavaan/man/sam.html) if
   `manymome` 0.3.4.25 or above is installed. (0.2.1.3)
+
+- Updated
+  [`fit_model()`](https://sfcheung.github.io/power4mome/reference/fit_model.md)
+  to allow fitting a single-group model even if the data generation
+  model is a multigroup model (set `arg_group_name` to
+  `NULL). The argument`model_append\` is also added to allow modifying
+  the data generation model. (0.2.1.7)
+
+- Added
+  [`rig_rs()`](https://sfcheung.github.io/power4mome/reference/rig_rs.md),
+  which can be used in `x_fun` to generate correlated nonnormal
+  variables. (0.2.1.9)
+
+- Added
+  [`test_fit_measure()`](https://sfcheung.github.io/power4mome/reference/test_fit_measure.md)
+  for estimating the “rejection rate” based on a fit measure. (0.2.1.12)
+
+### Miscellaneous
+
+- Improve a check for the fit function. (0.2.1.2)
 
 - If `parallel = FALSE` and `progress = TRUE`,
   [`power4test()`](https://sfcheung.github.io/power4mome/reference/power4test.md)
@@ -20,12 +38,21 @@
   [`parallel::detectCores()`](https://rdrr.io/r/parallel/detectCores.html)
   to handle cases in which `NA` will be returned. (0.2.1.6)
 
+- Updated the argument `process_data`. The argument for the dataset does
+  not have to be named. If not set and the function does not have an
+  argument named `data`, then it will be assumed that the first argument
+  will be treated as the dataset to be processed. (0.2.1.8)
+
+- Updated
+  [`sim_data()`](https://sfcheung.github.io/power4mome/reference/sim_data.md)
+  (and its helpers) to store the measurement part of a model separately,
+  in case other function need it. (0.2.1.10)
+
 - Updated
   [`fit_model()`](https://sfcheung.github.io/power4mome/reference/fit_model.md)
-  to allow fitting a single-group model even if the data generation
-  model is a multigroup model (set `arg_group_name` to
-  `NULL). The argument`model_append\` is also added to allow modifying
-  the data generation model. (0.2.1.7)
+  to allow the `map_names` to retrieve elements stored in the output of
+  [`sim_out()`](https://sfcheung.github.io/power4mome/reference/sim_out.md)
+  for a replication. (0.2.1.11)
 
 ### Bug Fixes
 

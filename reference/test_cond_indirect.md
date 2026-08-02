@@ -311,7 +311,7 @@ print(test_ind,
 #> 
 #> ============ <fit> ============
 #> 
-#> lavaan 0.6-21 ended normally after 1 iteration
+#> lavaan 0.7-2 ended normally after 1 iteration
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
@@ -337,7 +337,7 @@ print(test_ind,
 #> 
 #> Mean(s) across replication:
 #>    est  cilo  cihi   sig pvalue
-#>  0.206 0.075 0.382 0.800  0.052
+#>  0.206 0.064 0.387 0.800  0.052
 #> 
 #> - The value 'sig' is the rejection rate.
 #> - If the null hypothesis is false, this is the power.
