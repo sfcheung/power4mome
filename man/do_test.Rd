@@ -42,7 +42,12 @@ in the element \code{extra} is set to
 the argument \code{fit} of \code{test_fun}.
 That is, for the first replication,
 \code{fit = sim_out[[1]]$extra$fit} when
-calling \code{test_fun}.}
+calling \code{test_fun}. Since
+Version 0.2.1.11, if not found in
+\verb{$extra}, the elements of \code{sim_out}
+will be searched, allowing the retrieval
+of information related to data
+generation, stored by \code{\link[=sim_data]{sim_data()}}.}
 
 \item{results_fun}{The function to be
 used to extract the test results.

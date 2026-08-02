@@ -1,4 +1,4 @@
-# power4mome 0.2.1.10
+# power4mome 0.2.1.11
 
 ## New Features
 
@@ -52,6 +52,12 @@
   model separately, in case other function
   need it.
   (0.2.1.10)
+
+- Updated `fit_model()` to allow the
+  `map_names` to retrieve elements stored
+  in the output of `sim_out()` for a
+  replication.
+  (0.2.1.11)
 
 ## Bug Fixes
 
