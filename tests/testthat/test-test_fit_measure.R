@@ -46,7 +46,10 @@ sim_only <- power4test(nrep = 5,
 
 test_out1 <- power4test(
   object = sim_only,
-  test_fun = test_fit_measure
+  test_fun = test_fit_measure,
+  test_args = list(
+    fit_measure = "chisq.scaled"
+  )
 )
 
 tmp1 <- rejection_rates(test_out1)
@@ -55,7 +58,8 @@ test_out2 <- power4test(
   object = sim_only,
   test_fun = test_fit_measure,
   test_args = list(
-    model_to_fit = model_simple_med_0
+    model_to_fit = model_simple_med_0,
+    fit_measure = "chisq.scaled"
   )
 )
 
@@ -74,7 +78,7 @@ fit_chk <- lapply(
 fm_chk <- sapply(
   fit_chk,
   fitMeasures,
-  "chisq"
+  "chisq.scaled"
 )
 
 expect_equal(
@@ -86,7 +90,7 @@ expect_equal(
 sig_chk <- sapply(
   fit_chk,
   fitMeasures,
-  "pvalue"
+  "pvalue.scaled"
 )
 
 expect_equal(
@@ -204,5 +208,55 @@ expect_equal(
   mean(fm_chk < .95),
   tolerance = 1e-4
 )
+
+# Refit with new option
+
+test_out2 <- power4test(
+  object = sim_only,
+  test_fun = test_fit_measure,
+  test_args = list(
+    always_refit = TRUE,
+    refit_args = list(
+      se = "none",
+      estimator = "ML"
+    )
+  )
+)
+
+tmp2 <- rejection_rates(test_out2)
+
+sim_only_ml <- power4test(nrep = 5,
+                       model = model_simple_med,
+                       pop_es = model_simple_med_es,
+                       fit_model_args = list(
+                        estimator = "ML",
+                        model_append = "y ~ 0*x"
+                       ),
+                       n = 100,
+                       progress = !is_testing(),
+                       iseed = 1234)
+
+fit_chk <- lapply(
+  sim_only_ml$sim_all,
+  \(x) x$extra$fit
+)
+fm_chk <- sapply(
+  fit_chk,
+  fitMeasures,
+  "chisq"
+)
+
+expect_equal(
+  tmp2$est,
+  mean(fm_chk),
+  tolerance = 1e-4
+)
+
+tmp_chk <- sapply(
+  fit_chk,
+  \(x) length(fitMeasures(x, "chisq.scaled"))
+)
+
+expect_all_equal(tmp_chk, 0)
 
 })
