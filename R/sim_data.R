@@ -1260,6 +1260,14 @@ sim_data_i <- function(repid = 1,
     model <- add_indicator_syntax(model,
                                   number_of_indicators = tmp1,
                                   reliability = tmp2)
+    model_measurement <- add_indicator_syntax(
+        model,
+        number_of_indicators = tmp1,
+        reliability = tmp2,
+        measurement_only = TRUE
+      )
+  } else {
+    model_measurement <- NULL
   }
 
   if (!is.null(attr(ptable, "model_fixed"))) {
@@ -1306,6 +1314,7 @@ sim_data_i <- function(repid = 1,
               mm_lm_dat_out = mm_lm_dat_out,
               model_original = model_original,
               model_final = model,
+              model_measurement = model_measurement,
               fit0 = fit0,
               group_name = group_name,
               group_labels = group_labels,
