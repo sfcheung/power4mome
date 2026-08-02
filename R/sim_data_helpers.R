@@ -132,20 +132,26 @@ mm_lm_data <- function(object,
 # - Modified model syntax with the measurement part
 add_indicator_syntax <- function(model,
                                  number_of_indicators = NULL,
-                                 reliability = NULL) {
+                                 reliability = NULL,
+                                 measurement_only = FALSE) {
   f_names <- names(number_of_indicators)
   reliability <- reliability[f_names]
+  if (measurement_only) {
+    model_out <- character(0)
+  } else {
+    model_out <- model
+  }
   if (!is.null(number_of_indicators)) {
     for (i in seq_along(number_of_indicators)) {
       i_name <- names(number_of_indicators)[i]
-      model <- c(model,
+      model_out <- c(model_out,
                 paste0(i_name, " =~ ",
                        paste0(i_name,
                               seq_len(number_of_indicators[i]),
                               collapse = " + ")))
     }
   }
-  return(model)
+  return(model_out)
 }
 
 
