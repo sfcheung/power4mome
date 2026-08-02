@@ -234,7 +234,12 @@
 #' the argument `fit` of `test_fun`.
 #' That is, for the first replication,
 #' `fit = sim_out[[1]]$extra$fit` when
-#' calling `test_fun`.
+#' calling `test_fun`. Since
+#' Version 0.2.1.11, if not found in
+#' `$extra`, the elements of `sim_out`
+#' will be searched, allowing the retrieval
+#' of information related to data
+#' generation, stored by [sim_data()].
 #'
 #' @param results_fun The function to be
 #' used to extract the test results.
@@ -376,6 +381,20 @@ do_test_i <- function(out_i,
                      out_i = out_i,
                      simplify = FALSE,
                      USE.NAMES = FALSE)
+  i <- !(map_names %in% names(out_i$extra))
+  if (any(i)) {
+    # Search out_i if not found in $extra
+    map_names_out_i <- map_names[i]
+    args_map_out_i <- sapply(map_names_out_i,
+                      function(x,
+                                out_i) {
+                        out_i[[x]]
+                      },
+                      out_i = out_i,
+                      simplify = FALSE,
+                      USE.NAMES = FALSE)
+    args_map[map_names_out_i] <- args_map_out_i[map_names_out_i]
+  }
   args1 <- c(args_map,
              test_args)
   # # Disable error catching
