@@ -15,6 +15,8 @@ test_fit_measure(
   refit_args = list(se = "none"),
   always_refit = FALSE,
   fitmeasures_args = list(),
+  override_measurement_model = FALSE,
+  model_measurement = NULL,
   fit_name = "fit",
   get_map_names = FALSE,
   get_test_name = FALSE
@@ -28,10 +30,11 @@ and \code{\link[lavaan:cfa]{lavaan::cfa()}}.}
 
 \item{model_to_fit}{The model to be
 fitted, specified by \code{lavaan} model
-syntax. The full model must be specified
-if it is a model with indicators.
-It can also be a parameter
-table. If \code{NULL}, then the model
+syntax. Can contain only the structural
+part, with the measurement part, if any,
+retrieved from the data generation
+model.
+If \code{NULL}, then the model
 used by \code{fit_model()} will be used.}
 
 \item{fit_measure}{The name of the
@@ -97,6 +100,18 @@ but with different argument values.}
 
 \item{fitmeasures_args}{A named list
 of arguments to be passed to \code{\link[lavaan:fitMeasures]{lavaan::fitMeasures()}}.}
+
+\item{override_measurement_model}{Whether \code{model_to_fit} already has
+the measurement part and so will
+override the stored measurement part
+of the model, if any. If \code{FALSE},
+\code{model_to_fit} can only specify the
+structural part of the model.}
+
+\item{model_measurement}{The model
+syntax for the measurement model.
+Ignored because its value will be
+determined by \code{\link[=do_test]{do_test()}}.}
 
 \item{fit_name}{The name of the
 model fit object to be extracted.

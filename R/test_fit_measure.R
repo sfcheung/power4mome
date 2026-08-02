@@ -93,10 +93,11 @@
 #'
 #' @param model_to_fit The model to be
 #' fitted, specified by `lavaan` model
-#' syntax. The full model must be specified
-#' if it is a model with indicators.
-#' It can also be a parameter
-#' table. If `NULL`, then the model
+#' syntax. Can contain only the structural
+#' part, with the measurement part, if any,
+#' retrieved from the data generation
+#' model.
+#' If `NULL`, then the model
 #' used by `fit_model()` will be used.
 #'
 #' @param fit_measure The name of the
@@ -154,6 +155,19 @@
 #'
 #' @param fitmeasures_args A named list
 #' of arguments to be passed to [lavaan::fitMeasures()].
+#'
+#' @param override_measurement_model
+#' Whether `model_to_fit` already has
+#' the measurement part and so will
+#' override the stored measurement part
+#' of the model, if any. If `FALSE`,
+#' `model_to_fit` can only specify the
+#' structural part of the model.
+#'
+#' @param model_measurement The model
+#' syntax for the measurement model.
+#' Ignored because its value will be
+#' determined by [do_test()].
 #'
 #' @seealso [power4test()]
 #'
@@ -225,11 +239,16 @@ test_fit_measure <- function(
   refit_args = list(se = "none"),
   always_refit = FALSE,
   fitmeasures_args = list(),
+  override_measurement_model = FALSE,
+  model_measurement = NULL,
   fit_name = "fit",
   get_map_names = FALSE,
   get_test_name = FALSE
 ) {
-  map_names <- c(fit = fit_name)
+  map_names <- c(
+    fit = fit_name,
+    model_measurement = "model_measurement"
+  )
 
   if (length(fit_measure) != 1) {
     stop("'fit_measure' must has exactly one string.")
@@ -279,10 +298,16 @@ test_fit_measure <- function(
 
   if (is.character(model_to_fit) ||
       is.data.frame(model_to_fit)) {
-    # TODO:
-    # - Allow users to specify only the structural model
     # Always refit
     always_refit <- TRUE
+    if (!override_measurement_model) {
+      if (!is.null(model_measurement)) {
+        model_to_fit <- c(
+          model_to_fit,
+          model_measurement
+        )
+      }
+    }
   } else {
     # Use stored model
     model_to_fit <- lavaan::parameterTable(fit)
