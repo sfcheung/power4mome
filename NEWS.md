@@ -1,4 +1,4 @@
-# power4mome 0.2.1.9
+# power4mome 0.2.1.10
 
 ## New Features
 
@@ -46,6 +46,12 @@
   that the first argument will be treated
   as the dataset to be processed.
   (0.2.1.8)
+
+- Updated `sim_data()` (and its helpers)
+  to store the measurement part of a
+  model separately, in case other function
+  need it.
+  (0.2.1.10)
 
 ## Bug Fixes
 
