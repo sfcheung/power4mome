@@ -202,7 +202,9 @@ source data; \code{sim_data_name} (optional) the
 name of the argument to receive the
 simulated data (e.g., \code{"data"} for
 \code{\link[mice:ampute]{mice::ampute()}}), default to
-\code{"data"} if it is not set; \code{processed_data_name}
+\code{"data"} if it is not set or as the
+first argument of \code{fun} if it has
+no argument named \code{"data"}; \code{processed_data_name}
 (optional), the name of the data frame
 after being processed by \code{fun},
 such as the data frame
@@ -277,7 +279,12 @@ in the element \code{extra} is set to
 the argument \code{fit} of \code{test_fun}.
 That is, for the first replication,
 \code{fit = sim_out[[1]]$extra$fit} when
-calling \code{test_fun}.}
+calling \code{test_fun}. Since
+Version 0.2.1.11, if not found in
+\verb{$extra}, the elements of \code{sim_out}
+will be searched, allowing the retrieval
+of information related to data
+generation, stored by \code{\link[=sim_data]{sim_data()}}.}
 
 \item{results_fun}{The function to be
 used to extract the test results.
@@ -1149,13 +1156,58 @@ These are some of them:
 \item \code{\link[=rpgnorm_rs]{rpgnorm_rs()}}.
 }
 
-To use \code{x_fun}, the variables must
+To use \code{x_fun} with these univariate
+random number generators, the variables must
 have zero covariances with other
-variables in the population. It is
-possible to generate nonnormal
-multivariate data but we believe this
-is rarely needed when estimating
-power \emph{before} having the data.
+variables in the population.
+\subsection{Correlated Nonnormal Exogenous Variables}{
+
+Though may not be common, it is possible
+to specify exogenous variables which
+are correlated but have nonnormal marginal
+distributions. This is implemented
+internally by \code{\link[covsim:rIG]{covsim::rIG()}}.
+
+To specify this kind of distribution,
+set \code{x_fun} to a list with the first
+argument to \code{rig_rs}, \emph{unnamed}. It
+should be unnamed because this function
+will be used for \emph{all} exogenous variables.
+
+Then set \code{skew} and \code{kurt} to scalars
+(one-element numeric vectors) or
+named numeric vectors. If it is a scalar,
+then the value will be used for all
+exogenous variables.
+If it is a named vector, then the values
+will be used to set the population skew
+or (excess) kurtosis of the corresponding
+exogenous variables. Exogenous variables
+not named will have zero skew (or excess kurtosis).
+If not set, then default to zero.
+
+For example:
+
+\preformatted{x_fun = list(rig_rs,
+             skew = c(x = 2),
+             kurt = c(x = 6, w = 3))}
+
+The function \link{rig_rs} will be used to
+generate all exogenous variables.
+The population skewness of \code{x} is set
+to 2.
+The population excess kurtosis coefficients
+of \code{x} and \code{w} are set to 6 and 3,
+respectively.
+
+Note that \link{rig_rs} cannot be used with
+other univariate random functions.
+
+Other arguments to \link{rig_rs} can be supplied,
+but \code{n}, \code{sigma}, \code{pmean}, and \code{psd}
+will be ignored. They will be determined
+by the model.
+}
 }
 
 \section{Major Test-Related Arguments}{

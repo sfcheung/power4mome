@@ -146,6 +146,7 @@ reference:
   - test_index_of_mome
   - test_parameters
   - test_group_equal
+  - test_fit_measure
 - title: Data Processors
   desc:  >
     Built-in functions for processing
@@ -184,6 +185,7 @@ reference:
   - rpgnorm_rs
   - rt_rs
   - runif_rs
+  - rig_rs
 - title: Miscellaneous Functions
   desc:  >
     Miscellaneous functions
