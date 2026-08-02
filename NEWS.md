@@ -1,4 +1,4 @@
-# power4mome 0.2.1.11
+# power4mome 0.2.1.12
 
 ## New Features
 
@@ -21,6 +21,11 @@
   in `x_fun` to generate correlated
   nonnormal variables.
   (0.2.1.9)
+
+- Added `test_fit_measure()` for estimating
+  the "rejection rate" based on a fit
+  measure.
+  (0.2.1.12)
 
 ## Miscellaneous
 
