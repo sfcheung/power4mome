@@ -501,3 +501,87 @@ check_valid_es_values <- function(object,
   es_range <- range(es_to_test[es_ok])
   es_range
 }
+
+#' @noRd
+nil_paths <- function(
+  object
+) {
+  # Find all (nil) paths not specified
+  # Input:
+  # - A ptable_pop object
+  # Output:
+  # - A string of lavaan model syntax
+  mm <- model_matrices_pop(
+          object,
+          drop_list_single_group = FALSE
+        )
+  beta <- mm[[1]]$beta
+  if (is.null(beta)) {
+    stop("No regression paths.")
+  }
+  # TODO:
+  # - Handle edge cases:
+  #   - Only one ov.nox
+  #   - No ov.x
+
+  # ==== All paths ====
+
+  xvars <- lavaan::lavNames(object, "ov.x")
+  yvars <- lavaan::lavNames(object, "ov.nox")
+  betay <- beta[yvars, yvars, drop = FALSE]
+  all_paths1 <- character()
+  for (i in seq_len(nrow(betay))[-1]) {
+    for (j in seq_len(i - 1)) {
+      all_paths1 <- c(
+        all_paths1,
+        paste0(yvars[i], "~", yvars[j])
+      )
+    }
+  }
+  betax <- beta[yvars, xvars, drop = FALSE]
+  all_paths2 <- character()
+  for (i in seq_len(nrow(betax))) {
+    for (j in seq_len(ncol(betax))) {
+      all_paths2 <- c(
+        all_paths2,
+        paste0(yvars[i], "~", xvars[j])
+      )
+    }
+  }
+  all_paths <- union(
+    all_paths1,
+    all_paths2
+  )
+
+  # ==== Paths in ptable ====
+
+  i <- object$op == "~"
+  # Exclude covary variables
+  j <- object$op == "~~" &
+       (object$lhs != object$rhs)
+  no_paths1 <- paste0(
+              object$lhs,
+              "~",
+              object$rhs
+            )[j]
+  no_paths2 <- paste0(
+              object$rhs,
+              "~",
+              object$lhs
+            )[j]
+  no_paths <- union(
+      no_paths1,
+      no_paths2
+    )
+  pt_paths <- lavaan::lav_partable_labels(object)
+  pt_paths <- pt_paths[i & (object$group == 1)]
+  out0 <- setdiff(
+              all_paths,
+              pt_paths
+            )
+  out0 <- setdiff(
+            out0,
+            no_paths
+          )
+  out0
+}
