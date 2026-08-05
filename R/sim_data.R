@@ -583,7 +583,8 @@ sim_data <- function(nrep = 10,
                          ...)
   }
   mm_out <- model_matrices_pop(ptable,
-                               drop_list_single_group = FALSE)
+                               drop_list_single_group = FALSE,
+                               use_nil = TRUE)
   mm_lm_out <- mm_lm(mm_out,
                      drop_list_single_group = FALSE)
 

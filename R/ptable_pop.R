@@ -870,7 +870,8 @@ split_par_pop <- function(par_pop) {
 
 model_matrices_pop <- function(x,
                                ...,
-                               drop_list_single_group = TRUE) {
+                               drop_list_single_group = TRUE,
+                               use_nil = FALSE) {
   if (is.character((x))) {
     ptable <- ptable_pop(model = x,
                          ...)
@@ -895,9 +896,15 @@ model_matrices_pop <- function(x,
       attr(mm2[[i]], "model") <- x
     }
   } else {
-    attr(mm2, "model") <- attr(x, "model")
+    if (use_nil) {
+      model_tmp <- c(attr(x, "model"),
+                     attr(x, "model_nil"))
+    } else {
+      model_tmp <- attr(x, "model")
+    }
+    attr(mm2, "model") <- model_tmp
     for (i in seq_along(mm2)) {
-      attr(mm2[[i]], "model") <- attr(x, "model")
+      attr(mm2[[i]], "model") <- model_tmp
     }
   }
   if (drop_list_single_group && (ngroups == 1)) {
