@@ -9,13 +9,13 @@ test_that("sim_out: Sim one", {
 
   # # ==== Find .beta_nil. ====
 
-  # if (TRUE) {
+  # if (TRUE && !just_once) {
 
   #   out <- beta_nil_from_fit_measures(
-  #     ptable = ptable,
+  #     nrep = 1,
   #     model = model,
-  #     mm_out = mm_out,
-  #     mm_lm_out = mm_lm_out,
+  #     pop_es = pop_es,
+  #     ...,
   #     n = n,
   #     number_of_indicators = NULL,
   #     reliability = NULL,
@@ -24,9 +24,9 @@ test_that("sim_out: Sim one", {
   #     x_fun = x_fun,
   #     e_fun = e_fun,
   #     process_data = NULL,
-  #     fit_external = list(all_paths = all_paths),
-  #     seed = iseed,
-  #     n_ratio = n_ratio
+  #     iseed = iseed,
+  #     n_ratio = n_ratio,
+  #     just_once = TRUE
   #   )
 
   # }
@@ -41,8 +41,14 @@ beta_nil_from_fit_measures <- function(
   target_fm <- match.arg(target_fm)
   args0 <- list(...)
   args0$n[] <- n_test
+  pop_es_i <- pop_es_yaml_check(args0$pop_es)
   browser()
-  out0 <- sim_data_i(...)
+  pop_es_i <- c(pop_es_i, ".beta_nil." = .05)
+  args0$pop_es <- pop_es_i
+  out0 <- do.call(
+    sim_data,
+    args0
+  )[[1]]
   fit0a <- lavaan::update(
     out0$fit0,
     data = out0$mm_lm_dat_out,

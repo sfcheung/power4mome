@@ -562,13 +562,17 @@ ptable_pop <- function(model = NULL,
                        standardized = TRUE,
                        n_std = 100000,
                        std_force_monte_carlo = FALSE,
-                       add_cov_for_moderation = TRUE) {
+                       add_cov_for_moderation = TRUE,
+                       use_beta_nil = TRUE) {
   if (is.null(model) || is.null(pop_es)) {
     stop("Both model and pop_es must be set.")
   }
   model_original <- model
   # pop_es a YAML string? If yes, convert it
   pop_es <- pop_es_yaml_check(pop_es)
+  if (!use_beta_nil) {
+    pop_es <- pop_es[!(names(pop_es) %in% ".beta_nil")]
+  }
 
   par_pop <- pop_es2par_pop(pop_es = pop_es,
                             es1 = es1,
