@@ -566,6 +566,7 @@ ptable_pop <- function(model = NULL,
   if (is.null(model) || is.null(pop_es)) {
     stop("Both model and pop_es must be set.")
   }
+  model_original <- model
   # pop_es a YAML string? If yes, convert it
   pop_es <- pop_es_yaml_check(pop_es)
 
@@ -575,6 +576,13 @@ ptable_pop <- function(model = NULL,
                             model = model,
                             to_one_table = TRUE,
                             es_ind = es_ind)
+  if (".beta_nil." %in% names(pop_es)) {
+    # model_nil should be used only in data generation ptable
+    model_nil <- nil_paths(model)
+    model <- c(model, model_nil)
+  } else {
+    model_nil <- NULL
+  }
   ngroups <- max(par_pop$group)
   # Single group ptable
   if (ngroups > 1) {
@@ -678,6 +686,9 @@ ptable_pop <- function(model = NULL,
   ptable1$pop <- NULL
   # TODO:
   # - Check equality constraints
+  # model_nil is not used starting this line
+  attr(ptable1, "model_nil") <- model_nil
+  model <- model_original
   attr(ptable1, "model") <- model
   if (standardized) {
     mm <- model_matrices_pop(ptable1,

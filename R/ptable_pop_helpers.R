@@ -158,14 +158,18 @@ es_long <- function(es) {
 # - The expanded named vectors
 
 fix_par_es <- function(par_es,
-                       model) {
+                       model,
+                       add_beta_nil = TRUE,
+                       return_beta_nil = FALSE) {
   par_es_org <- par_es
   i <- match(c(".beta.", ".cov."), names(par_es))
   i_ind <- which(grepl("^.ind.", names(par_es)))
-  i <- c(i, i_ind)
+  i_beta_nil <- match(c(".beta_nil."), names(par_es))
+  i <- c(i, i_ind, i_beta_nil)
   par_es_def <- par_es[i]
   par_es_def <- par_es_def[!is.na(par_es_def)]
   all_beta_es <- character(0)
+  all_beta_nil_es <- character(0)
   all_cov_es <- character(0)
   all_ind_es <- character(0)
   if (!all(is.na(i))) {
@@ -177,6 +181,20 @@ fix_par_es <- function(par_es,
       all_beta <- apply(all_beta, 1, paste, collapse = " ")
       all_beta_es <- rep(par_es_def[".beta."], length(all_beta))
       names(all_beta_es) <- all_beta
+    }
+    if (".beta_nil." %in% names(par_es_def)) {
+      pt_nil <- nil_paths(ptable)
+      pt_nil <- lavaan::lavParseModelString(
+                  pt_nil,
+                  as_data_frame = TRUE
+                )
+      all_beta_nil <- pt_nil[pt_nil$op == "~", c("lhs", "op", "rhs")]
+      all_beta_nil <- apply(all_beta_nil, 1, paste, collapse = " ")
+      all_beta_nil_es <- rep(par_es_def[".beta_nil."], length(all_beta_nil))
+      names(all_beta_nil_es) <- all_beta_nil
+      if (return_beta_nil) {
+        return(all_beta_nil_es)
+      }
     }
     if (".cov." %in% names(par_es_def)) {
       all_cov <- ptable[ptable$op == "~~", ]
@@ -239,7 +257,7 @@ fix_par_es <- function(par_es,
     out <- c(out, tmp3)
   }
   # Add all_beta_es
-  all_def <- c(all_beta_es, all_cov_es)
+  all_def <- c(all_beta_es, all_cov_es, all_beta_nil_es)
   tmp <- setdiff(names(all_def), names(out))
   out <- c(out, all_def[tmp])
 
