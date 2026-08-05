@@ -9,7 +9,10 @@ test_that("sim_out: Sim one", {
 
   # # ==== Find .beta_nil. ====
 
-  # if (TRUE && !just_once) {
+  # if (TRUE &&
+  #     misspec &&
+  #     !is.null(model) &&
+  #     !is.null(pop_es))
 
   #   out <- beta_nil_from_fit_measures(
   #     nrep = 1,
@@ -39,22 +42,34 @@ beta_nil_from_fit_measures <- function(
   max_attempt = 100
 ) {
   target_fm <- match.arg(target_fm)
+  if (length(target_value) > 1) {
+    target_value <- target_value[target_fm]
+  }
   args0 <- list(...)
   args0$n[] <- n_test
+  args1 <- args0
+  args1$misspec <- FALSE
   pop_es_i <- pop_es_yaml_check(args0$pop_es)
-  browser()
-  pop_es_i <- c(pop_es_i, ".beta_nil." = .05)
-  args0$pop_es <- pop_es_i
-  out0 <- do.call(
-    sim_data,
-    args0
-  )[[1]]
-  fit0a <- lavaan::update(
-    out0$fit0,
-    data = out0$mm_lm_dat_out,
-    do.fit = TRUE
+  f <- function(x) {
+    pop_es_i1 <- c(pop_es_i, ".beta_nil." = x)
+    args1$pop_es <- pop_es_i1
+    out0 <- do.call(
+      sim_data,
+      args1
+    )[[1]]
+    fit0a <- lavaan::update(
+      out0$fit0,
+      model = out0$model_final,
+      data = out0$mm_lm_dat_out,
+      do.fit = TRUE
+    )
+    lavaan::fitMeasures(fit0a, target_fm) - target_value
+  }
+  out0 <- uniroot(
+    f = f,
+    interval = c(0, .50)
   )
-  lavaan::fitMeasures(fit0a, target_fm)
+  out0$root
 }
 
 mod <-
@@ -69,6 +84,8 @@ data_all <- sim_data(nrep = 3,
                      n = 100,
                      progress = !is_testing(),
                      iseed = 1234)
+
+
 fit_all <- fit_model(data_all)
 # mc_all <- gen_mc(fit_all,
 #                  R = 100,
