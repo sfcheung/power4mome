@@ -164,7 +164,8 @@ fix_par_es <- function(par_es,
   par_es_org <- par_es
   i <- match(c(".beta.", ".cov."), names(par_es))
   i_ind <- which(grepl("^.ind.", names(par_es)))
-  i_beta_nil <- match(c(".beta_nil."), names(par_es))
+  i_beta_nil <- which(grepl("^.beta_nil.", names(par_es)))
+  # i_beta_nil <- match(c(".beta_nil."), names(par_es))
   i <- c(i, i_ind, i_beta_nil)
   par_es_def <- par_es[i]
   par_es_def <- par_es_def[!is.na(par_es_def)]
@@ -182,7 +183,7 @@ fix_par_es <- function(par_es,
       all_beta_es <- rep(par_es_def[".beta."], length(all_beta))
       names(all_beta_es) <- all_beta
     }
-    if (".beta_nil." %in% names(par_es_def)) {
+    if (length(i_beta_nil) > 0) {
       pt_nil <- nil_paths(ptable)
       pt_nil <- lavaan::lavParseModelString(
                   pt_nil,
@@ -190,8 +191,32 @@ fix_par_es <- function(par_es,
                 )
       all_beta_nil <- pt_nil[pt_nil$op == "~", c("lhs", "op", "rhs")]
       all_beta_nil <- apply(all_beta_nil, 1, paste, collapse = " ")
-      all_beta_nil_es <- rep(par_es_def[".beta_nil."], length(all_beta_nil))
-      names(all_beta_nil_es) <- all_beta_nil
+      if (".beta_nil." %in% names(par_es_def)) {
+        # ==== One for all ====
+        all_beta_nil_es <- rep(par_es_def[".beta_nil."], length(all_beta_nil))
+        names(all_beta_nil_es) <- all_beta_nil
+      } else {
+        # ==== One for one ====
+        i2 <- which(grepl("^.beta_nil.", names(par_es_def)))
+        par_es_beta_nil <- par_es_def[i2]
+        tmpfct <- function(xx, pattern = "^.beta.") {
+          x0 <- trimws(gsub("^.beta_nil.", "", names(xx)))
+          x1 <- sub("\\(", "", x0)
+          x1 <- sub("\\)$", "", x1)
+          x1 <- trimws(x1)
+        }
+        all_beta_nil_1 <- tmpfct(par_es_beta_nil)
+        all_beta_nil_1 <- lavaan::lavParseModelString(
+                    all_beta_nil_1,
+                    as_data_frame = TRUE
+                  )
+        all_beta_nil_1 <- all_beta_nil_1[all_beta_nil_1$op == "~", c("lhs", "op", "rhs")]
+        all_beta_nil_1 <- apply(all_beta_nil_1, 1, paste, collapse = " ")
+        all_beta_nil_es
+        all_beta_nil_es <- rep(0, length(all_beta_nil))
+        names(all_beta_nil_es) <- all_beta_nil
+        all_beta_nil_es[all_beta_nil_1] <- par_es_beta_nil
+      }
       if (return_beta_nil) {
         return(all_beta_nil_es)
       }
