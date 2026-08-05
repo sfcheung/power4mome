@@ -511,6 +511,14 @@ nil_paths <- function(
   # - A ptable_pop object
   # Output:
   # - A string of lavaan model syntax
+  if (is.character(object)) {
+    # Assume it is a model syntax
+    object <- lavaan::sem(
+      object,
+      do.fit = FALSE
+    )
+    object <- lavaan::parametertable(object)
+  }
   mm <- model_matrices_pop(
           object,
           drop_list_single_group = FALSE
