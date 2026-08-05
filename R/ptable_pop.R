@@ -571,7 +571,7 @@ ptable_pop <- function(model = NULL,
   # pop_es a YAML string? If yes, convert it
   pop_es <- pop_es_yaml_check(pop_es)
   if (!use_beta_nil) {
-    pop_es <- pop_es[!(names(pop_es) %in% ".beta_nil")]
+    pop_es <- pop_es[!(names(pop_es) %in% ".beta_nil.")]
   }
 
   par_pop <- pop_es2par_pop(pop_es = pop_es,
