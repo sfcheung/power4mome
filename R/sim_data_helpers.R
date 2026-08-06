@@ -906,9 +906,9 @@ beta_nil_from_fit_measures <- function(
   # ==== Prepare the arguments ====
 
   args0 <- list(...)
-
-  args0$n[] <- n_test
   args1 <- args0
+  args1$n <- n_test
+  args1$nrep <- 1
   pop_es_i <- pop_es_yaml_check(args0$pop_es)
   all_nil <- nil_paths(args0$model)
   if (length(all_nil) == 1) {

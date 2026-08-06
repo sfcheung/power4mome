@@ -19,10 +19,9 @@ c("y ~ m2" = "m",
 target_fm_from_pop_es(es)
 
 out <- beta_nil_from_fit_measures(
-  nrep = 1,
   model = mod,
   pop_es = es,
-  n = 100,
+  iseed = 1234,
   progress = !is_testing()
 )
 
@@ -49,10 +48,9 @@ expect_lt(
 )
 
 out <- beta_nil_from_fit_measures(
-  nrep = 1,
   model = mod,
   pop_es = es,
-  n = 100,
+  iseed = 1234,
   method = "multi",
   progress = !is_testing()
 )
@@ -94,10 +92,9 @@ c("y1 ~ x1" = .90,
   ".cfi." = .85)
 
 out <- beta_nil_from_fit_measures(
-  nrep = 1,
   model = mod,
   pop_es = es,
-  n = 100,
+  iseed = 1234,
   progress = !is_testing()
 )
 
@@ -123,10 +120,9 @@ expect_lt(
   .01
 )
 out <- beta_nil_from_fit_measures(
-  nrep = 1,
   model = mod,
   pop_es = es,
-  n = 100,
+  iseed = 1234,
   method = "multi",
   progress = !is_testing()
 )
