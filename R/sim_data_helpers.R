@@ -886,11 +886,11 @@ beta_nil_from_fit_measures <- function(
   ...,
   progress = TRUE,
   n_test = 100000,
-  max_attempt = 100,
+  max_attempt = 1000,
   method = c("single_multi", "single", "multi"),
-  single_tol = .00025,
+  single_tol = .005,
   multi_control = list(
-    abstol = .00025,
+    abstol = .005,
     reltol = 1e-3
   )
 ) {
@@ -937,6 +937,7 @@ beta_nil_from_fit_measures <- function(
     # ==== Single value search ====
 
     f <- function(x) {
+      force(args1)
       pop_es_i1 <- c(pop_es_i, ".beta_nil." = x)
       args1$pop_es <- pop_es_i1
       out0 <- try(do.call(
