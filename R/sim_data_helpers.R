@@ -859,17 +859,38 @@ get_direct <- function(x,
 }
 
 #' @noRd
+target_fm_from_pop_es <- function(
+  pop_es,
+  exclude = c(".beta.", ".cov.")
+) {
+  pop_es <- pop_es_yaml_check(pop_es)
+  pop_es_names <- names(pop_es)
+  i <- grepl("^\\..*\\.$", pop_es_names)
+  i <- i & !(pop_es_names %in% exclude)
+  if (!any(i)) {
+    return(NULL)
+  }
+  # Get the first as the target
+  out <- pop_es[i][1]
+  out_name <- names(out)
+  out_name <- gsub("^\\.", "", out_name)
+  out_name <- gsub("\\.$", "", out_name)
+  names(out) <- out_name
+  out
+}
+
+#' @noRd
 beta_nil_from_fit_measures <- function(
   target_fm = c("rmsea", "cfi"),
   target_value = c(rmsea = .10, cfi = .89),
   ...,
   progress = TRUE,
-  n_test = 50000,
+  n_test = 100000,
   max_attempt = 100,
   method = c("single_multi", "single", "multi"),
-  single_tol = .0005,
+  single_tol = .00025,
   multi_control = list(
-    abstol = .0005,
+    abstol = .00025,
     reltol = 1e-3
   )
 ) {
@@ -881,15 +902,11 @@ beta_nil_from_fit_measures <- function(
   if (length(target_value) > 1) {
     target_value <- target_value[target_fm]
   }
-  target_str <- sprintf(
-    "%s=%.3f",
-    target_fm,
-    target_value
-  )
 
   # ==== Prepare the arguments ====
 
   args0 <- list(...)
+
   args0$n[] <- n_test
   args1 <- args0
   pop_es_i <- pop_es_yaml_check(args0$pop_es)
@@ -897,6 +914,20 @@ beta_nil_from_fit_measures <- function(
   if (length(all_nil) == 1) {
     method <- "single"
   }
+
+  # ==== User target? ====
+
+  args_target <- target_fm_from_pop_es(pop_es_i)
+  if (!is.null(args_target)) {
+    target_fm <- names(args_target)
+    target_value <- as.numeric(unname(args_target))
+  }
+  target_str <- sprintf(
+    "%s=%.3f",
+    target_fm,
+    target_value
+  )
+
   ok <- NA
   out <- NULL
   out0 <- NULL
@@ -1006,7 +1037,7 @@ beta_nil_from_fit_measures <- function(
       if (inherits(fit0a, "try-error")) {
         return(NA)
       }
-      unname((lavaan::fitMeasures(fit0a, target_fm) - target_value)^2)
+      unname(abs(lavaan::fitMeasures(fit0a, target_fm) - target_value))
     }
     if (progress) {
       cat("Searching for misspecification (",
