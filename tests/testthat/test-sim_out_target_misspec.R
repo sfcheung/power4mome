@@ -1,9 +1,9 @@
-skip("WIP")
+skip_on_cran()
 
 library(testthat)
 suppressMessages(library(lavaan))
 
-test_that("sim_out: Sim one", {
+test_that("target misspec", {
 
 # To be added to sim_data()
 
@@ -12,7 +12,7 @@ test_that("sim_out: Sim one", {
   # if (TRUE &&
   #     misspec &&
   #     !is.null(model) &&
-  #     !is.null(pop_es))
+  #     !is.null(pop_es)) {
 
   #   out <- beta_nil_from_fit_measures(
   #     nrep = 1,
@@ -34,173 +34,153 @@ test_that("sim_out: Sim one", {
 
   # }
 
-beta_nil_from_fit_measures <- function(
-  target_fm = c("rmsea", "cfi"),
-  target_value = c(rmsea = .10, cfi = .89),
-  ...,
-  n_test = 50000,
-  max_attempt = 100
-) {
-  target_fm <- match.arg(target_fm)
-  if (length(target_value) > 1) {
-    target_value <- target_value[target_fm]
-  }
-  args0 <- list(...)
-  args0$n[] <- n_test
-  args1 <- args0
-  args1$misspec <- FALSE
-  pop_es_i <- pop_es_yaml_check(args0$pop_es)
-  f <- function(x) {
-    pop_es_i1 <- c(pop_es_i, ".beta_nil." = x)
-    args1$pop_es <- pop_es_i1
-    out0 <- do.call(
-      sim_data,
-      args1
-    )[[1]]
-    fit0a <- lavaan::update(
-      out0$fit0,
-      model = out0$model_final,
-      data = out0$mm_lm_dat_out,
-      do.fit = TRUE
-    )
-    lavaan::fitMeasures(fit0a, target_fm) - target_value
-  }
-  out0 <- uniroot(
-    f = f,
-    interval = c(0, .50)
-  )
-  out0$root
-}
+# ---- Serial Mediation Model ----
 
 mod <-
-"m ~ x
- y ~ m"
+"m1 ~ x
+ m2 ~ m1
+ y ~ m2 + x"
 es <-
-c("y ~ m" = "m",
-  "m ~ x" = "m")
-data_all <- sim_data(nrep = 3,
-                     model = mod,
-                     pop_es = es,
-                     n = 100,
-                     progress = !is_testing(),
-                     iseed = 1234)
+c("y ~ m2" = "m",
+  "m1 ~ x" = "m")
+
+out <- beta_nil_from_fit_measures(
+  nrep = 1,
+  model = mod,
+  pop_es = es,
+  n = 100,
+  progress = !is_testing()
+)
+
+out$beta_nil
+
+data_all <- sim_data(
+  nrep = 1,
+  model = mod,
+  pop_es = c(es, out$beta_nil),
+  n = 50000,
+  progress = !is_testing(),
+  iseed = 1234
+)
+out0 <- data_all[[1]]
+fit <- lavaan::update(
+  out0$fit0,
+  model = out0$model_final,
+  data = out0$mm_lm_dat_out,
+  do.fit = TRUE
+)
+expect_equal(
+  round(unname(fitMeasures(fit, "rmsea")), 2),
+  .100
+)
+
+out <- beta_nil_from_fit_measures(
+  nrep = 1,
+  model = mod,
+  pop_es = es,
+  n = 100,
+  method = "multi",
+  progress = !is_testing()
+)
+
+out$beta_nil
+
+data_all <- sim_data(
+  nrep = 1,
+  model = mod,
+  pop_es = c(es, out$beta_nil),
+  n = 50000,
+  progress = !is_testing(),
+  iseed = 1234
+)
+out0 <- data_all[[1]]
+fit <- lavaan::update(
+  out0$fit0,
+  model = out0$model_final,
+  data = out0$mm_lm_dat_out,
+  do.fit = TRUE
+)
+expect_equal(
+  round(unname(fitMeasures(fit, "rmsea")), 2),
+  .100
+)
 
 
-fit_all <- fit_model(data_all)
-# mc_all <- gen_mc(fit_all,
-#                  R = 100,
-#                  iseed = 4567)
-sim_all <- sim_out(data_all = data_all,
-                   fit = fit_all)
+# ---- Some paths bounded ----
 
-# Check fit_external
+mod <-
+"
+y1 ~ x1
+y2 ~ x2
+"
+es <-
+c("y1 ~ x1" = .90,
+  "y2 ~ x2" = "m",
+  "x1 ~~ x2" = "l")
 
-tmp <- sim_all[[3]]$fit_external$all_paths
-expect_equal(unname(unlist(manymome::all_paths_to_df(tmp))),
-             c("x", "y", "m"))
-tmp <- fit_all[[3]]@external$fit_external$all_paths
-expect_equal(unname(unlist(manymome::all_paths_to_df(tmp))),
-             c("x", "y", "m"))
+out <- beta_nil_from_fit_measures(
+  target_fm = "cfi",
+  nrep = 1,
+  model = mod,
+  pop_es = es,
+  n = 100,
+  progress = !is_testing()
+)
 
-fit_all_lm <- fit_model(data_all, fit_function = "lm")
-tmp <- attr(fit_all_lm[[3]], "fit_external")$all_paths
-expect_equal(unname(unlist(manymome::all_paths_to_df(tmp))),
-             c("x", "y", "m"))
+out$beta_nil
 
-est_test <- function(fit,
-                     par_name = NULL,
-                     alpha = .05,
-                     out_type = c("vector", "list")) {
-  out_type <- match.arg(out_type)
-  est <- lavaan::parameterEstimates(fit,
-                                    ci = TRUE)
-  est$lavlabel <- lavaan::lav_partable_labels(est)
-  i <- which(est$lavlabel == par_name)
-  out <- switch(out_type,
-          vector = c(est = est[i, "est"],
-                     se = est[i, "se"],
-                     cilo = est[i, "ci.lower"],
-                     cihi = est[i, "ci.upper"],
-                     sig = ifelse(est[i, "pvalue"] < alpha, 1, 0)),
-          list = list(est = est[i, "est"],
-                      se = est[i, "se"],
-                      cilo = est[i, "ci.lower"],
-                      cihi = est[i, "ci.upper"],
-                      sig = ifelse(est[i, "pvalue"] < alpha, 1, 0)))
-  out
-}
+data_all <- sim_data(
+  nrep = 1,
+  model = mod,
+  pop_es = c(es, out$beta_nil),
+  n = 50000,
+  progress = !is_testing(),
+  iseed = 1234
+)
+out0 <- data_all[[1]]
+fit <- lavaan::update(
+  out0$fit0,
+  model = out0$model_final,
+  data = out0$mm_lm_dat_out,
+  do.fit = TRUE
+)
+expect_equal(
+  round(unname(fitMeasures(fit, "cfi")), 2),
+  .89,
+  tolerance = 1e-1
+)
 
-test_i <- do_test_i(sim_all[[1]],
-                    test_fun = est_test,
-                    test_args = list(par_name = "y~x"))
-expect_equal(test_i$test_results["se"],
-             parameterEstimates(fit_all[[1]])[3, "se"],
-             ignore_attr = TRUE)
+out <- beta_nil_from_fit_measures(
+  target_fm = "cfi",
+  nrep = 1,
+  model = mod,
+  pop_es = es,
+  n = 100,
+  method = "multi",
+  progress = !is_testing()
+)
 
-test_all <- do_test(sim_all,
-                    test_fun = est_test,
-                    test_args = list(par_name = "y~x"),
-                    parallel = FALSE,
-                    progress = !is_testing())
+out$beta_nil
 
-expect_equal(test_all[[3]]$test_results["se"],
-             parameterEstimates(fit_all[[3]])[3, "se"],
-             ignore_attr = TRUE)
-
-test_all <- do_test(sim_all,
-                    test_fun = est_test,
-                    test_args = list(par_name = "y~x",
-                                     out_type = "list"),
-                    parallel = FALSE,
-                    progress = !is_testing())
-
-expect_equal(test_all[[3]]$test_results$se,
-             parameterEstimates(fit_all[[3]])[3, "se"],
-             ignore_attr = TRUE)
-
-est_results <- function(est,
-                        par_name = NULL,
-                        alpha = .05,
-                        out_type = c("vector", "list")) {
-  out_type <- match.arg(out_type)
-  est$lavlabel <- lavaan::lav_partable_labels(est)
-  i <- which(est$lavlabel == par_name)
-  out <- switch(out_type,
-          vector = c(est = est[i, "est"],
-                     se = est[i, "se"],
-                     cilo = est[i, "ci.lower"],
-                     cihi = est[i, "ci.upper"],
-                     sig = ifelse(est[i, "pvalue"] < alpha, 1, 0)),
-          list = list(est = est[i, "est"],
-                      se = est[i, "se"],
-                      cilo = est[i, "ci.lower"],
-                      cihi = est[i, "ci.upper"],
-                      sig = ifelse(est[i, "pvalue"] < alpha, 1, 0)))
-  out
-}
-
-test_all <- do_test(sim_all,
-                    test_fun = lavaan::parameterEstimates,
-                    map_names = c(object = "fit"),
-                    results_fun = est_results,
-                    results_args = list(par_name = "y~x"),
-                    parallel = FALSE,
-                    progress = !is_testing())
-expect_equal(test_all[[3]]$test_results["se"],
-             parameterEstimates(fit_all[[3]])[3, "se"],
-             ignore_attr = TRUE)
-
-test_all <- do_test(sim_all,
-                    test_fun = lavaan::parameterEstimates,
-                    map_names = c(object = "fit"),
-                    results_fun = est_results,
-                    results_args = list(par_name = "y~x",
-                                        out_type = "list"),
-                    parallel = FALSE,
-                    progress = !is_testing())
-expect_equal(test_all[[3]]$test_results$se,
-             parameterEstimates(fit_all[[3]])[3, "se"],
-             ignore_attr = TRUE)
-
+data_all <- sim_data(
+  nrep = 1,
+  model = mod,
+  pop_es = c(es, out$beta_nil),
+  n = 50000,
+  progress = !is_testing(),
+  iseed = 1234
+)
+out0 <- data_all[[1]]
+fit <- lavaan::update(
+  out0$fit0,
+  model = out0$model_final,
+  data = out0$mm_lm_dat_out,
+  do.fit = TRUE
+)
+expect_equal(
+  round(unname(fitMeasures(fit, "cfi")), 2),
+  .89,
+  tolerance = 1e-1
+)
 
 })

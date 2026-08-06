@@ -857,3 +857,206 @@ get_direct <- function(x,
   }
   out
 }
+
+#' @noRd
+beta_nil_from_fit_measures <- function(
+  target_fm = c("rmsea", "cfi"),
+  target_value = c(rmsea = .10, cfi = .89),
+  ...,
+  progress = TRUE,
+  n_test = 50000,
+  max_attempt = 100,
+  method = c("single_multi", "single", "multi"),
+  single_tol = .0005,
+  multi_control = list(
+    abstol = .0005,
+    reltol = 1e-3
+  )
+) {
+
+  # ==== Setup the target ====
+
+  method <- match.arg(method)
+  target_fm <- match.arg(target_fm)
+  if (length(target_value) > 1) {
+    target_value <- target_value[target_fm]
+  }
+  target_str <- sprintf(
+    "%s=%.3f",
+    target_fm,
+    target_value
+  )
+
+  # ==== Prepare the arguments ====
+
+  args0 <- list(...)
+  args0$n[] <- n_test
+  args1 <- args0
+  pop_es_i <- pop_es_yaml_check(args0$pop_es)
+  all_nil <- nil_paths(args0$model)
+  if (length(all_nil) == 1) {
+    method <- "single"
+  }
+  ok <- NA
+  out <- NULL
+  out0 <- NULL
+  out_raw <- NULL
+  if (method %in% c("single", "single_multi")) {
+
+    # ==== Single value search ====
+
+    f <- function(x) {
+      pop_es_i1 <- c(pop_es_i, ".beta_nil." = x)
+      args1$pop_es <- pop_es_i1
+      out0 <- try(do.call(
+                        sim_data,
+                        args1
+                      )[[1]],
+                    silent = TRUE
+                  )
+      if (inherits(out0, "try-error")) {
+        return(NA)
+      }
+      fit0a <- try(lavaan::update(
+                      out0$fit0,
+                      model = out0$model_final,
+                      data = out0$mm_lm_dat_out,
+                      do.fit = TRUE
+                    ),
+                    silent = TRUE
+                  )
+      if (inherits(fit0a, "try-error")) {
+        return(NA)
+      }
+      unname(lavaan::fitMeasures(fit0a, target_fm) - target_value)
+    }
+    if (progress) {
+      cat("Searching for misspecification (",
+          target_str,
+          ", one value) ...\n",
+          sep = "")
+    }
+    out0 <- try(stats::uniroot(
+                f = f,
+                interval = c(0, .50),
+                extendInt = "yes",
+                maxiter = max_attempt
+              ),
+              silent = TRUE
+            )
+    if (inherits(out0, "try-error")) {
+      ok <- FALSE
+    } else if (abs(out0$f.root) > single_tol) {
+      ok <- FALSE
+    } else {
+      ok <- TRUE
+      out <- c(".beta_nil." = out0$root)
+      out_raw <- out0
+      if (progress) {
+        tmp <- sprintf(
+          "Misspecification solution found: %.4f\n",
+          out
+        )
+        cat(tmp)
+      }
+    }
+  }
+  if ((method == "single_multi") &&
+      (ok)) {
+    # Single OK. Don't do multi
+    method <- "single"
+  }
+  if (method %in% c("multi", "single_multi")) {
+
+    # ==== Multiple values search ====
+
+    beta_nil_all_names <- paste0(
+        ".beta_nil.(",
+        all_nil,
+        ")"
+      )
+    beta_nil_k <- length(beta_nil_all_names)
+    beta_nil_all <- rep(0, beta_nil_k)
+    names(beta_nil_all) <- beta_nil_all_names
+    f <- function(x) {
+      beta_nil_all_i <- beta_nil_all
+      beta_nil_all_i[] <- x
+      pop_es_i1 <- c(
+        pop_es_i,
+        beta_nil_all_i
+      )
+      args1$pop_es <- pop_es_i1
+      out0 <- try(do.call(
+                    sim_data,
+                    args1
+                  )[[1]],
+                silent = TRUE
+              )
+      if (inherits(out0, "try-error")) {
+        return(NA)
+      }
+      fit0a <- try(lavaan::update(
+                    out0$fit0,
+                    model = out0$model_final,
+                    data = out0$mm_lm_dat_out,
+                    do.fit = TRUE
+                  ),
+                silent = TRUE
+              )
+      if (inherits(fit0a, "try-error")) {
+        return(NA)
+      }
+      unname((lavaan::fitMeasures(fit0a, target_fm) - target_value)^2)
+    }
+    if (progress) {
+      cat("Searching for misspecification (",
+          target_str,
+          ", multiple values) ...\n",
+          sep = "")
+    }
+    multi_control1 <- utils::modifyList(
+                        multi_control,
+                        list(
+                          maxit = max_attempt
+                        )
+                      )
+    out0 <- try(stats::optim(
+                par = beta_nil_all,
+                fn = f,
+                control = multi_control1,
+              ),
+              silent = TRUE
+            )
+    if (inherits(out0, "try-error")) {
+      ok <- FALSE
+    } else if (out0$convergence != 0) {
+      ok <- FALSE
+    } else {
+      ok <- TRUE
+      out <- out0$par
+      names(out) <- beta_nil_all_names
+      out_raw <- out0
+      if (progress) {
+        tmp <- sprintf(
+          "Misspecification solution found: %.4f to %.4f\n",
+          min(out),
+          max(out)
+        )
+        cat(tmp)
+      }
+    }
+  }
+
+  # ==== Finalized the output ====
+
+  if (!ok) {
+    if (progress) {
+      cat("Misspecification solution not found.\n")
+    }
+  }
+  list(
+    beta_nil = out,
+    optim_out = out_raw,
+    ok = ok
+  )
+}
