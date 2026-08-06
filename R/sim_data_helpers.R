@@ -871,7 +871,16 @@ target_fm_from_pop_es <- function(
     return(NULL)
   }
   # Get the first as the target
-  out <- pop_es[i][1]
+  out <- unlist(pop_es[i][1])
+  if (length(out) > 1) {
+    tmp1 <- paste0(as.character(out), collapse = ",")
+    tmp <- sprintf(
+      "The key %1s should only have one value: %2s",
+      names(pop_es[i][1]),
+      tmp1
+    )
+    stop(tmp)
+  }
   out_name <- names(out)
   out_name <- gsub("^\\.", "", out_name)
   out_name <- gsub("\\.$", "", out_name)
