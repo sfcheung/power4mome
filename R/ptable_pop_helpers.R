@@ -163,8 +163,8 @@ fix_par_es <- function(par_es,
                        return_beta_nil = FALSE) {
   par_es_org <- par_es
   i <- match(c(".beta.", ".cov."), names(par_es))
-  i_ind <- which(grepl("^.ind.", names(par_es)))
-  i_beta_nil <- which(grepl("^.beta_nil.", names(par_es)))
+  i_ind <- which(grepl("^\\.ind\\.", names(par_es)))
+  i_beta_nil <- which(grepl("^\\.beta_nil\\.", names(par_es)))
   # i_beta_nil <- match(c(".beta_nil."), names(par_es))
   i <- c(i, i_ind, i_beta_nil)
   par_es_def <- par_es[i]
@@ -197,10 +197,10 @@ fix_par_es <- function(par_es,
         names(all_beta_nil_es) <- all_beta_nil
       } else {
         # ==== One for one ====
-        i2 <- which(grepl("^.beta_nil.", names(par_es_def)))
+        i2 <- which(grepl("^\\.beta_nil\\.", names(par_es_def)))
         par_es_beta_nil <- par_es_def[i2]
         tmpfct <- function(xx, pattern = "^.beta.") {
-          x0 <- trimws(gsub("^.beta_nil.", "", names(xx)))
+          x0 <- trimws(gsub("^\\.beta_nil\\.", "", names(xx)))
           x1 <- sub("\\(", "", x0)
           x1 <- sub("\\)$", "", x1)
           x1 <- trimws(x1)
@@ -237,7 +237,7 @@ fix_par_es <- function(par_es,
     }
     if (length(i_ind) > 0) {
       # Expand to component paths
-      i2 <- which(grepl("^.ind.", names(par_es_def)))
+      i2 <- which(grepl("^\\.ind\\.", names(par_es_def)))
       par_es_ind <- par_es_def[i2]
       any_negative <- grepl("^-", trimws(par_es_ind))
       if (any(any_negative)) {

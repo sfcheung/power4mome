@@ -580,7 +580,7 @@ ptable_pop <- function(model = NULL,
                             model = model,
                             to_one_table = TRUE,
                             es_ind = es_ind)
-  if (any(grepl("^.beta_nil.", names(pop_es)))) {
+  if (any(grepl("^\\.beta_nil\\.", names(pop_es)))) {
     # model_nil should be used only in data generation ptable
     model_nil <- nil_paths(model)
     model <- c(model, model_nil)
