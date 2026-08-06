@@ -272,8 +272,12 @@ fix_par_es <- function(par_es,
   out <- character(0)
   for (i in seq_along(par_es)) {
     x_name <- names(par_es[i])
-    tmp1 <- lavaan::lavParseModelString(x_name,
-                                        as.data.frame. = TRUE)
+    tmp1 <- try(lavaan::lavParseModelString(x_name,
+                                        as.data.frame. = TRUE),
+                silent = TRUE)
+    if (inherits(tmp1, "try-error")) {
+      next
+    }
     tmp2 <- paste(tmp1$lhs,
                   tmp1$op,
                   tmp1$rhs)
