@@ -563,7 +563,9 @@ ptable_pop <- function(model = NULL,
                        n_std = 100000,
                        std_force_monte_carlo = FALSE,
                        add_cov_for_moderation = TRUE,
-                       use_beta_nil = TRUE) {
+                       use_beta_nil = TRUE,
+                       progress = TRUE,
+                       beta_nil_auto_args = list(progress = progress)) {
   if (is.null(model) || is.null(pop_es)) {
     stop("Both model and pop_es must be set.")
   }
@@ -572,6 +574,26 @@ ptable_pop <- function(model = NULL,
   pop_es <- pop_es_yaml_check(pop_es)
   if (!use_beta_nil) {
     pop_es <- pop_es[!(names(pop_es) %in% ".beta_nil.")]
+  }
+
+  # ==== Target fit measures? ====
+
+  pop_target <- target_fm_from_pop_es(pop_es)
+  if (!is.null(pop_target)
+      && FALSE) {
+    beta_nil_auto_args0 <- beta_nil_auto_args
+    beta_nil_auto_args0 <- utils::modifyList(
+      beta_nil_auto_args,
+      list(
+        model = model,
+        pop_es = pop_es
+      )
+    )
+    beta_nil_auto <- do.call(
+      beta_nil_from_fit_measures,
+      beta_nil_auto_args0
+    )
+    pop_es <- unique(pop_es, beta_nil_auto)
   }
 
   par_pop <- pop_es2par_pop(pop_es = pop_es,
