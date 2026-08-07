@@ -30,7 +30,7 @@ out$beta_nil
 data_all <- sim_data(
   nrep = 1,
   model = mod,
-  pop_es = c(es, out$beta_nil),
+  pop_es = c(strip_keys_from_pop_es(es), out$beta_nil),
   n = 100000,
   progress = !is_testing(),
   iseed = 1234
@@ -60,7 +60,7 @@ out$beta_nil
 data_all <- sim_data(
   nrep = 1,
   model = mod,
-  pop_es = c(es, out$beta_nil),
+  pop_es = c(strip_keys_from_pop_es(es), out$beta_nil),
   n = 100000,
   progress = !is_testing(),
   iseed = 1234
@@ -103,7 +103,7 @@ out$beta_nil
 data_all <- sim_data(
   nrep = 1,
   model = mod,
-  pop_es = c(es, out$beta_nil),
+  pop_es = c(strip_keys_from_pop_es(es), out$beta_nil),
   n = 100000,
   progress = !is_testing(),
   iseed = 1234
@@ -132,7 +132,7 @@ out$beta_nil
 data_all <- sim_data(
   nrep = 1,
   model = mod,
-  pop_es = c(es, out$beta_nil),
+  pop_es = c(strip_keys_from_pop_es(es), out$beta_nil),
   n = 10000,
   progress = !is_testing(),
   iseed = 1234

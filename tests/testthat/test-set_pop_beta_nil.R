@@ -108,7 +108,7 @@ tmp <- set_pop(pop_es)
 
 out <- ptable_pop(
   model = mod,
-  pop_es = mod_es1
+  pop_es = strip_keys_from_pop_es(mod_es1)
 )
 
 out$lavlabel <- lav_partable_labels(out)
