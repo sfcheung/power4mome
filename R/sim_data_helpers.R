@@ -859,9 +859,26 @@ get_direct <- function(x,
 }
 
 #' @noRd
+strip_keys_from_pop_es <- function(
+  pop_es,
+  exclude = c(".beta.", ".cov.", ".beta_nil.", ".cov_nil.")
+) {
+  pop_es <- pop_es_yaml_check(pop_es)
+  pop_es_names <- names(pop_es)
+  i <- grepl("^\\..*\\.$", pop_es_names)
+  i <- i & !(pop_es_names %in% exclude)
+  if (!any(i)) {
+    return(pop_es)
+  } else {
+    out <- pop_es[!i]
+    return(out)
+  }
+}
+
+#' @noRd
 target_fm_from_pop_es <- function(
   pop_es,
-  exclude = c(".beta.", ".cov.")
+  exclude = c(".beta.", ".cov.", ".beta_nil.", ".cov_nil")
 ) {
   pop_es <- pop_es_yaml_check(pop_es)
   pop_es_names <- names(pop_es)
@@ -930,6 +947,7 @@ beta_nil_from_fit_measures <- function(
   if (!is.null(args_target)) {
     target_fm <- names(args_target)
     target_value <- as.numeric(unname(args_target))
+    pop_es_i <- strip_keys_from_pop_es(pop_es_i)
   }
   target_str <- sprintf(
     "%s=%.3f",
