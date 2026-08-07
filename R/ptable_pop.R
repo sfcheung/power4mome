@@ -565,7 +565,7 @@ ptable_pop <- function(model = NULL,
                        add_cov_for_moderation = TRUE,
                        use_beta_nil = TRUE,
                        progress = TRUE,
-                       beta_nil_auto_args = list(progress = progress)) {
+                       beta_nil_auto_args = list()) {
   if (is.null(model) || is.null(pop_es)) {
     stop("Both model and pop_es must be set.")
   }
@@ -573,29 +573,49 @@ ptable_pop <- function(model = NULL,
   # pop_es a YAML string? If yes, convert it
   pop_es <- pop_es_yaml_check(pop_es)
   if (!use_beta_nil) {
-    pop_es <- pop_es[!(names(pop_es) %in% ".beta_nil.")]
+    i_beta_nil <- which(!grepl("^\\.beta_nil\\.", names(pop_es)))
+    pop_es <- pop_es[i_beta_nil]
   }
 
   # ==== Target fit measures? ====
 
   pop_target <- target_fm_from_pop_es(pop_es)
-  if (!is.null(pop_target)
-      && FALSE) {
+  beta_nil_auto_es <- NULL
+  if (!is.null(pop_target) &&
+      use_beta_nil) {
+    # Target fit measures used only if beta_nil is allowed
+
+    # Strip existing .beta_nil
+    i_beta_nil <- which(!grepl("^\\.beta_nil\\.", names(pop_es)))
+    pop_es <- pop_es[i_beta_nil]
+
     beta_nil_auto_args0 <- beta_nil_auto_args
     beta_nil_auto_args0 <- utils::modifyList(
       beta_nil_auto_args,
       list(
         model = model,
-        pop_es = pop_es
+        pop_es = pop_es,
+        progress = progress
       )
     )
     beta_nil_auto <- do.call(
       beta_nil_from_fit_measures,
       beta_nil_auto_args0
     )
-    pop_es <- unique(pop_es, beta_nil_auto)
+    if (!beta_nil_auto$ok) {
+      tmp <- sprintf(
+        "No solution for %1s = %2.3f. Try another target value.",
+        names(pop_target),
+        as.numeric(pop_target)
+      )
+      stop(tmp)
+    }
+    beta_nil_auto_es <- beta_nil_auto$beta_nil
+    pop_es <- c(
+                strip_keys_from_pop_es(pop_es),
+                beta_nil_auto_es
+              )
   }
-
   par_pop <- pop_es2par_pop(pop_es = pop_es,
                             es1 = es1,
                             es2 = es2,
@@ -768,6 +788,8 @@ ptable_pop <- function(model = NULL,
   attr(ptable1, "n_std") <- n_std
   attr(ptable1, "standardized") <- standardized
   attr(ptable1, "std_force_monte_carlo") <- std_force_monte_carlo
+  attr(ptable1, "pop_es_fm_target") <- pop_target
+  attr(ptable1, "beta_nil_auto") <- beta_nil_auto_es
 
   class(ptable1) <- c("ptable_pop", class(ptable1))
   ptable1
