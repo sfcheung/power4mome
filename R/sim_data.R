@@ -580,6 +580,7 @@ sim_data <- function(nrep = 10,
     }
     ptable <- ptable_pop(model = model,
                          pop_es = pop_es,
+                         progress = progress,
                          ...)
   }
   mm_out <- model_matrices_pop(ptable,
