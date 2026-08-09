@@ -238,7 +238,7 @@ print(test_out,
 #> 
 #> Variances:
 #>                    Population
-#>    .m                 0.726  
+#>    .m                 0.730  
 #>    .y                 1.000  
 #>     x                 1.000  
 #>     w                 1.000  
@@ -306,7 +306,7 @@ print(test_out,
 #> 
 #> Model Test User Model:
 #>                                                       
-#>   Test statistic                                 5.501
+#>   Test statistic                                 5.502
 #>   Degrees of freedom                                 3
 #>   P-value (Chi-square)                           0.139
 #> 
@@ -322,7 +322,7 @@ print(test_out,
 #> 
 #> Mean(s) across replication:
 #>     est   cilo  cihi   sig pvalue
-#>  -0.006 -0.053 0.024 0.000  0.620
+#>  -0.006 -0.042 0.030 0.000  0.600
 #> 
 #> - The value 'sig' is the rejection rate.
 #> - If the null hypothesis is false, this is the power.

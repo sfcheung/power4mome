@@ -196,7 +196,7 @@ print(test_out,
 #> 
 #> Variances:
 #>                    Population
-#>    .m                 0.977  
+#>    .m                 0.978  
 #>    .y                 0.910  
 #>     x                 1.000  
 #>     w1                1.000  
@@ -280,7 +280,7 @@ print(test_out,
 #> 
 #> Mean(s) across replication:
 #>   test_label lhs op  rhs   est    se     z pvalue   cilo  cihi   sig
-#> 1     m~x:w1   m  ~ x:w1 0.150 0.101 1.557  0.160 -0.047 0.348 0.250
+#> 1     m~x:w1   m  ~ x:w1 0.150 0.101 1.557  0.161 -0.047 0.348 0.250
 #> 
 #> - The column 'sig' shows the rejection rates.
 #> - If the null hypothesis is false, the rate is the power.

@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1.12</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1.13</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,16 +78,17 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.2.1.12" id="power4mome-02112">power4mome 0.2.1.12<a class="anchor" aria-label="anchor" href="#power4mome-02112"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.2.1.13" id="power4mome-02113">power4mome 0.2.1.13<a class="anchor" aria-label="anchor" href="#power4mome-02113"></a></h2>
 <div class="section level3">
-<h3 id="new-features-0-2-1-12">New Features<a class="anchor" aria-label="anchor" href="#new-features-0-2-1-12"></a></h3>
+<h3 id="new-features-0-2-1-13">New Features<a class="anchor" aria-label="anchor" href="#new-features-0-2-1-13"></a></h3>
 <ul><li><p>Added support for estimating the power of SAM (structural-after-measurement) by <code><a href="https://rdrr.io/pkg/lavaan/man/sam.html" class="external-link">lavaan::sam()</a></code> if <code>manymome</code> 0.3.4.25 or above is installed. (0.2.1.3)</p></li>
 <li><p>Updated <code><a href="../reference/fit_model.html">fit_model()</a></code> to allow fitting a single-group model even if the data generation model is a multigroup model (set <code>arg_group_name</code> to <code>NULL). The argument</code>model_append` is also added to allow modifying the data generation model. (0.2.1.7)</p></li>
 <li><p>Added <code><a href="../reference/rig_rs.html">rig_rs()</a></code>, which can be used in <code>x_fun</code> to generate correlated nonnormal variables. (0.2.1.9)</p></li>
 <li><p>Added <code><a href="../reference/test_fit_measure.html">test_fit_measure()</a></code> for estimating the “rejection rate” based on a fit measure. (0.2.1.12)</p></li>
+<li><p>Updated <code><a href="../reference/ptable_pop.html">ptable_pop()</a></code> and <code><a href="../reference/sim_data.html">sim_data()</a></code> to process the keys <code>.beta_nil.</code> and <code>.fm.</code> for specifying some forms of model misspecifications (e.g., nil paths actually not nil). Also support multigroup models. (0.2.1.13)</p></li>
 </ul></div>
 <div class="section level3">
-<h3 id="miscellaneous-0-2-1-12">Miscellaneous<a class="anchor" aria-label="anchor" href="#miscellaneous-0-2-1-12"></a></h3>
+<h3 id="miscellaneous-0-2-1-13">Miscellaneous<a class="anchor" aria-label="anchor" href="#miscellaneous-0-2-1-13"></a></h3>
 <ul><li><p>Improve a check for the fit function. (0.2.1.2)</p></li>
 <li><p>If <code>parallel = FALSE</code> and <code>progress = TRUE</code>, <code><a href="../reference/power4test.html">power4test()</a></code> will print a message to recommend users to set <code>parallel</code> to <code>TRUE</code>. (0.2.1.5)</p></li>
 <li><p>Updated calls to <code><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">parallel::detectCores()</a></code> to handle cases in which <code>NA</code> will be returned. (0.2.1.6)</p></li>
@@ -96,7 +97,7 @@
 <li><p>Updated <code><a href="../reference/fit_model.html">fit_model()</a></code> to allow the <code>map_names</code> to retrieve elements stored in the output of <code><a href="../reference/sim_out.html">sim_out()</a></code> for a replication. (0.2.1.11)</p></li>
 </ul></div>
 <div class="section level3">
-<h3 id="bug-fixes-0-2-1-12">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-2-1-12"></a></h3>
+<h3 id="bug-fixes-0-2-1-13">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-2-1-13"></a></h3>
 <ul><li>Fixed the printing of the conditional effects in the simulated data. If a moderator affects more than only component paths (e.g., both the a-path and a b-path in a simple mediation model), it will be counted only once in the printing. This affects only the printout used to examine the generated data, and has not impact on the generated data. (0.2.1.1)</li>
 </ul></div>
 </div>

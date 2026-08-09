@@ -1,6 +1,6 @@
 # Changelog
 
-## power4mome 0.2.1.12
+## power4mome 0.2.1.13
 
 ### New Features
 
@@ -24,6 +24,14 @@
 - Added
   [`test_fit_measure()`](https://sfcheung.github.io/power4mome/reference/test_fit_measure.md)
   for estimating the “rejection rate” based on a fit measure. (0.2.1.12)
+
+- Updated
+  [`ptable_pop()`](https://sfcheung.github.io/power4mome/reference/ptable_pop.md)
+  and
+  [`sim_data()`](https://sfcheung.github.io/power4mome/reference/sim_data.md)
+  to process the keys `.beta_nil.` and `.fm.` for specifying some forms
+  of model misspecifications (e.g., nil paths actually not nil). Also
+  support multigroup models. (0.2.1.13)
 
 ### Miscellaneous
 
