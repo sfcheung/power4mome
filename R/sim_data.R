@@ -763,7 +763,7 @@ print.sim_data <- function(x,
 
   cat(header_str("Population Values",
                  hw = .4,
-                 prefix = "",
+                 prefix = "\n",
                  suffix = "\n"))
   print(ptable1,
         digits = digits)
@@ -893,7 +893,25 @@ print.sim_data <- function(x,
     cat("Sample Sizes: ", paste0(n, collapse = ", "), "\n")
 
   if (data_long) {
+
+    # ==== data_long TRUE ====
+
+    # ==== Pool the samples ====
+
     all_data <- pool_sim_data(x)
+
+    has_preprocess <- !is.null(x[[1]]$mm_lm_dat_out_preprocess)
+
+    if (has_preprocess) {
+      all_data_preprocess <- pool_sim_data(
+                                x,
+                                preprocess = TRUE
+                              )
+    } else {
+      all_data_preprocess <- NULL
+    }
+
+    # ==== Fit model_final to the pooled data ====
 
     fit_to_all_args0 <- list(model = model_final,
                              data = all_data,
@@ -906,8 +924,22 @@ print.sim_data <- function(x,
     fit_all <- do.call(lavaan::sem,
                        fit_to_all_args1)
 
+    if (has_preprocess) {
+      fit_to_all_args1_preprocess <- fit_to_all_args1
+      fit_to_all_args1_preprocess$data <- NULL
+      fit_to_all_args1_preprocess <- utils::modifyList(fit_to_all_args1_preprocess,
+                                            list(data = all_data_preprocess))
+      fit_all_preprocess <- try(do.call(lavaan::sem,
+                        fit_to_all_args1_preprocess),
+                        silent = TRUE)
+    } else {
+      fit_all_preprocess <- NULL
+    }
+
     if (isTRUE(identical(est_type, "standardized"))) {
-      # Standardized Only
+
+      # ==== Standardized Only ====
+
       est_all <- lavaan::standardizedSolution(fit_all,
                                               se = FALSE,
                                               pvalue = FALSE,
@@ -917,11 +949,32 @@ print.sim_data <- function(x,
         i <- est_all$lhs == est_all$rhs
         est_all <- est_all[!i, ]
       }
+
+      if (has_preprocess) {
+        if (!inherits(fit_all_preprocess, "try-error")) {
+          est_all_preprocess <- lavaan::standardizedSolution(fit_all_preprocess,
+                                                  se = FALSE,
+                                                  pvalue = FALSE,
+                                                  ci = FALSE,
+                                                  output = "text")
+          if (!variances) {
+            i <- est_all_preprocess$lhs == est_all_preprocess$rhs
+            est_all_preprocess <- est_all_preprocess[!i, ]
+          }
+        } else {
+          est_all_preprocess <- NULL
+        }
+      } else {
+        est_all_preprocess <- NULL
+      }
+
       tmp_est_hdr <- "Standardized Estimates"
     }
 
     if (isTRUE(identical(est_type, "unstandardized"))) {
-      # Unstandardized Only
+
+      # ==== Unstandardized Only ====
+
       est_all <- lavaan::parameterEstimates(fit_all,
                                             se = FALSE,
                                             pvalue = FALSE,
@@ -932,11 +985,33 @@ print.sim_data <- function(x,
         i <- est_all$lhs == est_all$rhs
         est_all <- est_all[!i, ]
       }
+
+      if (has_preprocess) {
+        if (!inherits(fit_all_preprocess, "try-error")) {
+          est_all_preprocess <- lavaan::parameterEstimates(fit_all_preprocess,
+                                                se = FALSE,
+                                                pvalue = FALSE,
+                                                ci = FALSE,
+                                                standardized = FALSE,
+                                                output = "text")
+          if (!variances) {
+            i <- est_all_preprocess$lhs == est_all_preprocess$rhs
+            est_all_preprocess <- est_all_preprocess[!i, ]
+          }
+        } else {
+          est_all_preprocess <- NULL
+        }
+      } else {
+        est_all_preprocess <- NULL
+      }
+
       tmp_est_hdr <- "Unstandardized Estimates"
     }
 
     if (isTRUE(all(c("unstandardized", "standardized") %in% est_type))) {
-      # Both unstandardized and standardized
+
+      # ==== Both unstandardized and standardized ====
+
       est_all <- lavaan::parameterEstimates(fit_all,
                                             se = FALSE,
                                             pvalue = FALSE,
@@ -947,13 +1022,44 @@ print.sim_data <- function(x,
         i <- est_all$lhs == est_all$rhs
         est_all <- est_all[!i, ]
       }
+
+      if (has_preprocess) {
+        if (!inherits(fit_all_preprocess, "try-error")) {
+          est_all_preprocess <- lavaan::parameterEstimates(fit_all_preprocess,
+                                            se = FALSE,
+                                            pvalue = FALSE,
+                                            ci = FALSE,
+                                            standardized = TRUE,
+                                            output = "text")
+          if (!variances) {
+            i <- est_all_preprocess$lhs == est_all_preprocess$rhs
+            est_all_preprocess <- est_all_preprocess[!i, ]
+          }
+        } else {
+          est_all_preprocess <- NULL
+        }
+      } else {
+        est_all_preprocess <- NULL
+      }
+
       tmp_est_hdr <- "Unstandardized and Standardized Estimates"
     }
+
+    # ==== Descriptive Statistics ====
 
     cat(header_str("Descriptive Statistics",
                   hw = .4,
                   prefix = "\n",
                   suffix = "\n\n"))
+
+    if (has_preprocess) {
+      cat(header_str("Processed Data",
+                    hw = .2,
+                    sym = "-",
+                    prefix = "",
+                    suffix = "\n\n"))
+    }
+
     if (ngroups > 1) {
       tmp <- which(colnames(all_data) == x_i$group_name)
       print(psych::describeBy(
@@ -965,6 +1071,27 @@ print.sim_data <- function(x,
       print(psych::describe(all_data,
                             range = FALSE),
             digits = digits_descriptive)
+    }
+
+    if (has_preprocess) {
+      cat(header_str("Original Data (Before Being Processed)",
+                    hw = .2,
+                    sym = "-",
+                    prefix = "\n",
+                    suffix = "\n\n"))
+      if (ngroups > 1) {
+        tmp <- which(colnames(all_data_preprocess) == x_i$group_name)
+        print(psych::describeBy(
+                              all_data_preprocess[, -tmp],
+                              group = all_data_preprocess[[x_i$group_name]],
+                              range = FALSE),
+              digits = digits_descriptive)
+      } else {
+        print(psych::describe(all_data_preprocess,
+                              range = FALSE),
+              digits = digits_descriptive)
+      }
+
     }
 
     # ==== Response Frequencies ====
@@ -983,6 +1110,15 @@ print.sim_data <- function(x,
                     hw = .4,
                     prefix = "\n",
                     suffix = "\n"))
+
+      if (has_preprocess) {
+        cat(header_str("Processed Data",
+                      hw = .2,
+                      sym = "-",
+                      prefix = "\n",
+                      suffix = "\n\n"))
+      }
+
       tmp2 <- unique(response_count[tmp1])
       if (ngroups > 1) {
         group <- all_data[[x_i$group_name]]
@@ -1000,7 +1136,8 @@ print.sim_data <- function(x,
               digits = digits_descriptive)
       }
     }
-    # Print missing data pattern
+
+    # ==== Print missing data pattern ====
 
     mp <- tryCatch(miss_pattern(all_data),
                    error = function(e) e)
@@ -1011,10 +1148,21 @@ print.sim_data <- function(x,
                           prefix = "\n",
                           suffix = "\n\n"))
         cat("Missing data is present\n\n")
+
+        if (has_preprocess) {
+          cat(header_str("Processed Data",
+                        hw = .2,
+                        sym = "-",
+                        prefix = "",
+                        suffix = "\n\n"))
+        }
+
         print_miss_pattern(mp,
                            digits = max(0, digits = digits - 1))
       }
     }
+
+    # ==== Parameter Estimates ====
 
     tmp <- paste("Parameter Estimates Based on All",
                 nrep,
@@ -1034,8 +1182,30 @@ print.sim_data <- function(x,
       cat("Variances and error variances omitted.\n")
     }
 
+    if (has_preprocess) {
+      cat(header_str("Estimated from the Processed Data",
+                    hw = .2,
+                    sym = "-",
+                    prefix = "\n",
+                    suffix = "\n\n"))
+    }
     print(est_all,
           nd = digits)
+
+    if (has_preprocess) {
+      cat(header_str("Estimated from the Original Data",
+                    hw = .2,
+                    sym = "-",
+                    prefix = "\n",
+                    suffix = "\n\n"))
+      if (inherits(fit_all_preprocess, "lavaan")) {
+        print(est_all_preprocess,
+              nd = digits)
+      } else {
+        cat("The final model is not applicable to the original data.\n")
+      }
+    }
+
   } else {
     cat("\nCall print with 'data_long = TRUE' for further information.\n")
   }
@@ -1060,16 +1230,23 @@ print.sim_data <- function(x,
 #' are returned as a list of data
 #' frames.
 #'
+#' @param preprocess If the data have been
+#' processed by `process_data`, whether
+#' the data before being processed are
+#' to be extracted. If ignored if the
+#' data were not processed by `process_data`.
+#'
 #' @return
 #' The function `pool_sim_data()` returns
 #' either one data frame or a list
 #' of data frames, depending on the
-#' argument `as_list`
+#' argument `as_list`.
 #'
 #' @rdname sim_data
 #' @export
 pool_sim_data <- function(object,
-                          as_list = FALSE) {
+                          as_list = FALSE,
+                          preprocess = FALSE) {
   if (!inherits(object, "power4test") &&
       !inherits(object, "sim_data")) {
     stop("pool_sim_data() only supports 'power4test' or 'sim_data' objects.")
@@ -1077,8 +1254,15 @@ pool_sim_data <- function(object,
   if (inherits(object, "power4test")) {
     object <- object$sim_all
   }
-  all_data <- lapply(object,
-                     function(x) x$mm_lm_dat_out)
+  has_preprocess <- !is.null(object[[1]]$mm_lm_dat_out_preprocess)
+  if (preprocess &&
+      has_preprocess) {
+    all_data <- lapply(object,
+                      function(x) x$mm_lm_dat_out_preprocess)
+  } else {
+    all_data <- lapply(object,
+                      function(x) x$mm_lm_dat_out)
+  }
   if (!as_list) {
     all_data <- do.call(rbind,
                         all_data)
@@ -1246,6 +1430,20 @@ sim_data_i <- function(repid = 1,
                   which = "lambda",
                   simplify = FALSE
                 )
+  mm_lm_dat_out_preprocess <- NULL
+  if (is.list(process_data)) {
+    mm_lm_dat_out_preprocess <- lapply(
+      mm_lm_dat_out,
+      attr,
+      which = "dat_all_preprocess"
+    )
+    lambda_pop_preprocess <- sapply(
+                    mm_lm_dat_out_preprocess,
+                    attr,
+                    which = "lambda",
+                    simplify = FALSE
+                  )
+  }
   model_original <- model
   # add_indicator_syntax() already supports
   # a model syntax with "x:z ~~ y:w"
@@ -1303,21 +1501,33 @@ sim_data_i <- function(repid = 1,
     mm_lm_out <- mm_lm_out[[1]]
     mm_lm_dat_out <- mm_lm_dat_out[[1]]
     lambda_pop <- lambda_pop[[1]]
+    if (!is.null(mm_lm_dat_out_preprocess)) {
+      mm_lm_dat_out_preprocess <- mm_lm_dat_out_preprocess[[1]]
+    }
   }
   if (ngroups > 1) {
     for (i in group_labels) {
       mm_lm_dat_out[[i]]$group <- i
+      if (!is.null(mm_lm_dat_out_preprocess)) {
+        mm_lm_dat_out_preprocess[[i]]$group <- i
+      }
     }
   }
   if (merge_groups && (ngroups > 1)) {
     mm_lm_dat_out <- do.call(rbind,
                              mm_lm_dat_out)
     rownames(mm_lm_dat_out) <- NULL
+    if (!is.null(mm_lm_dat_out_preprocess)) {
+      mm_lm_dat_out_preprocess <- do.call(rbind,
+                              mm_lm_dat_out_preprocess)
+      rownames(mm_lm_dat_out_preprocess) <- NULL
+    }
   }
   out <- list(ptable = ptable,
               mm_out = mm_out,
               mm_lm_out = mm_lm_out,
               mm_lm_dat_out = mm_lm_dat_out,
+              mm_lm_dat_out_preprocess = mm_lm_dat_out_preprocess,
               model_original = model_original,
               model_final = model,
               model_measurement = model_measurement,
