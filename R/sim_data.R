@@ -1246,6 +1246,20 @@ sim_data_i <- function(repid = 1,
                   which = "lambda",
                   simplify = FALSE
                 )
+  mm_lm_dat_out_preprocess <- NULL
+  if (is.list(process_data)) {
+    mm_lm_dat_out_preprocess <- lapply(
+      mm_lm_dat_out,
+      attr,
+      which = "dat_all_preprocess"
+    )
+    lambda_pop_preprocess <- sapply(
+                    mm_lm_dat_out_preprocess,
+                    attr,
+                    which = "lambda",
+                    simplify = FALSE
+                  )
+  }
   model_original <- model
   # add_indicator_syntax() already supports
   # a model syntax with "x:z ~~ y:w"
@@ -1303,21 +1317,33 @@ sim_data_i <- function(repid = 1,
     mm_lm_out <- mm_lm_out[[1]]
     mm_lm_dat_out <- mm_lm_dat_out[[1]]
     lambda_pop <- lambda_pop[[1]]
+    if (!is.null(mm_lm_dat_out_preprocess)) {
+      mm_lm_dat_out_preprocess <- mm_lm_dat_out_preprocess[[1]]
+    }
   }
   if (ngroups > 1) {
     for (i in group_labels) {
       mm_lm_dat_out[[i]]$group <- i
+      if (!is.null(mm_lm_dat_out_preprocess)) {
+        mm_lm_dat_out_preprocess[[i]]$group <- i
+      }
     }
   }
   if (merge_groups && (ngroups > 1)) {
     mm_lm_dat_out <- do.call(rbind,
                              mm_lm_dat_out)
     rownames(mm_lm_dat_out) <- NULL
+    if (!is.null(mm_lm_dat_out_preprocess)) {
+      mm_lm_dat_out_preprocess <- do.call(rbind,
+                              mm_lm_dat_out_preprocess)
+      rownames(mm_lm_dat_out_preprocess) <- NULL
+    }
   }
   out <- list(ptable = ptable,
               mm_out = mm_out,
               mm_lm_out = mm_lm_out,
               mm_lm_dat_out = mm_lm_dat_out,
+              mm_lm_dat_out_preprocess = mm_lm_dat_out_preprocess,
               model_original = model_original,
               model_final = model,
               model_measurement = model_measurement,

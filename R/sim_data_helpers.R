@@ -84,6 +84,7 @@ mm_lm_data <- function(object,
   # In case a processor needs lambda
   attr(dat_all, "lambda") <- lambda_pop
   if (is.list(process_data)) {
+    dat_all_preprocess <- dat_all
     process_data_fun <- match.fun(process_data$fun)
     attr(dat_all, "number_of_indicators") <- number_of_indicators
     tmp <- list(dat_all)
@@ -113,6 +114,7 @@ mm_lm_data <- function(object,
     } else {
       dat_all <- dat_all_amp
     }
+    attr(dat_all, "dat_all_preprocess") <- dat_all_preprocess
   }
   # In case a processor removes the attributes
   attr(dat_all, "lambda") <- lambda_pop
