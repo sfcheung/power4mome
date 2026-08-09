@@ -491,8 +491,6 @@
 #' for `.beta_nil.` This internal function
 #' is not exported for now.
 #'
-#' @param beta_nil_auto_args
-#'
 #' @examples
 #'
 #' # Specify the model
@@ -589,6 +587,9 @@ ptable_pop <- function(model = NULL,
     stop("Both model and pop_es must be set.")
   }
   model_original <- model
+
+  # ==== Process pop_es ====
+
   # pop_es a YAML string? If yes, convert it
   pop_es <- pop_es_yaml_check(pop_es)
   if (!use_beta_nil) {
@@ -600,47 +601,40 @@ ptable_pop <- function(model = NULL,
 
   pop_target <- target_fm_from_pop_es(pop_es)
   beta_nil_auto_es <- NULL
+
   if (!is.null(pop_target) &&
       use_beta_nil) {
-    # Target fit measures used only if beta_nil is allowed
-
-    # Strip existing .beta_nil
-    i_beta_nil <- which(!grepl("^\\.beta_nil\\.", names(pop_es)))
-    pop_es <- pop_es[i_beta_nil]
-
-    beta_nil_auto_args0 <- beta_nil_auto_args
-    beta_nil_auto_args0 <- utils::modifyList(
-      beta_nil_auto_args,
-      list(
-        model = model,
-        pop_es = pop_es,
-        progress = progress
-      )
+    pop_target_call <- match.call()
+    pop_target_call <- lapply(
+              pop_target_call,
+              \(x, envir0) eval(x, envir0),
+              envir0 = parent.frame()
+            )
+    pop_target_call <- as.call(pop_target_call)
+    pop_target_call[[1]] <- as.name("pop_es_from_fit_measures")
+    pop_target_out <- eval(
+      pop_target_call
     )
-    beta_nil_auto <- do.call(
-      beta_nil_from_fit_measures,
-      beta_nil_auto_args0
-    )
-    if (!beta_nil_auto$ok) {
-      tmp <- sprintf(
-        "No solution for %1s = %2.3f. Try another target value.",
-        names(pop_target),
-        as.numeric(pop_target)
-      )
-      stop(tmp)
-    }
-    beta_nil_auto_es <- beta_nil_auto$beta_nil
-    pop_es <- c(
-                strip_keys_from_pop_es(pop_es),
-                beta_nil_auto_es
-              )
+
+    pop_es <- pop_target_out$pop_es
+    beta_nil_auto_es <- pop_target_out$beta_nil_auto_es
   }
+
+  # ==== Generate par_pop ====
+
+  # par_pop is a working parameter table:
+  # - could be a multigroup model
+  # - Always have the column `group`
+  # - .beta. and .cov. processed but will not be stored
   par_pop <- pop_es2par_pop(pop_es = pop_es,
                             es1 = es1,
                             es2 = es2,
                             model = model,
                             to_one_table = TRUE,
                             es_ind = es_ind)
+
+  # ==== Generate model_nil, if .beta_nil. set ====
+
   if (any(grepl("^\\.beta_nil\\.", names(pop_es)))) {
     # model_nil should be used only in data generation ptable
     model_nil <- nil_paths(model)
@@ -648,9 +642,19 @@ ptable_pop <- function(model = NULL,
   } else {
     model_nil <- NULL
   }
+
+  # ==== Generate a template for the population parameter table ====
+
+  # Only use the model syntax in the generation
+  # - It can include model_nil
+  # - ptable0 always has the column `group`
+
   ngroups <- max(par_pop$group)
   # Single group ptable
   if (ngroups > 1) {
+
+    # ==== Multigroup model ====
+
     # Handle labels in the syntax
     tmp <- lavaan::lavParseModelString(model,
                                        as.data.frame. = TRUE)
@@ -663,14 +667,23 @@ ptable_pop <- function(model = NULL,
                         fixed.x = FALSE)
     ptable0 <- lavaan::parTable(fit0)
   } else {
+
+    # ==== Single-group model ====
+
     fit0 <- lavaan::sem(model,
                         do.fit = FALSE,
                         fixed.x = FALSE)
     ptable0 <- lavaan::parTable(fit0)
   }
 
+  # ==== Set the population parameter table ====
+
   # Use fake data to create the target parameter table
+
   if (ngroups > 1) {
+
+    # ==== Multigroup model ====
+
     ptable0_ng <- ptable0
     gpnames <- paste0("gp", seq_len(ngroups))
     vnames <- lavaan::lavNames(ptable0,
@@ -712,6 +725,8 @@ ptable_pop <- function(model = NULL,
     rownames(ptable0) <- NULL
   }
 
+  # ==== Check for any names in pop_es but not in the model ====
+
   # Check par_pop
   vnames <- lavaan::lavNames(ptable0,
                              type = "ov")
@@ -728,8 +743,16 @@ ptable_pop <- function(model = NULL,
     warning(msg)
   }
 
+  # ==== Set population values from par_pop ====
+
+  # Output: ptable1
+
+  tmp <- intersect(
+            c("lhs", "op", "rhs", "id", "group"),
+            colnames(ptable0)
+          )
   par_pop2 <- merge(par_pop,
-                    ptable0[, c("lhs", "op", "rhs", "id")],
+                    ptable0[, tmp],
                     all.x = TRUE,
                     all.y = FALSE)
   if (any(is.na(par_pop2$id))) {
@@ -744,6 +767,7 @@ ptable_pop <- function(model = NULL,
   }
   par_pop2 <- par_pop2[, c("id", "lhs", "op", "rhs", "group", "pop")]
 
+  # The data generation parameter table with population values
   ptable1 <- merge(ptable0,
                    par_pop2,
                    all.x = TRUE)
@@ -751,11 +775,18 @@ ptable_pop <- function(model = NULL,
   ptable1$pop <- NULL
   # TODO:
   # - Check equality constraints
-  # model_nil is not used starting this line
+
+  # ==== Add model(s) syntax to the data generation parameter table (ptable1) ====
+
   attr(ptable1, "model_nil") <- model_nil
+  # model_nil is not used starting this line
   model <- model_original
   attr(ptable1, "model") <- model
+
   if (standardized) {
+
+    # ==== Standardized? Set error variances ====
+
     mm <- model_matrices_pop(ptable1,
                              drop_list_single_group = FALSE)
     if (ncol(mm[[1]]$psi) != 0) {
@@ -781,8 +812,12 @@ ptable_pop <- function(model = NULL,
     attr(ptable1, "model") <- model
     attr(ptable1, "std_by_monte_carlo") <- std_by_monte_carlo
   }
+
   if ((length(m_moderated(model, ngroups = ngroups)) > 0) &&
       add_cov_for_moderation) {
+
+    # ==== Add covariances for moderators, if requested ====
+
     # Models with mediators involved in moderation
     ptable_fixed <- pt_with_int(
                       ptable = ptable1,
@@ -794,6 +829,8 @@ ptable_pop <- function(model = NULL,
       attr(ptable1, "model") <- attr(ptable1, "model_fixed")
     }
   }
+
+  # ==== Finalize the output (ptable1) ====
 
   # It is intentional not saving the call and
   # saving the argument values.
@@ -821,6 +858,11 @@ ptable_pop <- function(model = NULL,
 # - new_pop_es: pop_es for parameters to be updated
 # Output:
 # - A ptable based on updated pop_es
+# Limitations:
+# - Only work on explicitly specified parameters.
+#   Does not work with keys, e.g., .beta.
+# Used by:
+# - power4test() (update_power4test && !is.null(pop_es))
 update_ptable_pop <- function(object,
                               new_pop_es) {
   if (!inherits(object, "ptable_pop")) {
@@ -990,9 +1032,14 @@ model_matrices_pop <- function(x,
 # - model
 # Output:
 # - par_pop
+# Limitations:
+# - Only work on explicitly specified parameters.
+#   Does not work with keys, e.g., .beta.
+# Used by:
+# - update_ptable_pop()
 update_par_pop <- function(add,
                            par_pop) {
-  # par_pop should be a list of tables
+  # par_pop should be a list of parameter tables
   out <- par_pop
   ngroups <- length(out)
   for (i in seq_len(ngroups)) {
@@ -1016,7 +1063,7 @@ update_par_pop <- function(add,
     tmp$es.add <- NULL
     out[[i]] <- tmp
   }
-  # The output is always a list
+  # The output is always a list of parameter tables
   out
 }
 
