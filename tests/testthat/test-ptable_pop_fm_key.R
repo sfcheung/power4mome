@@ -40,7 +40,7 @@ y ~ x: [m, l, nil]
 y ~ w: s
 y ~ x:w: s
 x ~~ w: [s, m, l]
-.rmsea.: .12
+.fm.(rmsea): .12
 "
 
 expect_equal(
@@ -72,7 +72,7 @@ y ~ x: m
 y ~ w: s
 y ~ x:w: s
 x ~~ w: s
-.cfi.: .80
+.fm.(cfi): .80
 "
 
 expect_equal(
@@ -89,7 +89,7 @@ y ~ x: m
 y ~ w: s
 y ~ x:w: s
 x ~~ w: s
-.cfi.: [.80, .90]
+.fm.(cfi): [.80, .90]
 "
 
 pop_es_yaml_check(es)
@@ -136,12 +136,12 @@ y ~ x: [m, l, nil]
 y ~ w: s
 y ~ x:w: s
 x ~~ w: [s, m, l]
-.rmsea.: .12
+.fm.(rmsea): .12
 "
 tmp <- pop_es_yaml_check(es)
 expect_identical(
   strip_keys_from_pop_es(es),
-  tmp[!(names(tmp) %in% ".rmsea.")]
+  tmp[!(names(tmp) %in% ".fm.(rmsea)")]
 )
 
 es <-
@@ -153,7 +153,7 @@ y ~ x: m
 y ~ w: s
 y ~ x:w: s
 x ~~ w: s
-.cfi.: .80
+.fm.(cfi): .80
 .beta.: .30
 .beta_nil.: .20
 "
@@ -161,7 +161,7 @@ tmp <- pop_es_yaml_check(es)
 
 expect_identical(
   strip_keys_from_pop_es(es),
-  tmp[!(names(tmp) %in% ".cfi.")]
+  tmp[!(names(tmp) %in% ".fm.(cfi)")]
 )
 
 es <-
@@ -173,13 +173,13 @@ y ~ x: m
 y ~ w: s
 y ~ x:w: s
 x ~~ w: [nil, m]
-.cfi.: [.80, .90]
+.fm.(cfi): [.80, .90]
 "
 tmp <- pop_es_yaml_check(es)
 
 expect_identical(
   strip_keys_from_pop_es(es),
-  tmp[!(names(tmp) %in% ".cfi.")]
+  tmp[!(names(tmp) %in% ".fm.(cfi)")]
 )
 
 })

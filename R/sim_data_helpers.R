@@ -861,11 +861,18 @@ get_direct <- function(x,
 #' @noRd
 strip_keys_from_pop_es <- function(
   pop_es,
-  exclude = c(".beta.", ".cov.", ".beta_nil.", ".cov_nil.")
+  exclude = c(".beta.", ".cov.", ".beta_nil.", ".cov_nil."),
+  prefix = "fm"
 ) {
   pop_es <- pop_es_yaml_check(pop_es)
   pop_es_names <- names(pop_es)
-  i <- grepl("^\\..*\\.$", pop_es_names)
+  prefix0 <- paste0(
+            "^\\.",
+            prefix,
+            "*\\.\\("
+          )
+  # i <- grepl("^\\..*\\.$", pop_es_names)
+  i <- grepl(prefix0, pop_es_names)
   i <- i & !(pop_es_names %in% exclude)
   if (!any(i)) {
     return(pop_es)
@@ -878,11 +885,18 @@ strip_keys_from_pop_es <- function(
 #' @noRd
 target_fm_from_pop_es <- function(
   pop_es,
-  exclude = c(".beta.", ".cov.", ".beta_nil.", ".cov_nil")
+  exclude = c(".beta.", ".cov.", ".beta_nil.", ".cov_nil"),
+  prefix = "fm"
 ) {
   pop_es <- pop_es_yaml_check(pop_es)
   pop_es_names <- names(pop_es)
-  i <- grepl("^\\..*\\.$", pop_es_names)
+  prefix0 <- paste0(
+            "^\\.",
+            prefix,
+            "*\\.\\("
+          )
+  # i <- grepl("^\\..*\\.$", pop_es_names)
+  i <- grepl(prefix0, pop_es_names)
   i <- i & !(pop_es_names %in% exclude)
   if (!any(i)) {
     return(NULL)
@@ -899,8 +913,8 @@ target_fm_from_pop_es <- function(
     stop(tmp)
   }
   out_name <- names(out)
-  out_name <- gsub("^\\.", "", out_name)
-  out_name <- gsub("\\.$", "", out_name)
+  out_name <- gsub(prefix0, "", out_name)
+  out_name <- gsub("\\)$", "", out_name)
   names(out) <- out_name
   out
 }

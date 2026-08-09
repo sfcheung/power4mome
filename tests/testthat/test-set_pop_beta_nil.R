@@ -91,7 +91,7 @@ mod_es1 <- c(".beta." = "m",
              ".beta_nil.(y~m1)" = .05,
              ".beta_nil.(y~x)" = .10,
              ".cfa." = .80,
-             ".rmsea." = .12)
+             ".fm.(rmsea)" = .12)
 
 pop_es <- fix_par_es(
             mod_es1,

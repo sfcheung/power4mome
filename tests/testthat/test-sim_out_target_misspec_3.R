@@ -14,7 +14,7 @@ mod <-
 es <-
 c("y ~ m2" = "m",
   "m1 ~ x" = "m",
-  ".rmsea." = .11)
+  ".fm.(rmsea)" = .11)
 
 target_fm_from_pop_es(es)
 
@@ -101,7 +101,7 @@ es <-
 c("y1 ~ x1" = .90,
   "y2 ~ x2" = "m",
   "x1 ~~ x2" = "l",
-  ".cfi." = .85)
+  ".fm.(cfi)" = .85)
 
 target_fm_from_pop_es(es)
 

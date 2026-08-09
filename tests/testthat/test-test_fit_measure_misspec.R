@@ -17,7 +17,7 @@ model_simple_med_es <-
 "
 y ~ m: s
 m ~ x: s
-.rmsea.: .12
+.fm.(rmsea): .12
 "
 
 sim_only <- power4test(nrep = 5,
@@ -48,7 +48,7 @@ model_simple_med_es <-
 "
 y ~ m: s
 m ~ x: s
-.cfi.: .90
+.fm.(cfi): .90
 "
 
 sim_only <- power4test(nrep = 5,
@@ -57,8 +57,6 @@ sim_only <- power4test(nrep = 5,
                        n = 5000,
                        progress = !is_testing(),
                        iseed = 1234)
-
-print(sim_only)
 
 test_out1 <- power4test(
   object = sim_only,
