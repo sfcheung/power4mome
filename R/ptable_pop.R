@@ -601,52 +601,23 @@ ptable_pop <- function(model = NULL,
 
   pop_target <- target_fm_from_pop_es(pop_es)
   beta_nil_auto_es <- NULL
+
   if (!is.null(pop_target) &&
       use_beta_nil) {
-
-    # ==== Generate beta_nil from pop_target ====
-
-    # Target fit measures used only if beta_nil is allowed
-
-    # Strip existing .beta_nil
-    i_beta_nil <- which(!grepl("^\\.beta_nil\\.", names(pop_es)))
-    pop_es <- pop_es[i_beta_nil]
-
-    beta_nil_auto_args0 <- beta_nil_auto_args
-    # Need to pass these arguments to sim_data()
-    beta_nil_auto_args0 <- utils::modifyList(
-      beta_nil_auto_args,
-      list(
-        model = model,
-        pop_es = pop_es,
-        progress = progress,
-        es1 = es1,
-        es2 = es2,
-        es_ind = es_ind,
-        standardized = standardized,
-        n_std = n_std,
-        std_force_monte_carlo = std_force_monte_carlo,
-        add_cov_for_moderation = add_cov_for_moderation,
-        use_beta_nil = use_beta_nil
-      )
+    pop_target_call <- match.call()
+    pop_target_call <- lapply(
+              pop_target_call,
+              \(x, envir0) eval(x, envir0),
+              envir0 = parent.frame()
+            )
+    pop_target_call <- as.call(pop_target_call)
+    pop_target_call[[1]] <- as.name("pop_es_from_fit_measures")
+    pop_target_out <- eval(
+      pop_target_call
     )
-    beta_nil_auto <- do.call(
-      beta_nil_from_fit_measures,
-      beta_nil_auto_args0
-    )
-    if (!beta_nil_auto$ok) {
-      tmp <- sprintf(
-        "No solution for %1s = %2.3f. Try another target value.",
-        names(pop_target),
-        as.numeric(pop_target)
-      )
-      stop(tmp)
-    }
-    beta_nil_auto_es <- beta_nil_auto$beta_nil
-    pop_es <- c(
-                strip_keys_from_pop_es(pop_es),
-                beta_nil_auto_es
-              )
+
+    pop_es <- pop_target_out$pop_es
+    beta_nil_auto_es <- pop_target_out$beta_nil_auto_es
   }
 
   # ==== Generate par_pop ====
