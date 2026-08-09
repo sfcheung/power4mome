@@ -1,4 +1,4 @@
-# power4mome 0.2.1.13
+# power4mome 0.2.1.15
 
 ## New Features
 
@@ -33,8 +33,15 @@
   model misspecifications
   (e.g., nil paths actually not nil). Also
   support multigroup models.
-  (0.2.1.13)
+  (0.2.1.13, 0.2.1.14)
 
+- If `process_data` used, `sim_data()`
+  will store the preprocessing data.
+  Its `print` method will also print
+  descriptive statistics and parameter
+  estimates on the preprocessing data
+  alongside those on the processed data.
+  (0.2.1.15)
 
 ## Miscellaneous
 

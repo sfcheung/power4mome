@@ -84,6 +84,7 @@ mm_lm_data <- function(object,
   # In case a processor needs lambda
   attr(dat_all, "lambda") <- lambda_pop
   if (is.list(process_data)) {
+    dat_all_preprocess <- dat_all
     process_data_fun <- match.fun(process_data$fun)
     attr(dat_all, "number_of_indicators") <- number_of_indicators
     tmp <- list(dat_all)
@@ -113,6 +114,7 @@ mm_lm_data <- function(object,
     } else {
       dat_all <- dat_all_amp
     }
+    attr(dat_all, "dat_all_preprocess") <- dat_all_preprocess
   }
   # In case a processor removes the attributes
   attr(dat_all, "lambda") <- lambda_pop
@@ -918,6 +920,91 @@ target_fm_from_pop_es <- function(
   names(out) <- out_name
   out
 }
+
+#' @noRd
+# Input:
+# - pop_es
+# - Other arguments to ptable_pop()
+# Output:
+# - Update pop_es with beta_nil
+# - beta_nil_auto_es
+# - pop_target
+pop_es_from_fit_measures <- function(
+  ...
+) {
+
+  # ==== Process dotdotdot ====
+
+  args <- list(...)
+  pop_es <- args$pop_es
+  beta_nil_auto_args <- args$beta_nil_auto_args %||%
+    formals(ptable_pop)$beta_nil_auto_args
+  use_beta_nil <- args$use_beta_nil %||%
+    formals(ptable_pop)$use_beta_nil
+  if (is.null(pop_es)) {
+    stop("pop_es cannot be NULL")
+  }
+  args1 <- args
+  args1$pop_es <- NULL
+  args1$beta_nil_auto_args <- NULL
+  args1$use_beta_nil <- NULL
+
+  pop_target <- target_fm_from_pop_es(pop_es)
+  beta_nil_auto_es <- NULL
+
+  if (!is.null(pop_target) &&
+      use_beta_nil) {
+
+    # ==== Generate beta_nil from pop_target ====
+
+    # Target fit measures used only if beta_nil is allowed
+    # Strip existing .beta_nil
+    i_beta_nil <- which(!grepl("^\\.beta_nil\\.", names(pop_es)))
+    if (length(i_beta_nil) > 0) {
+      pop_es <- pop_es[i_beta_nil]
+    }
+    pop_es_1 <- strip_keys_from_pop_es(pop_es)
+    target_fm <- names(pop_target)
+    target_value <- as.numeric(pop_target)
+
+    beta_nil_auto_args0 <- args
+    beta_nil_auto_args0 <- utils::modifyList(
+      beta_nil_auto_args0,
+      c(
+        beta_nil_auto_args,
+        list(
+          pop_es = pop_es_1,
+          target_fm = target_fm,
+          target_value = target_value
+        )
+      )
+    )
+    beta_nil_auto <- do.call(
+      beta_nil_from_fit_measures,
+      beta_nil_auto_args0
+    )
+    if (!beta_nil_auto$ok) {
+      tmp <- sprintf(
+        "No solution for %1s = %2.3f. Try another target value.",
+        names(pop_target),
+        as.numeric(pop_target)
+      )
+      stop(tmp)
+    }
+    beta_nil_auto_es <- beta_nil_auto$beta_nil
+    pop_es <- c(
+                strip_keys_from_pop_es(pop_es),
+                beta_nil_auto_es
+              )
+  }
+  out <- list(
+    pop_es = pop_es,
+    beta_nil_auto_es = beta_nil_auto_es,
+    pop_target = pop_target
+  )
+  out
+}
+
 
 #' @noRd
 beta_nil_from_fit_measures <- function(
