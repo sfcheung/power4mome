@@ -1,4 +1,4 @@
-# power4mome 0.2.1.13
+# power4mome 0.2.1.14
 
 ## New Features
 
@@ -33,8 +33,7 @@
   model misspecifications
   (e.g., nil paths actually not nil). Also
   support multigroup models.
-  (0.2.1.13)
-
+  (0.2.1.13, 0.2.1.14)
 
 ## Miscellaneous
 
