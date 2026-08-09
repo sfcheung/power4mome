@@ -41,7 +41,7 @@ sim_data(
   ...
 )
 
-pool_sim_data(object, as_list = FALSE)
+pool_sim_data(object, as_list = FALSE, preprocess = FALSE)
 }
 \arguments{
 \item{nrep}{The number of replications
@@ -275,6 +275,12 @@ the simulated datasets is returned as one
 single data frame. If \code{FALSE}, they
 are returned as a list of data
 frames.}
+
+\item{preprocess}{If the data have been
+processed by \code{process_data}, whether
+the data before being processed are
+to be extracted. If ignored if the
+data were not processed by \code{process_data}.}
 }
 \value{
 The function \code{\link[=sim_out]{sim_out()}} returns
@@ -322,7 +328,7 @@ its side effect.
 The function \code{pool_sim_data()} returns
 either one data frame or a list
 of data frames, depending on the
-argument \code{as_list}
+argument \code{as_list}.
 }
 \description{
 Get a model matrix and
