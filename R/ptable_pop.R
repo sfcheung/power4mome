@@ -491,8 +491,6 @@
 #' for `.beta_nil.` This internal function
 #' is not exported for now.
 #'
-#' @param beta_nil_auto_args
-#'
 #' @examples
 #'
 #' # Specify the model
@@ -615,12 +613,21 @@ ptable_pop <- function(model = NULL,
     pop_es <- pop_es[i_beta_nil]
 
     beta_nil_auto_args0 <- beta_nil_auto_args
+    # Need to pass these arguments to sim_data()
     beta_nil_auto_args0 <- utils::modifyList(
       beta_nil_auto_args,
       list(
         model = model,
         pop_es = pop_es,
-        progress = progress
+        progress = progress,
+        es1 = es1,
+        es2 = es2,
+        es_ind = es_ind,
+        standardized = standardized,
+        n_std = n_std,
+        std_force_monte_carlo = std_force_monte_carlo,
+        add_cov_for_moderation = add_cov_for_moderation,
+        use_beta_nil = use_beta_nil
       )
     )
     beta_nil_auto <- do.call(
@@ -880,6 +887,11 @@ ptable_pop <- function(model = NULL,
 # - new_pop_es: pop_es for parameters to be updated
 # Output:
 # - A ptable based on updated pop_es
+# Limitations:
+# - Only work on explicitly specified parameters.
+#   Does not work with keys, e.g., .beta.
+# Used by:
+# - power4test() (update_power4test && !is.null(pop_es))
 update_ptable_pop <- function(object,
                               new_pop_es) {
   if (!inherits(object, "ptable_pop")) {
@@ -1049,9 +1061,14 @@ model_matrices_pop <- function(x,
 # - model
 # Output:
 # - par_pop
+# Limitations:
+# - Only work on explicitly specified parameters.
+#   Does not work with keys, e.g., .beta.
+# Used by:
+# - update_ptable_pop()
 update_par_pop <- function(add,
                            par_pop) {
-  # par_pop should be a list of tables
+  # par_pop should be a list of parameter tables
   out <- par_pop
   ngroups <- length(out)
   for (i in seq_len(ngroups)) {
@@ -1075,7 +1092,7 @@ update_par_pop <- function(add,
     tmp$es.add <- NULL
     out[[i]] <- tmp
   }
-  # The output is always a list
+  # The output is always a list of parameter tables
   out
 }
 
