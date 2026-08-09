@@ -1121,6 +1121,7 @@ print(out,
 #> m ~ x
 #> y ~ m + x
 #> 
+#> 
 #> ====== Population Values ======
 #> 
 #> Regressions:
@@ -1216,6 +1217,7 @@ print(out1,
 #> m ~ x
 #> y ~ m + x
 #> 
+#> 
 #> ====== Population Values ======
 #> 
 #> Regressions:
@@ -1307,6 +1309,7 @@ print(out2,
 #> 
 #> m ~ x
 #> y ~ m + x
+#> 
 #> 
 #> ====== Population Values ======
 #> 

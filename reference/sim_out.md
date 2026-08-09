@@ -142,6 +142,7 @@ sim_out_all
 #> == Model on Variables/Indicators ==
 #> m ~ x
 #>  y ~ m + x
+#> 
 #> ====== Population Values ======
 #> 
 #> Regressions:

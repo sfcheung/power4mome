@@ -1,6 +1,6 @@
 # Changelog
 
-## power4mome 0.2.1.13
+## power4mome 0.2.1.15
 
 ### New Features
 
@@ -31,7 +31,13 @@
   [`sim_data()`](https://sfcheung.github.io/power4mome/reference/sim_data.md)
   to process the keys `.beta_nil.` and `.fm.` for specifying some forms
   of model misspecifications (e.g., nil paths actually not nil). Also
-  support multigroup models. (0.2.1.13)
+  support multigroup models. (0.2.1.13, 0.2.1.14)
+
+- If `process_data` used,
+  [`sim_data()`](https://sfcheung.github.io/power4mome/reference/sim_data.md)
+  will store the preprocessing data. Its `print` method will also print
+  descriptive statistics and parameter estimates on the preprocessing
+  data alongside those on the processed data. (0.2.1.15)
 
 ### Miscellaneous
 

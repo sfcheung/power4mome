@@ -15,7 +15,7 @@ The function"><meta property="og:image" content="https://sfcheung.github.io/powe
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1.13</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1.15</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -132,7 +132,7 @@ along with other information.</p>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">pool_sim_data</span><span class="op">(</span><span class="va">object</span>, as_list <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">pool_sim_data</span><span class="op">(</span><span class="va">object</span>, as_list <span class="op">=</span> <span class="cn">FALSE</span>, preprocess <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -428,6 +428,14 @@ single data frame. If <code>FALSE</code>, they
 are returned as a list of data
 frames.</p></dd>
 
+
+<dt id="arg-preprocess">preprocess<a class="anchor" aria-label="anchor" href="#arg-preprocess"></a></dt>
+<dd><p>If the data have been
+processed by <code>process_data</code>, whether
+the data before being processed are
+to be extracted. If ignored if the
+data were not processed by <code>process_data</code>.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -471,7 +479,7 @@ its side effect.</p>
 <p>The function <code>pool_sim_data()</code> returns
 either one data frame or a list
 of data frames, depending on the
-argument <code>as_list</code></p>
+argument <code>as_list</code>.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -1104,6 +1112,7 @@ the specification in <code>pop_es</code>.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> == Model on Variables/Indicators ==</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> m ~ x</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  y ~ m + x</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ====== Population Values ======</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Regressions:</span>

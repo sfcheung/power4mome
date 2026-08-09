@@ -255,6 +255,7 @@ print(test_ind,
 #> m2 ~ x
 #> y ~ m1 + m2 + x
 #> 
+#> 
 #> ====== Population Values ======
 #> 
 #> Regressions:
@@ -367,6 +368,7 @@ print(test_ind_all_sig,
 #> m1 ~ x
 #> m2 ~ x
 #> y ~ m1 + m2 + x
+#> 
 #> 
 #> ====== Population Values ======
 #> 

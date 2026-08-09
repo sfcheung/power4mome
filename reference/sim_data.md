@@ -44,7 +44,7 @@ print(
   ...
 )
 
-pool_sim_data(object, as_list = FALSE)
+pool_sim_data(object, as_list = FALSE, preprocess = FALSE)
 ```
 
 ## Arguments
@@ -252,6 +252,12 @@ pool_sim_data(object, as_list = FALSE)
   Logical. If `TRUE`, the simulated datasets is returned as one single
   data frame. If `FALSE`, they are returned as a list of data frames.
 
+- preprocess:
+
+  If the data have been processed by `process_data`, whether the data
+  before being processed are to be extracted. If ignored if the data
+  were not processed by `process_data`.
+
 ## Value
 
 The function
@@ -289,7 +295,7 @@ The `print` method of `sim_data` returns `x` invisibly. It is called for
 its side effect.
 
 The function `pool_sim_data()` returns either one data frame or a list
-of data frames, depending on the argument `as_list`
+of data frames, depending on the argument `as_list`.
 
 ## Details
 
@@ -811,6 +817,7 @@ data_all
 #> == Model on Variables/Indicators ==
 #> m ~ x
 #>  y ~ m + x
+#> 
 #> ====== Population Values ======
 #> 
 #> Regressions:
