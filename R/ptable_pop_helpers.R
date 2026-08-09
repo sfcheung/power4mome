@@ -199,13 +199,13 @@ fix_par_es <- function(par_es,
         # ==== One for one ====
         i2 <- which(grepl("^\\.beta_nil\\.", names(par_es_def)))
         par_es_beta_nil <- par_es_def[i2]
-        tmpfct <- function(xx, pattern = "^.beta.") {
+        tmpfct2 <- function(xx, pattern = "^.beta.") {
           x0 <- trimws(gsub("^\\.beta_nil\\.", "", names(xx)))
           x1 <- sub("\\(", "", x0)
           x1 <- sub("\\)$", "", x1)
           x1 <- trimws(x1)
         }
-        all_beta_nil_1 <- tmpfct(par_es_beta_nil)
+        all_beta_nil_1 <- tmpfct2(par_es_beta_nil)
         all_beta_nil_1 <- lavaan::lavParseModelString(
                     all_beta_nil_1,
                     as_data_frame = TRUE
