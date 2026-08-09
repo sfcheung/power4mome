@@ -578,12 +578,18 @@ sim_data <- function(nrep = 10,
     if (is.null(model) || is.null(pop_es)) {
       stop("Both model and pop_es must be set if ptable is not set.")
     }
+    if (!is.null(iseed) &&
+        getOption("power4mome.ptable_pop_use_seed", default = TRUE)) {
+      set.seed(iseed + 1)
+    }
     ptable <- ptable_pop(model = model,
                          pop_es = pop_es,
+                         progress = progress,
                          ...)
   }
   mm_out <- model_matrices_pop(ptable,
-                               drop_list_single_group = FALSE)
+                               drop_list_single_group = FALSE,
+                               use_nil = TRUE)
   mm_lm_out <- mm_lm(mm_out,
                      drop_list_single_group = FALSE)
 
