@@ -1,4 +1,4 @@
-# power4mome 0.2.1.12
+# power4mome 0.2.1.13
 
 ## New Features
 
@@ -26,6 +26,15 @@
   the "rejection rate" based on a fit
   measure.
   (0.2.1.12)
+
+- Updated `ptable_pop()` and `sim_data()`
+  to process the keys `.beta_nil.` and
+  `.fm.` for specifying some forms of
+  model misspecifications
+  (e.g., nil paths actually not nil). Also
+  support multigroup models.
+  (0.2.1.13)
+
 
 ## Miscellaneous
 
