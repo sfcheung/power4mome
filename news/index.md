@@ -1,6 +1,6 @@
 # Changelog
 
-## power4mome 0.2.1.15
+## power4mome 0.2.1.16
 
 ### New Features
 
@@ -38,6 +38,10 @@
   will store the preprocessing data. Its `print` method will also print
   descriptive statistics and parameter estimates on the preprocessing
   data alongside those on the processed data. (0.2.1.15)
+
+- Updated to make updating `.fm.` work in
+  [`power4test()`](https://sfcheung.github.io/power4mome/reference/power4test.md)
+  and `*_by_es()`. (0.2.1.16)
 
 ### Miscellaneous
 
