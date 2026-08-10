@@ -1,4 +1,4 @@
-# power4mome 0.2.1.15
+# power4mome 0.2.1.16
 
 ## New Features
 
@@ -42,6 +42,10 @@
   estimates on the preprocessing data
   alongside those on the processed data.
   (0.2.1.15)
+
+- Updated to make updating `.fm.` work
+  in `power4test()` and `*_by_es()`.
+  (0.2.1.16)
 
 ## Miscellaneous
 

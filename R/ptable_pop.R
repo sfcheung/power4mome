@@ -844,6 +844,9 @@ ptable_pop <- function(model = NULL,
   attr(ptable1, "n_std") <- n_std
   attr(ptable1, "standardized") <- standardized
   attr(ptable1, "std_force_monte_carlo") <- std_force_monte_carlo
+  attr(ptable1, "add_cov_for_moderation") <- add_cov_for_moderation
+  attr(ptable1, "use_beta_nil") <- use_beta_nil
+  attr(ptable1, "beta_nil_auto_args") <- beta_nil_auto_args
   attr(ptable1, "pop_es_fm_target") <- pop_target
   attr(ptable1, "beta_nil_auto") <- beta_nil_auto_es
 
@@ -864,7 +867,13 @@ ptable_pop <- function(model = NULL,
 # Used by:
 # - power4test() (update_power4test && !is.null(pop_es))
 update_ptable_pop <- function(object,
-                              new_pop_es) {
+                              new_pop_es,
+                              use_raw_update = c(
+                                ".beta.",
+                                ".cov.",
+                                ".beta_nil.",
+                                ".fm."
+                              )) {
   if (!inherits(object, "ptable_pop")) {
     stop("Can only update a ptable_pop object.")
   }
@@ -872,28 +881,86 @@ update_ptable_pop <- function(object,
   es2 <- attr(object, "es2")
   es_ind <- attr(object, "es_ind")
   model <- attr(object, "model")
+  old_pop_es <- attr(object, "pop_es")
   old_par_pop <- attr(object, "par_pop")
   if (is.data.frame(old_par_pop)) {
     old_par_pop <- split_par_pop(old_par_pop)
   }
   ngroups <- length(old_par_pop)
-  new_par_pop <- pop_es2par_pop(new_pop_es,
-                                es1 = es1,
-                                es2 = es2,
-                                model = model,
-                                es_ind = es_ind,
-                                ngroups = ngroups)
-  updated_par_pop <- update_par_pop(add = new_par_pop,
-                                    par_pop = old_par_pop)
-  updated_par_pop <- par_pop_to_one_table(updated_par_pop)
-  out <- ptable_pop(model = model,
-                    pop_es = updated_par_pop,
-                    es1 = es1,
-                    es2 = es2,
-                    standardized = attr(object, "standardized"),
-                    n_std = attr(object, "n_std"),
-                    std_force_monte_carlo = attr(object, "std_force_monte_carlo"))
-  out
+  raw_update <- any(sapply(
+                  use_raw_update,
+                  grepl,
+                  x = names(new_pop_es),
+                  fixed = TRUE
+                ))
+  if (!raw_update) {
+
+    # ==== The original approach to update the ptable ====
+
+    new_par_pop <- try(pop_es2par_pop(new_pop_es,
+                                  es1 = es1,
+                                  es2 = es2,
+                                  model = model,
+                                  es_ind = es_ind,
+                                  ngroups = ngroups),
+                      silent = TRUE)
+    if (inherits(new_par_pop, "try-error")) {
+      stop("Failed to process new_pop_es.")
+    }
+    updated_par_pop <- update_par_pop(add = new_par_pop,
+                                      par_pop = old_par_pop)
+    updated_par_pop <- par_pop_to_one_table(updated_par_pop)
+    out <- ptable_pop(model = model,
+                      pop_es = updated_par_pop,
+                      es1 = es1,
+                      es2 = es2,
+                      standardized = attr(object, "standardized"),
+                      n_std = attr(object, "n_std"),
+                      std_force_monte_carlo = attr(object, "std_force_monte_carlo"))
+    return(out)
+
+  } else {
+
+    # ==== Update by updating pop_es directly ====
+
+
+    if (ngroups == 1) {
+
+      updated_pop_es <- old_pop_es
+      updated_pop_es[names(new_pop_es)] <- new_pop_es
+
+    } else {
+
+      updated_pop_es <- old_pop_es
+
+      # These keys always affect all groups
+      # - .beta.
+      # - .cov.
+      # - .beta_nil.
+      # - .fm.
+
+      updated_pop_es[names(new_pop_es)] <- new_pop_es
+
+    }
+
+    out <- ptable_pop(
+              model = model,
+              pop_es = updated_pop_es,
+              es1 = es1,
+              es2 = es2,
+              es_ind = attr(object, "es_ind"),
+              standardized = attr(object, "standardized"),
+              n_std = attr(object, "n_std"),
+              std_force_monte_carlo = attr(object, "std_force_monte_carlo"),
+              add_cov_for_moderation = attr(object, "add_cov_for_moderation"),
+              use_beta_nil = attr(object, "use_beta_nil"),
+              progress = FALSE,
+              beta_nil_auto_args = attr(object, "beta_nil_auto_args")
+            )
+    return(out)
+
+  }
+
 }
 
 #' @noRd
@@ -1294,7 +1361,7 @@ dup_cov <- function(ptable) {
 
 #' @noRd
 # Find group ID from the name
-get_gp_id <- function(pop_es,
+get_gp_id_old <- function(pop_es,
                   ngroups) {
   gp_id0 <- strsplit(
                 names(pop_es),
@@ -1313,6 +1380,38 @@ get_gp_id <- function(pop_es,
     new_name <- gsub(paste0(".", gp_id1), "",
                      names(pop_es),
                      fixed = TRUE)
+  }
+  return(list(gp_id = gp_id,
+              new_name = new_name))
+}
+
+#' @noRd
+# Find group ID from the name
+get_gp_id <- function(pop_es,
+                  ngroups) {
+  gp_id0_out <- regexpr(
+                  "\\.g\\d+",
+                  names(pop_es)
+                )
+  if (gp_id0_out == -1) {
+    # Assume to be group 1
+    gp_id <- 1
+    new_name <- names(pop_es)
+  } else {
+    gp_id1 <- substr(
+      names(pop_es),
+      start = gp_id0_out,
+      stop = gp_id0_out + attr(gp_id0_out, "match.length") - 1
+    )
+    gp_id <- as.numeric(gsub(".g", "", gp_id1, fixed = TRUE))
+    if (!(gp_id %in% seq_len(ngroups))) {
+      stop("Group ID not valid: ", gp_id1)
+    }
+    new_name <- substring(
+                  names(pop_es),
+                  1,
+                  gp_id0_out - 1
+                )
   }
   return(list(gp_id = gp_id,
               new_name = new_name))
