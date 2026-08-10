@@ -1294,7 +1294,7 @@ dup_cov <- function(ptable) {
 
 #' @noRd
 # Find group ID from the name
-get_gp_id <- function(pop_es,
+get_gp_id_old <- function(pop_es,
                   ngroups) {
   gp_id0 <- strsplit(
                 names(pop_es),
@@ -1313,6 +1313,38 @@ get_gp_id <- function(pop_es,
     new_name <- gsub(paste0(".", gp_id1), "",
                      names(pop_es),
                      fixed = TRUE)
+  }
+  return(list(gp_id = gp_id,
+              new_name = new_name))
+}
+
+#' @noRd
+# Find group ID from the name
+get_gp_id <- function(pop_es,
+                  ngroups) {
+  gp_id0_out <- regexpr(
+                  "\\.g\\d+",
+                  names(pop_es)
+                )
+  if (gp_id0_out == -1) {
+    # Assume to be group 1
+    gp_id <- 1
+    new_name <- names(pop_es)
+  } else {
+    gp_id1 <- substr(
+      names(pop_es),
+      start = gp_id0_out,
+      stop = gp_id0_out + attr(gp_id0_out, "match.length") - 1
+    )
+    gp_id <- as.numeric(gsub(".g", "", gp_id1, fixed = TRUE))
+    if (!(gp_id %in% seq_len(ngroups))) {
+      stop("Group ID not valid: ", gp_id1)
+    }
+    new_name <- substring(
+                  names(pop_es),
+                  1,
+                  gp_id0_out - 1
+                )
   }
   return(list(gp_id = gp_id,
               new_name = new_name))
