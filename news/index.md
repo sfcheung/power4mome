@@ -1,6 +1,6 @@
 # Changelog
 
-## power4mome 0.2.1.16
+## power4mome 0.2.1.17
 
 ### New Features
 
@@ -42,6 +42,13 @@
 - Updated to make updating `.fm.` work in
   [`power4test()`](https://sfcheung.github.io/power4mome/reference/power4test.md)
   and `*_by_es()`. (0.2.1.16)
+
+- Added `common_processe()`, a wrapper of
+  [`ordinal_variables()`](https://sfcheung.github.io/power4mome/reference/ordinal_variables.md),
+  [`missing_values()`](https://sfcheung.github.io/power4mome/reference/missing_values.md),
+  and
+  [`scale_scores()`](https://sfcheung.github.io/power4mome/reference/scale_scores.md).
+  (0.2.1.17)
 
 ### Miscellaneous
 
