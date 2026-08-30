@@ -4,7 +4,7 @@
 \alias{scale_scores}
 \title{Process Data by Computing Scale Scores}
 \usage{
-scale_scores(data, method = c("mean", "sum"))
+scale_scores(data, method = c("mean", "sum"), na.rm = FALSE)
 }
 \arguments{
 \item{data}{A data frame with the
@@ -17,10 +17,13 @@ and their indicators.}
 
 \item{method}{The method to be used
 to compute the scale scores. Can
-be \code{"mean"} or \code{"sum"}. The default
-\code{na.rm = FALSE} will be used.
-Therefore, \code{data} must not have
-missing data.}
+be \code{"mean"} or \code{"sum"}. Implemented
+by \code{\link[=mean]{mean()}} and \code{\link[=sum]{sum()}}.}
+
+\item{na.rm}{How missing value (\code{NA})
+are handled. Default is \code{FALSE},
+the same default value for \code{\link[=mean]{mean()}}
+and \code{\link[=sum]{sum()}}.}
 }
 \value{
 It returns a data frame with the
