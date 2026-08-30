@@ -45,10 +45,13 @@
 #'
 #' @param method The method to be used
 #' to compute the scale scores. Can
-#' be `"mean"` or `"sum"`. The default
-#' `na.rm = FALSE` will be used.
-#' Therefore, `data` must not have
-#' missing data.
+#' be `"mean"` or `"sum"`. Implemented
+#' by [mean()] and [sum()].
+#'
+#' @param na.rm How missing value (`NA`)
+#' are handled. Default is `FALSE`,
+#' the same default value for [mean()]
+#' and [sum()].
 #'
 #' @seealso [power4test()]
 #'
@@ -100,7 +103,8 @@
 #'
 #' @export
 scale_scores <- function(data,
-                         method = c("mean", "sum")) {
+                         method = c("mean", "sum"),
+                         na.rm = FALSE) {
   method <- match.arg(method)
   score_function <- switch(
                       method,
@@ -127,7 +131,8 @@ scale_scores <- function(data,
     xi_scores <- apply(
                   data[, xi_ind, drop = FALSE],
                   MARGIN = 1,
-                  FUN = score_function
+                  FUN = score_function,
+                  na.rm = na.rm
                 )
     data[, xi_ind] <- NULL
     data[, xi] <- xi_scores

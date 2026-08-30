@@ -39,6 +39,7 @@ export(Rs_bz_supported)
 export(arg_x_from_power)
 export(as.power4test_by_es)
 export(as.power4test_by_n)
+export(common_processes)
 export(cut_patterns)
 export(do_test)
 export(find_par_names)
@@ -87,10 +88,12 @@ export(test_moderation)
 export(test_parameters)
 export(x_from_power)
 importFrom(grDevices,adjustcolor)
-importFrom(graphics,abline)
-importFrom(graphics,arrows)
-importFrom(graphics,par)
-importFrom(graphics,points)
-importFrom(graphics,rect)
-importFrom(graphics,text)
-importFrom(graphics,title)
+importFrom(graphics,
+  abline,
+  arrows,
+  par,
+  points,
+  rect,
+  text,
+  title
+)

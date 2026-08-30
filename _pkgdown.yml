@@ -157,6 +157,7 @@ reference:
   - scale_scores
   - missing_values
   - ordinal_variables
+  - common_processes
 - title: Advanced Functions
   desc:  >
     For advanced users to
