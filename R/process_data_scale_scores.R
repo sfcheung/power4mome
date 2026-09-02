@@ -47,6 +47,9 @@
 #' to compute the scale scores. Can
 #' be `"mean"` or `"sum"`. Implemented
 #' by [mean()] and [sum()].
+#' If set to `"none"`,
+#' then the original data (`data`) will
+#' be returned unchanged.
 #'
 #' @param na.rm How missing value (`NA`)
 #' are handled. Default is `FALSE`,
@@ -103,9 +106,12 @@
 #'
 #' @export
 scale_scores <- function(data,
-                         method = c("mean", "sum"),
+                         method = c("mean", "sum", "none"),
                          na.rm = FALSE) {
   method <- match.arg(method)
+  if (method == "none") {
+    return(data)
+  }
   score_function <- switch(
                       method,
                       mean = mean,
