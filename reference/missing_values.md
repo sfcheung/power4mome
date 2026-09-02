@@ -23,7 +23,8 @@ missing_values(data, ..., prop = 0.5, mech = "MCAR")
 - prop:
 
   The proportion of missingness. Default is 0.5, about 50% of the cases
-  have missing data.
+  have missing data. If set to `NULL`, then the original data (`data`)
+  will be returned unchanged.
 
 - mech:
 

@@ -11,7 +11,7 @@ values in the generated data."><meta property="og:image" content="https://sfcheu
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1.17</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1.18</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -109,7 +109,10 @@ passed to <code><a href="https://amices.org/mice/reference/ampute.html" class="e
 <dt id="arg-prop">prop<a class="anchor" aria-label="anchor" href="#arg-prop"></a></dt>
 <dd><p>The proportion of missingness.
 Default is 0.5, about 50% of the cases
-have missing data.</p></dd>
+have missing data.
+If set to <code>NULL</code>,
+then the original data (<code>data</code>) will
+be returned unchanged.</p></dd>
 
 
 <dt id="arg-mech">mech<a class="anchor" aria-label="anchor" href="#arg-mech"></a></dt>

@@ -15,7 +15,7 @@ scales scores."><meta property="og:image" content="https://sfcheung.github.io/po
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1.17</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1.18</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -101,9 +101,9 @@ scales scores.</p>
 <span>  cut_patterns <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  cuts <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  missing_values_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  prop <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>  prop <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  mech <span class="op">=</span> <span class="st">"MCAR"</span>,</span>
-<span>  method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mean"</span>, <span class="st">"sum"</span><span class="op">)</span>,</span>
+<span>  method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"none"</span>, <span class="st">"mean"</span>, <span class="st">"sum"</span><span class="op">)</span>,</span>
 <span>  na.rm <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -126,7 +126,10 @@ patterns (call <code><a href="ordinal_variables.html">cut_patterns()</a></code> 
 list the patterns and their names).
 Can be used with <code>cuts</code> but a latent
 variable should appear only either
-in <code>cut_patterns</code> or <code>cuts</code>, not both.</p></dd>
+in <code>cut_patterns</code> or <code>cuts</code>, not both.
+If both <code>cut_patterns</code> and <code>cuts</code> are set to <code>NULL</code>,
+then the original data (<code>data</code>) will
+be returned unchanged.</p></dd>
 
 
 <dt id="arg-cuts">cuts<a class="anchor" aria-label="anchor" href="#arg-cuts"></a></dt>
@@ -140,7 +143,10 @@ and <code>Inf</code> will be automatically
 included during the conversion.
 Can be used with <code>cut_patterns</code> but a latent
 variable should appear only either
-in <code>cut_patterns</code> or <code>cuts</code>, not both.</p></dd>
+in <code>cut_patterns</code> or <code>cuts</code>, not both.
+If both <code>cut_patterns</code> and <code>cuts</code> are set to <code>NULL</code>,
+then the original data (<code>data</code>) will
+be returned unchanged.</p></dd>
 
 
 <dt id="arg-missing-values-args">missing_values_args<a class="anchor" aria-label="anchor" href="#arg-missing-values-args"></a></dt>
@@ -155,7 +161,10 @@ the values set for them in
 <dt id="arg-prop">prop<a class="anchor" aria-label="anchor" href="#arg-prop"></a></dt>
 <dd><p>The proportion of missingness.
 Default is 0.5, about 50% of the cases
-have missing data.</p></dd>
+have missing data.
+If set to <code>NULL</code>,
+then the original data (<code>data</code>) will
+be returned unchanged.</p></dd>
 
 
 <dt id="arg-mech">mech<a class="anchor" aria-label="anchor" href="#arg-mech"></a></dt>
@@ -172,7 +181,10 @@ details.</p></dd>
 <dd><p>The method to be used
 to compute the scale scores. Can
 be <code>"mean"</code> or <code>"sum"</code>. Implemented
-by <code><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean()</a></code> and <code><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum()</a></code>.</p></dd>
+by <code><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean()</a></code> and <code><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum()</a></code>.
+If set to <code>"none"</code>,
+then the original data (<code>data</code>) will
+be returned unchanged.</p></dd>
 
 
 <dt id="arg-na-rm">na.rm<a class="anchor" aria-label="anchor" href="#arg-na-rm"></a></dt>
@@ -263,57 +275,57 @@ employed.</p></div>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="sim_data.html">pool_sim_data</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fl">50</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           y    m   x</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  1.333333   NA 1.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  2.666667   NA 1.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  1.666667 2.50  NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4  2.333333   NA 2.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5  2.333333 2.75  NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6  2.000000 2.50  NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7  2.666667 2.00 2.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8  2.333333 1.50  NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9        NA 1.75 2.2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10 1.666667 1.50  NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11 2.666667   NA 1.6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12 2.333333 1.25  NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13       NA 1.75 1.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14       NA 1.50 2.2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15 2.000000 2.50 2.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16 2.000000 2.00 2.6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17       NA 2.50 3.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18 1.666667   NA 2.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19 1.333333 1.75  NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 20       NA 3.00 2.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 21 2.333333   NA 2.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 22       NA 2.00 2.6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 23 2.333333 1.75  NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 24 2.666667 2.75  NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 25 2.333333 1.50  NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 26 1.666667 1.25 2.2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 27       NA 2.75 2.4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 28 2.333333 1.75  NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 29 1.666667   NA 1.6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 30 1.666667 2.25 1.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 31 2.666667 2.50 1.2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 32 1.666667 2.00  NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 33 1.000000   NA 1.4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 34       NA 1.50 2.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 35       NA 1.25 2.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 36 1.333333 1.50  NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 37 1.333333 2.25  NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 38 2.000000 2.00 2.4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 39 2.000000 1.75 1.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 40       NA 1.75 2.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 41 2.666667 3.00  NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 42 1.666667 1.75 2.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 43 1.000000 2.00  NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 44 2.666667   NA 1.4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 45 2.333333   NA 1.4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 46 1.666667 1.75 2.2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 47 2.333333 2.00 2.4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 48 1.666667 1.75 2.2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 49 2.000000   NA 2.2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 50 1.666667   NA 2.6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    y1 y2 y3 m1 m2 m3 m4 x1 x2 x3 x4 x5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   2  1  1  1  1 NA  1  1  2  1  3  2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   3  2  3  3 NA  1  2  2  2  2  2  1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   1  2  2  3  3  2  2  2  1 NA  2  2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   2  3  2 NA  1  2  1  2  2  1  2  3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5   2  2  3  3  3  2  3  1 NA  1  2  3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   2  3  1  3  3  2  2 NA  2  2  2  2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7   3  2  3  2  2  3  1  2  1  2  2  3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8   3  2  2  2  2  1  1  2  2  2  1 NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  NA  2  2  2  2  1  2  2  2  3  2  2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10  2  1  2  2  2  1  1  1  2  2  2 NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11  2  3  3  1  2 NA  1  1  1  2  2  2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12  2  2  3  1  1  2  1  1  3 NA  2  2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13  3  2 NA  1  2  2  2  2  2  2  2  1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14  1  1 NA  2  2  1  1  2  3  3  1  2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15  1  3  2  3  2  2  3  1  2  2  2  3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16  2  2  2  2  2  1  3  3  3  2  2  3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17  3  2 NA  2  3  3  2  3  3  3  3  3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18  2  2  1  3  2 NA  2  2  2  2  2  2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19  1  1  2  2  3  1  1  3  2 NA  2  3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20 NA  2  2  3  3  3  3  2  2  3  2  1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21  3  2  2  3 NA  2  2  2  2  2  2  2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22  3 NA  2  2  2  3  1  2  3  2  3  3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23  2  2  3  2  2  2  1  2  1  2  2 NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24  3  3  2  3  2  3  3  3  3 NA  2  2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25  2  3  2  2  1  2  1  2  2  2  3 NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26  2  2  1  1  1  2  1  2  3  2  3  1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27 NA  3  3  3  3  2  3  2  3  2  2  3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28  2  2  3  2  2  2  1  2  2 NA  2  2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29  2  1  2  2 NA  1  2  2  2  1  1  2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30  2  2  1  2  2  2  3  1  2  3  1  2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31  3  2  3  3  3  1  3  1  2  1  1  1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32  2  2  1  2  2  2  2  3 NA  1  1  1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33  1  1  1 NA  2  1  1  1  2  1  1  2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 34 NA  2  2  1  2  1  2  1  2  2  3  2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35  1  2 NA  2  1  1  1  2  1  2  3  2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 36  1  2  1  1  1  1  3  2  3  3 NA  3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 37  1  2  1  2  2  2  3 NA  2  3  3  3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 38  2  2  2  2  2  2  2  3  2  3  3  1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 39  2  2  2  2  1  2  2  2  2  2  2  1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 40  3 NA  3  1  2  2  2  1  1  3  3  2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 41  3  2  3  3  3  3  3  3  3  3  2 NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 42  2  2  1  2  2  2  1  2  2  2  1  3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 43  1  1  1  3  2  2  1  1  1 NA  3  1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 44  2  3  3  2  2 NA  2  2  1  2  1  1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 45  2  2  3 NA  1  2  1  2  2  1  1  1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 46  1  1  3  1  1  3  2  2  1  3  2  3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 47  2  2  3  2  2  3  1  2  2  2  3  3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 48  2  1  2  2  2  2  1  3  2  1  2  3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 49  2  3  1 NA  2  2  2  3  3  2  2  1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 50  2  1  2  2  2 NA  3  2  3  3  3  2</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

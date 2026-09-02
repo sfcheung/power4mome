@@ -1,6 +1,6 @@
 # Changelog
 
-## power4mome 0.2.1.17
+## power4mome 0.2.1.18
 
 ### New Features
 
@@ -48,7 +48,7 @@
   [`missing_values()`](https://sfcheung.github.io/power4mome/reference/missing_values.md),
   and
   [`scale_scores()`](https://sfcheung.github.io/power4mome/reference/scale_scores.md).
-  (0.2.1.17)
+  (0.2.1.17, 0.2.1.18)
 
 ### Miscellaneous
 

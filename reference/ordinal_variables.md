@@ -24,7 +24,8 @@ cut_patterns(which = NULL)
   of one of the built-in patterns (call `cut_patterns()` to list the
   patterns and their names). Can be used with `cuts` but a latent
   variable should appear only either in `cut_patterns` or `cuts`, not
-  both.
+  both. If both `cut_patterns` and `cuts` are set to `NULL`, then the
+  original data (`data`) will be returned unchanged.
 
 - cuts:
 
@@ -33,7 +34,9 @@ cut_patterns(which = NULL)
   the thresholds for the conversion. `-Inf` and `Inf` will be
   automatically included during the conversion. Can be used with
   `cut_patterns` but a latent variable should appear only either in
-  `cut_patterns` or `cuts`, not both.
+  `cut_patterns` or `cuts`, not both. If both `cut_patterns` and `cuts`
+  are set to `NULL`, then the original data (`data`) will be returned
+  unchanged.
 
 - which:
 

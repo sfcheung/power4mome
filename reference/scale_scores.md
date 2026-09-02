@@ -6,7 +6,7 @@ and replace the indicators scores by computed scale scores.
 ## Usage
 
 ``` r
-scale_scores(data, method = c("mean", "sum"), na.rm = FALSE)
+scale_scores(data, method = c("mean", "sum", "none"), na.rm = FALSE)
 ```
 
 ## Arguments
@@ -23,7 +23,8 @@ scale_scores(data, method = c("mean", "sum"), na.rm = FALSE)
 
   The method to be used to compute the scale scores. Can be `"mean"` or
   `"sum"`. Implemented by [`mean()`](https://rdrr.io/r/base/mean.html)
-  and [`sum()`](https://rdrr.io/r/base/sum.html).
+  and [`sum()`](https://rdrr.io/r/base/sum.html). If set to `"none"`,
+  then the original data (`data`) will be returned unchanged.
 
 - na.rm:
 

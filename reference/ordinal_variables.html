@@ -11,7 +11,7 @@ indicator variable to ordinal variables."><meta property="og:image" content="htt
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1.17</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1.18</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -113,7 +113,10 @@ patterns (call <code>cut_patterns()</code> to
 list the patterns and their names).
 Can be used with <code>cuts</code> but a latent
 variable should appear only either
-in <code>cut_patterns</code> or <code>cuts</code>, not both.</p></dd>
+in <code>cut_patterns</code> or <code>cuts</code>, not both.
+If both <code>cut_patterns</code> and <code>cuts</code> are set to <code>NULL</code>,
+then the original data (<code>data</code>) will
+be returned unchanged.</p></dd>
 
 
 <dt id="arg-cuts">cuts<a class="anchor" aria-label="anchor" href="#arg-cuts"></a></dt>
@@ -127,7 +130,10 @@ and <code>Inf</code> will be automatically
 included during the conversion.
 Can be used with <code>cut_patterns</code> but a latent
 variable should appear only either
-in <code>cut_patterns</code> or <code>cuts</code>, not both.</p></dd>
+in <code>cut_patterns</code> or <code>cuts</code>, not both.
+If both <code>cut_patterns</code> and <code>cuts</code> are set to <code>NULL</code>,
+then the original data (<code>data</code>) will
+be returned unchanged.</p></dd>
 
 
 <dt id="arg-which">which<a class="anchor" aria-label="anchor" href="#arg-which"></a></dt>
