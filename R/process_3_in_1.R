@@ -103,9 +103,9 @@ common_processes <- function(
   cut_patterns = NULL,
   cuts = NULL,
   missing_values_args = list(),
-  prop = 0.5,
+  prop = NULL,
   mech = "MCAR",
-  method = c("mean", "sum"),
+  method = c("none", "mean", "sum"),
   na.rm = FALSE
 ) {
 
@@ -122,9 +122,13 @@ common_processes <- function(
   # ==== missing_values ====
 
   mv_args <- missing_values_args
-  mv_args$prop <- prop
-  mv_args$mech <- mech
-  mv_args$data <- data_new
+  mv_args <- utils::modifyList(
+    mv_args,
+    list(prop = prop,
+         mech = mech,
+         data = data_new),
+    keep.null = TRUE
+  )
   data_new <- do.call(
     missing_values,
     mv_args

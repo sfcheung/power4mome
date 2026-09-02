@@ -1,3 +1,5 @@
+skip_on_cran()
+
 library(testthat)
 
 skip_if_not_installed("lmhelprs")

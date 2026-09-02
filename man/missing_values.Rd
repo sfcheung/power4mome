@@ -14,7 +14,10 @@ passed to \code{\link[mice:ampute]{mice::ampute()}}.}
 
 \item{prop}{The proportion of missingness.
 Default is 0.5, about 50\% of the cases
-have missing data.}
+have missing data.
+If set to \code{NULL},
+then the original data (\code{data}) will
+be returned unchanged.}
 
 \item{mech}{The missing data mechanism.
 Default is \code{"MCAR"} (missing completely at random).

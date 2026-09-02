@@ -1,3 +1,5 @@
+skip_on_cran()
+
 library(testthat)
 
 test_that("cond indirect effects", {

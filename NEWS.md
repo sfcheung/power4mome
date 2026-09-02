@@ -1,4 +1,4 @@
-# power4mome 0.2.1.17
+# power4mome 0.2.1.18
 
 ## New Features
 
@@ -50,7 +50,7 @@
 - Added `common_processe()`, a wrapper
   of `ordinal_variables()`, `missing_values()`,
   and `scale_scores()`.
-  (0.2.1.17)
+  (0.2.1.17, 0.2.1.18)
 
 ## Miscellaneous
 

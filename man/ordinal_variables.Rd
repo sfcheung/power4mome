@@ -21,7 +21,10 @@ patterns (call \code{cut_patterns()} to
 list the patterns and their names).
 Can be used with \code{cuts} but a latent
 variable should appear only either
-in \code{cut_patterns} or \code{cuts}, not both.}
+in \code{cut_patterns} or \code{cuts}, not both.
+If both \code{cut_patterns} and \code{cuts} are set to \code{NULL},
+then the original data (\code{data}) will
+be returned unchanged.}
 
 \item{cuts}{A named list.
 The names are the names of the latent
@@ -33,7 +36,10 @@ and \code{Inf} will be automatically
 included during the conversion.
 Can be used with \code{cut_patterns} but a latent
 variable should appear only either
-in \code{cut_patterns} or \code{cuts}, not both.}
+in \code{cut_patterns} or \code{cuts}, not both.
+If both \code{cut_patterns} and \code{cuts} are set to \code{NULL},
+then the original data (\code{data}) will
+be returned unchanged.}
 
 \item{which}{A name of a built-in pattern.}
 }

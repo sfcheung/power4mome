@@ -57,6 +57,9 @@
 #' Can be used with `cuts` but a latent
 #' variable should appear only either
 #' in `cut_patterns` or `cuts`, not both.
+#' If both `cut_patterns` and `cuts` are set to `NULL`,
+#' then the original data (`data`) will
+#' be returned unchanged.
 #'
 #' @param cuts A named list.
 #' The names are the names of the latent
@@ -69,6 +72,9 @@
 #' Can be used with `cut_patterns` but a latent
 #' variable should appear only either
 #' in `cut_patterns` or `cuts`, not both.
+#' If both `cut_patterns` and `cuts` are set to `NULL`,
+#' then the original data (`data`) will
+#' be returned unchanged.
 #'
 #' @seealso [power4test()]. See also
 #' [cut()] for the implementation.
@@ -139,6 +145,10 @@ ordinal_variables <- function(
   cut_patterns = NULL,
   cuts = NULL
 ) {
+  if (is.null(cut_patterns) &&
+      is.null(cuts)) {
+    return(data)
+  }
   k_ind <- attr(data, "number_of_indicators")
   # ==== Any factors with indicators? ====
   if (isTRUE(is.null(k_ind)) ||
