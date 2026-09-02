@@ -54,6 +54,9 @@
 #' @param prop The proportion of missingness.
 #' Default is 0.5, about 50% of the cases
 #' have missing data.
+#' If set to `NULL`,
+#' then the original data (`data`) will
+#' be returned unchanged.
 #'
 #' @param mech The missing data mechanism.
 #' Default is `"MCAR"` (missing completely at random).
@@ -117,6 +120,9 @@ missing_values <- function(
   prop = 0.5,
   mech = "MCAR"
 ) {
+  if (is.null(prop)) {
+    return(data)
+  }
   args0 <- list(...)
   cnames <- colnames(data)
   if (!is.null(args0$patterns)) {
