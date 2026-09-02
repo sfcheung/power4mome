@@ -9,9 +9,9 @@ common_processes(
   cut_patterns = NULL,
   cuts = NULL,
   missing_values_args = list(),
-  prop = 0.5,
+  prop = NULL,
   mech = "MCAR",
-  method = c("mean", "sum"),
+  method = c("none", "mean", "sum"),
   na.rm = FALSE
 )
 }
@@ -27,7 +27,10 @@ patterns (call \code{cut_patterns()} to
 list the patterns and their names).
 Can be used with \code{cuts} but a latent
 variable should appear only either
-in \code{cut_patterns} or \code{cuts}, not both.}
+in \code{cut_patterns} or \code{cuts}, not both.
+If both \code{cut_patterns} and \code{cuts} are set to \code{NULL},
+then the original data (\code{data}) will
+be returned unchanged.}
 
 \item{cuts}{A named list.
 The names are the names of the latent
@@ -39,7 +42,10 @@ and \code{Inf} will be automatically
 included during the conversion.
 Can be used with \code{cut_patterns} but a latent
 variable should appear only either
-in \code{cut_patterns} or \code{cuts}, not both.}
+in \code{cut_patterns} or \code{cuts}, not both.
+If both \code{cut_patterns} and \code{cuts} are set to \code{NULL},
+then the original data (\code{data}) will
+be returned unchanged.}
 
 \item{missing_values_args}{A named
 list of optional arguments to be
@@ -50,7 +56,10 @@ the values set for them in
 
 \item{prop}{The proportion of missingness.
 Default is 0.5, about 50\% of the cases
-have missing data.}
+have missing data.
+If set to \code{NULL},
+then the original data (\code{data}) will
+be returned unchanged.}
 
 \item{mech}{The missing data mechanism.
 Default is \code{"MCAR"} (missing completely at random).
@@ -63,7 +72,10 @@ details.}
 \item{method}{The method to be used
 to compute the scale scores. Can
 be \code{"mean"} or \code{"sum"}. Implemented
-by \code{\link[=mean]{mean()}} and \code{\link[=sum]{sum()}}.}
+by \code{\link[=mean]{mean()}} and \code{\link[=sum]{sum()}}.
+If set to \code{"none"},
+then the original data (\code{data}) will
+be returned unchanged.}
 
 \item{na.rm}{How missing value (\code{NA})
 are handled. Default is \code{FALSE},
