@@ -1,4 +1,4 @@
-# power4mome 0.2.1.19
+# power4mome 0.2.1.20
 
 ## New Features
 
@@ -107,6 +107,11 @@
   correctly when generating simulated
   data.
   (0.2.1.19)
+
+- Fixed a bug: Boos-Zhang method is now
+  correctly enabled for bootstrap
+  confidence intervals.
+  (0.2.1.20)
 
 # power4mome 0.2.1
 
