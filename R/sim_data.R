@@ -1355,6 +1355,10 @@ sim_data_i <- function(repid = 1,
 
   vnames <- lavaan::lavNames(ptable,
                              type = "ov")
+  # Exclude product terms
+  int_names <- lavaan::lavNames(ptable,
+                                type = "ov.interaction")
+  vnames <- setdiff(vnames, int_names)
   p <- length(vnames)
 
   if ((length(number_of_indicators) == 1) &&

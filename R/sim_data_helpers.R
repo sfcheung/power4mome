@@ -234,10 +234,9 @@ add_indicator_scores <- function(x,
                   out0)
   out2 <- cbind(x, out1)
   if (!keep_f_scores) {
-    # TODO:
-    # - Should also remove product terms
     i <- match(f_names, colnames(x))
     out2 <- out2[, -i, drop = FALSE]
+    out2 <- drop_p_terms(out2)
   }
   attr(out2, "lambda") <- lambda_pop
   return(out2)
@@ -479,6 +478,15 @@ update_p_terms <- function(x) {
                prod)
     out[, xx] <- b
   }
+  out
+}
+
+#' @noRd
+# Compute the product term
+drop_p_terms <- function(x) {
+  out <- x
+  i <- grepl("[:]", colnames(out))
+  out <- out[, !i]
   out
 }
 

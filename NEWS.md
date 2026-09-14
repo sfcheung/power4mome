@@ -1,4 +1,4 @@
-# power4mome 0.2.1.18
+# power4mome 0.2.1.20
 
 ## New Features
 
@@ -50,7 +50,7 @@
 - Added `common_processe()`, a wrapper
   of `ordinal_variables()`, `missing_values()`,
   and `scale_scores()`.
-  (0.2.1.17, 0.2.1.18)
+  (0.2.1.17, 0.2.1.19)
 
 ## Miscellaneous
 
@@ -102,6 +102,16 @@
   data, and has not impact on the generated
   data.
   (0.2.1.1)
+
+- Product terms will now be dropped
+  correctly when generating simulated
+  data.
+  (0.2.1.19)
+
+- Fixed a bug: Boos-Zhang method is now
+  correctly enabled for bootstrap
+  confidence intervals.
+  (0.2.1.20)
 
 # power4mome 0.2.1
 
