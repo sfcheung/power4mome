@@ -254,6 +254,8 @@ print(test_out,
 #>  Path: x -> m -> y
 #>  Conditional on moderator(s): w
 #>  Moderator(s) represented by: w
+#>  Computation Formula:
+#>    (b.m~x + (b.x:w)*(w))*(b.y~m)
 #> 
 #>       [w] (w) ind    m~x y~m
 #> 1 M+1.0SD   1   0  0.150   0
@@ -263,6 +265,8 @@ print(test_out,
 #>  - The 'ind' column shows the conditional indirect effects.
 #>  - ‘m~x’,‘y~m’ is/are the path coefficient(s) along the path conditional
 #>    on the moderator(s).
+#>  - Call ‘print_all_cond_indirect_effects()’ to print the detailed
+#>    outputs of all levels.
 #> 
 #> 
 #> == Conditional indirect effects ==
@@ -270,6 +274,8 @@ print(test_out,
 #>  Path: w -> m -> y
 #>  Conditional on moderator(s): x
 #>  Moderator(s) represented by: x
+#>  Computation Formula:
+#>    (b.m~w + (b.x:w)*(x))*(b.y~m)
 #> 
 #>       [x] (x) ind   m~w y~m
 #> 1 M+1.0SD   1   0 0.650   0
@@ -279,6 +285,8 @@ print(test_out,
 #>  - The 'ind' column shows the conditional indirect effects.
 #>  - ‘m~w’,‘y~m’ is/are the path coefficient(s) along the path conditional
 #>    on the moderator(s).
+#>  - Call ‘print_all_cond_indirect_effects()’ to print the detailed
+#>    outputs of all levels.
 #> 
 #> 
 #> ======================= Data Information =======================
@@ -323,7 +331,7 @@ print(test_out,
 #> 
 #> Mean(s) across replication:
 #>     est   cilo  cihi   sig pvalue
-#>  -0.006 -0.042 0.030 0.000  0.600
+#>  -0.006 -0.044 0.030 0.000  0.590
 #> 
 #> - The value 'sig' is the rejection rate.
 #> - If the null hypothesis is false, this is the power.

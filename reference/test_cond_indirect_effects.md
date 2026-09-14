@@ -298,6 +298,8 @@ print(test_out,
 #>  Path: x -> m -> y
 #>  Conditional on moderator(s): w
 #>  Moderator(s) represented by: w
+#>  Computation Formula:
+#>    (b.m~x + (b.x:w)*(w))*(b.y~m)
 #> 
 #>       [w] (w)   ind   m~x   y~m
 #> 1 M+1.0SD   1 0.225 0.450 0.500
@@ -307,6 +309,8 @@ print(test_out,
 #>  - The 'ind' column shows the conditional indirect effects.
 #>  - ‘m~x’,‘y~m’ is/are the path coefficient(s) along the path conditional
 #>    on the moderator(s).
+#>  - Call ‘print_all_cond_indirect_effects()’ to print the detailed
+#>    outputs of all levels.
 #> 
 #> 
 #> == Conditional indirect effects ==
@@ -314,6 +318,8 @@ print(test_out,
 #>  Path: w -> m -> y
 #>  Conditional on moderator(s): x
 #>  Moderator(s) represented by: x
+#>  Computation Formula:
+#>    (b.m~w + (b.x:w)*(x))*(b.y~m)
 #> 
 #>       [x] (x)    ind    m~w   y~m
 #> 1 M+1.0SD   1  0.075  0.150 0.500
@@ -323,6 +329,8 @@ print(test_out,
 #>  - The 'ind' column shows the conditional indirect effects.
 #>  - ‘m~w’,‘y~m’ is/are the path coefficient(s) along the path conditional
 #>    on the moderator(s).
+#>  - Call ‘print_all_cond_indirect_effects()’ to print the detailed
+#>    outputs of all levels.
 #> 
 #> 
 #> ======================= Data Information =======================
@@ -367,9 +375,9 @@ print(test_out,
 #> 
 #> Mean(s) across replication:
 #>             test_label     [w]    (w)   est   cilo  cihi   sig pvalue   m~x
-#> 1 x->m->y | w: M+1.0SD M+1.0SD  1.060 0.212  0.070 0.375 0.800  0.036 0.438
-#> 2    x->m->y | w: Mean    Mean  0.061 0.132  0.037 0.251 0.800  0.188 0.275
-#> 3 x->m->y | w: M-1.0SD M-1.0SD -0.939 0.053 -0.089 0.205 0.000  0.148 0.112
+#> 1 x->m->y | w: M+1.0SD M+1.0SD  1.060 0.212  0.066 0.385 0.800  0.036 0.438
+#> 2    x->m->y | w: Mean    Mean  0.061 0.132  0.027 0.253 0.800  0.188 0.275
+#> 3 x->m->y | w: M-1.0SD M-1.0SD -0.939 0.053 -0.093 0.198 0.000  0.164 0.112
 #>     y~m
 #> 1 0.474
 #> 2 0.474

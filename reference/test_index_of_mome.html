@@ -11,7 +11,7 @@ object."><meta property="og:image" content="https://sfcheung.github.io/power4mom
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1.18</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1.20</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -367,6 +367,8 @@ fitted by regression using
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Path: x -&gt; m -&gt; y</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Conditional on moderator(s): w</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Moderator(s) represented by: w</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Computation Formula:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    (b.m~x + (b.x:w)*(w))*(b.y~m)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       [w] (w) ind    m~x y~m</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 M+1.0SD   1   0  0.150   0</span>
@@ -376,6 +378,8 @@ fitted by regression using
 <span class="r-out co"><span class="r-pr">#&gt;</span>  - The 'ind' column shows the conditional indirect effects.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  - ‘m~x’,‘y~m’ is/are the path coefficient(s) along the path conditional</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    on the moderator(s).</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  - Call ‘print_all_cond_indirect_effects()’ to print the detailed</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    outputs of all levels.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> == Conditional indirect effects ==</span>
@@ -383,6 +387,8 @@ fitted by regression using
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Path: w -&gt; m -&gt; y</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Conditional on moderator(s): x</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Moderator(s) represented by: x</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Computation Formula:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    (b.m~w + (b.x:w)*(x))*(b.y~m)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       [x] (x) ind   m~w y~m</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 M+1.0SD   1   0 0.650   0</span>
@@ -392,6 +398,8 @@ fitted by regression using
 <span class="r-out co"><span class="r-pr">#&gt;</span>  - The 'ind' column shows the conditional indirect effects.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  - ‘m~w’,‘y~m’ is/are the path coefficient(s) along the path conditional</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    on the moderator(s).</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  - Call ‘print_all_cond_indirect_effects()’ to print the detailed</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    outputs of all levels.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ======================= Data Information =======================</span>
@@ -436,7 +444,7 @@ fitted by regression using
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mean(s) across replication:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     est   cilo  cihi   sig pvalue</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  -0.006 -0.042 0.030 0.000  0.600</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  -0.006 -0.044 0.030 0.000  0.590</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - The value 'sig' is the rejection rate.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - If the null hypothesis is false, this is the power.</span>

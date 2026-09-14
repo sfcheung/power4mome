@@ -1,6 +1,6 @@
 # Changelog
 
-## power4mome 0.2.1.18
+## power4mome 0.2.1.20
 
 ### New Features
 
@@ -48,7 +48,7 @@
   [`missing_values()`](https://sfcheung.github.io/power4mome/reference/missing_values.md),
   and
   [`scale_scores()`](https://sfcheung.github.io/power4mome/reference/scale_scores.md).
-  (0.2.1.17, 0.2.1.18)
+  (0.2.1.17, 0.2.1.19)
 
 ### Miscellaneous
 
@@ -87,6 +87,12 @@
   only once in the printing. This affects only the printout used to
   examine the generated data, and has not impact on the generated data.
   (0.2.1.1)
+
+- Product terms will now be dropped correctly when generating simulated
+  data. (0.2.1.19)
+
+- Fixed a bug: Boos-Zhang method is now correctly enabled for bootstrap
+  confidence intervals. (0.2.1.20)
 
 ## power4mome 0.2.1
 
