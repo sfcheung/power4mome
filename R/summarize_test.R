@@ -595,6 +595,7 @@ summarize_one_test_data_frame <- function(x,
       }
     }
     if (collapse == "at_least_one_sig") {
+      do_bz <- FALSE
       sig1 <- apply(sig0,
                     MARGIN = 1,
                     function(xx) as.numeric(any(xx > 0)),
@@ -602,6 +603,7 @@ summarize_one_test_data_frame <- function(x,
       out1a[, "sig"] <- sig1
     }
     if (collapse == "at_least_k_sig") {
+      do_bz <- FALSE
       sig1 <- apply(sig0,
                     MARGIN = 1,
                     function(xx) as.numeric(isTRUE(sum(xx > 0, na.rm = TRUE) >= at_least_k)),

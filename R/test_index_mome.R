@@ -120,7 +120,6 @@ test_index_of_mome <- function(fit = fit,
   } else {
     R <- NULL
   }
-  R <- args$R %||% formals(manymome::index_of_mome)$R
   ci_level <- args$level %||% formals(manymome::index_of_mome)$level
   R_bz_ok <- isTRUE(R %in% R_extrapolate(alpha = 1 - ci_level))
   bz_not_FALSE <- !isFALSE(options("power4mome.bz"))
