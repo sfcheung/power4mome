@@ -113,9 +113,9 @@ test_index_of_mome <- function(fit = fit,
   # ==== Enable pvalue? ====
 
   args <- list(...)
-  if (!is.null(mc_out)) {
+  if (is.list(mc_out)) {
     R <- length(mc_out)
-  } else if (!is.null(boot_out)) {
+  } else if (is.list(boot_out)) {
     R <- length(boot_out)
   } else {
     R <- NULL
