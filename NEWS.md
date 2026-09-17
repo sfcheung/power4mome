@@ -1,4 +1,4 @@
-# power4mome 0.2.1.20
+# power4mome 0.2.1.21
 
 ## New Features
 
@@ -88,6 +88,11 @@
   in the output of `sim_out()` for a
   replication.
   (0.2.1.11)
+
+- Support Monte Carlo confidence intervals
+  for models fitted by regression.
+  Need `manymome` 0.3.7.1 or above.
+  (0.2.1.21)
 
 ## Bug Fixes
 

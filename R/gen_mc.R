@@ -162,9 +162,22 @@ gen_mc_i <- function(fit_i,
                                        progress = FALSE),
                        error = function(e) e)
   } else {
-    mc_out <- tryCatch(stop("The fit is not a lavaan object, ",
-                            "probably an error in model fitting."),
+    manymome_lm_mc <- (utils::packageVersion("manymome") >= "0.3.7.1")
+    if (isFALSE(manymome_lm_mc)) {
+      stop("manymome 0.3.7.1 or later is required. ",
+          "If not available from CRAN, can be installed from ",
+          "GitHub: remotes::install_github('sfcheung/manymome')")
+    }
+    mc_out <- tryCatch(manymome::do_mc(fit = fit_i,
+                                       R = R,
+                                       ...,
+                                       compute_implied_stats = FALSE,
+                                       parallel = FALSE,
+                                       progress = FALSE),
                        error = function(e) e)
+    # mc_out <- tryCatch(stop("The fit is not a lavaan object, ",
+    #                         "probably an error in model fitting."),
+    #                    error = function(e) e)
   }
   mc_out
 }
