@@ -1,3 +1,5 @@
+skip_if_not(Sys.getenv("LONG_TEST") == "YES")
+
 skip_on_cran()
 
 test_that("q_power_mediation", {
