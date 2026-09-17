@@ -331,7 +331,7 @@ print(test_out,
 #> 
 #> Mean(s) across replication:
 #>     est   cilo  cihi   sig pvalue
-#>  -0.006 -0.044 0.030 0.000  0.590
+#>  -0.006 -0.042 0.030 0.000  0.600
 #> 
 #> - The value 'sig' is the rejection rate.
 #> - If the null hypothesis is false, this is the power.
