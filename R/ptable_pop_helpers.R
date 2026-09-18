@@ -164,9 +164,10 @@ fix_par_es <- function(par_es,
   par_es_org <- par_es
   i <- match(c(".beta.", ".cov."), names(par_es))
   i_ind <- which(grepl("^\\.ind\\.", names(par_es)))
+  i_mod <- which(grepl("^\\.mod\\.", names(par_es)))
   i_beta_nil <- which(grepl("^\\.beta_nil\\.", names(par_es)))
   # i_beta_nil <- match(c(".beta_nil."), names(par_es))
-  i <- c(i, i_ind, i_beta_nil)
+  i <- c(i, i_ind, i_mod, i_beta_nil)
   par_es_def <- par_es[i]
   par_es_def <- par_es_def[!is.na(par_es_def)]
   all_beta_es <- character(0)
@@ -267,6 +268,10 @@ fix_par_es <- function(par_es,
                            USE.NAMES = FALSE,
                            SIMPLIFY = FALSE)
       all_ind_es <- unlist(all_ind_es)
+    }
+    if (length(i_mod) > 0) {
+      # Process moderation effects
+      stop("Not ready")
     }
   }
   out <- character(0)
