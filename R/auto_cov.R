@@ -113,12 +113,33 @@ cov_to_add <- function(object) {
     pt_cov_all[i, c("lhs", "rhs")] <- unname(tmp_i[tmp2])
   }
   pt_cov_all <- pt_cov_all[!duplicated(pt_cov_all), , drop = FALSE]
+  pt_cov_all <- remove_xy_cov(pt_cov_all, pt = pt)
   pt_cov_all <- apply(pt_cov_all,
                       MARGIN = 1,
                       paste,
                       collapse = " ")
   pt_cov_all <- unname(pt_cov_all)
   pt_cov_all
+}
+
+#' @noRd
+# Remove cov b/w x and y
+remove_xy_cov <- function(
+  pt_cov_all,
+  pt
+) {
+  k <- nrow(pt_cov_all)
+  i_keep <- rep(TRUE, k)
+  for (i in seq_len(k)) {
+    lhs <- pt_cov_all[i, "lhs"]
+    rhs <- pt_cov_all[i, "rhs"]
+    i1 <- (pt$lhs == lhs) & (pt$rhs == rhs) & (pt$op == "~")
+    i2 <- (pt$lhs == rhs) & (pt$rhs == lhs) & (pt$op == "~")
+    if (any(i1) | any(i2)) {
+      i_keep[i] <- FALSE
+    }
+  }
+  pt_cov_all[i_keep, , drop = FALSE]
 }
 
 #' @noRd
