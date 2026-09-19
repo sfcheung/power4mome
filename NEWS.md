@@ -1,4 +1,4 @@
-# power4mome 0.2.1.22
+# power4mome 0.2.1.23
 
 ## New Features
 
@@ -97,6 +97,11 @@
 - Store and print versions of essential
   packages.
   (0.2.1.22)
+
+- All built-in tests now return a
+  data frame instead of a vector.
+  This is the recommended output type.
+  (0.2.1.23)
 
 ## Bug Fixes
 

@@ -70,12 +70,13 @@ as_test_data_frame_i(out3$test_all[[3]][[1]]$test_results,
 expect_identical(as_test_data_frame(out3$test_all[[1]]),
                  out3$test_all[[1]])
 
-chk <- as_test_data_frame(out3$test_all[[3]])
-expect_false(identical(
-                  chk,
-                  out3$test_all[[3]])
-              )
-expect_s3_class(chk[[1]]$test_results, "data.frame")
+# No need for this check because the output type is data.frame by default
+# chk <- as_test_data_frame(out3$test_all[[3]])
+# expect_false(identical(
+#                   chk,
+#                   out3$test_all[[3]])
+#               )
+# expect_s3_class(chk[[1]]$test_results, "data.frame")
 
 tmp <- as_test_data_frame_all_tests(out3)
 

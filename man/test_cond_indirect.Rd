@@ -19,7 +19,8 @@ test_cond_indirect(
   ...,
   fit_name = "fit",
   get_map_names = FALSE,
-  get_test_name = FALSE
+  get_test_name = FALSE,
+  output_type = c("data.frame", "vector")
 )
 }
 \arguments{
@@ -116,14 +117,35 @@ should not use this argument.}
 by \code{\link[=power4test]{power4test()}} to get the default
 name of this test. Users should not
 use this argument.}
+
+\item{output_type}{The type of the output.
+Can be \code{"data.frame"} or \code{"vector"}.
+ALl tests should now return a data frame.
+Set to \code{"vector"} for backward compatibility.}
 }
 \value{
-In its normal usage, it returns
+If \code{output_type} is \code{"data.frame"},
+it returns
+a data frame with the
+following columns:
+\itemize{
+\item \code{test_label}: A label for the test.
+\item \code{est}: The estimated effect.
+\item \code{cilo} and \code{cihi}: The
+lower and upper limits of the
+confidence interval (95\% by
+default), respectively,
+for effect.
+\item \code{sig}: Whether a test by confidence
+interval is significant (\code{1}) or
+not significant (\code{0}).
+}
+
+If \code{output_type} is \code{"vector"}, it returns
 a named numeric vector with the
 following elements:
 \itemize{
-\item \code{est}: The mean of the estimated
-indirect effect across datasets.
+\item \code{est}: The estimated effect.
 \item \code{cilo} and \code{cihi}: The means of the
 lower and upper limits of the
 confidence interval (95\% by
