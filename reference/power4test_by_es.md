@@ -229,7 +229,7 @@ out <- power4test_by_es(test_out,
 out_reject <- rejection_rates(out)
 out_reject
 #> [test]: test_indirect: x->m->y 
-#> [test_label]: Test 
+#> [test_label]: x->m->y 
 #>     par    es   est   p.v reject r.cilo r.cihi
 #> 1 y ~ m 0.100 0.043 1.000  0.000 -0.000  0.658
 #> 2 y ~ m 0.200 0.038 1.000  0.500  0.095  0.905

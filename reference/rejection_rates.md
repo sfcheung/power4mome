@@ -341,7 +341,7 @@ test_out <- power4test(object = test_out,
 
 rejection_rates(test_out)
 #>                     test test_label    est   p.v reject r.cilo r.cihi
-#> 1 test_indirect: x->m->y       Test  0.149 1.000  1.000  0.510  1.000
+#> 1 test_indirect: x->m->y    x->m->y  0.149 1.000  1.000  0.510  1.000
 #> 2  test_parameters: CIs         m~x  0.317 1.000  1.000  0.510  1.000
 #> 3  test_parameters: CIs         y~m  0.475 1.000  1.000  0.510  1.000
 #> 4  test_parameters: CIs         y~x -0.080 1.000  0.000  0.000  0.490

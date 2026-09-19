@@ -20,7 +20,8 @@ test_index_of_mome(
   ...,
   fit_name = "fit",
   get_map_names = FALSE,
-  get_test_name = FALSE
+  get_test_name = FALSE,
+  output_type = c("data.frame", "vector")
 )
 ```
 
@@ -121,12 +122,31 @@ test_index_of_mome(
   to get the default name of this test. Users should not use this
   argument.
 
+- output_type:
+
+  The type of the output. Can be `"data.frame"` or `"vector"`. ALl tests
+  should now return a data frame. Set to `"vector"` for backward
+  compatibility.
+
 ## Value
 
-In its normal usage, it returns a named numeric vector with the
-following elements:
+If `output_type` is `"data.frame"`, it returns a data frame with the
+following columns:
 
-- `est`: The mean of the estimated indirect effect across datasets.
+- `test_label`: A label for the test.
+
+- `est`: The estimated effect.
+
+- `cilo` and `cihi`: The lower and upper limits of the confidence
+  interval (95% by default), respectively, for the effect.
+
+- `sig`: Whether a test by confidence interval is significant (`1`) or
+  not significant (`0`).
+
+If `output_type` is `"vector"`, it returns a named numeric vector with
+the following elements:
+
+- `est`: The estimated effect.
 
 - `cilo` and `cihi`: The means of the lower and upper limits of the
   confidence interval (95% by default), respectively.
@@ -207,7 +227,7 @@ print(test_out,
 #> 
 #> ===================== Package Information =====================
 #> 
-#> Created by power4mome 0.2.1.22 
+#> Created by power4mome 0.2.1.23 
 #> Supporting packages:
 #> - lavaan 0.7.2 
 #> - manymome 0.3.7 
@@ -338,11 +358,11 @@ print(test_out,
 #> ==== <test_index_of_mome: x->m->y, moderated by w> ====
 #> 
 #> Mean(s) across replication:
-#>     est   cilo  cihi   sig pvalue
-#>  -0.006 -0.042 0.030 0.000  0.600
+#>                test_label    est   cilo  cihi   sig pvalue
+#> 1 x->m->y, moderated by w -0.006 -0.044 0.030 0.000  0.590
 #> 
-#> - The value 'sig' is the rejection rate.
-#> - If the null hypothesis is false, this is the power.
-#> - Number of valid replications for rejection rate: 2 
-#> - Proportion of valid replications for rejection rate: 1.000 
+#> - The column 'sig' shows the rejection rates.
+#> - If the null hypothesis is false, the rate is the power.
+#> - Number of valid replications for rejection rate(s): 2 
+#> - Proportion of valid replications for rejection rate(s): 1.000 
 ```

@@ -235,7 +235,7 @@ out <- power4test_by_n(test_out,
 out_reject <- rejection_rates(out)
 out_reject
 #> [test]: test_indirect: x->m->y 
-#> [test_label]: Test 
+#> [test_label]: x->m->y 
 #>     n   est   p.v reject r.cilo r.cihi
 #> 1 100 0.132 1.000  0.500  0.095  0.905
 #> 2 110 0.166 1.000  1.000  0.342  1.000

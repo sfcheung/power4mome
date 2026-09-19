@@ -557,7 +557,7 @@ out
 #> 
 #> ===================== Package Information =====================
 #> 
-#> Created by power4mome 0.2.1.22 
+#> Created by power4mome 0.2.1.23 
 #> Supporting packages:
 #> - lavaan 0.7.2 
 #> - manymome 0.3.7 
@@ -642,20 +642,20 @@ out
 #> =============== <test_indirect: x->m->y> ===============
 #> 
 #> Mean(s) across replication:
-#>    est cilo cihi   sig pvalue      R   nlt0 alpha bz_39 bz_79
-#>  0.066  NaN  NaN 0.196  0.256 79.000 15.000 0.050 0.204 0.200
+#>   test_label   est cilo cihi   sig pvalue      R   nlt0 alpha
+#> 1    x->m->y 0.066  NaN  NaN 0.195  0.253 79.000 14.900 0.050
 #> 
-#> - The value 'sig' is the rejection rate.
-#> - If the null hypothesis is false, this is the power.
-#> - Number of valid replications for rejection rate: 10 
-#> - Proportion of valid replications for rejection rate: 1.000 
+#> - The column 'sig' shows the rejection rates.
+#> - If the null hypothesis is false, the rate is the power.
+#> - Number of valid replications for rejection rate(s): 10 
+#> - Proportion of valid replications for rejection rate(s): 1.000 
 #> 
 #> ========== power4test Power ==========
 #> 
 #> [test]: test_indirect: x->m->y 
-#> [test_label]: Test 
+#> [test_label]: x->m->y 
 #>     est   p.v reject r.cilo r.cihi
-#> 1 0.066 1.000  0.196  0.057  0.510
+#> 1 0.066 1.000  0.195  0.057  0.510
 #> Notes:
 #> - p.v: The proportion of valid replications.
 #> - est: The mean of the estimates in a test across replications.
