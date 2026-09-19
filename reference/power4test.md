@@ -1109,6 +1109,14 @@ out <- power4test(nrep = 10,
 print(out,
       test_long = TRUE)
 #> 
+#> ===================== Package Information =====================
+#> 
+#> Created by power4mome 0.2.1.22 
+#> Supporting packages:
+#> - lavaan 0.7.2 
+#> - manymome 0.3.7 
+#> - lmhelprs 0.4.5 
+#> 
 #> ====================== Model Information ======================
 #> 
 #> == Model on Factors/Variables ==
@@ -1205,6 +1213,14 @@ out1 <- power4test(out,
 print(out1,
       test_long = TRUE)
 #> 
+#> ===================== Package Information =====================
+#> 
+#> Created by power4mome 0.2.1.22 
+#> Supporting packages:
+#> - lavaan 0.7.2 
+#> - manymome 0.3.7 
+#> - lmhelprs 0.4.5 
+#> 
 #> ====================== Model Information ======================
 #> 
 #> == Model on Factors/Variables ==
@@ -1297,6 +1313,14 @@ out2 <- power4test(out,
 
 print(out2,
       test_long = TRUE)
+#> 
+#> ===================== Package Information =====================
+#> 
+#> Created by power4mome 0.2.1.22 
+#> Supporting packages:
+#> - lavaan 0.7.2 
+#> - manymome 0.3.7 
+#> - lmhelprs 0.4.5 
 #> 
 #> ====================== Model Information ======================
 #> 

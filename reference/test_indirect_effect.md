@@ -203,6 +203,14 @@ test_ind <- power4test(object = sim_only,
 print(test_ind,
       test_long = TRUE)
 #> 
+#> ===================== Package Information =====================
+#> 
+#> Created by power4mome 0.2.1.22 
+#> Supporting packages:
+#> - lavaan 0.7.2 
+#> - manymome 0.3.7 
+#> - lmhelprs 0.4.5 
+#> 
 #> ====================== Model Information ======================
 #> 
 #> == Model on Factors/Variables ==

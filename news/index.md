@@ -1,6 +1,6 @@
 # Changelog
 
-## power4mome 0.2.1.21
+## power4mome 0.2.1.22
 
 ### New Features
 
@@ -81,6 +81,8 @@
 
 - Support Monte Carlo confidence intervals for models fitted by
   regression. Need `manymome` 0.3.7.1 or above. (0.2.1.21)
+
+- Store and print versions of essential packages. (0.2.1.22)
 
 ### Bug Fixes
 
