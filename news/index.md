@@ -1,6 +1,6 @@
 # Changelog
 
-## power4mome 0.2.1.24
+## power4mome 0.2.1.25
 
 ### New Features
 
@@ -105,6 +105,9 @@
 - Fixed: When adding covariances automatically for models with
   moderators, covariances between a variable and its predictor will now
   be excluded. (0.2.1.24)
+
+- [`power4test()`](https://sfcheung.github.io/power4mome/reference/power4test.md)
+  will now re-simulate data if `process_data` changed. (0.2.1.25)
 
 ## power4mome 0.2.1
 
