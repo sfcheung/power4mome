@@ -1,6 +1,6 @@
 # Changelog
 
-## power4mome 0.2.1.23
+## power4mome 0.2.1.24
 
 ### New Features
 
@@ -99,8 +99,12 @@
 - Product terms will now be dropped correctly when generating simulated
   data. (0.2.1.19)
 
-- Fixed a bug: Boos-Zhang method is now correctly enabled for bootstrap
+- Fixed: Boos-Zhang method is now correctly enabled for bootstrap
   confidence intervals. (0.2.1.20)
+
+- Fixed: When adding covariances automatically for models with
+  moderators, covariances between a variable and its predictor will now
+  be excluded. (0.2.1.24)
 
 ## power4mome 0.2.1
 
