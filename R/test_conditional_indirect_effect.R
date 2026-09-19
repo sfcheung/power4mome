@@ -27,12 +27,30 @@
 #' calling the function.
 #'
 #' @return
-#' In its normal usage, it returns
+#' If `output_type` is `"data.frame"`,
+#' it returns
+#' a data frame with the
+#' following columns:
+#'
+#' - `test_label`: A label for the test.
+#'
+#' - `est`: The estimated effect.
+#'
+#' - `cilo` and `cihi`: The
+#'  lower and upper limits of the
+#'  confidence interval (95% by
+#'  default), respectively,
+#'  for effect.
+#'
+#' - `sig`: Whether a test by confidence
+#'  interval is significant (`1`) or
+#'  not significant (`0`).
+#'
+#' If `output_type` is `"vector"`, it returns
 #' a named numeric vector with the
 #' following elements:
 #'
-#' - `est`: The mean of the estimated
-#'  indirect effect across datasets.
+#' - `est`: The estimated effect.
 #'
 #' - `cilo` and `cihi`: The means of the
 #'  lower and upper limits of the
@@ -77,6 +95,8 @@
 # @param get_map_names <- Inherited
 #'
 # @param get_test_name <- Inherited
+#'
+# @param output_type <- Inherited
 #'
 #' @seealso [power4test()]
 #'
@@ -139,7 +159,10 @@ test_cond_indirect <- function(fit = fit,
                                ...,
                                fit_name = "fit",
                                get_map_names = FALSE,
-                               get_test_name = FALSE) {
+                               get_test_name = FALSE,
+                               output_type = c("data.frame", "vector")) {
+
+  output_type <- match.arg(output_type)
 
   # ==== Enable pvalue? ====
 
@@ -187,15 +210,16 @@ test_cond_indirect <- function(fit = fit,
   if (get_map_names) {
     return(map_names)
   }
+  tmp_w <- cond_name(wvalues,
+                      ...)
+  tmp <- paste0(c(x, m, y),
+                collapse = "->")
+  test_label <- paste0(tmp,
+                " (",
+                tmp_w,
+                ")")
   if (get_test_name) {
-    tmp_w <- cond_name(wvalues,
-                       ...)
-    tmp <- paste0(c(x, m, y),
-                  collapse = "->")
-    tmp <- paste0(tmp,
-                  " (",
-                  tmp_w,
-                  ")")
+    tmp <- test_label
     args <- as.list(match.call())
     tmp2 <- character(0)
     if (isTRUE(args$standardized_x) && !isTRUE(args$standardized_y)) {
@@ -238,11 +262,23 @@ test_cond_indirect <- function(fit = fit,
   }
   if (inherits(out, "error") ||
       identical(out, NA)) {
-    out2 <- c(est = as.numeric(NA),
-              cilo = as.numeric(NA),
-              cihi = as.numeric(NA),
-              sig = as.numeric(NA),
-              pvalue = as.numeric(NA))
+    if (output_type == "data.frame") {
+      out2 <- data.frame(
+                test_label = test_label,
+                est = as.numeric(NA),
+                cilo = as.numeric(NA),
+                cihi = as.numeric(NA),
+                sig = as.numeric(NA),
+                pvalue = as.numeric(NA)
+              )
+      attr(out2, "test_label") <- "test_label"
+    } else {
+      out2 <- c(est = as.numeric(NA),
+                cilo = as.numeric(NA),
+                cihi = as.numeric(NA),
+                sig = as.numeric(NA),
+                pvalue = as.numeric(NA))
+    }
     return(out2)
   }
   if (test_method == "ci") {
@@ -298,6 +334,14 @@ test_cond_indirect <- function(fit = fit,
     out2 <- c(out2, R = R, nlt0 = nlt0,
               alpha = 1 - out$level,
               boot_sig)
+  }
+  if (output_type == "data.frame") {
+    out2 <- data.frame(
+      test_label = test_label,
+      as.list(out2),
+      check.names = FALSE
+    )
+    attr(out2, "test_label") <- "test_label"
   }
   return(out2)
 }

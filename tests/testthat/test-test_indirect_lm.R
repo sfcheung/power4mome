@@ -53,10 +53,10 @@ chk_cis <- lapply(chk_outs,
 chk_cis <- do.call(rbind, chk_cis)
 chk_sigs <- (chk_cis[, 1] > 0) | (chk_cis[, 2] < 0)
 
-expect_equal(chk[[1]]["sig"],
+expect_equal(chk[[1]][, "sig"],
              mean(chk_sigs),
              ignore_attr = TRUE)
-expect_equal(chk[[1]][c("cilo", "cihi")],
+expect_equal(unlist(chk[[1]][1, c("cilo", "cihi")]),
              colMeans(chk_cis),
              ignore_attr = TRUE)
 
