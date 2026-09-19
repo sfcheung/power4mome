@@ -1,4 +1,4 @@
-# power4mome 0.2.1.24
+# power4mome 0.2.1.25
 
 ## New Features
 
@@ -132,6 +132,10 @@
   between a variable and its predictor
   will now be excluded.
   (0.2.1.24)
+
+- `power4test()` will now re-simulate
+  data if `process_data` changed.
+  (0.2.1.25)
 
 # power4mome 0.2.1
 

@@ -610,7 +610,8 @@ power4test <- function(object = NULL,
         is.null(reference) &&
         identical(x_fun, list()) &&
         identical(e_fun, list()) &&
-        is.null(nrep)) {
+        is.null(nrep) &&
+        is.null(process_data)) {
       update_data <- FALSE
     }
   }
