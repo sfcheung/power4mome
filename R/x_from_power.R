@@ -1524,6 +1524,13 @@ x_from_power <- function(object,
                               level = ci_level)
   time_end <- Sys.time()
 
+  pkg_versions <-
+    c(power4mome = utils::packageVersion("power4mome"),
+      lavaan = utils::packageVersion("lavaan"),
+      manymome = utils::packageVersion("manymome"),
+      lmhelprs = utils::packageVersion("lmhelprs")
+    )
+
   out <- list(x = x,
               pop_es_name = pop_es_name,
               power4test_trials = by_x_1,
@@ -1553,7 +1560,8 @@ x_from_power <- function(object,
               technical = technical,
               algorithm = algorithm,
               call = match.call(),
-              rejection_rates_args = rejection_rates_args)
+              rejection_rates_args = rejection_rates_args,
+              pkg_versions = pkg_versions)
   class(out) <- c("x_from_power", class(out))
   return(out)
 }
@@ -1762,6 +1770,25 @@ print.x_from_power <- function(x,
   if (!is.symbol(my_call[[1]])) {
     my_call[[1]] <- as.symbol("x_from_power")
   }
+  if (!is.null(x$pkg_versions)) {
+    tmp <- sapply(
+      c("power4mome",
+        "lavaan",
+        "manymome",
+        "lmhelprs"),
+      \(x, pkg_vi) {
+        x2 <- pkg_vi[x]
+        sprintf(
+          "- %1s: %2s",
+          x,
+          x2
+        )
+      },
+      pkg_vi = x$pkg_versions
+    )
+    cat("Packages Version:\n")
+    cat(tmp, sep = "\n")
+  }
   cat("\n")
   solution_found <- !is.na(x$x_final)
   predictor <- x$x
@@ -1857,6 +1884,25 @@ print.n_region_from_power <- function(
     my_call[[1]] <- as.symbol("n_region_from_power")
   }
   print(my_call)
+  if (!is.null(x$below$pkg_versions)) {
+    tmp <- sapply(
+      c("power4mome",
+        "lavaan",
+        "manymome",
+        "lmhelprs"),
+      \(x, pkg_vi) {
+        x2 <- pkg_vi[x]
+        sprintf(
+          "- %1s: %2s",
+          x,
+          x2
+        )
+      },
+      pkg_vi = x$below$pkg_versions
+    )
+    cat("Packages Version:\n")
+    cat(tmp, sep = "\n")
+  }
   cat("\n")
   x_below <- x$below
   x_above <- x$above

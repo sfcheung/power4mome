@@ -876,6 +876,10 @@ power4test <- function(object = NULL,
     out <- list(sim_all = sim_all,
                 test_all = test_all)
     attr(out, "args") <- args
+    attr(out, "version.power4mome") <- utils::packageVersion("power4mome")
+    attr(out, "version.lavaan") <- utils::packageVersion("lavaan")
+    attr(out, "version.manymome") <- utils::packageVersion("manymome")
+    attr(out, "version.lmhelprs") <- utils::packageVersion("lmhelprs")
     class(out) <- c("power4test", class(out))
   } else {
     attr(object, "args") <- args
@@ -949,6 +953,31 @@ print.power4test <- function(x,
                              fit_to_all_args = list(),
                              ...) {
   what <- match.arg(what, several.ok = TRUE)
+  cat(header_str("Package Information",
+                 prefix = "\n",
+                 suffix = "\n"))
+  cat("\n")
+  tmp <- sprintf(
+          "Created by power4mome %s",
+          attr(x, "version.power4mome") %||% "(Version Unknown)"
+        )
+  cat(tmp, "\n")
+  cat("Supporting packages:\n")
+  tmp <- sprintf(
+    "- lavaan %s",
+    attr(x, "version.lavaan") %||% "(Version Unknown)"
+  )
+  cat(tmp, "\n")
+  tmp <- sprintf(
+    "- manymome %s",
+    attr(x, "version.manymome") %||% "(Version Unknown)"
+  )
+  cat(tmp, "\n")
+  tmp <- sprintf(
+    "- lmhelprs %s",
+    attr(x, "version.lmhelprs") %||% "(Version Unknown)"
+  )
+  cat(tmp, "\n")
   if ("data" %in% what) {
     print(x$sim_all,
           data_long = data_long,
