@@ -483,7 +483,7 @@
 #' stop it manually.
 #'
 #' @return
-#' The function [sim_out()] returns
+#' The function [sim_data()] returns
 #' a list of the class `sim_data`,
 #' with length `nrep`. Each element
 #' is a `sim_data_i` object, with
