@@ -232,7 +232,7 @@ print(test_ind,
 #> 
 #> ===================== Package Information =====================
 #> 
-#> Created by power4mome 0.2.1.27 
+#> Created by power4mome 0.2.1.28 
 #> Supporting packages:
 #> - lavaan 0.7.2 
 #> - manymome 0.3.7 
@@ -374,7 +374,7 @@ print(test_ind,
 #> 
 #> Mean(s) across replication:
 #>        test_label   est  cilo  cihi   sig pvalue
-#> 1 x->m->y (w = 1) 0.206 0.064 0.375 0.800  0.052
+#> 1 x->m->y (w = 1) 0.206 0.068 0.365 0.800  0.052
 #> 
 #> - The column 'sig' shows the rejection rates.
 #> - If the null hypothesis is false, the rate is the power.

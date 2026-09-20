@@ -1,6 +1,6 @@
 # Changelog
 
-## power4mome 0.2.1.27
+## power4mome 0.2.1.28
 
 ### New Features
 
@@ -55,6 +55,12 @@
   to accept a list of tests in `test_fun()`. If set to a list of tests,
   it must be a named list. The argument `test_args()` must also be a
   named list. (0.2.1.27)
+
+- Added
+  [`get_sim_fit()`](https://sfcheung.github.io/power4mome/reference/get_sim_fit.md)
+  to retrieve a fit object from the output of
+  [`power4test()`](https://sfcheung.github.io/power4mome/reference/power4test.md).
+  (0.2.1.28)
 
 ### Miscellaneous
 

@@ -62,6 +62,8 @@ Helpers for main functions
 - [`Rs_bz_supported()`](https://sfcheung.github.io/power4mome/reference/bz_helpers.md)
   [`R_for_bz()`](https://sfcheung.github.io/power4mome/reference/bz_helpers.md)
   : Helpers for the Boos-and-Zhang (2000) Method
+- [`get_sim_fit()`](https://sfcheung.github.io/power4mome/reference/get_sim_fit.md)
+  : Get a Fit Object From a 'power4test' Object
 
 ## Test Functions
 

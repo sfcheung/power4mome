@@ -306,7 +306,7 @@ test_all <- do_test(sim_all,
 lapply(test_all, function(x) x$test_results)
 #> [[1]]
 #>   test_label       est       cilo      cihi sig pvalue
-#> 1    x->m->y 0.1014728 0.02144103 0.1803555   1      0
+#> 1    x->m->y 0.1014728 0.02623885 0.2050513   1      0
 #> 
 #> [[2]]
 #>   test_label       est         cilo      cihi sig pvalue
@@ -318,11 +318,11 @@ lapply(test_all, function(x) x$test_results)
 #> 
 #> [[4]]
 #>   test_label       est       cilo      cihi sig pvalue
-#> 1    x->m->y 0.1046104 0.04079654 0.2157204   1      0
+#> 1    x->m->y 0.1046104 0.02975369 0.2318472   1      0
 #> 
 #> [[5]]
-#>   test_label       est       cilo     cihi sig pvalue
-#> 1    x->m->y 0.1169023 0.01345705 0.256392   1   0.02
+#>   test_label       est      cilo      cihi sig pvalue
+#> 1    x->m->y 0.1169023 0.0195144 0.2311664   1      0
 #> 
 
 ```

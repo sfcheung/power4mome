@@ -3,8 +3,6 @@
 Get a model matrix and effect size specification and simulate a number
 of datasets, along with other information.
 
-The function
-
 ## Usage
 
 ``` r
@@ -260,10 +258,9 @@ pool_sim_data(object, as_list = FALSE, preprocess = FALSE)
 
 ## Value
 
-The function
-[`sim_out()`](https://sfcheung.github.io/power4mome/reference/sim_out.md)
-returns a list of the class `sim_data`, with length `nrep`. Each element
-is a `sim_data_i` object, with the following major elements:
+The function `sim_data()` returns a list of the class `sim_data`, with
+length `nrep`. Each element is a `sim_data_i` object, with the following
+major elements:
 
 - `ptable`: A `lavaan` parameter table of the model, with population
   values set in the column `start`. (It is the output of the function
