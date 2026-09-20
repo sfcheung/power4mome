@@ -1,4 +1,4 @@
-# power4mome 0.2.1.26
+# power4mome 0.2.1.27
 
 ## New Features
 
@@ -51,6 +51,13 @@
   of `ordinal_variables()`, `missing_values()`,
   and `scale_scores()`.
   (0.2.1.17, 0.2.1.19)
+
+- Updated `power4test()` to accept
+  a list of tests in `test_fun()`.
+  If set to a list of tests, it must be
+  a named list. The argument `test_args()`
+  must also be a named list.
+  (0.2.1.27)
 
 ## Miscellaneous
 
