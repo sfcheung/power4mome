@@ -128,7 +128,8 @@ rig_rs <- function(
     # Try typeA = "symm"
     rIG_args <- utils::modifyList(
                   rIG_args,
-                  list(typeA = "symm")
+                  list(typeA = "symm"),
+                  keep.null = TRUE
                 )
     x0 <- tryCatch(do.call(
           covsim::rIG,

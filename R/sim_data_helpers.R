@@ -99,7 +99,8 @@ mm_lm_data <- function(object,
       # Set data as the named argument
       names(tmp) <- sim_data_name_0
       process_data_args <- utils::modifyList(process_data$args,
-                                             tmp)
+                                             tmp,
+                                             keep.null = TRUE)
     } else {
       # sim_data_name_0 not in formals
       # Set data as the first argument
@@ -278,7 +279,8 @@ gen_indicator_scores <- function(f_score,
     ee_fun <- match.fun(ee_fun)
     ee_args <- e_fun[-1]
     ee_args <- utils::modifyList(ee_args,
-                                 list(n = n * p))
+                                 list(n = n * p),
+                                 keep.null = TRUE)
     e <- do.call(ee_fun,
                  ee_args)
     e <- matrix(e,
@@ -564,7 +566,8 @@ gen_pure_x <- function(psi,
         xx_fun <- match.fun(xx_fun)
         xx <- xx[-1]
         xx <- utils::modifyList(xx,
-                                list(n = n))
+                                list(n = n),
+                                keep.null = TRUE)
         out <- do.call(xx_fun,
                       xx)
         out
@@ -626,7 +629,8 @@ gen_pure_x_rig <- function(
       kurt = kurt0,
       pmean = 0,
       psd = sqrt(diag(sigma))
-    )
+    ),
+    keep.null = TRUE
   )
   x_rig <- do.call(
     x_fun0,
@@ -985,7 +989,8 @@ pop_es_from_fit_measures <- function(
           target_fm = target_fm,
           target_value = target_value
         )
-      )
+      ),
+      keep.null = TRUE
     )
     beta_nil_auto <- do.call(
       beta_nil_from_fit_measures,
@@ -1186,7 +1191,8 @@ beta_nil_from_fit_measures <- function(
                         multi_control,
                         list(
                           maxit = max_attempt
-                        )
+                        ),
+                        keep.null = TRUE
                       )
     out0 <- try(stats::optim(
                 par = beta_nil_all,

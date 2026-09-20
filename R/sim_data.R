@@ -920,7 +920,8 @@ print.sim_data <- function(x,
                              group = x_i$group_name,
                              fixed.x = FALSE)
     fit_to_all_args1 <- utils::modifyList(fit_to_all_args0,
-                                          fit_to_all_args)
+                                          fit_to_all_args,
+                                          keep.null = TRUE)
     fit_all <- do.call(lavaan::sem,
                        fit_to_all_args1)
 
@@ -928,7 +929,8 @@ print.sim_data <- function(x,
       fit_to_all_args1_preprocess <- fit_to_all_args1
       fit_to_all_args1_preprocess$data <- NULL
       fit_to_all_args1_preprocess <- utils::modifyList(fit_to_all_args1_preprocess,
-                                            list(data = all_data_preprocess))
+                                            list(data = all_data_preprocess),
+                                            keep.null = TRUE)
       fit_all_preprocess <- try(do.call(lavaan::sem,
                         fit_to_all_args1_preprocess),
                         silent = TRUE)

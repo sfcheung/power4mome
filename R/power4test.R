@@ -557,7 +557,8 @@ power4test <- function(object = NULL,
                       eval,
                       envir = parent.frame())
   args <- utils::modifyList(args,
-                            as.list(call_args))
+                            as.list(call_args),
+                            keep.null = TRUE)
   args$object <- NULL
   # args available in all cases.
   # It should be used whenever possible,
@@ -692,6 +693,7 @@ power4test <- function(object = NULL,
                                    progress = args$progress,
                                    ncores = args$ncores,
                                    cl = cl),
+                        keep.null = TRUE,
                         simplify = FALSE)
 
     if (args$progress) {
@@ -717,7 +719,8 @@ power4test <- function(object = NULL,
                                         progress = args$progress,
                                         ncores = args$ncores,
                                         iseed = args$iseed,
-                                        cl = cl))
+                                        cl = cl),
+                                    keep.null = TRUE)
       if (args$progress) {
         cat("Generate Monte Carlo estimates:\n")
       }
@@ -751,7 +754,8 @@ power4test <- function(object = NULL,
                                            progress = args$progress,
                                            ncores = args$ncores,
                                            iseed = args$iseed,
-                                           cl = cl))
+                                           cl = cl),
+                                      keep.null = TRUE)
       if (args$progress) {
         cat("Generate bootstrap estimates:\n")
       }
@@ -804,7 +808,8 @@ power4test <- function(object = NULL,
     if (is.null(test_name)) {
       test_name <- deparse(substitute(test_fun))
       test_args_tmp <- utils::modifyList(test_args,
-                                         list(get_test_name = TRUE))
+                                         list(get_test_name = TRUE),
+                                         keep.null = TRUE)
       test_name0 <- tryCatch(do.call(test_fun,
                                      test_args_tmp),
                              error = function(e) e)

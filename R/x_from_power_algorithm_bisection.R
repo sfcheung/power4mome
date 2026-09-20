@@ -186,7 +186,8 @@ power_algorithm_bisection <- function(object,
                     min_interval_width = c(n = 2,
                                            es = .001))
   variants <- utils::modifyList(variants0,
-                                variants)
+                                variants,
+                                keep.null = TRUE)
   proxy_power <- NULL
   if (variants$use_power_curve_assist) {
     proxy_power <- tryCatch(target_power_adjusted(

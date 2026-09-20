@@ -391,7 +391,8 @@ power_curve <- function(object,
       nls_args1 <- utils::modifyList(nls_args_fixed$nls_args,
                                      list(data = reject0,
                                           control = nls_args_fixed$nls_contorl1,
-                                          nrep = reject0$nrep))
+                                          nrep = reject0$nrep),
+                                     keep.null = TRUE)
       nls_args_fixed_i <- list(formula = nls_args_fixed$formula[[i]],
                                start = nls_args_fixed$start[[i]],
                                lower = nls_args_fixed$lower_bound[[i]],
@@ -402,7 +403,8 @@ power_curve <- function(object,
         }
       }
       nls_args1 <- utils::modifyList(nls_args1,
-                                     nls_args_fixed_i)
+                                     nls_args_fixed_i,
+                                     keep.null = TRUE)
       # Do nls0
       fit_i <- tryCatch(suppressWarnings(do.call(do_nls,
                                                  nls_args1)),
@@ -546,7 +548,8 @@ do_nls <- function(...,
   # Try weights
   if (!is.null(nrep)) {
     args1 <- utils::modifyList(args,
-                              list(weights = nrep))
+                              list(weights = nrep),
+                              keep.null = TRUE)
     fit <- tryCatch(suppressWarnings(do.call(stats::nls,
                                      args1)),
                    error = function(e) e)
@@ -651,13 +654,15 @@ fix_nls_args <- function(formula,
   # Default argument values
   nls_contorl0 <- list(maxiter = 1000)
   nls_contorl1 <- utils::modifyList(nls_contorl0,
-                                    nls_control)
+                                    nls_control,
+                                    keep.null = TRUE)
 
   # Use "port" because zero residual cases are possible
   # But can be overridden
   nls_args0 <- list(algorithm = "port")
   nls_args1 <- utils::modifyList(nls_args0,
-                                 nls_args)
+                                 nls_args,
+                                 keep.null = TRUE)
 
   out <- list(formula = formula,
               start = start,

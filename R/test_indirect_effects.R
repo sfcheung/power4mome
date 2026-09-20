@@ -213,11 +213,13 @@ test_k_indirect_effects <- function(
   if (test_method == "pvalue") {
     internal_options <- utils::modifyList(internal_options,
                                           list(skip_ci = TRUE,
-                                               pvalue_min_size = -Inf))
+                                               pvalue_min_size = -Inf),
+                                          keep.null = TRUE)
   }
   if (test_method == "ci") {
     internal_options <- utils::modifyList(internal_options,
-                                          list(skip_ci = FALSE))
+                                          list(skip_ci = FALSE),
+                                          keep.null = TRUE)
   }
   omnibus <- match.arg(omnibus)
   if (fit_name != "fit") {

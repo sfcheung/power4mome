@@ -176,7 +176,8 @@ plot.power_curve <- function(x,
   if ("ci" %in% what) {
 
     tmp_args <- utils::modifyList(pars_ci,
-                                  list(reject_df = reject_df))
+                                  list(reject_df = reject_df),
+                                  keep.null = TRUE)
     do.call(plot_power_curve_ci,
             tmp_args)
   }
@@ -185,7 +186,8 @@ plot.power_curve <- function(x,
 
   if ("power_curve" %in% what) {
     tmp_args <- utils::modifyList(pars_ci,
-                                  list(x = x))
+                                  list(x = x),
+                                  keep.null = TRUE)
     do.call(plot_power_curve_curve,
             tmp_args)
   }

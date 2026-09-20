@@ -279,7 +279,8 @@ power_algorithm_prob_bisection <- function(
                     min_interval_width = c(n = 100,
                                            es = .20))
   variants <- utils::modifyList(variants0,
-                                variants)
+                                variants,
+                                keep.null = TRUE)
   if (is.null(variants$hdr_prob)) {
     variants$hdr_prob <- ci_level * variants$hdr_prob_ci_level_ratio
   }

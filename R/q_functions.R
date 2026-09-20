@@ -405,7 +405,8 @@ q_power_mediation <- function(
                   )
   test_args0 <- utils::modifyList(
                   test_args0,
-                  test_more_args
+                  test_more_args,
+                  keep.null = TRUE
                 )
 
   if (is.null(nrep)) {
@@ -450,7 +451,8 @@ q_power_mediation <- function(
 
   p4t_args <- utils::modifyList(
                 p4t_args,
-                ddd_power4test
+                ddd_power4test,
+                keep.null = TRUE
               )
 
   out <- do.call(
@@ -477,7 +479,8 @@ q_power_mediation <- function(
 
     n_reg_args <- utils::modifyList(
                   n_reg_args,
-                  ddd_n_from_region
+                  ddd_n_from_region,
+                  keep.null = TRUE
                 )
 
     out2 <- do.call(
@@ -505,7 +508,8 @@ q_power_mediation <- function(
 
     n_args <- utils::modifyList(
                   n_args,
-                  ddd_n_from_power
+                  ddd_n_from_power,
+                  keep.null = TRUE
                 )
     out3 <- do.call(
               n_from_power,
@@ -766,7 +770,8 @@ q_power_mediation_simple <- function(
                   test_more_args,
                   list(x = "x",
                        m = "m",
-                       y = "y")
+                       y = "y"),
+                  keep.null = TRUE
                 )
 
   # ==== Call the general function ====
@@ -963,7 +968,8 @@ q_power_mediation_serial <- function(
                       test_more_args,
                       list(x = "x",
                            y = "y",
-                           m = c(m_names[-p]))
+                           m = c(m_names[-p])),
+                      keep.null = TRUE
                     )
 
   # ==== Call the general function ====
@@ -1166,7 +1172,8 @@ q_power_mediation_parallel <- function(
                       list(x = "x",
                            y = "y",
                            omnibus = omnibus,
-                           at_least_k = at_least_k)
+                           at_least_k = at_least_k),
+                      keep.null = TRUE
                     )
 
   # ==== Call the general function ====

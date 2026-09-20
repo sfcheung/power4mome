@@ -1,4 +1,4 @@
-# power4mome 0.2.1.25
+# power4mome 0.2.1.26
 
 ## New Features
 
@@ -102,6 +102,12 @@
   data frame instead of a vector.
   This is the recommended output type.
   (0.2.1.23)
+
+- Default to `keep.null = TRUE` in
+  calls to `utils::modifyList()`. Not
+  a must, but `keep.null = FALSE` is
+  rarely what we need.
+  (0.2.1.26)
 
 ## Bug Fixes
 
