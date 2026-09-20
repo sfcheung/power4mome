@@ -280,9 +280,8 @@ This is part of the output:
 
 ```{r des, echo=FALSE}
 i1 <- which(grepl("= Descriptive Statistics =", tmp))
-i2 <- which(grepl("^$", tmp))
-i2 <- i2[which(i2 > (i1 + 2))][1]
-cat(tmp[i1:i2], sep = "\n")
+i2 <- which(grepl("= Response Proportions =", tmp))
+cat(tmp[i1:(i2 - 2)], sep = "\n")
 ```
 
 By default, values of 1, 2, ... will
@@ -295,7 +294,7 @@ to linear transformation of the variables,
 which is usually the case for most common
 tests.
 
-If there are variables with 10 or few
+If there are variables with 10 or fewer
 unique values, the response proportions
 are also printed:
 

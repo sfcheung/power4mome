@@ -82,4 +82,26 @@ expect_equal(
   0
 )
 
+
+suppressWarnings(
+  out_i2 <- power4test(
+            nrep = 2,
+            model = model_simple_med,
+            pop_es = model_simple_med_es,
+            n = 50,
+            number_of_indicators = k,
+            R = 100,
+            fit_model_args = list(control = list(iter.max = 100)),
+            ci_type = "mc",
+            reliability = rel,
+            test_fun = test_parameters,
+            iseed = 1234,
+            parallel = FALSE,
+            progress = !is_testing()
+          )
+)
+expect_true(
+  all(rejection_rates(out_i2)$pvalid == 0)
+)
+
 })
