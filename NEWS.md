@@ -59,7 +59,7 @@
   must also be a named list.
   (0.2.1.27)
 
-- Added `get_fit()` to retrieve a fit
+- Added `get_sim_fit()` to retrieve a fit
   object from the output of `power4test()`.
   (0.2.1.28)
 

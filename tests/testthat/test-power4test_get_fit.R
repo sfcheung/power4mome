@@ -53,22 +53,22 @@ power_all_sim_only_k2 <- power4test(nrep = 3,
                                     parallel = FALSE,
                                     iseed = 1234)
 
-fit0 <- get_fit(power_all_sim_only_k2)
+fit0 <- get_sim_fit(power_all_sim_only_k2)
 
 expect_identical(
   fit0,
   power_all_sim_only_k2$sim_all[[1]]$extra$fit
 )
 
-fit0 <- get_fit(power_all_sim_only_k2, "fit2")
+fit0 <- get_sim_fit(power_all_sim_only_k2, "fit2")
 
 expect_identical(
   fit0,
   power_all_sim_only_k2$sim_all[[1]]$extra$fit2
 )
 
-expect_error(get_fit(power_all_sim_only_k2, "fit0"))
-expect_error(get_fit(power_all_sim_only_k2, fit_class = "lm"))
+expect_error(get_sim_fit(power_all_sim_only_k2, "fit0"))
+expect_error(get_sim_fit(power_all_sim_only_k2, fit_class = "lm"))
 
 power_all_sim_only_k2 <- power4test(nrep = 3,
                                     model = model_simple_med,
@@ -82,25 +82,25 @@ power_all_sim_only_k2 <- power4test(nrep = 3,
                                     parallel = FALSE,
                                     iseed = 1234)
 
-expect_error(get_fit(power_all_sim_only_k2, "fit0"))
-expect_error(get_fit(power_all_sim_only_k2, fit_class = "lm"))
+expect_error(get_sim_fit(power_all_sim_only_k2, "fit0"))
+expect_error(get_sim_fit(power_all_sim_only_k2, fit_class = "lm"))
 
-fit0 <- get_fit(power_all_sim_only_k2, "fit2")
+fit0 <- get_sim_fit(power_all_sim_only_k2, "fit2")
 expect_identical(
   fit0,
   power_all_sim_only_k2$sim_all[[1]]$extra$fit2
 )
 
 expect_equal(
-  get_fit(power_all_sim_only_k2, NULL),
+  get_sim_fit(power_all_sim_only_k2, NULL),
   c("fit", "fit2", "fit3")
 )
 expect_equal(
-  get_fit(power_all_sim_only_k2, NULL, fit_class = "lavaan"),
+  get_sim_fit(power_all_sim_only_k2, NULL, fit_class = "lavaan"),
   c("fit2", "fit3")
 )
 
-fit0 <- get_fit(power_all_sim_only_k1)
+fit0 <- get_sim_fit(power_all_sim_only_k1)
 expect_identical(
   fit0,
   power_all_sim_only_k1$sim_all[[1]]$extra$fit

@@ -11,7 +11,7 @@
 #' If the sample size of a replication is
 #' large enough, the fit results can also
 #' be used to check the specification of
-#' the model. The helper [get_fit()] is
+#' the model. The helper [get_sim_fit()] is
 #' for extracting the stored fit results
 #' from the output of [power4test()]
 #' and friends.
@@ -75,10 +75,10 @@
 #'                   parallel = FALSE,
 #'                   progress = TRUE)
 #'
-#' get_fit(out)
+#' get_sim_fit(out)
 #'
 #' @export
-get_fit <- function(
+get_sim_fit <- function(
   object,
   which = "fit",
   fit_class = c("lavaan", "lm_list_lmhelprs"),
