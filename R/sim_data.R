@@ -483,7 +483,7 @@
 #' stop it manually.
 #'
 #' @return
-#' The function [sim_out()] returns
+#' The function [sim_data()] returns
 #' a list of the class `sim_data`,
 #' with length `nrep`. Each element
 #' is a `sim_data_i` object, with
@@ -1215,9 +1215,6 @@ print.sim_data <- function(x,
   invisible(x)
 }
 
-#' @description
-#' The function
-#'
 #' @param object Either a `sim_data`
 #' object or a `power4test` object.
 #' It extracts the simulated data
