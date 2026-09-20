@@ -441,7 +441,7 @@ summarize_one_test_data_frame <- function(x,
   collapse <- match.arg(collapse)
   nrep <- length(x)
   test_i <- x[[1]]$test_results
-  test_label <- attr(test_i, "test_label")
+  test_label <- attr(test_i, "test_label") %||% "test_label"
   i <- sapply(test_i,
               is.numeric)
   i_names <- colnames(test_i)[i]
@@ -450,12 +450,21 @@ summarize_one_test_data_frame <- function(x,
           x,
           \(xx) !(test_label %in% colnames(xx$test_results))
          )
+  all_default_cols_na <- sapply(
+    x,
+    \(xx) {
+      all(is.na(unlist(xx$test_results[, c("est", "cilo", "cihi", "sig", "pvalue")])))
+    }
+  )
   x_ok <- x[!no_test_label]
   out0 <- sapply(test_i[, "test_label", drop = TRUE],
                  function(xx) {
                    t(sapply(x_ok,
                             function(yy) {
                               tmp <- yy$test_results
+                              if (!all(i_names %in% colnames(tmp))) {
+                                tmp[, setdiff(i_names, colnames(tmp))] <- NA
+                              }
                               unlist(tmp[tmp[, test_label] == xx, i])
                             },
                             simplify = TRUE))
