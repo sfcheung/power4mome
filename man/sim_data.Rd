@@ -283,7 +283,7 @@ to be extracted. If ignored if the
 data were not processed by \code{process_data}.}
 }
 \value{
-The function \code{\link[=sim_out]{sim_out()}} returns
+The function \code{\link[=sim_data]{sim_data()}} returns
 a list of the class \code{sim_data},
 with length \code{nrep}. Each element
 is a \code{sim_data_i} object, with
@@ -335,8 +335,6 @@ Get a model matrix and
 effect size specification and
 simulate a number of datasets,
 along with other information.
-
-The function
 }
 \details{
 The function \code{\link[=sim_data]{sim_data()}} generates

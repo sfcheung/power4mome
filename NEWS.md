@@ -1,4 +1,4 @@
-# power4mome 0.2.1.27
+# power4mome 0.2.1.28
 
 ## New Features
 
@@ -58,6 +58,10 @@
   a named list. The argument `test_args()`
   must also be a named list.
   (0.2.1.27)
+
+- Added `get_sim_fit()` to retrieve a fit
+  object from the output of `power4test()`.
+  (0.2.1.28)
 
 ## Miscellaneous
 
