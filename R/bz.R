@@ -51,6 +51,12 @@ add_bz_i <- function(outi) {
   outz1 <- split(outz1,
                  seq_len(nrow(outz1)),
                  drop = FALSE)
+  # Remove NA cases
+  na_cases <- sapply(
+    outz1,
+    \(x) is.na(x[, "nlt0"])
+  )
+  outz1 <- outz1[!na_cases]
   R <- sapply(outz1,
               \(x) x[,"R"])
   if (length(unique(R)) != 1) {
@@ -88,7 +94,7 @@ add_bz_i <- function(outi) {
     if (inherits(outi, "matrix")) {
       out <- as.matrix(out)
     }
-    rownames(out) <- rownames(outi)
+    rownames(out) <- rownames(outi[!na_cases, ])
     return(out)
   }
 }

@@ -803,61 +803,189 @@ power4test <- function(object = NULL,
     update_test <- TRUE
   }
   test_all <- NULL
+  # test_all is always a list, even if there is only one test,
+  #   with one element for each test.
+  # Each element has nrep replications of test results.
 
   if (do_the_test && !update_test) {
-    if (is.null(test_name)) {
-      test_name <- deparse(substitute(test_fun))
-      test_args_tmp <- utils::modifyList(test_args,
-                                         list(get_test_name = TRUE),
-                                         keep.null = TRUE)
-      test_name0 <- tryCatch(do.call(test_fun,
-                                     test_args_tmp),
-                             error = function(e) e)
-      if (!inherits(test_name0, "error")) {
-        if (is.character(test_name0) &&
-            length(test_name0) == 1) {
-          test_name <- test_name0
+
+    # ==== Add new test(s) ====
+
+    # ==== Check the number of tests ====
+
+    if (is.list(test_fun)) {
+
+      # ==== test_fun is a list, though may be a list of one test ====
+
+      test_fun_names <- names(test_fun)
+      test_k <- length(test_fun)
+      test_args_names <- names(test_args)
+
+      # Sanity checks
+
+      if (!is.null(results_fun)) {
+        stop("results_fun cannot be used if test_fun is a list.")
+      }
+      if (!is.null(test_note)) {
+        stop("test_note cannot be used if test_fun is a list.")
+      }
+      if (is.null(test_fun_names)) {
+        stop("If test_fun set to a list, it must be a named list.")
+      }
+      if (any(duplicated(test_fun_names))) {
+        stop("Names of tests in test_fun must be unique.")
+      }
+      tmp <- sapply(
+              test_fun,
+              \(x) {
+                x0 <- try(match.fun(x), silent = TRUE)
+                if (inherits(x0, "try-error")) {
+                  return(FALSE)
+                }
+                is.function(x0)
+              }
+            )
+      if (any(!tmp)) {
+        tmp2 <- paste0(test_fun_names[tmp], collapse = ", ")
+        stop("Not function(s): ", tmp2)
+      }
+      tmp <- all(test_args_names %in% test_fun_names)
+      if (any(!tmp)) {
+        tmp2 <- paste0(test_args_names[!tmp], collapse = ", ")
+        stop("Name(s) in test_args but not in test_fun: ", tmp2)
+      }
+
+      # Set list() for tests not in test_args
+
+      tmp <- setdiff(test_fun_names, test_args_names)
+      tmp2 <- sapply(
+                tmp, \(x) list(),
+                simplify = FALSE,
+                USE.NAMES = TRUE
+              )
+      test_args <- c(test_args, tmp2)
+
+    } else {
+
+      # ==== test_fun is not a list. Convert it to a list ====
+
+      if (is.null(test_name)) {
+        test_name <- deparse(substitute(test_fun))
+        # Try to get 'official' test name
+        test_args_tmp <- utils::modifyList(test_args,
+                                          list(get_test_name = TRUE),
+                                          keep.null = TRUE)
+        test_name0 <- tryCatch(do.call(test_fun,
+                                      test_args_tmp),
+                              error = function(e) e)
+        if (!inherits(test_name0, "error")) {
+          if (is.character(test_name0) &&
+              length(test_name0) == 1) {
+            # 'Official' test name available. Use it
+            test_name <- test_name0
+          }
         }
       }
+      test_fun <- list(test_fun)
+      names(test_fun) <- test_name
+      test_args <- list(test_args)
+      names(test_args) <- test_name
+      test_fun_names <- names(test_fun)
+      test_k <- length(test_fun)
+      test_args_names <- names(test_args)
     }
+
+    # test_fun and test_args are always lists at this point.
+
     if (args$progress) {
-      cat("Do the test:",
+      cat("Do the test(s):",
           test_name,
           "\n")
     }
-    tmp_args <- test_args
-    tmp_args$get_map_names <- TRUE
-    map_names0 <- tryCatch(do.call(test_fun, tmp_args),
-                           error = function(e) e)
-    if (!inherits(map_names, "error")) {
-      if (is.character(map_names0) && !is.null(names(map_names0))) {
-        map_names_user <- map_names
-        map_names <- map_names0
-        map_names[names(map_names_user)] <- map_names_user
+
+    test_all <- vector("list", test_k)
+    names(test_all) <- test_fun_names
+
+    for (test_name_i in test_fun_names) {
+
+      tmp_args <- test_args[[test_name_i]]
+      test_fun_i <- test_fun[[test_name_i]]
+      test_args_i <- test_args[[test_name_i]]
+      map_names_i <- map_names
+      # Try 'official' map_names
+      tmp_args$get_map_names <- TRUE
+      map_names0 <- tryCatch(do.call(test_fun_i, tmp_args),
+                            error = function(e) e)
+      if (!inherits(map_names0, "error")) {
+        # 'Official' map_names available. Use them.
+        if (is.character(map_names0) && !is.null(names(map_names0))) {
+          map_names_user <- map_names_i
+          map_names_i <- map_names0
+          map_names_i[names(map_names_user)] <- map_names_user
+        }
       }
+
+      # ==== Do one test ====
+      test_all_i <- do_test(sim_all,
+                          test_fun = test_fun_i,
+                          test_args = test_args_i,
+                          map_names = map_names_i,
+                          results_fun = results_fun,
+                          results_args = results_args,
+                          parallel = args$parallel,
+                          progress = args$progress,
+                          ncores = args$ncores,
+                          cl = cl)
+      attr(test_all_i, "test_note") <- test_note
+      attr(test_all_i, "test_name") <- test_name_i
+      test_all[[test_name_i]] <- test_all_i
     }
-    test_all <- do_test(sim_all,
-                        test_fun = test_fun,
-                        test_args = test_args,
-                        map_names = map_names,
-                        results_fun = results_fun,
-                        results_args = results_args,
-                        parallel = args$parallel,
-                        progress = args$progress,
-                        ncores = args$ncores,
-                        cl = cl)
-    attr(test_all, "test_note") <- test_note
-    attr(test_all, "test_name") <- test_name
-    test_all <- list(test_all)
-    names(test_all) <- test_name
+    # tmp_args <- test_args
+    # # Try 'official' map_names
+    # tmp_args$get_map_names <- TRUE
+    # map_names0 <- tryCatch(do.call(test_fun, tmp_args),
+    #                        error = function(e) e)
+    # if (!inherits(map_names, "error")) {
+    #   # 'Official' map_names available. Use them.
+    #   if (is.character(map_names0) && !is.null(names(map_names0))) {
+    #     map_names_user <- map_names
+    #     map_names <- map_names0
+    #     map_names[names(map_names_user)] <- map_names_user
+    #   }
+    # }
+
+    # # ==== Do one test ====
+
+    # test_all <- do_test(sim_all,
+    #                     test_fun = test_fun,
+    #                     test_args = test_args,
+    #                     map_names = map_names,
+    #                     results_fun = results_fun,
+    #                     results_args = results_args,
+    #                     parallel = args$parallel,
+    #                     progress = args$progress,
+    #                     ncores = args$ncores,
+    #                     cl = cl)
+    # attr(test_all, "test_note") <- test_note
+    # attr(test_all, "test_name") <- test_name
+    # test_all <- list(test_all)
+    # names(test_all) <- test_name
   }
 
   if (update_test) {
+
+    # ==== Update test(s) ====
+
     if (args$progress) {
       cat("Update the test(s):\n")
     }
     # Only update tests. Ignore test arguments
     # Clear all argument values about test
+
+    # ==== Update each stored test ====
+
+    # These arguments are cleared because the
+    # values in the stored tests should be used.
     tmp <- formals(power4test)
     args$test_fun <- tmp$test_fun
     args$test_args <- tmp$test_args
@@ -878,7 +1006,12 @@ power4test <- function(object = NULL,
 
   }
 
+  # ==== Finalize the output ====
+
   if (!update_power4test) {
+
+    # ==== New power4test ====
+
     out <- list(sim_all = sim_all,
                 test_all = test_all)
     attr(out, "args") <- args
@@ -888,20 +1021,33 @@ power4test <- function(object = NULL,
     attr(out, "version.lmhelprs") <- utils::packageVersion("lmhelprs")
     class(out) <- c("power4test", class(out))
   } else {
+
+    # ==== Update power4test ====
+
     attr(object, "args") <- args
     if (update_data) {
+      # Store new sim data, if any
       object$sim_all <- sim_all
     }
     if (!is.null(test_all)) {
+      # Test results available
       if (update_test) {
+        # The 1st test. Add it.
         object$test_all <- test_all
       } else {
-        object$test_all[[test_name]] <- test_all[[1]]
+        # A new test is added. Add it by names.
+        if (is.null(object$test_all)) {
+          object$test_all <- test_all
+        } else {
+          # test_all is always a list
+          object$test_all[names(test_all)] <- test_all
+        }
       }
     }
     out <- object
   }
   if (!is.null(out$test_all)) {
+    # Tests available. Set the class
     if (!inherits(out$test_all, "test_out_list")) {
       class(out$test_all) <- c("test_out_list", class(out$test_all))
     }
