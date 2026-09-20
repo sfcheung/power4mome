@@ -1215,9 +1215,6 @@ print.sim_data <- function(x,
   invisible(x)
 }
 
-#' @description
-#' The function
-#'
 #' @param object Either a `sim_data`
 #' object or a `power4test` object.
 #' It extracts the simulated data
