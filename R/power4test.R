@@ -826,6 +826,9 @@ power4test <- function(object = NULL,
       if (!is.null(results_fun)) {
         stop("results_fun cannot be used if test_fun is a list.")
       }
+      if (!is.null(test_note)) {
+        stop("test_note cannot be used if test_fun is a list.")
+      }
       if (is.null(test_fun_names)) {
         stop("If test_fun set to a list, it must be a named list.")
       }
@@ -903,11 +906,11 @@ power4test <- function(object = NULL,
     test_all <- vector("list", test_k)
     names(test_all) <- test_fun_names
 
-    for (test_i in test_fun_names) {
+    for (test_name_i in test_fun_names) {
 
-      tmp_args <- test_args[[test_i]]
-      test_fun_i <- test_fun[[test_i]]
-      test_args_i <- test_args[[test_i]]
+      tmp_args <- test_args[[test_name_i]]
+      test_fun_i <- test_fun[[test_name_i]]
+      test_args_i <- test_args[[test_name_i]]
       map_names_i <- map_names
       # Try 'official' map_names
       tmp_args$get_map_names <- TRUE
@@ -934,9 +937,8 @@ power4test <- function(object = NULL,
                           ncores = args$ncores,
                           cl = cl)
       attr(test_all_i, "test_note") <- test_note
-      attr(test_all_i, "test_name") <- test_name
-      test_all[[test_i]] <- test_all_i
-
+      attr(test_all_i, "test_name") <- test_name_i
+      test_all[[test_name_i]] <- test_all_i
     }
     # tmp_args <- test_args
     # # Try 'official' map_names
