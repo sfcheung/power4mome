@@ -239,14 +239,14 @@ sim_only <- power4test(nrep = 2,
 test_out <- power4test(object = sim_only,
                        test_fun = test_parameters)
 #> Recommend setting 'parallel' to TRUE for faster analysis
-#> Do the test: test_parameters: CIs  
+#> Do the test(s): test_parameters: CIs  
 
 print(test_out,
       test_long = TRUE)
 #> 
 #> ===================== Package Information =====================
 #> 
-#> Created by power4mome 0.2.1.26 
+#> Created by power4mome 0.2.1.27 
 #> Supporting packages:
 #> - lavaan 0.7.2 
 #> - manymome 0.3.7 
@@ -343,14 +343,14 @@ test_out <- power4test(object = sim_only,
                        test_fun = test_parameters,
                        test_args = list(standardized = TRUE))
 #> Recommend setting 'parallel' to TRUE for faster analysis
-#> Do the test: test_parameters: CIs (standardized)  
+#> Do the test(s): test_parameters: CIs (standardized)  
 
 print(test_out,
       test_long = TRUE)
 #> 
 #> ===================== Package Information =====================
 #> 
-#> Created by power4mome 0.2.1.26 
+#> Created by power4mome 0.2.1.27 
 #> Supporting packages:
 #> - lavaan 0.7.2 
 #> - manymome 0.3.7 
@@ -447,14 +447,14 @@ test_out <- power4test(object = sim_only,
                        test_fun = test_parameters,
                        test_args = list(op = "~"))
 #> Recommend setting 'parallel' to TRUE for faster analysis
-#> Do the test: test_parameters: CIs (op: ~) 
+#> Do the test(s): test_parameters: CIs (op: ~) 
 
 print(test_out,
       test_long = TRUE)
 #> 
 #> ===================== Package Information =====================
 #> 
-#> Created by power4mome 0.2.1.26 
+#> Created by power4mome 0.2.1.27 
 #> Supporting packages:
 #> - lavaan 0.7.2 
 #> - manymome 0.3.7 

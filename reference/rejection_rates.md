@@ -327,7 +327,7 @@ test_out <- power4test(object = sim_only,
                                         boot_ci = TRUE,
                                         mc_ci = FALSE))
 #> Recommend setting 'parallel' to TRUE for faster analysis
-#> Do the test: test_indirect: x->m->y 
+#> Do the test(s): test_indirect: x->m->y 
 
 # Do the test 'test_parameters' on each datasets
 # and add the results to 'test_out'
@@ -335,7 +335,7 @@ test_out <- power4test(object = sim_only,
 test_out <- power4test(object = test_out,
                        test_fun = test_parameters)
 #> Recommend setting 'parallel' to TRUE for faster analysis
-#> Do the test: test_parameters: CIs  
+#> Do the test(s): test_parameters: CIs  
 
 # Compute and print the rejection rates for stored tests
 

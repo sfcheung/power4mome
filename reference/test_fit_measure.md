@@ -253,14 +253,14 @@ test_out <- power4test(
   )
 )
 #> Recommend setting 'parallel' to TRUE for faster analysis
-#> Do the test: test_fit_measure 
+#> Do the test(s): test_fit_measure 
 
 print(test_out,
       test_long = TRUE)
 #> 
 #> ===================== Package Information =====================
 #> 
-#> Created by power4mome 0.2.1.26 
+#> Created by power4mome 0.2.1.27 
 #> Supporting packages:
 #> - lavaan 0.7.2 
 #> - manymome 0.3.7 

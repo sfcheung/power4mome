@@ -226,13 +226,13 @@ test_ind <- power4test(object = sim_only,
                                         wvalues = c(w = 1),
                                         mc_ci = TRUE))
 #> Recommend setting 'parallel' to TRUE for faster analysis
-#> Do the test: test_cond_indirect: x->m->y (w = 1) 
+#> Do the test(s): test_cond_indirect: x->m->y (w = 1) 
 print(test_ind,
       test_long = TRUE)
 #> 
 #> ===================== Package Information =====================
 #> 
-#> Created by power4mome 0.2.1.26 
+#> Created by power4mome 0.2.1.27 
 #> Supporting packages:
 #> - lavaan 0.7.2 
 #> - manymome 0.3.7 

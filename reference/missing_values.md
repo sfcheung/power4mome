@@ -120,7 +120,7 @@ out <- power4test(
 #> Recommend setting 'parallel' to TRUE for faster analysis
 #> Simulate the data:
 #> Fit the model(s):
-#> Do the test: test_parameters: CIs (op: ~) 
+#> Do the test(s): test_parameters: CIs (op: ~) 
 
 dat <- pool_sim_data(out)
 head(dat, 50)

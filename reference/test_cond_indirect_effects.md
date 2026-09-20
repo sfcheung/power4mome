@@ -235,13 +235,13 @@ test_out <- power4test(object = sim_only,
                                         wlevels = c("w"),
                                         mc_ci = TRUE))
 #> Recommend setting 'parallel' to TRUE for faster analysis
-#> Do the test: test_cond_indirect_effects: x->m->y 
+#> Do the test(s): test_cond_indirect_effects: x->m->y 
 print(test_out,
       test_long = TRUE)
 #> 
 #> ===================== Package Information =====================
 #> 
-#> Created by power4mome 0.2.1.26 
+#> Created by power4mome 0.2.1.27 
 #> Supporting packages:
 #> - lavaan 0.7.2 
 #> - manymome 0.3.7 

@@ -237,13 +237,13 @@ test_ind <- power4test(object = sim_only,
                                         y = "y",
                                         mc_ci = TRUE))
 #> Recommend setting 'parallel' to TRUE for faster analysis
-#> Do the test: test_indirects: x-...->y 
+#> Do the test(s): test_indirects: x-...->y 
 print(test_ind,
       test_long = TRUE)
 #> 
 #> ===================== Package Information =====================
 #> 
-#> Created by power4mome 0.2.1.26 
+#> Created by power4mome 0.2.1.27 
 #> Supporting packages:
 #> - lavaan 0.7.2 
 #> - manymome 0.3.7 
@@ -359,13 +359,13 @@ test_ind_all_sig <- power4test(
                                         mc_ci = TRUE,
                                         omnibus = "all_sig"))
 #> Recommend setting 'parallel' to TRUE for faster analysis
-#> Do the test: test_indirects: x-...->y 
+#> Do the test(s): test_indirects: x-...->y 
 print(test_ind_all_sig,
       test_long = TRUE)
 #> 
 #> ===================== Package Information =====================
 #> 
-#> Created by power4mome 0.2.1.26 
+#> Created by power4mome 0.2.1.27 
 #> Supporting packages:
 #> - lavaan 0.7.2 
 #> - manymome 0.3.7 

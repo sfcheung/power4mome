@@ -270,7 +270,7 @@ test_out <- power4test(object = sim_only,
                        test_fun = test_parameters,
                        test_args = list(pars = "m~x"))
 #> Recommend setting 'parallel' to TRUE for faster analysis
-#> Do the test: test_parameters: CIs (pars: m~x) 
+#> Do the test(s): test_parameters: CIs (pars: m~x) 
 
 # Determine the sample size with a power of .80 (default)
 
@@ -326,7 +326,7 @@ power_vs_n <- x_from_power(test_out,
 #> 
 #> ========== Final Stage ==========
 #> 
-#> - Start at 2026-09-20 01:11:55 
+#> - Start at 2026-09-20 08:24:44 
 #> - Rejection Rates:
 #> 
 #> [test]: test_parameters: CIs (pars: m~x) 

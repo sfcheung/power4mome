@@ -1104,14 +1104,14 @@ out <- power4test(nrep = 10,
 #> Recommend setting 'parallel' to TRUE for faster analysis
 #> Simulate the data:
 #> Fit the model(s):
-#> Do the test: test_parameters: CIs (pars: m~x) 
+#> Do the test(s): test_parameters: CIs (pars: m~x) 
 
 print(out,
       test_long = TRUE)
 #> 
 #> ===================== Package Information =====================
 #> 
-#> Created by power4mome 0.2.1.26 
+#> Created by power4mome 0.2.1.27 
 #> Supporting packages:
 #> - lavaan 0.7.2 
 #> - manymome 0.3.7 
@@ -1215,7 +1215,7 @@ print(out1,
 #> 
 #> ===================== Package Information =====================
 #> 
-#> Created by power4mome 0.2.1.26 
+#> Created by power4mome 0.2.1.27 
 #> Supporting packages:
 #> - lavaan 0.7.2 
 #> - manymome 0.3.7 
@@ -1309,14 +1309,14 @@ out2 <- power4test(out,
                    parallel = FALSE,
                    progress = TRUE)
 #> Recommend setting 'parallel' to TRUE for faster analysis
-#> Do the test: test_parameters: CIs (pars: y~x) 
+#> Do the test(s): test_parameters: CIs (pars: y~x) 
 
 print(out2,
       test_long = TRUE)
 #> 
 #> ===================== Package Information =====================
 #> 
-#> Created by power4mome 0.2.1.26 
+#> Created by power4mome 0.2.1.27 
 #> Supporting packages:
 #> - lavaan 0.7.2 
 #> - manymome 0.3.7 

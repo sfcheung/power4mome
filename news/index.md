@@ -1,6 +1,6 @@
 # Changelog
 
-## power4mome 0.2.1.26
+## power4mome 0.2.1.27
 
 ### New Features
 
@@ -49,6 +49,12 @@
   and
   [`scale_scores()`](https://sfcheung.github.io/power4mome/reference/scale_scores.md).
   (0.2.1.17, 0.2.1.19)
+
+- Updated
+  [`power4test()`](https://sfcheung.github.io/power4mome/reference/power4test.md)
+  to accept a list of tests in `test_fun()`. If set to a list of tests,
+  it must be a named list. The argument `test_args()` must also be a
+  named list. (0.2.1.27)
 
 ### Miscellaneous
 

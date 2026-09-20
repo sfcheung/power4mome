@@ -204,7 +204,7 @@ test_out <- power4test(object = sim_only,
                                         boot_ci = TRUE,
                                         mc_ci = FALSE))
 #> Recommend setting 'parallel' to TRUE for faster analysis
-#> Do the test: test_indirect: x->m->y 
+#> Do the test(s): test_indirect: x->m->y 
 
 out <- power4test_by_n(test_out,
                        n = c(100, 110, 120))

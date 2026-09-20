@@ -220,14 +220,14 @@ test_out <- power4test(object = sim_only,
                                         w = "w",
                                         mc_ci = TRUE))
 #> Recommend setting 'parallel' to TRUE for faster analysis
-#> Do the test: test_index_of_mome: x->m->y, moderated by w 
+#> Do the test(s): test_index_of_mome: x->m->y, moderated by w 
 
 print(test_out,
       test_long = TRUE)
 #> 
 #> ===================== Package Information =====================
 #> 
-#> Created by power4mome 0.2.1.26 
+#> Created by power4mome 0.2.1.27 
 #> Supporting packages:
 #> - lavaan 0.7.2 
 #> - manymome 0.3.7 
