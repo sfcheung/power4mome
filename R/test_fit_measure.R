@@ -369,7 +369,8 @@ test_fit_measure <- function(
     list(
       fit_measures = unique(c(fit_measure, sig_value_name)),
       object = fit_out
-    )
+    ),
+    keep.null = TRUE
   )
   fm_out <- suppressWarnings(
     tryCatch(do.call(

@@ -407,7 +407,8 @@ power_algorithm_search_by_curve <- function(object,
   variants0 <- list(delta_tol = NULL,
                     last_k = 3)
   variants <- utils::modifyList(variants0,
-                                variants)
+                                variants,
+                                keep.null = TRUE)
 
   # ==== Set default for delta_tol ====
 

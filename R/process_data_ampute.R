@@ -136,7 +136,8 @@ missing_values <- function(
             list(data = data,
                  prop = prop,
                  mech = mech,
-                 run = TRUE))
+                 run = TRUE),
+            keep.null = TRUE)
   out <- do.call(mice::ampute,
                  args)
   out$amp

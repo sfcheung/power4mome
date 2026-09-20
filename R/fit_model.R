@@ -328,7 +328,8 @@ fit_model_i <- function(data_i,
     fit_args0[[arg_group_name]] <- data_i$group_name
   }
   fit_args <- utils::modifyList(list(...),
-                                fit_args0)
+                                fit_args0,
+                                keep.null = TRUE)
   fit <- tryCatch(suppressWarnings(do.call(fit_function,
                                            fit_args)),
                   error = function(e) e)

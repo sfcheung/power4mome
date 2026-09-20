@@ -692,7 +692,8 @@ x_from_power <- function(object,
 
   internal_args <- utils::modifyList(
                       internal_args0,
-                      internal_args
+                      internal_args,
+                      keep.null = TRUE
                     )
 
   # ==== Update the object if x_from_power ====
@@ -740,7 +741,8 @@ x_from_power <- function(object,
               alpha = .05)
   rejection_rates_args <- utils::modifyList(
                             tmp,
-                            rejection_rates_args
+                            rejection_rates_args,
+                            keep.null = TRUE
                           )
   rejection_rates_args$merge_all_tests <- TRUE
 
@@ -1518,7 +1520,8 @@ x_from_power <- function(object,
   my_call <- as.list(match.call())[-1]
   args <- formals()
   args <- utils::modifyList(args,
-                            my_call)
+                            my_call,
+                            keep.null = TRUE)
   args$object <- NULL
   reject_1 <- rejection_rates(by_x_1,
                               level = ci_level)

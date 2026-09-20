@@ -238,11 +238,13 @@ test_indirect_effect <- function(fit = fit,
   if (test_method == "pvalue") {
     internal_options <- utils::modifyList(internal_options,
                                           list(skip_ci = TRUE,
-                                               pvalue_min_size = -Inf))
+                                               pvalue_min_size = -Inf),
+                                          keep.null = TRUE)
   }
   if (test_method == "ci") {
     internal_options <- utils::modifyList(internal_options,
-                                          list(skip_ci = FALSE))
+                                          list(skip_ci = FALSE),
+                                          keep.null = TRUE)
   }
   if (fit_name != "fit") {
     mc_name <- paste0(fit_name, "_mc_out")

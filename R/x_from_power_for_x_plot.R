@@ -369,7 +369,8 @@ plot.x_from_power <- function(x,
       class(tmp) <- class(x$power4test_trials)
       tmp_args <- utils::modifyList(pars_ci_final_x,
                                     list(object = tmp,
-                                         predictor = predictor))
+                                         predictor = predictor),
+                                    keep.null = TRUE)
       do.call(plot_power_x_ci,
               tmp_args)
       # Drop final_n from the CI lists
@@ -385,7 +386,8 @@ plot.x_from_power <- function(x,
         !is_pba) {
       tmp_args <- utils::modifyList(pars_ci,
                                     list(object = tmp_for_ci,
-                                        predictor = predictor))
+                                        predictor = predictor),
+                                    keep.null = TRUE)
       do.call(plot_power_x_ci,
               tmp_args)
     }
@@ -399,7 +401,8 @@ plot.x_from_power <- function(x,
     tmp_args <- utils::modifyList(pars_power_curve,
                                   list(object = x$power4test_trials,
                                        predictor = predictor,
-                                       power_x_fit = x$power_curve))
+                                       power_x_fit = x$power_curve),
+                                  keep.null = TRUE)
     do.call(plot_power_curve_x,
             tmp_args)
   }
@@ -408,7 +411,8 @@ plot.x_from_power <- function(x,
 
   if ("target_power" %in% what) {
     tmp_args <- utils::modifyList(pars_target_power,
-                                  list(h = x$target_power))
+                                  list(h = x$target_power),
+                                  keep.null = TRUE)
     do.call(abline,
             tmp_args)
   }
@@ -419,7 +423,8 @@ plot.x_from_power <- function(x,
 
     if ("final_x" %in% what) {
       tmp_args <- utils::modifyList(pars_final_x,
-                                    list(v = x$x_final))
+                                    list(v = x$x_final),
+                                    keep.null = TRUE)
       do.call(abline,
               tmp_args)
     }
@@ -428,7 +433,8 @@ plot.x_from_power <- function(x,
 
     if ("final_power" %in% what) {
       tmp_args <- utils::modifyList(pars_final_power,
-                                    list(h = x$power_final))
+                                    list(h = x$power_final),
+                                    keep.null = TRUE)
       do.call(abline,
               tmp_args)
     }
@@ -443,7 +449,8 @@ plot.x_from_power <- function(x,
                              format = "f")
       tmp_args <- utils::modifyList(pars_text_final_x,
                                     list(x = x$x_final,
-                                         labels = x_final_str))
+                                         labels = x_final_str),
+                                    keep.null = TRUE)
       do.call(text,
               tmp_args)
     }
@@ -457,7 +464,8 @@ plot.x_from_power <- function(x,
                                         xright = par("usr")[2],
                                         ybottom = par("usr")[3],
                                         ytop = par("usr")[4],
-                                        border = NULL)
+                                        border = NULL),
+                                      keep.null = TRUE
                                       )
         do.call(rect,
                 tmp_args)
@@ -469,7 +477,8 @@ plot.x_from_power <- function(x,
                                         xright = x$x_final,
                                         ybottom = par("usr")[3],
                                         ytop = par("usr")[4],
-                                        border = NULL)
+                                        border = NULL),
+                                      keep.null = TRUE
                                       )
         do.call(rect,
                 tmp_args)
@@ -488,7 +497,8 @@ plot.x_from_power <- function(x,
                                                       par("usr")[2])),
                                            y = mean(c(x$target_power,
                                                       par("usr")[3])),
-                                           labels = tmp_str))
+                                           labels = tmp_str),
+                                      keep.null = TRUE)
         do.call(text,
                 tmp_args)
       }
@@ -502,7 +512,8 @@ plot.x_from_power <- function(x,
                                                       par("usr")[1])),
                                            y = mean(c(x$target_power,
                                                       par("usr")[3])),
-                                           labels = tmp_str))
+                                           labels = tmp_str),
+                                      keep.null = TRUE)
         do.call(text,
                 tmp_args)
       }
@@ -517,10 +528,12 @@ plot.x_from_power <- function(x,
                                          x = tmp[1] + (tmp[2] - tmp[1]) * .05,
                                          labels = formatC(x$power_final,
                                                           digits = digits,
-                                                          format = "f")))
+                                                          format = "f")),
+                                    keep.null = TRUE)
       if (!is.null(pars_text_final_power$x)) {
         tmp_args <- utils::modifyList(tmp_args,
-                                      list(x = pars_text_final_power$x))
+                                      list(x = pars_text_final_power$x),
+                                      keep.null = TRUE)
       }
       do.call(text,
               tmp_args)
@@ -741,11 +754,13 @@ plot.n_region_from_power <- function(x,
                     predictor = predictor,
                     main = main,
                     xlab = xlab,
-                    ylab = ylab)
+                    ylab = ylab),
+               keep.null = TRUE
               )
   if (is.null(args0$xlim)) {
     args1 <- utils::modifyList(args1,
-                               list(xlim = c(x_min, x_max)))
+                               list(xlim = c(x_min, x_max)),
+                               keep.null = TRUE)
   }
 
   do.call(plot_power_x,
@@ -770,7 +785,8 @@ plot.n_region_from_power <- function(x,
         class(tmp) <- class(x$below$power4test_trials)
         tmp_args <- utils::modifyList(pars_ci_final_x,
                                       list(object = tmp,
-                                          predictor = predictor))
+                                          predictor = predictor),
+                                      keep.null = TRUE)
         do.call(plot_power_x_ci,
                 tmp_args)
 
@@ -783,7 +799,8 @@ plot.n_region_from_power <- function(x,
         class(tmp) <- class(x$above$power4test_trials)
         tmp_args <- utils::modifyList(pars_ci_final_x,
                                       list(object = tmp,
-                                          predictor = predictor))
+                                          predictor = predictor),
+                                      keep.null = TRUE)
         do.call(plot_power_x_ci,
                 tmp_args)
 
@@ -796,7 +813,8 @@ plot.n_region_from_power <- function(x,
     # Draw the other CIs
     tmp_args <- utils::modifyList(pars_ci,
                                   list(object = a_for_ci,
-                                       predictor = predictor))
+                                       predictor = predictor),
+                                  keep.null = TRUE)
     do.call(plot_power_x_ci,
             tmp_args)
   }
@@ -819,7 +837,8 @@ plot.n_region_from_power <- function(x,
     tmp_args <- utils::modifyList(pars_power_curve,
                                   list(object = a,
                                        predictor = "n",
-                                       power_x_fit = fit))
+                                       power_x_fit = fit),
+                                  keep.null = TRUE)
     do.call(plot_power_curve_x,
             tmp_args)
   }
@@ -828,7 +847,8 @@ plot.n_region_from_power <- function(x,
 
   if ("target_power" %in% what) {
     tmp_args <- utils::modifyList(pars_target_power,
-                                  list(h = x$below$target_power))
+                                  list(h = x$below$target_power),
+                                  keep.null = TRUE)
     do.call(abline,
             tmp_args)
   }
@@ -840,13 +860,15 @@ plot.n_region_from_power <- function(x,
     if ("final_x" %in% what) {
       if (solution_found_below) {
         tmp_args <- utils::modifyList(pars_final_x,
-                                      list(v = x$below$x_final))
+                                      list(v = x$below$x_final),
+                                      keep.null = TRUE)
         do.call(abline,
                 tmp_args)
       }
       if (solution_found_above) {
         tmp_args <- utils::modifyList(pars_final_x,
-                                      list(v = x$above$x_final))
+                                      list(v = x$above$x_final),
+                                      keep.null = TRUE)
         do.call(abline,
                 tmp_args)
       }
@@ -857,13 +879,15 @@ plot.n_region_from_power <- function(x,
     if ("final_power" %in% what) {
       if (solution_found_below) {
         tmp_args <- utils::modifyList(pars_final_power,
-                                      list(h = x$below$power_final))
+                                      list(h = x$below$power_final),
+                                      keep.null = TRUE)
         do.call(abline,
                 tmp_args)
       }
       if (solution_found_above) {
         tmp_args <- utils::modifyList(pars_final_power,
-                                      list(h = x$above$power_final))
+                                      list(h = x$above$power_final),
+                                      keep.null = TRUE)
         do.call(abline,
                 tmp_args)
       }
@@ -879,10 +903,12 @@ plot.n_region_from_power <- function(x,
                                               es = digits),
                               format = "f")
         tmp_args <- utils::modifyList(list(y = par("usr")[3] + .05 * (par("usr")[4] - par("usr")[3])),
-                                      pars_text_final_x_lower)
+                                      pars_text_final_x_lower,
+                                      keep.null = TRUE)
         tmp_args <- utils::modifyList(tmp_args,
                                       list(x = x$below$x_final,
-                                          labels = x_final_str))
+                                          labels = x_final_str),
+                                      keep.null = TRUE)
         do.call(text,
                 tmp_args)
       }
@@ -893,10 +919,12 @@ plot.n_region_from_power <- function(x,
                                               es = digits),
                               format = "f")
         tmp_args <- utils::modifyList(list(y = par("usr")[3] + .10 * (par("usr")[4] - par("usr")[3])),
-                                      pars_text_final_x_upper)
+                                      pars_text_final_x_upper,
+                                      keep.null = TRUE)
         tmp_args <- utils::modifyList(tmp_args,
                                       list(x = x$above$x_final,
-                                          labels = x_final_str))
+                                          labels = x_final_str),
+                                      keep.null = TRUE)
         do.call(text,
                 tmp_args)
       }
@@ -910,7 +938,8 @@ plot.n_region_from_power <- function(x,
                                         xright = x$below$x_final,
                                         ybottom = par("usr")[3],
                                         ytop = par("usr")[4],
-                                        border = NULL)
+                                        border = NULL),
+                                      keep.null = TRUE
                                       )
         do.call(rect,
                 tmp_args)
@@ -922,7 +951,8 @@ plot.n_region_from_power <- function(x,
                                         xright = par("usr")[2],
                                         ybottom = par("usr")[3],
                                         ytop = par("usr")[4],
-                                        border = NULL)
+                                        border = NULL),
+                                      keep.null = TRUE
                                       )
         do.call(rect,
                 tmp_args)
@@ -940,7 +970,8 @@ plot.n_region_from_power <- function(x,
                                                       par("usr")[1])),
                                            y = mean(c(x$below$target_power,
                                                       par("usr")[3])),
-                                           labels = tmp_str))
+                                           labels = tmp_str),
+                                      keep.null = TRUE)
         do.call(text,
                 tmp_args)
       }
@@ -954,7 +985,8 @@ plot.n_region_from_power <- function(x,
                                                       par("usr")[2])),
                                            y = mean(c(x$above$target_power,
                                                       par("usr")[3])),
-                                           labels = tmp_str))
+                                           labels = tmp_str),
+                                      keep.null = TRUE)
         do.call(text,
                 tmp_args)
       }
@@ -971,10 +1003,12 @@ plot.n_region_from_power <- function(x,
                                           pos = 1,
                                           labels = formatC(x$below$power_final,
                                                             digits = digits,
-                                                            format = "f")))
+                                                            format = "f")),
+                                      keep.null = TRUE)
         if (!is.null(pars_text_final_power$x)) {
           tmp_args <- utils::modifyList(tmp_args,
-                                        list(x = pars_text_final_power$x))
+                                        list(x = pars_text_final_power$x),
+                                        keep.null = TRUE)
         }
         do.call(text,
                 tmp_args)
@@ -987,10 +1021,12 @@ plot.n_region_from_power <- function(x,
                                           pos = 3,
                                           labels = formatC(x$above$power_final,
                                                             digits = digits,
-                                                            format = "f")))
+                                                            format = "f")),
+                                      keep.null = TRUE)
         if (!is.null(pars_text_final_power$x)) {
           tmp_args <- utils::modifyList(tmp_args,
-                                        list(x = pars_text_final_power$x))
+                                        list(x = pars_text_final_power$x),
+                                        keep.null = TRUE)
         }
         do.call(text,
                 tmp_args)
