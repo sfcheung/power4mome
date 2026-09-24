@@ -1,6 +1,6 @@
 # Changelog
 
-## power4mome 0.2.1.28
+## power4mome 0.2.1.29
 
 ### New Features
 
@@ -102,6 +102,13 @@
 - Default to `keep.null = TRUE` in calls to
   [`utils::modifyList()`](https://rdrr.io/r/utils/modifyList.html). Not
   a must, but `keep.null = FALSE` is rarely what we need. (0.2.1.26)
+
+- In
+  [`power4test()`](https://sfcheung.github.io/power4mome/reference/power4test.md),
+  if these arguments are set, they always replace the stored values
+  completely: `fit_model_args`, `gen_mc_args`, `gen_boot_args`, `x_fun`,
+  `e_fun`. This is because there is no easy way to know those values
+  stored in a `power4test` object. (0.2.1.29)
 
 ### Bug Fixes
 

@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1.28</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1.29</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,9 +78,9 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.2.1.28" id="power4mome-02128">power4mome 0.2.1.28<a class="anchor" aria-label="anchor" href="#power4mome-02128"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.2.1.29" id="power4mome-02129">power4mome 0.2.1.29<a class="anchor" aria-label="anchor" href="#power4mome-02129"></a></h2>
 <div class="section level3">
-<h3 id="new-features-0-2-1-28">New Features<a class="anchor" aria-label="anchor" href="#new-features-0-2-1-28"></a></h3>
+<h3 id="new-features-0-2-1-29">New Features<a class="anchor" aria-label="anchor" href="#new-features-0-2-1-29"></a></h3>
 <ul><li><p>Added support for estimating the power of SAM (structural-after-measurement) by <code><a href="https://rdrr.io/pkg/lavaan/man/sam.html" class="external-link">lavaan::sam()</a></code> if <code>manymome</code> 0.3.4.25 or above is installed. (0.2.1.3)</p></li>
 <li><p>Updated <code><a href="../reference/fit_model.html">fit_model()</a></code> to allow fitting a single-group model even if the data generation model is a multigroup model (set <code>arg_group_name</code> to <code>NULL). The argument</code>model_append` is also added to allow modifying the data generation model. (0.2.1.7)</p></li>
 <li><p>Added <code><a href="../reference/rig_rs.html">rig_rs()</a></code>, which can be used in <code>x_fun</code> to generate correlated nonnormal variables. (0.2.1.9)</p></li>
@@ -93,7 +93,7 @@
 <li><p>Added <code><a href="../reference/get_sim_fit.html">get_sim_fit()</a></code> to retrieve a fit object from the output of <code><a href="../reference/power4test.html">power4test()</a></code>. (0.2.1.28)</p></li>
 </ul></div>
 <div class="section level3">
-<h3 id="miscellaneous-0-2-1-28">Miscellaneous<a class="anchor" aria-label="anchor" href="#miscellaneous-0-2-1-28"></a></h3>
+<h3 id="miscellaneous-0-2-1-29">Miscellaneous<a class="anchor" aria-label="anchor" href="#miscellaneous-0-2-1-29"></a></h3>
 <ul><li><p>Improve a check for the fit function. (0.2.1.2)</p></li>
 <li><p>If <code>parallel = FALSE</code> and <code>progress = TRUE</code>, <code><a href="../reference/power4test.html">power4test()</a></code> will print a message to recommend users to set <code>parallel</code> to <code>TRUE</code>. (0.2.1.5)</p></li>
 <li><p>Updated calls to <code><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">parallel::detectCores()</a></code> to handle cases in which <code>NA</code> will be returned. (0.2.1.6)</p></li>
@@ -104,9 +104,10 @@
 <li><p>Store and print versions of essential packages. (0.2.1.22)</p></li>
 <li><p>All built-in tests now return a data frame instead of a vector. This is the recommended output type. (0.2.1.23)</p></li>
 <li><p>Default to <code>keep.null = TRUE</code> in calls to <code><a href="https://rdrr.io/r/utils/modifyList.html" class="external-link">utils::modifyList()</a></code>. Not a must, but <code>keep.null = FALSE</code> is rarely what we need. (0.2.1.26)</p></li>
+<li><p>In <code><a href="../reference/power4test.html">power4test()</a></code>, if these arguments are set, they always replace the stored values completely: <code>fit_model_args</code>, <code>gen_mc_args</code>, <code>gen_boot_args</code>, <code>x_fun</code>, <code>e_fun</code>. This is because there is no easy way to know those values stored in a <code>power4test</code> object. (0.2.1.29)</p></li>
 </ul></div>
 <div class="section level3">
-<h3 id="bug-fixes-0-2-1-28">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-2-1-28"></a></h3>
+<h3 id="bug-fixes-0-2-1-29">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-2-1-29"></a></h3>
 <ul><li><p>Fixed the printing of the conditional effects in the simulated data. If a moderator affects more than only component paths (e.g., both the a-path and a b-path in a simple mediation model), it will be counted only once in the printing. This affects only the printout used to examine the generated data, and has not impact on the generated data. (0.2.1.1)</p></li>
 <li><p>Product terms will now be dropped correctly when generating simulated data. (0.2.1.19)</p></li>
 <li><p>Fixed: Boos-Zhang method is now correctly enabled for bootstrap confidence intervals. (0.2.1.20)</p></li>
