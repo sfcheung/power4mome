@@ -559,6 +559,23 @@ power4test <- function(object = NULL,
   args <- utils::modifyList(args,
                             as.list(call_args),
                             keep.null = TRUE)
+  # These arguments should always be fully replaced
+  if (length(call_args$fit_model_args) > 0) {
+    args$fit_model_args <- call_args$fit_model_args
+  }
+  if (length(call_args$gen_mc_args) > 0) {
+    args$gen_mc_args <- call_args$gen_mc_args
+  }
+  if (length(call_args$gen_boot_args) > 0) {
+    args$gen_boot_args <- call_args$gen_boot_args
+  }
+  if (length(call_args$x_fun) > 0) {
+    args$x_fun <- call_args$x_fun
+  }
+  if (length(call_args$e_fun) > 0) {
+    args$e_fun <- call_args$e_fun
+  }
+
   args$object <- NULL
   # args available in all cases.
   # It should be used whenever possible,
