@@ -103,6 +103,7 @@ common_processes <- function(
   cut_patterns = NULL,
   cuts = NULL,
   missing_values_args = list(),
+  var_patterns = NULL,
   prop = NULL,
   mech = "MCAR",
   method = c("none", "mean", "sum"),
@@ -125,6 +126,7 @@ common_processes <- function(
   mv_args <- utils::modifyList(
     mv_args,
     list(prop = prop,
+         var_patterns = var_patterns,
          mech = mech,
          data = data_new),
     keep.null = TRUE
