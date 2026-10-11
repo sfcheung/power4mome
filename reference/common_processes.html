@@ -15,7 +15,7 @@ scales scores."><meta property="og:image" content="https://sfcheung.github.io/po
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1.29</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1.30</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -101,6 +101,7 @@ scales scores.</p>
 <span>  cut_patterns <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  cuts <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  missing_values_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  var_patterns <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  prop <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  mech <span class="op">=</span> <span class="st">"MCAR"</span>,</span>
 <span>  method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"none"</span>, <span class="st">"mean"</span>, <span class="st">"sum"</span><span class="op">)</span>,</span>
@@ -156,6 +157,24 @@ passed to <code><a href="https://amices.org/mice/reference/ampute.html" class="e
 <code>prop</code> and <code>mech</code> will override
 the values set for them in
 <code>missing_values_args</code>, if any.</p></dd>
+
+
+<dt id="arg-var-patterns">var_patterns<a class="anchor" aria-label="anchor" href="#arg-var-patterns"></a></dt>
+<dd><p>A list
+of named list. Used to specify the pattern
+at the latent variable level. Each
+list has two elements. <code>vars</code> is the
+vector of latent variables names. The
+pattern will consist of all indicators
+of these latent variables.
+<code>prop</code> is the proportion of missing
+for this pattern. If the values of
+<code>prop</code> summed to one, then the values
+will be used as <code>freq</code> in <code><a href="https://amices.org/mice/reference/ampute.html" class="external-link">mice::ampute()</a></code>.
+If they do not summed to one and <code>prop</code>
+is not set manually, the sum will be
+used in <code>prop</code>, and <code>prop</code> divided by the
+sum will be used as <code>freq</code>.</p></dd>
 
 
 <dt id="arg-prop">prop<a class="anchor" aria-label="anchor" href="#arg-prop"></a></dt>

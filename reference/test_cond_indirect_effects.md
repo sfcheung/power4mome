@@ -241,9 +241,9 @@ print(test_out,
 #> 
 #> ===================== Package Information =====================
 #> 
-#> Created by power4mome 0.2.1.29 
+#> Created by power4mome 0.2.1.30 
 #> Supporting packages:
-#> - lavaan 0.7.2 
+#> - lavaan 0.7.3 
 #> - manymome 0.3.7 
 #> - lmhelprs 0.4.5 
 #> 
@@ -357,7 +357,7 @@ print(test_out,
 #> 
 #> ============ <fit> ============
 #> 
-#> lavaan 0.7-2 ended normally after 1 iteration
+#> lavaan 0.7-3 ended normally after 1 iteration
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
@@ -370,6 +370,11 @@ print(test_out,
 #>   Test statistic                                 4.530
 #>   Degrees of freedom                                 2
 #>   P-value (Chi-square)                           0.104
+#>                                                       
+#>   Browne's residual (NT model-based) test             
+#>   Test statistic                                 4.429
+#>   Degrees of freedom                                 2
+#>   P-value (Chi-square)                           0.109
 #> 
 #> =========== <mc_out> ===========
 #> 
@@ -383,9 +388,9 @@ print(test_out,
 #> 
 #> Mean(s) across replication:
 #>             test_label     [w]    (w)   est   cilo  cihi   sig pvalue   m~x
-#> 1 x->m->y | w: M+1.0SD M+1.0SD  1.060 0.212  0.070 0.375 0.800  0.036 0.438
-#> 2    x->m->y | w: Mean    Mean  0.061 0.132  0.037 0.251 0.800  0.188 0.275
-#> 3 x->m->y | w: M-1.0SD M-1.0SD -0.939 0.053 -0.089 0.205 0.000  0.148 0.112
+#> 1 x->m->y | w: M+1.0SD M+1.0SD  1.060 0.212  0.066 0.385 0.800  0.036 0.438
+#> 2    x->m->y | w: Mean    Mean  0.061 0.132  0.027 0.253 0.800  0.188 0.275
+#> 3 x->m->y | w: M-1.0SD M-1.0SD -0.939 0.053 -0.093 0.198 0.000  0.164 0.112
 #>     y~m
 #> 1 0.474
 #> 2 0.474

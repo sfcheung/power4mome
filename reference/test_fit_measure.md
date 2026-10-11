@@ -260,9 +260,9 @@ print(test_out,
 #> 
 #> ===================== Package Information =====================
 #> 
-#> Created by power4mome 0.2.1.29 
+#> Created by power4mome 0.2.1.30 
 #> Supporting packages:
-#> - lavaan 0.7.2 
+#> - lavaan 0.7.3 
 #> - manymome 0.3.7 
 #> - lmhelprs 0.4.5 
 #> 
@@ -322,7 +322,7 @@ print(test_out,
 #> 
 #> ============ <fit> ============
 #> 
-#> lavaan 0.7-2 ended normally after 1 iteration
+#> lavaan 0.7-3 ended normally after 1 iteration
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
@@ -332,6 +332,10 @@ print(test_out,
 #> 
 #> Model Test User Model:
 #>                                                       
+#>   Test statistic                                 0.000
+#>   Degrees of freedom                                 0
+#>                                                       
+#>   Browne's residual (NT model-based) test             
 #>   Test statistic                                 0.000
 #>   Degrees of freedom                                 0
 #> 

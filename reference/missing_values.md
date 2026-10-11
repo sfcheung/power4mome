@@ -6,7 +6,7 @@ generated data.
 ## Usage
 
 ``` r
-missing_values(data, ..., prop = 0.5, mech = "MCAR")
+missing_values(data, var_patterns = NULL, ..., prop = 0.5, mech = "MCAR")
 ```
 
 ## Arguments
@@ -14,6 +14,19 @@ missing_values(data, ..., prop = 0.5, mech = "MCAR")
 - data:
 
   A data frame.
+
+- var_patterns:
+
+  A list of named list. Used to specify the pattern at the latent
+  variable level. Each list has two elements. `vars` is the vector of
+  latent variables names. The pattern will consist of all indicators of
+  these latent variables. `prop` is the proportion of missing for this
+  pattern. If the values of `prop` summed to one, then the values will
+  be used as `freq` in
+  [`mice::ampute()`](https://amices.org/mice/reference/ampute.html). If
+  they do not summed to one and `prop` is not set manually, the sum will
+  be used in `prop`, and `prop` divided by the sum will be used as
+  `freq`.
 
 - ...:
 

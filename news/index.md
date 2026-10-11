@@ -1,6 +1,6 @@
 # Changelog
 
-## power4mome 0.2.1.29
+## power4mome 0.2.1.30
 
 ### New Features
 
@@ -61,6 +61,11 @@
   to retrieve a fit object from the output of
   [`power4test()`](https://sfcheung.github.io/power4mome/reference/power4test.md).
   (0.2.1.28)
+
+- Added the argument `var_patterns` to
+  [`missing_values()`](https://sfcheung.github.io/power4mome/reference/missing_values.md)
+  to allow specifying missing for all the indicators of a latent
+  variable. (0.2.1.30)
 
 ### Miscellaneous
 

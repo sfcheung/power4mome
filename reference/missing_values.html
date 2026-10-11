@@ -11,7 +11,7 @@ values in the generated data."><meta property="og:image" content="https://sfcheu
 
     <a class="navbar-brand me-2" href="../index.html">power4mome</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1.29</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1.30</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -90,7 +90,7 @@ values in the generated data.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">missing_values</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span>, prop <span class="op">=</span> <span class="fl">0.5</span>, mech <span class="op">=</span> <span class="st">"MCAR"</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">missing_values</span><span class="op">(</span><span class="va">data</span>, var_patterns <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span>, prop <span class="op">=</span> <span class="fl">0.5</span>, mech <span class="op">=</span> <span class="st">"MCAR"</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -99,6 +99,24 @@ values in the generated data.</p>
 
 <dl><dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
 <dd><p>A data frame.</p></dd>
+
+
+<dt id="arg-var-patterns">var_patterns<a class="anchor" aria-label="anchor" href="#arg-var-patterns"></a></dt>
+<dd><p>A list
+of named list. Used to specify the pattern
+at the latent variable level. Each
+list has two elements. <code>vars</code> is the
+vector of latent variables names. The
+pattern will consist of all indicators
+of these latent variables.
+<code>prop</code> is the proportion of missing
+for this pattern. If the values of
+<code>prop</code> summed to one, then the values
+will be used as <code>freq</code> in <code><a href="https://amices.org/mice/reference/ampute.html" class="external-link">mice::ampute()</a></code>.
+If they do not summed to one and <code>prop</code>
+is not set manually, the sum will be
+used in <code>prop</code>, and <code>prop</code> divided by the
+sum will be used as <code>freq</code>.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>

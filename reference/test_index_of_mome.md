@@ -227,9 +227,9 @@ print(test_out,
 #> 
 #> ===================== Package Information =====================
 #> 
-#> Created by power4mome 0.2.1.29 
+#> Created by power4mome 0.2.1.30 
 #> Supporting packages:
-#> - lavaan 0.7.2 
+#> - lavaan 0.7.3 
 #> - manymome 0.3.7 
 #> - lmhelprs 0.4.5 
 #> 
@@ -333,7 +333,7 @@ print(test_out,
 #> 
 #> ============ <fit> ============
 #> 
-#> lavaan 0.7-2 ended normally after 1 iteration
+#> lavaan 0.7-3 ended normally after 1 iteration
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
@@ -346,6 +346,11 @@ print(test_out,
 #>   Test statistic                                 5.502
 #>   Degrees of freedom                                 3
 #>   P-value (Chi-square)                           0.139
+#>                                                       
+#>   Browne's residual (NT model-based) test             
+#>   Test statistic                                 5.353
+#>   Degrees of freedom                                 3
+#>   P-value (Chi-square)                           0.148
 #> 
 #> =========== <mc_out> ===========
 #> 
@@ -359,7 +364,7 @@ print(test_out,
 #> 
 #> Mean(s) across replication:
 #>                test_label    est   cilo  cihi   sig pvalue
-#> 1 x->m->y, moderated by w -0.006 -0.042 0.030 0.000  0.600
+#> 1 x->m->y, moderated by w -0.006 -0.044 0.030 0.000  0.590
 #> 
 #> - The column 'sig' shows the rejection rates.
 #> - If the null hypothesis is false, the rate is the power.

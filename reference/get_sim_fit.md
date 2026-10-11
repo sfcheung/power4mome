@@ -99,7 +99,7 @@ out <- power4test(nrep = 2,
 #> Do the test(s): test_parameters: CIs (pars: m~x) 
 
 get_sim_fit(out)
-#> lavaan 0.7-2 ended normally after 1 iteration
+#> lavaan 0.7-3 ended normally after 1 iteration
 #> 
 #>   Estimator                                         ML
 #>   Optimization method                           NLMINB
@@ -109,6 +109,10 @@ get_sim_fit(out)
 #> 
 #> Model Test User Model:
 #>                                                       
+#>   Test statistic                                 0.000
+#>   Degrees of freedom                                 0
+#>                                                       
+#>   Browne's residual (NT model-based) test             
 #>   Test statistic                                 0.000
 #>   Degrees of freedom                                 0
 ```
