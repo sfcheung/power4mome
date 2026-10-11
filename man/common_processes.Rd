@@ -9,6 +9,7 @@ common_processes(
   cut_patterns = NULL,
   cuts = NULL,
   missing_values_args = list(),
+  var_patterns = NULL,
   prop = NULL,
   mech = "MCAR",
   method = c("none", "mean", "sum"),
@@ -53,6 +54,22 @@ passed to \code{\link[mice:ampute]{mice::ampute()}}. Note that
 \code{prop} and \code{mech} will override
 the values set for them in
 \code{missing_values_args}, if any.}
+
+\item{var_patterns}{A list
+of named list. Used to specify the pattern
+at the latent variable level. Each
+list has two elements. \code{vars} is the
+vector of latent variables names. The
+pattern will consist of all indicators
+of these latent variables.
+\code{prop} is the proportion of missing
+for this pattern. If the values of
+\code{prop} summed to one, then the values
+will be used as \code{freq} in \code{\link[mice:ampute]{mice::ampute()}}.
+If they do not summed to one and \code{prop}
+is not set manually, the sum will be
+used in \code{prop}, and \code{prop} divided by the
+sum will be used as \code{freq}.}
 
 \item{prop}{The proportion of missingness.
 Default is 0.5, about 50\% of the cases
