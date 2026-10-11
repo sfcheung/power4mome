@@ -48,6 +48,22 @@
 #'
 #' @param data A data frame.
 #'
+#' @param var_patterns A list
+#' of named list. Used to specify the pattern
+#' at the latent variable level. Each
+#' list has two elements. `vars` is the
+#' vector of latent variables names. The
+#' pattern will consist of all indicators
+#' of these latent variables.
+#' `prop` is the proportion of missing
+#' for this pattern. If the values of
+#' `prop` summed to one, then the values
+#' will be used as `freq` in [mice::ampute()].
+#' If they do not summed to one and `prop`
+#' is not set manually, the sum will be
+#' used in `prop`, and `prop` divided by the
+#' sum will be used as `freq`.
+#'
 #' @param ... Optional arguments to be
 #' passed to [mice::ampute()].
 #'
@@ -116,21 +132,62 @@
 #' @export
 missing_values <- function(
   data,
+  var_patterns = NULL,
   ...,
   prop = 0.5,
   mech = "MCAR"
 ) {
-  if (is.null(prop)) {
+  if (is.null(prop) &&
+      is.null(var_patterns)) {
     return(data)
   }
+  my_call <- match.call()
   args0 <- list(...)
   cnames <- colnames(data)
+  if (!is.null(var_patterns) &&
+      !is.null(args0$patterns)) {
+    stop("var_patterns and patterns cannot be used together.")
+  }
   if (!is.null(args0$patterns)) {
     args0$patterns <- args0$patterns[, cnames]
   }
   if (!is.null(args0$weights)) {
+    if (!is.null(args0$var_patterns)) {
+      stop("weights cannot be used with var_patterns")
+    }
     args0$weights <- args0$weights[, cnames]
   }
+
+  # ==== Handle var_patterns ====
+
+  if (!is.null(var_patterns)) {
+    my_patterns <- expand_var_patterns(
+      data = data,
+      var_patterns = var_patterns
+    )
+    my_prop <- sapply(
+      var_patterns,
+      \(x) x$prop
+    )
+    my_prop_sum <- sum(my_prop)
+    my_prop_one <- all.equal(
+      my_prop_sum,
+      1
+    )
+    prop_set <- "prop" %in% names(my_call)
+    if (isTRUE(my_prop_one)) {
+      # my_prop is the vector of freq
+      args0$freq <- my_prop
+    } else {
+      # my_prop is not a vector of proportions
+      # Use as frequency
+      args0$freq <- my_prop / my_prop_sum
+      # Always override prop is not set
+      prop <- my_prop_sum
+    }
+    args0$patterns <- my_patterns
+  }
+
   args <- utils::modifyList(
             args0,
             list(data = data,
@@ -141,4 +198,63 @@ missing_values <- function(
   out <- do.call(mice::ampute,
                  args)
   out$amp
+}
+
+#' @noRd
+get_ind_names <- function(
+  data
+) {
+  k_ind <- attr(data, "number_of_indicators")
+  # ==== Any factors with indicators? ====
+  if (isTRUE(is.null(k_ind)) ||
+      (all(k_ind == 1))) {
+    return(colnames(data))
+  }
+  f_names <- names(k_ind)
+  f <- function(x, xk) {
+    paste0(x, seq_len(xk))
+  }
+  ind_names <- mapply(
+                FUN = f,
+                x = f_names,
+                xk = k_ind,
+                SIMPLIFY = FALSE
+              )
+  f_no_ind <- setdiff(colnames(data), unlist(ind_names))
+  ov_names <- as.list(f_no_ind)
+  names(ov_names) <- ov_names
+  out <- c(ind_names, ov_names)
+  out
+}
+
+#' @noRd
+expand_var_patterns <- function(
+  data,
+  var_patterns
+) {
+  ind_names <- get_ind_names(data)
+  vnames <- colnames(data)
+  p_base <- vector("numeric", ncol(data))
+  p_base[] <- 1
+  names(p_base) <- vnames
+  out0 <- mapply(
+    \(x, ind_names, p_base) {
+      var_i <- x$vars
+      ind_i <- unlist(ind_names[var_i])
+      p_base[ind_i] <- 0
+      p_base
+    },
+    x = var_patterns,
+    MoreArgs = list(
+      p_base = p_base,
+      ind_names = ind_names
+    ),
+    SIMPLIFY = FALSE
+  )
+  out1 <- do.call(
+    rbind,
+    out0
+  )
+  out1 <- out1[, vnames]
+  out1
 }
