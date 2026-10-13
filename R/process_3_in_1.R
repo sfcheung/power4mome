@@ -104,6 +104,8 @@ common_processes <- function(
   cuts = NULL,
   missing_values_args = list(),
   var_patterns = NULL,
+  vars_in_waves = NULL,
+  attrition_rate = NULL,
   prop = NULL,
   mech = "MCAR",
   method = c("none", "mean", "sum"),
@@ -127,6 +129,8 @@ common_processes <- function(
     mv_args,
     list(prop = prop,
          var_patterns = var_patterns,
+         vars_in_waves = vars_in_waves,
+         attrition_rate = attrition_rate,
          mech = mech,
          data = data_new),
     keep.null = TRUE

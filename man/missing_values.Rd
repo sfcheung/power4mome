@@ -4,10 +4,21 @@
 \alias{missing_values}
 \title{Process Data by Generating Missing Values}
 \usage{
-missing_values(data, var_patterns = NULL, ..., prop = 0.5, mech = "MCAR")
+missing_values(
+  data,
+  ...,
+  var_patterns = NULL,
+  vars_in_waves = NULL,
+  attrition_rate = NULL,
+  prop = 0.5,
+  mech = "MCAR"
+)
 }
 \arguments{
 \item{data}{A data frame.}
+
+\item{...}{Optional arguments to be
+passed to \code{\link[mice:ampute]{mice::ampute()}}.}
 
 \item{var_patterns}{A list
 of named list. Used to specify the pattern
@@ -25,8 +36,19 @@ is not set manually, the sum will be
 used in \code{prop}, and \code{prop} divided by the
 sum will be used as \code{freq}.}
 
-\item{...}{Optional arguments to be
-passed to \code{\link[mice:ampute]{mice::ampute()}}.}
+\item{vars_in_waves}{A list of character
+vectors. Each vector denotes the
+latent variables or non-indicator
+observed variables in a wave.
+For example,
+\code{list("x", c("m1", "m2"), "y")} means
+that \code{x} is collected in Wave 1,
+\code{m1} and \code{m2} in Wave 2, and \code{y} in
+Wave 3.}
+
+\item{attrition_rate}{The probability
+that a case will drop out from one
+wave to another.}
 
 \item{prop}{The proportion of missingness.
 Default is 0.5, about 50\% of the cases
