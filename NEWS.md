@@ -1,4 +1,4 @@
-# power4mome 0.2.1.30
+# power4mome 0.2.1.31
 
 ## New Features
 
@@ -68,6 +68,15 @@
   missing for all the indicators of a
   latent variable.
   (0.2.1.30)
+
+- Added the arguments `vars_in_waves`
+  add `attrition_rate` to
+  `missing_values()` to allow specifying
+  missing patterns using attrition rate
+  and the variables in each wave.
+  (0.2.1.31)
+
+
 
 ## Miscellaneous
 
