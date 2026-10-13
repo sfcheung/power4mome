@@ -64,6 +64,20 @@
 #' used in `prop`, and `prop` divided by the
 #' sum will be used as `freq`.
 #'
+#' @param vars_in_waves A list of character
+#' vectors. Each vector denotes the
+#' latent variables or non-indicator
+#' observed variables in a wave.
+#' For example,
+#' `list("x", c("m1", "m2"), "y")` means
+#' that `x` is collected in Wave 1,
+#' `m1` and `m2` in Wave 2, and `y` in
+#' Wave 3.
+#'
+#' @param attrition_rate The probability
+#' that a case will drop out from one
+#' wave to another.
+#'
 #' @param ... Optional arguments to be
 #' passed to [mice::ampute()].
 #'
@@ -132,13 +146,16 @@
 #' @export
 missing_values <- function(
   data,
-  var_patterns = NULL,
   ...,
+  var_patterns = NULL,
+  vars_in_waves = NULL,
+  attrition_rate = NULL,
   prop = 0.5,
   mech = "MCAR"
 ) {
   if (is.null(prop) &&
-      is.null(var_patterns)) {
+      is.null(var_patterns) &&
+      is.null(vars_in_waves)) {
     return(data)
   }
   my_call <- match.call()
@@ -148,14 +165,40 @@ missing_values <- function(
       !is.null(args0$patterns)) {
     stop("var_patterns and patterns cannot be used together.")
   }
+  if (!is.null(vars_in_waves) &&
+      !is.null(args0$patterns)) {
+    stop("vars_in_waves and patterns cannot be used together.")
+  }
+  if (!is.null(vars_in_waves) &&
+      !is.null(var_patterns)) {
+    stop("vars_in_waves and var_patterns cannot be used together.")
+  }
+
   if (!is.null(args0$patterns)) {
     args0$patterns <- args0$patterns[, cnames]
   }
   if (!is.null(args0$weights)) {
-    if (!is.null(args0$var_patterns)) {
+    if (!is.null(var_patterns)) {
       stop("weights cannot be used with var_patterns")
     }
+    if (!is.null(vars_in_waves)) {
+      stop("weights cannot be used with vars_in_waves")
+    }
     args0$weights <- args0$weights[, cnames]
+  }
+
+  # ==== Handle vars_in_waves ====
+
+  if (!is.null(vars_in_waves)) {
+    # vars_in_waves set. Use it to generate
+    # var_patterns
+    if (is.null(attrition_rate)) {
+      stop("attrition_rate must be set along with vars_in_waves.")
+    }
+    var_patterns <- from_attrition(
+      vars_in_waves = vars_in_waves,
+      attrition_rate = attrition_rate
+    )
   }
 
   # ==== Handle var_patterns ====
@@ -257,4 +300,38 @@ expand_var_patterns <- function(
   )
   out1 <- out1[, vnames]
   out1
+}
+
+#' @noRd
+
+from_attrition <- function(
+  vars_in_waves,
+  attrition_rate
+) {
+  k <- length(vars_in_waves)
+  patterns <- vector(
+    "list",
+    length = k
+  )
+  for (i in seq_len(k)) {
+    patterns[[i]] <- unlist(vars_in_waves[i:k])
+  }
+  props <- vector("numeric", k)
+  props[] <- NA
+  stay_rate <- 1 - attrition_rate
+  for (i in seq_len(k)) {
+    props[i] <- stay_rate^(i - 2) * attrition_rate
+  }
+  props[1] <- stay_rate^(k - 1)
+  props1 <- props[-1]
+  patterns1 <- patterns[-1]
+  out <- mapply(
+    \(x, y) {
+      list(vars = x, prop = y)
+    },
+    x = patterns1,
+    y = props1,
+    SIMPLIFY = FALSE
+  )
+  out
 }
