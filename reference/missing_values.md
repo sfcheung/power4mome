@@ -6,7 +6,15 @@ generated data.
 ## Usage
 
 ``` r
-missing_values(data, var_patterns = NULL, ..., prop = 0.5, mech = "MCAR")
+missing_values(
+  data,
+  ...,
+  var_patterns = NULL,
+  vars_in_waves = NULL,
+  attrition_rate = NULL,
+  prop = 0.5,
+  mech = "MCAR"
+)
 ```
 
 ## Arguments
@@ -14,6 +22,11 @@ missing_values(data, var_patterns = NULL, ..., prop = 0.5, mech = "MCAR")
 - data:
 
   A data frame.
+
+- ...:
+
+  Optional arguments to be passed to
+  [`mice::ampute()`](https://amices.org/mice/reference/ampute.html).
 
 - var_patterns:
 
@@ -28,10 +41,16 @@ missing_values(data, var_patterns = NULL, ..., prop = 0.5, mech = "MCAR")
   be used in `prop`, and `prop` divided by the sum will be used as
   `freq`.
 
-- ...:
+- vars_in_waves:
 
-  Optional arguments to be passed to
-  [`mice::ampute()`](https://amices.org/mice/reference/ampute.html).
+  A list of character vectors. Each vector denotes the latent variables
+  or non-indicator observed variables in a wave. For example,
+  `list("x", c("m1", "m2"), "y")` means that `x` is collected in Wave 1,
+  `m1` and `m2` in Wave 2, and `y` in Wave 3.
+
+- attrition_rate:
+
+  The probability that a case will drop out from one wave to another.
 
 - prop:
 

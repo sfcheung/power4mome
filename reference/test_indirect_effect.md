@@ -225,7 +225,7 @@ print(test_ind,
 #> 
 #> ===================== Package Information =====================
 #> 
-#> Created by power4mome 0.2.1.30 
+#> Created by power4mome 0.2.1.31 
 #> Supporting packages:
 #> - lavaan 0.7.3 
 #> - manymome 0.3.7 

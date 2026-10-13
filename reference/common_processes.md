@@ -13,6 +13,8 @@ common_processes(
   cuts = NULL,
   missing_values_args = list(),
   var_patterns = NULL,
+  vars_in_waves = NULL,
+  attrition_rate = NULL,
   prop = NULL,
   mech = "MCAR",
   method = c("none", "mean", "sum"),
@@ -67,6 +69,17 @@ common_processes(
   they do not summed to one and `prop` is not set manually, the sum will
   be used in `prop`, and `prop` divided by the sum will be used as
   `freq`.
+
+- vars_in_waves:
+
+  A list of character vectors. Each vector denotes the latent variables
+  or non-indicator observed variables in a wave. For example,
+  `list("x", c("m1", "m2"), "y")` means that `x` is collected in Wave 1,
+  `m1` and `m2` in Wave 2, and `y` in Wave 3.
+
+- attrition_rate:
+
+  The probability that a case will drop out from one wave to another.
 
 - prop:
 
