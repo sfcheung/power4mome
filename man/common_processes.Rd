@@ -10,6 +10,8 @@ common_processes(
   cuts = NULL,
   missing_values_args = list(),
   var_patterns = NULL,
+  vars_in_waves = NULL,
+  attrition_rate = NULL,
   prop = NULL,
   mech = "MCAR",
   method = c("none", "mean", "sum"),
@@ -70,6 +72,20 @@ If they do not summed to one and \code{prop}
 is not set manually, the sum will be
 used in \code{prop}, and \code{prop} divided by the
 sum will be used as \code{freq}.}
+
+\item{vars_in_waves}{A list of character
+vectors. Each vector denotes the
+latent variables or non-indicator
+observed variables in a wave.
+For example,
+\code{list("x", c("m1", "m2"), "y")} means
+that \code{x} is collected in Wave 1,
+\code{m1} and \code{m2} in Wave 2, and \code{y} in
+Wave 3.}
+
+\item{attrition_rate}{The probability
+that a case will drop out from one
+wave to another.}
 
 \item{prop}{The proportion of missingness.
 Default is 0.5, about 50\% of the cases
