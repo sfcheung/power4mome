@@ -1,4 +1,4 @@
-# power4mome 0.2.1.31
+# power4mome 0.2.1.32
 
 ## New Features
 
@@ -177,6 +177,11 @@
 - `power4test()` will now re-simulate
   data if `process_data` changed.
   (0.2.1.25)
+
+- Fixed instances of incorrect use
+  of `options()` regarding the option
+  `power4mome.bz`.
+  (0.2.1.32)
 
 # power4mome 0.2.1
 
