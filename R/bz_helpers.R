@@ -45,7 +45,7 @@ NULL
 #' will automatically enable the Boos-Zhang-2000
 #' method (unless explicitly turned off
 #' by setting the option `"power4mome.bz"`
-#' to `FALSE` by `options("power4mome.bz") <- FALSE`),
+#' to `FALSE` by `options("power4mome.bz" = FALSE)`,
 #' substantially reducing the processing
 #' time. For now, only two-tailed tests are supported.
 #'
