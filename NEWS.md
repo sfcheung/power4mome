@@ -1,4 +1,4 @@
-# power4mome 0.2.1.32
+# power4mome 0.2.1.33
 
 ## New Features
 
@@ -76,7 +76,11 @@
   and the variables in each wave.
   (0.2.1.31)
 
-
+- Added `plot_cut_pattern()` and
+  `plot_all_cut_patterns()` for plotting
+  built-in patterns supported by
+  `ordinal_variables()`.
+  (0.2.1.33)
 
 ## Miscellaneous
 
