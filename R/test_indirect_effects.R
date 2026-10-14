@@ -198,7 +198,7 @@ test_k_indirect_effects <- function(
   }
   ci_level <- args$level %||% formals(manymome::indirect_effect)$level
   R_bz_ok <- isTRUE(R %in% R_extrapolate(alpha = 1 - ci_level))
-  bz_not_FALSE <- !isFALSE(options("power4mome.bz"))
+  bz_not_FALSE <- !isFALSE(getOption("power4mome.bz"))
   test_method_NULL <- is.null(test_method)
   if (R_bz_ok &&
       bz_not_FALSE &&

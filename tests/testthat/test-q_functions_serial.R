@@ -6,7 +6,7 @@ progress0 <- !testthat::is_testing()
 
 # ===== Serial mediation =====
 
-options(power4mome.bz = TRUE)
+opt_old <- options(power4mome.bz = TRUE)
 system.time(
 outs <- tryCatch(q_power_mediation_serial(
     ab = c("s", "m", "l"),
@@ -32,4 +32,5 @@ expect_equal(outs$n_region_from_power$below$args$final_nrep,
              10)
 }
 
+options(opt_old)
 })

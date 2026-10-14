@@ -68,7 +68,7 @@ If possible, setting the number of resamples.
 will automatically enable the Boos-Zhang-2000
 method (unless explicitly turned off
 by setting the option \code{"power4mome.bz"}
-to \code{FALSE} by \code{options("power4mome.bz") <- FALSE}),
+to \code{FALSE} by \code{options("power4mome.bz" = FALSE)},
 substantially reducing the processing
 time. For now, only two-tailed tests are supported.
 
