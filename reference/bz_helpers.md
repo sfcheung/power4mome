@@ -58,7 +58,7 @@ of resamples. (e.g., setting `R` when calling
 [`x_from_power()`](https://sfcheung.github.io/power4mome/reference/x_from_power.md))
 will automatically enable the Boos-Zhang-2000 method (unless explicitly
 turned off by setting the option `"power4mome.bz"` to `FALSE` by
-`options("power4mome.bz") <- FALSE`), substantially reducing the
+`options("power4mome.bz" = FALSE)`, substantially reducing the
 processing time. For now, only two-tailed tests are supported.
 
 Given a target maximum number of resamples and a level of significance,

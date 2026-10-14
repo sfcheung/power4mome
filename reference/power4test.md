@@ -1111,7 +1111,7 @@ print(out,
 #> 
 #> ===================== Package Information =====================
 #> 
-#> Created by power4mome 0.2.1.31 
+#> Created by power4mome 0.2.1.32 
 #> Supporting packages:
 #> - lavaan 0.7.3 
 #> - manymome 0.3.7 
@@ -1219,7 +1219,7 @@ print(out1,
 #> 
 #> ===================== Package Information =====================
 #> 
-#> Created by power4mome 0.2.1.31 
+#> Created by power4mome 0.2.1.32 
 #> Supporting packages:
 #> - lavaan 0.7.3 
 #> - manymome 0.3.7 
@@ -1324,7 +1324,7 @@ print(out2,
 #> 
 #> ===================== Package Information =====================
 #> 
-#> Created by power4mome 0.2.1.31 
+#> Created by power4mome 0.2.1.32 
 #> Supporting packages:
 #> - lavaan 0.7.3 
 #> - manymome 0.3.7 

@@ -1,6 +1,6 @@
 # Changelog
 
-## power4mome 0.2.1.31
+## power4mome 0.2.1.32
 
 ### New Features
 
@@ -141,6 +141,10 @@
 
 - [`power4test()`](https://sfcheung.github.io/power4mome/reference/power4test.md)
   will now re-simulate data if `process_data` changed. (0.2.1.25)
+
+- Fixed instances of incorrect use of
+  [`options()`](https://rdrr.io/r/base/options.html) regarding the
+  option `power4mome.bz`. (0.2.1.32)
 
 ## power4mome 0.2.1
 
