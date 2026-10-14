@@ -1,6 +1,6 @@
 # power4mome
 
-(Version 0.2.1.32, updated on 2026-10-14, [release
+(Version 0.2.1.33, updated on 2026-10-14, [release
 history](https://sfcheung.github.io/power4mome/news/index.html))
 
 This package is for power analysis and sample size determination for
@@ -274,6 +274,8 @@ such as converting indicator scores to scale scores.
   : Process Data by Generating Missing Values
 - [`ordinal_variables()`](https://sfcheung.github.io/power4mome/reference/ordinal_variables.md)
   [`cut_patterns()`](https://sfcheung.github.io/power4mome/reference/ordinal_variables.md)
+  [`plot_cut_pattern()`](https://sfcheung.github.io/power4mome/reference/ordinal_variables.md)
+  [`plot_all_cut_patterns()`](https://sfcheung.github.io/power4mome/reference/ordinal_variables.md)
   : Process Data by Creating Ordinal Variables
 - [`common_processes()`](https://sfcheung.github.io/power4mome/reference/common_processes.md)
   : Common Data Processing

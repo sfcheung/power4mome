@@ -1,6 +1,6 @@
 # Changelog
 
-## power4mome 0.2.1.32
+## power4mome 0.2.1.33
 
 ### New Features
 
@@ -71,6 +71,14 @@
   [`missing_values()`](https://sfcheung.github.io/power4mome/reference/missing_values.md)
   to allow specifying missing patterns using attrition rate and the
   variables in each wave. (0.2.1.31)
+
+- Added
+  [`plot_cut_pattern()`](https://sfcheung.github.io/power4mome/reference/ordinal_variables.md)
+  and
+  [`plot_all_cut_patterns()`](https://sfcheung.github.io/power4mome/reference/ordinal_variables.md)
+  for plotting built-in patterns supported by
+  [`ordinal_variables()`](https://sfcheung.github.io/power4mome/reference/ordinal_variables.md).
+  (0.2.1.33)
 
 ### Miscellaneous
 

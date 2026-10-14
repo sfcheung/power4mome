@@ -9,6 +9,10 @@ variable to ordinal variables.
 ordinal_variables(data, cut_patterns = NULL, cuts = NULL)
 
 cut_patterns(which = NULL)
+
+plot_cut_pattern(which, ...)
+
+plot_all_cut_patterns(..., mar = c(3, 1, 2, 1))
 ```
 
 ## Arguments
@@ -42,6 +46,16 @@ cut_patterns(which = NULL)
 
   A name of a built-in pattern.
 
+- ...:
+
+  Optional arguments to be passed to
+  [`barplot()`](https://rdrr.io/r/graphics/barplot.html).
+
+- mar:
+
+  A vector of four numbers, for the margin of each plot: bottom, left,
+  top, right. See [`par()`](https://rdrr.io/r/graphics/par.html).
+
 ## Value
 
 The function `ordinal_variables()` returns a data frame with the the
@@ -51,6 +65,13 @@ The function `cut_patterns()` returns a named list of the built-in
 patterns if `which = NULL`, and a numeric vector of the thresholds of a
 built-in pattern if `which` is set to one of the names of the built-in
 patterns.
+
+The function `plot_cut_pattern()` returns a numeric vector of the
+thresholds of the built-in pattern specified in `which`. It is called
+for its side-effect, plotting the pattern.
+
+The function `plot_all_cut_patterns()` returns `NULL` invisibly. It is
+called for its side-effect, plotting all the built-in patterns.
 
 ## Details
 
@@ -78,6 +99,13 @@ argument `cuts`.
 
 Currently, all indicators of a latent variable must be converted in the
 same way.
+
+The function `plot_cut_pattern()` can be used to plot a pattern using
+[`barplot()`](https://rdrr.io/r/graphics/barplot.html).
+
+The function `plot_all_cut_patterns()` can be used to plot all built-in
+patterns using [`barplot()`](https://rdrr.io/r/graphics/barplot.html) on
+a grid.
 
 ## References
 
@@ -290,4 +318,26 @@ cut_patterns()
 #> $`-ea7`
 #> [1] -1.64 -1.18 -0.81 -0.47 -0.13  0.25
 #> 
+
+
+# Visualize some patterns
+
+plot_cut_pattern("s5")
+
+#> [1] -1.5 -0.5  0.5  1.5
+plot_cut_pattern("s7")
+
+#> [1] -1.79 -1.07 -0.36  0.36  1.07  1.79
+plot_cut_pattern("ma5")
+
+#> [1] -0.70  0.39  1.16  2.05
+plot_cut_pattern("ea4")
+
+#> [1] 0.28 0.71 1.23
+plot_cut_pattern("-ma5")
+
+#> [1] -2.05 -1.16 -0.39  0.70
+plot_cut_pattern("-ea7")
+
+#> [1] -1.64 -1.18 -0.81 -0.47 -0.13  0.25
 ```

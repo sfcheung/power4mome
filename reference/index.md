@@ -101,6 +101,8 @@ such as converting indicator scores to scale scores.
   : Process Data by Generating Missing Values
 - [`ordinal_variables()`](https://sfcheung.github.io/power4mome/reference/ordinal_variables.md)
   [`cut_patterns()`](https://sfcheung.github.io/power4mome/reference/ordinal_variables.md)
+  [`plot_cut_pattern()`](https://sfcheung.github.io/power4mome/reference/ordinal_variables.md)
+  [`plot_all_cut_patterns()`](https://sfcheung.github.io/power4mome/reference/ordinal_variables.md)
   : Process Data by Creating Ordinal Variables
 - [`common_processes()`](https://sfcheung.github.io/power4mome/reference/common_processes.md)
   : Common Data Processing

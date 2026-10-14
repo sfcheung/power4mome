@@ -246,7 +246,7 @@ print(test_out,
 #> 
 #> ===================== Package Information =====================
 #> 
-#> Created by power4mome 0.2.1.32 
+#> Created by power4mome 0.2.1.33 
 #> Supporting packages:
 #> - lavaan 0.7.3 
 #> - manymome 0.3.7 
@@ -354,7 +354,7 @@ print(test_out,
 #> 
 #> ===================== Package Information =====================
 #> 
-#> Created by power4mome 0.2.1.32 
+#> Created by power4mome 0.2.1.33 
 #> Supporting packages:
 #> - lavaan 0.7.3 
 #> - manymome 0.3.7 
@@ -462,7 +462,7 @@ print(test_out,
 #> 
 #> ===================== Package Information =====================
 #> 
-#> Created by power4mome 0.2.1.32 
+#> Created by power4mome 0.2.1.33 
 #> Supporting packages:
 #> - lavaan 0.7.3 
 #> - manymome 0.3.7 
