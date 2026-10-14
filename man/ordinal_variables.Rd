@@ -3,11 +3,17 @@
 \name{ordinal_variables}
 \alias{ordinal_variables}
 \alias{cut_patterns}
+\alias{plot_cut_pattern}
+\alias{plot_all_cut_patterns}
 \title{Process Data by Creating Ordinal Variables}
 \usage{
 ordinal_variables(data, cut_patterns = NULL, cuts = NULL)
 
 cut_patterns(which = NULL)
+
+plot_cut_pattern(which, ...)
+
+plot_all_cut_patterns(..., mar = c(3, 1, 2, 1))
 }
 \arguments{
 \item{data}{A data frame.}
@@ -42,6 +48,13 @@ then the original data (\code{data}) will
 be returned unchanged.}
 
 \item{which}{A name of a built-in pattern.}
+
+\item{...}{Optional arguments to be
+passed to \code{\link[=barplot]{barplot()}}.}
+
+\item{mar}{A vector of four numbers,
+for the margin of each plot:
+bottom, left, top, right. See \code{\link[=par]{par()}}.}
 }
 \value{
 The function \code{\link[=ordinal_variables]{ordinal_variables()}}
@@ -55,6 +68,19 @@ a numeric vector of the thresholds
 of a built-in pattern if \code{which} is
 set to one of the names of the built-in
 patterns.
+
+The function \code{\link[=plot_cut_pattern]{plot_cut_pattern()}}
+returns a numeric vector of the
+thresholds of the built-in pattern
+specified in \code{which}. It is called
+for its side-effect, plotting the
+pattern.
+
+The function
+\code{\link[=plot_all_cut_patterns]{plot_all_cut_patterns()}} returns
+\code{NULL} invisibly. It is called for
+its side-effect, plotting all the
+built-in patterns.
 }
 \description{
 For the \code{process_data}
@@ -96,6 +122,15 @@ thresholds directly through the argument
 Currently, all indicators of a latent
 variable must be converted in the same
 way.
+
+The function \code{\link[=plot_cut_pattern]{plot_cut_pattern()}} can
+be used to plot a pattern using
+\code{\link[=barplot]{barplot()}}.
+
+The function
+\code{\link[=plot_all_cut_patterns]{plot_all_cut_patterns()}} can be used
+to plot all built-in patterns using
+\code{\link[=barplot]{barplot()}} on a grid.
 }
 \examples{
 
@@ -148,6 +183,16 @@ head(dat, 50)
 # The built-in patterns
 
 cut_patterns()
+
+
+# Visualize some patterns
+
+plot_cut_pattern("s5")
+plot_cut_pattern("s7")
+plot_cut_pattern("ma5")
+plot_cut_pattern("ea4")
+plot_cut_pattern("-ma5")
+plot_cut_pattern("-ea7")
 
 }
 \references{

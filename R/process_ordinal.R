@@ -267,3 +267,124 @@ cut_pattern_scores <- function(
                        Inf))
   as.numeric(out)
 }
+
+
+
+#' @details
+#'
+#' The function [plot_cut_pattern()] can
+#' be used to plot a pattern using
+#' [barplot()].
+#'
+#' @param ... Optional arguments to be
+#' passed to [barplot()].
+#'
+#' @return
+#' The function [plot_cut_pattern()]
+#' returns a numeric vector of the
+#' thresholds of the built-in pattern
+#' specified in `which`. It is called
+#' for its side-effect, plotting the
+#' pattern.
+#'
+#' @examples
+#'
+#' # Visualize some patterns
+#'
+#' plot_cut_pattern("s5")
+#' plot_cut_pattern("s7")
+#' plot_cut_pattern("ma5")
+#' plot_cut_pattern("ea4")
+#' plot_cut_pattern("-ma5")
+#' plot_cut_pattern("-ea7")
+#'
+#' @rdname ordinal_variables
+#' @export
+plot_cut_pattern <- function(
+  which,
+  ...
+) {
+  a <- cut_patterns()
+  if (!(which %in% names(a))) {
+    stop(sprintf("Pattern %s not found.", which))
+  }
+  b <- a[[which]]
+  c0 <- stats::pnorm(b)
+  c1 <- c(c0, 1) - c(0, c0)
+  names(c1) <- seq_along(c1)
+  ddd <- list(...)
+  arg0 <- list(
+    height = c1,
+    space = 0,
+    axes = FALSE,
+    main = sprintf("Pattern: %s", which)
+  )
+  arg1 <- utils::modifyList(
+    arg0,
+    ddd,
+    keep.null = TRUE
+  )
+  do.call(
+    graphics::barplot,
+    arg1
+  )
+  b
+}
+
+#' @details
+#'
+#' The function
+#' [plot_all_cut_patterns()] can be used
+#' to plot all built-in patterns using
+#' [barplot()] on a grid.
+#'
+#' @param mar A vector of four numbers,
+#' for the margin of each plot:
+#' bottom, left, top, right. See [par()].
+#'
+#' @return
+#' The function
+#' [plot_all_cut_patterns()] returns
+#' `NULL` invisibly. It is called for
+#' its side-effect, plotting all the
+#' built-in patterns.
+#'
+#' @rdname ordinal_variables
+#' @export
+plot_all_cut_patterns <- function(
+  ...,
+  mar = c(3, 1, 2, 1)
+) {
+  a <- cut_patterns()
+  p <- length(a)
+  p1 <- ceiling(sqrt(p))
+  p2 <- floor(p / p1)
+  ymax <- max(stats::pnorm(unlist(a)))
+  par_old <- par(no.readonly = TRUE)
+  par(mar = mar)
+  par(mfrow = c(p1, p2))
+  # layout(matrix(1:(p1 * p2),
+  #               nrow = p1,
+  #               ncol = p2,
+  #               byrow = TRUE))
+  ddd <- list(...)
+  arg0 <- list(
+    ylim = c(0, ymax)
+  )
+  arg1 <- utils::modifyList(
+    arg0,
+    ddd
+  )
+  for (ai in names(a)) {
+    arg2 <- utils::modifyList(
+      arg1,
+      list(which = ai)
+    )
+    do.call(
+      plot_cut_pattern,
+      arg2
+    )
+  }
+  par(par_old)
+  invisible(NULL)
+}
