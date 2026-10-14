@@ -17,7 +17,7 @@ y ~ m: m
 y ~ x: m
 "
 
-options(power4mome.bz = TRUE)
+opt_old <- options(power4mome.bz = TRUE)
 out <- power4test(
           nrep = 400,
           model = mod,
@@ -49,6 +49,7 @@ out2 <- n_region_from_power(
         )
 plot(out2)
 
+options(opt_old)
 })
 
 test_that("check_extend: Start with very large n", {
@@ -66,7 +67,7 @@ y ~ m: m
 y ~ x: m
 "
 
-options(power4mome.bz = TRUE)
+opt_old <- options(power4mome.bz = TRUE)
 outb <- power4test(
           nrep = 400,
           model = mod,
@@ -98,4 +99,5 @@ outb2 <- n_region_from_power(
         )
 plot(outb2)
 
+options(opt_old)
 })

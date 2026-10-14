@@ -20,7 +20,7 @@ y ~ m: m
 y ~ x: m
 "
 
-options(power4mome.bz = TRUE)
+opt_old <- options(power4mome.bz = TRUE)
 
 out <- power4test(nrep = 50,
                   model = mod,
@@ -57,4 +57,5 @@ out2 <- x_from_power(
             seed = 4567)
 # plot(out2)
 
+options(opt_old)
 })

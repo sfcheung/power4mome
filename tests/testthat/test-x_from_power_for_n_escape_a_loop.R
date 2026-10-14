@@ -4,7 +4,7 @@ library(testthat)
 
 test_that("x_from_power: escape a loop", {
 
-options(power4mome.bz = TRUE)
+opt_old <- options(power4mome.bz = TRUE)
 
 mod <-
 "
@@ -50,4 +50,5 @@ tmp3 <- power_curve(
         )
 plot(tmp3)
 
+options(opt_old)
 })

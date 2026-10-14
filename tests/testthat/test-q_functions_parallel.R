@@ -6,7 +6,7 @@ progress0 <- !testthat::is_testing()
 
 # ===== Parallel mediation =====
 
-options(power4mome.bz = TRUE)
+opt_old <- options(power4mome.bz = TRUE)
 system.time(
 outp <- q_power_mediation_parallel(
     as = c("s", "m"),
@@ -30,4 +30,5 @@ expect_no_error(summary(outp))
 expect_equal(outp$n_region_from_power$above$args$final_nrep,
              10)
 
+options(opt_old)
 })

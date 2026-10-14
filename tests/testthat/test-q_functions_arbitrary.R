@@ -6,7 +6,7 @@ progress0 <- !testthat::is_testing()
 
 # ===== Arbitrary model =====
 
-options(power4mome.bz = TRUE)
+opt_old <- options(power4mome.bz = TRUE)
 model <-
 "
 m1 ~ x
@@ -47,5 +47,7 @@ expect_no_error(capture.output(print(outa)))
 expect_no_error(summary(outa))
 expect_equal(outa$n_region_from_power$above$args$final_nrep,
              10)
+
+options(opt_old)
 
 })
