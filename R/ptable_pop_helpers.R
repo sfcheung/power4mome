@@ -176,7 +176,8 @@ fix_par_es <- function(par_es,
   if (!all(is.na(i))) {
     par_es <- par_es[-i[!is.na(i)]]
     ptable <- lavaan::parTable(lavaan::sem(model = model,
-                                           do.fit = FALSE))
+                                           do.fit = FALSE,
+                                           correlation = FALSE))
     if (".beta." %in% names(par_es_def)) {
       all_beta <- ptable[ptable$op == "~", c("lhs", "op", "rhs")]
       all_beta <- apply(all_beta, 1, paste, collapse = " ")
@@ -562,7 +563,8 @@ nil_paths <- function(
     # Assume it is a model syntax
     object <- lavaan::sem(
       object,
-      do.fit = FALSE
+      do.fit = FALSE,
+      correlation = FALSE
     )
     object <- lavaan::parametertable(object)
   }

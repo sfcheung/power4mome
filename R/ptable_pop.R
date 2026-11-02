@@ -664,7 +664,8 @@ ptable_pop <- function(model = NULL,
     attr(tmp, "constraints") <- list()
     fit0 <- lavaan::sem(tmp,
                         do.fit = FALSE,
-                        fixed.x = FALSE)
+                        fixed.x = FALSE,
+                        correlation = FALSE)
     ptable0 <- lavaan::parTable(fit0)
   } else {
 
@@ -672,7 +673,8 @@ ptable_pop <- function(model = NULL,
 
     fit0 <- lavaan::sem(model,
                         do.fit = FALSE,
-                        fixed.x = FALSE)
+                        fixed.x = FALSE,
+                        correlation = FALSE)
     ptable0 <- lavaan::parTable(fit0)
   }
 
@@ -698,7 +700,8 @@ ptable_pop <- function(model = NULL,
                         sample.nobs = rep(10000, ngroups),
                         do.fit = FALSE,
                         group.label = gpnames,
-                        fixed.x = FALSE)
+                        fixed.x = FALSE,
+                        correlation = FALSE)
     ptable0 <- lavaan::parTable(fit0)
 
     # Fix starting values from MG
@@ -1055,7 +1058,8 @@ model_matrices_pop <- function(x,
     ptable <- x
   }
   fit1 <- lavaan::sem(ptable,
-                      do.fit = FALSE)
+                      do.fit = FALSE,
+                      correlation = FALSE)
   ngroups <- lavaan::lavInspect(fit1,
                                 "ngroups")
   mm <- lavaan::lavInspect(fit1,
@@ -1302,7 +1306,8 @@ mm_lm_i <- function(mm) {
   attr(tmp, "modifiers") <- list()
   attr(tmp, "constraints") <- list()
   fit1 <- lavaan::sem(tmp,
-                      do.fit = FALSE)
+                      do.fit = FALSE,
+                      correlation = FALSE)
   mm1 <- lavaan::lavInspect(fit1,
                             "partable")
   beta1 <- mm1$beta

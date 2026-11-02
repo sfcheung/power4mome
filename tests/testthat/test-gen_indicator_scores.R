@@ -5,7 +5,7 @@ omega_test <- function(data) {
   p <- ncol(data)
   mod <- paste("f1 =~",
               paste0("item", seq_len(p), collapse = " + "))
-  fit <- lavaan::cfa(mod, data)
+  fit <- lavaan::cfa(mod, data, correlation = FALSE)
   lambda <- c(1, coef(fit)[1:(p - 1)])
   f_var <- lavaan::lavInspect(fit, "cov.lv")[1, 1]
   total_var <- sum(lavaan::lavInspect(fit, "sampstats")$cov)
