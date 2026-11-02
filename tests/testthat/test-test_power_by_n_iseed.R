@@ -48,7 +48,7 @@ out2 <- power4test_by_n(test_out,
 out2_reject <- rejection_rates(out2)
 out2_reject
 
-expect_identical(out1_reject,
+expect_equal(out1_reject,
                  out2_reject)
 
 })

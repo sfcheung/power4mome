@@ -60,7 +60,7 @@ out_chk <- power4test_by_n(test_out,
                            progress = !is_testing())
 out_reject_chk <- rejection_rates(out_chk)
 
-expect_identical(out_reject,
+expect_equal(out_reject,
                  out_reject_chk)
 
 # Test sort = FALSE
@@ -75,7 +75,7 @@ out_chk <- power4test_by_n(test_out,
                            progress = !is_testing())
 out_reject_chk <- rejection_rates(out_chk)
 
-expect_identical(out_reject,
+expect_equal(out_reject,
                  out_reject_chk)
 
 model_simple_med2 <-

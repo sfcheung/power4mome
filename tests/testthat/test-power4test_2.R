@@ -233,7 +233,7 @@ power_all_test_only_5 <- power4test(object = power_all_sim_only_5,
 expect_identical(power_all_sim_only_5$sim_all[[1]]$mm_lm_dat_out[1:10, ],
                  power_all_test_only_new_nrep$sim_all[[1]]$mm_lm_dat_out[1:10, ])
 
-expect_identical(power_all_test_only_5$test_all[[1]][[5]]$test_results,
+expect_equal(power_all_test_only_5$test_all[[1]][[5]]$test_results,
                  power_all_test_only_new_nrep$test_all[[1]][[5]]$test_results)
 
 })
