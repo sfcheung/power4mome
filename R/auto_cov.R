@@ -159,7 +159,8 @@ fake_fit_for_int <- function(
   ngroups <- max(ptable$group)
   gpnames <- paste0("gp", seq_len(ngroups))
   fit0 <- lavaan::sem(model_int,
-                      do.fit = FALSE)
+                      do.fit = FALSE,
+                      correlation = FALSE)
   vnames <- lavaan::lavNames(fit0,
                              type = "ov")
   p <- length(vnames)
@@ -183,7 +184,8 @@ fake_fit_for_int <- function(
                       do.fit = FALSE,
                       group.label = gpnames,
                       meanstructure = (ngroups > 1),
-                      fixed.x = FALSE)
+                      fixed.x = FALSE,
+                      correlation = FALSE)
   list(fit = fit1,
        cov = dat_cov,
        mean = dat_means)

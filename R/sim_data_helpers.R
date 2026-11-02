@@ -8,7 +8,8 @@ start_from_mm <- function(ptable,
                           mm) {
   ptable_out <- ptable
   fit <- lavaan::sem(ptable,
-                     do.fit = FALSE)
+                     do.fit = FALSE,
+                     correlation = FALSE)
   mm0 <- lavaan::lavInspect(fit,
                             "partable",
                             drop.list.single.group = FALSE)

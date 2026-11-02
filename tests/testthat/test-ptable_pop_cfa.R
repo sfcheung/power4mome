@@ -24,12 +24,14 @@ check_gen_dat <- function(model,
                                 reliability = reliability)
   fit <- lavaan::sem(model,
              data = mm_lm_dat_out,
-             fixed.x = FALSE)
+             fixed.x = FALSE,
+             correlation = FALSE)
   tmp <- ptable
   tmp$est <- tmp$start
   fit0 <- lavaan::sem(tmp,
               do.fit = FALSE,
-              fixed.x = FALSE)
+              fixed.x = FALSE,
+              correlation = FALSE)
   out <- list(ptable = ptable,
               mm_out = mm_out,
               mm_lm_out = mm_lm_out,
