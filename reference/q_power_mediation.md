@@ -557,7 +557,7 @@ out
 #> 
 #> ===================== Package Information =====================
 #> 
-#> Created by power4mome 0.2.1.33 
+#> Created by power4mome 0.2.1.34 
 #> Supporting packages:
 #> - lavaan 0.7.3 
 #> - manymome 0.3.7 
@@ -647,7 +647,7 @@ out
 #> 
 #> Mean(s) across replication:
 #>   test_label   est cilo cihi   sig pvalue      R   nlt0 alpha
-#> 1    x->m->y 0.066  NaN  NaN 0.195  0.253 79.000 14.900 0.050
+#> 1    x->m->y 0.066  NaN  NaN 0.195  0.256 79.000 15.000 0.050
 #> 
 #> - The column 'sig' shows the rejection rates.
 #> - If the null hypothesis is false, the rate is the power.

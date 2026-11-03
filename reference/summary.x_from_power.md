@@ -189,7 +189,7 @@ power_vs_n <- x_from_power(test_out,
 #> 
 #> ========== Final Stage ==========
 #> 
-#> - Start at 2026-10-14 14:48:06 
+#> - Start at 2026-11-03 11:45:18 
 #> - Rejection Rates:
 #> 
 #> [test]: test_parameters: CIs (pars: m~x) 
@@ -263,7 +263,7 @@ summary(power_vs_n)
 #> 
 #> - Algorithm: bisection 
 #> - The range of values explored: 50 to 100 
-#> - Time spent in the search: 0.5717 secs 
+#> - Time spent in the search: 0.8433 secs 
 #> - The final crude model for the power-predictor relation:
 #> 
 #> Model Type: Logistic Regression 

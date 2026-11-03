@@ -1,6 +1,6 @@
 # Changelog
 
-## power4mome 0.2.1.33
+## power4mome 0.2.1.34
 
 ### New Features
 
@@ -127,6 +127,13 @@
   completely: `fit_model_args`, `gen_mc_args`, `gen_boot_args`, `x_fun`,
   `e_fun`. This is because there is no easy way to know those values
   stored in a `power4test` object. (0.2.1.29)
+
+- Added `correlation = FALSE` in some calls to
+  [`lavaan::sem()`](https://rdrr.io/pkg/lavaan/man/sem.html), to
+  accommodate the new warning added in `lavaan` 0.7-3.3322. These calls
+  do not fit the models. They just use
+  [`lavaan::sem()`](https://rdrr.io/pkg/lavaan/man/sem.html) to generate
+  the parameter tables. (0.2.1.34)
 
 ### Bug Fixes
 
