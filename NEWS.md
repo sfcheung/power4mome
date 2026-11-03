@@ -1,4 +1,4 @@
-# power4mome 0.2.1.33
+# power4mome 0.2.1.34
 
 ## New Features
 
@@ -147,6 +147,14 @@
   is no easy way to know those values stored
   in a `power4test` object.
   (0.2.1.29)
+
+- Added `correlation = FALSE` in some calls
+  to `lavaan::sem()`, to accommodate
+  the new warning added in `lavaan` 0.7-3.3322.
+  These calls do not fit the models. They
+  just use `lavaan::sem()` to generate the
+  parameter tables.
+  (0.2.1.34)
 
 ## Bug Fixes
 

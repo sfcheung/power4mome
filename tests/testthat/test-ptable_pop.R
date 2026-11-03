@@ -32,12 +32,14 @@ check_gen_dat <- function(model,
                               keep_f_scores = keep_f_scores)
   fit <- lavaan::sem(model,
              data = mm_lm_dat_out,
-             fixed.x = FALSE)
+             fixed.x = FALSE,
+             correlation = FALSE)
   tmp <- ptable
   tmp$est <- tmp$start
   fit0 <- lavaan::sem(tmp,
               do.fit = FALSE,
-              fixed.x = FALSE)
+              fixed.x = FALSE,
+              correlation = FALSE)
   out <- list(ptable = ptable,
               # mm_out_original = mm_out_original,
               mm_out = mm_out,

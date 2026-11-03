@@ -595,7 +595,8 @@ sim_data <- function(nrep = 10,
 
   fit_tmp <- try(lavaan::sem(
                     ptable,
-                    do.fit = FALSE
+                    do.fit = FALSE,
+                    correlation = FALSE
                   ),
                 silent = TRUE)
   if (inherits(fit_tmp, "try-error")) {
@@ -1491,7 +1492,8 @@ sim_data_i <- function(repid = 1,
   # fixed.x set to FALSE such that covariances are also displayed
   fit0 <- lavaan::sem(tmp,
               do.fit = FALSE,
-              fixed.x = FALSE)
+              fixed.x = FALSE,
+              correlation = FALSE)
   if (ngroups > 1) {
     group_labels <- names(mm_out)
     group_name <- "group"

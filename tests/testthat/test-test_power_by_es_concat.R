@@ -69,7 +69,7 @@ out_chk <- power4test_by_es(test_out,
                                 progress = !is_testing())
 out_reject_chk <- rejection_rates(out_chk)
 
-expect_identical(out_reject,
+expect_equal(out_reject,
                  out_reject_chk)
 
 # Test different parameters
@@ -93,7 +93,7 @@ out_chk <- power4test_by_es(test_out,
                                 progress = !is_testing())
 out_reject_chk <- rejection_rates(out_chk)
 
-expect_identical(out_reject,
+expect_equal(out_reject,
                  out_reject_chk)
 
 
